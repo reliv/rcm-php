@@ -1,0 +1,194 @@
+/**
+* Eric Meyer's Reset CSS v2.0 (http://meyerweb.com/eric/tools/css/reset/)
+* http://cssreset.com
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, img, ins, kbd, q, s, samp,
+small, tt, var,
+center,
+dl, dt, dd,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+
+}
+
+.cke_contents, .cke_contents iframe, .cke_wrapper
+{
+    background-color: Transparent !important;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/**
+* End Css Reset
+*/
+
+
+html, body, p {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+h1 {
+    color: #00A3E6;
+    font-size: 20px;
+    line-height: 22px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #8DC63F;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 18px;
+    margin-bottom: 5px
+}
+
+strong {
+    font-weight: bold;
+}
+
+a:hover {
+    color: #8DC63F;
+}
+
+a {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #68649A;
+    text-decoration: underline;
+    font-weight: normal;
+}
+
+#navWrap, #footWrap{
+    background-color: #8DC63F;
+    color:white;
+}
+
+#nav, #foot, #aboveNav, #belowFoot{
+    width: 980px;
+    margin:0 auto;
+    padding: 0 10px;
+}
+
+#belowFoot{
+    margin-top:10px;
+}
+
+#rightCol{
+    float:right;
+    width:200px;
+    padding-left: 10px;
+}
+
+#centerCol{
+    width:760px;
+}
+
+#centerCol, #rightCol{
+    min-height: 400px;
+}
+
+#mainCols{
+    width:980px;
+    margin: 20px auto;
+}
+
+h1{
+    color:#00A4E4;
+}
+
+h2{
+    color:#8DC63F;
+}
+
+.RcmNavigation.SiteNavigation  li .popup {
+    width: 300px;
+}
+
+.RcmNavigation.SiteNavigation .column {
+    width: 300px;
+    padding: 0 0 10px 0;
+    float: left;
+}
+
+.RcmNavigation.SiteNavigation li .columnCount_2 {
+    width: 602px;
+}
+
+.RcmNavigation.SiteNavigation .column li a{
+    font-weight: bold;
+    color: #000000;
+}
+
+.RcmNavigation.SiteNavigation li ul li{
+    padding: 0 20px 0 50px;
+    background-repeat: no-repeat;
+    background-position: 30px top;
+    background-image: url('/modules/rcm/generic-site/images/menu-arrow.jpg');
+}
+
+.RcmNavigation.SiteNavigation li ul li a{
+    color: #000000;
+    line-height: 21px;
+}
+
+.RcmNavigation.SiteNavigation li ul li:hover {
+    background-color: transparent;
+}
+
+.RcmNavigation.SiteNavigation li ul li a{
+    color: #8dc63f;
+}
+
+.RcmNavigation.SiteNavigation li ul li:hover a {
+    color: #8dc63f;
+}
+
+.RcmNavigation.SiteNavigation li .popup {
+    border: 3px solid #8DC63F;
+}
+
+.RcmNavigation.SiteNavigation .columnCount_2 .column_1{
+    border-right: 2px solid #8DC63F;
+}
+
+.RcmNavigation.SiteNavigation li {
+    padding: 11px 45px 11px 5px;
+}
+
+.RcmNavigation.SiteNavigation li a {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}

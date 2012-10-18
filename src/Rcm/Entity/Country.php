@@ -1,0 +1,145 @@
+<?php
+
+/**
+ * Country Database Entity
+ *
+ * This is a Doctorine 2 definition file for Country Objects.  This file is used
+ * for any module that needs to know Country information.  
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: No License yet
+ *
+ * @category  Reliv
+ * @package   Common\Entites
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://ci.reliv.com/confluence
+ */
+
+namespace Rcm\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Country Database Entity
+ *
+ * This object contains ISO country codes as well as a map to the old site 
+ * countries.  Also contained is a map to internal country codes that may be 
+ * needed when an API used in the system does not use standard ISO codes
+ *
+ * @category  Reliv
+ * @package   Common\Entites
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   Release: 1.0
+ * @link      http://ci.reliv.com/confluence
+ * 
+ * @ORM\Entity
+ * @ORM\Table(name="rcm_countries")
+ */
+
+class Country
+{
+    /**
+     * @var string ISO Three Digit Country Code
+     *
+     * @link http://en.wikipedia.org/wiki/ISO_3166-1 ISO Standard
+     *  
+     * @ORM\Column(type="string", length=3, unique = true)
+     * @ORM\Id
+     */
+    protected $iso3;
+
+    /**
+     * @var string ISO Two Digit Country Code
+     *
+     * @link http://en.wikipedia.org/wiki/ISO_3166-1 ISO Standard
+     *
+     * @ORM\Column(type="string", length=2, unique = true)
+     */
+    protected $iso2;
+
+    /**
+     * @var string Name of Country in English
+     *
+     * @ORM\Column(type="string", unique = true)
+     */
+    protected $countryName;
+
+    /**
+     * Sets the CountryName property
+     *
+     * @param string $countryName
+     *
+     * @return null
+     *
+     */
+    public function setCountryName($countryName)
+    {
+        $this->countryName = $countryName;
+    }
+
+    /**
+     * Gets the CountryName property
+     *
+     * @return string CountryName
+     *
+     */
+    public function getCountryName()
+    {
+        return $this->countryName;
+    }
+
+    /**
+     * Sets the Iso2 property
+     *
+     * @param string $iso2
+     *
+     * @return null
+     *
+     */
+    public function setIso2($iso2)
+    {
+        $this->iso2 = $iso2;
+    }
+
+    /**
+     * Gets the Iso2 property
+     *
+     * @return string Iso2
+     *
+     */
+    public function getIso2()
+    {
+        return $this->iso2;
+    }
+
+    /**
+     * Sets the Iso3 property
+     *
+     * @param string $iso3
+     *
+     * @return null
+     *
+     */
+    public function setIso3($iso3)
+    {
+        $this->iso3 = $iso3;
+    }
+
+    /**
+     * Gets the Iso3 property
+     *
+     * @return string Iso3
+     *
+     */
+    public function getIso3()
+    {
+        return $this->iso3;
+    }
+
+}

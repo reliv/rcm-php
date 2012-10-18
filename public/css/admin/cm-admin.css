@@ -1,0 +1,203 @@
+#rcmAdminMenuBar {
+    width: 100%;
+    position: relative;
+    z-index: 999999;
+    background-color: #DCDCDC;
+}
+
+#ContentManagerTopAdminPanel {
+    min-height: 50px;
+    width: 100%;
+    position: fixed;
+    z-index: 999998;
+    background-color: #DCDCDC;
+}
+
+#ckEditorfooter {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    display: none;
+}
+
+#rcmLayoutEditorColumn {
+    width: 260px;
+    height: 100%;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    position: fixed;
+    z-index: 100000;
+    background: #ffffff;
+    display: none;
+    margin-bottom: -120px;
+}
+
+#RcmRealPage {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#ToolBarSpacer {
+    width: 100%;
+}
+
+.cke_contents, .cke_contents iframe {
+    background-color: transparent !important;
+}
+
+.ui-dialog form.simple p {
+    margin-bottom: 10px;
+}
+
+.ui-dialog form.simple input {
+    width: 590px;
+}
+
+.ui-dialog form.simple input[type="checkbox"] {
+    width: auto;
+}
+
+.rcmContainer {
+    width: 100%;
+    min-height: 30px;
+}
+
+
+/*  New Page Wizard */
+.rcmNewPageLayoutWrapper {
+
+    padding-right: 20px;
+    float: left;
+}
+
+.rcmNewPageLayoutContainer {
+    border: 1px dashed #000000;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px;
+    position: relative;
+    height: 171px;
+    width: 200px;
+}
+
+.rcmNewPageLinkOverlay {
+    position: absolute;
+    height: 95%;
+    width: 95%;
+    cursor: pointer;
+}
+
+.rcmNewPageLinkOverlayActive {
+    opacity: 0.4;
+    background-color: #000000;
+}
+
+.rcmNewPageLayoutScrollWrapper {
+    width: 636px;
+    height: 220px;
+    /*overflow-x: scroll;*/
+}
+
+.RcmBlankPageInput {
+    width: 500px !important;
+}
+
+.RcmErrorInputHightlight {
+    background-color: #FF0000;
+}
+
+.RcmOkInputHightlight {
+    background-color: #d6e9c6;
+}
+
+.ui-accordion .ui-accordion-content {
+    padding: 0px !important;
+}
+
+.rcmLayoutImage {
+    float: left;
+    padding-right: 5px;
+}
+
+.rcmLayoutTitle {
+    display: table-cell;
+    vertical-align: middle;
+    height: 40px;
+    cursor:pointer;
+}
+
+.layoutPluginContainerIcon {
+    height: 40px;
+}
+
+html.rcmEditingPlugins .rcmPlugin:hover{
+    border-color: grey;
+}
+
+html.rcmDraggingPlugins .rcmContainer{
+    border-color: grey;
+}
+
+html.rcmDraggingPlugins .rcmPlugin{
+    border-color: transparent;
+}
+
+.rcmPluginSortPlaceHolder{
+    float: left;
+    opacity:0.4;
+    filter:alpha(opacity=40);
+}
+
+/* layout editor Bar */
+#rcmLayoutHandlerBar {
+    width: 100%;
+    background-color: #DCDCDC;
+    border: solid 1px #666666;
+    padding: 4px 0;
+    position: relative;
+}
+
+#rcmLayoutMenuPopout {
+    background-image: url("/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png");
+    background-position: -34px -82px;
+    background-repeat: no-repeat;
+    height: 12px;
+    width: 12px;
+    position: absolute;
+    top: 7px;
+    right: 21px;
+    border: solid 1px #000000;
+    border-radius: 5px;
+}
+
+#rcmLayoutMenuClose {
+    background-image: url("/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png");
+    background-position: -34px -194px;
+    background-repeat: no-repeat;
+    height: 12px;
+    width: 12px;
+    position: absolute;
+    top: 7px;
+    right: 5px;
+    border: solid 1px #000000;
+    border-radius: 5px;
+}
+
+.rcmBlockUi{
+    color: white;
+    font-size: 70px;
+}
+
+/*  Tiny MCE */
+.defaultSkin td.mceToolbar {
+    background-color: transparent !important;
+}
+
+.defaultSkin .mceButton, .defaultSkin table.mceLayout tr.mceFirst td,
+.defaultSkin table.mceLayout tr.mceLast td, .defaultSkin table.mceLayout {
+    border: none !important;
+}
+
+
+

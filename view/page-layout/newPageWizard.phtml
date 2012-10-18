@@ -1,0 +1,50 @@
+<div id="rcmNewPageWizard" style="position: absolute; left: -999999px;">
+    <form action="" method="post" id="newPageWizard">
+        <div id="rcmNewPageErrorLine" style="display: none; text-align: center;">
+
+        </div>
+        <table width="100%">
+            <tr>
+                <td valign="middle"><p> Page URL:</p></td>
+                <td valign="middle" width="502">
+                    <input class="RcmBlankPageInput"
+                           type="text"
+                           name="rcmNewPageUrl"
+                           id="rcmNewPageUrl" value=""
+                    />
+                </td>
+                <td valign="middle"><p id="newPageValidatorIndicator">&nbsp;</p></td>
+            </tr>
+            <tr>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td valign="middle"><p>Page Title:</p></td>
+                <td valign="middle">
+                    <input class="RcmBlankPageInput"
+                           type="text"
+                           name="rcmNewPageName"
+                           id="rcmNewPageName"
+                           value=""
+                    />
+                </td>
+                <td valign="middle"></td>
+            </tr>
+        </table>
+        <p>&nbsp;</p>
+
+        <?php foreach ($this->newPageLayoutContainers as $newLayoutKey => $newLayout) :?>
+        <div class="rcmNewPageLayoutWrapper">
+            <div class="rcmNewPageLayoutContainer">
+                <div class="rcmNewPageLinkOverlay"></div>
+                <img src="<?php echo $newLayout['screenShot']; ?>" /> <br />
+                <?php echo $newLayout['display']; ?>
+                <input type="hidden" name="<?php echo $newLayoutKey; ?>" value="N" class="rcmLayoutKeySelector" />
+            </div>
+        </div>
+        <?php endforeach; ?>
+        <div style="clear: both;"></div>
+        <input type="hidden" name="rcmNewPageSelectedLayout" id="rcmNewPageSelectedLayout" value="" />
+    </form>
+
+</div>
