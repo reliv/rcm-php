@@ -146,7 +146,24 @@ function RcmEdit(config) {
         }
 
         me.ui.showPleaseWaitInEasyNav();
+        var containerInfo = me.rcmPlugins.GetAllInstancesAndOrder();
+        var pageMetaData = me.savePageProperties();
 
+        var pluginData = me.rcmPlugins.savePlugins();
+
+        var dataToSave = $.extend(true, pluginData, pageMetaData, containerInfo);
+
+        var dataToSend = JSON.stringify(dataToSave);
+
+        var input = $('<input type="hidden" ' +
+            'name="saveData" value="" />').val(dataToSend);
+
+        var form = $('<form method="post" action="/rcm-admin-save/' +
+            this.page+'/'+this.language+'/'+this.pageRevision+'" name="rcmDataForm" id="rcmDataForm">').append(input);
+
+        $("body").append(form);
+
+        $("#rcmDataForm").submit();
     };
 
     /**
@@ -344,6 +361,16 @@ function RcmEdit(config) {
         });
     };
 
+    me.savePageProperties = function() {
+        return  {
+            main : {
+                metaTitle : $("title").html(),
+                metaDesc  : $('meta[name="description"]').attr('content'),
+                metaKeyWords : $('meta[name="keywords"]').attr('content')
+            }
+        };
+    };
+
 
     /********************************/
     /*        User Interface        */
@@ -434,7 +461,7 @@ function RcmEdit(config) {
         });
 
         $(".rcmSaveButton").click(function(){
-            //me.saveAndPostData();
+            me.savePage();
         });
     };
 
@@ -608,6 +635,25 @@ function RcmEdit(config) {
         me.editMode = true;
     };
 
+    me.rcmPlugins.GetAllInstancesAndOrder = function() {
+        var dataToReturn = {};
+
+        $(".rcmContainer").each(function(){
+            var containerNumber = $(this).attr('data-containerId');
+            $(this).find(".rcmPlugin").each(function(index, value){
+                var instanceId = $(value).attr('data-rcmPluginInstanceId');
+                var pluginName = $(value).attr('data-rcmPluginName');
+                dataToReturn[instanceId] = {
+                    'container' : containerNumber,
+                    'order' : index,
+                    'pluginName' : pluginName
+                }
+            })
+        });
+
+        return dataToReturn;
+    };
+
     /**
      * Init all Site Wide plugins for edit mode.
      */
@@ -648,6 +694,17 @@ function RcmEdit(config) {
         me.editMode = true;
     };
 
+    me.rcmPlugins.savePlugins = function() {
+        var dataToReturn = {};
+
+        var pluginData = me.rcmPlugins.getSaveDataFromCalledPlugins();
+        var pluginEdits = me.rcmPlugins.getSaveDataFromPluginEdits();
+
+        dataToReturn = $.extend(true, pluginEdits, pluginData);
+
+        return dataToReturn;
+    };
+
     /**
      * Initiate Plugin editor
      *
@@ -659,6 +716,8 @@ function RcmEdit(config) {
         me.rcmPlugins.initHtml5Edits(container);
         me.rcmPlugins.unlockPlugin(container);
     };
+
+
 
     /**
      * Disable edit regions of a container
@@ -711,6 +770,40 @@ function RcmEdit(config) {
     };
 
     /**
+     * Get Plugin Save Data.
+     *
+     * @return {Array}
+     */
+    me.rcmPlugins.getSaveDataFromCalledPlugins = function() {
+        var dataToReturn = {};
+
+        $.each(me.rcmPlugins.calledPlugins, function(index, value){
+
+            if (!me.rcmPlugins.calledPlugins.hasOwnProperty(index)) {
+                return;
+            }
+
+            var instanceId = me.rcmPlugins.calledPlugins[index].instanceId;
+            var pluginObject = me.rcmPlugins.calledPlugins[index].pluginObject;
+
+            dataToReturn[instanceId] = {
+                pluginData : {}
+            };
+
+            if ($.isFunction(pluginObject.getSaveData)) {
+                dataToReturn[instanceId].pluginData = pluginObject.getSaveData();
+            }
+
+            if ($.isFunction(pluginObject.getAssets)) {
+                dataToReturn[instanceId].pluginData.assets =  pluginObject.getAssets();
+            }
+
+        });
+
+        return dataToReturn;
+    };
+
+    /**
      * Find and initialize the Rich edits within the plugin passed.
      *
      * @param pluginContainer
@@ -756,7 +849,7 @@ function RcmEdit(config) {
 
         $(pluginContainer).find('[data-textEdit]').each(function() {
 
-            var textAreaId = $(pluginContainer).attr('data-textEdit');
+            var textAreaId = $(this).attr('data-textEdit');
 
             var newEditor = me.editor.addHtml5Editor(this, textAreaId);
 
@@ -768,6 +861,53 @@ function RcmEdit(config) {
                 type         : 'html5'
             });
         });
+    };
+
+    /**
+     * Get Plugin Save Data.
+     *
+     * @return {Array}
+     */
+    me.rcmPlugins.getSaveDataFromPluginEdits = function() {
+        var dataToReturn = {};
+
+        $.each(me.rcmPlugins.activeEditors, function(index, value) {
+            if (!me.rcmPlugins.activeEditors.hasOwnProperty(index)) {
+                return;
+            }
+
+            var instanceId = me.rcmPlugins.activeEditors[index].instanceId;
+            var textId = me.rcmPlugins.activeEditors[index].textId;
+
+
+            if (me.rcmPlugins.activeEditors[index].type == 'rich') {
+                var saveData = me.editor.getRichEditorData(
+                    me.rcmPlugins.activeEditors[index].editor
+                );
+            } else {
+                var saveData = me.editor.getHtml5EditorData(
+                    me.rcmPlugins.activeEditors[index].editor
+                );
+            }
+
+            //Setup the data to return
+
+            if (dataToReturn[instanceId] == undefined) {
+                dataToReturn[instanceId] = {
+                    pluginName : '',
+                    pluginData : {
+                        assets : []
+                    }
+                };
+            }
+
+            dataToReturn[instanceId].pluginName = me.rcmPlugins.activeEditors[index].pluginName;
+            dataToReturn[instanceId].pluginData[textId] = saveData.html;
+            dataToReturn[instanceId].pluginData.assets = saveData.assets;
+
+        });
+
+        return dataToReturn;
     };
 
     /**

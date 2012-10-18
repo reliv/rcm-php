@@ -73,6 +73,24 @@ function RcmCkEditor(config) {
         return $(newTextAres).ckeditorGet();
     };
 
+    me.getRichEditorData = function(editor)  {
+        var returnData = {};
+
+        if ($.isFunction(editor.getData)) {
+            returnData.html = editor.getData();
+
+            if (returnData == undefined || returnData == '') {
+                return false;
+            }
+
+            returnData.assets = me.getAssets(returnData.html);
+
+            return returnData;
+        }
+
+        return false;
+    };
+
     /**
      * Setup HTML5 edits.
      *
@@ -88,6 +106,56 @@ function RcmCkEditor(config) {
         $(container).attr('contentEditable',true).css('cursor','text');
 
         return container
+    };
+
+    /**
+     * Get data from an HTML5 edit area.
+     *
+     * @param editor
+     * @return {*}
+     */
+    me.getHtml5EditorData = function(editor)  {
+
+        var returnData = {};
+
+        returnData.html = $(editor).html();
+
+        if (returnData == undefined || returnData == '') {
+            return false;
+        }
+
+        returnData.assets = me.getAssets(returnData.html);
+
+        return returnData;
+    };
+
+    me.getAssets = function (htmlToCheck) {
+
+        var assets = [];
+
+        //Record what assets this ckEdit is using
+        var html=$('<div></div>');
+        html.append(htmlToCheck);
+
+        html.find('img').each(function(key, ele){
+            assets.push(
+                $(ele).attr('src')
+            );
+        });
+
+        html.find('a').each(function(key, ele){
+            assets.push(
+                $(ele).attr('href')
+            );
+        });
+
+        html.find('embed').each(function(key, ele){
+            assets.push(
+                $(ele).attr('src')
+            );
+        });
+
+        return assets;
     };
 
     /**
