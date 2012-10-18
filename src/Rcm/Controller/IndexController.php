@@ -94,7 +94,7 @@ class IndexController extends \Rcm\Controller\BaseController
          *   If Admin we're going to check for a staged revision.
          */
 
-        if ($this->adminIsLoggedIn()) {
+        if ($this->adminIsLoggedIn() && empty($pageRevisionId)) {
             $this->pageRevision = $this->page->getStagedRevision();
 
             //If no stage exists return published
