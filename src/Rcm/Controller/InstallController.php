@@ -49,7 +49,9 @@ class InstallController extends \Rcm\Controller\BaseController
         $this->getEm()->flush();
 
 
-        $view = new ViewModel(array('content'=>'Install Complete'));
+        $view = new \Zend\View\Model\ViewModel(
+            array('content'=>'Install Complete')
+        );
         $view->setTemplate('rcm/literal');
         return $view;
     }
