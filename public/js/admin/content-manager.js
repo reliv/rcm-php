@@ -1,4 +1,5 @@
 var rcmEdit = new RcmEdit(rcmConfig);
+
 /**
  * Main Javascript file for the content manager.  This file is required for
  * the admin side of the content manager and is pulled in through the admin

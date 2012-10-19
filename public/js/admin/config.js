@@ -5,7 +5,6 @@ var rcmConfig = {
 };
 
 var rcmCkConfig = {
-
     sharedSpaces : {
         top : 'ckEditortoolbar',
         bottom : 'ckEditorfooter'
