@@ -1,4 +1,4 @@
-var rcm = new Rcm();
+window.rcm = new Rcm();
 /**
  * Content Viewing Code
  *

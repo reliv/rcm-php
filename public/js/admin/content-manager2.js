@@ -751,7 +751,7 @@ function RcmEdit(config) {
 
         if(typeof(window[containerData.editClass])=='function'){
 
-            try {
+//            try {
                 var plugin = new window[containerData.editClass](
                     containerData.instanceId,
                     $(pluginContainer)
@@ -764,9 +764,9 @@ function RcmEdit(config) {
                     instanceId   : containerData.instanceId,
                     pluginName   : containerData.pluginName
                 });
-            } catch (err) {
-                console.error(err);
-            }
+//            } catch (err) {
+//                console.log(err.toString());
+//            }
         }
     };
 
@@ -1330,4 +1330,20 @@ function RcmEdit(config) {
 
         }
     };
+
+    me.pluginContextMenu = function(operation, options){
+        var globalContextMenuItems = {
+            'rcmEditDeletePlugin':{
+                name:'Delete Plugin',
+                icon:'delete',
+                callback:function () {
+                    alert('not done yet');
+                }
+            },
+            rcmEditSeparator1:'-'
+        }
+
+        operation.items = $.extend(globalContextMenuItems,operation.items);
+        $.contextMenu(operation, options);
+    }
 }

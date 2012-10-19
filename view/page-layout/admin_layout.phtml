@@ -173,7 +173,7 @@ foreach($child->plugins as $container => $orders){
 <script type="text/javascript">
 
 $(function(){
-    var rcmEdit = new RcmEdit(rcmConfig);
+    window.rcmEdit = new RcmEdit(rcmConfig);
     rcmEdit.setLanguage('<?php echo $this->language; ?>');
     rcmEdit.setPage('<?php echo $this->page->getName(); ?>');
     rcmEdit.setPageRevision('<?php echo $this->pageRevision; ?>');
