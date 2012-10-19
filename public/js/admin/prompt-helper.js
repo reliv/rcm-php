@@ -1,5 +1,4 @@
 (function( $ ){
-
     /**
      * Pops up an alert dialog using jQuery UI
      *

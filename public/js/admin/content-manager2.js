@@ -5,6 +5,7 @@
  *
  * @type {Object}
  */
+
 function RcmEdit(config) {
 
     /**

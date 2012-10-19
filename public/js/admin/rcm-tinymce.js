@@ -4,6 +4,7 @@
  * @type {Object}
  */
 function RcmTinyMceEditor(config) {
+
     /**
      * Always refers to this object unlike the 'this' JS variable;
      *

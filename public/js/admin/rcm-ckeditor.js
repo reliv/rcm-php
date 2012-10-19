@@ -4,6 +4,7 @@
  * @type {Object}
  */
 function RcmCkEditor(config) {
+
     /**
      * Always refers to this object unlike the 'this' JS variable;
      *
