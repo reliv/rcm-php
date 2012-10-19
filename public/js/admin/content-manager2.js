@@ -1337,7 +1337,7 @@ function RcmEdit(config) {
                 name:'Delete Plugin',
                 icon:'delete',
                 callback:function () {
-                    alert('not done yet');
+                    alert('Errt1! - not done yet');
                 }
             },
             rcmEditSeparator1:'-'
