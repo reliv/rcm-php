@@ -1,8 +1,12 @@
-RCM
+RCM Install Instructions
 ==============
 
-Add these entries to the "require" section inside "path-to-zf2-project-root/composer.json"
+If you don't already have the ZF2 skeleton app, download it form github.
+```bash
+git clone https://github.com/zendframework/ZendSkeletonApplication.git
+```
 
+Add these entries to the "require" section inside "path-to-zf2-project-root/composer.json"
 ```php
 "require": {
     "reliv/Rcm" : "dev-master"
@@ -78,9 +82,9 @@ date.timezone="America/Chicago"
 ```
 
 Navigate to this URL in a browser to run the installer. This loads data into your database and creates symlinks that allow zf2 modules to contain routable public asset folders.
-
+```php
 http://localhost/rcm/install
-
+```
 
 Login with these credentials:
 ```php
