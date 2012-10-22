@@ -329,31 +329,37 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
             );
         }
 
-        $reflector = new \ReflectionClass($controllerPath);
+//        $reflector = new \ReflectionClass($controllerPath);
+//
+//        if (!$reflector->hasMethod($action)) {
+//            throw new \Exception(
+//                'Plugin controller has no method pluginAction()'
+//            );
+//        }
 
-        if (!$reflector->hasMethod($action)) {
-            throw new \Exception(
-                'Plugin controller has no method pluginAction()'
-            );
+        try{
+            //See if the plugin has defined a custom factory for it's controller
+            $pluginController = $this->serviceLocator->get($controllerPath);
+        }catch(\Zend\ServiceManager\Exception\ServiceNotFoundException $e){
+            //If there is not factory, create the plugin controller our selves
+            //Maybe this should use zf2 "invokable" instead?
+            $pluginController = new $controllerPath;
         }
+        $pluginController->setServiceLocator($this->getServiceLocator());
 
-        $pluginInstance = new $controllerPath;
-
-        $pluginInstance->setServiceLocator($this->getServiceLocator());
-
-        $pluginInstance->setEvent($this->getEvent());
+        $pluginController->setEvent($this->getEvent());
 
         $this->setPluginManager($this->getPluginManager());
 
         if (empty($dataToPass)){
             if(isset($_GET['rcm-plugin-init'])&&$_GET['rcm-plugin-init']==1){
                 //Used to preview plugins when developing
-                $return = $pluginInstance->{$action}(rand(-99999,-1));
+                $return = $pluginController->{$action}(rand(-99999,-1));
             }else{
-                $return = $pluginInstance->{$action}($instance->getInstanceId());
+                $return = $pluginController->{$action}($instance->getInstanceId());
             }
         } else {
-            $return = $pluginInstance->{$action}(
+            $return = $pluginController->{$action}(
                 $instance->getInstanceId(),
                 $dataToPass
             );
