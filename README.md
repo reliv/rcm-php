@@ -55,7 +55,6 @@ return array(
         'RcmRssFeed',
         'RcmRotatingImage',
 
-
         //MUST BE AT BOTTOM OF DEFINITION
         'ElFinder',
     ),
