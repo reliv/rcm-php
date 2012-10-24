@@ -33,11 +33,12 @@ chmod 777 /path-to-zf2-project-root/public/modules
 ```
 
 
-Add this "path-to-zf2-project-root/config/application.config.php"
+Add Rcm's modules and module paths in  "path-to-zf2-project-root/config/application.config.php"
 ```php
 <?php
 return array(
     'modules' => array(
+
         //Rcm Dependencies
         'DoctrineModule',
         'DoctrineORMModule',
@@ -47,9 +48,30 @@ return array(
         'RcmPluginCommon',
         'RcmHtmlArea',
         'RcmNavigation',
+        'RcmCallToActionBox',
+        'RcmPortalAnnouncementBox',
         'RcmLogin',
         'RcmSocialButtons',
         'RcmRssFeed',
+        'RcmRotatingImage',
+
+
+        //MUST BE AT BOTTOM OF DEFINITION
+        'ElFinder',
+    ),
+    'module_listener_options' => array(
+        'config_glob_paths'    => array(
+            'config/autoload/{,*.}{global,local}.php',
+        ),
+        'module_paths' => array(
+            './module',
+            './vendor',
+            './vendor/reliv',
+            './vendor/reliv/RcmPlugins',
+        ),
+    ),
+);
+
 ```
 
 
