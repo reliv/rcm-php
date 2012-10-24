@@ -349,7 +349,7 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
 
         $pluginController->setEvent($this->getEvent());
 
-        $this->setPluginManager($this->getPluginManager());
+        $pluginController->setPluginManager($this->getPluginManager());
 
         if (empty($dataToPass)){
             if(isset($_GET['rcm-plugin-init'])&&$_GET['rcm-plugin-init']==1){

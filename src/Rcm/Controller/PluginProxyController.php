@@ -61,9 +61,12 @@ class PluginProxyController extends BaseController
             return false;
         }
 
-        $view = $this->callPlugin($instance, $action);
+        /**
+         * @var \Zend\View\Model\ViewModel | \Zend\Http\Response
+         */
+        $actionResponse = $this->callPlugin($instance, $action);
 
-        exit($view->content);
+        return $actionResponse;
     }
 
     /**
