@@ -85,10 +85,21 @@ class InstallController extends \Rcm\Controller\BaseController
         $userManager->newPerson($email,$password);
     }
 
+    function getDefaultHtmlAreaContent(){
+        return json_decode(
+            file_get_contents(
+                'vendor/reliv/RcmPlugins/RcmHtmlArea/config/'
+                    .'default.content.json'
+            )
+        );
+    }
+
     function createHomePage(){
         $this->instances = array();
 
-        $this->createJsonInstance('RcmHtmlArea', null, 6, 0);
+        $this->createJsonInstance(
+            'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 6, 0
+        );
 
         $this->getPageFactory()->createPage(
             'index',
@@ -122,7 +133,9 @@ class InstallController extends \Rcm\Controller\BaseController
     function createLicensePage(){
         $this->instances = array();
 
-        $this->createJsonInstance('RcmHtmlArea', null, 6, 0);
+        $this->createJsonInstance(
+            'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 6, 0
+        );
 
         $this->getPageFactory()->createPage(
             'license',
@@ -139,7 +152,9 @@ class InstallController extends \Rcm\Controller\BaseController
     function createContactPage(){
         $this->instances = array();
 
-        $this->createJsonInstance('RcmHtmlArea', null, 6, 0);
+        $this->createJsonInstance(
+            'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 6, 0
+        );
 
         $this->getPageFactory()->createPage(
             'contact',
