@@ -285,10 +285,17 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
     public function loadPlugin(
         \Rcm\Entity\PluginInstance $instance
     ) {
-        $view = $this->callPlugin(
-            $instance,
-            'plugin'
-        );
+        if($instance->getInstanceId() <0 ){
+            $view = $this->callPlugin(
+                $instance,
+                'renderDefaultInstance'
+            );
+        }else{
+            $view = $this->callPlugin(
+                $instance,
+                'renderInstance'
+            );
+        }
 
         $instance->setViewModel($view);
     }
@@ -299,7 +306,7 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
     ) {
         $this->callPlugin(
             $instance,
-            'save',
+            'saveInstance',
             $dataToSave
         );
     }
@@ -310,8 +317,6 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
         $action,
         $dataToPass = array()
     ) {
-        //Ensure we can only call functions that end with Action
-        $action = $action.'Action';
 
         $pluginName = $instance->getName();
 
@@ -329,11 +334,12 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
             );
         }
 
+        //@TODO - WE DONT NEED TO CHECk FOR EACH FUNCTION, JUST MAKE SURE IT IMPLEMENTS OUR PLUGININTERFACE
 //        $reflector = new \ReflectionClass($controllerPath);
 //
 //        if (!$reflector->hasMethod($action)) {
 //            throw new \Exception(
-//                'Plugin controller has no method pluginAction()'
+//                'Plugin controller has no method renderInstance()'
 //            );
 //        }
 

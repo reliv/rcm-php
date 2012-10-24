@@ -34,33 +34,43 @@ namespace Rcm\Controller;
  * @version   Release: 1.0
  * @link      http://ci.reliv.com/confluence
  */
-interface PluginControllerInterface
+interface PluginInterface
 {
     /**
-     * Plugin Action - Returns the guest-facing view model for this plugin
+     * Reads a plugin instance from persistent storage returns a view model for
+     * it
      *
      * @param int $instanceId plugin instance id
      *
      * @return \Zend\View\Model\ViewModel
      */
-    function pluginAction($instanceId);
+    function renderInstance($instanceId);
 
     /**
-     * Save Action - Reads input data for a plugin instance and saves it to DB
+     * Returns a view model filled with content for a brand new instance. This
+     * usually comes out of a config file rather than writable persistent
+     * storage like a database.
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
+    function renderDefaultInstance();
+
+    /**
+     * Saves a plugin instance to persistent storage
      *
      * @param string $instanceId plugin instance id
      * @param array  $data       posted data to be saved
      *
      * @return null
      */
-    function saveAction($instanceId,$data);
+    function saveInstance($instanceId,$data);
 
     /**
-     * Delete Action - Deletes all data for a plugin instance from the DB
+     * Deletes a plugin instance from persistent storage
      *
      * @param string $instanceId plugin instance id
      *
      * @return null
      */
-    function deleteAction($instanceId);
+    function deleteInstance($instanceId);
 }
