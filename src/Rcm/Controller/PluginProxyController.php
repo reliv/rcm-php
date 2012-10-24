@@ -38,7 +38,7 @@ Zend\View\Model\ViewModel,
 class PluginProxyController extends BaseController
 {
     /**
-     * Proxy admin functions that start with "admin" if admin is logged in
+     * Private Ajax actions
      *
      * @return \Zend\View\Model\ViewModel
      */
@@ -47,12 +47,6 @@ class PluginProxyController extends BaseController
         $this->ensureAdminIsLoggedIn();
 
         list($pluginName, $instanceId, $action) = $this->parseParams();
-
-        //This action is only for private plugin functions that start with "Admin"
-        if (strpos($action, 'admin') !== 0) {
-            $this->response->setStatusCode(404);
-            return;
-        }
 
         $instance = $this->getInstance($pluginName, $instanceId);
 
@@ -64,13 +58,13 @@ class PluginProxyController extends BaseController
         /**
          * @var \Zend\View\Model\ViewModel | \Zend\Http\Response
          */
-        $actionResponse = $this->callPlugin($instance, $action);
+        $actionResponse = $this->callPlugin($instance, $action.'AdminAjaxAction');
 
         return $actionResponse;
     }
 
     /**
-     * Proxy functions that start with "ajax" this is publicly available
+     * Public ajax actions
      *
      * @return \Zend\View\Model\ViewModel
      */
@@ -79,12 +73,6 @@ class PluginProxyController extends BaseController
 
         list($pluginName, $instanceId, $action) = $this->parseParams();
 
-        //This action is only plugin functions that start with "ajax"
-        if (strpos($action, 'ajax') !== 0) {
-            $this->response->setStatusCode(404);
-            return;
-        }
-
         $instance = $this->getInstance($pluginName, $instanceId);
 
         if (!$instance) {
@@ -92,7 +80,7 @@ class PluginProxyController extends BaseController
             return false;
         }
 
-        $view = $this->callPlugin($instance, $action);
+        $view = $this->callPlugin($instance, $action.'AjaxAction');
 
         exit($view->content);
     }
