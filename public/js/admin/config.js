@@ -12,7 +12,7 @@ var rcmCkConfig = {
     extraPlugins : 'autogrow',
     removePlugins : 'resize',
     skin : 'kama',
-    contentsCss: '/modules/private-app/css/guestsite/guestSiteFonts.css',
+    contentsCss: '/modules/application/css/guestsite/guestSiteFonts.css',
     autoGrow_minHeight: '35',
     toolbar: [
         { name: 'document', items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },
@@ -66,7 +66,7 @@ var rcmTinyMceConfig = {
     theme_advanced_toolbar_align : "left",
     theme_advanced_statusbar_location : "none",
     theme_advanced_resizing : true,
-    content_css : '/modules/private-app/css/guestsite/guestSiteFonts.css',
+    content_css : '/modules/application/css/guestsite/guestSiteFonts.css',
 };
 
 /* Aloha Config */
