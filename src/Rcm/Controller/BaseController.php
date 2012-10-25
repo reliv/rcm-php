@@ -355,6 +355,13 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
         );
     }
 
+    /**
+     * Gets cached plugin controller. Creates one if not in cache
+     * @param $pluginName
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     function getPluginController($pluginName)
     {
         if (!isset($this->pluginControllers[$pluginName])) {
