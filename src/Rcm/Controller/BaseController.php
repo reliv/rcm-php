@@ -141,7 +141,7 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function getEm()
     {
-        $emClass='Doctrine\ORM\EntityManager';
+        $emClass = 'Doctrine\ORM\EntityManager';
 
         //If the entity manger was not injected, go get it.
         if (!is_a($this->entityManager, $emClass)) {
@@ -158,7 +158,8 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * @return null
      */
-    function setEm($entityManager){
+    function setEm($entityManager)
+    {
         $this->entityManager = $entityManager;
     }
 
@@ -203,7 +204,7 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
         $requestedUri = $_SERVER['REQUEST_URI'];
         $domainName = $domain->getDomainName();
 
-        $redirectUrl = $protocol.$domainName.$requestedUri;
+        $redirectUrl = $protocol . $domainName . $requestedUri;
 
         return $this->redirect()->toUrl($redirectUrl)->setStatusCode(301);
     }
@@ -222,17 +223,16 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
             'Rcm\Model\SiteFactory'
         );
 
-        $language=$this->getEvent()->getRouteMatch()->getParam('language');
-
+        $language = $this->getEvent()->getRouteMatch()->getParam('language');
 
 
         try {
-            $this->siteInfo=$siteFactory->getSite(
+            $this->siteInfo = $siteFactory->getSite(
                 $_SERVER['HTTP_HOST'],
                 $language
             );
-        } catch(\Rcm\Exception\SiteNotFoundException $e) {
-            $this->siteInfo=$siteFactory->getSite(
+        } catch (\Rcm\Exception\SiteNotFoundException $e) {
+            $this->siteInfo = $siteFactory->getSite(
                 $appConfig['reliv']['defaultDomain'],
                 $language
             );
@@ -249,26 +249,33 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
      */
     protected function prepPluginInstance(
         \Rcm\Entity\PluginInstance $instance
-    ) {
+    )
+    {
         $this->loadPlugin($instance);
 
-        $config=$this->getServiceLocator()->get('config');
+        $config = $this->getServiceLocator()->get('config');
 
         $pluginName = $instance->getName();
 
 
         if (isset($config['rcmPlugin'][$pluginName]['editJs'])) {
-            $instance->setAdminEditJs($config['rcmPlugin'][$pluginName]['editJs']);
+            $instance->setAdminEditJs(
+                $config['rcmPlugin'][$pluginName]['editJs']
+            );
         }
 
         if (isset($config['rcmPlugin'][$pluginName]['editCss'])) {
-            $instance->setAdminEditCss($config['rcmPlugin'][$pluginName]['editCss']);
+            $instance->setAdminEditCss(
+                $config['rcmPlugin'][$pluginName]['editCss']
+            );
         }
 
         if (isset($config['rcmPlugin'][$pluginName]['display'])
             && !$instance->isSiteWide()
         ) {
-            $instance->setDisplayName($config['rcmPlugin'][$pluginName]['display']);
+            $instance->setDisplayName(
+                $config['rcmPlugin'][$pluginName]['display']
+            );
         }
 
         if (isset($config['rcmPlugin'][$pluginName]['tooltip'])) {
@@ -284,13 +291,14 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
 
     public function loadPlugin(
         \Rcm\Entity\PluginInstance $instance
-    ) {
-        if($instance->getInstanceId() <0 ){
+    )
+    {
+        if ($instance->getInstanceId() < 0) {
             $view = $this->callPlugin(
                 $instance,
                 'renderDefaultInstance'
             );
-        }else{
+        } else {
             $view = $this->callPlugin(
                 $instance,
                 'renderInstance'
@@ -303,7 +311,8 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
     public function savePlugin(
         \Rcm\Entity\PluginInstance $instance,
         $dataToSave
-    ) {
+    )
+    {
         $this->callPlugin(
             $instance,
             'saveInstance',
@@ -316,7 +325,8 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
         \Rcm\Entity\PluginInstance $instance,
         $action,
         $dataToPass = array()
-    ) {
+    )
+    {
 
         $pluginName = $instance->getName();
 
@@ -327,29 +337,9 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
             );
         }
 
-        //Load the plugin controller
-        $pluginController = $this->serviceLocator->get($pluginName);
+        $pluginController = $this->buildPluginController($pluginName);
 
-        //Plugin controllers must implement this interface
-        if(!$pluginController instanceof \Rcm\Controller\PluginInterface){
-            throw new \Exception(
-                'Class "' . get_class($pluginController) . '" for plugin "'
-                    . $pluginName . '" does not implement '
-                    . '\Rcm\Controller\PluginInterface'
-            );
-        }
-
-        //If the plugin controller can accept a service locator, pass it
-        if(method_exists($pluginController,'setServiceLocator')){
-            $pluginController->setServiceLocator($this->getServiceLocator());
-        }
-
-        //If the plugin controller can accept an event, pass it
-        if(method_exists($pluginController,'setEvent')){
-            $pluginController->setEvent($this->getEvent());
-        }
-
-        if (empty($dataToPass)){
+        if (empty($dataToPass)) {
             return $pluginController->{$action}($instance->getInstanceId());
         }
 
@@ -358,7 +348,35 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
         );
     }
 
-    function moduleIsLoaded($moduleName){
+    function buildPluginController($pluginName)
+    {
+        //Load the plugin controller
+        $pluginController = $this->serviceLocator->get($pluginName);
+
+        //Plugin controllers must implement this interface
+        if (!$pluginController instanceof \Rcm\Controller\PluginInterface) {
+            throw new \Exception(
+                'Class "' . get_class($pluginController) . '" for plugin "'
+                    . $pluginName . '" does not implement '
+                    . '\Rcm\Controller\PluginInterface'
+            );
+        }
+
+        //If the plugin controller can accept a service locator, pass it
+        if (method_exists($pluginController, 'setServiceLocator')) {
+            $pluginController->setServiceLocator($this->getServiceLocator());
+        }
+
+        //If the plugin controller can accept an event, pass it
+        if (method_exists($pluginController, 'setEvent')) {
+            $pluginController->setEvent($this->getEvent());
+        }
+
+        return $pluginController;
+    }
+
+    function moduleIsLoaded($moduleName)
+    {
         $moduleManager = $this->getServiceLocator()->get('modulemanager');
 
         $loadedModules = $moduleManager->getLoadedModules();
@@ -369,14 +387,16 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * @TODO FIX THIS
      */
-    function adminIsLoggedIn(){
+    function adminIsLoggedIn()
+    {
         return true;
         /*return $this->loggedInPerson
             && is_a($this->loggedInPerson->getAdminInfo(),'\RcmLogin\Entity\AdminUser')
             && $this->loggedInPerson->getAdminInfo()->isAdmin();*/
     }
 
-    function ensureAdminIsLoggedIn(){
+    function ensureAdminIsLoggedIn()
+    {
         if (!$this->adminIsLoggedIn()
         ) {
             throw new \Rcm\Exception\InvalidArgumentException(
@@ -392,7 +412,9 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
 
         $this->setConfig();
         $pageName = $this->getEvent()->getRouteMatch()->getParam('page');
-        $pageRevisionId= $this->getEvent()->getRouteMatch()->getParam('revision');
+        $pageRevisionId = $this->getEvent()->getRouteMatch()->getParam(
+            'revision'
+        );
 
         /** @var \Rcm\Entity\Page $page  */
         $this->page = $this->siteInfo->getPageByName($pageName);
