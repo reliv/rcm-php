@@ -72,6 +72,8 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
      */
     protected $view;
 
+    protected $pluginControllers = array();
+
     /**
      * This function put the environment together.
      *
@@ -337,7 +339,12 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
             );
         }
 
-        $pluginController = $this->buildPluginController($pluginName);
+        $pluginController = $this->getPluginController($pluginName);
+
+        //If the plugin controller can accept an event, pass it
+        if (method_exists($pluginController, 'setEvent')) {
+            $pluginController->setEvent($this->getEvent());
+        }
 
         if (empty($dataToPass)) {
             return $pluginController->{$action}($instance->getInstanceId());
@@ -348,31 +355,33 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
         );
     }
 
-    function buildPluginController($pluginName)
+    function getPluginController($pluginName)
     {
-        //Load the plugin controller
-        $pluginController = $this->serviceLocator->get($pluginName);
+        if (!isset($this->pluginControllers[$pluginName])) {
 
-        //Plugin controllers must implement this interface
-        if (!$pluginController instanceof \Rcm\Controller\PluginInterface) {
-            throw new \Exception(
-                'Class "' . get_class($pluginController) . '" for plugin "'
-                    . $pluginName . '" does not implement '
-                    . '\Rcm\Controller\PluginInterface'
-            );
+            //Load the plugin controller
+            $pluginController = $this->serviceLocator->get($pluginName);
+
+            //Plugin controllers must implement this interface
+            if (!$pluginController instanceof \Rcm\Controller\PluginInterface) {
+                throw new \Exception(
+                    'Class "' . get_class($pluginController) . '" for plugin "'
+                        . $pluginName . '" does not implement '
+                        . '\Rcm\Controller\PluginInterface'
+                );
+            }
+
+            //If the plugin controller can accept a service locator, pass it
+            if (method_exists($pluginController, 'setServiceLocator')) {
+                $pluginController->setServiceLocator(
+                    $this->getServiceLocator()
+                );
+            }
+
+            $this->pluginControllers[$pluginName] = $pluginController;
         }
 
-        //If the plugin controller can accept a service locator, pass it
-        if (method_exists($pluginController, 'setServiceLocator')) {
-            $pluginController->setServiceLocator($this->getServiceLocator());
-        }
-
-        //If the plugin controller can accept an event, pass it
-        if (method_exists($pluginController, 'setEvent')) {
-            $pluginController->setEvent($this->getEvent());
-        }
-
-        return $pluginController;
+        return $this->pluginControllers[$pluginName];
     }
 
     function moduleIsLoaded($moduleName)
