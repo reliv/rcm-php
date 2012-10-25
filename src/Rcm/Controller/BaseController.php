@@ -320,8 +320,7 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
 
         $pluginName = $instance->getName();
 
-        $moduleManager = $this->getServiceLocator()
-            ->get('modulemanager');
+        $moduleManager = $this->getServiceLocator()->get('modulemanager');
 
         $loaded = $moduleManager->getLoadedModules();
 
@@ -336,16 +335,21 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
 
         if(!$pluginController instanceof \Rcm\Controller\PluginInterface){
             throw new \Exception(
-                get_class($pluginController)
-                    . ' does not implement \Rcm\Controller\PluginInterface'
+                'Class "' . get_class($pluginController) . '" for plugin "'
+                    . $pluginName . '" does not implement '
+                    . '\Rcm\Controller\PluginInterface'
             );
         }
 
-        $pluginController->setServiceLocator($this->getServiceLocator());
+        //If the plugin controller can accept a service locator, pass it
+        if(method_exists($pluginController,'setServiceLocator')){
+            $pluginController->setServiceLocator($this->getServiceLocator());
+        }
 
-        $pluginController->setEvent($this->getEvent());
-
-        $pluginController->setPluginManager($this->getPluginManager());
+        //If the plugin controller can accept an event, pass it
+        if(method_exists($pluginController,'setEvent')){
+            $pluginController->setEvent($this->getEvent());
+        }
 
         if (empty($dataToPass)){
             if(isset($_GET['rcm-plugin-init'])&&$_GET['rcm-plugin-init']==1){
