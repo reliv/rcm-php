@@ -325,8 +325,6 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
 
         $loaded = $moduleManager->getLoadedModules();
 
-        $controllerPath = $pluginName . '\Controller\PluginController';
-
         if (!isset($loaded[$pluginName])) {
             throw new \Exception(
                 "Plugin $pluginName is not loaded or configured. Check
@@ -334,23 +332,15 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
             );
         }
 
-        //@TODO - WE DONT NEED TO CHECk FOR EACH FUNCTION, JUST MAKE SURE IT IMPLEMENTS OUR PLUGININTERFACE
-//        $reflector = new \ReflectionClass($controllerPath);
-//
-//        if (!$reflector->hasMethod($action)) {
-//            throw new \Exception(
-//                'Plugin controller has no method renderInstance()'
-//            );
-//        }
+        $pluginController = $this->serviceLocator->get($pluginName);
 
-        try{
-            //See if the plugin has defined a custom factory for it's controller
-            $pluginController = $this->serviceLocator->get($controllerPath);
-        }catch(\Zend\ServiceManager\Exception\ServiceNotFoundException $e){
-            //If there is not factory, create the plugin controller our selves
-            //Maybe this should use zf2 "invokable" instead?
-            $pluginController = new $controllerPath;
+        if(!$pluginController instanceof \Rcm\Controller\PluginInterface){
+            throw new \Exception(
+                get_class($pluginController)
+                    . ' does not implement \Rcm\Controller\PluginInterface'
+            );
         }
+
         $pluginController->setServiceLocator($this->getServiceLocator());
 
         $pluginController->setEvent($this->getEvent());
