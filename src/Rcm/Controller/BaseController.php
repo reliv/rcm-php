@@ -320,19 +320,17 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
 
         $pluginName = $instance->getName();
 
-        $moduleManager = $this->getServiceLocator()->get('modulemanager');
-
-        $loaded = $moduleManager->getLoadedModules();
-
-        if (!isset($loaded[$pluginName])) {
+        if (!$this->moduleIsLoaded($pluginName)) {
             throw new \Exception(
                 "Plugin $pluginName is not loaded or configured. Check
                 config/application.config.php"
             );
         }
 
+        //Load the plugin controller
         $pluginController = $this->serviceLocator->get($pluginName);
 
+        //Plugin controllers must implement this interface
         if(!$pluginController instanceof \Rcm\Controller\PluginInterface){
             throw new \Exception(
                 'Class "' . get_class($pluginController) . '" for plugin "'
@@ -352,20 +350,20 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
         }
 
         if (empty($dataToPass)){
-            if(isset($_GET['rcm-plugin-init'])&&$_GET['rcm-plugin-init']==1){
-                //Used to preview plugins when developing
-                $return = $pluginController->{$action}(rand(-99999,-1));
-            }else{
-                $return = $pluginController->{$action}($instance->getInstanceId());
-            }
-        } else {
-            $return = $pluginController->{$action}(
-                $instance->getInstanceId(),
-                $dataToPass
-            );
+            return $pluginController->{$action}($instance->getInstanceId());
         }
 
-        return $return;
+        return $pluginController->{$action}(
+            $instance->getInstanceId(), $dataToPass
+        );
+    }
+
+    function moduleIsLoaded($moduleName){
+        $moduleManager = $this->getServiceLocator()->get('modulemanager');
+
+        $loadedModules = $moduleManager->getLoadedModules();
+
+        return isset($loadedModules[$moduleName]);
     }
 
     /**
