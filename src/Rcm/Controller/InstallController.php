@@ -2,7 +2,7 @@
 
 namespace Rcm\Controller;
 
-use \RcmPluginCommon\Entity\JsonContent as JsonContent;
+use \RcmJsonDataPluginToolkit\Entity\JsonContent as JsonContent;
 
 
 class InstallController extends \Rcm\Controller\BaseController
@@ -267,7 +267,7 @@ class InstallController extends \Rcm\Controller\BaseController
 
     /**
      * Creates a plugin instance for plugins that have controllers that extend
-     * \RcmPluginCommon\JsonContentController
+     * \RcmJsonDataPluginToolkit\JsonContentController
      *
      * @param int    $pluginName
      * @param array  $jsonContent
