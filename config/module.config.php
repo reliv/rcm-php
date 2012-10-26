@@ -394,7 +394,7 @@ return array(
             'contentManager' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm/[:page][/:language][/:revision]',
+                    'route' => '/rcm[/:page][/:language][/:revision]',
                     'defaults' => array(
                         'controller' => 'Rcm\Controller\IndexController',
                         'action' => 'index',
