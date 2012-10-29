@@ -5,9 +5,9 @@ namespace Rcm\Model\UserManagement;
 interface UserManagementInterface {
 
     /* proposed by rod
-    public function getLoggedInPerson();
+    public function getLoggedInUser();
     public function login($username,$password);
-    public function newPerson()
+    public function newUser()
     */
 
     /* old

@@ -62,7 +62,7 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * @var \RcmLogin\Entity\User
      */
-    protected $loggedInPerson;
+    protected $loggedInUser;
 
     /** @var \Rcm\Entity\Page $page */
     protected $page;
@@ -96,7 +96,7 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
         $userManager = $this->getServiceLocator()->get('rcmUserManager');
 
         if (!empty($userManager)) {
-            $this->loggedInPerson = $userManager->getLoggedInPerson();
+            $this->loggedInUser = $userManager->getLoggedInUser();
         }
 
     }
@@ -392,9 +392,9 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
     function adminIsLoggedIn()
     {
         return true;
-        /*return $this->loggedInPerson
-            && is_a($this->loggedInPerson->getAdminInfo(),'\RcmLogin\Entity\AdminUser')
-            && $this->loggedInPerson->getAdminInfo()->isAdmin();*/
+        /*return $this->loggedInUser
+            && is_a($this->loggedInUser->getAdminInfo(),'\RcmLogin\Entity\AdminUser')
+            && $this->loggedInUser->getAdminInfo()->isAdmin();*/
     }
 
     function ensureAdminIsLoggedIn()

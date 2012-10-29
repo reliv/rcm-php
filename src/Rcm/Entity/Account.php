@@ -20,27 +20,30 @@ class Account
     protected $accountNumber;
 
     /**
-     * @var \Rcm\Entity\Person primary person on the account
+     * @var \Rcm\Entity\User primary person on the account
      *
-     * @ORM\OneToOne(targetEntity="Person")
-     * @ORM\JoinColumn(name="primaryPersonId", referencedColumnName="personId")
+     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="primaryUserId", referencedColumnName="userId")
      */
-    protected $primaryPerson;
+    protected $primaryUser;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection people on the account,
-     * this includes the primary person
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Person",
-     *     mappedBy="personId",
-     *     cascade={"persist", "remove"}
-     * )
+     * @ORM\OneToMany(targetEntity="Account", mappedBy="account")
      */
-    protected $people;
+    protected $users;
 
     function __construct(){
         $this->people=New ArrayCollection();
+    }
+
+    public function setPeople($people)
+    {
+        $this->people = $people;
+    }
+
+    public function getPeople()
+    {
+        return $this->people;
     }
 
     /**
@@ -67,20 +70,20 @@ class Account
         return $this->accountNumber;
     }
 
-    public function setPrimaryPerson(\Rcm\Entity\Person $primaryPerson)
+    public function setPrimaryUser(\Rcm\Entity\User $primaryUser)
     {
-        $this->primaryPerson = $primaryPerson;
-        if(!$this->people->contains($primaryPerson)){
-            $this->addPerson($primaryPerson);
+        $this->primaryUser = $primaryUser;
+        if(!$this->people->contains($primaryUser)){
+            $this->addUser($primaryUser);
         }
     }
 
-    public function getPrimaryPerson()
+    public function getPrimaryUser()
     {
-        return $this->primaryPerson;
+        return $this->primaryUser;
     }
 
-    function addPerson(\Rcm\Entity\Person $person){
+    function addUser(\Rcm\Entity\User $person){
         $this->people->add($person);
     }
 

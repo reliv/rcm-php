@@ -93,7 +93,7 @@ return array(
         ),
     ),
     'encryption' => array(
-        'blockCypher' => array(
+        'cypher' => array(
             'algo' => 'aes',
             'key' => 'CHANGE THIS ENCRYPTION KEY!'
         )

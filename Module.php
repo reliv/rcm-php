@@ -79,7 +79,7 @@ class Module
     {
         return array(
             'factories' => array(
-                'blockCypher'=>function($serviceMgr){
+                'cypher'=>function($serviceMgr){
                     $config=$serviceMgr->get('config');
                     $config=$config['encryption']['blockCypher'];
                     $cypher = \Zend\Crypt\BlockCipher::factory(
@@ -119,7 +119,7 @@ class Module
                 function($serviceMgr)
                 {
                     $service = new \Rcm\Model\UserManagement\DoctrineUserManager(
-                        $serviceMgr->get('blockCypher')
+                        $serviceMgr->get('cypher')
                     );
                     $service->setEm(
                         $serviceMgr->get(

@@ -82,7 +82,7 @@ class InstallController extends \Rcm\Controller\BaseController
 
     function createUser($email,$password){
         $userManager=$this->serviceLocator->get('rcmUserManager');
-        $userManager->newPerson($email,$password);
+        $userManager->newUser($email,$password);
     }
 
     function getDefaultHtmlAreaContent(){
