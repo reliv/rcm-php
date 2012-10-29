@@ -7,9 +7,9 @@ Rcm\Exception\InvalidArgumentException;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="rcm_person")
+ * @ORM\Table(name="rcm_user")
  */
-class Person
+class User
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -18,7 +18,7 @@ class Person
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
-    protected $personId;
+    protected $userId;
 
     /**
      * @var string  first name
@@ -88,20 +88,36 @@ class Person
      */
     protected $password;
 
-    public function setPassword($password, \Zend\Crypt\BlockCipher $blockCypher)
+    public function setAccount($account)
+    {
+        $this->account = $account;
+    }
+
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Account", inversedBy="users")
+     * @ORM\JoinColumn(name="accountNumber", referencedColumnName="accountNumber")
+     */
+    protected $account;
+
+    public function setPassword($password, \Zend\Crypt\BlockCipher $cypher)
     {
         if(empty($password)){
             $this->password = null;
         }
-        $this->password = $blockCypher->encrypt($password);
+        $this->password = $cypher->encrypt($password);
     }
 
-    public function getPassword(\Zend\Crypt\BlockCipher $blockCypher)
+    public function getPassword(\Zend\Crypt\BlockCipher $cypher)
     {
         if(empty($this->password)){
             return null;
         }
-        return $blockCypher->decrypt($this->password);
+        return $cypher->decrypt($this->password);
     }
 
     /**
@@ -317,27 +333,27 @@ class Person
     }
 
     /**
-     * Sets the PersonId property
+     * Sets the UserId property
      *
-     * @param int $personId
+     * @param int $userId
      *
      * @return null
      *
      */
-    public function setPersonId($personId)
+    public function setUserId($userId)
     {
-        $this->personId = $personId;
+        $this->userId = $userId;
     }
 
     /**
-     * Gets the PersonId property
+     * Gets the UserId property
      *
-     * @return int PersonId
+     * @return int UserId
      *
      */
-    public function getPersonId()
+    public function getUserId()
     {
-        return $this->personId;
+        return $this->userId;
     }
 
     /**
