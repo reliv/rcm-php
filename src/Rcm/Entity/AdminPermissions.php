@@ -38,7 +38,7 @@ use Rcm\Entity\Page;
  *
  * @ORM\Entity
  * @ORM\Table(
- *     name="rcm_admin_users",
+ *     name="rcm_admin_permissions",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(name="userId", columns={"userId"})
  *     }

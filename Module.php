@@ -156,6 +156,15 @@ class Module
                     );
                     return $controller;
                 },
+                'rcmInstallController' => function($controllerMgr) {
+                    $serviceMgr=$controllerMgr->getServiceLocator();
+                    $controller =
+                        new \Rcm\Controller\InstallController(
+                            $serviceMgr->get('rcmPluginManager'),
+                            $serviceMgr->get('em')
+                        );
+                    return $controller;
+                },
             )
         );
     }

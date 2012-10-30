@@ -380,8 +380,6 @@ return array(
             'PrivateDevTools\Controller\CreateController'
             => 'PrivateDevTools\Controller\CreateController',
             'PluginProxyController' => 'Rcm\Controller\PluginProxyController',
-            'Rcm\Controller\InstallController'
-            => 'Rcm\Controller\InstallController',
         ),
     ),
 
@@ -572,7 +570,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm/install',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\InstallController',
+                        'controller' => 'rcmInstallController',
                         'action' => 'index',
                     )
                 ),

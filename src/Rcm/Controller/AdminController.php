@@ -533,7 +533,7 @@ class AdminController extends BaseController
 
             $this->entityMgr->flush();
 
-            $this->savePlugin(
+            $this->pluginManager->savePlugin(
                 $newPluginInstance->getInstance(),
                 $data['pluginData']
             );

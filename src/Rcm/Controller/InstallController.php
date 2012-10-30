@@ -269,7 +269,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
      * Creates a plugin instance for plugins that have controllers that extend
      * \RcmJsonDataPluginToolkit\JsonContentController
      *
-     * @param int    $pluginName
+     * @param string    $pluginName
      * @param array  $jsonContent
      * @param int    $container
      * @param int    $renderOrder
