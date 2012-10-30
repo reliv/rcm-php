@@ -1,9 +1,9 @@
 <?php
 
-namespace Rcm\Model\UserManagement;
+namespace Rcm\UserManagement;
 
-class DoctrineUserManager extends \Rcm\Model\FactoryAbstract
-    implements UserManagementInterface
+class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
+    implements UserManagerInterface
 {
     protected $session;
 
@@ -22,7 +22,7 @@ class DoctrineUserManager extends \Rcm\Model\FactoryAbstract
     {
         if (!empty($this->session->loggedInUser)) {
 
-            $person = $this->getEm()->getRepository('\Rcm\Entity\User')
+            $person = $this->entityMgr->getRepository('\Rcm\Entity\User')
                 ->findOneByUserId($this->session->loggedInUser);
 
             return $person;
@@ -33,7 +33,7 @@ class DoctrineUserManager extends \Rcm\Model\FactoryAbstract
 
     public function login($email, $password)
     {
-        $person = $this->getEm()->getRepository('\Rcm\Entity\User')
+        $person = $this->entityMgr->getRepository('\Rcm\Entity\User')
             ->findOneBy(
             array(
                 'email' => $email,
@@ -58,7 +58,7 @@ class DoctrineUserManager extends \Rcm\Model\FactoryAbstract
         $person = new \Rcm\Entity\User();
         $person->setEmail($email);
         $person->setPassword($password, $this->cypher);
-        $this->getEm()->persist($person);
-        $this->getEm()->flush();
+        $this->entityMgr->persist($person);
+        $this->entityMgr->flush();
     }
 }

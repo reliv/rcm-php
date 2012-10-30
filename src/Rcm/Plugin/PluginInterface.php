@@ -16,7 +16,7 @@
  * @version   GIT: <git_id>
  * @link      http://ci.reliv.com/confluence
  */
-namespace Rcm\Controller;
+namespace Rcm\Plugin;
 /**
  * Plugin Controller Interface
  *
