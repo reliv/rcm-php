@@ -156,6 +156,15 @@ class Module
                     );
                     return $controller;
                 },
+                'rcmPluginProxyController' => function($controllerMgr) {
+                    $serviceMgr=$controllerMgr->getServiceLocator();
+                    $controller = new \Rcm\Controller\PluginProxyController(
+                        $serviceMgr->get('rcmUserManager'),
+                        $serviceMgr->get('rcmPluginManager'),
+                        $serviceMgr->get('em')
+                    );
+                    return $controller;
+                },
                 'rcmInstallController' => function($controllerMgr) {
                     $serviceMgr=$controllerMgr->getServiceLocator();
                     $controller =

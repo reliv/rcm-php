@@ -169,6 +169,7 @@ class PluginManager
 
         $pluginName = $instance->getName();
 
+        $config=$this->config;
 
         if (isset($config['rcmPlugin'][$pluginName]['editJs'])) {
             $instance->setAdminEditJs(

@@ -374,15 +374,6 @@ return array(
         ),
     ),
 
-
-    'controllers' => array(
-        'invokables' => array(
-            'PrivateDevTools\Controller\CreateController'
-            => 'PrivateDevTools\Controller\CreateController',
-            'PluginProxyController' => 'Rcm\Controller\PluginProxyController',
-        ),
-    ),
-
     'router' => array(
         'routes' => array(
             'contentManager' => array(
@@ -490,7 +481,7 @@ return array(
                     'route' =>
                     '/rmc-plugin-admin-proxy/:pluginName/:instanceId/:pluginActionName',
                     'defaults' => array(
-                        'controller' => 'PluginProxyController',
+                        'controller' => 'rcmPluginProxyController',
                         'action' => 'adminProxy',
                     )
                 ),
@@ -502,7 +493,7 @@ return array(
                     'route' =>
                     '/plugin-ajax-proxy/:pluginName/:instanceId/:pluginActionName',
                     'defaults' => array(
-                        'controller' =>'PluginProxyController',
+                        'controller' =>'rcmPluginProxyController',
                         'action' => 'ajaxProxy',
                     )
                 ),

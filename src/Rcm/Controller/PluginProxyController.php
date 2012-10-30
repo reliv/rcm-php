@@ -58,7 +58,8 @@ class PluginProxyController extends BaseController
         /**
          * @var \Zend\View\Model\ViewModel | \Zend\Http\Response
          */
-        $actionResponse = $this->callPlugin($instance, $action.'AdminAjaxAction');
+        $actionResponse = $this->pluginManager
+            ->callPlugin($instance, $action.'AdminAjaxAction');
 
         return $actionResponse;
     }
@@ -80,7 +81,8 @@ class PluginProxyController extends BaseController
             return false;
         }
 
-        $view = $this->callPlugin($instance, $action.'AjaxAction');
+        $view = $this->pluginManager
+            ->callPlugin($instance, $action.'AjaxAction');
 
         exit($view->content);
     }
