@@ -120,7 +120,7 @@ class PluginProxyController extends BaseController
             $instance->setInstanceId($instanceId);
             $instance->setPlugin($pluginName);
         } else {
-            $instance = $this->getEm()
+            $instance = $this->entityMgr
                 ->getRepository('\Rcm\Entity\PluginInstance')
                 ->findOneByInstanceId($instanceId);
         }

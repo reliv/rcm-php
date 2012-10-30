@@ -142,18 +142,18 @@ class Module
                         $serviceMgr=$controllerMgr->getServiceLocator();
                         $controller = new \Rcm\Controller\IndexController(
                             $serviceMgr->get('rcmUserManager'),
-                            $serviceMgr->get('rcmPluginManager')
+                            $serviceMgr->get('rcmPluginManager'),
+                            $serviceMgr->get('em')
                         );
-                        $controller->setEm($serviceMgr->get('em'));
                     return $controller;
                 },
                 'rcmAdminController' => function($controllerMgr) {
                     $serviceMgr=$controllerMgr->getServiceLocator();
                     $controller = new \Rcm\Controller\AdminController(
                         $serviceMgr->get('rcmUserManager'),
-                        $serviceMgr->get('rcmPluginManager')
+                        $serviceMgr->get('rcmPluginManager'),
+                        $serviceMgr->get('em')
                     );
-                    $controller->setEm($serviceMgr->get('em'));
                     return $controller;
                 },
             )

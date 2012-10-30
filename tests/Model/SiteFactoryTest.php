@@ -13,7 +13,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
      */
     protected $SiteFactory;
 
-    protected $entityManagerMock;
+    protected $entityMgrMock;
 
     protected $languageData;
 
@@ -36,7 +36,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
         $language = $site->getLanguage();
         $domain = $site->getDomain();
 
-        $entityManagerMockParams = array(
+        $entityMgrMockParams = array(
             '\Rcm\Entity\Language' => array(
                 'findOneBy' => $language
             ),
@@ -51,8 +51,8 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
         );
 
         $this->SiteFactory = new SiteFactory;
-        $this->entityManagerMock = $this->getEmMock(
-            $entityManagerMockParams
+        $this->entityMgrMock = $this->getEmMock(
+            $entityMgrMockParams
         );
     }
 
@@ -67,16 +67,16 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
     /**
      * @covers Rcm\Model\SiteFactory::getEm
      * @covers Rcm\Model\SiteFactory::setEm
-     * @covers Rcm\Model\FactoryAbstract::getEm
-     * @covers Rcm\Model\FactoryAbstract::setEm
+     * @covers Rcm\Model\EntityMgrAware::getEm
+     * @covers Rcm\Model\EntityMgrAware::setEm
      */
     public function testGetAndSetEntityManager()
     {
-        $this->SiteFactory->setEm($this->entityManagerMock);
+        $this->SiteFactory->setEm($this->entityMgrMock);
 
         $this->assertInstanceOf(
             '\Doctrine\ORM\EntityManager',
-            $this->SiteFactory->getEm()
+            $this->SiteFactory->entityMgr
         );
     }
 
@@ -85,7 +85,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
      */
     public function testGetLanguageWithThreeDigits()
     {
-        $this->SiteFactory->setEm($this->entityManagerMock);
+        $this->SiteFactory->setEm($this->entityMgrMock);
 
         $language = $this->SiteFactory->getLanguage(
             $this->languageData['iso6392t']
@@ -107,7 +107,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
      */
     public function testGetLanguageWithTwoDigits()
     {
-        $this->SiteFactory->setEm($this->entityManagerMock);
+        $this->SiteFactory->setEm($this->entityMgrMock);
 
         $language = $this->SiteFactory->getLanguage(
             $this->languageData['iso6391']
@@ -131,14 +131,14 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
      */
     public function testNotFoundInGetLanguage()
     {
-        $entityManagerMockParams = array(
+        $entityMgrMockParams = array(
             '\Rcm\Entity\Language' => array(
                 'findOneBy' => null
             ),
         );
 
         $em = $this->getEmMock(
-            $entityManagerMockParams
+            $entityMgrMockParams
         );
 
         $this->SiteFactory->setEm($em);
@@ -166,14 +166,14 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
      */
     public function testExceptionForNoDomainFoundInGetDomain()
     {
-        $entityManagerMockParams = array(
+        $entityMgrMockParams = array(
             '\Rcm\Entity\Domain' => array(
                 'findOneBy' => null
             ),
         );
 
         $em = $this->getEmMock(
-            $entityManagerMockParams
+            $entityMgrMockParams
         );
 
         $this->SiteFactory->setEm($em);
@@ -186,7 +186,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
      */
     public function testGetDomain()
     {
-        $this->SiteFactory->setEm($this->entityManagerMock);
+        $this->SiteFactory->setEm($this->entityMgrMock);
 
         $domains = $this->SiteFactory->getDomain(
             $this->domainData['domainName']
@@ -231,7 +231,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
         $domain->setPrimary($primaryDomain);
 
 
-        $entityManagerMockParams = array(
+        $entityMgrMockParams = array(
             '\Rcm\Entity\Language' => array(
                 'findOneBy' => $language
             ),
@@ -242,7 +242,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
         );
 
         $em = $this->getEmMock(
-            $entityManagerMockParams
+            $entityMgrMockParams
         );
 
         $this->SiteFactory->setEm($em);
@@ -268,7 +268,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
     public function testGetSite()
     {
         $site = $this->getSiteEntityForTests();
-        $this->SiteFactory->setEm($this->entityManagerMock);
+        $this->SiteFactory->setEm($this->entityMgrMock);
 
         $returnedSite = $this->SiteFactory->getSite(
             $site->getDomain()->getDomainName(),
@@ -297,7 +297,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
         $language = $site->getLanguage();
         $domain = $site->getDomain();
 
-        $entityManagerMockParams = array(
+        $entityMgrMockParams = array(
             '\Rcm\Entity\Language' => array(
                 'findOneBy' => null
             ),
@@ -312,7 +312,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
         );
 
         $em = $this->getEmMock(
-            $entityManagerMockParams
+            $entityMgrMockParams
         );
 
         $this->SiteFactory->setEm($em);
@@ -346,7 +346,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
         $language = $site->getLanguage();
         $domain = $site->getDomain();
 
-        $entityManagerMockParams = array(
+        $entityMgrMockParams = array(
             '\Rcm\Entity\Language' => array(
                 'findOneBy' => null
             ),
@@ -361,7 +361,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
         );
 
         $em = $this->getEmMock(
-            $entityManagerMockParams
+            $entityMgrMockParams
         );
 
         $this->SiteFactory->setEm($em);
@@ -378,7 +378,7 @@ class SiteFactoryTest extends \Rcm\Base\BaseSite
     public function testCreateNewSite()
     {
         $site = $this->getSiteEntityForTests();
-        $this->SiteFactory->setEm($this->entityManagerMock);
+        $this->SiteFactory->setEm($this->entityMgrMock);
 
         $additionalDomains = $site->getDomain()->getAdditionalDomains();
 

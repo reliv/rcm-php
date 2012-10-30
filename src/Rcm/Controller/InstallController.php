@@ -5,7 +5,7 @@ namespace Rcm\Controller;
 use \RcmJsonDataPluginToolkit\Entity\JsonContent as JsonContent;
 
 
-class InstallController extends \Rcm\Controller\BaseController
+class InstallController extends \Rcm\Controller\EntityMgrAwareController
 {
     protected $instances = array();
     protected $siteWideInstances = array();
@@ -13,6 +13,16 @@ class InstallController extends \Rcm\Controller\BaseController
      * @var \Rcm\Entity\Site
      */
     private $site=null;
+
+    protected $pluginManager;
+
+    function __construct(
+        \Rcm\Model\PluginManager $pluginManager,
+        \Doctrine\ORM\EntityManager $entityMgr
+    ) {
+        parent::__construct($entityMgr);
+        $this->pluginManager=$pluginManager;
+    }
 
     public function indexAction()
     {
@@ -23,8 +33,8 @@ class InstallController extends \Rcm\Controller\BaseController
 
         $this->initializeDatabase(true);
 
-        $countryRepo = $this->getEm()->getRepository('\Rcm\Entity\Country');
-        $languageRepo = $this->getEm()->getRepository('\Rcm\Entity\Language');
+        $countryRepo = $this->entityMgr->getRepository('\Rcm\Entity\Country');
+        $languageRepo = $this->entityMgr->getRepository('\Rcm\Entity\Language');
 
         /** @var \Rcm\Entity\Country $country  */
         $country = $countryRepo->find('USA');
@@ -46,7 +56,7 @@ class InstallController extends \Rcm\Controller\BaseController
             'Smith',
             'johnsmith@johnsmith.johnsmith'
         );*/
-        $this->getEm()->flush();
+        $this->entityMgr->flush();
 
 
         $view = new \Zend\View\Model\ViewModel(
@@ -86,12 +96,17 @@ class InstallController extends \Rcm\Controller\BaseController
     }
 
     function getDefaultHtmlAreaContent(){
+        return $this->readDefaultJsonFile(
+            'vendor/reliv/RcmPlugins/RcmHtmlArea/'
+        );
+    }
+
+    function readDefaultJsonFile($pluginPath){
         return json_decode(
             file_get_contents(
-                'vendor/reliv/RcmPlugins/RcmHtmlArea/config/'
-                    .'default.content.json'
-            )
-        );
+                $pluginPath.'/config/default.content.json'
+                )
+            );
     }
 
     function createHomePage(){
@@ -227,21 +242,6 @@ class InstallController extends \Rcm\Controller\BaseController
         $this->createContactPage();
     }
 
-    /**
-     * Set the Doctorine or DB EntityManager.  Use Service Manager to inject
-     * instance.
-     */
-    public function getEm()
-    {
-        if (null === $this->entityManager) {
-            $this->entityManager
-                = $this->getServiceLocator()->get(
-                'doctrine.entitymanager.orm_default'
-            );
-        }
-        return $this->entityManager;
-    }
-
     /*
     * Runs all sql files in the given folder.
     * SQL Queries must end with ;\n for this to work
@@ -250,7 +250,7 @@ class InstallController extends \Rcm\Controller\BaseController
     */
     function runAllSqlFilesInDir($directory)
     {
-        $conn = $this->getEm()->getConnection();
+        $conn = $this->entityMgr->getConnection();
         $path = __DIR__;
         $path .= $directory;
         $dir = openDir($path);
@@ -279,14 +279,9 @@ class InstallController extends \Rcm\Controller\BaseController
      * @return null
      */
     function createJsonInstance(
-        $pluginName, $jsonContent=null, $container, $renderOrder = 0, $siteWide = false, $siteWidePluginName = ''
+        $pluginName, $jsonContent, $container, $renderOrder = 0, $siteWide = false, $siteWidePluginName = ''
     ){
-        if(empty($jsonContent)){
-            $controllerClass = '\\'.$pluginName.'\\Controller\\PluginController';
-            $pluginController=new $controllerClass();
-            $jsonContent=$pluginController->getDefaultJsonContent();
-        }
-        $this->getEm()->persist(
+        $this->entityMgr->persist(
             New JsonContent(
                 $this->createInstance(
                     $pluginName,
@@ -334,9 +329,9 @@ class InstallController extends \Rcm\Controller\BaseController
             $instance->setDisplayName($siteWidePluginName);
         }
 
-        $this->getEm()->persist($pageInstance);
-        $this->getEm()->persist($instance);
-        $this->getEm()->flush();
+        $this->entityMgr->persist($pageInstance);
+        $this->entityMgr->persist($instance);
+        $this->entityMgr->flush();
         return $instance->getInstanceId();
     }
 
@@ -346,7 +341,7 @@ class InstallController extends \Rcm\Controller\BaseController
      * @return null
      */
     function dropDatabase(){
-        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->getEm());
+        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityMgr);
         $schemaTool->dropDatabase();
     }
 
@@ -357,9 +352,9 @@ class InstallController extends \Rcm\Controller\BaseController
      * @return null
      */
     function buildDatabase(){
-        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->getEm());
+        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityMgr);
         $schemaTool->createSchema(
-            $this->getEm()->getMetadataFactory()->getAllMetadata()
+            $this->entityMgr->getMetadataFactory()->getAllMetadata()
         );
 
     }
@@ -390,8 +385,8 @@ class InstallController extends \Rcm\Controller\BaseController
         $lastName,
         $email
     ) {
-        $entityManager = $this->getEm();
-        $postCodeRepo = $entityManager->getRepository(
+        $entityMgr = $this->entityMgr;
+        $postCodeRepo = $entityMgr->getRepository(
             '\Rcm\Entity\PostalCode'
         );
 

@@ -49,7 +49,7 @@ class AdminController extends BaseController
         $pageUrl = $this->getRequest()->getQuery()->get('pageUrl');
         $pageUrl = urlencode($pageUrl);
 
-        $em = $this->getEm();
+        $em = $this->entityMgr;
         $repo = $em->getRepository("\Rcm\Entity\Page");
         $page = $this->siteInfo->getPageByName($pageUrl);
 
@@ -73,7 +73,7 @@ class AdminController extends BaseController
         $instance = new \Rcm\Entity\PluginInstance();
         $instance->setPlugin($pluginType);
         $instance->setInstanceId(-1);
-        $this->prepPluginInstance($instance);
+        $this->pluginManager->prepPluginInstance($instance, $this->getEvent());
 
         $instance->getView();
         $this->view->setVariable('newInstance', $instance);
@@ -104,7 +104,7 @@ class AdminController extends BaseController
     public function publishPageAction()
     {
         $this->adminSaveInit();
-        $entityManager=$this->getEm();
+        $entityMgr=$this->entityMgr;
 
         $this->page->setCurrentRevision($this->pageRevision);
 
@@ -113,12 +113,12 @@ class AdminController extends BaseController
         if (!empty($staged)) {
             $staged->unStageRevision();
             $this->page->removedStagedRevistion();
-            $entityManager->persist($staged);
+            $entityMgr->persist($staged);
         }
 
 
-        $entityManager->persist($this->page);
-        $entityManager->flush();
+        $entityMgr->persist($this->page);
+        $entityMgr->flush();
 
 
         return $this->redirect()->toRoute(
@@ -134,7 +134,7 @@ class AdminController extends BaseController
     {
         $this->adminSaveInit();
 
-        $entityManager=$this->getEm();
+        $entityMgr=$this->entityMgr;
 
         /** @var \Rcm\Entity\Page $page  */
         $page = $this->page;
@@ -144,14 +144,14 @@ class AdminController extends BaseController
 
         if (!empty($oldStagedRevision)) {
             $oldStagedRevision->unStageRevision();
-            $entityManager->persist($oldStagedRevision);
+            $entityMgr->persist($oldStagedRevision);
         }
 
         $page->setStagedRevision($this->pageRevision);
 
 
-        $entityManager->persist($page);
-        $entityManager->flush();
+        $entityMgr->persist($page);
+        $entityMgr->flush();
 
 
         return $this->redirect()->toRoute(
@@ -180,7 +180,7 @@ class AdminController extends BaseController
             exit;
         }
 
-        $em = $this->getEm();
+        $em = $this->entityMgr;
         $page = $this->siteInfo->getPageByName($pageUrl);
 
         if (!empty($page)) {
@@ -190,7 +190,7 @@ class AdminController extends BaseController
         }
 
         $pageManager = new \Rcm\Model\PageFactory();
-        $pageManager->setEm($this->getEm());
+        $pageManager->setEm($this->entityMgr);
         $pageManager->createPage(
             $pageUrl,
             $this->loggedInUser->getFullName(),
@@ -238,7 +238,7 @@ class AdminController extends BaseController
         $this->ensureAdminIsLoggedIn();
         $config = $this->getConfig();
         $pageManager = new \Rcm\Model\PageFactory();
-        $pageManager->setEm($this->getEm());
+        $pageManager->setEm($this->entityMgr);
 
         $errors = $config['reliv']['saveAsTemplateErrors'];
 
@@ -248,7 +248,7 @@ class AdminController extends BaseController
             exit;
         }
 
-        $em = $this->getEm();
+        $em = $this->entityMgr;
         $page = $this->siteInfo->getPageByName($pageUrl);
 
         if (!empty($page)) {
@@ -350,7 +350,7 @@ class AdminController extends BaseController
         }
 
         $assets=array();
-        $em = $entityManager;
+        $em = $entityMgr;
 
         foreach($postedAssets as $url){
             $url=strtolower($url);
@@ -377,7 +377,7 @@ class AdminController extends BaseController
                 //Add our current plugin instance to the asset
                 $assets[$url]->addPluginInstance($newInstance);
 
-                $entityManager->persist($assets[$url]);
+                $entityMgr->persist($assets[$url]);
             }
         }
 
@@ -405,9 +405,9 @@ class AdminController extends BaseController
         }
 
         if ($newRev->getIsDirty()) {
-            $entityManager=$this->getEm();
-            $entityManager->persist($newRev);
-            $entityManager->flush();
+            $entityMgr=$this->entityMgr;
+            $entityMgr->persist($newRev);
+            $entityMgr->flush();
             return $newRev;
         } else {
             return $this->pageRevision;
@@ -450,7 +450,7 @@ class AdminController extends BaseController
     ) {
 
         //Get Entity Manager
-        $entityManager = $this->getEm();
+        $entityMgr = $this->entityMgr;
 
         //Get Current Page Revision
         $pageRev = $this->pageRevision;
@@ -465,7 +465,7 @@ class AdminController extends BaseController
             $currentInstance = $pageRev->getInstanceById($instanceId);
 
             if (empty($currentInstance)) {
-                $repo = $entityManager->getRepository('\Rcm\Entity\PluginInstance');
+                $repo = $entityMgr->getRepository('\Rcm\Entity\PluginInstance');
                 $actual = $repo->findOneBy(array('instanceId' => $instanceId));
                 $currentInstance = $this->processNewPostedInstance($data);
                 $currentInstance->setInstance($actual);
@@ -528,10 +528,10 @@ class AdminController extends BaseController
             $newPluginInstance->getInstance()
                 ->setPreviousEntity($currentInstance->getInstance());
 
-            $this->entityManager->persist($newPluginInstance);
-            $this->entityManager->persist($newPluginInstance->getInstance());
+            $this->entityMgr->persist($newPluginInstance);
+            $this->entityMgr->persist($newPluginInstance->getInstance());
 
-            $this->entityManager->flush();
+            $this->entityMgr->flush();
 
             $this->savePlugin(
                 $newPluginInstance->getInstance(),
@@ -545,13 +545,13 @@ class AdminController extends BaseController
             && $instanceDirty === true
         ) {
 
-            $entityManager->getConnection()->update(
+            $entityMgr->getConnection()->update(
                 'rcm_page_plugin_instances',
                 array('instance_id' => $newPluginInstance->getInstanceId()),
                 array('instance_id' => $currentInstance->getInstanceId())
             );
 
-            $entityManager->getConnection()->update(
+            $entityMgr->getConnection()->update(
                 'rcm_sites_instances',
                 array('instance_id' => $newPluginInstance->getInstanceId()),
                 array('instance_id' => $currentInstance->getInstanceId())
@@ -562,8 +562,8 @@ class AdminController extends BaseController
 
         }
 
-        $this->entityManager->persist($newPluginInstance);
-        $this->entityManager->persist($newPluginInstance->getInstance());
+        $this->entityMgr->persist($newPluginInstance);
+        $this->entityMgr->persist($newPluginInstance->getInstance());
 
         if ($instanceDirty === false) {
             $newRev->addInstance($currentInstance);

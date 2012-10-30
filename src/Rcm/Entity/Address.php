@@ -134,9 +134,9 @@ class Address
 
     public function setZipFromInt(
         $postalCode,
-        \Doctrine\ORM\EntityManager $entityManager
+        \Doctrine\ORM\EntityManager $entityMgr
     ){
-        $zip = $entityManager->getRepository('\Rcm\Entity\PostalCode')
+        $zip = $entityMgr->getRepository('\Rcm\Entity\PostalCode')
             ->findOneByPostalCode($postalCode);
         if(!$zip){
             throw new InvalidArgumentException();
@@ -146,9 +146,9 @@ class Address
 
     public function setCountryFromIso3(
         $iso3,
-        \Doctrine\ORM\EntityManager $entityManager
+        \Doctrine\ORM\EntityManager $entityMgr
     ) {
-        $country = $entityManager->getRepository('\Rcm\Entity\Country')
+        $country = $entityMgr->getRepository('\Rcm\Entity\Country')
             ->find($iso3);
         if(!$country){
             throw new InvalidArgumentException();

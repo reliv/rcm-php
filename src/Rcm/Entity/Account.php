@@ -46,6 +46,16 @@ class Account
         return $this->people;
     }
 
+    public function setUsers($users)
+    {
+        $this->users = $users;
+    }
+
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
     /**
      * Sets the AccountNumber property
      *

@@ -380,12 +380,8 @@ return array(
             'PrivateDevTools\Controller\CreateController'
             => 'PrivateDevTools\Controller\CreateController',
             'PluginProxyController' => 'Rcm\Controller\PluginProxyController',
-            'Rcm\Controller\AdminController'
-            => 'Rcm\Controller\AdminController',
             'Rcm\Controller\InstallController'
             => 'Rcm\Controller\InstallController',
-            'Rcm\Controller\IndexController'
-            =>'Rcm\Controller\IndexController'
         ),
     ),
 
@@ -396,7 +392,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm[/:page][/:language][/:revision]',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\IndexController',
+                        'controller' => 'rcmIndexController',
                         'action' => 'index',
                     )
                 ),
@@ -407,7 +403,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-save/:page/:language/:revision',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\AdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'savePage',
                     ),
                 ),
@@ -418,7 +414,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-get-instance[/:type]',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\AdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'getNewInstance',
                     ),
                 ),
@@ -429,7 +425,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-checkpage/:language',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\AdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'checkPageNameJson',
                     ),
                 ),
@@ -440,7 +436,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-create-blank-page/:language',
                     'defaults' => array(
-                        'controller'=> 'Rcm\Controller\AdminController',
+                        'controller'=> 'rcmAdminController',
                         'action' => 'createBlankPage',
                     ),
                 ),
@@ -451,7 +447,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-create-from-template/:language',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\AdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'newFromTemplate',
                     ),
                 ),
@@ -462,7 +458,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-save-as-template/:language',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\AdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'saveAsTemplate',
                     ),
                 ),
@@ -473,7 +469,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-publish/:page/:language/:revision',
                     'defaults' => array(
-                        'controller'=> 'Rcm\Controller\AdminController',
+                        'controller'=> 'rcmAdminController',
                         'action' => 'publishPage',
                     ),
                 ),
@@ -484,7 +480,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-stage/:page/:language/:revision',
                     'defaults' => array(
-                        'controller'=> 'Rcm\Controller\AdminController',
+                        'controller'=> 'rcmAdminController',
                         'action' => 'stagePage',
                     ),
                 ),
@@ -542,7 +538,7 @@ return array(
                 'options' => array(
                     'route' => '/blog[/:page[/:language]]',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\IndexController',
+                        'controller' => 'rcmIndexController',
                         'action' => 'index',
                     )
                 ),

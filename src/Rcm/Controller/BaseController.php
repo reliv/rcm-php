@@ -23,8 +23,6 @@
 
 namespace Rcm\Controller;
 
-use Rcm\Model\SiteFactory;
-
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Doctrine\ORM\EntityManager;
@@ -46,13 +44,8 @@ use Doctrine\ORM\EntityManager;
  * @link      http://ci.reliv.com/confluence
  *
  */
-class BaseController extends \Zend\Mvc\Controller\AbstractActionController
+class BaseController extends \Rcm\Controller\EntityMgrAwareController
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $entityManager;
-
     /**
      * @var \Rcm\Entity\Site
      */
@@ -60,9 +53,19 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
     protected $config;
 
     /**
-     * @var \RcmLogin\Entity\User
+     * @var \Rcm\Model\PluginManager
+     */
+    protected $pluginManager;
+
+    /**
+     * @var \Rcm\Entity\User
      */
     protected $loggedInUser;
+
+    /**
+     * @var \Rcm\Entity\AdminPermissions
+     */
+    protected $loggedInAdminPermissions;
 
     /** @var \Rcm\Entity\Page $page */
     protected $page;
@@ -71,6 +74,31 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
      * @var \Zend\View\Model\ViewModel Zend View Model
      */
     protected $view;
+
+    /**
+     * @param \Rcm\Model\PluginManager $pluginManager
+     * @param \Rcm\Entity\User         $loggedInUser
+     * @param \Rcm\Entity\AdminPermissions  $loggedInAdminPermissions
+     */
+    function __construct(
+        \Rcm\UserManagement\UserManagerInterface $userMgr,
+        \Rcm\Model\PluginManager $pluginManager,
+        EntityManager $entityMgr
+    ) {
+        parent::__construct($entityMgr);
+        $this->loggedInUser=$userMgr->getLoggedInUser();
+        $this->loggedInAdminPermissions=$userMgr->getLoggedInAdminPermissions();
+        $this->pluginManager=$pluginManager;
+    }
+
+    /**
+     * @return bool
+     */
+    function adminIsLoggedIn(){
+        return is_a(
+            $this->loggedInAdminPermissions,'\Rcm\Entity\AdminPermissions'
+        );
+    }
 
     /**
      * This function put the environment together.
@@ -91,14 +119,6 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
         if (!$this->isRequestDomainPrimary($domain)) {
             return $this->redirectToPrimary($domain);
         }
-
-        /** @var \RcmLogin\Model\UserManagement\UserManagementInterface $userManager  */
-        $userManager = $this->getServiceLocator()->get('rcmUserManager');
-
-        if (!empty($userManager)) {
-            $this->loggedInUser = $userManager->getLoggedInUser();
-        }
-
     }
 
     /**
@@ -132,35 +152,6 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
         }
 
         return $this->config;
-    }
-
-    /**
-     * Gets the doctrine entity manager
-     *
-     * @return \Doctrine\ORM\EntityManager
-     */
-    public function getEm()
-    {
-        $emClass = 'Doctrine\ORM\EntityManager';
-
-        //If the entity manger was not injected, go get it.
-        if (!is_a($this->entityManager, $emClass)) {
-            $this->entityManager = $this->getServiceLocator()->get($emClass);
-        }
-
-        return $this->entityManager;
-    }
-
-    /**
-     * Sets the doctrine entity manager - this is used for testing only
-     *
-     * @param $entityManager \Doctrine\ORM\EntityManager doctrine entity manager
-     *
-     * @return null
-     */
-    function setEm($entityManager)
-    {
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -237,164 +228,6 @@ class BaseController extends \Zend\Mvc\Controller\AbstractActionController
                 $language
             );
         }
-    }
-
-    /**
-     * Prep a plugin instance to be passed to the View layer
-     *
-     * @param \Rcm\Entity\PluginInstance $instance plugin Instance
-     *
-     * @return \Rcm\Entity\PluginInstance $instance plugin Instance
-     * @throws \Exception
-     */
-    protected function prepPluginInstance(
-        \Rcm\Entity\PluginInstance $instance
-    )
-    {
-        $this->loadPlugin($instance);
-
-        $config = $this->getServiceLocator()->get('config');
-
-        $pluginName = $instance->getName();
-
-
-        if (isset($config['rcmPlugin'][$pluginName]['editJs'])) {
-            $instance->setAdminEditJs(
-                $config['rcmPlugin'][$pluginName]['editJs']
-            );
-        }
-
-        if (isset($config['rcmPlugin'][$pluginName]['editCss'])) {
-            $instance->setAdminEditCss(
-                $config['rcmPlugin'][$pluginName]['editCss']
-            );
-        }
-
-        if (isset($config['rcmPlugin'][$pluginName]['display'])
-            && !$instance->isSiteWide()
-        ) {
-            $instance->setDisplayName(
-                $config['rcmPlugin'][$pluginName]['display']
-            );
-        }
-
-        if (isset($config['rcmPlugin'][$pluginName]['tooltip'])) {
-            $instance->setTooltip($config['rcmPlugin'][$pluginName]['tooltip']);
-        }
-
-        if (isset($config['rcmPlugin'][$pluginName]['icon'])) {
-            $instance->setIcon($config['rcmPlugin'][$pluginName]['icon']);
-        }
-
-        return $instance;
-    }
-
-    public function loadPlugin(
-        \Rcm\Entity\PluginInstance $instance
-    )
-    {
-        if ($instance->getInstanceId() < 0) {
-            $view = $this->callPlugin(
-                $instance,
-                'renderDefaultInstance'
-            );
-        } else {
-            $view = $this->callPlugin(
-                $instance,
-                'renderInstance'
-            );
-        }
-
-        $instance->setViewModel($view);
-    }
-
-    public function savePlugin(
-        \Rcm\Entity\PluginInstance $instance,
-        $dataToSave
-    )
-    {
-        $this->callPlugin(
-            $instance,
-            'saveInstance',
-            $dataToSave
-        );
-    }
-
-
-    public function callPlugin(
-        \Rcm\Entity\PluginInstance $instance,
-        $action,
-        $dataToPass = array()
-    )
-    {
-
-        $pluginName = $instance->getName();
-
-        if (!$this->moduleIsLoaded($pluginName)) {
-            throw new \Exception(
-                "Plugin $pluginName is not loaded or configured. Check
-                config/application.config.php"
-            );
-        }
-
-        $pluginController = $this->getPluginController($pluginName);
-
-        if (empty($dataToPass)) {
-            return $pluginController->{$action}($instance->getInstanceId());
-        }
-
-        return $pluginController->{$action}(
-            $instance->getInstanceId(), $dataToPass
-        );
-    }
-
-    /**
-     * Gets cached plugin controller. Creates one if not in cache
-     * @param $pluginName
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    function getPluginController($pluginName)
-    {
-        //Load the plugin controller
-        $pluginController = $this->serviceLocator->get($pluginName);
-
-        //Plugin controllers must implement this interface
-        if (!$pluginController instanceof \Rcm\Controller\PluginInterface) {
-            throw new \Exception(
-                'Class "' . get_class($pluginController) . '" for plugin "'
-                    . $pluginName . '" does not implement '
-                    . '\Rcm\Controller\PluginInterface'
-            );
-        }
-
-        //If the plugin controller can accept a ZF2 event, pass it
-        if (method_exists($pluginController, 'setEvent')) {
-            $pluginController->setEvent($this->getEvent());
-        }
-
-        return $pluginController;
-    }
-
-    function moduleIsLoaded($moduleName)
-    {
-        $moduleManager = $this->getServiceLocator()->get('modulemanager');
-
-        $loadedModules = $moduleManager->getLoadedModules();
-
-        return isset($loadedModules[$moduleName]);
-    }
-
-    /**
-     * @TODO FIX THIS
-     */
-    function adminIsLoggedIn()
-    {
-        return true;
-        /*return $this->loggedInUser
-            && is_a($this->loggedInUser->getAdminInfo(),'\RcmLogin\Entity\AdminUser')
-            && $this->loggedInUser->getAdminInfo()->isAdmin();*/
     }
 
     function ensureAdminIsLoggedIn()

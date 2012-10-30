@@ -63,6 +63,12 @@ class AdminPermissions
     protected $user;
 
     /**
+     * @var $accountNumber string
+     * @ORM\Column(type="string")
+     */
+    protected $accountNumber;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Rcm\Entity\Site")
      * @ORM\JoinTable(
      *     name="rcm_admin_allowed_sites",

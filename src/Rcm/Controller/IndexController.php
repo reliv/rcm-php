@@ -119,9 +119,11 @@ class IndexController extends \Rcm\Controller\BaseController
             foreach ($pageInstances as $container => $ordered) {
                 /** @var \Rcm\Entity\PagePluginInstance $instance */
                 foreach ($ordered as $order => $instance) {
-                    $plugins[$container][$order] = $this->prepPluginInstance(
-                        $instance->getInstance()
-                    );
+                    $plugins[$container][$order] = $this
+                        ->pluginManager->prepPluginInstance(
+                            $instance->getInstance(),
+                            $this->getEvent()
+                        );
                 }
             }
         }
@@ -299,7 +301,7 @@ class IndexController extends \Rcm\Controller\BaseController
             $instance = new \Rcm\Entity\PluginInstance();
             $instance->setPlugin($pluginName);
             $instance->setInstanceId($this->pluginCount);
-            $this->prepPluginInstance($instance);
+            $this->pluginManager->prepPluginInstance($instance, $this->getEvent());
 
             $return[$plugin['type']][$pluginName] = $instance;
         }
@@ -326,7 +328,7 @@ class IndexController extends \Rcm\Controller\BaseController
             if (!empty($instanceCheck)) {
                 $instance->setOnPage(true);
             } else {
-                $this->prepPluginInstance($instance);
+                $this->pluginManager->prepPluginInstance($instance, $this->getEvent());
             }
 
             $return[] = $instance;
@@ -474,7 +476,7 @@ class IndexController extends \Rcm\Controller\BaseController
     }
 
     protected function getTemplates() {
-        $em = $this->getEm();
+        $em = $this->entityMgr;
         $repo = $em->getRepository('\Rcm\Entity\Page');
 
         $templates = $repo->findBy(

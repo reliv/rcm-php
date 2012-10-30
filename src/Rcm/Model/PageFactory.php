@@ -19,7 +19,7 @@
  */
 namespace Rcm\Model;
 
-use Rcm\Model\FactoryAbstract,
+use Rcm\Model\EntityMgrAware,
     Zend\View\Helper\ViewModel,
     Doctrine\ORM\EntityManager,
     Rcm\Entity\Site;
@@ -42,7 +42,7 @@ use Rcm\Model\FactoryAbstract,
  * @link      http://ci.reliv.com/confluence
  */
 
-class PageFactory extends FactoryAbstract
+class PageFactory extends EntityMgrAware
 {
 
 
@@ -71,7 +71,7 @@ class PageFactory extends FactoryAbstract
         $plugins='',
         $template=false
     ) {
-        $entityManager = $this->getEm();
+        $entityMgr = $this->entityMgr;
 
         $page = new \Rcm\Entity\Page();
         $page->setName($name);
@@ -102,11 +102,11 @@ class PageFactory extends FactoryAbstract
         
         $baseSite->addPage($page);
 
-        $entityManager->persist($baseSite);
-        $entityManager->persist($pageRevision);
-        $entityManager->persist($page);
+        $entityMgr->persist($baseSite);
+        $entityMgr->persist($pageRevision);
+        $entityMgr->persist($page);
         
-        $entityManager->flush();
+        $entityMgr->flush();
 
         return $page;
     }

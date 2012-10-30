@@ -20,7 +20,7 @@
 
 namespace Rcm\Model;
 
-use Rcm\Model\FactoryAbstract,
+use Rcm\Model\EntityMgrAware,
     Doctrine\ORM\EntityManager,
     \Rcm\Exception\LanguageNotFoundException,
     \Rcm\Exception\SiteNotFoundException,
@@ -46,12 +46,12 @@ use Rcm\Model\FactoryAbstract,
  * @link      http://ci.reliv.com/confluence
  */
 
-class SiteFactory extends FactoryAbstract
+class SiteFactory extends EntityMgrAware
 {
     /**
      * @var \Doctrine\ORM\EntityManager entity manager
      */
-    protected $entityManager;
+    protected $entityMgr;
 
     /**
      * Get the site entity for a given domain name and language. Will fall back
@@ -65,8 +65,8 @@ class SiteFactory extends FactoryAbstract
      */
     public function getSite($domainName, $language)
     {
-        $entityManager = $this->getEm();
-        $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
+        $entityMgr = $this->entityMgr;
+        $siteRepo = $entityMgr->getRepository('\Rcm\Entity\Site');
 
         $domain = $this->getDomain($domainName);
 
@@ -119,7 +119,7 @@ class SiteFactory extends FactoryAbstract
         $additionalDomain = array(),
         $initialSiteWidePlugins = array()
     ) {
-        $entityManager = $this->getEm();
+        $entityMgr = $this->entityMgr;
 
         //Check for existing domain
         try {
@@ -139,7 +139,7 @@ class SiteFactory extends FactoryAbstract
                     $domain[$key+1]->setDomainName($additionalDomainName);
                     $domain[$key+1]->setPrimary($domain[0]);
                     $domain[0]->setAdditionalDomain($domain[$key+1]);
-                    $entityManager->persist($domain[$key+1]);
+                    $entityMgr->persist($domain[$key+1]);
                 }
             }
         }
@@ -169,11 +169,11 @@ class SiteFactory extends FactoryAbstract
 
         $pwsInfo->setSite($site);
 
-        $entityManager->persist($site);
-        $entityManager->persist($domain[0]);
-        $entityManager->persist($pwsInfo);
+        $entityMgr->persist($site);
+        $entityMgr->persist($domain[0]);
+        $entityMgr->persist($pwsInfo);
 
-        $entityManager->flush();
+        $entityMgr->flush();
 
         return $site;
 
@@ -199,8 +199,8 @@ class SiteFactory extends FactoryAbstract
 
 
         $query = array('domain' => $domainName);
-        $entityManager = $this->getEm();
-        $repo = $entityManager->getRepository('\Rcm\Entity\Domain');
+        $entityMgr = $this->entityMgr;
+        $repo = $entityMgr->getRepository('\Rcm\Entity\Domain');
         $domainEntity = $repo->findOneBy($query);
 
         if (empty($domainEntity)) {
@@ -226,11 +226,11 @@ class SiteFactory extends FactoryAbstract
      */
     public function getLanguage($language)
     {
-        $entityManager = $this->getEm();
+        $entityMgr = $this->entityMgr;
 
         //Get Language
 
-        $languageRepo = $entityManager->getRepository(
+        $languageRepo = $entityMgr->getRepository(
             '\Rcm\Entity\Language'
         );
 

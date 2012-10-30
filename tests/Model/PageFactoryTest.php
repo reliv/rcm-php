@@ -108,8 +108,8 @@ class PageFactoryTest extends \Rcm\Base\BaseSite
     /**
      * @covers Rcm\Model\PageFactory::getEm
      * @covers Rcm\Model\PageFactory::setEm
-     * @covers Rcm\Model\FactoryAbstract::getEm
-     * @covers Rcm\Model\FactoryAbstract::setEm
+     * @covers Rcm\Model\EntityMgrAware::getEm
+     * @covers Rcm\Model\EntityMgrAware::setEm
      */
     public function testGetAndSetEntityManager()
     {
@@ -117,7 +117,7 @@ class PageFactoryTest extends \Rcm\Base\BaseSite
 
         $this->assertInstanceOf(
             '\Doctrine\ORM\EntityManager',
-            $this->PageFactory->getEm()
+            $this->PageFactory->entityMgr
         );
     }
 
