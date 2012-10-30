@@ -93,11 +93,8 @@ class Module
                 'Rcm\Model\SiteFactory' =>
                 function($serviceMgr)
                 {
-                    $object = new \Rcm\Model\SiteFactory();
-                    $object->setEm(
-                        $serviceMgr->get(
-                            'doctrine.entitymanager.ormdefault'
-                        )
+                    $object = new \Rcm\Model\SiteFactory(
+                        $serviceMgr->get('em')
                     );
                     return $object;
                 },
@@ -105,30 +102,61 @@ class Module
                 'Rcm\Model\PageFactory' =>
                 function($serviceMgr)
                 {
-                    $object = new \Rcm\Model\PageFactory();
-                    $object->setEm(
-                        $serviceMgr->get(
-                            'doctrine.entitymanager.ormdefault'
-                        )
+                    $object = new \Rcm\Model\PageFactory(
+                        $serviceMgr->get('em')
                     );
                     return $object;
                 },
 
+                'rcmPluginManager' => function($serviceMgr){
+                    return new \Rcm\Model\PluginManager(
+                        $serviceMgr->get('modulemanager'),
+                        $serviceMgr->get('config'),
+                        $serviceMgr
+                    );
+                },
 
                 'rcmUserManager' =>
                 function($serviceMgr)
                 {
-                    $service = new \Rcm\Model\UserManagement\DoctrineUserManager(
+                    $service = new \Rcm\UserManagement\DoctrineUserManager(
                         $serviceMgr->get('cypher')
                     );
-                    $service->setEm(
-                        $serviceMgr->get(
-                            'doctrine.entitymanager.ormdefault'
-                        )
-                    );
+                    $service->setEm($serviceMgr->get('em'));
                     return $service;
                 },
+
+                'em' => function($serviceMgr){
+                    return $serviceMgr->get(
+                        'doctrine.entitymanager.ormdefault'
+                    );
+                }
             ),
+        );
+    }
+
+    function getControllerConfig(){
+        return array(
+            'factories' => array(
+                'rcmIndexController' => function($controllerMgr) {
+                        $serviceMgr=$controllerMgr->getServiceLocator();
+                        $controller = new \Rcm\Controller\IndexController(
+                            $serviceMgr->get('rcmUserManager'),
+                            $serviceMgr->get('rcmPluginManager')
+                        );
+                        $controller->setEm($serviceMgr->get('em'));
+                    return $controller;
+                },
+                'rcmAdminController' => function($controllerMgr) {
+                    $serviceMgr=$controllerMgr->getServiceLocator();
+                    $controller = new \Rcm\Controller\AdminController(
+                        $serviceMgr->get('rcmUserManager'),
+                        $serviceMgr->get('rcmPluginManager')
+                    );
+                    $controller->setEm($serviceMgr->get('em'));
+                    return $controller;
+                },
+            )
         );
     }
 
@@ -156,7 +184,7 @@ class Module
     /**
      * Event Listener for the Base Controller.
      *
-     * @param Event $event ZF2 Called Event
+     * @param \Zend\EventManager\Event $event ZF2 Called Event
      *
      * @return null
      */
