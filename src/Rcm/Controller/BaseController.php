@@ -76,19 +76,22 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
     protected $view;
 
     /**
-     * @param \Rcm\Model\PluginManager $pluginManager
-     * @param \Rcm\Entity\User         $loggedInUser
-     * @param \Rcm\Entity\AdminPermissions  $loggedInAdminPermissions
+     * @param \Rcm\UserManagement\UserManagerInterface $userMgr
+     * @param \Rcm\Model\PluginManager                 $pluginManager
+     * @param \Doctrine\ORM\EntityManager              $entityMgr
+     * @param array                                    $config
      */
     function __construct(
         \Rcm\UserManagement\UserManagerInterface $userMgr,
         \Rcm\Model\PluginManager $pluginManager,
-        EntityManager $entityMgr
+        EntityManager $entityMgr,
+        $config
     ) {
         parent::__construct($entityMgr);
         $this->loggedInUser=$userMgr->getLoggedInUser();
         $this->loggedInAdminPermissions=$userMgr->getLoggedInAdminPermissions();
         $this->pluginManager=$pluginManager;
+        $this->config = $config;
     }
 
     /**
@@ -107,7 +110,6 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
      */
     public function init()
     {
-        $this->setConfig();
 
         //Create Initial View Object
         $this->view = new ViewModel();
@@ -119,39 +121,6 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         if (!$this->isRequestDomainPrimary($domain)) {
             return $this->redirectToPrimary($domain);
         }
-    }
-
-    /**
-     * Get ZF2 config
-     *
-     * @return array
-     */
-    public function getConfig()
-    {
-        if (empty($this->config)) {
-            return $this->setConfig();
-        }
-
-        return $this->config;
-    }
-
-    /**
-     * Set the config for the controller.  If none is passed it will attempt
-     * to retrieve it from the service manager.
-     *
-     * @param array $config Array of Configurations
-     *
-     * @return array
-     */
-    public function setConfig($config = null)
-    {
-        if (!empty($config) && is_array($config)) {
-            $this->config = $config;
-        } else {
-            $this->config = $this->getServiceLocator()->get('config');
-        }
-
-        return $this->config;
     }
 
     /**
@@ -245,7 +214,6 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
 
         $this->ensureAdminIsLoggedIn();
 
-        $this->setConfig();
         $pageName = $this->getEvent()->getRouteMatch()->getParam('page');
         $pageRevisionId = $this->getEvent()->getRouteMatch()->getParam(
             'revision'

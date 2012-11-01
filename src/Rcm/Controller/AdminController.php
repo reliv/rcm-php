@@ -50,7 +50,6 @@ class AdminController extends BaseController
         $pageUrl = urlencode($pageUrl);
 
         $em = $this->entityMgr;
-        $repo = $em->getRepository("\Rcm\Entity\Page");
         $page = $this->siteInfo->getPageByName($pageUrl);
 
         if (empty($page)) {
@@ -84,7 +83,6 @@ class AdminController extends BaseController
     public function savePageAction()
     {
         $this->adminSaveInit();
-        $this->setConfig();
         $postedData = $this->getPageSaveData();
 
         /** @var \Rcm\Entity\PageRevision $newRevision  */
@@ -166,7 +164,7 @@ class AdminController extends BaseController
     public function createBlankPageAction()
     {
         $this->ensureAdminIsLoggedIn();
-        $config = $this->getConfig();
+        $config = $this->config;
 
         $errors = $config['reliv']['createBlankPagesErrors'];
 
@@ -189,8 +187,7 @@ class AdminController extends BaseController
             exit;
         }
 
-        $pageManager = new \Rcm\Model\PageFactory();
-        $pageManager->setEm($this->entityMgr);
+        $pageManager = new \Rcm\Model\PageFactory($this->entityMgr);
         $pageManager->createPage(
             $pageUrl,
             $this->loggedInUser->getFullName(),
@@ -236,9 +233,8 @@ class AdminController extends BaseController
     private function savePageAs($pageUrl, $pageRevision, $pageTitle='', $asTemplate=false)
     {
         $this->ensureAdminIsLoggedIn();
-        $config = $this->getConfig();
-        $pageManager = new \Rcm\Model\PageFactory();
-        $pageManager->setEm($this->entityMgr);
+        $config = $this->config;
+        $pageManager = new \Rcm\Model\PageFactory($this->entityMgr);
 
         $errors = $config['reliv']['saveAsTemplateErrors'];
 
@@ -350,7 +346,6 @@ class AdminController extends BaseController
         }
 
         $assets=array();
-        $em = $entityMgr;
 
         foreach($postedAssets as $url){
             $url=strtolower($url);
@@ -365,7 +360,8 @@ class AdminController extends BaseController
                     //Look in DB for the asset for this url
                     /** @var \Rcm\Entity\PluginAsset $assetEntity */
 
-                    $repo = $em->getRepository('\Rcm\Entity\PluginAsset');
+                    $repo = $this->entityMgr
+                        ->getRepository('\Rcm\Entity\PluginAsset');
                     $assetEntity = $repo->findOneByurl($url);
 
                     $assets[$url] = $assetEntity;
@@ -377,11 +373,11 @@ class AdminController extends BaseController
                 //Add our current plugin instance to the asset
                 $assets[$url]->addPluginInstance($newInstance);
 
-                $entityMgr->persist($assets[$url]);
+                $this->entityMgr->persist($assets[$url]);
             }
         }
 
-        $em->flush();
+        $this->entityMgr->flush();
 
         return $assets;
     }

@@ -65,12 +65,6 @@ class IndexController extends \Rcm\Controller\BaseController
      */
     public function indexAction()
     {
-        //TODO remove this and just use getConfig() anywhere we need it in this
-        //class
-        $this->setConfig();
-
-        $config=$this->getConfig();
-
         $plugins = array();
         $pageName = $this->getEvent()->getRouteMatch()->getParam('page');
         $pageRevisionId= $this->getEvent()->getRouteMatch()->getParam('revision');
@@ -199,11 +193,9 @@ class IndexController extends \Rcm\Controller\BaseController
         );
 
         $adminView->setVariable('newPluginCount', --$this->pluginCount);
-
-        $config = $this->getConfig();
         $adminView->setVariable(
             'adminRichEditor',
-            $config['reliv']['adminRichEditor']
+            $this->config['reliv']['adminRichEditor']
         );
 
         return $adminView;
@@ -285,14 +277,13 @@ class IndexController extends \Rcm\Controller\BaseController
      */
     protected function getPlugins()
     {
-        $config = $this->getConfig();
         $return = array();
 
-        if (empty($config['rcmPlugin'])) {
+        if (empty($this->config['rcmPlugin'])) {
             return false;
         }
 
-        foreach ($config['rcmPlugin'] as $pluginName => $plugin) {
+        foreach ($this->config['rcmPlugin'] as $pluginName => $plugin) {
             if (empty($plugin['type'])) {
                 continue;
             }
@@ -345,8 +336,7 @@ class IndexController extends \Rcm\Controller\BaseController
      */
     protected function setupAdminToolBar()
     {
-        $config = $this->getConfig();
-        $adminPanel = $config['reliv']['adminPanel'];
+        $adminPanel = $this->config['reliv']['adminPanel'];
         $revisionLinks = $this->getPageRevisionLinks();
 
         $adminPanel['Page']['links']['Restore']['links']

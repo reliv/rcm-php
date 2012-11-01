@@ -143,7 +143,8 @@ class Module
                         $controller = new \Rcm\Controller\IndexController(
                             $serviceMgr->get('rcmUserManager'),
                             $serviceMgr->get('rcmPluginManager'),
-                            $serviceMgr->get('em')
+                            $serviceMgr->get('em'),
+                            $serviceMgr->get('config')
                         );
                     return $controller;
                 },
@@ -152,7 +153,8 @@ class Module
                     $controller = new \Rcm\Controller\AdminController(
                         $serviceMgr->get('rcmUserManager'),
                         $serviceMgr->get('rcmPluginManager'),
-                        $serviceMgr->get('em')
+                        $serviceMgr->get('em'),
+                        $serviceMgr->get('config')
                     );
                     return $controller;
                 },
@@ -161,7 +163,8 @@ class Module
                     $controller = new \Rcm\Controller\PluginProxyController(
                         $serviceMgr->get('rcmUserManager'),
                         $serviceMgr->get('rcmPluginManager'),
-                        $serviceMgr->get('em')
+                        $serviceMgr->get('em'),
+                        $serviceMgr->get('config')
                     );
                     return $controller;
                 },
