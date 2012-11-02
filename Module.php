@@ -172,8 +172,8 @@ class Module
                     $serviceMgr=$controllerMgr->getServiceLocator();
                     $controller =
                         new \Rcm\Controller\InstallController(
-                            $serviceMgr->get('rcmPluginManager'),
-                            $serviceMgr->get('em')
+                            $serviceMgr->get('em'),
+                            $serviceMgr->get('rcmPluginManager')
                         );
                     return $controller;
                 },

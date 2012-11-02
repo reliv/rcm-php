@@ -17,8 +17,8 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     protected $pluginManager;
 
     function __construct(
-        \Rcm\Model\PluginManager $pluginManager,
-        \Doctrine\ORM\EntityManager $entityMgr
+        \Doctrine\ORM\EntityManager $entityMgr,
+        \Rcm\Model\PluginManager $pluginManager
     ) {
         parent::__construct($entityMgr);
         $this->pluginManager=$pluginManager;
