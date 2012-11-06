@@ -194,7 +194,9 @@ class User
 
     function getDateOfBirthViaMMDDYYY()
     {
-        return $this->dateOfBirth->format('m/d/Y');
+        if(is_object($this->dateOfBirth)){
+            return $this->dateOfBirth->format('m/d/Y');
+        }
     }
 
     /**
