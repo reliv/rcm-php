@@ -68,6 +68,10 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         return $view;
     }
 
+    /**
+     * @TODO check for unset timezones here to so we can remove that from docs
+     * @throws \Exception
+     */
     function checkEnvironmentRequirements(){
         if(get_magic_quotes_gpc()){
             throw new \Exception('Magic quotes must be OFF for Rcm');
