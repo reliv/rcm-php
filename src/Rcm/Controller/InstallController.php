@@ -29,6 +29,8 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
 
         ini_set('max_execution_time', 0);
 
+        $this->checkEnvironmentRequirements();
+
         $this->fixSymLinks();
 
         $this->initializeDatabase(true);
@@ -64,6 +66,12 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         );
         $view->setTemplate('rcm/literal');
         return $view;
+    }
+
+    function checkEnvironmentRequirements(){
+        if(get_magic_quotes_gpc()){
+            throw new \Exception('Magic quotes must be OFF for Rcm');
+        }
     }
 
     function fixSymLinks(){
