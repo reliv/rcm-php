@@ -196,14 +196,12 @@ function RcmCkEditor(config) {
                 var ckData = editor.getData();
             } catch (err) {return}
 
-            var textAreaId = $(textarea).attr('id');
             editor.destroy();
-            $("#hiddenEditor").ckeditorGet().focus();
-            var tempDiv = $('<div class="tempDragEditorDiv" id="'+textAreaId+'"></div>');
-            $(tempDiv).html(ckData);
-            $(textarea).replaceWith(tempDiv);
+            $(container).html(ckData);
+
+
         }
-    }
+    };
 
     me.stopDrag = function(container) {
         var tempDiv = $(container).find('.tempDragEditorDiv');
@@ -216,5 +214,5 @@ function RcmCkEditor(config) {
             $(tempDiv).replaceWith(replacementTextarea);
             $("#"+textAreaId).ckeditor(rcmCkConfig).focus();
         }
-    }
+    };
 }

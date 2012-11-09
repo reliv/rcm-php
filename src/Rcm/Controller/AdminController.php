@@ -387,7 +387,9 @@ class AdminController extends BaseController
     )
     {
         foreach($postedData as $postedInstanceId => $data) {
-            if ($postedInstanceId == 'main') {
+            if ($postedInstanceId == 'undefined') {
+                continue;
+            } elseif ($postedInstanceId == 'main') {
                 $this->processMainPageData($data, $newRev);
                 unset($postedData['main']);
             } else {

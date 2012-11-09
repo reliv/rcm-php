@@ -784,6 +784,10 @@ function RcmEdit(config) {
                 return;
             }
 
+            if (!me.rcmPlugins.calledPlugins[index].hasOwnProperty(instanceId)) {
+                return;
+            }
+
             var instanceId = me.rcmPlugins.calledPlugins[index].instanceId;
             var pluginObject = me.rcmPlugins.calledPlugins[index].pluginObject;
 
@@ -874,6 +878,10 @@ function RcmEdit(config) {
 
         $.each(me.rcmPlugins.activeEditors, function(index, value) {
             if (!me.rcmPlugins.activeEditors.hasOwnProperty(index)) {
+                return;
+            }
+
+            if (!me.rcmPlugins.activeEditors[index].hasOwnProperty(instanceId)) {
                 return;
             }
 
@@ -1240,9 +1248,21 @@ function RcmEdit(config) {
                     $('html').addClass('rcmDraggingPlugins');
 
                     /* Advise the editor that we are moving it's container */
-                    var richEdit = $(ui.item).find('[data-richedit="html"]');
+                    var richEdit = $(ui.item).find('[data-richedit]');
 
                     if (richEdit.length > 0) {
+                        var pluginContainer = $(richEdit).closest('.rcmPlugin');
+                        var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
+
+                        $.each(me.rcmPlugins.activeEditors, function(index, value){
+                            if (value.instanceId == containerData.instanceId
+                                && value.textId == $(richEdit).attr('data-richedit')
+                                && value.pluginName == containerData.pluginName
+                            ) {
+                                me.rcmPlugins.activeEditors[index] = {};
+                            }
+                        });
+
                         me.editor.startDrag(richEdit);
                     }
 
@@ -1252,7 +1272,7 @@ function RcmEdit(config) {
                     $('html').removeClass('rcmDraggingPlugins');
 
                     /* Let the editor know that dragging has stopped */
-                    me.editor.stopDrag(ui.item);
+                    me.rcmPlugins.initPluginRichEdits(ui.item);
                 },
                 cancel: '[data-textedit]'
             });
