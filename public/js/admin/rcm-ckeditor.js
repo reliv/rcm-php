@@ -25,6 +25,17 @@ function RcmCkEditor(config) {
     me.init = function() {
         me.addHiddenEditorForToolbars();
         me.addCkToolbars();
+
+        /*This ugly hack prevents ckeditors from vanishing when resizing google
+         chrome's window or developer tools */
+        $(window).resize(function () {
+            setTimeout(
+                function(){
+                    $('iframe').attr('style','height:100%;width:100%;')
+                },
+                100
+            );
+        });
     };
 
     /**
