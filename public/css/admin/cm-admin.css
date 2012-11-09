@@ -1,3 +1,9 @@
+.cke_contents iframe{
+    /* This is ESSENTIAL for the ck editors less than 300px wide in chrome */
+    display:block;
+}
+
+
 #rcmAdminMenuBar {
     width: 100%;
     position: relative;
