@@ -33,7 +33,7 @@ $this->headMeta()->appendName(
 );
 
 /** @var \Rcm\View\Helper\GetRcmRequired $rcmRequired  */
-$rcmRequired = $this->getRcmRequired();
+
 
 echo $this->doctype();
 ?>
@@ -48,10 +48,8 @@ echo $this->doctype();
 </head>
 
 <body>
-<?php echo $rcmRequired->getBodyTop(); ?>
 
 <?php echo $this->content; ?>
 
-<?php echo $rcmRequired->getBodyBottom(); ?>
 </body>
 </html>

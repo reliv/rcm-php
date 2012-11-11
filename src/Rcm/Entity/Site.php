@@ -81,7 +81,7 @@ class Site
     /**
      * @var string Theme of site
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      *
      * @todo Determine the types of statuses for the site
      */
@@ -289,6 +289,22 @@ class Site
     public function setCountry($country)
     {
         $this->country = $country;
+    }
+
+    /**
+     * @param string $theme
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTheme()
+    {
+        return $this->theme;
     }
 
     /**

@@ -1,8 +1,6 @@
 <?php
 /**
- * Add Layout Container Helper.
- *
- * Contains the view helper to add a layout container to a page layout
+ * Render Plugin
  *
  * PHP version 5.3
  *
@@ -35,7 +33,7 @@ use \Zend\View\Helper\AbstractHelper;
  * @link      http://ci.reliv.com/confluence
  *
  */
-class AddLayoutContainer extends AbstractHelper
+class RenderPlugin extends AbstractHelper
 {
     /**
      * Function called when using $this->view->addLayoutContainer().  Will
@@ -46,57 +44,12 @@ class AddLayoutContainer extends AbstractHelper
      *
      * @return string Rendered HTML from plugins for the container specified
      */
-    public function __invoke($containerNum)
+    public function __invoke(\Rcm\Entity\PluginInstance $plugin, $renderView=true)
     {
-        return $this->renderLayoutContainer($containerNum);
+        return $this->renderPlugin($plugin, $renderView);
     }
 
-    /**
-     * Will render all plugins for the container passed to it.  For instance if
-     * I want to render container number two in my page layout I would call
-     * echo $this->view->addLayoutContainer(2);
-     * Note: This object expects or assumes that the view or page layout has
-     * an array of plugin view objects to render.
-     *
-     * @param array $containerNum Container Number to Render
-     *
-     * @return string Rendered HTML from plugins for the container specified
-     */
-    public function renderLayoutContainer($containerNum)
-    {
-        /** @var \Zend\View\Renderer\PhpRenderer $renderer */
-        $renderer = $this->getView();
-
-        /** @var \Zend\View\Helper\ViewModel $helper  */
-        $helper = $renderer->plugin('view_model');
-
-        $view = $helper->getCurrent();
-
-        $plugins  =  $view->plugins;
-
-        $html = '<div class="rcmContainer" data-containerId="'.$containerNum.'" id="rcmContainer_'.$containerNum.'">';
-
-        if (!empty($plugins[$containerNum])
-            && is_array($plugins[$containerNum])
-        ) {
-            /** @var \Rcm\Entity\PagePluginInstance $plugin */
-            foreach ($plugins[$containerNum] as $plugin) {
-                $html .= $this->renderPlugin($plugin);
-            }
-        }
-
-        $html .= '<div style="clear:both;"></div>';
-
-        $html .= '</div>';
-
-
-
-        $helper->setCurrent($view);
-
-        return $html;
-    }
-
-    public function renderPlugin(\Rcm\Entity\PluginInstance $plugin, $renderView=true)
+    protected function renderPlugin(\Rcm\Entity\PluginInstance $plugin, $renderView=true)
     {
         $pluginInstanceId = $plugin->getInstanceId();
         $pluginName = $plugin->getName();

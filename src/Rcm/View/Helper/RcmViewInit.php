@@ -37,18 +37,8 @@ use \Zend\View\Helper\AbstractHelper;
  * @link      http://ci.reliv.com/confluence
  *
  */
-class GetRcmRequired extends AbstractHelper
+class RcmViewInit extends AbstractHelper
 {
-    /**
-     * @var string Internal storage to return HTML that needs added to the page.
-     */
-    private $bodyTop;
-
-    /**
-     * @var string Internal storage to return html to be placed just before closing body tag
-     */
-    private $bodyBottom;
-
     /**
      * Function called when using $this->view->getRcmRequired().  Will
      * call method getRequired.  See method getRequired
@@ -58,15 +48,19 @@ class GetRcmRequired extends AbstractHelper
      */
     public function __invoke()
     {
-        return $this->getRequired();
+        return $this->init();
     }
 
-    public function getRequired()
+    public function init()
     {
         /** @var \Zend\View\Renderer\PhpRenderer $renderer */
         $renderer = $this->getView();
+        $renderer->rcmTop = '';
+        $renderer->rcmBottom = '';
+        $renderer->containers = array();
 
         $this->setHead($renderer);
+        $this->initPlugins($renderer);
 
         if ($renderer->adminIsLoggedIn) {
             $this->getRequiredAdmin($renderer);
@@ -107,6 +101,12 @@ class GetRcmRequired extends AbstractHelper
 
     protected function setJs(\Zend\View\Renderer\PhpRenderer $renderer)
     {
+        // HTML5 shim, for IE6-8 support of HTML elements
+        $renderer->headScript()->appendFile(
+            $renderer->basePath() . '/js/html5.js', 'text/javascript',
+            array('conditional' => 'lt IE 9',)
+        );
+
         $renderer->headScript()->appendFile(
             $renderer->basePath() . '/modules/rcm/vendor/jquery/js/jquery-1.8.2.min.js', 'text/javascript'
         );
@@ -119,11 +119,7 @@ class GetRcmRequired extends AbstractHelper
             $renderer->basePath() . '/modules/rcm/vendor/jquery-block-ui/jquery.blockUI.js', 'text/javascript'
         );
 
-        // HTML5 shim, for IE6-8 support of HTML elements
-        $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/js/html5.js', 'text/javascript',
-            array('conditional' => 'lt IE 9',)
-        );
+
     }
 
     protected function setCss(\Zend\View\Renderer\PhpRenderer $renderer)
@@ -383,12 +379,35 @@ class GetRcmRequired extends AbstractHelper
 
     private function appendBodyTop($value)
     {
-        $this->bodyTop .= $value;
+        $renderer = $this->getView();
+        $renderer->rcmTop .= $value;
     }
 
     private function appendBodyBottom($value)
     {
-        $this->bodyBottom .= $value;
+        $renderer = $this->getView();
+        $renderer->rcmBottom .= $value;
     }
 
+    /**  Init Plugins */
+    public function initPlugins(\Zend\View\Renderer\PhpRenderer $renderer)
+    {
+        /** @var \Zend\View\Helper\ViewModel $helper  */
+        $helper = $renderer->plugin('view_model');
+        $view = $helper->getCurrent();
+        $renderedContainers = array();
+        $containers  =  $renderer->plugins;
+
+        if (!empty($containers) && is_array($containers) ) {
+            /** @var \Rcm\Entity\PagePluginInstance $plugin */
+            foreach ($containers as $containerNum => $plugins) {
+                foreach ($plugins as $plugin) {
+                    $renderedContainers[$containerNum][] = $renderer->renderPlugin($plugin);
+                }
+            }
+        }
+        $renderer->renderedContainers = $renderedContainers;
+        $helper->setCurrent($view);
+
+    }
 }

@@ -35,7 +35,7 @@ use \Zend\View\Helper\AbstractHelper;
  * @link      http://ci.reliv.com/confluence
  *
  */
-class RenderLayoutEditorContainers extends AddLayoutContainer
+class RenderLayoutEditorContainers extends AbstractHelper
 {
     /**
      * Function called when using $this->view->addLayoutContainer().  Will
@@ -85,12 +85,6 @@ class RenderLayoutEditorContainers extends AddLayoutContainer
                 if (empty($plugin)) {
                     continue;
                 }
-//                //Add Plugin JS
-//                if ($plugin->hasAdminJs()) {
-//                    $renderer->headScript()->appendFile(
-//                        $basePath. $plugin->getAdminEditJs(), 'text/javascript'
-//                    );
-//                }
 
                 //Add Plugin Css
                 if ($plugin->hasAdminCss()) {
@@ -134,7 +128,7 @@ class RenderLayoutEditorContainers extends AddLayoutContainer
 
         $html .= '</div>';
         $html .= '<div class="initialState" style="position: absolute; left: -99999px; display: none;" align="center">';
-        $html .= $this->renderPlugin($plugin, false);
+        $html .= $renderer->renderPlugin($plugin, false);
         $html .= '</div>';
         $html .= '<div style="clear: both;"></div>';
         $html .= '</div>';

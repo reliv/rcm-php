@@ -122,13 +122,15 @@ class IndexController extends \Rcm\Controller\BaseController
             }
         }
 
-        $layout = $this->getLayout();
+        $layoutView = $this->layout();
 
-        $this->view->setTemplate('page-layout/' . $layout);
-        $this->view->setVariable('plugins', $plugins);
+        $layoutTemplatePath = $this->getLayout();
+
+        $layoutView->setTemplate('layout/'.$layoutTemplatePath);
+        $layoutView->setVariable('plugins', $plugins);
 
         /** @var \Zend\Mvc\Controller\Plugin\Layout $layoutView  */
-        $layoutView = $this->layout();
+
         $layoutView->setVariable('metaTitle', $this->pageRevision->getPageTitle());
         $layoutView->setVariable('metaDesc', $this->pageRevision->getDescription());
         $layoutView->setVariable('metaKeys', $this->pageRevision->getKeywords());
@@ -212,26 +214,18 @@ class IndexController extends \Rcm\Controller\BaseController
         //Get Page Layout
         $config = $this->config;
         $layout = $this->pageRevision->getPageLayout();
-        $domain = $this->siteInfo->getDomain()->getDomainName();
+        $theme = $this->siteInfo->getTheme();
 
-        if (!empty($config['reliv']['layouts'][$domain][$layout]['file'])) {
-            return $config['reliv']['layouts'][$domain][$layout]['file'];
+        if (!empty($config['Rcm']['themes'][$theme]['layouts'][$layout]['file'])) {
+            return $config['Rcm']['themes'][$theme]['layouts'][$layout]['file'];
+        } elseif (!empty($config['Rcm']['themes'][$theme]['layouts']['default']['file'])) {
+            return $config['Rcm']['themes'][$theme]['layouts']['default']['file'];
+        } elseif (!empty($config['Rcm']['themes']['generic']['layouts'][$layout]['file'])) {
+            return $config['Rcm']['themes']['generic']['layouts'][$layout]['file'];
         } elseif (
-            !empty($config['reliv']['layouts'][$domain]['default']['file'])
+            !empty($config['Rcm']['themes']['generic']['layouts']['default']['file'])
         ) {
-            return $config['reliv']['layouts'][$domain]['default']['file'];
-        } elseif (
-            !empty($config['reliv']['layouts'][$layout]['file'])
-        ) {
-            return $config['reliv']['layouts'][$layout]['file'];
-        } elseif (
-            !empty($config['reliv']['layouts']['default'][$layout]['file'])
-        ) {
-            return $config['reliv']['layouts']['default'][$layout]['file'];
-        } elseif (
-            !empty($config['reliv']['layouts']['default']['default']['file'])
-        ) {
-            return $config['reliv']['layouts']['default']['default']['file'];
+            return $config['Rcm']['themes']['generic']['layouts']['default']['file'];
         } else {
             throw new \InvalidArgumentException('No Layouts Found in config');
         }

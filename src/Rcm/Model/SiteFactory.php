@@ -113,6 +113,7 @@ class SiteFactory extends EntityMgrAware
      */
     public function createNewSite(
         $domainName,
+        $theme,
         \Rcm\Entity\Country $country,
         \Rcm\Entity\Language $language,
         $ownerAccountNum,
@@ -155,6 +156,7 @@ class SiteFactory extends EntityMgrAware
         $site->setLanguage($language);
         $site->setCountry($country);
         $site->setStatus("A");
+        $site->setTheme($theme);
 
         if (!empty($initialSiteWidePlugins)
             && is_array($initialSiteWidePlugins)

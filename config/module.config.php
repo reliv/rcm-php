@@ -366,12 +366,13 @@ return array(
     'view_helpers' => array(
         'invokables' => array(
             'getContentBasePath' => '\Rcm\View\Helper\GetContentBasePath',
-            'addLayoutContainer' => '\Rcm\View\Helper\AddLayoutContainer',
+            'getLayoutContainer' => '\Rcm\View\Helper\GetLayoutContainer',
             'addAdminNavigation' => '\Rcm\View\Helper\AddAdminNavigation',
             'renderLayoutEditorContainers'
                 => '\Rcm\View\Helper\RenderLayoutEditorContainers',
             'adminTitleBar' => '\Rcm\View\Helper\AdminTitleBar',
-            'getRcmRequired' => '\Rcm\View\Helper\GetRcmRequired'
+            'rcmViewInit' => '\Rcm\View\Helper\RcmViewInit',
+            'renderPlugin' => 'Rcm\View\Helper\RenderPlugin',
         ),
     ),
 
