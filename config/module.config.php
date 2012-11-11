@@ -369,8 +369,9 @@ return array(
             'addLayoutContainer' => '\Rcm\View\Helper\AddLayoutContainer',
             'addAdminNavigation' => '\Rcm\View\Helper\AddAdminNavigation',
             'renderLayoutEditorContainers'
-            => '\Rcm\View\Helper\RenderLayoutEditorContainers',
-            'adminTitleBar' => '\Rcm\View\Helper\AdminTitleBar'
+                => '\Rcm\View\Helper\RenderLayoutEditorContainers',
+            'adminTitleBar' => '\Rcm\View\Helper\AdminTitleBar',
+            'getRcmRequired' => '\Rcm\View\Helper\GetRcmRequired'
         ),
     ),
 

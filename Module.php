@@ -190,7 +190,7 @@ class Module
      * @return null
      */
 
-    public function init(ModuleManager $moduleManager)
+    public function init(\Zend\ModuleManager\ModuleManager $moduleManager)
     {
         $sharedEvents = $moduleManager->getEventManager()->getSharedManager();
         $sharedEvents->attach(

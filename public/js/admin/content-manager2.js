@@ -930,7 +930,12 @@ function RcmEdit(config) {
         containerData.pluginName = $(pluginContainer).attr('data-rcmPluginName');
         containerData.isSiteWide = $(pluginContainer).attr('data-rcmSiteWidePlugin');
         containerData.instanceId = $(pluginContainer).attr('data-rcmPluginInstanceId');
-        containerData.displayName = $(pluginContainer).attr('data-rcmPluginDisplayName').replace(/\s/g, '-');
+        containerData.displayName = $(pluginContainer).attr('data-rcmPluginDisplayName');
+
+        if (containerData.displayName != undefined) {
+            containerData.displayName = containerData.displayName.replace(/\s/g, '-');
+        }
+
         containerData.editClass = containerData.pluginName + 'Edit';
 
         return containerData;
@@ -1271,8 +1276,14 @@ function RcmEdit(config) {
                 stop: function (event, ui){
                     $('html').removeClass('rcmDraggingPlugins');
 
-                    /* Let the editor know that dragging has stopped */
-                    me.rcmPlugins.initPluginRichEdits(ui.item);
+                    var initialInstance = $(ui.item).find(".initialState");
+
+                    if (!$(initialInstance).is('.initialState')) {
+                        /* Let the editor know that dragging has stopped */
+                        me.rcmPlugins.initPluginRichEdits(ui.item);
+                    }
+
+
                 },
                 cancel: '[data-textedit]'
             });

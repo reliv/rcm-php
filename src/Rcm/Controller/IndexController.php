@@ -134,7 +134,7 @@ class IndexController extends \Rcm\Controller\BaseController
         $layoutView->setVariable('metaKeys', $this->pageRevision->getKeywords());
 
         if ($this->adminIsLoggedIn()) {
-            return $this->doAdmin();
+            $this->doAdmin();
         }
 
         return $this->view;
@@ -150,55 +150,52 @@ class IndexController extends \Rcm\Controller\BaseController
      */
     protected function doAdmin()
     {
-        $adminView = new \Zend\View\Model\ViewModel();
-        $adminView->setTemplate('page-layout/admin_layout.phtml');
+        $layout = $this->layout();
 
-        $this->view->setVariable('rcmAdminMode', true);
+        $layout->setVariable('adminIsLoggedIn', $this->adminIsLoggedIn());
 
-        $adminView->addChild($this->view, 'MainPageBody');
+        $layout->setVariable('rcmAdminMode', true);
 
-        $adminView->setVariable(
+        $layout->setVariable(
             'adminPanel',
             $this->setupAdminToolBar()
         );
 
-        $adminView->setVariable(
+        $layout->setVariable(
             'page',
             $this->page
         );
 
-        $adminView->setVariable(
+        $layout->setVariable(
             'language',
             $this->siteInfo->getLanguage()->getLanguage()
         );
 
-        $adminView->setVariable(
+        $layout->setVariable(
             'pageRevision',
             $this->pageRevision->getPageRevId()
         );
 
-        $adminView->setVariable(
+        $layout->setVariable(
             'layoutContainers',
             $this->getLayoutEditorContents()
         );
 
-        $adminView->setVariable(
+        $layout->setVariable(
             'newPageLayoutContainers',
             $this->getPageLayoutsForNewPages()
         );
 
-        $adminView->setVariable(
+        $layout->setVariable(
             'rcmTemplates',
             $this->siteInfo->getTemplates()
         );
 
-        $adminView->setVariable('newPluginCount', --$this->pluginCount);
-        $adminView->setVariable(
+        $layout->setVariable('newPluginCount', --$this->pluginCount);
+        $layout->setVariable(
             'adminRichEditor',
             $this->config['reliv']['adminRichEditor']
         );
-
-        return $adminView;
     }
 
     /**

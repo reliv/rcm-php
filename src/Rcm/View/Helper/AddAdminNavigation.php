@@ -69,7 +69,7 @@ class AddAdminNavigation extends AbstractHelper
             $html .= '<a href="'.$link['href'].'"';
 
             if (!empty($link['links']) && is_array($link['links'])) {
-                $html .= 'class="additionalMenus"';
+                $html .= ' class="additionalMenus"';
             }
 
             $html .= '>'.$link['display'].'</a>';

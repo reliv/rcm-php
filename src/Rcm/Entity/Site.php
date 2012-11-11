@@ -77,6 +77,15 @@ class Site
      * )
      */
     protected $pwsInfo;
+
+    /**
+     * @var string Theme of site
+     *
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @todo Determine the types of statuses for the site
+     */
+    protected $theme;
     
     /** 
      * @var \Rcm\Entity\Language Default lanugage for the site
