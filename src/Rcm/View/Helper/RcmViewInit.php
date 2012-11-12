@@ -82,6 +82,7 @@ class RcmViewInit extends AbstractHelper
         $this->setAdminHead($renderer);
         $this->getAdminInitScript($renderer);
         $this->getAdminTopBody($renderer);
+        $this->getAdminBottomBody($renderer);
     }
 
     protected function setHead(\Zend\View\Renderer\PhpRenderer $renderer)
@@ -277,11 +278,9 @@ class RcmViewInit extends AbstractHelper
 
     protected function getPluginAdminEditJs(\Zend\View\Renderer\PhpRenderer $renderer)
     {
-        $children = $renderer->viewModel()->getCurrent()->getChildren();
-        $child = $children[0];
         $hasPageJs = array();
 
-        foreach($child->plugins as $container => $orders){
+        foreach($renderer->plugins as $container => $orders){
             /** @var \Rcm\Entity\PluginInstance $pluginInstance */
             foreach ($orders as $pluginInstance) {
                 if ($pluginInstance->hasAdminJs()) {

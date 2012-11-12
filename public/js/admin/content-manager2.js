@@ -784,7 +784,8 @@ function RcmEdit(config) {
                 return;
             }
 
-            if (!me.rcmPlugins.calledPlugins[index].hasOwnProperty(instanceId)) {
+            if (me.rcmPlugins.calledPlugins[index].instanceId == undefined) {
+                console.log('no id found')
                 return;
             }
 
@@ -881,7 +882,7 @@ function RcmEdit(config) {
                 return;
             }
 
-            if (!me.rcmPlugins.activeEditors[index].hasOwnProperty(instanceId)) {
+            if (me.rcmPlugins.activeEditors[index].instanceId == undefined) {
                 return;
             }
 
