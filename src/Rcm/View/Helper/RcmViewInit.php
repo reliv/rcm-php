@@ -113,7 +113,7 @@ class RcmViewInit extends AbstractHelper
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery/js/jquery-ui-1.8.24.custom.min.js', 'text/javascript'
+            $renderer->basePath() . '/modules/rcm/vendor/jquery/js/jquery-ui-1.9.1.custom.min.js', 'text/javascript'
         );
 
         $renderer->headScript()->appendFile(

@@ -988,6 +988,21 @@ function RcmEdit(config) {
         me.layoutEditor.makePluginsDraggable();
 
         me.layoutEditor.makePluginsSortable();
+
+        me.layoutEditor.addCMSHandles();
+
+        $(".rcmPlugin").hover(
+            function() {
+                $(this).find(".rcmLayoutEditHelper").each(function(){
+                    $(this).show();
+                });
+            },
+            function(){
+                $(this).find(".rcmLayoutEditHelper").each(function(){
+                    $(this).hide();
+                })
+            }
+        );
     };
 
     /**
@@ -1000,7 +1015,15 @@ function RcmEdit(config) {
         rcmLayoutEditorColumn.hide('slide');
         me.layoutEditor.stopPluginsSortable();
         me.layoutEditor.stopPluginsDraggable();
+
+        $(".rcmPlugin").unbind('mouseenter mouseleave')
     };
+
+    me.layoutEditor.addCMSHandles = function() {
+        $(".rcmPlugin").prepend("<span class='rcmSortableHandle rcmLayoutEditHelper' />");
+        $(".rcmPlugin").prepend("<span class='rcmDeletePlugin rcmLayoutEditHelper' />");
+        $(".rcmPlugin").prepend("<span class='rcmSettingPlugin rcmLayoutEditHelper' />");
+    }
 
     /**
      * Add popout click event to icon

@@ -136,6 +136,32 @@
     height: 40px;
 }
 
+.rcmSortableHandle {
+    left: -2px;
+    cursor: move;
+}
+
+.rcmLayoutEditHelper {
+    border: 1px dotted grey;
+    border-radius: 5px 5px 0 0;
+    border-bottom: none;
+    position: absolute;
+    z-index: 10000;
+    top: -18px;
+    display: none;
+    height: 16px;
+    width: 20px;
+}
+
+.rcmDeletePlugin {
+    right: -2px;
+}
+
+.rcmSettingPlugin {
+    right: 18px;
+}
+
+
 html.rcmEditingPlugins .rcmPlugin:hover{
     border-color: grey;
 }
