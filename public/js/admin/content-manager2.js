@@ -1020,9 +1020,10 @@ function RcmEdit(config) {
     };
 
     me.layoutEditor.addCMSHandles = function() {
-        $(".rcmPlugin").prepend("<span class='rcmSortableHandle rcmLayoutEditHelper' />");
-        $(".rcmPlugin").prepend("<span class='rcmDeletePlugin rcmLayoutEditHelper' />");
-        $(".rcmPlugin").prepend("<span class='rcmSettingPlugin rcmLayoutEditHelper' />");
+        var pluginContainers = $("#RcmRealPage").find(".rcmPlugin");
+        $(pluginContainers).prepend("<span class='rcmSortableHandle rcmLayoutEditHelper' />");
+        $(pluginContainers).prepend("<span class='rcmDeletePlugin rcmLayoutEditHelper' />");
+        $(pluginContainers).prepend("<span class='rcmSettingPlugin rcmLayoutEditHelper' />");
     }
 
     /**

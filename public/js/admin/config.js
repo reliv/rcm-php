@@ -12,7 +12,7 @@ var rcmCkConfig = {
     extraPlugins : 'autogrow',
     removePlugins : 'resize',
     skin : 'kama',
-    contentsCss: '/modules/reliv-application/css/guestsite/guestSiteFonts.css',
+    contentsCss: '/modules/reliv-guest-site/css/guestSiteFonts.css',
     autoGrow_minHeight: '35',
     toolbar: [
         { name: 'document', items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },
