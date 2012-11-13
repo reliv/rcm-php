@@ -145,6 +145,9 @@ class PluginManager
         $dataToSave
     )
     {
+        //We don't want to save the asset array, it is for core us only
+        unset($dataToSave['assets']);
+
         $this->callPlugin(
             $instance,
             'saveInstance',
