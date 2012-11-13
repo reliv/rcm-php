@@ -1313,6 +1313,8 @@ function RcmEdit(config) {
                 cancel: '[data-textedit]'
             });
         });
+
+        $('#RcmRealPage').find('.rcmPlugin').resizable();
     };
 
     /**
