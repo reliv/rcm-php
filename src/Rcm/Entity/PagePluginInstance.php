@@ -174,4 +174,56 @@ class PagePluginInstance
     public function getInstanceId() {
         return $this->instance->getInstanceId();
     }
+
+    /**
+     * @param int $height
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHeight()
+    {
+        return $this->height.'px';
+    }
+
+    /**
+     * @param int $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWidth()
+    {
+        return $this->width.'px';
+    }
+
+    /**
+     * @param string $divFloat
+     */
+    public function setDivFloat($divFloat)
+    {
+        $this->divFloat = $divFloat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDivFloat()
+    {
+        return $this->divFloat;
+    }
+
+
+
+
 }

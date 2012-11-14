@@ -489,9 +489,27 @@ class AdminController extends BaseController
         }
 
         $renderOrderNumber = $currentInstance->getRenderOrderNumber();
+        $renderWidth = $currentInstance->getWidth();
+        $renderHeight = $currentInstance->getHeight();
+        $renderFloat = $currentInstance->getDivFloat();
 
         if ($data['order'] != $renderOrderNumber) {
             $newPluginInstance->setRenderOrderNumber($data['order']);
+            $instanceDirty = true;
+        }
+
+        if ($data['pluginWidth'] != $renderWidth) {
+            $newPluginInstance->setWidth($data['pluginWidth']);
+            $instanceDirty = true;
+        }
+
+        if ($data['pluginHeight'] != $renderHeight) {
+            $newPluginInstance->setHeight($data['pluginHeight']);
+            $instanceDirty = true;
+        }
+
+        if ($data['pluginFloat'] != $renderFloat) {
+            $newPluginInstance->setDivFloat($data['pluginFloat']);
             $instanceDirty = true;
         }
 

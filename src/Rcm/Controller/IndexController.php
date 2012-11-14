@@ -113,11 +113,14 @@ class IndexController extends \Rcm\Controller\BaseController
             foreach ($pageInstances as $container => $ordered) {
                 /** @var \Rcm\Entity\PagePluginInstance $instance */
                 foreach ($ordered as $order => $instance) {
-                    $plugins[$container][$order] = $this
+                    $plugins[$container][$order]['plugin'] = $this
                         ->pluginManager->prepPluginInstance(
                             $instance->getInstance(),
                             $this->getEvent()
-                        );
+                    );
+                    $plugins[$container][$order]['width'] = $instance->getWidth();
+                    $plugins[$container][$order]['height'] = $instance->getHeight();
+                    $plugins[$container][$order]['float'] = $instance->getDivFloat();
                 }
             }
         }

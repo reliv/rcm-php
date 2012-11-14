@@ -130,7 +130,9 @@ function RcmCkEditor(config) {
 
         var returnData = {};
 
-        returnData.html = $(editor).html();
+        var tempData = $(editor).html();
+
+        returnData.html = $.trim(tempData);
 
         if (returnData == undefined || returnData == '') {
             return false;

@@ -644,12 +644,18 @@ function RcmEdit(config) {
             $(this).find(".rcmPlugin").each(function(index, value){
                 var instanceId = $(value).attr('data-rcmPluginInstanceId');
                 var pluginName = $(value).attr('data-rcmPluginName');
+                var pluginWidth = $(value).width();
+                var pluginHeight = $(value).height();
+                var pluginFloat = $(value).css('float');
                 dataToReturn[instanceId] = {
                     'container' : containerNumber,
                     'order' : index,
-                    'pluginName' : pluginName
+                    'pluginName' : pluginName,
+                    'pluginHeight' : pluginHeight,
+                    'pluginWidth' : pluginWidth,
+                    'pluginFloat' : pluginFloat
                 }
-            })
+            });
         });
 
         return dataToReturn;
@@ -1314,7 +1320,7 @@ function RcmEdit(config) {
             });
         });
 
-        $('#RcmRealPage').find('.rcmPlugin').resizable();
+        $('#RcmRealPage').find('.rcmPlugin').resizable({grid: 10});
     };
 
     /**

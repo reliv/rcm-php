@@ -44,12 +44,12 @@ class RenderPlugin extends AbstractHelper
      *
      * @return string Rendered HTML from plugins for the container specified
      */
-    public function __invoke(\Rcm\Entity\PluginInstance $plugin, $renderView=true)
+    public function __invoke(\Rcm\Entity\PluginInstance $plugin, $height=null, $width=null, $float=null, $renderView=true)
     {
-        return $this->renderPlugin($plugin, $renderView);
+        return $this->renderPlugin($plugin, $height, $width, $float, $renderView);
     }
 
-    protected function renderPlugin(\Rcm\Entity\PluginInstance $plugin, $renderView=true)
+    protected function renderPlugin(\Rcm\Entity\PluginInstance $plugin, $height=null, $width=null, $float=null, $renderView=true)
     {
         $pluginInstanceId = $plugin->getInstanceId();
         $pluginName = $plugin->getName();
@@ -74,7 +74,21 @@ class RenderPlugin extends AbstractHelper
 
         $html .= 'data-rcmPluginDisplayName="'.$plugin->getDisplayName().'" ';
 
-        $html .= '>';
+        $html .= 'style="';
+
+        if (!empty($width)) {
+            $html .= " width: ".$width.";";
+        }
+
+        if (!empty($height)) {
+            $html .= " height: ".$height.";";
+        }
+
+        if (!empty($float)) {
+            $html .= " float: ".$float.";";
+        }
+
+        $html .= '">';
 
         if ($renderView === true) {
             $pluginView = $plugin->getView();

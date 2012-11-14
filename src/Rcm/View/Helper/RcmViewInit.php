@@ -283,19 +283,20 @@ class RcmViewInit extends AbstractHelper
         foreach($renderer->plugins as $container => $orders){
             /** @var \Rcm\Entity\PluginInstance $pluginInstance */
             foreach ($orders as $pluginInstance) {
-                if ($pluginInstance->hasAdminJs()) {
+                $pluginEntity = $pluginInstance['plugin'];
+                if ($pluginEntity->hasAdminJs()) {
                     $renderer->headScript()->appendFile(
-                        $renderer->basePath() . $pluginInstance->getAdminEditJs(),
+                        $renderer->basePath() . $pluginEntity->getAdminEditJs(),
                         'text/javascript'
                     );
 
-                    $hasPageJs[$pluginInstance->getName()] = $pluginInstance->getName();
+                    $hasPageJs[$pluginEntity->getName()] = $pluginEntity->getName();
 
                 }
 
-                if ($pluginInstance->hasAdminCss()) {
+                if ($pluginEntity->hasAdminCss()) {
                     $renderer->headLink()->appendStylesheet(
-                        $renderer->basePath() . $pluginInstance->getAdminEditCss()
+                        $renderer->basePath() . $pluginEntity->getAdminEditCss()
                     );
                 }
             }
@@ -401,7 +402,7 @@ class RcmViewInit extends AbstractHelper
             /** @var \Rcm\Entity\PagePluginInstance $plugin */
             foreach ($containers as $containerNum => $plugins) {
                 foreach ($plugins as $plugin) {
-                    $renderedContainers[$containerNum][] = $renderer->renderPlugin($plugin);
+                    $renderedContainers[$containerNum][] = $renderer->renderPlugin($plugin['plugin'], $plugin['height'], $plugin['width'], $plugin['float']);
                 }
             }
         }
