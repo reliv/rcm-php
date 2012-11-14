@@ -1,3 +1,4 @@
+alert('While IE7 does work to edit the site it is not recommended.  Please use a new version of IE, FF, or Chrome');
 /*
     json2.js
     2012-10-08
