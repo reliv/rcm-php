@@ -215,11 +215,13 @@
     background-image: url("/modules/rcm/images/icons/down.png");
     background-repeat: no-repeat;
     background-position: right 3px;
+    list-style: none;
 }
 
 #rcmAdminTitleBarMenu li ul li {
     background: none;
     text-align: left;
+    list-style: inside;
 }
 
 #rcmAdminTitleBarMenu, #rcmAdminTitleBarMenu li ul li a {
@@ -239,12 +241,12 @@
     position: relative;
     top: -2px;
     left: -4px;
-    padding-bottom: 10px;
+    padding: 10px;
     border-radius: 0 0 10px 5px;
 }
 
 #rcmAdminTitleBarMenu li ul li {
-    padding-left: 10px;
+    padding-left: 0px;
 }
 
 #rcmAdminTitleBarMenu li ul li:hover {

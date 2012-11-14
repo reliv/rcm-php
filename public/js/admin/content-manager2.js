@@ -386,6 +386,10 @@ function RcmEdit(config) {
         me.ui.addEditSiteWideMenuLinkClickEvent();
         me.ui.addPagePropertiesMenuLinkClickEvent();
         me.ui.addEditLayoutMenuLinkClickEvent();
+
+        $("#rcmAdminTitleBarMenu li").click(function(){
+            $("#rcmAdminTitleBarMenu li ul").toggle();
+        });
     };
 
     /**
