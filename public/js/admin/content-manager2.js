@@ -758,6 +758,7 @@ function RcmEdit(config) {
     me.rcmPlugins.callPluginEditInit = function(pluginContainer) {
 
         var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
+        var pluginContainer = $(pluginContainer).find('.rcmPluginContainer');
 
         if(typeof(window[containerData.editClass])=='function'){
 

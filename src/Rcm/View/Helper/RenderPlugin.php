@@ -90,6 +90,8 @@ class RenderPlugin extends AbstractHelper
 
         $html .= '">';
 
+        $html .= '<div class="rcmPluginContainer">';
+
         if ($renderView === true) {
             $pluginView = $plugin->getView();
 
@@ -100,6 +102,8 @@ class RenderPlugin extends AbstractHelper
 
             $html .= $this->getView()->render($pluginView);
         }
+
+        $html .= '</div>';
 
         $html .= '</div>';
 

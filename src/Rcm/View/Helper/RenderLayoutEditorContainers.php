@@ -128,7 +128,7 @@ class RenderLayoutEditorContainers extends AbstractHelper
 
         $html .= '</div>';
         $html .= '<div class="initialState" style="position: absolute; left: -99999px; display: none;" align="center">';
-        $html .= $renderer->renderPlugin($plugin, false);
+        $html .= $renderer->renderPlugin($plugin, null, null, null, false);
         $html .= '</div>';
         $html .= '<div style="clear: both;"></div>';
         $html .= '</div>';
