@@ -165,8 +165,6 @@ function RcmEdit(config) {
         $("body").append(form);
 
         $("#rcmDataForm").submit();
-
-        alert('save submitted');
     };
 
     /**
