@@ -160,11 +160,13 @@ function RcmEdit(config) {
             'name="saveData" value="" />').val(dataToSend);
 
         var form = $('<form method="post" action="/rcm-admin-save/' +
-            this.page+'/'+this.language+'/'+this.pageRevision+'" name="rcmDataForm" id="rcmDataForm">').append(input);
+            this.page+'/'+this.language+'/'+this.pageRevision+'" name="rcmDataForm" id="rcmDataForm"></form>').append(input);
 
         $("body").append(form);
 
         $("#rcmDataForm").submit();
+
+        alert('save submitted');
     };
 
     /**
