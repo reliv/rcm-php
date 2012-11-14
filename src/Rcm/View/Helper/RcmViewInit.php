@@ -126,7 +126,7 @@ class RcmViewInit extends AbstractHelper
     protected function setCss(\Zend\View\Renderer\PhpRenderer $renderer)
     {
         $renderer->headLink()->appendStylesheet(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery/css/smoothness/jquery-ui-1.8.21.custom.css'
+            $renderer->basePath() . '/modules/rcm/vendor/jquery/css/smoothness/jquery-ui-1.9.1.custom.css'
         );
     }
 
