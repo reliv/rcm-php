@@ -23,9 +23,9 @@ function Rcm() {
         var container = $('#RcmRealPage [data-rcmPluginInstanceId="'+instanceId+'"]');
 
         if (container.length < 1) {
-            return('[data-rcmPluginInstanceId="'+instanceId+'"]');
+            return('[data-rcmPluginInstanceId="'+instanceId+'"] .rcmPluginContainer');
         } else {
-            return('#RcmRealPage [data-rcmPluginInstanceId="'+instanceId+'"]');
+            return('#RcmRealPage [data-rcmPluginInstanceId="'+instanceId+'"] .rcmPluginContainer');
         }
     }
 
