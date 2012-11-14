@@ -168,6 +168,12 @@ class RcmViewInit extends AbstractHelper
                 .'contextMenu.js'
             , 'text/javascript'
         );
+
+        $renderer->headScript()->appendFile(
+            $renderer->basePath() . '/modules/rcm/vendor/JSON-js-master/json2.js',
+            'text/javascript',
+            array('conditional' => 'lt IE 8',)
+        );
     }
 
     protected function setAdminCss(\Zend\View\Renderer\PhpRenderer $renderer)

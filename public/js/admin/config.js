@@ -26,7 +26,7 @@ var rcmCkConfig = {
         { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
         { name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv',
             '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
-        { name: 'colors', items : [ 'TextColor','BGColor' ] },
+        { name: 'colors', items : [ 'TextColor','BGColor' ] }
     ],
     filebrowserBrowseUrl : '/elfinder/ckeditor',
     filebrowserImageBrowseUrl : '/elfinder/ckeditor/images',
@@ -66,7 +66,7 @@ var rcmTinyMceConfig = {
     theme_advanced_toolbar_align : "left",
     theme_advanced_statusbar_location : "none",
     theme_advanced_resizing : true,
-    content_css : '/modules/reliv-application/css/guestsite/guestSiteFonts.css',
+    content_css : '/modules/reliv-application/css/guestsite/guestSiteFonts.css'
 };
 
 /* Aloha Config */
