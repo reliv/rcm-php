@@ -648,6 +648,8 @@ function RcmEdit(config) {
             $(this).find(".rcmPlugin").each(function(index, value){
                 var instanceId = $(value).attr('data-rcmPluginInstanceId');
                 var pluginName = $(value).attr('data-rcmPluginName');
+                var siteWide = $(value).attr('data-rcmsitewideplugin');
+                var pluginDisplayName = $(value).attr('data-rcmplugindisplayname');
                 var pluginWidth = $(value).width();
                 var pluginHeight = $(value).height();
                 var pluginFloat = $(value).css('float');
@@ -657,7 +659,9 @@ function RcmEdit(config) {
                     'pluginName' : pluginName,
                     'pluginHeight' : pluginHeight,
                     'pluginWidth' : pluginWidth,
-                    'pluginFloat' : pluginFloat
+                    'pluginFloat' : pluginFloat,
+                    'siteWide' : siteWide,
+                    'pluginDisplayName' : pluginDisplayName
                 }
             });
         });
@@ -1101,6 +1105,10 @@ function RcmEdit(config) {
         $(pluginContainer).find(".rcmDeletePlugin").click(function(e) {
             me.layoutEditor.deletePlugin($(this).parent());
             e.preventDefault();
+        });
+
+        $(pluginContainer).find(".rcmSettingPlugin").click(function(e) {
+            me.layoutEditor.makeSiteWide($(this).parent());
         })
     };
 
@@ -1489,6 +1497,37 @@ function RcmEdit(config) {
 
         $(container).remove();
     }
+
+    /**
+     * Make Site Wide
+     *
+     */
+    me.layoutEditor.makeSiteWide = function(container)
+    {
+        var form = $('<form></form>')
+            .addInput('text', 'Plugin Name','')
+            .dialog({
+                title:'Create Site Wide Plugin',
+                modal:true,
+                width:620,
+                buttons:{
+                    Cancel:function () {
+                        $(this).dialog("close");
+                    },
+                    Ok:function () {
+
+                        //Get user-entered data from form
+                        var newPluginName = form.find('[name=text]').val();
+                        $(container).attr('data-rcmsitewideplugin', 'Y');
+                        $(container).attr('data-rcmplugindisplayname', newPluginName);
+
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+
+    };
 
     me.pluginContextMenu = function(operation, options){
         $.contextMenu(operation, options);

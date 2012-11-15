@@ -453,7 +453,6 @@ class AdminController extends BaseController
         $data,
         \Rcm\Entity\PageRevision $newRev
     ) {
-
         //Get Entity Manager
         $entityMgr = $this->entityMgr;
 
@@ -564,9 +563,13 @@ class AdminController extends BaseController
             $instanceDirty = true;
         }
 
+
+
         if ($newPluginInstance->getInstance()->isSiteWide()
             && $instanceDirty === true
         ) {
+
+            $newPluginInstance->getInstance()->setDisplayName($data['pluginDisplayName']);
 
             $entityMgr->getConnection()->update(
                 'rcm_page_plugin_instances',
@@ -583,6 +586,15 @@ class AdminController extends BaseController
             $newRev->addInstance($newPluginInstance);
             return null;
 
+        }
+
+        //Check for new sitewide
+        if (!$currentInstance->getInstance()->isSiteWide()
+            && $data['siteWide']
+        ) {
+            $newPluginInstance->getInstance()->setSiteWide();
+            $newPluginInstance->getInstance()->setDisplayName($data['pluginDisplayName']);
+            $instanceDirty = true;
         }
 
         $this->entityMgr->persist($newPluginInstance);
