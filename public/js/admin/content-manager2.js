@@ -1493,4 +1493,113 @@ function RcmEdit(config) {
     me.pluginContextMenu = function(operation, options){
         $.contextMenu(operation, options);
     }
+
+
+    /**
+     * File Browser
+     */
+
+    /**
+     * Displays a file picker window
+     *
+     * @param {Function} callBack this is called when the user picks a file
+     * @param {String} fileType optional file type to allow
+     *
+     * @return {Null}
+     */
+    me.showFileBrowser = function(callBack, fileType){
+
+        //Declare a function for the file picker to call when user picks a file
+        window.elFinderFileSelected = function(filePath){
+            callBack(filePath);
+        }
+
+        //Open the file picker window
+        var url=config.filebrowserBrowseUrl;
+        if(fileType){
+            url += '/' + fileType;
+        }
+        me.popup(url, config.filebrowserWindowWidth, config.filebrowserWindowHeight);
+    }
+
+    /**
+     * Displays a file picker window that is connected to an input box.
+     *
+     * @param {Object} urlInputBox jQuery input box to attach to file URL
+     * @param {String} fileType optional file type to allow
+     *
+     * @return {Null}
+     */
+    me.showFileBrowserForInputBox = function(urlInputBox, fileType){
+        me.showFileBrowser(
+            function(path){
+                urlInputBox.attr('value', path);
+                urlInputBox.trigger('change');
+            },
+            fileType
+        )
+    }
+
+    /**
+     * Opens Browser in a popup. The "width" and "height" parameters accept
+     * numbers (pixels) or percent (of screen size) values.
+     *
+     * This is pulled from ckEditor code
+     *
+     * @param {String} url The url of the external file browser.
+     * @param {String} width Popup window width.
+     * @param {String} height Popup window height.
+     * @param {String} options Popup window features.
+     */
+    me.popup = function( url, width, height, options )
+    {
+        width = width || '80%';
+        height = height || '70%';
+
+        if ( typeof width == 'string' && width.length > 1 && width.substr( width.length - 1, 1 ) == '%' )
+            width = parseInt( window.screen.width * parseInt( width, 10 ) / 100, 10 );
+
+        if ( typeof height == 'string' && height.length > 1 && height.substr( height.length - 1, 1 ) == '%' )
+            height = parseInt( window.screen.height * parseInt( height, 10 ) / 100, 10 );
+
+        if ( width < 640 )
+            width = 640;
+
+        if ( height < 420 )
+            height = 420;
+
+        var top = parseInt( ( window.screen.height - height ) / 2, 10 ),
+            left = parseInt( ( window.screen.width  - width ) / 2, 10 );
+
+        options = ( options || 'location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes' ) +
+            ',width='  + width +
+            ',height=' + height +
+            ',top='  + top +
+            ',left=' + left;
+
+        var popupWindow = window.open( '', null, options, true );
+
+        // Blocked by a popup blocker.
+        if ( !popupWindow )
+            return false;
+
+        try
+        {
+            // Chrome 18 is problematic, but it's not really needed here (#8855).
+            var ua = navigator.userAgent.toLowerCase();
+            if ( ua.indexOf( ' chrome/18' ) == -1 )
+            {
+                popupWindow.moveTo( left, top );
+                popupWindow.resizeTo( width, height );
+            }
+            popupWindow.focus();
+            popupWindow.location.href = url;
+        }
+        catch ( e )
+        {
+            popupWindow = window.open( url, null, options, true );
+        }
+
+        return true;
+    }
 }
