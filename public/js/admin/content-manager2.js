@@ -761,8 +761,7 @@ function RcmEdit(config) {
         var pluginContainer = $(pluginContainer).find('.rcmPluginContainer');
 
         if(typeof(window[containerData.editClass])=='function'){
-
-//            try {
+            try {
                 var plugin = new window[containerData.editClass](
                     containerData.instanceId,
                     $(pluginContainer)
@@ -775,9 +774,10 @@ function RcmEdit(config) {
                     instanceId   : containerData.instanceId,
                     pluginName   : containerData.pluginName
                 });
-//            } catch (err) {
-//                console.log(err.toString());
-//            }
+            } catch (err) {
+                console.log(err.toString());
+                throw "An error occurred initing editing for a plugin"
+            }
         }
     };
 
@@ -787,6 +787,7 @@ function RcmEdit(config) {
      * @return {Array}
      */
     me.rcmPlugins.getSaveDataFromCalledPlugins = function() {
+
         var dataToReturn = {};
 
         $.each(me.rcmPlugins.calledPlugins, function(index, value){
@@ -808,11 +809,19 @@ function RcmEdit(config) {
             };
 
             if ($.isFunction(pluginObject.getSaveData)) {
-                dataToReturn[instanceId].pluginData = pluginObject.getSaveData();
+                try{
+                    dataToReturn[instanceId].pluginData = pluginObject.getSaveData();
+                }catch(e){
+                    throw 'An error occurred saving plugin. Check JS Console.';
+                }
             }
 
             if ($.isFunction(pluginObject.getAssets)) {
-                dataToReturn[instanceId].pluginData.assets =  pluginObject.getAssets();
+                try{
+                    dataToReturn[instanceId].pluginData.assets =  pluginObject.getAssets();
+                }catch(e){
+                    throw 'An error occurred saving plugin. Check JS Console.';
+                }
             }
 
         });
