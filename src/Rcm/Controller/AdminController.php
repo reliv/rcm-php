@@ -386,6 +386,7 @@ class AdminController extends BaseController
         \Rcm\Entity\PageRevision $newRev
     )
     {
+
         foreach($postedData as $postedInstanceId => $data) {
             if ($postedInstanceId == 'undefined') {
                 continue;
@@ -397,9 +398,15 @@ class AdminController extends BaseController
             }
         }
 
-        //Check for empty page -- Must be able to save blank pages
-        if (empty($postedData)) {
-            $newRev->setIsDirty(true);
+        //Check for deleted Plugins -- Must be able to save blank pages
+        $pageRev = $this->pageRevision;
+        $allInstancesInOldRev = $pageRev->getRawPluginInstances();
+
+        foreach($allInstancesInOldRev as $instance) {
+            $instanceId = $instance->getInstanceId();
+            if (!isset($postedData[$instanceId])) {
+                $newRev->setIsDirty(true);
+            }
         }
 
         if ($newRev->getIsDirty()) {

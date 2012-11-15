@@ -940,7 +940,6 @@ function RcmEdit(config) {
                     && value.textId == $(tempContainer).attr('data-richedit')
                     && value.pluginName == containerData.pluginName
                     ) {
-                    console.log(me.rcmPlugins.activeEditors[index]);
                     me.rcmPlugins.activeEditors[index] = {};
                 }
             });
@@ -957,7 +956,6 @@ function RcmEdit(config) {
                     && value.textId == $(tempContainer).attr('data-textedit')
                     && value.pluginName == containerData.pluginName
                 ) {
-                    console.log(me.rcmPlugins.activeEditors[index]);
                     me.rcmPlugins.activeEditors[index] = {};
                 }
             });
