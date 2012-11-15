@@ -166,11 +166,11 @@
 
 
 html.rcmEditingPlugins .rcmPlugin:hover{
-    border-color: grey;
+    border: 2px dotted grey;
 }
 
 html.rcmDraggingPlugins .rcmContainer{
-    border-color: grey;
+    border: 2px dotted grey;
 }
 
 html.rcmDraggingPlugins .rcmPlugin{
