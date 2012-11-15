@@ -931,6 +931,51 @@ function RcmEdit(config) {
         return dataToReturn;
     };
 
+    me.rcmPlugins.removeRichEdits = function(pluginContainer) {
+        var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
+        $(pluginContainer).find('[data-richedit]').each(function() {
+            var tempContainer = this;
+            $.each(me.rcmPlugins.activeEditors, function(index, value){
+                if (value.instanceId == containerData.instanceId
+                    && value.textId == $(tempContainer).attr('data-richedit')
+                    && value.pluginName == containerData.pluginName
+                    ) {
+                    console.log(me.rcmPlugins.activeEditors[index]);
+                    me.rcmPlugins.activeEditors[index] = {};
+                }
+            });
+        });
+    };
+
+    me.rcmPlugins.removeTextEdits = function(pluginContainer) {
+        var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
+
+        $(pluginContainer).find('[data-textedit]').each(function(){
+            var tempContainer = this;
+            $.each(me.rcmPlugins.activeEditors, function(index, value){
+                if (value.instanceId == containerData.instanceId
+                    && value.textId == $(tempContainer).attr('data-textedit')
+                    && value.pluginName == containerData.pluginName
+                ) {
+                    console.log(me.rcmPlugins.activeEditors[index]);
+                    me.rcmPlugins.activeEditors[index] = {};
+                }
+            });
+        });
+    };
+
+    me.rcmPlugins.removeCalledPlugin = function(pluginContainer) {
+        var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
+
+        $.each(me.rcmPlugins.calledPlugins, function(index, value){
+            if (value.instanceId == containerData.instanceId
+                && value.pluginName == containerData.pluginName
+                ) {
+                me.rcmPlugins.calledPlugins[index] = {};
+            }
+        });
+    };
+
     /**
      * Get the container info
      *
@@ -1043,6 +1088,11 @@ function RcmEdit(config) {
                 })
             }
         );
+
+        $(pluginContainer).find(".rcmDeletePlugin").click(function(e) {
+            me.layoutEditor.deletePlugin($(this).parent());
+            e.preventDefault();
+        })
     };
 
     me.layoutEditor.removePluginToolbar = function() {
@@ -1301,28 +1351,7 @@ function RcmEdit(config) {
                     me.layoutEditor.pluginSortableReceive(this, ui);
                 },
                 start: function(event, ui){
-                    $('html').addClass('rcmDraggingPlugins');
-
-                    /* Advise the editor that we are moving it's container */
-                    var richEdit = $(ui.item).find('[data-richedit]');
-
-                    if (richEdit.length > 0) {
-                        var pluginContainer = $(richEdit).closest('.rcmPlugin');
-                        var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
-
-                        $.each(me.rcmPlugins.activeEditors, function(index, value){
-                            if (value.instanceId == containerData.instanceId
-                                && value.textId == $(richEdit).attr('data-richedit')
-                                && value.pluginName == containerData.pluginName
-                            ) {
-                                me.rcmPlugins.activeEditors[index] = {};
-                            }
-                        });
-
-                        me.editor.startDrag(richEdit);
-                    }
-
-
+                    me.layoutEditor.pluginSortableStart(ui);
                 },
                 stop: function (event, ui){
                     $('html').removeClass('rcmDraggingPlugins');
@@ -1379,6 +1408,22 @@ function RcmEdit(config) {
         }
     };
 
+    me.layoutEditor.pluginSortableStart = function(ui) {
+        $('html').addClass('rcmDraggingPlugins');
+
+        /* Advise the editor that we are moving it's container */
+        var richEdit = $(ui.item).find('[data-richedit]');
+
+        if (richEdit.length > 0) {
+            var pluginContainer = $(richEdit).closest('.rcmPlugin');
+            me.rcmPlugins.removeRichEdits(pluginContainer);
+            me.editor.startDrag(richEdit);
+        }
+    };
+
+
+
+
     /**
      * Tells the sortable objects what to do with a new plugin.
      *
@@ -1415,6 +1460,26 @@ function RcmEdit(config) {
 
         }
     };
+
+    /**
+     * Delete Plugin on clink bind
+     *
+     * @param container
+     */
+    me.layoutEditor.deletePlugin = function(container)
+    {
+        var containerData = me.rcmPlugins.getPluginContainerInfo(container);
+
+        if (containerData.isSiteWide == 'Y') {
+            $('#'+containerData.displayName).show();
+        }
+
+        me.rcmPlugins.removeRichEdits(container);
+        me.rcmPlugins.removeTextEdits(container);
+        me.rcmPlugins.removeCalledPlugin(container);
+
+        $(container).remove();
+    }
 
     me.pluginContextMenu = function(operation, options){
         $.contextMenu(operation, options);
