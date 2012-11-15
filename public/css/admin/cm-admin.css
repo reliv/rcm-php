@@ -139,6 +139,7 @@
 .rcmSortableHandle {
     left: -2px;
     cursor: move;
+    background: url('/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png') no-repeat 0px -81px; width: 9px; height: 9px;
 }
 
 .rcmLayoutEditHelper {
@@ -147,10 +148,10 @@
     border-bottom: none;
     position: absolute;
     z-index: 10000;
-    top: -18px;
+    top: -16px;
     display: none;
     height: 16px;
-    width: 20px;
+    width: 15px;
 }
 
 .rcmDeletePlugin {

@@ -1278,7 +1278,7 @@ function RcmEdit(config) {
                 tolerance : 'pointer',
                 placeholder: "rcmPluginSortPlaceHolder",
                 forcePlaceholderSize: false,
-                cursorAt : {left:40, top : 10},
+                handle:'.rcmSortableHandle',
                 change: function(event, ui) {
                     me.layoutEditor.pluginSortableChange(ui);
                 },
