@@ -172,7 +172,7 @@ class User
         return preg_replace('/[^0-9]*/', '', $value);
     }
 
-    function setDateOfBirthViaMMDDYYY($dateOfBirth)
+    function setDateOfBirthViaMMDDYYY($dateOfBirth, $sanityCheck = true)
     {
         $parts = explode('/', $dateOfBirth);
         $dateObj = null;
@@ -184,7 +184,17 @@ class User
         ) {
             $dateObj = \DateTime::createFromFormat('m/d/Y', $dateOfBirth);
         }
-        if (!$dateObj) {
+        $now = new \DateTime();
+        $twoHundredYearsAgo=clone($now);
+        $twoHundredYearsAgo = $twoHundredYearsAgo->sub(
+            new \DateInterval('P200Y')
+        );
+        if (
+            !$dateObj
+            || ($sanityCheck
+                && ($dateObj > $now || $twoHundredYearsAgo > $dateObj)
+            )
+        ) {
             throw new InvalidArgumentException();
         } else {
             $this->setDateOfBirth($dateObj);
