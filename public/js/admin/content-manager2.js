@@ -811,7 +811,8 @@ function RcmEdit(config) {
             if ($.isFunction(pluginObject.getSaveData)) {
                 try{
                     dataToReturn[instanceId].pluginData = pluginObject.getSaveData();
-                }catch(e){
+                }catch(err){
+                    console.log(err.toString());
                     throw 'An error occurred saving plugin. Check JS Console.';
                 }
             }
@@ -819,7 +820,8 @@ function RcmEdit(config) {
             if ($.isFunction(pluginObject.getAssets)) {
                 try{
                     dataToReturn[instanceId].pluginData.assets =  pluginObject.getAssets();
-                }catch(e){
+                }catch(err){
+                    console.log(err.toString());
                     throw 'An error occurred saving plugin. Check JS Console.';
                 }
             }
