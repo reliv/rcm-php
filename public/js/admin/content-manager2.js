@@ -1002,7 +1002,36 @@ function RcmEdit(config) {
 
         me.layoutEditor.addCMSHandles();
 
-        $(".rcmPlugin").hover(
+
+    };
+
+    /**
+     * Closes the layout editor and returns the edit mode back to normal
+     */
+    me.layoutEditor.stopLayoutEditor = function() {
+        var rcmLayoutEditorColumn = $("#rcmLayoutEditorColumn");
+        $( "#rcmLayoutAccordion" ).accordion("destroy");
+        rcmLayoutEditorColumn.resizable("destroy");
+        rcmLayoutEditorColumn.hide('slide');
+        me.layoutEditor.stopPluginsSortable();
+        me.layoutEditor.stopPluginsDraggable();
+        me.layoutEditor.removePluginToolbar();
+
+    };
+
+    me.layoutEditor.addCMSHandles = function() {
+        var pluginContainers = $("#RcmRealPage").find(".rcmPlugin").each(function(){
+            me.layoutEditor.addPluginToolbar(this);
+        });
+    };
+
+    me.layoutEditor.addPluginToolbar = function(pluginContainer)
+    {
+        $(pluginContainer).prepend("<span class='rcmSortableHandle rcmLayoutEditHelper' title='Move Plugin' />");
+        $(pluginContainer).prepend("<span class='rcmDeletePlugin rcmLayoutEditHelper' title='Delete Plugin' />");
+        $(pluginContainer).prepend("<span class='rcmSettingPlugin rcmLayoutEditHelper' title='Make Site-Wide' />");
+
+        $(pluginContainer).hover(
             function() {
                 $(this).find(".rcmLayoutEditHelper").each(function(){
                     $(this).show();
@@ -1016,26 +1045,10 @@ function RcmEdit(config) {
         );
     };
 
-    /**
-     * Closes the layout editor and returns the edit mode back to normal
-     */
-    me.layoutEditor.stopLayoutEditor = function() {
-        var rcmLayoutEditorColumn = $("#rcmLayoutEditorColumn");
-        $( "#rcmLayoutAccordion" ).accordion("destroy");
-        rcmLayoutEditorColumn.resizable("destroy");
-        rcmLayoutEditorColumn.hide('slide');
-        me.layoutEditor.stopPluginsSortable();
-        me.layoutEditor.stopPluginsDraggable();
-
-        $(".rcmPlugin").unbind('mouseenter mouseleave')
+    me.layoutEditor.removePluginToolbar = function() {
+        $('.rcmLayoutEditHelper').remove();
+        $(".rcmPlugin").unbind('mouseenter mouseleave');
     };
-
-    me.layoutEditor.addCMSHandles = function() {
-        var pluginContainers = $("#RcmRealPage").find(".rcmPlugin");
-        $(pluginContainers).prepend("<span class='rcmSortableHandle rcmLayoutEditHelper' />");
-        $(pluginContainers).prepend("<span class='rcmDeletePlugin rcmLayoutEditHelper' />");
-        $(pluginContainers).prepend("<span class='rcmSettingPlugin rcmLayoutEditHelper' />");
-    }
 
     /**
      * Add popout click event to icon
@@ -1163,7 +1176,9 @@ function RcmEdit(config) {
      */
     me.layoutEditor.pluginDraggableStart = function(helper, pluginContainer) {
 
-        if ($(pluginContainer).html() != '') {
+        var pluginInstanceContainer = $(pluginContainer).find('.rcmPluginContainer');
+
+        if ($(pluginInstanceContainer).html() != '') {
             return;
         }
 
@@ -1208,7 +1223,7 @@ function RcmEdit(config) {
         }
 
         $(helper).html(data.display);
-        $(pluginContainer).html(data.display);
+        $(pluginContainer).find(".rcmPluginContainer").html(data.display);
 
         me.layoutEditor.setHelperWidth(helper, pluginContainer);
     };
@@ -1396,23 +1411,12 @@ function RcmEdit(config) {
             });
 
             me.rcmPlugins.initPluginEditMode(newDiv);
+            me.layoutEditor.addPluginToolbar(newDiv);
 
         }
     };
 
     me.pluginContextMenu = function(operation, options){
-        var globalContextMenuItems = {
-            'rcmEditDeletePlugin':{
-                name:'Delete Plugin',
-                icon:'delete',
-                callback:function () {
-                    alert('Errt1! - not done yet');
-                }
-            },
-            rcmEditSeparator1:'-'
-        }
-
-        operation.items = $.extend(globalContextMenuItems,operation.items);
         $.contextMenu(operation, options);
     }
 }

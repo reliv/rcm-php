@@ -139,7 +139,7 @@
 .rcmSortableHandle {
     left: -2px;
     cursor: move;
-    background: url('/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png') no-repeat 0px -81px; width: 9px; height: 9px;
+    background: url('/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png') no-repeat 0px -82px; width: 9px; height: 9px;
 }
 
 .rcmLayoutEditHelper {
@@ -156,10 +156,12 @@
 
 .rcmDeletePlugin {
     right: -2px;
+    background: url('/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png') no-repeat -97px -130px;
 }
 
 .rcmSettingPlugin {
-    right: 18px;
+    background: url('/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png') no-repeat -145px -146px;
+    right: 16px;
 }
 
 
