@@ -563,6 +563,16 @@ class AdminController extends BaseController
             $instanceDirty = true;
         }
 
+        if ($newPluginInstance->getInstance()->isSiteWide()
+            && $newPluginInstance->getInstance()->getDisplayName() != $data['pluginDisplayName']
+        ) {
+            $newPluginInstance->getInstance()->setDisplayName($data['pluginDisplayName']);
+            $this->entityMgr->persist($newPluginInstance);
+            $this->entityMgr->persist($newPluginInstance->getInstance());
+            $this->entityMgr->flush();
+            $instanceDirty = true;
+        }
+
 
 
         if ($newPluginInstance->getInstance()->isSiteWide()
@@ -590,10 +600,13 @@ class AdminController extends BaseController
 
         //Check for new sitewide
         if (!$currentInstance->getInstance()->isSiteWide()
-            && $data['siteWide']
+            && $data['siteWide'] == 'Y'
         ) {
             $newPluginInstance->getInstance()->setSiteWide();
             $newPluginInstance->getInstance()->setDisplayName($data['pluginDisplayName']);
+            $this->siteInfo->addSiteWidePlugin($newPluginInstance->getInstance());
+            $this->entityMgr->persist($this->siteInfo);
+            $this->entityMgr->flush();
             $instanceDirty = true;
         }
 
