@@ -153,7 +153,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
             "loginSubmitCopy" => "Login",
             "loginForgotPasswordCopy" => "Forgot your password?",
             "loginErrorInvalidCopy" => "Incorrect Username or Password",
-            "bottomLoginText" => "<strong>Don\u2019t have an account yet?<\/strong> <\/br>\n<a href=\"#\">Request a customer account.<\/a> <\/br>\n<a href=\"#\">Request a distributor account.<\/a>\n"
+            "bottomLoginText" => "<strong>Don't have an account yet?</strong> <br /><a href=\"#\">Request a customer account.</a> <br /><a href=\"#\">Request a distributor account.</a>"
         );
 
         $this->createJsonInstance('RcmLogin', $content, 2, 0);
