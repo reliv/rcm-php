@@ -24,52 +24,40 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
      */
     public function getLoggedInUser()
     {
-        if (is_a($this->session->user, '\Rcm\Entity\User')) {
-            return $this->session->user;
+        if(!$this->session->userId){
+            return null;
         }
-    }
-
-    function setLoggedInUser(User $user)
-    {
-        $this->session->user = $user;
-
-        $adminPermissions = $this->entityMgr
-            ->getRepository('\Rcm\Entity\AdminPermissions')
-            ->findOneByAccountNumber($user->getAccount()->getAccountNumber());
-
-        if ($adminPermissions) {
-            $this->session->adminPermissions = $adminPermissions;
-        }
-    }
-
-    function clearLoggedInUser(){
-        $this->session->user = null;
-        $this->session->adminPermissions = null;
+        return $this->entityMgr->getRepository('\Rcm\Entity\User')
+            ->find($this->session->userId);
     }
 
     /**
-     * Ensures that the current-user admin permissions object in the session is
-     * valid and returns it
-     *
+     * @param \Rcm\Entity\User $user
+     */
+    function setLoggedInUser(User $user)
+    {
+        $this->session->userId=$user->getUserId();
+    }
+
+    /*
+     * TODO TEST THIS, DON'T THINK IT WORKS
+     */
+    function clearLoggedInUser(){
+        $this->session->offsetUnset('userId');
+    }
+
+    /**
      * @return \Rcm\Entity\AdminPermissions|null
      */
     public function getLoggedInAdminPermissions()
     {
-        $user = $this->getLoggedInUser();
+        $user=$this->getLoggedInUser();
         if(!$user){
             return null;
         }
-
-        $adminPermissions = $this->session->adminPermissions;
-        $userAccountNo=$user->getAccount()->getAccountNumber();
-
-        if (
-            $user
-            && is_a($adminPermissions, '\Rcm\Entity\AdminPermissions')
-            && $userAccountNo == $adminPermissions->getAccountNumber()
-        ) {
-            return $adminPermissions;
-        }
+        return $this->entityMgr
+            ->getRepository('\Rcm\Entity\AdminPermissions')
+            ->findOneByAccountNumber($user->getAccount()->getAccountNumber());
     }
 
 
@@ -95,7 +83,7 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
         return $user;
     }
 
-    public function newUser($email, $password)
+    public function newUser($email, $password, $accountNumber)
     {
         if(!is_a($this->cypher,'\Zend\Crypt\BlockCipher')){
             throw new \Exception(
@@ -107,6 +95,10 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
         $user = new \Rcm\Entity\User();
         $user->setEmail($email);
         $user->setPassword($password, $this->cypher);
+        $account=new \Rcm\Entity\Account();
+        $account->setAccountNumber($accountNumber);
+        $user->setAccount($account);
+        $this->entityMgr->persist($account);
         $this->entityMgr->persist($user);
         $this->entityMgr->flush();
     }

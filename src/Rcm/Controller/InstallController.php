@@ -104,7 +104,10 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
 
     function createUser($email,$password){
         $userManager=$this->serviceLocator->get('rcmUserManager');
-        $userManager->newUser($email,$password);
+        $userManager->newUser($email,$password,1);
+        $adminPermissions= new \Rcm\Entity\AdminPermissions();
+        $adminPermissions->setAccountNumber(1);
+        $this->entityMgr->persist($adminPermissions);
     }
 
     function getDefaultHtmlAreaContent(){
