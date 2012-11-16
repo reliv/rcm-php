@@ -68,14 +68,20 @@ class AdminController extends BaseController
         $this->ensureAdminIsLoggedIn();
 
         $pluginType = $this->getEvent()->getRouteMatch()->getParam('type');
+        $instanceId = $this->getEvent()->getRouteMatch()->getParam('instanceId');
+
+        if (empty($instanceId)) {
+            $instanceId = -1;
+        }
 
         $instance = new \Rcm\Entity\PluginInstance();
         $instance->setPlugin($pluginType);
-        $instance->setInstanceId(-1);
+        $instance->setInstanceId($instanceId);
         $this->pluginManager->prepPluginInstance($instance, $this->getEvent());
 
-        $instance->getView();
+        $pageView = $instance->getView();
         $this->view->setVariable('newInstance', $instance);
+        $pageView->setVariable('rcmPluginInstanceId', $instanceId);
 
         return $this->view;
     }

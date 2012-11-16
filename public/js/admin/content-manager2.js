@@ -1252,7 +1252,7 @@ function RcmEdit(config) {
         var pluginData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
 
         $.getJSON(
-            me.newPluginInstanceAjaxPath+'/'+pluginData.pluginName,
+            me.newPluginInstanceAjaxPath+'/'+pluginData.pluginName+'/'+pluginData.instanceId,
             function(data) {
                 me.layoutEditor.getInstanceSuccessCallback(data, helper, pluginContainer)
             }
@@ -1289,6 +1289,7 @@ function RcmEdit(config) {
             me.layoutEditor.loadPluginJs(data.js);
         }
 
+        console.log(data.display);
         $(helper).html(data.display);
         $(pluginContainer).find(".rcmPluginContainer").html(data.display);
 
@@ -1486,6 +1487,8 @@ function RcmEdit(config) {
     me.layoutEditor.deletePlugin = function(container)
     {
         var containerData = me.rcmPlugins.getPluginContainerInfo(container);
+
+        var displayName = containerData.displayName.replace(/\s/g, '-');
 
         if (containerData.isSiteWide == 'Y') {
             $('#'+containerData.displayName).show();
