@@ -119,7 +119,7 @@ class Module
                 'rcmUserManager' =>
                 function($serviceMgr)
                 {
-                    $service = new \Rcm\UserManagement\DoctrineUserManager(
+                    $service = new \Rcm\Model\UserManagement\DoctrineUserManager(
                         $serviceMgr->get('cypher')
                     );
                     $service->setEm($serviceMgr->get('em'));
