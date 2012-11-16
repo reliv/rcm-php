@@ -403,7 +403,7 @@ return array(
             'contentManagerNewInstanceAjax' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm-admin-get-instance[/:type]',
+                    'route' => '/rcm-admin-get-instance[/:type[/:instanceId]]',
                     'defaults' => array(
                         'controller' => 'rcmAdminController',
                         'action' => 'getNewInstance',

@@ -241,6 +241,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
 
         $this->site = $this->getSiteFactory()->createNewSite(
             $subDomain,
+            'RcmGeneric',
             $country,
             $language,
             7,
