@@ -99,9 +99,9 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
     {
         if(!is_a($this->cypher,'\Zend\Crypt\BlockCipher')){
             throw new \Exception(
-                'User Manager is missing all required dependencies. This ' .
+                'User Manager is missing required dependencies. This ' .
                 'is likely because you are running the open source installer' .
-                'but still have a non-open-source user manager enabled.'
+                'but have a non-open-source user manager enabled.'
             );
         }
         $user = new \Rcm\Entity\User();

@@ -239,4 +239,15 @@ class AdminPermissions
     {
         $this->accountNumber = $accountNum;
     }
+
+    /**
+     * Gets the AccountNumber property
+     *
+     * @return string AccountNumber
+     *
+     */
+    public function getAccountNumber()
+    {
+        return $this->accountNumber;
+    }
 }

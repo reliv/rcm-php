@@ -76,13 +76,13 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
     protected $view;
 
     /**
-     * @param \Rcm\UserManagement\UserManagerInterface $userMgr
+     * @param \Rcm\Model\UserManagement\UserManagerInterface $userMgr
      * @param \Rcm\Model\PluginManager                 $pluginManager
      * @param \Doctrine\ORM\EntityManager              $entityMgr
      * @param array                                    $config
      */
     function __construct(
-        \Rcm\UserManagement\UserManagerInterface $userMgr,
+        \Rcm\Model\UserManagement\UserManagerInterface $userMgr,
         \Rcm\Model\PluginManager $pluginManager,
         EntityManager $entityMgr,
         $config
