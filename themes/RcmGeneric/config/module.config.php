@@ -29,7 +29,7 @@ return array(
                 'layouts' => array(
                     'default' => array(
                         'display'      => 'Generic Page',
-                        'file'         => 'reliv-guest-page.phtml',
+                        'file'         => 'rcm-generic-home-page.phtml',
                         'screenShot'   => '/modules/reliv-guest-site/images/GuestLayoutPageScreenshot.png',
                         'hidden'       => true,
                     ),
