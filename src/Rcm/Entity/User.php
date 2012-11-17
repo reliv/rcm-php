@@ -608,4 +608,9 @@ class User
     {
         return $this->username;
     }
+
+    public function getFullName()
+    {
+        return $this->getFirstName().' '.$this->getLastName();
+    }
 }
