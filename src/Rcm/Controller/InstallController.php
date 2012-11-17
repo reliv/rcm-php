@@ -104,7 +104,10 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
 
     function createUser($email,$password){
         $userManager=$this->serviceLocator->get('rcmUserManager');
-        $userManager->newUser($email,$password);
+        $userManager->newUser($email,$password,1);
+        $adminPermissions= new \Rcm\Entity\AdminPermissions();
+        $adminPermissions->setAccountNumber(1);
+        $this->entityMgr->persist($adminPermissions);
     }
 
     function getDefaultHtmlAreaContent(){
@@ -143,7 +146,17 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     function createLoginPage(){
         $this->instances = array();
 
-        $this->createJsonInstance('RcmLogin', null, 6, 0);
+        $content = array(
+            "loginHeader" => "Login",
+            "userNameCopy" => "Username:",
+            "loginPasswordCopy" => "Password",
+            "loginSubmitCopy" => "Login",
+            "loginForgotPasswordCopy" => "Forgot your password?",
+            "loginErrorInvalidCopy" => "Incorrect Username or Password",
+            "bottomLoginText" => "<strong>Don't have an account yet?</strong> <br /><a href=\"#\">Request a customer account.</a> <br /><a href=\"#\">Request a distributor account.</a>"
+        );
+
+        $this->createJsonInstance('RcmLogin', $content, 2, 0);
 
         $this->getPageFactory()->createPage(
             'login',
@@ -161,7 +174,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         $this->instances = array();
 
         $this->createJsonInstance(
-            'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 6, 0
+            'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 2, 0
         );
 
         $this->getPageFactory()->createPage(
@@ -180,7 +193,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         $this->instances = array();
 
         $this->createJsonInstance(
-            'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 6, 0
+            'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 2, 0
         );
 
         $this->getPageFactory()->createPage(
@@ -200,28 +213,59 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     }
 
     function createSiteWideContent(){
+
+        $homeLink = $this->url()->fromRoute(
+            'contentManager',
+            array(
+                'page' => 'index'
+            )
+        );
+
+        $loginLink = $this->url()->fromRoute(
+            'contentManager',
+            array(
+                'page' => 'login'
+            )
+        );
+
+        $licenseLink = $this->url()->fromRoute(
+            'contentManager',
+            array(
+                'page' => 'license'
+            )
+        );
+
+        $contactLink = $this->url()->fromRoute(
+            'contentManager',
+            array(
+                'page' => 'contact'
+            )
+        );
+
         $content= array(
             'html'=>'
-                <li><a href="/rcm/">Home</a></li>
-                <li><a href="/rcm/login">Login</a></li>
-                <li><a href="/rcm/license">License</a></li>
-                <li><a href="/rcm/contact">Contact</a></li>
+                <li><a href="'.$homeLink.'">Home</a></li>
+                <li><a href="'.$loginLink.'">Login</a></li>
+                <li><a href="'.$licenseLink.'">License</a></li>
+                <li><a href="'.$contactLink.'">Contact</a></li>
             '
         );
         $this->createJsonInstance(
-            'RcmNavigation', $content, 2, 0, true, 'Site Navigation'
+            'RcmNavigation', $content, 1, 0, true, 'Site Navigation'
         );
 
         $content= array(
             'html'=>'RCM is free software and licensed under the New BSD License'
         );
-        $this->createJsonInstance(
-            'RcmHtmlArea', $content, 4, 0, true, 'Footer Details'
-        );
+
 
         $this->createJsonInstance(
-            'RcmRssFeed', null, 5, 0, true, 'Blog Feed'
+            'RcmHtmlArea', $content, 2, 0, true, 'Footer Details'
         );
+
+//        $this->createJsonInstance(
+//            'RcmRssFeed', null, 5, 0, true, 'Blog Feed'
+//        );
     }
 
     public function createSite(

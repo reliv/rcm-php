@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\UserManagement;
+namespace Rcm\Model\UserManagement;
 
 interface UserManagerInterface {
 
