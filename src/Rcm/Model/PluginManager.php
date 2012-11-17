@@ -168,14 +168,6 @@ class PluginManager
         \Zend\EventManager\Event $event
     )
     {
-        /** @var \Zend\Cache\Storage\StorageInterface $cache  */
-        $cache = $this->serviceLocator->get('rcmCache');
-
-        if ($cache->hasItem($instance->getInstanceId())) {
-            print "Has Item";
-            exit;
-        }
-
         $this->loadPlugin($instance,$event);
 
         $pluginName = $instance->getName();
@@ -210,7 +202,6 @@ class PluginManager
             $instance->setIcon($config['rcmPlugin'][$pluginName]['icon']);
         }
 
-        $cache->addItem($instance->getInstanceId(), $instance);
         return $instance;
     }
 }

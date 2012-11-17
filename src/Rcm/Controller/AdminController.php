@@ -226,6 +226,11 @@ class AdminController extends BaseController
         $pageUrl = $this->getRequest()->getQuery()->get('pageUrl');
         $pageName = $this->getRequest()->getQuery()->get('pageName');
         $pageRevision = $this->getRequest()->getQuery()->get('revision');
+
+        if ($pageRevision < 0) {
+            $this->createBlankPageAction();
+        }
+
         $this->savePageAs($pageUrl, $pageRevision, true, $pageName);
     }
 

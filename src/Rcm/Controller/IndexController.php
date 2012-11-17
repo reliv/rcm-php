@@ -243,12 +243,12 @@ class IndexController extends \Rcm\Controller\BaseController
     protected function getPageLayoutsForNewPages()
     {
         $config = $this->config;
-        $domain = $this->siteInfo->getDomain()->getDomainName();
+        $theme = $this->siteInfo->getTheme();
 
-        if (!empty($config['reliv']['layouts'][$domain])) {
-            return $config['reliv']['layouts'][$domain];
+        if (!empty($config['Rcm']['themes'][$theme]['layouts'])) {
+            return $config['Rcm']['themes'][$theme]['layouts'];
         } else {
-            return $config['reliv']['layouts']['default'];
+            return $config['Rcm']['themes']['generic']['layouts']['default'];
         }
     }
 

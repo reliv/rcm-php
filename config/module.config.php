@@ -22,16 +22,6 @@ return array(
 
     'reliv' => array(
 
-        'layouts' => array(
-            'default' => array(
-                'default' => array(
-                    'display'      => 'Two Column',
-                    'file'         => 'two-column.phtml',
-                    'screenShot'   => '/modules/rcm/images/admin/layouts/GuestLayoutPageScreenshot.png',
-                ),
-            ),
-        ),
-
         'createBlankPagesErrors' => array(
             'missingItems' => 'Please make sure to include a Page Name and select the layout you wish to use.',
             'pageExists' => 'The page URL provided already exists'
@@ -67,19 +57,12 @@ return array(
                                 'href' => "#",
                             ),*/
 
-                            'Page From Template' => array(
-                                'display' => 'Page From Template',
+                            'Page' => array(
+                                'display' => 'Page',
                                 'aclGroups' => 'admin',
-                                'cssClass' => 'pageTemplateIcon',
+                                'cssClass' => 'rcmNewPageIcon rcmNewPage',
                                 'href' => '#',
                             ),
-
-                            'Blank Page' => array(
-                                'display' => 'Blank Page',
-                                'aclGroups' => 'admin',
-                                'cssClass' => 'blankPageIcon',
-                                'href' => '#',
-                            )
                         )
                     ),
 
@@ -373,6 +356,7 @@ return array(
             'adminTitleBar' => '\Rcm\View\Helper\AdminTitleBar',
             'rcmViewInit' => '\Rcm\View\Helper\RcmViewInit',
             'renderPlugin' => 'Rcm\View\Helper\RenderPlugin',
+            'getNewTemplateWizard' => '\Rcm\View\Helper\GetNewTemplateWizard',
         ),
     ),
 

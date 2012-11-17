@@ -116,8 +116,7 @@ class Module
                     );
                 },
 
-                'rcmUserManager' =>
-                function($serviceMgr)
+                'rcmUserManager' => function($serviceMgr)
                 {
                     $service = new \Rcm\Model\UserManagement\DoctrineUserManager(
                         $serviceMgr->get('cypher')
@@ -130,7 +129,26 @@ class Module
                     return $serviceMgr->get(
                         'doctrine.entitymanager.ormdefault'
                     );
-                }
+                },
+                'rcmCache' => function($serviceMgr) {
+                    $config = $serviceMgr->get('config');
+
+                    $cache = \Zend\Cache\StorageFactory::factory(
+                        array(
+                            'adapter' => 'filesystem',
+                            'plugins' => array(
+                                'exception_handler' => array('throw_exceptions' => true),
+                                'serializer'
+                            ),
+                        )
+                    );
+
+                   $cache->setOptions(array(
+                        'cache_dir' => '/www/sites/reliv/data/cache'
+                   ));
+
+                    return $cache;
+                },
             ),
         );
     }
@@ -178,26 +196,7 @@ class Module
                     return $controller;
                 },
 
-                'rcmCache' => function($controllerMgr) {
-                    $serviceMgr=$controllerMgr->getServiceLocator();
-                    $config = $serviceMgr->get('config');
 
-                    $cache = \Zend\Cache\StorageFactory::factory(
-                        array(
-                            'adapter' => 'filesystem',
-                            'plugins' => array(
-                                'exception_handler' => array('throw_exceptions' => false),
-                                'serializer'
-                            ),
-                        )
-                    );
-
-                    $cache->setOptions(array(
-                        'cache_dir' => '/www/sites/reliv/data/cache'
-                    ));
-
-                    return $cache;
-                },
             )
         );
     }

@@ -250,6 +250,13 @@ function RcmEdit(config) {
     me.editor = {};
 
     /**
+     * Page Manager Object.  This contains all the functions to create new pages.
+     *
+     * @type {Object}
+     */
+    me.pageManager = {};
+
+    /**
      * Route to get a new plugin instance.
      *
      * @type {String}
@@ -390,6 +397,8 @@ function RcmEdit(config) {
         $("#rcmAdminTitleBarMenu li").click(function(){
             $("#rcmAdminTitleBarMenu li ul").toggle();
         });
+
+        me.pageManager.createNew();
     };
 
     /**
@@ -1644,4 +1653,123 @@ function RcmEdit(config) {
 
         return true;
     }
+
+    /****************************/
+    /**     Page Manager        */
+    /****************************/
+
+    me.pageManager.createNew = function() {
+        $(".rcmNewPage").click(function(){
+
+            $(".rcmNewPageLayoutContainer").click(function(){
+                $(".rcmNewPageLinkOverlay").removeClass("rcmNewPageLinkOverlayActive");
+                $(this).find(".rcmNewPageLinkOverlay").addClass("rcmNewPageLinkOverlayActive");
+                var selectedValue = $(this).find(".rcmLayoutKeySelector").attr('name');
+                $("#rcmNewPageSelectedLayout").val(selectedValue);
+            });
+
+            $("#rcmNewFromTemplateWizard").find("#rcmPageRevision").change(function(){
+                var revision = $("#rcmPageRevision").val();
+
+                if (revision < 0) {
+                    $("#rcmNewPageLayoutSelector").show();
+                } else {
+                    $("#rcmNewPageLayoutSelector").hide();
+                }
+            });
+
+            $("#rcmNewFromTemplateWizard").css('left', 0).css('position', 'static').dialog({
+                title: 'Create a New Page',
+                width: 725,
+                modal: true,
+                zIndex: 999999,
+                buttons:{
+                    Cancel:function () {
+
+                        $(this).dialog("close");
+                    },
+                    Ok:function () {
+                        var pageUrl = $("#rcmNewFromTemplateUrl").val();
+                        var pageName = $("#rcmNewFromTemplateName").val();
+                        var revision = $("#rcmPageRevision").val();
+                        var selectedLayout = null;
+
+                        if (revision < 0) {
+                            selectedLayout = $("#rcmNewPageSelectedLayout").val();
+                        }
+
+                        $.getJSON('/rcm-admin-create-from-template/'+me.language,
+                            {
+                                pageUrl: pageUrl,
+                                pageName: pageName,
+                                revision: revision,
+                                selectedLayout: selectedLayout
+                            },
+
+                            function(data) {
+                                if (data.pageOk == 'Y' && data.redirect) {
+                                    window.location = data.redirect;
+                                } else if(data.pageOk != 'Y' && data.error != '') {
+                                    $("#rcmNewFromTemplateErrorLine").html('<br /><p style="color: #FF0000;">'+data.error+'</p><br />').show();
+                                } else {
+                                    $("#rcmNewFromTemplateErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
+                                }
+                            }
+                        ).error(function(){
+                                $("#rcmNewFromTemplateErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
+                            })
+                    }
+                }
+            });
+
+            $('#rcmNewFromTemplateUrl').keyup(function(){
+                var validationContainer = $("#rcmNewFromTemplateValidatorIndicator");
+                me.checkPageName(this, validationContainer);
+            });
+        });
+    };
+
+    me.checkPageName = function(inputField, resultContainer) {
+
+        /* Get the value of the input field and filter */
+        var pageUrl = $(inputField).val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9\-\_]/g, "");
+        $(inputField).val(pageUrl);
+
+        /* make sure that the page name is greater then 1 char */
+        if(pageUrl.length < 1) {
+            $(resultContainer).removeClass('ui-icon-check')
+            $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon')
+            $(inputField).addClass('RcmErrorInputHightlight');
+            $(inputField).removeClass('RcmOkInputHightlight');
+            $(resultContainer).html('');
+            return;
+        }
+
+        /* Check name via rest service */
+        var pageOk = false;
+
+        $.getJSON('/rcm-admin-checkpage/'+me.language, { pageUrl: pageUrl }, function(data) {
+            if (data.pageOk == 'Y') {
+                $(resultContainer).removeClass('ui-icon-alert')
+                $(resultContainer).addClass('ui-icon-check').addClass('ui-icon');
+                $(inputField).removeClass('RcmErrorInputHightlight');
+                $(inputField).addClass('RcmOkInputHightlight');
+            } else if(data.pageOk != 'Y') {
+                $(resultContainer).removeClass('ui-icon-check')
+                $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon');
+                $(inputField).addClass('RcmErrorInputHightlight');
+                $(inputField).removeClass('RcmOkInputHightlight');
+            } else {
+                $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
+                $(inputField).addClass('RcmErrorInputHightlight');
+                $(inputField).removeClass('RcmOkInputHightlight');
+            }
+        }).error(function(){
+                $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
+                $(inputField).addClass('RcmErrorInputHightlight');
+                $(inputField).removeClass('RcmOkInputHightlight');
+            })
+
+        return pageOk;
+    };
 }

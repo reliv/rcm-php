@@ -104,6 +104,10 @@
     /*overflow-x: scroll;*/
 }
 
+#rcmNewPageLayoutSelector {
+    display: none;
+}
+
 .RcmBlankPageInput {
     width: 500px !important;
 }
