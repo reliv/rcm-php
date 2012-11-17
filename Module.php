@@ -177,6 +177,27 @@ class Module
                         );
                     return $controller;
                 },
+
+                'rcmCache' => function($controllerMgr) {
+                    $serviceMgr=$controllerMgr->getServiceLocator();
+                    $config = $serviceMgr->get('config');
+
+                    $cache = \Zend\Cache\StorageFactory::factory(
+                        array(
+                            'adapter' => 'filesystem',
+                            'plugins' => array(
+                                'exception_handler' => array('throw_exceptions' => false),
+                                'serializer'
+                            ),
+                        )
+                    );
+
+                    $cache->setOptions(array(
+                        'cache_dir' => '/www/sites/reliv/data/cache'
+                    ));
+
+                    return $cache;
+                },
             )
         );
     }
