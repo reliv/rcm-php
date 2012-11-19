@@ -157,7 +157,7 @@ var ApertureSlider = function (apertureDiv, frameCount, width, minHeight) {
     /**
      * slide to next frame
      *
-     * @param {Function} callBack [optional] is called when sliding is complete
+     * @param {Function} [callBack] is called when sliding is complete
      */
     me.goForward = function (callBack) {
         if (currentFrame < frameCount) {
@@ -168,7 +168,7 @@ var ApertureSlider = function (apertureDiv, frameCount, width, minHeight) {
     /**
      * Slide to last frame
      *
-     * @param {Function} callBack [optional] is called when sliding is complete
+     * @param {Function} [callBack] is called when sliding is complete
      */
     me.goBack = function (callBack) {
         if (currentFrame != 1) {
