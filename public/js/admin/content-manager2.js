@@ -774,7 +774,7 @@ function RcmEdit(config) {
         var pluginContainer = $(pluginContainer).find('.rcmPluginContainer');
 
         if(typeof(window[containerData.editClass])=='function'){
-            try {
+//            try {
                 var plugin = new window[containerData.editClass](
                     containerData.instanceId,
                     $(pluginContainer)
@@ -787,10 +787,10 @@ function RcmEdit(config) {
                     instanceId   : containerData.instanceId,
                     pluginName   : containerData.pluginName
                 });
-            } catch (err) {
-                console.log(err.toString());
-                throw "An error occurred initing editing for a plugin"
-            }
+//            } catch (err) {
+//                console.log(err.toString());
+//                throw "An error occurred initing editing for a plugin"
+//            }
         }
     };
 

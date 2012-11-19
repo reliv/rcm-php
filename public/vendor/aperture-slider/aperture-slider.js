@@ -56,8 +56,8 @@ var ApertureSlider = function (apertureDiv, frameCount, width, minHeight) {
      * Sets the current frame. This is the meat of this class.
      *
      * @param {Integer} newFrame the frame that we want to switch to
-     * @param {Function} callBack [optional] is called when sliding is complete
-     * @param {Boolean} skipPushState [optional] used internally only
+     * @param {Function} [callBack] is called when sliding is complete
+     * @param {Boolean} [skipPushState] used internally only
      */
     me.setCurrentFrame = function (newFrame, callBack, skipPushState) {
 
@@ -188,7 +188,7 @@ var ApertureSlider = function (apertureDiv, frameCount, width, minHeight) {
     /**
      * Enables support for the browser's back and refresh buttons
      *
-     * @param {String} urlName the url parameter name to use to store the
+     * @param {String} [urlName] the url parameter name to use to store the
      * current frame. Example: "step"
      */
     me.enableBrowserButtonSupport = function(urlName){
