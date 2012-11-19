@@ -1298,7 +1298,6 @@ function RcmEdit(config) {
             me.layoutEditor.loadPluginJs(data.js);
         }
 
-        console.log(data.display);
         $(helper).html(data.display);
         $(pluginContainer).find(".rcmPluginContainer").html(data.display);
 
@@ -1361,16 +1360,15 @@ function RcmEdit(config) {
      * Makes plugins sortable.
      */
     me.layoutEditor.makePluginsSortable = function() {
-        $(".rcmContainer").each(function(v, e){
-            $(e).sortable({
-                items: '.rcmPlugin',
+        $(".rcmContainer").sortable({
+                //items: '.rcmPlugin',
                 connectWith: '.rcmContainer',
                 dropOnEmpty: true,
                 helper: "original",
                 tolerance : 'pointer',
                 placeholder: "rcmPluginSortPlaceHolder",
                 forcePlaceholderSize: false,
-                handle:'.rcmSortableHandle',
+                //handle:'.rcmSortableHandle',
                 change: function(event, ui) {
                     me.layoutEditor.pluginSortableChange(ui);
                 },
@@ -1394,7 +1392,6 @@ function RcmEdit(config) {
                 },
                 cancel: '[data-textedit]'
             });
-        });
 
         $('#RcmRealPage').find('.rcmPlugin').resizable({grid: 10});
     };
