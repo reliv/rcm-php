@@ -1361,7 +1361,6 @@ function RcmEdit(config) {
      */
     me.layoutEditor.makePluginsSortable = function() {
         $(".rcmContainer").sortable({
-                //items: '.rcmPlugin',
                 connectWith: '.rcmContainer',
                 dropOnEmpty: true,
                 helper: "original",
