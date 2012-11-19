@@ -76,11 +76,11 @@ class RenderPlugin extends AbstractHelper
 
         $html .= 'style="';
 
-        if (!empty($width)) {
+        if (!empty($width) && $width != 'px') {
             $html .= " width: ".$width.";";
         }
 
-        if (!empty($height)) {
+        if (!empty($height) && $height != 'px') {
             $html .= " height: ".$height.";";
         }
 
