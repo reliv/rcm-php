@@ -1,9 +1,11 @@
 <?php
 
 /** @var \Rcm\Entity\PluginInstance $newInstance */
+
 $jsonReturn['display'] = $this->render($this->newInstance->getView());
-$jsonReturn['display'] .= $this->headScript();
-$jsonReturn['display'] .= $this->headLink();
+$jsonReturn['display'] = $this->headScript(). $jsonReturn['display'];
+$jsonReturn['display'] = $this->headLink(). $jsonReturn['display'];;
+
 $jsonReturn['js'] = $this->newInstance->getAdminEditJs();
 $jsonReturn['css'] = $this->newInstance->getAdminEditCss();
 
