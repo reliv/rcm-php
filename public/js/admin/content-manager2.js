@@ -1298,7 +1298,6 @@ function RcmEdit(config) {
             me.layoutEditor.loadPluginJs(data.js);
         }
 
-        console.log(data.display);
         $(helper).html(data.display);
         $(pluginContainer).find(".rcmPluginContainer").html(data.display);
 
@@ -1362,37 +1361,37 @@ function RcmEdit(config) {
      */
     me.layoutEditor.makePluginsSortable = function() {
         $(".rcmContainer").sortable({
-                connectWith: '.rcmContainer',
-                dropOnEmpty: true,
-                helper: "original",
-                tolerance : 'pointer',
-                placeholder: "rcmPluginSortPlaceHolder",
-                forcePlaceholderSize: false,
-                handle:'.rcmSortableHandle',
-                change: function(event, ui) {
-                    me.layoutEditor.pluginSortableChange(ui);
-                },
-                receive: function(event, ui) {
-                    me.layoutEditor.pluginSortableReceive(this, ui);
-                },
-                start: function(event, ui){
-                    me.layoutEditor.pluginSortableStart(ui);
-                },
-                stop: function (event, ui){
-                    $('html').removeClass('rcmDraggingPlugins');
+            connectWith: '.rcmContainer',
+            dropOnEmpty: true,
+            helper: "original",
+            tolerance : 'pointer',
+            placeholder: "rcmPluginSortPlaceHolder",
+            forcePlaceholderSize: false,
+            handle:'.rcmSortableHandle',
+            change: function(event, ui) {
+                me.layoutEditor.pluginSortableChange(ui);
+            },
+            receive: function(event, ui) {
+                me.layoutEditor.pluginSortableReceive(this, ui);
+            },
+            start: function(event, ui){
+                me.layoutEditor.pluginSortableStart(ui);
+            },
+            stop: function (event, ui){
+                $('html').removeClass('rcmDraggingPlugins');
 
-                    var initialInstance = $(ui.item).find(".initialState");
+                var initialInstance = $(ui.item).find(".initialState");
 
-                    if (!$(initialInstance).is('.initialState')) {
-                        /* Let the editor know that dragging has stopped */
-                        me.rcmPlugins.initPluginRichEdits(ui.item);
-                    }
+                if (!$(initialInstance).is('.initialState')) {
+                    /* Let the editor know that dragging has stopped */
+                    me.rcmPlugins.initPluginRichEdits(ui.item);
+                }
 
 
-                },
-                cancel: '[data-textedit]'
-            });
+            },
+            cancel: '[data-textedit]'
         });
+
 
         $('#RcmRealPage').find('.rcmPlugin').resizable({grid: 10});
     };
