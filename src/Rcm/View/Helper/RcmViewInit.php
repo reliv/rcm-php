@@ -120,7 +120,7 @@ class RcmViewInit extends AbstractHelper
             $renderer->basePath() . '/modules/rcm/vendor/jquery-block-ui/jquery.blockUI.js', 'text/javascript'
         );
 
-        $script = '$.blockUI.defaults = { baseZ: 2000};';
+        $script = '$.blockUI.defaults = { baseZ: 2000 };';
 
         $renderer->headScript()->appendScript($script,'text/javascript');
 
