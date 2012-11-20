@@ -357,6 +357,7 @@ return array(
             'rcmViewInit' => '\Rcm\View\Helper\RcmViewInit',
             'renderPlugin' => 'Rcm\View\Helper\RenderPlugin',
             'getNewTemplateWizard' => '\Rcm\View\Helper\GetNewTemplateWizard',
+            'getSaveAsTemplateWizard' => '\Rcm\View\Helper\GetSaveAsTemplateWizard',
         ),
     ),
 

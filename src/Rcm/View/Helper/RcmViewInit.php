@@ -336,6 +336,8 @@ class RcmViewInit extends AbstractHelper
     protected function getAdminTopBody(\Zend\View\Renderer\PhpRenderer $renderer)
     {
         $this->appendBodyTop($renderer->getNewTemplateWizard());
+        $this->appendBodyTop($renderer->getSaveAsTemplateWizard());
+
         $this->appendBodyTop('
             <div id="ContentManagerTopAdminPanel">
 
