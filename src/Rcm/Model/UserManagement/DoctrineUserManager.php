@@ -39,11 +39,24 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
         $this->session->userId=$user->getUserId();
     }
 
-    /*
-     * TODO TEST THIS, DON'T THINK IT WORKS
-     */
     function clearLoggedInUser(){
-        $this->session->offsetUnset('userId');
+        $this->destroySession();
+    }
+
+    /**
+     * Deletes all keys in this session container. Is two-foreach process due to
+     * weirdness with zf2 sessions
+     *
+     * @return null
+     */
+    function destroySession(){
+        $keysToKill = array();
+        foreach($this->session->getIterator() as $key => $val){
+            $keysToKill[]=$key;
+        }
+        foreach ($keysToKill as $key){
+            $this->session->offsetUnset($key);
+        }
     }
 
     /**
