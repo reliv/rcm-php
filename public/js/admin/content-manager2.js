@@ -399,6 +399,7 @@ function RcmEdit(config) {
         });
 
         me.pageManager.createNew();
+        me.pageManager.saveAsTemplate();
     };
 
     /**
@@ -1724,6 +1725,49 @@ function RcmEdit(config) {
                 me.checkPageName(this, validationContainer);
             });
         });
+    };
+
+    me.pageManager.saveAsTemplate = function() {
+        $('.saveAsTemplate').click(function(){
+            $("#rcmSaveTemplateWizard").css('left', 0).css('position', 'static').dialog({
+                title: 'Save as Template',
+                width: 400,
+                modal: true,
+                zIndex: 999999,
+                buttons:{
+                    Cancel:function () {
+                        $(this).dialog("close");
+                    },
+                    Ok:function () {
+                        var pageName = $("#rcmTemplateNameInput").val();
+                        var revisionId = me.pageRevision;
+
+                        $.getJSON('/rcm-admin-save-as-template/'+me.language,
+                            {
+                                pageName: pageName,
+                                revision: revisionId
+                            },
+                            function(data) {
+                                if (data.pageOk == 'Y' && data.redirect) {
+                                    window.location = data.redirect;
+                                } else if(data.pageOk != 'Y' && data.error != '') {
+                                    $("#rcmSaveTemplateError").html('<br /><p style="color: #FF0000;">'+data.error+'</p><br />').show();
+                                } else {
+                                    $("#rcmSaveTemplateError").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
+                                }
+                            }
+                        ).error(function(){
+                                $("#rcmSaveTemplateError").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
+                            })
+                    }
+                }
+            });
+
+            $('#rcmTemplateNameInput').keyup(function(){
+                var validationContainer = $("#newSaveTemplateIndicator");
+                me.checkPageName(this, validationContainer);
+            });
+        })
     };
 
     me.checkPageName = function(inputField, resultContainer) {
