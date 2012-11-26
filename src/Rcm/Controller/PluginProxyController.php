@@ -20,7 +20,7 @@
 namespace Rcm\Controller;
 
 use \Rcm\Controller\BaseController,
-\Rcm\Entity\PageRevision,
+    \Rcm\Exception\PluginActionNotImplemented,
 Zend\View\Model\ViewModel,
 \Rcm\Entity\PluginInstance;
 
@@ -55,11 +55,16 @@ class PluginProxyController extends BaseController
             return false;
         }
 
+        try{
         /**
          * @var \Zend\View\Model\ViewModel | \Zend\Http\Response
          */
         $actionResponse = $this->pluginManager
             ->callPlugin($instance, $action.'AdminAjaxAction');
+        }catch(PluginActionNotImplemented $e){
+            $this->response->setStatusCode(404);
+            return false;
+        }
 
         return $actionResponse;
     }
@@ -81,8 +86,16 @@ class PluginProxyController extends BaseController
             return false;
         }
 
-        $view = $this->pluginManager
-            ->callPlugin($instance, $action.'AjaxAction');
+        try{
+            /**
+             * @var \Zend\View\Model\ViewModel | \Zend\Http\Response
+             */
+            $view = $this->pluginManager
+                ->callPlugin($instance, $action.'AjaxAction');
+        }catch(PluginActionNotImplemented $e){
+            $this->response->setStatusCode(404);
+            return false;
+        }
 
         exit($view->content);
     }
