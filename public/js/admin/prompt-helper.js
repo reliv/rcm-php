@@ -4,8 +4,6 @@
      *
      * @param {String} text what to say to user
      * @param {Function} okCallBack [optional] called for ok button
-     *
-     * @return {Null}
      */
     $.fn.alert = function(text, okCallBack){
         $('<p>' + text + '</p>').dialog({
@@ -20,7 +18,7 @@
                 }
             }
         });
-    }
+    };
 
     /**
      * Pops up a confirm dialog using jQuery UI
@@ -28,8 +26,6 @@
      * @param {String} text what we are asking the user to confirm
      * @param {Function} [okCallBack] called for ok button click
      * @param {Function} [cancelCallBack] called for cancel button click
-     *
-     * @return {Null}
      */
     $.fn.confirm = function(text, okCallBack, cancelCallBack){
         $('<p>' + text + '</p>').dialog({
@@ -50,7 +46,7 @@
                 }
             }
         });
-    }
+    };
 
     $.fn.addImage = function (name, description, src) {
         var p = $('<p class="imageInput" style="overflow-y:hidden"></p>');
@@ -82,7 +78,7 @@
             });
         }
         return this;
-    }
+    };
 
     /**
      * Build html for a text input
@@ -99,7 +95,7 @@
             '<input name="' + name + '" value="' + value + '"></p>'
         );
         return this;
-    }
+    };
 
     /**
     * Build html for a text input
@@ -123,23 +119,24 @@
         p.append(div);
         div.ckeditor();
         return this;
-    }
+    };
 
     /**
      * Build html for a select drop down box
      *
      * @param {String} name html name
      * @param {String} description title to show user
-     * @param {Array} choices options [html key => display value]
-     * @param {String} value current choice key
-     * @param {Boolean} allowCustomValues allow user to enter custom values that
+     * @param {Object} choices options [html key => display value]
+     * @param {String} [value] current choice key
+     * @param {Boolean} [allowCustomValues] allow user to enter custom values that
      *                  are no in the select
      *
      * @return {String}
      */
     $.fn.addSelect = function (name, description, choices, value, allowCustomValues) {
         var p = $('<p></p>');
-        p.append('<label for="' + name + '">' + description + '</label><br>')
+        var selected;
+        p.append('<label for="' + name + '">' + description + '</label><br>');
         var customClass = '';
         if(allowCustomValues){
             customClass = ' class="selectAllowCustomValues"';
@@ -147,7 +144,7 @@
         var select=$('<select' + customClass + ' name="' + name + '"><select>');
 
         for (var key in choices) {
-            var selected = '';
+            selected = '';
             if (key == value) {
                 selected=' selected="selected"';
             }
@@ -156,7 +153,7 @@
         var inputBox = '';
         if (allowCustomValues) {
 
-            var selected = '';
+            selected = '';
             var displayNone = ' style="display:none"';
             var customValue = '';
             if (!(value in choices)) {
@@ -199,15 +196,15 @@
             });
         }
         return this;
-    }
+    };
 
 
     /**
      * Build a check box
      *
-     * @param string name name
-     * @param string description name to show user
-     * @param boolean checked is it checked?
+     * @param {String} name name
+     * @param {String} description name to show user
+     * @param {Boolean} checked is it checked?
      *
      * @return {String}
      */
@@ -221,5 +218,5 @@
                 '" value="true" />' + description + '</p>'
         );
         return this;
-    }
+    };
 })( jQuery );
