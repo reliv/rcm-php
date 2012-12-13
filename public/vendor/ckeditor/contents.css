@@ -11,9 +11,9 @@ body
 
 	/* Text color */
 	color: #222;
-    height: auto;
 
-
+	/* Remove the background color to make it transparent */
+	background-color: #fff;
 }
 
 ol,ul,dl
