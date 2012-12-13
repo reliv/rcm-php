@@ -26,8 +26,8 @@
      * Pops up a confirm dialog using jQuery UI
      *
      * @param {String} text what we are asking the user to confirm
-     * @param {Function} okCallBack [optional] called for ok button click
-     * @param {Function} cancelCallBack [optional] called for cancel button click
+     * @param {Function} [okCallBack] called for ok button click
+     * @param {Function} [cancelCallBack] called for cancel button click
      *
      * @return {Null}
      */
