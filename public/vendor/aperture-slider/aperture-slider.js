@@ -275,6 +275,9 @@ var ApertureSlider = function (apertureDiv, frameCount, width, minHeight) {
 
 
     me.init = function (){
+        //Hide optional "Loading..." div
+        apertureDiv.parent().find('.apertureLoading').hide();
+
         //Add css
         frameDivs.css('float', 'left');
         frameDivs.css('width', width + 'px');
@@ -291,6 +294,7 @@ var ApertureSlider = function (apertureDiv, frameCount, width, minHeight) {
 
         //Focus on first input if this is a form
         me.focusOnFirstInput();
+
     }
 
     me.init();

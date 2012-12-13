@@ -102,34 +102,34 @@ return array(
                         ),
                     ),
 
-                    'Save' => array(
-                        'display' => 'Save',
-                        'aclGroups' => 'admin',
-                        'cssClass' => 'rcmSaveIcon rcmSaveMenu',
-                        'href' => '#',
-                        'links' => array(
-                            'Save Draft' => array(
-                                'display' => 'Save Draft',
-                                'aclGroups' => 'admin',
-                                'cssClass' => 'rcmSaveIcon rcmSave',
-                                'href' => '#',
-                            ),
-
-                            'Save and Publish Now' => array(
-                                'display' => 'Save Draft',
-                                'aclGroups' => 'admin',
-                                'cssClass' => 'rcmSaveIcon rcmSave',
-                                'href' => '#',
-                            ),
-
-                            'Save As...' => array(
-                                'display' => 'Save As...',
-                                'aclGroups' => 'admin',
-                                'cssClass' => 'rcmSaveAsIcon',
-                                'href' => '#',
-                            ),
-                        )
-                    ),
+//                    'Save' => array(
+//                        'display' => 'Save',
+//                        'aclGroups' => 'admin',
+//                        'cssClass' => 'rcmSaveIcon rcmSaveMenu',
+//                        'href' => '#',
+//                        'links' => array(
+//                            'Save Draft' => array(
+//                                'display' => 'Save Draft',
+//                                'aclGroups' => 'admin',
+//                                'cssClass' => 'rcmSaveIcon rcmSave',
+//                                'href' => '#',
+//                            ),
+//
+//                            'Save and Publish Now' => array(
+//                                'display' => 'Save Draft',
+//                                'aclGroups' => 'admin',
+//                                'cssClass' => 'rcmSaveIcon rcmSave',
+//                                'href' => '#',
+//                            ),
+//
+//                            'Save As...' => array(
+//                                'display' => 'Save As...',
+//                                'aclGroups' => 'admin',
+//                                'cssClass' => 'rcmSaveAsIcon',
+//                                'href' => '#',
+//                            ),
+//                        )
+//                    ),
 
 
 

@@ -102,6 +102,30 @@
     }
 
     /**
+    * Build html for a text input
+    *
+    * Due to ckEditor limitations, this must be called AFTER .dialog is called
+    *
+    * @param {String} name html name
+    * @param {String} description title to show user
+    * @param {String} value the current value
+    *
+    * @return String
+    */
+    $.fn.addRichEdit = function (name, description, value) {
+        var div = $('<div class="'+name+'">' + value +'</div>');
+        var p = $(
+            '<p>' +
+                '<label>' + description + '</label><br>' +
+            '</p>'
+        );
+        this.append(p);
+        p.append(div);
+        div.ckeditor();
+        return this;
+    }
+
+    /**
      * Build html for a select drop down box
      *
      * @param {String} name html name

@@ -65,6 +65,10 @@ class PluginManager
             $pluginController->setEvent($event);
         }
 
+        if(!method_exists($pluginController,$action)){
+            throw new \Rcm\Exception\PluginActionNotImplemented();
+        }
+
         if (empty($dataToPass)) {
             return $pluginController->{$action}($instance->getInstanceId());
         }

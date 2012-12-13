@@ -59,6 +59,10 @@
     width: 590px;
 }
 
+.ui-dialog  form.simple .ui-tabs-panel input {
+    width: 550px;
+}
+
 .ui-dialog form.simple input[type="checkbox"] {
     width: auto;
 }

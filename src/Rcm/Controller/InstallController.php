@@ -398,8 +398,23 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
      * @return null
      */
     function dropDatabase(){
-        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityMgr);
-        $schemaTool->dropDatabase();
+
+        try{
+
+            $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityMgr);
+            $schemaTool->dropDatabase();
+
+        }catch(\Exception $e){
+
+            //This fixes errors with removing tables wth foreign keys in MYSQL
+            $conn = $this->entityMgr->getConnection();
+            $params = $conn->getParams();
+            $databaseName = $params['master']['dbname'];
+            $conn->exec('drop database ' . $databaseName);
+            $conn->exec('create database ' . $databaseName);
+            $conn->exec('use ' . $databaseName);
+        }
+
     }
 
     /**
