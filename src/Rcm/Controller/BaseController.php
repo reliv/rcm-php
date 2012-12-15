@@ -238,4 +238,22 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
             );
         }
     }
+
+    /**
+     * Gets all the views available for the site/domain for use with the
+     * create new page option in the admin section.
+     *
+     * @return mixed
+     */
+    protected function getPageLayoutsForNewPages()
+    {
+        $config = $this->config;
+        $theme = $this->siteInfo->getTheme();
+
+        if (!empty($config['Rcm']['themes'][$theme]['layouts'])) {
+            return $config['Rcm']['themes'][$theme]['layouts'];
+        } else {
+            return $config['Rcm']['themes']['generic']['layouts']['default'];
+        }
+    }
 }

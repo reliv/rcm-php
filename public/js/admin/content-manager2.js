@@ -322,6 +322,19 @@ function RcmEdit(config) {
     me.siteWidesEditable = false;
 
 
+    /*
+     * Admin Popout window
+     */
+
+    me.adminPopoutWindow = function (pagePath, height, width, title) {
+        var popoutWidowDiv = $("#rcmAdminPagePopoutWindow");
+        $(popoutWidowDiv).load(pagePath+'/'+me.language);
+        $(popoutWidowDiv).dialog({
+            title: title,
+            height: height,
+            width: width
+        });
+    };
 
     /********************************/
     /*        Page Properties       */
@@ -398,7 +411,7 @@ function RcmEdit(config) {
             $("#rcmAdminTitleBarMenu li ul").toggle();
         });
 
-        me.pageManager.createNew();
+        //me.pageManager.createNew();
         me.pageManager.saveAsTemplate();
     };
 
@@ -1670,120 +1683,6 @@ function RcmEdit(config) {
     /****************************/
     /**     Page Manager        */
     /****************************/
-
-    me.pageManager.createNew = function() {
-        $(".rcmNewPage").click(function(){
-
-            $(".rcmNewPageLayoutContainer").click(function(){
-                $(".rcmNewPageLinkOverlay").removeClass("rcmNewPageLinkOverlayActive");
-                $(this).find(".rcmNewPageLinkOverlay").addClass("rcmNewPageLinkOverlayActive");
-                var selectedValue = $(this).find(".rcmLayoutKeySelector").attr('name');
-                $("#rcmNewPageSelectedLayout").val(selectedValue);
-            });
-
-            $("#rcmNewFromTemplateWizard").find("#rcmPageRevision").change(function(){
-                var revision = $("#rcmPageRevision").val();
-
-                if (revision < 0) {
-                    $("#rcmNewPageLayoutSelector").show();
-                } else {
-                    $("#rcmNewPageLayoutSelector").hide();
-                }
-            });
-
-            $("#rcmNewFromTemplateWizard").css('left', 0).css('position', 'static').dialog({
-                title: 'Create a New Page',
-                width: 725,
-                modal: true,
-                zIndex: 999999,
-                buttons:{
-                    Cancel:function () {
-
-                        $(this).dialog("close");
-                    },
-                    Ok:function () {
-                        var pageUrl = $("#rcmNewFromTemplateUrl").val();
-                        var pageName = $("#rcmNewFromTemplateName").val();
-                        var revision = $("#rcmPageRevision").val();
-                        var selectedLayout = null;
-
-                        if (revision < 0) {
-                            selectedLayout = $("#rcmNewPageSelectedLayout").val();
-                        }
-
-                        $.getJSON('/rcm-admin-create-from-template/'+me.language,
-                            {
-                                pageUrl: pageUrl,
-                                pageName: pageName,
-                                revision: revision,
-                                selectedLayout: selectedLayout
-                            },
-
-                            function(data) {
-                                if (data.pageOk == 'Y' && data.redirect) {
-                                    window.location = data.redirect;
-                                } else if(data.pageOk != 'Y' && data.error != '') {
-                                    $("#rcmNewFromTemplateErrorLine").html('<br /><p style="color: #FF0000;">'+data.error+'</p><br />').show();
-                                } else {
-                                    $("#rcmNewFromTemplateErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
-                                }
-                            }
-                        ).error(function(){
-                                $("#rcmNewFromTemplateErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
-                            })
-                    }
-                }
-            });
-
-            $('#rcmNewFromTemplateUrl').keyup(function(){
-                var validationContainer = $("#rcmNewFromTemplateValidatorIndicator");
-                me.checkPageName(this, validationContainer);
-            });
-        });
-    };
-
-    me.pageManager.saveAsTemplate = function() {
-        $('.saveAsTemplate').click(function(){
-            $("#rcmSaveTemplateWizard").css('left', 0).css('position', 'static').dialog({
-                title: 'Save as Template',
-                width: 400,
-                modal: true,
-                zIndex: 999999,
-                buttons:{
-                    Cancel:function () {
-                        $(this).dialog("close");
-                    },
-                    Ok:function () {
-                        var pageName = $("#rcmTemplateNameInput").val();
-                        var revisionId = me.pageRevision;
-
-                        $.getJSON('/rcm-admin-save-as-template/'+me.language,
-                            {
-                                pageName: pageName,
-                                revision: revisionId
-                            },
-                            function(data) {
-                                if (data.pageOk == 'Y' && data.redirect) {
-                                    window.location = data.redirect;
-                                } else if(data.pageOk != 'Y' && data.error != '') {
-                                    $("#rcmSaveTemplateError").html('<br /><p style="color: #FF0000;">'+data.error+'</p><br />').show();
-                                } else {
-                                    $("#rcmSaveTemplateError").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
-                                }
-                            }
-                        ).error(function(){
-                                $("#rcmSaveTemplateError").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
-                            })
-                    }
-                }
-            });
-
-            $('#rcmTemplateNameInput').keyup(function(){
-                var validationContainer = $("#newSaveTemplateIndicator");
-                me.checkPageName(this, validationContainer);
-            });
-        })
-    };
 
     me.checkPageName = function(inputField, resultContainer) {
 

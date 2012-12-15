@@ -62,6 +62,7 @@ return array(
                                 'aclGroups' => 'admin',
                                 'cssClass' => 'rcmNewPageIcon rcmNewPage',
                                 'href' => '#',
+                                'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
                             ),
                         )
                     ),
@@ -188,6 +189,7 @@ return array(
                                 'aclGroups' => 'admin',
                                 'cssClass' => 'saveAsTemplate',
                                 'href' => "#",
+                                'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-get-save-as-template', 150, 430, 'Copy to Template'); return false;"
                             ),
                         ),
                     ),
@@ -356,8 +358,6 @@ return array(
             'adminTitleBar' => '\Rcm\View\Helper\AdminTitleBar',
             'rcmViewInit' => '\Rcm\View\Helper\RcmViewInit',
             'renderPlugin' => 'Rcm\View\Helper\RenderPlugin',
-            'getNewTemplateWizard' => '\Rcm\View\Helper\GetNewTemplateWizard',
-            'getSaveAsTemplateWizard' => '\Rcm\View\Helper\GetSaveAsTemplateWizard',
         ),
     ),
 
@@ -410,7 +410,18 @@ return array(
             'rcm-admin-create-blank-page' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm-admin-create-blank-page/:language',
+                    'route' => '/rcm-admin-create-blank-page[/:language]',
+                    'defaults' => array(
+                        'controller'=> 'rcmAdminController',
+                        'action' => 'newPageWizard',
+                    ),
+                ),
+            ),
+
+            'rcm-admin-create-blank-page_create' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-admin-create-blank-page/create/:language',
                     'defaults' => array(
                         'controller'=> 'rcmAdminController',
                         'action' => 'createBlankPage',
@@ -425,6 +436,17 @@ return array(
                     'defaults' => array(
                         'controller' => 'rcmAdminController',
                         'action' => 'newFromTemplate',
+                    ),
+                ),
+            ),
+
+            'rcm-admin-get-save-as-template' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-admin-get-save-as-template/:language',
+                    'defaults' => array(
+                        'controller' => 'rcmAdminController',
+                        'action' => 'getSaveAsTemplate',
                     ),
                 ),
             ),

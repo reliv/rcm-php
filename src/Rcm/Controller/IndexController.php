@@ -186,16 +186,6 @@ class IndexController extends \Rcm\Controller\BaseController
             $this->getLayoutEditorContents()
         );
 
-        $layout->setVariable(
-            'newPageLayoutContainers',
-            $this->getPageLayoutsForNewPages()
-        );
-
-        $layout->setVariable(
-            'rcmTemplates',
-            $this->siteInfo->getTemplates()
-        );
-
         $layout->setVariable('newPluginCount', --$this->pluginCount);
         $layout->setVariable(
             'adminRichEditor',
@@ -234,23 +224,7 @@ class IndexController extends \Rcm\Controller\BaseController
         }
     }
 
-    /**
-     * Gets all the views available for the site/domain for use with the
-     * create new page option in the admin section.
-     *
-     * @return mixed
-     */
-    protected function getPageLayoutsForNewPages()
-    {
-        $config = $this->config;
-        $theme = $this->siteInfo->getTheme();
 
-        if (!empty($config['Rcm']['themes'][$theme]['layouts'])) {
-            return $config['Rcm']['themes'][$theme]['layouts'];
-        } else {
-            return $config['Rcm']['themes']['generic']['layouts']['default'];
-        }
-    }
 
     /**
      * Get a new instance of all plugins for use with the layout editor

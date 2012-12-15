@@ -42,6 +42,26 @@ use \Rcm\Controller\BaseController,
  */
 class AdminController extends BaseController
 {
+
+    public function newPageWizardAction()
+    {
+        $this->ensureAdminIsLoggedIn();
+
+
+
+        $viewVars['rcmTemplates'] = $this->siteInfo->getTemplates();
+
+        $viewVars['newPageLayoutContainers'] = $this->getPageLayoutsForNewPages();
+
+        return $viewVars;
+
+    }
+
+    public function getSaveAsTemplateAction()
+    {
+        $this->ensureAdminIsLoggedIn();
+    }
+
     public function checkPageNameJsonAction()
     {
         $this->ensureAdminIsLoggedIn();
