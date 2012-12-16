@@ -40,10 +40,14 @@ $this->headScript()->appendFile(
     $this->basePath() . '/modules/rcm/js/rcm.js', 'text/javascript'
 );
 
+$this->headLink()->prependStylesheet($this->basePath() . '/modules/rcm-generic/css/layout.css');
+
 echo $this->doctype();
 ?>
 
 <html lang="en">
+<!-- Website template by freewebsitetemplates.com -->
+
 <head>
     <meta charset="utf-8">
     <?php echo $this->headTitle($this->metaTitle) ?>

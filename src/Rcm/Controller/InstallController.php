@@ -127,6 +127,12 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     function createHomePage(){
         $this->instances = array();
 
+
+
+        $this->createJsonInstance(
+            'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 6, 0
+        );
+
         $this->createJsonInstance(
             'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 6, 0
         );
@@ -214,6 +220,17 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
 
     function createSiteWideContent(){
 
+        $this->createJsonInstance(
+            'RcmHtmlArea',
+            array(
+                'html' => '<h1>R-Writer</h1>',
+            ),
+            1,
+            0,
+            true,
+            'SiteName'
+        );
+
         $homeLink = $this->url()->fromRoute(
             'contentManager',
             array(
@@ -251,7 +268,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
             '
         );
         $this->createJsonInstance(
-            'RcmNavigation', $content, 1, 0, true, 'Site Navigation'
+            'RcmNavigation', $content, 1, 1, true, 'Site Navigation'
         );
 
         $content= array(
