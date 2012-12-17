@@ -411,8 +411,6 @@ function RcmEdit(config) {
             $("#rcmAdminTitleBarMenu li ul").toggle();
         });
 
-        //me.pageManager.createNew();
-        me.pageManager.saveAsTemplate();
     };
 
     /**
