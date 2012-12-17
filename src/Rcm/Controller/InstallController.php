@@ -127,15 +127,104 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     function createHomePage(){
         $this->instances = array();
 
-
-
         $this->createJsonInstance(
-            'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 6, 0
+            'RcmHtmlArea',
+            array(
+                'html' => '
+<table syle="width: 100%;" class="homePageTable">
+    <tr>
+        <td class="homePageTableTd">
+            <p>
+	            <strong>Complete &quot;What You See Is What You Get&quot; website editor</strong>
+	        </p>
+            <p>
+	            R-Witer has been built from the ground up to be a WYSIWYG website editor. &nbsp; Simply edit the site
+	            as is and publish. &nbsp;No need to open another browser, or go back and forth between preview and edit
+	            screens to see how your changes will look.
+	        </p>
+            <p>&nbsp;</p>
+            <p>
+	            <strong>Built for teams of all sizes</strong>
+	        </p>
+            <p>
+	            R-Writer is built to be used in big teams with multiple departments, or for your personal use. &nbsp;
+	            Create multiple admin accounts, each with independent access rights. &nbsp;Grant rights to indidual
+	            sites, pages, or even on a per plugin bases. &nbsp;This allows for complex settings where you could
+	            grant full access to one person and then grant access to one component, page, or site to another.
+	        </p>
+            <p>&nbsp;</p>
+            <p>
+	            <strong>Developer freindly</strong></p>
+            <p>
+	            R-Writer is built on top Zend Framework 2. &nbsp; Giving developers a comfortable standardized way to
+	            develop and extend the system to their needs. &nbsp;R-Writer itself is nothing more then a plugin
+	            module for Zend Framework 2. &nbsp;
+	        </p>
+
+        </td>
+        <td style="width: 378px; vertical-align: text-top;" >
+            <img src="/modules/rcm-generic/images/house.jpg">
+        </td>
+    </tr>
+</table>'
+            ),
+            2,
+            0
         );
 
         $this->createJsonInstance(
-            'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 6, 0
+            'RcmPortalAnnouncementBox',
+            array(
+                'top' => '',
+                'text' => 'Click to read more',
+                'href' => 'http://rwriter.org/forums',
+                'html' => '
+<img alt="Yummy Pastries" src="/modules/rcm-generic/images/pastries.jpg" />
+<p>
+    If you&lsquo;re having problems editing this website template, then don&lsquo;t hesitate to ask for help on
+    the <a href="http://rwriter.org/forums">Forums</a>.
+</p>
+'
+            ),
+            2,
+            1
         );
+
+        $this->createJsonInstance(
+            'RcmPortalAnnouncementBox',
+            array(
+                'top' => '',
+                'text' => 'Click to read more',
+                'href' => '/login',
+                'html' => '
+<img alt="Yummy Pastries" src="/modules/rcm-generic/images/fruits.jpg" />
+<p>
+    To begin editing your new site simply <a href="http://rwriter.org/forums">Login</a>.
+</p>
+'
+            ),
+            2,
+            2
+        );
+
+        $this->createJsonInstance(
+            'RcmPortalAnnouncementBox',
+            array(
+                'top' => '',
+                'text' => 'Click to read more',
+                'href' => 'http://www.freewebsitetemplates.com/',
+                'html' => '
+<img alt="Yummy Pastries" src="/modules/rcm-generic/images/cosmetics.jpg" />
+<p>
+    This website template has been designed by <a href="http://www.freewebsitetemplates.com/">Free Website Templates</a>.
+    for you, for free. You can replace all this text with your own text.
+</p>
+'
+            ),
+            2,
+            3
+        );
+
 
         $this->getPageFactory()->createPage(
             'index',
@@ -157,9 +246,9 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
             "userNameCopy" => "Username:",
             "loginPasswordCopy" => "Password",
             "loginSubmitCopy" => "Login",
-            "loginForgotPasswordCopy" => "Forgot your password?",
+            "loginForgotPasswordCopy" => "",
             "loginErrorInvalidCopy" => "Incorrect Username or Password",
-            "bottomLoginText" => "<strong>Don't have an account yet?</strong> <br /><a href=\"#\">Request a customer account.</a> <br /><a href=\"#\">Request a distributor account.</a>"
+            "bottomLoginText" => ""
         );
 
         $this->createJsonInstance('RcmLogin', $content, 2, 0);
@@ -179,8 +268,77 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     function createLicensePage(){
         $this->instances = array();
 
+        $content = array( 'html' => '
+<h1>R-Writer License (New BSD)</h1>
+<p>Copyright<sup>&copy;</sup> 2012, Reliv\' International, Inc.</p>
+<p>All rights reserved.</p>
+<p>&nbsp;</p>
+<p>Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:</p>
+<ul>
+    <li>Redistributions of source code must retain the above copyright notice,
+        this list of conditions and the following disclaimer.
+    </li>
+
+    <li>Redistributions in binary form must reproduce the above copyright notice,
+        this list of conditions and the following disclaimer in the documentation
+        and/or other materials provided with the distribution.
+    </li>
+
+    <li>Neither the name of Reliv\' International, Inc. nor the names of its
+      contributors may be used to endorse or promote products derived from this
+      software without specific prior written permission.
+    </li>
+</ul>
+<p>&nbsp;</p>
+
+<p>
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+    ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</p>
+
+<p>&nbsp;</p>
+<h1>Other Licences</h1>
+<p>R-Writer is dependent on other open source packages. These are independent of R-Writer and each has it\'s own
+        license.  These are listed below:</p>
+<p>&nbsp;</p>
+<ul>
+    <li><a href="http://framework.zend.com/">Zend Framework 2</a> - License: <a href="http://framework.zend.com/license">New BSD</a></li>
+    <li><a href="http://www.doctrine-project.org/">Doctrine 2</a> - License: <a href="https://github.com/doctrine/doctrine2/blob/master/LICENSE">MIT</a></li>
+    <li><a href="http://jquery.com/">JQuery</a> - License: <a href="http://jquery.org/license/">MIT</a></li>
+    <li><a href="http://www.malsup.com/jquery/block/">JQuery BlockUI</a> - Duel License:
+        <a href="http://www.opensource.org/licenses/mit-license.php">MIT</a> /
+        <a href="http://www.gnu.org/licenses/gpl.html">GPL</a>
+    </li>
+
+    <li>Editors (Optional)
+        <ul>
+            <li><a href="http://ckeditor.com/">CkEditor</a> -
+                Triple License:
+                <a href="http://www.gnu.org/licenses/gpl.html">GPL</a> /
+                <a href="http://www.gnu.org/licenses/lgpl.html">LGPL</a> /
+                <a href="http://www.mozilla.org/MPL/">MPL</a>
+            </li>
+
+            <li><a href="http://www.tinymce.com/">TinyMCE</a> - License: <a href="http://www.tinymce.com/wiki.php/License">GPL</a></li>
+            <li><a href="http://aloha-editor.org/">Aloha Editor</a> - License: <a href="http://aloha-editor.org/license.php">GPL</a>
+                (Commercial licenses may be purchased)
+            </li>
+        </ul>
+    </li>
+</ul>
+        ');
+
         $this->createJsonInstance(
-            'RcmHtmlArea', $this->getDefaultHtmlAreaContent(), 2, 0
+            'RcmHtmlArea', $content, 2, 0
         );
 
         $this->getPageFactory()->createPage(
@@ -271,13 +429,17 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
             'RcmNavigation', $content, 1, 1, true, 'Site Navigation'
         );
 
+        $this->createJsonInstance(
+            'RcmNavigation', $content, 3, 0, true, 'Footer Navigation'
+        );
+
         $content= array(
-            'html'=>'RCM is free software and licensed under the New BSD License'
+            'html'=>'<p>R-Writer is free software and licensed under the New BSD License</p>'
         );
 
 
         $this->createJsonInstance(
-            'RcmHtmlArea', $content, 2, 0, true, 'Footer Details'
+            'RcmHtmlArea', $content, 3, 1, true, 'Footer Copyright Notice'
         );
 
 //        $this->createJsonInstance(

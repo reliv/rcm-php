@@ -40,7 +40,7 @@ $this->headScript()->appendFile(
     $this->basePath() . '/modules/rcm/js/rcm.js', 'text/javascript'
 );
 
-$this->headLink()->prependStylesheet($this->basePath() . '/modules/rcm-generic/css/layout.css');
+$this->headLink()->appendStylesheet($this->basePath() . '/modules/rcm-generic/css/layout.css');
 
 echo $this->doctype();
 ?>
@@ -71,12 +71,8 @@ echo $this->doctype();
         <?php echo $this->getLayoutContainer(2); ?>
     </div>
 
-    <div id="rcmGenCallToAction">
-        <?php echo $this->getLayoutContainer(3); ?>
-    </div>
-
     <div id="rcmGenFooter">
-        <?php echo $this->getLayoutContainer(4); ?>
+        <?php echo $this->getLayoutContainer(3); ?>
     </div>
 </div>
 
