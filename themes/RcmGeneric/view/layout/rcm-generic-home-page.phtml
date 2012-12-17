@@ -40,10 +40,14 @@ $this->headScript()->appendFile(
     $this->basePath() . '/modules/rcm/js/rcm.js', 'text/javascript'
 );
 
+$this->headLink()->appendStylesheet($this->basePath() . '/modules/rcm-generic/css/layout.css');
+
 echo $this->doctype();
 ?>
 
 <html lang="en">
+<!-- Website template by freewebsitetemplates.com -->
+
 <head>
     <meta charset="utf-8">
     <?php echo $this->headTitle($this->metaTitle) ?>
@@ -67,12 +71,8 @@ echo $this->doctype();
         <?php echo $this->getLayoutContainer(2); ?>
     </div>
 
-    <div id="rcmGenCallToAction">
-        <?php echo $this->getLayoutContainer(3); ?>
-    </div>
-
     <div id="rcmGenFooter">
-        <?php echo $this->getLayoutContainer(4); ?>
+        <?php echo $this->getLayoutContainer(3); ?>
     </div>
 </div>
 
