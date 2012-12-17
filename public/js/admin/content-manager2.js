@@ -1122,8 +1122,12 @@ function RcmEdit(config) {
     me.layoutEditor.addPluginToolbar = function(pluginContainer)
     {
         $(pluginContainer).prepend("<span class='rcmSortableHandle rcmLayoutEditHelper' title='Move Plugin' />");
-        $(pluginContainer).prepend("<span class='rcmDeletePlugin rcmLayoutEditHelper' title='Delete Plugin' />");
-        $(pluginContainer).prepend("<span class='rcmSettingPlugin rcmLayoutEditHelper' title='Make Site-Wide' />");
+        //$(pluginContainer).prepend("<span class='rcmDeletePluginMenuItem rcmLayoutEditHelper' title='Delete Plugin' />");
+        //$(pluginContainer).prepend("<span class='rcmSiteWidePluginMenuItem rcmLayoutEditHelper' title='Make Site-Wide' />");
+
+
+        var pullDownMenu ='<span class="rcmContainerMenu rcmLayoutEditHelper" title="Container Menu"><ul><li><a href="#"></a><ul><li><a href="#" class="rcmSiteWidePluginMenuItem">Mark as site-wide</a> </li><li><a href="#" class="rcmDeletePluginMenuItem">Delete Plugin</a> </li></ul></li></ul></span>'
+        $(pluginContainer).prepend(pullDownMenu);
 
         $(pluginContainer).hover(
             function() {
@@ -1138,12 +1142,12 @@ function RcmEdit(config) {
             }
         );
 
-        $(pluginContainer).find(".rcmDeletePlugin").click(function(e) {
+        $(pluginContainer).find(".rcmDeletePluginMenuItem").click(function(e) {
             me.layoutEditor.deletePlugin($(this).parent());
             e.preventDefault();
         });
 
-        $(pluginContainer).find(".rcmSettingPlugin").click(function(e) {
+        $(pluginContainer).find(".rcmSiteWidePluginMenuItem").click(function(e) {
             me.layoutEditor.makeSiteWide($(this).parent());
         })
     };

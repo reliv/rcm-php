@@ -74,8 +74,8 @@ function RcmCkEditor(config) {
      */
     me.addRichEditor = function(container, textAreaId) {
         //Hack to keep CKEdits the correct size
-        var parent = $(container).parent();
-        $(parent).width($(parent).width());
+//        var parent = $(container).parent();
+//        $(parent).width($(parent).width());
 
         //Get Current HTML of div area
         var htmlToAddToTextArea = $(container).html();
