@@ -967,19 +967,17 @@ function RcmEdit(config) {
         return dataToReturn;
     };
 
-    me.rebuildAllEditorsInContainer = function (pluginContainer){
-
-        /*
-        Plugins are unlikely to realize that this file their container's
-        container the name "container", so we find it for them.
-         */
-        if(!pluginContainer.hasClass('rcmPlugin')){
-            pluginContainer = pluginContainer.closest('.rmcPlugin');
-        }
-
-        me.rcmPlugins.removeEdits(pluginContainer);
-        me.rcmPlugins.initPluginRichEdits(pluginContainer);
-        me.rcmPlugins.initHtml5Edits(pluginContainer);
+    me.refreshEditors = function (){
+        $.each(
+            me.rcmPlugins.activeEditors,
+            function(){
+                var editor = this.editor;
+                if(editor.hasOwnProperty('mode')){//Is it a ckEdit?
+                    editor.setMode('source');
+                    editor.setMode('wysiwyg');
+                }
+            }
+        );
     };
 
     me.rcmPlugins.removeEdits = function(pluginContainer) {
