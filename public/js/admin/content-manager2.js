@@ -600,6 +600,7 @@ function RcmEdit(config) {
      * Add an Unlock option to the right click menu for locked plugins.
      */
     me.ui.addUnlockRightClick = function() {
+        $('.rcmLockOverlay').dblclick(me.ui.unlock);
         $.contextMenu({
             selector: '.rcmLockOverlay',
 
@@ -608,20 +609,21 @@ function RcmEdit(config) {
                 unlockMe:{
                     name:'Unlock',
                     icon:'delete',
-                    callback:function (action, el, pos) {
-                        var container = $(this);
-                        var isSiteWide = $(container).parent().attr('data-rcmSiteWidePlugin');
-
-                        if (isSiteWide == 'Y') {
-                            me.rcmPlugins.initSiteWidePlugins()
-                        } else {
-                            me.switchToEditMode();
-                        }
-
-                    }
+                    callback:me.ui.unlock
                 }
             }
         });
+    };
+
+    me.ui.unlock = function () {
+        var container = $(this);
+        var isSiteWide = $(container).parent().attr('data-rcmSiteWidePlugin');
+
+        if (isSiteWide == 'Y') {
+            me.rcmPlugins.initSiteWidePlugins()
+        } else {
+            me.switchToEditMode();
+        }
     };
 
     /***********************/
@@ -706,7 +708,7 @@ function RcmEdit(config) {
         var editButton = this;
 
         $().confirm(
-            'Please note:  Any changes you make to a site wide plugin will be published and made live when you save your changes.',
+            'Unlock Site-Wide Plugins?<br><Br>Please Note: Any changes you make to a site-wide plugin will be published and made live when you save your changes.',
             function() {
                 me.ui.switchEasyEditNavButtons();
                 me.rcmPlugins.preformUnlockSiteWide();
