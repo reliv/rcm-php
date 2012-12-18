@@ -75,8 +75,8 @@ return array(
                         'cssClass' => 'draftsIcon',
                         'href' => '#',
                         'links' => array(
-                            'Edit Page' => array(
-                                'display' => 'Edit Page',
+                            'Page' => array(
+                                'display' => 'Edit Content',
                                 'aclGroups' => 'admin',
                                 'cssClass' => 'rcmEditPageIcon rcmEditPage',
                                 'href' => '#',
@@ -88,7 +88,7 @@ return array(
 //                                'href' => '#',
 //                            ),
                             'Page Layout' => array(
-                                'display' => 'Page Layout',
+                                'display' => 'Add/Remove Plugins on Page',
                                 'aclGroups' => 'admin',
                                 'cssClass' => 'rcmLayoutIcon rcmShowLayoutEditor',
                                 'href' => '#',
@@ -226,21 +226,21 @@ return array(
                         'href' => '#',
                     ),
 
-                    'Site Plugins' => array(
-                        'display' => 'Site Plugins',
+                    'Site-Wide Plugins' => array(
+                        'display' => 'Site-Wide Plugins',
                         'aclGroups' => 'admin',
                         'cssClass' => 'draftsIcon',
                         'href' => '#',
                         'links' => array(
-                            'Edit Site Plugins' => array(
-                                'display' => 'Edit Active Site Plugins',
+                            'Edit Only Site-Wide Plugins' => array(
+                                'display' => 'Edit Site-Wide Plugin Content',
                                 'aclGroups' => 'admin',
                                 'cssClass' => 'rcmEditSiteWideIcon rcmEditSiteWide',
                                 'href' => '#',
                             ),
 
-                            'Rollback a Site Plugins' => array(
-                                'display' => 'Rollback a Site Plugins',
+                            'Rollback Site-Wide Plugin' => array(
+                                'display' => 'Rollback Site-Wide Plugin',
                                 'aclGroups' => 'admin',
                                 'cssClass' => 'rcmEditSiteWideIcon rcmEditSiteWide',
                                 'href' => '#',
