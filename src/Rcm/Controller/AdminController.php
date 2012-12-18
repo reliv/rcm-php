@@ -535,12 +535,18 @@ class AdminController extends BaseController
             $instanceDirty = true;
         }
 
-        if ($data['pluginWidth'] != $renderWidth) {
+        if (empty($data['pluginWidth']) && !empty($renderWidth)) {
+            $newPluginInstance->setWidth(null);
+            $instanceDirty = true;
+        } elseif (!empty($data['pluginWidth']) && $data['pluginWidth'] != $renderWidth) {
             $newPluginInstance->setWidth($data['pluginWidth']);
             $instanceDirty = true;
         }
 
-        if ($data['pluginHeight'] != $renderHeight) {
+        if (empty($data['pluginHeight']) && !empty($renderHeight)) {
+            $newPluginInstance->setHeight(null);
+            $instanceDirty = true;
+        } elseif (!empty($data['pluginHeight']) && $data['pluginHeight'] != $renderHeight) {
             $newPluginInstance->setHeight($data['pluginHeight']);
             $instanceDirty = true;
         }

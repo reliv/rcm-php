@@ -242,7 +242,7 @@ html.rcmDraggingPlugins .rcmPlugin{
 /* Container Menu */
 .rcmContainerMenu {
     right: -2px;
-    background: url('/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png') no-repeat -97px -130px;
+    background: url('/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png') no-repeat -194px -115px;
 }
 
 .rcmContainerMenu, .rcmContainerMenu ul {

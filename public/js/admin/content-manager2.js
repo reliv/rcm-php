@@ -671,18 +671,26 @@ function RcmEdit(config) {
                 var pluginName = $(value).attr('data-rcmPluginName');
                 var siteWide = $(value).attr('data-rcmsitewideplugin');
                 var pluginDisplayName = $(value).attr('data-rcmplugindisplayname');
-                var pluginWidth = $(value).width();
-                var pluginHeight = $(value).height();
+
                 var pluginFloat = $(value).css('float');
+
                 dataToReturn[instanceId] = {
                     'container' : containerNumber,
                     'order' : index,
                     'pluginName' : pluginName,
-                    'pluginHeight' : pluginHeight,
-                    'pluginWidth' : pluginWidth,
                     'pluginFloat' : pluginFloat,
                     'siteWide' : siteWide,
                     'pluginDisplayName' : pluginDisplayName
+                }
+
+                var pluginResized = $(value).attr('data-rcmPluginResized');
+
+                if (pluginResized == 'Y') {
+                    var pluginWidth = $(value).width();
+                    var pluginHeight = $(value).height();
+                    dataToReturn[instanceId].pluginResized = pluginResized;
+                    dataToReturn[instanceId].pluginWidth = pluginWidth;
+                    dataToReturn[instanceId].pluginHeight = pluginHeight;
                 }
             });
         });
@@ -1127,6 +1135,8 @@ function RcmEdit(config) {
         var pullDownMenu ='<span class="rcmContainerMenu rcmLayoutEditHelper" title="Container Menu"><ul><li><a href="#"></a><ul><li><a href="#" class="rcmSiteWidePluginMenuItem">Mark as site-wide</a> </li><li><a href="#" class="rcmDeletePluginMenuItem">Delete Plugin</a> </li></ul></li></ul></span>'
         $(pluginContainer).prepend(pullDownMenu);
 
+
+
         $(pluginContainer).hover(
             function() {
                 $(this).find(".rcmLayoutEditHelper").each(function(){
@@ -1141,13 +1151,32 @@ function RcmEdit(config) {
         );
 
         $(pluginContainer).find(".rcmDeletePluginMenuItem").click(function(e) {
-            me.layoutEditor.deletePlugin($(this).parent());
+            me.layoutEditor.deletePlugin($(this).parents(".rcmPlugin"));
             e.preventDefault();
         });
 
         $(pluginContainer).find(".rcmSiteWidePluginMenuItem").click(function(e) {
-            me.layoutEditor.makeSiteWide($(this).parent());
+            me.layoutEditor.makeSiteWide($(this).parents(".rcmPlugin"));
+            e.preventDefault();
         })
+
+        me.layoutEditor.checkResize(pluginContainer);
+
+
+    };
+
+    me.layoutEditor.checkResize = function(pluginContainer) {
+        //Check for reset
+        var pluginResized = $(pluginContainer).attr('data-rcmPluginResized');
+        if (pluginResized == 'Y') {
+            $(pluginContainer).find(".rcmContainerMenu").find("ul li ul").prepend('<li><a href="#" class="rcmResetContainerSizeMenuItem">Reset size to default</a> </li>')
+            $(pluginContainer).find(".rcmResetContainerSizeMenuItem").click(function(e) {
+                $(this).parents(".rcmPlugin").attr('data-rcmPluginResized', 'N');
+                $(this).parents(".rcmPlugin").attr('style', '');
+                $(pluginContainer).find(".rcmResetContainerSizeMenuItem").remove();
+                e.preventDefault();
+            })
+        }
     };
 
     me.layoutEditor.removePluginToolbar = function() {
@@ -1422,7 +1451,13 @@ function RcmEdit(config) {
         });
 
 
-        $('#RcmRealPage').find('.rcmPlugin').resizable({grid: 10});
+        $('#RcmRealPage').find('.rcmPlugin').resizable({
+            grid: 10,
+            start: function(event, ui){
+                ui.element.attr('data-rcmPluginResized', 'Y');
+                me.layoutEditor.checkResize(ui.element);
+            }
+        });
     };
 
     /**
