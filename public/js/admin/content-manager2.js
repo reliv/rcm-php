@@ -1151,18 +1151,36 @@ function RcmEdit(config) {
         );
 
         $(pluginContainer).find(".rcmDeletePluginMenuItem").click(function(e) {
-            me.layoutEditor.deletePlugin($(this).parents(".rcmPlugin"));
+            me.layoutEditor.deleteConfirm(this);
             e.preventDefault();
         });
 
         $(pluginContainer).find(".rcmSiteWidePluginMenuItem").click(function(e) {
             me.layoutEditor.makeSiteWide($(this).parents(".rcmPlugin"));
             e.preventDefault();
-        })
+        });
 
         me.layoutEditor.checkResize(pluginContainer);
 
 
+    };
+
+    me.layoutEditor.deleteConfirm = function(pluginContainer) {
+        var form = $('<p>Are you sure you want to delete this plugin?</p>')
+            .dialog({
+                title:'Are you sure?',
+                modal:true,
+                width:200,
+                buttons:{
+                    No:function () {
+                        $(this).dialog("close");
+                    },
+                    Yes:function () {
+                        me.layoutEditor.deletePlugin($(pluginContainer).parents(".rcmPlugin"));
+                        $(this).dialog("close");
+                    }
+                }
+            });
     };
 
     me.layoutEditor.checkResize = function(pluginContainer) {
