@@ -251,7 +251,7 @@ class AdminController extends BaseController
             $this->createBlankPageAction();
         }
 
-        $this->savePageAs($pageUrl, $pageRevision, true, $pageName);
+        $this->savePageAs($pageUrl, $pageRevision, $pageName);
     }
 
     public function saveAsTemplateAction()
