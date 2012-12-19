@@ -515,7 +515,13 @@ are permitted provided that the following conditions are met:</p>
      * @return null
      */
     function createJsonInstance(
-        $pluginName, $jsonContent, $container, $renderOrder = 0, $siteWide = false, $siteWidePluginName = ''
+        $pluginName,
+        $jsonContent,
+        $container,
+        $renderOrder = 0,
+        $siteWide = false,
+        $siteWidePluginName = '',
+        $forceWidth = null
     ){
         $this->entityMgr->persist(
             New JsonContent(
@@ -524,7 +530,8 @@ are permitted provided that the following conditions are met:</p>
                     $container,
                     $renderOrder,
                     $siteWide,
-                    $siteWidePluginName
+                    $siteWidePluginName,
+                    $forceWidth
                 ),
                 $jsonContent
             )
@@ -543,15 +550,24 @@ are permitted provided that the following conditions are met:</p>
      * @return int
      */
     function createInstance(
-        $pluginName, $container, $renderOrder = 0, $siteWide = false, $siteWidePluginName = ''
+        $pluginName,
+        $container,
+        $renderOrder = 0,
+        $siteWide = false,
+        $siteWidePluginName = '',
+        $forceWidth = null
     )
     {
         $pageInstance = new \Rcm\Entity\PagePluginInstance();
-        $instance = new \Rcm\Entity\PluginInstance();
-        $instance->setPlugin($pluginName);
 
         $pageInstance->setLayoutContainer($container);
         $pageInstance->setRenderOrderNumber($renderOrder);
+        if(is_numeric($forceWidth)){
+            $pageInstance->setWidth($forceWidth);
+        }
+
+        $instance = new \Rcm\Entity\PluginInstance();
+        $instance->setPlugin($pluginName);
         $pageInstance->setInstance($instance);
 
         if ($siteWide !== false) {

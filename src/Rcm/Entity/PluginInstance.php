@@ -178,7 +178,7 @@ class PluginInstance
     /**
      * Set the plugin for this instance.
      *
-     * @param $plugin Module Name
+     * @param string $plugin Module Name
      *
      * @return null
      */
