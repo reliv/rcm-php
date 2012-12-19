@@ -5,6 +5,7 @@ var rcmConfig = {
 };
 
 var rcmCkConfig = {
+    forcePasteAsPlainText : true,
     sharedSpaces : {
         top : 'ckEditortoolbar',
         bottom : 'ckEditorfooter'

@@ -84,6 +84,17 @@ class IndexController extends \Rcm\Controller\BaseController
             return $this->view;
         }
 
+        //Redirect user to published revision if not logged in
+        if (!empty($pageRevisionId) && !$this->adminIsLoggedIn()) {
+            return $this->redirect()->toRoute(
+                'contentManager',
+                array(
+                    'page' => $this->page->getName(),
+                    'language' => $this->siteInfo->getLanguage()->getLanguage()
+                )
+            )->setStatusCode(301);
+        }
+
         /**
          *   If Admin we're going to check for a staged revision.
          */

@@ -9,7 +9,7 @@ body {
 .rcmPlugin {
     display: block;
     border: 2px dotted transparent;
-
+    width: 100%;
     position: relative;
     float: left;
 

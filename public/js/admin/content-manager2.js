@@ -411,8 +411,6 @@ function RcmEdit(config) {
             $("#rcmAdminTitleBarMenu li ul").toggle();
         });
 
-        //me.pageManager.createNew();
-        me.pageManager.saveAsTemplate();
     };
 
     /**
@@ -602,6 +600,7 @@ function RcmEdit(config) {
      * Add an Unlock option to the right click menu for locked plugins.
      */
     me.ui.addUnlockRightClick = function() {
+        $('.rcmLockOverlay').dblclick(me.ui.unlock);
         $.contextMenu({
             selector: '.rcmLockOverlay',
 
@@ -610,20 +609,21 @@ function RcmEdit(config) {
                 unlockMe:{
                     name:'Unlock',
                     icon:'delete',
-                    callback:function (action, el, pos) {
-                        var container = $(this);
-                        var isSiteWide = $(container).parent().attr('data-rcmSiteWidePlugin');
-
-                        if (isSiteWide == 'Y') {
-                            me.rcmPlugins.initSiteWidePlugins()
-                        } else {
-                            me.switchToEditMode();
-                        }
-
-                    }
+                    callback:me.ui.unlock
                 }
             }
         });
+    };
+
+    me.ui.unlock = function () {
+        var container = $(this);
+        var isSiteWide = $(container).parent().attr('data-rcmSiteWidePlugin');
+
+        if (isSiteWide == 'Y') {
+            me.rcmPlugins.initSiteWidePlugins()
+        } else {
+            me.switchToEditMode();
+        }
     };
 
     /***********************/
@@ -673,18 +673,26 @@ function RcmEdit(config) {
                 var pluginName = $(value).attr('data-rcmPluginName');
                 var siteWide = $(value).attr('data-rcmsitewideplugin');
                 var pluginDisplayName = $(value).attr('data-rcmplugindisplayname');
-                var pluginWidth = $(value).width();
-                var pluginHeight = $(value).height();
+
                 var pluginFloat = $(value).css('float');
+
                 dataToReturn[instanceId] = {
                     'container' : containerNumber,
                     'order' : index,
                     'pluginName' : pluginName,
-                    'pluginHeight' : pluginHeight,
-                    'pluginWidth' : pluginWidth,
                     'pluginFloat' : pluginFloat,
                     'siteWide' : siteWide,
                     'pluginDisplayName' : pluginDisplayName
+                }
+
+                var pluginResized = $(value).attr('data-rcmPluginResized');
+
+                if (pluginResized == 'Y') {
+                    var pluginWidth = $(value).width();
+                    var pluginHeight = $(value).height();
+                    dataToReturn[instanceId].pluginResized = pluginResized;
+                    dataToReturn[instanceId].pluginWidth = pluginWidth;
+                    dataToReturn[instanceId].pluginHeight = pluginHeight;
                 }
             });
         });
@@ -700,7 +708,7 @@ function RcmEdit(config) {
         var editButton = this;
 
         $().confirm(
-            'Please note:  Any changes you make to a site wide plugin will be published and made live when you save your changes.',
+            'Unlock Site-Wide Plugins?<br><Br>Please Note: Any changes you make to a site-wide plugin will be published and made live when you save your changes.',
             function() {
                 me.ui.switchEasyEditNavButtons();
                 me.rcmPlugins.preformUnlockSiteWide();
@@ -969,19 +977,17 @@ function RcmEdit(config) {
         return dataToReturn;
     };
 
-    me.rebuildAllEditorsInContainer = function (pluginContainer){
-
-        /*
-        Plugins are unlikely to realize that this file their container's
-        container the name "container", so we find it for them.
-         */
-        if(!pluginContainer.hasClass('rcmPlugin')){
-            pluginContainer = pluginContainer.closest('.rmcPlugin');
-        }
-
-        me.rcmPlugins.removeEdits(pluginContainer);
-        me.rcmPlugins.initPluginRichEdits(pluginContainer);
-        me.rcmPlugins.initHtml5Edits(pluginContainer);
+    me.refreshEditors = function (){
+        $.each(
+            me.rcmPlugins.activeEditors,
+            function(){
+                var editor = this.editor;
+                if(editor.hasOwnProperty('mode')){//Is it a ckEdit?
+                    editor.setMode('source');
+                    editor.setMode('wysiwyg');
+                }
+            }
+        );
     };
 
     me.rcmPlugins.removeEdits = function(pluginContainer) {
@@ -1124,8 +1130,14 @@ function RcmEdit(config) {
     me.layoutEditor.addPluginToolbar = function(pluginContainer)
     {
         $(pluginContainer).prepend("<span class='rcmSortableHandle rcmLayoutEditHelper' title='Move Plugin' />");
-        $(pluginContainer).prepend("<span class='rcmDeletePlugin rcmLayoutEditHelper' title='Delete Plugin' />");
-        $(pluginContainer).prepend("<span class='rcmSettingPlugin rcmLayoutEditHelper' title='Make Site-Wide' />");
+        //$(pluginContainer).prepend("<span class='rcmDeletePluginMenuItem rcmLayoutEditHelper' title='Delete Plugin' />");
+        //$(pluginContainer).prepend("<span class='rcmSiteWidePluginMenuItem rcmLayoutEditHelper' title='Make Site-Wide' />");
+
+
+        var pullDownMenu ='<span class="rcmContainerMenu rcmLayoutEditHelper" title="Container Menu"><ul><li><a href="#"></a><ul><li><a href="#" class="rcmSiteWidePluginMenuItem">Mark as site-wide</a> </li><li><a href="#" class="rcmDeletePluginMenuItem">Delete Plugin</a> </li></ul></li></ul></span>'
+        $(pluginContainer).prepend(pullDownMenu);
+
+
 
         $(pluginContainer).hover(
             function() {
@@ -1140,14 +1152,51 @@ function RcmEdit(config) {
             }
         );
 
-        $(pluginContainer).find(".rcmDeletePlugin").click(function(e) {
-            me.layoutEditor.deletePlugin($(this).parent());
+        $(pluginContainer).find(".rcmDeletePluginMenuItem").click(function(e) {
+            me.layoutEditor.deleteConfirm(this);
             e.preventDefault();
         });
 
-        $(pluginContainer).find(".rcmSettingPlugin").click(function(e) {
-            me.layoutEditor.makeSiteWide($(this).parent());
-        })
+        $(pluginContainer).find(".rcmSiteWidePluginMenuItem").click(function(e) {
+            me.layoutEditor.makeSiteWide($(this).parents(".rcmPlugin"));
+            e.preventDefault();
+        });
+
+        me.layoutEditor.checkResize(pluginContainer);
+
+
+    };
+
+    me.layoutEditor.deleteConfirm = function(pluginContainer) {
+        var form = $('<p>Are you sure you want to delete this plugin?</p>')
+            .dialog({
+                title:'Are you sure?',
+                modal:true,
+                width:200,
+                buttons:{
+                    No:function () {
+                        $(this).dialog("close");
+                    },
+                    Yes:function () {
+                        me.layoutEditor.deletePlugin($(pluginContainer).parents(".rcmPlugin"));
+                        $(this).dialog("close");
+                    }
+                }
+            });
+    };
+
+    me.layoutEditor.checkResize = function(pluginContainer) {
+        //Check for reset
+        var pluginResized = $(pluginContainer).attr('data-rcmPluginResized');
+        if (pluginResized == 'Y') {
+            $(pluginContainer).find(".rcmContainerMenu").find("ul li ul").prepend('<li><a href="#" class="rcmResetContainerSizeMenuItem">Reset size to default</a> </li>')
+            $(pluginContainer).find(".rcmResetContainerSizeMenuItem").click(function(e) {
+                $(this).parents(".rcmPlugin").attr('data-rcmPluginResized', 'N');
+                $(this).parents(".rcmPlugin").attr('style', '');
+                $(pluginContainer).find(".rcmResetContainerSizeMenuItem").remove();
+                e.preventDefault();
+            })
+        }
     };
 
     me.layoutEditor.removePluginToolbar = function() {
@@ -1422,7 +1471,13 @@ function RcmEdit(config) {
         });
 
 
-        $('#RcmRealPage').find('.rcmPlugin').resizable({grid: 10});
+        $('#RcmRealPage').find('.rcmPlugin').resizable({
+            grid: 10,
+            start: function(event, ui){
+                ui.element.attr('data-rcmPluginResized', 'Y');
+                me.layoutEditor.checkResize(ui.element);
+            }
+        });
     };
 
     /**

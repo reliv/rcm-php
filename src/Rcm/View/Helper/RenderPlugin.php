@@ -72,9 +72,17 @@ class RenderPlugin extends AbstractHelper
 
         }
 
+        if ((!empty($width) && $width != 'px') || (!empty($height) && $height != 'px')) {
+            $html .= 'data-rcmPluginResized="Y" ';
+        } else {
+            $html .= 'data-rcmPluginResized="N" ';
+        }
+
         $html .= 'data-rcmPluginDisplayName="'.$plugin->getDisplayName().'" ';
 
         $html .= 'style="';
+
+
 
         if (!empty($width) && $width != 'px') {
             $html .= " width: ".$width.";";
