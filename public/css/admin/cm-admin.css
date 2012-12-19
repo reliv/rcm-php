@@ -16,6 +16,8 @@
     position: fixed;
     z-index: 999998;
     background-color: #DCDCDC;
+    line-height: 16px;
+    text-shadow: none;
 }
 
 #ckEditorfooter {

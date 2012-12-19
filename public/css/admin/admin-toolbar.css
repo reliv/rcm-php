@@ -9,6 +9,7 @@
     border: solid #00A3E6;
     border-width: 1px 0;
 
+
 }
 
 #rcmAdminMenu a {
@@ -17,6 +18,9 @@
     color: #000000;
     text-decoration: none;
     padding: 0.10em 1.2em;
+    font-family: Verdana,Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    font-weight: normal;
 }
 
 
@@ -38,7 +42,7 @@
     position: absolute;
     left: -999em;
     height: auto;
-    width: 20em;
+    width: 250px;
     font-weight: normal;
     border-width: 0.25em;
     margin: 0;
@@ -54,7 +58,7 @@
 #rcmAdminMenu li li {
     padding-right: 1em;
     padding-left: 1em;
-    width: 18em
+    width: 220px;
 }
 
 #rcmAdminMenu li ul a {
@@ -70,7 +74,7 @@
 }
 
 #rcmAdminMenu li ul ul {
-    margin: -2.25em 0 0 18.8em;
+    margin: -30px 0 0 232px;
 }
 
 #rcmAdminMenu li:hover ul ul, #rcmAdminMenu li:hover ul ul ul {
@@ -122,6 +126,7 @@
     font-weight:bold;
     padding:0px 8px;
     text-decoration:none;
+    text-shadow: none;
 }.rcmEditButton:hover {
      background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #1e62d0), color-stop(1, #3d94f6) );
      background:-moz-linear-gradient( center top, #1e62d0 5%, #3d94f6 100% );
@@ -148,6 +153,7 @@
     font-weight:bold;
     padding:0px 8px;
     text-decoration:none;
+    text-shadow: none;
 }.rcmSaveButton:hover {
      background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #d34639), color-stop(1, #fa665a) );
      background:-moz-linear-gradient( center top, #d34639 5%, #fa665a 100% );
@@ -175,6 +181,7 @@
     font-weight:bold;
     padding:0px 8px;
     text-decoration:none;
+    text-shadow: none;
 }.rcmCancelButton:hover {
      background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
      background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
