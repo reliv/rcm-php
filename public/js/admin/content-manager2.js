@@ -1168,21 +1168,12 @@ function RcmEdit(config) {
     };
 
     me.layoutEditor.deleteConfirm = function(pluginContainer) {
-        var form = $('<p>Are you sure you want to delete this plugin?</p>')
-            .dialog({
-                title:'Are you sure?',
-                modal:true,
-                width:200,
-                buttons:{
-                    No:function () {
-                        $(this).dialog("close");
-                    },
-                    Yes:function () {
-                        me.layoutEditor.deletePlugin($(pluginContainer).parents(".rcmPlugin"));
-                        $(this).dialog("close");
-                    }
-                }
-            });
+        $().confirm(
+            'Are you sure you want to delete this plugin?',
+            function(){
+                me.layoutEditor.deletePlugin($(pluginContainer).parents(".rcmPlugin"));
+            }
+        );
     };
 
     me.layoutEditor.checkResize = function(pluginContainer) {
