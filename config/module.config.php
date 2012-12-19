@@ -484,11 +484,11 @@ return array(
                 ),
             ),
 
-            'rmc-plugin-admin-proxy' => array(
+            'rcm-plugin-admin-proxy' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route' =>
-                    '/rmc-plugin-admin-proxy/:pluginName/:instanceId/:pluginActionName',
+                    '/rcm-plugin-admin-proxy/:pluginName/:instanceId/:pluginActionName',
                     'defaults' => array(
                         'controller' => 'rcmPluginProxyController',
                         'action' => 'adminProxy',
