@@ -142,20 +142,7 @@ function RcmCkEditor(config) {
      * @return {*}
      */
     me.getHtml5EditorData = function(editor)  {
-
-        var returnData = {};
-
-        var tempData = $(editor).html();
-
-        returnData.html = $.trim(tempData);
-
-        if (returnData == undefined || returnData == '') {
-            return false;
-        }
-
-        returnData.assets = me.getAssets(returnData.html);
-
-        return returnData;
+        return me.getRichEditorData(editor);
     };
 
     me.getAssets = function (htmlToCheck) {
