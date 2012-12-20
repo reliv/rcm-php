@@ -12,7 +12,7 @@ var rcmCkConfig = {
     },
     extraPlugins: 'sharedspace',
     removePlugins : 'resize, floatingspace',
-    skin : 'kama',
+//    skin : 'kama',
 //    contentsCss: '/modules/reliv-guest-site/css/guestSiteFonts.css',
     autoGrow_onStartup : true,
     autoGrow_minHeight: '35',
