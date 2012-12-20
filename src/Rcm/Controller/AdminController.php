@@ -134,7 +134,7 @@ class AdminController extends BaseController
 
         $staged = $this->page->getStagedRevision();
 
-        if (!empty($staged)) {
+        if (!empty($staged) && $this->pageRevision == $this->page->getStagedRevision()) {
             $staged->unStageRevision();
             $this->page->removedStagedRevistion();
             $entityMgr->persist($staged);
@@ -149,7 +149,8 @@ class AdminController extends BaseController
             'contentManager',
             array(
                 'page' => $this->page->getName(),
-                'language' => $this->siteInfo->getLanguage()->getLanguage()
+                'language' => $this->siteInfo->getLanguage()->getLanguage(),
+                'revision' => $this->pageRevision->getPageRevId()
             )
         )->setStatusCode(301);
     }
