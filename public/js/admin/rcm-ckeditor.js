@@ -23,6 +23,7 @@ function RcmCkEditor(config) {
      * Add the toolbars for CKEditor
      */
     me.init = function() {
+        CKEDITOR.disableAutoInline = true;
         me.addHiddenEditorForToolbars();
         me.addCkToolbars();
 
@@ -47,21 +48,29 @@ function RcmCkEditor(config) {
      * Add the CKEditor Toolbars
      */
     me.addCkToolbars = function() {
+        editor = CKEDITOR.inline( 'hiddenEditor',  me.config );
+        editor.on("instanceReady", function(event) {
+
+            var cmTopAdminPanel = $("#ContentManagerTopAdminPanel");
+            $("#ToolBarSpacer").height(
+                cmTopAdminPanel.height()
+            );
+        });
         //Draw the toolbars and hide the editor
-        $("#hiddenEditor").ckeditor(function() {
-                var cmTopAdminPanel = $("#ContentManagerTopAdminPanel");
-
-                $("#ToolBarSpacer").height(
-                    cmTopAdminPanel.height()
-                );
-
-                cmTopAdminPanel.find('[role="button"]').each(function(){
-                    $(this).addClass('cke_disabled');
-                    $(this).unbind('click').attr('onclick', null).attr('onkeydown', null);
-                });
-            },
-            me.config
-        );
+//        $("#hiddenEditor").ckeditor(function() {
+//                var cmTopAdminPanel = $("#ContentManagerTopAdminPanel");
+//
+//                $("#ToolBarSpacer").height(
+//                    cmTopAdminPanel.height()
+//                );
+//
+//                cmTopAdminPanel.find('[role="button"]').each(function(){
+//                    $(this).addClass('cke_disabled');
+//                    $(this).unbind('click').attr('onclick', null).attr('onkeydown', null);
+//                });
+//            },
+//            me.config
+//        );
 
     };
 
@@ -72,7 +81,7 @@ function RcmCkEditor(config) {
      * @param textAreaId
      * @return {*|jQuery}
      */
-    me.addRichEditor = function(container, textAreaId) {
+    me.addRichEditor = function(container, textAreaId, instanceId) {
         //Hack to keep CKEdits the correct size
 //        var parent = $(container).parent();
 //        $(parent).width($(parent).width());
@@ -80,13 +89,13 @@ function RcmCkEditor(config) {
         //Get Current HTML of div area
         var htmlToAddToTextArea = $(container).html();
 
-        var newTextAres = $('<textarea id="'+textAreaId+'" >'+htmlToAddToTextArea+'</textarea>');
+        var newTextAres = $('<div id="'+instanceId+'_'+textAreaId+'" contenteditable="true">'+htmlToAddToTextArea+'</div>');
 
         $(container).html(newTextAres);
 
-        newTextAres.ckeditor(me.config);
+        var editor = CKEDITOR.inline( instanceId+'_'+textAreaId,  me.config );
 
-        return $(newTextAres).ckeditorGet();
+        return editor;
     };
 
     me.getRichEditorData = function(editor)  {
@@ -114,14 +123,16 @@ function RcmCkEditor(config) {
      * @param textAreaId
      * @return {*}
      */
-    me.addHtml5Editor = function(container, textAreaId) {
+    me.addHtml5Editor = function(container, textAreaId, instanceId) {
 
         //Used to keep IDE from whining.
         $('#'+textAreaId);
 
-        $(container).attr('contentEditable',true).css('cursor','text');
+        $(container).attr('contentEditable',true).attr('id',instanceId+'_'+textAreaId).css('cursor','text');
 
-        return container
+        var editor = CKEDITOR.inline(instanceId+'_'+textAreaId,  me.config );
+
+        return editor
     };
 
     /**

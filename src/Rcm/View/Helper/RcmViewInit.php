@@ -271,11 +271,6 @@ class RcmViewInit extends AbstractHelper
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/ckeditor/adapters/jquery.js',
-            'text/javascript'
-        );
-
-        $renderer->headScript()->appendFile(
             $renderer->basePath() . '/modules/rcm/js/admin/rcm-ckeditor.js',
             'text/javascript'
         );
@@ -363,7 +358,7 @@ class RcmViewInit extends AbstractHelper
                         </div>
                     </div>
                 </div>
-            <div id="ckEditortoolbar"></div>
+                <div id="ckEditortoolbar"></div>
 
             </div>
 

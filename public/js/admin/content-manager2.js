@@ -890,7 +890,7 @@ function RcmEdit(config) {
                 +'_'
                 +textAreaId;
 
-            var newEditor = me.editor.addRichEditor(this, newTextAreaId);
+            var newEditor = me.editor.addRichEditor(this, newTextAreaId, containerData.instanceId);
 
             me.rcmPlugins.activeEditors.push({
                 editor : newEditor,
@@ -914,7 +914,7 @@ function RcmEdit(config) {
 
             var textAreaId = $(this).attr('data-textEdit');
 
-            var newEditor = me.editor.addHtml5Editor(this, textAreaId);
+            var newEditor = me.editor.addHtml5Editor(this, textAreaId, containerData.instanceId);
 
             me.rcmPlugins.activeEditors.push({
                 editor : newEditor,

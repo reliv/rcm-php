@@ -110,7 +110,7 @@ class RenderLayoutEditorContainers extends AbstractHelper
 
         $html .= '<div class="rcmPluginDrag">';
 
-        $html .= '<div class="layoutPluginContainerIcon" title="'.$plugin->getTooltip().'" >';
+        $html .= '<div class="layoutPluginContainerIcon" title="'.$renderer->escapeHtml($plugin->getTooltip()).'" >';
 
         $iconSrc = $plugin->getIcon();
 

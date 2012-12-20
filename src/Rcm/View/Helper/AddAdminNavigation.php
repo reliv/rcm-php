@@ -83,6 +83,8 @@ class AddAdminNavigation extends AbstractHelper
                     $html .= $this->renderAdminNav($link['links']);
                 $html .= '</ul>';
             }
+
+            $html .= '</li>';
         }
 
         return $html;
