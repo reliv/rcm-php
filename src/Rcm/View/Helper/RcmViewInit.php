@@ -349,7 +349,7 @@ class RcmViewInit extends AbstractHelper
                         </div>
 
                         <div id="rcmAdminToolbarSaveCancel">
-                            <a href="#" class="rcmSaveButton">Save</a>
+                            <a href="#" class="rcmSaveButton">Save as Draft</a>
                             <a href="#" class="rcmCancelButton">Cancel</a>
                         </div>
 
