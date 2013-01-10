@@ -11,41 +11,18 @@ var AjaxEditHelper=function(instanceId, pluginUrlName){
      */
     var me = this;
 
+    var pluginBaseUrl =  '/rcm-plugin-admin-proxy/' + pluginUrlName + '/'
+        + instanceId + '/';
+
     me.getDataAndDefaultDataFromServer = function(callback){
 
-        var data;
-        var defaultData;
-
-        var haveDataAndDefaultData = function(){
-            return (data!=null && defaultData!=null);
-        };
-
-        var pluginBaseUrl =  '/rcm-plugin-admin-proxy/' + pluginUrlName + '/'
-            + instanceId + '/';
-
-        var returnAllData = function(){
-            callback(data, defaultData);
-        };
-
         $.getJSON(
-            pluginBaseUrl + 'default-data',
-            function(returnedData) {
-                defaultData = returnedData;
-                if (haveDataAndDefaultData()) {
-                    returnAllData();
-                }
+            pluginBaseUrl + 'data-and-default-data',
+            function(result) {
+                callback(result.data,result.defaultData);
             }
         );
 
-        $.getJSON(
-            pluginBaseUrl + 'data',
-            function success(returnedData) {
-                data = returnedData;
-                if (haveDataAndDefaultData()) {
-                    returnAllData();
-                }
-            }
-        );
 
     }
 };
