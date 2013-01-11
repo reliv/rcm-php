@@ -1,5 +1,7 @@
 <?php
 
+/* test for submodule updates */
+
 /**
  * Module Config For ZF2
 *
