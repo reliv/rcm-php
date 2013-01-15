@@ -87,8 +87,9 @@ class AdminController extends BaseController
     {
         $this->ensureAdminIsLoggedIn();
 
-        $pluginType = $this->getEvent()->getRouteMatch()->getParam('type');
-        $instanceId = $this->getEvent()->getRouteMatch()->getParam('instanceId');
+        $routeMatch = $this->getEvent()->getRouteMatch();
+        $pluginType = $routeMatch->getParam('type');
+        $instanceId = $routeMatch->getParam('instanceId');
 
         if (empty($instanceId)) {
             $instanceId = -1;
