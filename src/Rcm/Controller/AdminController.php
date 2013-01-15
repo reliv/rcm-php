@@ -100,10 +100,6 @@ class AdminController extends BaseController
         $instance->setInstanceId($instanceId);
         $this->pluginManager->prepPluginInstance($instance, $this->getEvent());
 
-        $pageView = $instance->getView();
-        $this->view->setVariable('newInstance', $instance);
-        $pageView->setVariable('rcmPluginInstanceId', $instanceId);
-
         $pluginView = $instance->getView();
         $body = $this->viewRenderer->render($pluginView);
         $pluginHtml = $this->viewRenderer->plugin('headScript')
