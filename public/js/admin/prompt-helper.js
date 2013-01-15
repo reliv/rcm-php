@@ -109,7 +109,8 @@
     * @return String
     */
     $.fn.addRichEdit = function (name, description, value) {
-        var div = $('<div class="'+name+'">' + value +'</div>');
+        var id = $.fn.generateUUID();
+        var div = $('<div id="' + id + '" class="'+name+'" contenteditable="true">' + value +'</div>');
         var p = $(
             '<p>' +
                 '<label>' + description + '</label><br>' +
@@ -117,7 +118,14 @@
         );
         this.append(p);
         p.append(div);
-        div.ckeditor();
+        // This terrible timeout hack is needed because the new version of
+        // ckEditor only works on elements that are in the DOM
+        setTimeout(
+            function(){
+                CKEDITOR.replace(id, rcmEditor.config);
+            },
+            100
+        )
         return this;
     };
 
@@ -218,5 +226,19 @@
                 '" value="true" />' + description + '</p>'
         );
         return this;
+    };
+
+    /**
+     * Generates RFC4122 v4 compliant random ids
+     * @return {String}
+     */
+    $.fn.generateUUID = function(){
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+            /[xy]/g,
+            function(c) {
+                var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                return v.toString(16);
+            }
+        );
     };
 })( jQuery );
