@@ -106,9 +106,9 @@ class AdminController extends BaseController
 
         $pluginView = $instance->getView();
         $body = $this->viewRenderer->render($pluginView);
-        $pluginHtml = $this->viewRenderer->plugin('headScript');
-        $pluginHtml .= $this->viewRenderer->plugin('headLink');
-        $pluginHtml .= $body;
+        $pluginHtml = $this->viewRenderer->plugin('headScript')
+            . $this->viewRenderer->plugin('headLink')
+            . $body;
 
         $jsonModel = new \Zend\View\Model\JsonModel();
         $jsonModel->setVariables(
