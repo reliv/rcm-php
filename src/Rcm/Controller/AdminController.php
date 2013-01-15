@@ -104,7 +104,22 @@ class AdminController extends BaseController
         $this->view->setVariable('newInstance', $instance);
         $pageView->setVariable('rcmPluginInstanceId', $instanceId);
 
-        return $this->view;
+        $pluginView = $instance->getView();
+        $body = $this->viewRenderer->render($pluginView);
+        $pluginHtml = $this->viewRenderer->plugin('headScript');
+        $pluginHtml .= $this->viewRenderer->plugin('headLink');
+        $pluginHtml .= $body;
+
+        $jsonModel = new \Zend\View\Model\JsonModel();
+        $jsonModel->setVariables(
+            array(
+                'display'=>$pluginHtml,
+                'js' => $instance->getAdminEditJs(),
+                'css' => $instance->getAdminEditCss()
+            )
+        );
+
+        return $jsonModel;
     }
 
     public function savePageAction()

@@ -76,21 +76,29 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
     protected $view;
 
     /**
+     * @var \Zend\View\Renderer\PhpRenderer
+     */
+    protected $viewRenderer;
+
+    /**
      * @param \Rcm\Model\UserManagement\UserManagerInterface $userMgr
      * @param \Rcm\Model\PluginManager                 $pluginManager
      * @param \Doctrine\ORM\EntityManager              $entityMgr
+     * @param \Zend\View\Renderer\PhpRenderer          $viewRenderer
      * @param array                                    $config
      */
     function __construct(
         \Rcm\Model\UserManagement\UserManagerInterface $userMgr,
         \Rcm\Model\PluginManager $pluginManager,
         EntityManager $entityMgr,
+        \Zend\View\Renderer\PhpRenderer $viewRenderer,
         $config
     ) {
         parent::__construct($entityMgr);
         $this->loggedInUser=$userMgr->getLoggedInUser();
         $this->loggedInAdminPermissions=$userMgr->getLoggedInAdminPermissions();
         $this->pluginManager=$pluginManager;
+        $this->viewRenderer = $viewRenderer;
         $this->config = $config;
     }
 
