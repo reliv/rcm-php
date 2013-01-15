@@ -1,28 +1,28 @@
 <?php
-    /**
-     * Index Controller for the entire application
-     *
-     * This file contains the main controller used for the application.  This
-     * should extend from the base class and should need no further modification.
-     *
-     * PHP version 5.3
-     *
-     * LICENSE: No License yet
-     *
-     * @category  Reliv
-     * @package   Main\Application\Controllers\Index
-     * @author    Unkown <unknown@relivinc.com>
-     * @copyright 2012 Reliv International
-     * @license   License.txt New BSD License
-     * @version   GIT: <git_id>
-     * @link      http://ci.reliv.com/confluence
-     */
+/**
+ * Index Controller for the entire application
+ *
+ * This file contains the main controller used for the application.  This
+ * should extend from the base class and should need no further modification.
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: No License yet
+ *
+ * @category  Reliv
+ * @package   Main\Application\Controllers\Index
+ * @author    Unkown <unknown@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://ci.reliv.com/confluence
+ */
 namespace Rcm\Controller;
 
 use \Rcm\Controller\BaseController,
-\Rcm\Entity\PageRevision,
-\Rcm\Entity\PluginInstance,
-\Rcm\Entity\PluginAsset;
+    \Rcm\Entity\PageRevision,
+    \Rcm\Entity\PluginInstance,
+    \Rcm\Entity\PluginAsset;
 
 /**
  * Index Controller for the entire application
@@ -48,10 +48,10 @@ class AdminController extends BaseController
         $this->ensureAdminIsLoggedIn();
 
 
-
         $viewVars['rcmTemplates'] = $this->siteInfo->getTemplates();
 
-        $viewVars['newPageLayoutContainers'] = $this->getPageLayoutsForNewPages();
+        $viewVars['newPageLayoutContainers'] = $this->getPageLayoutsForNewPages(
+        );
 
         return $viewVars;
 
@@ -113,7 +113,7 @@ class AdminController extends BaseController
         $jsonModel = new \Zend\View\Model\JsonModel();
         $jsonModel->setVariables(
             array(
-                'display'=>$pluginHtml,
+                'display' => $pluginHtml,
                 'js' => $instance->getAdminEditJs(),
                 'css' => $instance->getAdminEditCss()
             )
@@ -127,7 +127,7 @@ class AdminController extends BaseController
         $this->adminSaveInit();
         $postedData = $this->getPageSaveData();
 
-        /** @var \Rcm\Entity\PageRevision $newRevision  */
+        /** @var \Rcm\Entity\PageRevision $newRevision */
         $newRevision = clone $this->pageRevision;
         $newRevision = $this->processPostedInstances($postedData, $newRevision);
 
@@ -144,13 +144,15 @@ class AdminController extends BaseController
     public function publishPageAction()
     {
         $this->adminSaveInit();
-        $entityMgr=$this->entityMgr;
+        $entityMgr = $this->entityMgr;
 
         $this->page->setCurrentRevision($this->pageRevision);
 
         $staged = $this->page->getStagedRevision();
 
-        if (!empty($staged) && $this->pageRevision == $this->page->getStagedRevision()) {
+        if (!empty($staged)
+            && $this->pageRevision == $this->page->getStagedRevision()
+        ) {
             $staged->unStageRevision();
             $this->page->removedStagedRevistion();
             $entityMgr->persist($staged);
@@ -175,12 +177,12 @@ class AdminController extends BaseController
     {
         $this->adminSaveInit();
 
-        $entityMgr=$this->entityMgr;
+        $entityMgr = $this->entityMgr;
 
-        /** @var \Rcm\Entity\Page $page  */
+        /** @var \Rcm\Entity\Page $page */
         $page = $this->page;
 
-        /** @var \Rcm\Entity\PageRevision $oldStagedRevision  */
+        /** @var \Rcm\Entity\PageRevision $oldStagedRevision */
         $oldStagedRevision = $page->getStagedRevision();
 
         if (!empty($oldStagedRevision)) {
@@ -252,7 +254,7 @@ class AdminController extends BaseController
         );
 
         $return['pageOk'] = 'Y';
-        $return['redirect'] = $redirectUrl.'?rcmShowLayoutEditor=Y';
+        $return['redirect'] = $redirectUrl . '?rcmShowLayoutEditor=Y';
 
         echo json_encode($return);
         exit;
@@ -278,7 +280,9 @@ class AdminController extends BaseController
         $this->savePageAs($pageUrl, $pageRevision, '', true);
     }
 
-    private function savePageAs($pageUrl, $pageRevision, $pageTitle='', $asTemplate=false)
+    private function savePageAs(
+        $pageUrl, $pageRevision, $pageTitle = '', $asTemplate = false
+    )
     {
         $this->ensureAdminIsLoggedIn();
         $config = $this->config;
@@ -303,8 +307,10 @@ class AdminController extends BaseController
 
         $repo = $em->getRepository("\Rcm\Entity\PageRevision");
 
-        /** @var \Rcm\Entity\PageRevision $currentRevision  */
-        $currentRevision = $repo->findOneBy(array('pageRevId' => $pageRevision));
+        /** @var \Rcm\Entity\PageRevision $currentRevision */
+        $currentRevision = $repo->findOneBy(
+            array('pageRevId' => $pageRevision)
+        );
 
         if (empty($currentRevision)) {
             $return['error'] = $errors['revisionNotFound'];
@@ -375,7 +381,9 @@ class AdminController extends BaseController
         return $postedData;
     }
 
-    private function getNewPluginInstance(\Rcm\Entity\PagePluginInstance $currentInstance)
+    private function getNewPluginInstance(
+        \Rcm\Entity\PagePluginInstance $currentInstance
+    )
     {
         $newInstance = clone $currentInstance;
         $newActualInstance = clone $currentInstance->getInstance();
@@ -387,24 +395,25 @@ class AdminController extends BaseController
     private function savePluginAssets(
         $postedAssets,
         \Rcm\Entity\PluginInstance $newInstance
-    ) {
+    )
+    {
 
         if (empty($postedAssets)) {
             return;
         }
 
-        $assets=array();
+        $assets = array();
 
-        foreach($postedAssets as $url){
-            $url=strtolower($url);
+        foreach ($postedAssets as $url) {
+            $url = strtolower($url);
 
-            if(
+            if (
                 !preg_match("/^#/", $url)
-                &&!preg_match("/^javascript:/", $url)
-                &&!empty($url)
+                && !preg_match("/^javascript:/", $url)
+                && !empty($url)
             ) {
                 //If we haven't already have this asset
-                if(empty($assets[$url])){
+                if (empty($assets[$url])) {
                     //Look in DB for the asset for this url
                     /** @var \Rcm\Entity\PluginAsset $assetEntity */
 
@@ -414,7 +423,7 @@ class AdminController extends BaseController
 
                     $assets[$url] = $assetEntity;
                     //Create a new asset
-                    if(!$assets[$url]){
+                    if (!$assets[$url]) {
                         $assets[$url] = new PluginAsset($url);
                     }
                 }
@@ -430,12 +439,13 @@ class AdminController extends BaseController
         return $assets;
     }
 
-    private function processPostedInstances($postedData,
+    private function processPostedInstances(
+        $postedData,
         \Rcm\Entity\PageRevision $newRev
     )
     {
 
-        foreach($postedData as $postedInstanceId => $data) {
+        foreach ($postedData as $postedInstanceId => $data) {
             if ($postedInstanceId == 'undefined') {
                 continue;
             } elseif ($postedInstanceId == 'main') {
@@ -450,7 +460,7 @@ class AdminController extends BaseController
         $pageRev = $this->pageRevision;
         $allInstancesInOldRev = $pageRev->getRawPluginInstances();
 
-        foreach($allInstancesInOldRev as $instance) {
+        foreach ($allInstancesInOldRev as $instance) {
             $instanceId = $instance->getInstanceId();
             if (!isset($postedData[$instanceId])) {
                 $newRev->setIsDirty(true);
@@ -458,7 +468,7 @@ class AdminController extends BaseController
         }
 
         if ($newRev->getIsDirty()) {
-            $entityMgr=$this->entityMgr;
+            $entityMgr = $this->entityMgr;
             $entityMgr->persist($newRev);
             $entityMgr->flush();
             return $newRev;
@@ -467,9 +477,11 @@ class AdminController extends BaseController
         }
     }
 
-    private function processMainPageData($data,
+    private function processMainPageData(
+        $data,
         \Rcm\Entity\PageRevision $newRev
-    ) {
+    )
+    {
 
         if (!empty($data['metaTitle'])) {
             $newRev->setPageTitle($data['metaTitle']);
@@ -500,7 +512,8 @@ class AdminController extends BaseController
         $instanceId,
         $data,
         \Rcm\Entity\PageRevision $newRev
-    ) {
+    )
+    {
         //Get Entity Manager
         $entityMgr = $this->entityMgr;
 
@@ -531,7 +544,7 @@ class AdminController extends BaseController
         }
 
         //Get A New Plugin Instance For Saving
-        /** @var \Rcm\Entity\PagePluginInstance $newPluginInstance  */
+        /** @var \Rcm\Entity\PagePluginInstance $newPluginInstance */
         $newPluginInstance = $this->getNewPluginInstance($currentInstance);
 
         //Get Layout Container
@@ -555,7 +568,9 @@ class AdminController extends BaseController
         if (empty($data['pluginWidth']) && !empty($renderWidth)) {
             $newPluginInstance->setWidth(null);
             $instanceDirty = true;
-        } elseif (!empty($data['pluginWidth']) && $data['pluginWidth'] != $renderWidth) {
+        } elseif (
+            !empty($data['pluginWidth']) && $data['pluginWidth'] != $renderWidth
+        ) {
             $newPluginInstance->setWidth($data['pluginWidth']);
             $instanceDirty = true;
         }
@@ -563,7 +578,9 @@ class AdminController extends BaseController
         if (empty($data['pluginHeight']) && !empty($renderHeight)) {
             $newPluginInstance->setHeight(null);
             $instanceDirty = true;
-        } elseif (!empty($data['pluginHeight']) && $data['pluginHeight'] != $renderHeight) {
+        } elseif (!empty($data['pluginHeight'])
+            && $data['pluginHeight'] != $renderHeight
+        ) {
             $newPluginInstance->setHeight($data['pluginHeight']);
             $instanceDirty = true;
         }
@@ -618,9 +635,12 @@ class AdminController extends BaseController
         }
 
         if ($newPluginInstance->getInstance()->isSiteWide()
-            && $newPluginInstance->getInstance()->getDisplayName() != $data['pluginDisplayName']
+            && $newPluginInstance->getInstance()->getDisplayName()
+                != $data['pluginDisplayName']
         ) {
-            $newPluginInstance->getInstance()->setDisplayName($data['pluginDisplayName']);
+            $newPluginInstance->getInstance()->setDisplayName(
+                $data['pluginDisplayName']
+            );
             $this->entityMgr->persist($newPluginInstance);
             $this->entityMgr->persist($newPluginInstance->getInstance());
             $this->entityMgr->flush();
@@ -628,12 +648,13 @@ class AdminController extends BaseController
         }
 
 
-
         if ($newPluginInstance->getInstance()->isSiteWide()
             && $instanceDirty === true
         ) {
 
-            $newPluginInstance->getInstance()->setDisplayName($data['pluginDisplayName']);
+            $newPluginInstance->getInstance()->setDisplayName(
+                $data['pluginDisplayName']
+            );
 
             $entityMgr->getConnection()->update(
                 'rcm_page_plugin_instances',
@@ -657,8 +678,12 @@ class AdminController extends BaseController
             && $data['siteWide'] == 'Y'
         ) {
             $newPluginInstance->getInstance()->setSiteWide();
-            $newPluginInstance->getInstance()->setDisplayName($data['pluginDisplayName']);
-            $this->siteInfo->addSiteWidePlugin($newPluginInstance->getInstance());
+            $newPluginInstance->getInstance()->setDisplayName(
+                $data['pluginDisplayName']
+            );
+            $this->siteInfo->addSiteWidePlugin(
+                $newPluginInstance->getInstance()
+            );
             $this->entityMgr->persist($this->siteInfo);
             $this->entityMgr->flush();
             $instanceDirty = true;
@@ -676,7 +701,6 @@ class AdminController extends BaseController
         $newRev->setIsDirty(true);
 
 
-
         return null;
 
     }
@@ -688,7 +712,8 @@ class AdminController extends BaseController
      */
     private function processNewPostedInstance(
         $instanceData
-    ) {
+    )
+    {
         $pagePluginInstance = new \Rcm\Entity\PagePluginInstance();
         $pagePluginInstance->setRenderOrderNumber(0);
         $pagePluginInstance->setLayoutContainer(0);
@@ -698,14 +723,14 @@ class AdminController extends BaseController
         $pagePluginInstance->setInstance($newPluginInstance);
 
 
-
         return $pagePluginInstance;
     }
 
     private function getMd5(
         \Rcm\Entity\PagePluginInstance $currentInstance,
-        $instanceData=array()
-    ) {
+        $instanceData = array()
+    )
+    {
         $return = array(
             'current' => $currentInstance->getInstance()->getMd5(),
             'new' => md5(serialize($instanceData))
