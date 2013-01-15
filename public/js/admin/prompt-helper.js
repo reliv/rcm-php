@@ -126,7 +126,7 @@
      *
      * @param {String} name html name
      * @param {String} description title to show user
-     * @param {Object} choices options [html key => display value]
+     * @param {Array} choices options [html key => display value]
      * @param {String} [value] current choice key
      * @param {Boolean} [allowCustomValues] allow user to enter custom values that
      *                  are no in the select
