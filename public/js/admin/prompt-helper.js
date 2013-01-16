@@ -28,7 +28,9 @@
      * @param {Function} [cancelCallBack] called for cancel button click
      */
     $.fn.confirm = function(text, okCallBack, cancelCallBack){
-        $('<p>' + text + '</p>').dialog({
+        var p = $('<p></p>');
+        p.append(text);
+        p.dialog({
             title: 'Confirm',
             modal: true,
             buttons: {
@@ -98,6 +100,25 @@
     };
 
     /**
+     * Build html for a text input
+     *
+     * @param {String} name html name
+     * @param {String} description title to show user
+     * @param {String} value the current value
+     *
+     * @return String
+     */
+    $.fn.addDate = function (name, description, value) {
+        var p = $('<p><label for="' + name + '">' + description + '</label>' +
+            '<br></p>');
+        var input = $('<input name="' + name + '" value="' + value + '">');
+        p.append(input);
+        this.append(p);
+        input.datepicker();
+        return this;
+    };
+
+    /**
     * Build html for a text input
     *
     * Due to ckEditor limitations, this must be called AFTER .dialog is called
@@ -105,10 +126,27 @@
     * @param {String} name html name
     * @param {String} description title to show user
     * @param {String} value the current value
+    * @param {Object} [toolBarConfig] tool bar config for ckEditor
     *
     * @return String
     */
-    $.fn.addRichEdit = function (name, description, value) {
+    $.fn.addRichEdit = function (name, description, value, toolBarConfig) {
+
+        if(typeof(toolBarConfig)=='undefined'){
+            toolBarConfig = {
+                toolbar: [
+                    { name: 'document', items : [ 'Source' ] },
+                    { name: 'undoRedo', items : ['Undo','Redo'] },
+                    { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
+                    { name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv',
+                        '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
+                    { name: 'clipboard', items : ['Cut','Copy','Paste','PasteText','PasteFromWord'] },
+                    { name: 'insert', items : [ 'Image', 'Table','HorizontalRule','SpecialChar','Templates'] },
+                    { name: 'links', items : [ 'Link','Unlink','Anchor' ] },
+                ]
+            };
+        }
+
         var id = $.fn.generateUUID();
         var div = $('<div id="' + id + '" class="'+name+'" contenteditable="true">' + value +'</div>');
         var p = $(
@@ -122,10 +160,10 @@
         // ckEditor only works on elements that are in the DOM
         setTimeout(
             function(){
-                CKEDITOR.replace(id, rcmEditor.config);
+                CKEDITOR.replace(id,toolBarConfig);
             },
             100
-        )
+        );
         return this;
     };
 
