@@ -26,7 +26,7 @@ namespace Rcm\Exception;
  * from with in the Reliv Common Module
  *
  * @category  Reliv
- * @package   RcmJsonDataPluginToolkit\Exception
+ * @package   RcmSimpleConfigStorage\Exception
  * @author    Rod McNew <rmcnew@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License

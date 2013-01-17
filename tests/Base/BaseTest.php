@@ -12,7 +12,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
      *
      * $this->getEmMock(
      *           array(
-     *               'RcmJsonDataPluginToolkit\Entity\JsonContent'=>array(
+     *               'RcmSimpleConfigStorage\Entity\JsonInstanceConfig'=>array(
      *                   'findOneByInstanceId'=>$contentEntity
      *               )
      *           )

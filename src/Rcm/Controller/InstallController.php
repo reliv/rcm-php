@@ -2,7 +2,8 @@
 
 namespace Rcm\Controller;
 
-use \RcmJsonDataPluginToolkit\Entity\JsonContent as JsonContent;
+use \RcmSimpleConfigStorage\Entity\JsonInstanceConfig as JsonContent,
+    \RcmSimpleConfigStorage\StorageEngine\JsonDoctrineRepo;
 
 
 class InstallController extends \Rcm\Controller\EntityMgrAwareController
@@ -14,6 +15,8 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
      */
     private $site=null;
 
+    protected $instanceRepo;
+
     protected $pluginManager;
 
     function __construct(
@@ -22,6 +25,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     ) {
         parent::__construct($entityMgr);
         $this->pluginManager=$pluginManager;
+        $this->instanceRepo = new JsonDoctrineRepo($entityMgr);
     }
 
     public function indexAction()
@@ -111,17 +115,13 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     }
 
     function getDefaultHtmlAreaContent(){
-        return $this->readDefaultJsonFile(
+        return $this->getNewInstanceConfig(
             'vendor/reliv/RcmPlugins/RcmHtmlArea/'
         );
     }
 
-    function readDefaultJsonFile($pluginPath){
-        return json_decode(
-            file_get_contents(
-                $pluginPath.'/config/default.content.json'
-                )
-            );
+    function getNewInstanceConfig($pluginPath){
+        return include $pluginPath.'/config/newInstanceConfig.php';
     }
 
     function createHomePage(){
@@ -503,7 +503,7 @@ are permitted provided that the following conditions are met:</p>
 
     /**
      * Creates a plugin instance for plugins that have controllers that extend
-     * \RcmJsonDataPluginToolkit\JsonContentController
+     * \RcmSimpleConfigStorage\JsonContentController
      *
      * @param string    $pluginName
      * @param array  $jsonContent
@@ -523,8 +523,7 @@ are permitted provided that the following conditions are met:</p>
         $siteWidePluginName = '',
         $forceWidth = null
     ){
-        $this->entityMgr->persist(
-            New JsonContent(
+            $this->instanceRepo->createInstanceConfig(
                 $this->createInstance(
                     $pluginName,
                     $container,
@@ -534,7 +533,6 @@ are permitted provided that the following conditions are met:</p>
                     $forceWidth
                 ),
                 $jsonContent
-            )
         );
     }
 
