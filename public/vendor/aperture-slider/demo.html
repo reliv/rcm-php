@@ -27,12 +27,13 @@
         //jQuery document.ready() shortcut
         $(function () {
 
+            var apertureSliderDiv = $('.apertureSlider');
+
             //Init the slider
             var apertureSlider = new ApertureSlider(
-                    $('.apertureSlider'),
+                    apertureSliderDiv,
                     3,
-                    700,
-                    220
+                    700
             );
 
             //Attach forward button click events
@@ -47,6 +48,7 @@
                     apertureSlider.getFrameCount()
             );
             progressIndicator.setProgress(1);
+            apertureSliderDiv.bind('frameChanged', me.frameChangeCallBack);
             apertureSlider.setFrameChangedCallBack(function(frame){
                 progressIndicator.setProgress(frame);
             });
@@ -98,6 +100,11 @@
 
     <h2>Aperture Slider Demo</h2>
 
+    <p>
+        Try using your browser's back and refresh buttons.
+        They should work correctly.
+    </p>
+
     <div>
         <span>Sections: </span>
         <span class="progressIndicator"></span>
@@ -126,10 +133,6 @@
             <div>
                 <h2>Section 2 - Enter your favorite animals</h2>
 
-                <p>
-                    Try using your browser's back and refresh buttons.
-                    They should work correctly.
-                </p>
 
                 <form action="form_action.asp">
                     Animal 1:<br><input type="text"><br>
