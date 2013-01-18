@@ -2,8 +2,8 @@
 
 namespace Rcm\Controller;
 
-use \RcmSimpleConfigStorage\Entity\JsonInstanceConfig as JsonContent,
-    \RcmSimpleConfigStorage\StorageEngine\JsonDoctrineRepo;
+use \RcmSimpleConfigStorage\Entity\InstanceConfig as JsonContent,
+    \RcmSimpleConfigStorage\StorageEngine\DoctrineSerializedRepo;
 
 
 class InstallController extends \Rcm\Controller\EntityMgrAwareController
@@ -25,7 +25,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     ) {
         parent::__construct($entityMgr);
         $this->pluginManager=$pluginManager;
-        $this->instanceRepo = new JsonDoctrineRepo($entityMgr);
+        $this->instanceRepo = new DoctrineSerializedRepo($entityMgr);
     }
 
     public function indexAction()

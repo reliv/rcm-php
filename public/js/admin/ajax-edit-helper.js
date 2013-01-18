@@ -14,12 +14,12 @@ var AjaxEditHelper=function(instanceId, pluginUrlName){
     var pluginBaseUrl =  '/rcm-plugin-admin-proxy/' + pluginUrlName + '/'
         + instanceId + '/';
 
-    me.getDataAndDefaultDataFromServer = function(callback){
+    me.getInstanceConfigAndNewInstanceConfigFromServer = function(callback){
 
         $.getJSON(
-            pluginBaseUrl + 'data-and-default-data',
+            pluginBaseUrl + 'instance-config-and-new-instance-config',
             function(result) {
-                callback(result.data,result.defaultData);
+                callback(result.instanceConfig,result.newInstanceConfig);
             }
         );
 
