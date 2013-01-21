@@ -56,7 +56,7 @@
             //Attach tab events
             $('.progressIndicator span').click(function (event) {
                 event.preventDefault();
-                apertureSlider.setCurrentFrame($(this).html());
+                apertureSlider.goToFrame($(this).html());
             });
         });
 
