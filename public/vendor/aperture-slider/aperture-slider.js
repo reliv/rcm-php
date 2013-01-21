@@ -68,7 +68,7 @@ var ApertureSlider = function (apertureDiv, configOverride) {
         frameCount = filmDiv.children().length;
         totalFrameWidth = config.frameWidth + config.frameSeparation;
         filmWidth = (frameCount * totalFrameWidth * 2); // * 2 for good measure
-        apertureWidth = config.framesPerView * totalFrameWidth;
+        apertureWidth = config.framesPerView * config.frameWidth;
         maxFrameIndex = frameCount - config.framesPerView;
 
         //Hide optional "Loading..." div
