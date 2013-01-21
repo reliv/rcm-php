@@ -25,7 +25,7 @@ var ApertureSlider = function (apertureDiv,  configOverride) {
      * @type {Object}
      */
     var config = {
-        width:800,
+        frameWidth:800,
         minHeight : 400,
         framesPerView:1,//Values > 1 not compatible with hideOffScreenFrames
         animationDelay : 400,
@@ -42,8 +42,7 @@ var ApertureSlider = function (apertureDiv,  configOverride) {
      */
     var me = this;
 
-    var filmDiv, frameDivs, currentFrame, frameCount;
-
+    var filmDiv, frameDivs, currentFrame, frameCount, totalFrameWidth, filmWidth, apertureWidth;
 
     //Allow overriding of config vars
     if(typeof(configOverride)=='object'){
@@ -67,14 +66,12 @@ var ApertureSlider = function (apertureDiv,  configOverride) {
 
         //Add css
         frameDivs.css('float', 'left');
-        var frameWidth = config.width/config.framesPerView;
-        frameDivs.css('width', frameWidth + 'px');
+        frameDivs.css('width', config.frameWidth + 'px');
         frameDivs.css('min-height', config.minHeight + 'px');
         frameDivs.css('margin-right', config.frameSeparation + 'px');
-        var filmWidth = (frameCount * (config.width + config.frameSeparation));
         filmDiv.css('width', filmWidth + 'px');
         filmDiv.css('margin-left: 0');
-        apertureDiv.css('width', config.width + 'px');
+        apertureDiv.css('width', apertureWidth + 'px');
         apertureDiv.css('overflow', 'hidden');
 
         //Hide off-screen frame contents
@@ -137,7 +134,7 @@ var ApertureSlider = function (apertureDiv,  configOverride) {
 
             filmDiv.animate(
                 {
-                    'margin-left':-(newFrame-1) * (config.width / config.framesPerView + config.frameSeparation)
+                    'margin-left':-(newFrame-1) * totalFrameWidth
                 },
                 config.animationDelay,
                 function () {
