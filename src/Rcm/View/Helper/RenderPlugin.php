@@ -103,10 +103,11 @@ class RenderPlugin extends AbstractHelper
         if ($renderView === true) {
             $pluginView = $plugin->getView();
 
-            $pluginView->setVariable(
-                'rcmPluginInstanceId',
-                $plugin->getInstanceId()
-            );
+//            instanceId moved to SimplePluginConfigStorage so negatives work
+//            $pluginView->setVariable(
+//                'rcmPluginInstanceId',
+//                $plugin->getInstanceId()
+//            );
 
             $html .= $this->getView()->render($pluginView);
         }

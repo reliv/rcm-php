@@ -53,7 +53,7 @@ interface PluginInterface
      *
      * @return \Zend\View\Model\ViewModel
      */
-    function renderDefaultInstance();
+    function renderDefaultInstance($instanceId);
 
     /**
      * Saves a plugin instance to persistent storage
