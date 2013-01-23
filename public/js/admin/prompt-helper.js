@@ -142,7 +142,7 @@
                         '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
                     { name: 'clipboard', items : ['Cut','Copy','Paste','PasteText','PasteFromWord'] },
                     { name: 'insert', items : [ 'Image', 'Table','HorizontalRule','SpecialChar','Templates'] },
-                    { name: 'links', items : [ 'Link','Unlink','Anchor' ] },
+                    { name: 'links', items : [ 'Link','Unlink','Anchor' ] }
                 ]
             };
         }
@@ -263,6 +263,18 @@
             '<p><input type="checkbox"' + checkedHtml + ' name="' + name +
                 '" value="true" />' + description + '</p>'
         );
+        return this;
+    };
+
+    /**
+     * Converts a given element to a rich edit. WARNING: changes ele ID
+     * @param ele
+     * @return {*}
+     */
+    $.fn.richEdit = function (ele) {
+        var id = $.fn.generateUUID();
+        ele.attr('id', id);
+        CKEDITOR.replace(id,rcmCkConfig);
         return this;
     };
 
