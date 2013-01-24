@@ -1191,4 +1191,16 @@ function RcmEdit(config) {
 
         return true;
     }
+
+    /**
+     * Converts a given element to a rich edit. WARNING: changes ele ID
+     * @param ele
+     * @return {*}
+     */
+    me.convertToRichEdit = function (ele) {
+        var id = $.fn.generateUUID();
+        ele.attr('id', id);
+        CKEDITOR.replace(id,rcmCkConfig);
+        return this;
+    };
 }

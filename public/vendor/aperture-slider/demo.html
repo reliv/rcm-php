@@ -22,50 +22,14 @@
             src="https://raw.github.com/cowboy/jquery-bbq/master/jquery.ba-bbq.min.js"></script>
     <script type="text/javascript" src="aperture-slider.js"></script>
     <script type="text/javascript" src="progress-indicator.js"></script>
-    <script type="text/javascript">
 
-        //jQuery document.ready() shortcut
-        $(function () {
-
-            var apertureSliderDiv = $('.apertureSlider');
-
-            //Init the slider
-            var apertureSlider = new ApertureSlider(
-                    apertureSliderDiv,
-                    3,
-                    700
-            );
-
-            //Attach forward button click events
-            $('input[value="Continue"]').click(function (event) {
-                event.preventDefault();
-                apertureSlider.goForward();
-            });
-
-            //Setup optional progress indicator tab
-            var progressIndicator = new ProgressIndicator(
-                    $('.progressIndicator'),
-                    apertureSlider.getFrameCount()
-            );
-            progressIndicator.setProgress(1);
-            apertureSliderDiv.bind('frameChanged', me.frameChangeCallBack);
-            apertureSlider.setFrameChangedCallBack(function(frame){
-                progressIndicator.setProgress(frame);
-            });
-
-            //Attach tab events
-            $('.progressIndicator span').click(function (event) {
-                event.preventDefault();
-                apertureSlider.goToFrame($(this).html());
-            });
-        });
-
-    </script>
+    <!--
+    <script type="text/javascript" src="demo.js"></script>
 
     <style>
 
-        a, a:visited{
-            color:blue;
+        a, a:visited {
+            color: blue;
         }
 
         #main {
@@ -76,18 +40,18 @@
         }
 
         .progressIndicator span {
-            padding:3px;
-            margin:3px;
+            padding: 3px;
+            margin: 3px;
             border: 1px dotted grey;
-            color:blue;
+            color: blue;
             cursor: pointer;
         }
 
-        .progressIndicator .current{
-            border:3px solid black;
+        .progressIndicator .current {
+            border: 3px solid black;
         }
 
-        .progressIndicator .completed{
+        .progressIndicator .completed {
             border: 1px solid black;
         }
     </style>

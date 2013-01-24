@@ -162,7 +162,17 @@ class RcmViewInit extends AbstractHelper
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/js/admin/prompt-helper.js',
+            $renderer->basePath() . '/modules/rcm/vendor/prompt-helper/prompt-helper-legacy-deprecated.js',
+            'text/javascript'
+        );
+
+        $renderer->headScript()->appendFile(
+            $renderer->basePath() . '/modules/rcm/vendor/prompt-helper/alert-confirm.js',
+            'text/javascript'
+        );
+
+        $renderer->headScript()->appendFile(
+            $renderer->basePath() . '/modules/rcm/vendor/prompt-helper/dialog-inputs.js',
             'text/javascript'
         );
 
