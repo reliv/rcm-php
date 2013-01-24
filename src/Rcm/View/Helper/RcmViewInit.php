@@ -163,7 +163,7 @@ class RcmViewInit extends AbstractHelper
 
         $renderer->headScript()->appendFile(
             $renderer->basePath() . '/modules/rcm/vendor/prompt-helper/prompt-helper-legacy-deprecated.js',
-            'text/javascript'
+          e  'text/javascript'
         );
 
         $renderer->headScript()->appendFile(
