@@ -105,10 +105,39 @@
      * @param {String} name html name
      * @param {String} description title to show user
      * @param {String} value the current value
+     * @param {String} urlToValidator URL to Ajax Validator
+     * @param {Boolean} [disallowSpaces] URL to Ajax Validator
+     *
+     * @return String
+     */
+    $.fn.addInputWithAjaxValidator = function (name, description, value, urlToValidator, disallowSpaces) {
+        var validatorId = $.fn.generateUUID();
+        this.append('' +
+            '<p><label for="' + name + '">' + description + '</label><br>' +
+            '<div id="' + validatorId +'" style="float: right;"></div> ' +
+            '<input id="' + name + '" name="' + name + '" value="' + value + '"></p>'
+        );
+
+        this.find('#'+name).keyup(function(){
+            var validationContainer = $("#"+validatorId);
+            $.fn.validateInput(this, validationContainer, urlToValidator, disallowSpaces);
+        });
+
+        return this;
+    };
+
+    /**
+     * Build html for a text input
+     *
+     * @param {String} name html name
+     * @param {String} description title to show user
+     * @param {String} value the current value
      *
      * @return String
      */
     $.fn.addDate = function (name, description, value) {
+        var id = $.fn.generateUUID()
+
         var p = $('<p><label for="' + name + '">' + description + '</label>' +
             '<br></p>');
         var input = $('<input name="' + name + '" value="' + value + '">');
@@ -290,5 +319,70 @@
                 return v.toString(16);
             }
         );
+    };
+
+    $.fn.validateInput = function(inputField, resultContainer, ajaxPath, disallowSpaces) {
+
+        if(typeof(disallowSpaces)=='undefined'){
+            disallowSpaces = false;
+        }
+
+        if (disallowSpaces) {
+            /* Get the value of the input field and filter */
+            var inputValue = $(inputField).val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9\-\_]/g, "");
+            $(inputField).val(inputValue);
+        } else {
+            var inputValue = $(inputField).val();
+        }
+
+        /* make sure that the page name is greater then 1 char */
+        if(inputValue.length < 1) {
+            $.fn.inputFieldError(inputField, resultContainer);
+            $(resultContainer).html('');
+            return false;
+        }
+
+        /* Check name via rest service */
+        var pageOk = false;
+
+        var dataToSend = {};
+        var fieldId = $(inputField).attr('id');
+
+        dataToSend[fieldId] = inputValue;
+
+        $.getJSON(ajaxPath, dataToSend, function(data) {
+            if (data.pageOk == 'Y') {
+                $.fn.inputFieldOk(inputField, resultContainer);
+            } else if(data.pageOk != 'Y') {
+                $.fn.inputFieldError(inputField, resultContainer);
+            } else {
+                $.fn.inputFieldFatalError(inputField, resultContainer);
+            }
+        }).error(function(){
+                $.fn.inputFieldFatalError(inputField, resultContainer);
+            });
+
+        return pageOk;
+    };
+
+    $.fn.inputFieldError = function(inputField, resultContainer) {
+        $(resultContainer).removeClass('ui-icon-check');
+        $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon');
+        $(inputField).addClass('RcmErrorInputHightlight');
+        $(inputField).removeClass('RcmOkInputHightlight');
+
+    };
+
+    $.fn.inputFieldFatalError = function(inputField, resultContainer) {
+        $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
+        $(inputField).addClass('RcmErrorInputHightlight');
+        $(inputField).removeClass('RcmOkInputHightlight');
+    };
+
+    $.fn.inputFieldOk = function(inputField, resultContainer) {
+        $(resultContainer).removeClass('ui-icon-alert');
+        $(resultContainer).addClass('ui-icon-check').addClass('ui-icon');
+        $(inputField).removeClass('RcmErrorInputHightlight');
+        $(inputField).addClass('RcmOkInputHightlight');
     };
 })( jQuery );
