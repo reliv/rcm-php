@@ -1,5 +1,9 @@
 (function( $ ){
-    $.fn.inputImage = function (name, description, src) {
+    $.fn.inputImage = function (description, src) {
+
+        //Give it a random name so labels and multi-dialogs work
+        var name = $.fn.generateUUID();
+
         var p = $('<p class="imageInput" style="overflow-y:hidden"></p>');
         p.append('<label for="' + name + '">' + description + '</label><br>' +
             '<img style="max-width:120px;float:left;margin-right:10px" src="' + src + '">');
@@ -33,13 +37,16 @@
     /**
      * Build html for a text input
      *
-     * @param {String} name html name
      * @param {String} description title to show user
      * @param {String} value the current value
      *
      * @return String
      */
-    $.fn.inputText = function (name, description, value) {
+    $.fn.inputText = function (description, value) {
+
+        //Give it a random name so labels and multi-dialogs work
+        var name = $.fn.generateUUID();
+
         return $(
             '<p><label for="' + name + '">' + description + '</label><br>' +
             '<input name="' + name + '" value="' + value + '"></p>'
@@ -49,13 +56,16 @@
     /**
      * Build html for a text input
      *
-     * @param {String} name html name
      * @param {String} description title to show user
      * @param {String} value the current value
      *
      * @return String
      */
-    $.fn.inputDate = function (name, description, value) {
+    $.fn.inputDate = function (description, value) {
+
+        //Give it a random name so labels and multi-dialogs work
+        var name = $.fn.generateUUID();
+
         var p = $('<p><label for="' + name + '">' + description + '</label>' +
             '<br></p>');
         var input = $('<input name="' + name + '" value="' + value + '">');
@@ -76,6 +86,10 @@
      * @return {String}
      */
     $.fn.inputSelect = function (description, choices, value, allowCustomValues) {
+
+        //Give it a random name so labels and multi-dialogs work
+        var name = $.fn.generateUUID();
+
         var p = $('<p></p>');
         var selected;
         p.append('<label for="' + name + '">' + description + '</label><br>');
@@ -83,7 +97,7 @@
         if(allowCustomValues){
             customClass = ' class="selectAllowCustomValues"';
         }
-        var select=$('<select' + customClass + '"><select>');
+        var select=$('<select' + customClass + ' name="' + name + '"><select>');
 
         for (var key in choices) {
             selected = '';
@@ -150,15 +164,17 @@
      * @return {String}
      */
     $.fn.inputCheckBox = function (description, checked) {
+
+        //Give it a random name so labels and multi-dialogs work
+        var name = $.fn.generateUUID();
+
         var checkedHtml = '';
         if (checked) {
             checkedHtml = ' checked="checked"';
         }
         this.append(
-            '<p>' +
-                '<input type="checkbox"' + checkedHtml + '" value="true" />' +
-                 + description +
-                '</p>'
+            '<p><input type="checkbox"' + checkedHtml + ' name="' + name +
+                '" value="true" />' + description + '</p>'
         );
         return this;
     };
@@ -191,7 +207,6 @@
             };
         }
 
-        //Give the ele a random id since we could have more than one on a page
         var id = $.fn.generateUUID();
         var div = $('<div id="' + id + '" contenteditable="true">' + value +'</div>');
         var p = $(
