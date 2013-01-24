@@ -18,7 +18,7 @@
      *
      *
      * THIS FILE IS DEPRECATED!
-     * PLEASE USE vendor/reliv/Rcm/public/vendor/prompt-helper instead
+     * PLEASE USE vendor/reliv/Rcm/public/vendor/dialog-inputs instead
      * The new version uses js vars instead of names and ids to make val
      * retrieval easy
      *

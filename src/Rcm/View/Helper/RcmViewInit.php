@@ -167,12 +167,12 @@ class RcmViewInit extends AbstractHelper
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/prompt-helper/alert-confirm.js',
+            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui-alert-confirm/jquery-ui-alert-confirm.js',
             'text/javascript'
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/prompt-helper/dialog-inputs.js',
+            $renderer->basePath() . '/modules/rcm/vendor/jquery-dialog-inputs/jquery-dialog-inputs.js',
             'text/javascript'
         );
 
