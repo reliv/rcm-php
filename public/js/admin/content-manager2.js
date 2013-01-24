@@ -1469,7 +1469,8 @@ function RcmEdit(config) {
                 me.layoutEditor.pluginSortableChange(ui);
             },
             receive: function(event, ui) {
-                me.layoutEditor.pluginSortableReceive(event, ui);
+                console.log(self)
+                me.layoutEditor.pluginSortableReceive(this, ui);
             },
             start: function(event, ui){
                 me.layoutEditor.pluginSortableStart(ui);
@@ -1559,13 +1560,14 @@ function RcmEdit(config) {
      */
     me.layoutEditor.pluginSortableReceive = function(container, ui) {
         //Get the current Item
-        var newItem = $(container).data().sortable.currentItem;
+        var newItem = $(container).find(".rcmPluginDrag");
 
         //Find the actual plugin instance
         var initialInstance = $(ui.item).find(".initialState");
 
         //Create a new element to insert once dropped
         var newDiv = $(initialInstance).find(".rcmPlugin").clone(false);
+
 
         var containerData = me.rcmPlugins.getPluginContainerInfo(newDiv);
 
