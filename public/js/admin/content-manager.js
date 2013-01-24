@@ -140,6 +140,58 @@ function RcmEdit(config) {
         return pageOk;
     };
 
+    /**
+     * Check the user name and make sure a user name by the name provided doesn't
+     * already exist.
+     *
+     * @param inputField Input field to use for the check
+     * @param resultContainer The container where the result should be displayed
+     * @return {*}
+     */
+    me.checkUserName = function(inputField, resultContainer) {
+
+        /* Get the value of the input field and filter */
+        var userName = $(inputField).val().toLowerCase().replace(/\s/g, '').replace(/[^@A-Za-z0-9\-\_]/g, "");
+        $(inputField).val(userName);
+
+        /* make sure that the user name is greater then 0 char */
+        if(userName.length < 0) {
+            $(resultContainer).removeClass('ui-icon-check');
+            $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon');
+            $(inputField).addClass('RcmErrorInputHightlight');
+            $(inputField).removeClass('RcmOkInputHightlight');
+            $(resultContainer).html('');
+            return;
+        }
+
+        /* Check name via rest service */
+        var userOk = false;
+
+        $.getJSON('/rcm-admin-check-user/'+me.language, { pageUrl: pageUrl }, function(data) {
+            if (data.userOk == 'Y') {
+                $(resultContainer).removeClass('ui-icon-alert');
+                $(resultContainer).addClass('ui-icon-check').addClass('ui-icon');
+                $(inputField).removeClass('RcmErrorInputHightlight');
+                $(inputField).addClass('RcmOkInputHightlight');
+            } else if(data.userOk != 'Y') {
+                $(resultContainer).removeClass('ui-icon-check');
+                $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon');
+                $(inputField).addClass('RcmErrorInputHightlight');
+                $(inputField).removeClass('RcmOkInputHightlight');
+            } else {
+                $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
+                $(inputField).addClass('RcmErrorInputHightlight');
+                $(inputField).removeClass('RcmOkInputHightlight');
+            }
+        }).error(function(){
+                $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
+                $(inputField).addClass('RcmErrorInputHightlight');
+                $(inputField).removeClass('RcmOkInputHightlight');
+            });
+
+        return userOk;
+    };
+
     /* Freeze page */
     me.blockUI = function(message){
         $.blockUI({

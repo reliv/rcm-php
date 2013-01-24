@@ -328,7 +328,13 @@ function RcmEdit(config) {
 
     me.adminPopoutWindow = function (pagePath, height, width, title) {
         var popoutWidowDiv = $("#rcmAdminPagePopoutWindow");
-        $(popoutWidowDiv).load(pagePath+'/'+me.language);
+        $(popoutWidowDiv).html('');
+        $(popoutWidowDiv).load(pagePath+'/'+me.language, function(response, status, xhr) {
+            if (status == "error") {
+                var msg = "Sorry but there was an error: ";
+                $(popoutWidowDiv).html(msg + xhr.status + " " + xhr.statusText);
+            }
+        });
         $(popoutWidowDiv).dialog({
             title: title,
             height: height,
@@ -624,6 +630,28 @@ function RcmEdit(config) {
         } else {
             me.switchToEditMode();
         }
+    };
+
+
+    me.ui.inputFieldError = function(inputField, resultContainer) {
+        $(resultContainer).removeClass('ui-icon-check');
+        $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon');
+        $(inputField).addClass('RcmErrorInputHightlight');
+        $(inputField).removeClass('RcmOkInputHightlight');
+
+    };
+
+    me.ui.inputFieldFatalError = function(inputField, resultContainer) {
+        $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
+        $(inputField).addClass('RcmErrorInputHightlight');
+        $(inputField).removeClass('RcmOkInputHightlight');
+    };
+
+    me.ui.inputFieldOk = function(inputField, resultContainer) {
+        $(resultContainer).removeClass('ui-icon-alert');
+        $(resultContainer).addClass('ui-icon-check').addClass('ui-icon');
+        $(inputField).removeClass('RcmErrorInputHightlight');
+        $(inputField).addClass('RcmOkInputHightlight');
     };
 
     /***********************/
@@ -1727,6 +1755,42 @@ function RcmEdit(config) {
     }
 
     /****************************/
+    /**     User Manager       **/
+    /****************************/
+    me.checkUserName = function(inputField, resultContainer) {
+
+        /* Get the value of the input field and filter */
+        var userName = $(inputField).val().toLowerCase().replace(/\s/g, '-').replace(/[^@\.A-Za-z0-9\-\_]/g, "");
+        $(inputField).val(userName);
+
+        /* make sure that the user name is not empty */
+        if(userName.length < 0) {
+            me.ui.inputFieldError(inputField, resultContainer);
+            $(resultContainer).html('');
+            return false;
+        }
+
+        /* Check name via rest service */
+        var userOk = false;
+
+        $.getJSON('/rcm-admin-check-user/'+me.language, { userName: userName }, function(data) {
+            if (data.userOk == 'Y') {
+                me.ui.inputFieldOk(inputField, resultContainer);
+            } else if(data.userOk != 'Y') {
+                me.ui.inputFieldError(inputField, resultContainer);
+            } else {
+                me.ui.inputFieldFatalError(inputField, resultContainer);
+            }
+        }).error(function(){
+                me.ui.inputFieldFatalError(inputField, resultContainer);
+        });
+
+        return userOk;
+    };
+
+
+
+    /****************************/
     /**     Page Manager        */
     /****************************/
 
@@ -1738,38 +1802,26 @@ function RcmEdit(config) {
 
         /* make sure that the page name is greater then 1 char */
         if(pageUrl.length < 1) {
-            $(resultContainer).removeClass('ui-icon-check')
-            $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon')
-            $(inputField).addClass('RcmErrorInputHightlight');
-            $(inputField).removeClass('RcmOkInputHightlight');
+            me.ui.inputFieldError(inputField, resultContainer);
             $(resultContainer).html('');
-            return;
+            return false;
         }
 
         /* Check name via rest service */
         var pageOk = false;
 
+
         $.getJSON('/rcm-admin-checkpage/'+me.language, { pageUrl: pageUrl }, function(data) {
             if (data.pageOk == 'Y') {
-                $(resultContainer).removeClass('ui-icon-alert')
-                $(resultContainer).addClass('ui-icon-check').addClass('ui-icon');
-                $(inputField).removeClass('RcmErrorInputHightlight');
-                $(inputField).addClass('RcmOkInputHightlight');
+                me.ui.inputFieldOk(inputField, resultContainer);
             } else if(data.pageOk != 'Y') {
-                $(resultContainer).removeClass('ui-icon-check')
-                $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon');
-                $(inputField).addClass('RcmErrorInputHightlight');
-                $(inputField).removeClass('RcmOkInputHightlight');
+                me.ui.inputFieldError(inputField, resultContainer);
             } else {
-                $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
-                $(inputField).addClass('RcmErrorInputHightlight');
-                $(inputField).removeClass('RcmOkInputHightlight');
+                me.ui.inputFieldFatalError(inputField, resultContainer);
             }
         }).error(function(){
-                $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
-                $(inputField).addClass('RcmErrorInputHightlight');
-                $(inputField).removeClass('RcmOkInputHightlight');
-            })
+                me.ui.inputFieldFatalError(inputField, resultContainer);
+        });
 
         return pageOk;
     };

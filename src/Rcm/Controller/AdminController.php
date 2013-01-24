@@ -57,6 +57,20 @@ class AdminController extends BaseController
 
     }
 
+    public function createNewUserAction()
+    {
+        $this->ensureAdminIsLoggedIn();
+
+        /** @var $siteFactory \Rcm\Model\SiteFactory */
+        $siteFactory = $this->getServiceLocator()->get(
+            'Rcm\Model\SiteFactory'
+        );
+
+        $sites = $siteFactory->getAvailableSites();
+
+
+    }
+
     public function getSaveAsTemplateAction()
     {
         $this->ensureAdminIsLoggedIn();
@@ -74,11 +88,31 @@ class AdminController extends BaseController
 
         if (empty($page)) {
             $data['pageOk'] = 'Y';
-            echo json_encode($data);
-            exit;
+        } else {
+            $data['pageOk'] = 'N';
         }
 
-        $data['pageOk'] = 'N';
+        echo json_encode($data);
+        exit;
+    }
+
+    public function checkUserNameJsonAction()
+    {
+        $this->ensureAdminIsLoggedIn();
+
+        $userName = $this->getRequest()->getQuery()->get('userName');
+
+        /** @var $userManager /Rcm/Model/UserManagement/UserManagerInterface */
+        $userManager = $this->getServiceLocator()->get('rcmUserManager');
+
+        $user = $userManager->isCurrentUser($userName);
+
+        if (empty($user)) {
+            $data['userOk'] = 'Y';
+        } else {
+            $data['userOk'] = 'N';
+        }
+
         echo json_encode($data);
         exit;
     }

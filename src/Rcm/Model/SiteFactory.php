@@ -53,6 +53,12 @@ class SiteFactory extends EntityMgrAware
      */
     protected $entityMgr;
 
+    public function getAvailableSites()
+    {
+        $entityMgr = $this->entityMgr;
+        return $entityMgr->getRepository('\Rcm\Entity\Site')->findAll();
+    }
+
     /**
      * Get the site entity for a given domain name and language. Will fall back
      * to a domainName's default language if necessary.

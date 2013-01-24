@@ -256,7 +256,7 @@ return array(
                     ),
                 ),
             ),
-            /*'Users' => array(
+            'Users' => array(
                 'display' => 'Users',
                 'aclGroups' => 'admin',
                 'cssClass' => 'draftsIcon',
@@ -265,25 +265,36 @@ return array(
                     'New' => array(
                         'display' => 'New',
                         'aclGroups' => 'admin',
-                        'cssClass' => 'draftsIcon',
+                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
                         'href' => '#',
+                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-new-user', 430, 740, 'Add New User'); return false;"
                     ),
 
                     'Modify' => array(
-                        'display' => 'Modify',
+                        'display' => 'Page',
                         'aclGroups' => 'admin',
-                        'cssClass' => 'draftsIcon',
+                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
                         'href' => '#',
+                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
                     ),
 
                     'Suspend' => array(
-                        'display' => 'Suspend',
+                        'display' => 'Page',
                         'aclGroups' => 'admin',
-                        'cssClass' => 'draftsIcon',
+                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
                         'href' => '#',
-                    )
+                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
+                    ),
+
+                    'Delete' => array(
+                        'display' => 'Page',
+                        'aclGroups' => 'admin',
+                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
+                        'href' => '#',
+                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
+                    ),
                 )
-            ),*/
+            ),
 
             'Help' => array(
                 'display' => 'Help',
@@ -409,6 +420,16 @@ return array(
                     ),
                 ),
             ),
+            'rcm-admin-save-new-user' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-admin-check-user/:language',
+                    'defaults' => array(
+                        'controller' => 'rcmAdminController',
+                        'action' => 'checkUserNameJson',
+                    ),
+                ),
+            ),
 
             'rcm-admin-create-blank-page' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
@@ -420,6 +441,18 @@ return array(
                     ),
                 ),
             ),
+
+            'rcm-admin-create-new-user' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-admin-create-new-user[/:language]',
+                    'defaults' => array(
+                        'controller'=> 'rcmAdminController',
+                        'action' => 'createNewUser',
+                    ),
+                ),
+            ),
+
 
             'rcm-admin-create-blank-page_create' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',

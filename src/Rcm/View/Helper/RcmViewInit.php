@@ -113,7 +113,7 @@ class RcmViewInit extends AbstractHelper
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery/js/jquery-ui-1.9.1.custom.min.js', 'text/javascript'
+            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui/js/jquery-ui-1.10.0.custom.min.js', 'text/javascript'
         );
 
         $renderer->headScript()->appendFile(
@@ -130,7 +130,7 @@ class RcmViewInit extends AbstractHelper
     protected function setCss(\Zend\View\Renderer\PhpRenderer $renderer)
     {
         $renderer->headLink()->appendStylesheet(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery/css/smoothness/jquery-ui-1.9.1.custom.css'
+            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.0.custom.min.css'
         );
     }
 
@@ -168,15 +168,20 @@ class RcmViewInit extends AbstractHelper
 
         $renderer->headScript()->appendFile(
             $renderer->basePath()
-                .'/modules/rcm/vendor/medialize-jquery-context-menu/src/jquery.'
-                .'contextMenu.js'
-            , 'text/javascript'
+                .'/modules/rcm/vendor/medialize-jquery-context-menu/src/jquery.contextMenu.js',
+            'text/javascript'
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/JSON-js-master/json2.js',
-            'text/javascript',
-            array('conditional' => 'lt IE 8',)
+            $renderer->basePath()
+                . '/modules/rcm/vendor/ioncache-tag-handler/js/jquery.taghandler.js',
+            'text/javascript'
+        );
+
+        $renderer->headScript()->appendFile(
+            $renderer->basePath()
+                .'/modules/rcm/vendor/medialize-jquery-context-menu/src/jquery.contextMenu.js',
+            'text/javascript'
         );
     }
 
@@ -192,8 +197,12 @@ class RcmViewInit extends AbstractHelper
 
         $renderer->headLink()->appendStylesheet(
             $renderer->basePath()
-                .'/modules/rcm/vendor/medialize-jquery-context-menu/src/jquery.'
-                .'contextMenu.css'
+                .'/modules/rcm/vendor/medialize-jquery-context-menu/src/jquery.contextMenu.css'
+        );
+
+        $renderer->headLink()->appendStylesheet(
+            $renderer->basePath()
+                .'/modules/rcm/vendor/ioncache-tag-handler/css/jquery.taghandler.css'
         );
     }
 

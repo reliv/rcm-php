@@ -19,6 +19,18 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
         $this->session = new Container('rcm_user_manager');
     }
 
+    public function isCurrentUser($username)
+    {
+        $user = $this->entityMgr->getRepository('\Rcm\Entity\User')
+            ->findOneByUsername($username);
+
+        if ($user) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @return \Rcm\Entity\User | null
      */

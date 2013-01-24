@@ -21,4 +21,7 @@ interface UserManagerInterface {
      * @return \Rcm\Entity\User | null
      */
     public function loginUser($username, $password);
+
+    public function isCurrentUser($username);
+
 }
