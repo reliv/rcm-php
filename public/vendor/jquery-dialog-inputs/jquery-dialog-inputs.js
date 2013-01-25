@@ -40,12 +40,7 @@ var inputImageEventsDelegated = false;
                 });
             }
 
-            if (this instanceof jQuery) {
-                this.append(p);
-                return this;
-            } else {
-                return p;
-            }
+            return p;
         },
 
         /**
@@ -68,12 +63,7 @@ var inputImageEventsDelegated = false;
             var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
                 '<input name="' + name + '" value="' + value + '"></p>');
 
-            if (this instanceof jQuery) {
-                this.append(p);
-                return this;
-            } else {
-                return p;
-            }
+            return p;
         },
 
         /**
@@ -99,12 +89,7 @@ var inputImageEventsDelegated = false;
             p.append(input);
             input.datepicker();
 
-            if (this instanceof jQuery) {
-                this.append(p);
-                return this;
-            } else {
-                return p;
-            }
+            return p;
         },
 
         /**
@@ -183,12 +168,7 @@ var inputImageEventsDelegated = false;
                 });
             }
 
-            if (this instanceof jQuery) {
-                this.append(p);
-                return this;
-            } else {
-                return p;
-            }
+            return p;
         },
 
 
@@ -214,12 +194,7 @@ var inputImageEventsDelegated = false;
                     '" value="true" />' + description + '</p>'
             );
 
-            if (this instanceof jQuery) {
-                this.append(p);
-                return this;
-            } else {
-                return p;
-            }
+            return p;
         },
 
         /**
@@ -267,12 +242,7 @@ var inputImageEventsDelegated = false;
                 100
             );
 
-            if (this instanceof jQuery) {
-                this.append(p);
-                return this;
-            } else {
-                return p;
-            }
+            return p;
         },
 
         /**
@@ -367,11 +337,19 @@ var inputImageEventsDelegated = false;
 
         // Method calling logic
         if (methods[method]) {
-            return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
+            var p = methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
-            return methods.init.apply(this, arguments);
+            var p = methods.init.apply(this, arguments);
         } else {
             $.error('Method ' + method + ' does not exist on jquery-dialog-inputs');
+            return;
+        }
+
+        if (this instanceof jQuery) {
+            this.append(p);
+            return this;
+        } else {
+            return p;
         }
 
     };
