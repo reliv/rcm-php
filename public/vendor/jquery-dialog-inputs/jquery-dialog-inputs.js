@@ -333,7 +333,8 @@ var inputImageEventsDelegated = false;
     };
 
     /**
-     * From http://docs.jquery.com/Plugins/Authoring
+     * Follows namespace pollution avoidance advice
+     * from http://docs.jquery.com/Plugins/Authoring
      * @param {String} inputType
      * @param {String} label
      * @param [option1]
@@ -346,15 +347,15 @@ var inputImageEventsDelegated = false;
         var p;
 
         // Method calling logic
-        if (methods[method]) {
-            p = methods[ method ].apply(
+        if (methods[inputType]) {
+            p = methods[ inputType ].apply(
                 this, Array.prototype.slice.call(arguments, 1)
             );
-        } else if (typeof method === 'object' || !method) {
+        } else if (typeof inputType === 'object' || !method) {
             p = methods.init.apply(this, arguments);
         } else {
             $.error(
-                'Method ' + method + ' does not exist on jquery-dialog-inputs'
+                'Method ' + inputType + ' does not exist on jquery-dialog-inputs'
             );
             return null;
         }
