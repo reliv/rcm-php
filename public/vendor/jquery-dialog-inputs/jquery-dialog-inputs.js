@@ -1,3 +1,5 @@
+var inputImageEventsDelegated = false;
+
 (function ($) {
     var methods = {
         image:function (description, src) {
@@ -5,9 +7,13 @@
             //Give it a random name so labels and multi-dialogs work
             var name = $.fn.generateUUID();
 
+            if (src == undefined) {
+                src = '';
+            }
+
             var p = $('<p class="dialogElement imageInput" data-dialogElementName="' + name + '" style="overflow-y:hidden"></p>');
             p.append('<label for="' + name + '">' + description + '</label><br>' +
-                '<img style="max-width:120px;float:left;margin-right:10px" src="' + src + '">');
+                '<img style="max-width:120px;float:left;margin-right:10px" src="' + src + '" onerror="this.src=\'/modules/rcm/images/file-broken-icon.png\';">');
             var urlBox = $('<input style="width:370px;margin-right:10px" name="' + name + '" value="' + src + '">');
             p.append(urlBox);
             p.append('<button type="button" class="image-button ui-button ui-widget ' +
@@ -16,11 +22,11 @@
                 '<span class="ui-button-text">Browse</span>' +
                 '</button>');
 
-            if (!this.inputImageEventsDelegated) {
+            if (!inputImageEventsDelegated) {
 
-                this.inputImageEventsDelegated = true;
+                inputImageEventsDelegated = true;
 
-                this.delegate('.imageInput button, .imageInput img', 'click',
+                $('body').on('click', '.imageInput button, .imageInput img',
                     function () {
                         rcmEdit.showFileBrowserForInputBox(
                             $(this).parent().children('input')
@@ -28,11 +34,18 @@
                         );
                     }
                 );
-                this.delegate('.imageInput input', 'change', function () {
+
+                $('body').on('change', '.imageInput input', function () {
                     $(this).parent().children('img').attr('src', $(this).val());
                 });
             }
-            return p;
+
+            if (this instanceof jQuery) {
+                this.append(p);
+                return this;
+            } else {
+                return p;
+            }
         },
 
         /**
@@ -45,13 +58,22 @@
          */
         text:function (description, value) {
 
+            if (value == undefined) {
+                value = '';
+            }
+
             //Give it a random name so labels and multi-dialogs work
             var name = $.fn.generateUUID();
 
-            return $(
-                '<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
-                    '<input name="' + name + '" value="' + value + '"></p>'
-            );
+            var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
+                '<input name="' + name + '" value="' + value + '"></p>');
+
+            if (this instanceof jQuery) {
+                this.append(p);
+                return this;
+            } else {
+                return p;
+            }
         },
 
         /**
@@ -64,6 +86,10 @@
          */
         date:function (description, value) {
 
+            if (value == undefined) {
+                value = '';
+            }
+
             //Give it a random name so labels and multi-dialogs work
             var name = $.fn.generateUUID();
 
@@ -72,7 +98,13 @@
             var input = $('<input name="' + name + '" value="' + value + '">');
             p.append(input);
             input.datepicker();
-            return p;
+
+            if (this instanceof jQuery) {
+                this.append(p);
+                return this;
+            } else {
+                return p;
+            }
         },
 
         /**
@@ -150,7 +182,13 @@
                         .children('option.custom').val(textBox.val());
                 });
             }
-            return p;
+
+            if (this instanceof jQuery) {
+                this.append(p);
+                return this;
+            } else {
+                return p;
+            }
         },
 
 
@@ -171,10 +209,17 @@
             if (checked) {
                 checkedHtml = ' checked="checked"';
             }
-            return $(
+            var p = $(
                 '<p class="dialogElement" data-dialogElementName="' + name + '"><input type="checkbox"' + checkedHtml + ' name="' + name +
                     '" value="true" />' + description + '</p>'
             );
+
+            if (this instanceof jQuery) {
+                this.append(p);
+                return this;
+            } else {
+                return p;
+            }
         },
 
         /**
@@ -221,7 +266,13 @@
                 },
                 100
             );
-            return p;
+
+            if (this instanceof jQuery) {
+                this.append(p);
+                return this;
+            } else {
+                return p;
+            }
         },
 
         /**
@@ -230,16 +281,47 @@
          * @param dialogElement
          * @return {*}
          */
-        getDialogElementVal : function(dialogElement){
+        getDialogElementVal : function(){
+
+            var dialogElement = arguments[0];
+            var newVal = (arguments[1]) ? arguments[1] : null;
+
             var name = dialogElement.attr('data-dialogElementName');
-            if(typeof(name)!='undefined'){
-                //Used for must input types
-                return dialogElement.find('[name="'+name+'"]').val();
-            }else{
-                //For ck editor inputs
-                var ckEditId = dialogElement.attr('data-dialogCkEditId');
-                if(typeof(ckEditId)!='undefined'){
-                    return CKEDITOR.instances[ckEditId].getData();
+
+            //Get Value if not passed in
+            if (newVal == null) {
+                if(typeof(name)!='undefined'){
+                    //Used for must input types
+                    return dialogElement.find('[name="'+name+'"]').val();
+                }else{
+                    //For ck editor inputs
+
+                    var ckEditId = dialogElement.attr('data-dialogckeditid');
+                    console.log(CKEDITOR.instances);
+                    alert(ckEditId);
+                    if(typeof(ckEditId)!='undefined'){
+                        return CKEDITOR.instances[ckEditId].getData();
+                    }
+                }
+            } else {
+                if(typeof(name)!='undefined'){
+                    //Used for must input types
+                    dialogElement.find('[name="'+name+'"]').val(newVal);
+
+                    //Trigger change for images
+                    if ($(dialogElement).hasClass('imageInput')) {
+                        $(dialogElement).children('img').attr('src', newVal);
+                    }
+
+                    return this;
+                }else{
+                    //For ck editor inputs
+                    var ckEditId = dialogElement.attr('data-dialogckeditid');
+                    if(typeof(ckEditId)!='undefined'){
+                        return CKEDITOR.instances[ckEditId].setData(newVal);
+                    }
+
+                    return this;
                 }
             }
         }
@@ -253,15 +335,27 @@
      * @return {*}
      */
     $.fn.val = function (value) {
-        if(this.hasClass('dialogElement')){
-            return methods.getDialogElementVal(this);
-        } else {
+
+        var elementToGetVal = this.find('.dialogElement:first');
+
+        if (elementToGetVal.length == 0 && this.hasClass('dialogElement')) {
+            var elementToGetVal = this;
+        }
+
+        if (elementToGetVal.length > 0) {
             if (typeof value == 'undefined') {
-                return originalVal.call(this);
+                return methods.getDialogElementVal(elementToGetVal);
             } else {
-                return originalVal.call(this, value);
+                return methods.getDialogElementVal(elementToGetVal, value);
             }
         }
+
+        //Catch all others
+        if (typeof value == 'undefined') {
+            return originalVal.call(this);
+        }
+
+        return originalVal.call(this, value);
     };
 
     /**
@@ -307,3 +401,7 @@
         );
     };
 })(jQuery);
+
+jQuery.dialogIn = function () {
+    return $.fn.dialogIn.apply(this, arguments);
+};
