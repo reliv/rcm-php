@@ -251,7 +251,7 @@ var inputImageEventsDelegated = false;
          * @param dialogElement
          * @return {*}
          */
-        getDialogElementVal : function(){
+        getDialogElementVal:function () {
 
             var dialogElement = arguments[0];
             var newVal = (arguments[1]) ? arguments[1] : null;
@@ -260,23 +260,21 @@ var inputImageEventsDelegated = false;
 
             //Get Value if not passed in
             if (newVal == null) {
-                if(typeof(name)!='undefined'){
+                if (typeof(name) != 'undefined') {
                     //Used for must input types
-                    return dialogElement.find('[name="'+name+'"]').val();
-                }else{
+                    return dialogElement.find('[name="' + name + '"]').val();
+                } else {
                     //For ck editor inputs
 
                     var ckEditId = dialogElement.attr('data-dialogckeditid');
-                    console.log(CKEDITOR.instances);
-                    alert(ckEditId);
-                    if(typeof(ckEditId)!='undefined'){
+                    if (typeof(ckEditId) != 'undefined') {
                         return CKEDITOR.instances[ckEditId].getData();
                     }
                 }
             } else {
-                if(typeof(name)!='undefined'){
+                if (typeof(name) != 'undefined') {
                     //Used for must input types
-                    dialogElement.find('[name="'+name+'"]').val(newVal);
+                    dialogElement.find('[name="' + name + '"]').val(newVal);
 
                     //Trigger change for images
                     if ($(dialogElement).hasClass('imageInput')) {
@@ -284,10 +282,10 @@ var inputImageEventsDelegated = false;
                     }
 
                     return this;
-                }else{
+                } else {
                     //For ck editor inputs
                     var ckEditId = dialogElement.attr('data-dialogckeditid');
-                    if(typeof(ckEditId)!='undefined'){
+                    if (typeof(ckEditId) != 'undefined') {
                         return CKEDITOR.instances[ckEditId].setData(newVal);
                     }
 
@@ -297,7 +295,13 @@ var inputImageEventsDelegated = false;
         }
     };
 
+    /**
+     * Holds the original .val() so we can call it with our modified .val()
+     * @type {Function}
+     */
     var originalVal = $.fn.val;
+
+
     /**
      * We override val() to use our own function so we can get to the element
      * that actually holds the value. This is also useful for ckEditor.
@@ -309,7 +313,7 @@ var inputImageEventsDelegated = false;
         var elementToGetVal = this.find('.dialogElement:first');
 
         if (elementToGetVal.length == 0 && this.hasClass('dialogElement')) {
-            var elementToGetVal = this;
+            elementToGetVal = this;
         }
 
         if (elementToGetVal.length > 0) {
@@ -330,19 +334,29 @@ var inputImageEventsDelegated = false;
 
     /**
      * From http://docs.jquery.com/Plugins/Authoring
-     * @param method
-     * @return {*}
+     * @param {String} inputType
+     * @param {String} label
+     * @param [option1]
+     * @param [option2]
+     * @param [option3]
+     * @return {Object}
      */
-    $.fn.dialogIn = function (method) {
+    $.fn.dialogIn = function (inputType, label, option1, option2, option3) {
+
+        var p;
 
         // Method calling logic
         if (methods[method]) {
-            var p = methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
+            p = methods[ method ].apply(
+                this, Array.prototype.slice.call(arguments, 1)
+            );
         } else if (typeof method === 'object' || !method) {
-            var p = methods.init.apply(this, arguments);
+            p = methods.init.apply(this, arguments);
         } else {
-            $.error('Method ' + method + ' does not exist on jquery-dialog-inputs');
-            return;
+            $.error(
+                'Method ' + method + ' does not exist on jquery-dialog-inputs'
+            );
+            return null;
         }
 
         if (this instanceof jQuery) {
@@ -380,6 +394,15 @@ var inputImageEventsDelegated = false;
     };
 })(jQuery);
 
-jQuery.dialogIn = function () {
+/**
+ *
+ * @param {String} inputType
+ * @param {String} label
+ * @param [option1]
+ * @param [option2]
+ * @param [option3]
+ * @return {Object}
+ */
+jQuery.dialogIn = function (inputType, label, option1, option2, option3) {
     return $.fn.dialogIn.apply(this, arguments);
 };
