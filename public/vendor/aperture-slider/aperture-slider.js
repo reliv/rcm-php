@@ -98,7 +98,7 @@ var ApertureSlider = function (apertureDiv, configOverride) {
             //Support browser's refresh button
             me.handleHashChange();
 
-            //Support browser's back button
+            //happens when back forward or refresh are clicked
             $(window).bind('hashchange', me.handleHashChange);
         }
     };
