@@ -1469,7 +1469,6 @@ function RcmEdit(config) {
                 me.layoutEditor.pluginSortableChange(ui);
             },
             receive: function(event, ui) {
-                console.log(self)
                 me.layoutEditor.pluginSortableReceive(this, ui);
             },
             start: function(event, ui){
