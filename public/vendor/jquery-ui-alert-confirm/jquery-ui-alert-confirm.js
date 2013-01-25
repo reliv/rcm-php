@@ -63,3 +63,12 @@
 
     };
 })( jQuery );
+
+
+jQuery.alert = function () {
+    return $.fn.alert.apply(this, arguments);
+};
+
+jQuery.confirm = function () {
+    return $.fn.confirm.apply(this, arguments);
+};
