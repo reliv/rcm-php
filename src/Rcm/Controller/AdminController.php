@@ -136,7 +136,8 @@ class AdminController extends BaseController
 
         $pluginView = $instance->getView();
         $body = $this->viewRenderer->render($pluginView);
-        $pluginHtml = $this->viewRenderer->plugin('headScript')
+        $pluginHtml =
+            $this->viewRenderer->plugin('headScript')
             . $this->viewRenderer->plugin('headLink')
             . $body;
 
