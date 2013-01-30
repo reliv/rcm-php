@@ -539,6 +539,10 @@ function RcmEdit(config) {
      * @param container
      */
     me.ui.addOverlay = function (container) {
+
+        //Allow plugins to disable hover css when they are locked (navigation)
+        $(container).addClass('rcmPluginLocked');
+
         var divHeight = me.ui.getElementHeight(container);
         var divWidth = me.ui.getElementWidth(container);
 
@@ -561,6 +565,9 @@ function RcmEdit(config) {
      * @param container
      */
     me.ui.removeOverlay = function (container) {
+        //Allow plugins to disable hover css when they are locked (navigation)
+        $(container).removeClass('rcmPluginLocked');
+
         $(container).find(".rcmLockOverlay").remove();
     };
 
