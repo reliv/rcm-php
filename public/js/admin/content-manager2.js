@@ -1826,4 +1826,8 @@ function RcmEdit(config) {
 
         return pageOk;
     };
+
+    me.getBlankImgUrl = function(){
+        return '/modules/rcm/vendor/ckeditor/plugins/image/images/noimage.png'
+    }
 }

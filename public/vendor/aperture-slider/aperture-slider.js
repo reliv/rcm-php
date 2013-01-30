@@ -42,8 +42,15 @@ var ApertureSlider = function (apertureDiv, configOverride) {
      */
     var me = this;
 
-    var filmDiv, frameDivs, currentFrame, frameCount, totalFrameWidth,
-        filmWidth, apertureWidth, maxFrameIndex, minFrameIndex;
+    var filmDiv, frameDivs, frameCount, totalFrameWidth,
+        filmWidth, apertureWidth, maxFrameIndex;
+
+    /**
+     * Set outside of init() so it can be recalled after new frame creation
+     * @type {Number}
+     */
+    var currentFrame = 1;
+    var minFrameIndex = 1;
 
     //Allow overriding of config vars
     if (typeof(configOverride) == 'object') {
@@ -60,16 +67,15 @@ var ApertureSlider = function (apertureDiv, configOverride) {
         filmDiv = apertureDiv.children();
         frameDivs = filmDiv.children();
 
-        //Init
-        currentFrame = 1;
-        minFrameIndex = 1;
-
         //Calculate widths and counts
         frameCount = filmDiv.children().length;
         totalFrameWidth = config.frameWidth + config.frameSeparation;
         filmWidth = (frameCount * totalFrameWidth * 2); // * 2 for good measure
         apertureWidth = config.framesPerView * config.frameWidth;
         maxFrameIndex = frameCount - config.framesPerView + 1;
+        if(maxFrameIndex < 0){
+            maxFrameIndex = 1;
+        }
 
         //Hide optional "Loading..." div
         apertureDiv.parent().find('.apertureLoading').hide();
