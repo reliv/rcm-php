@@ -126,13 +126,26 @@ function RcmCkEditor(config) {
     me.addHtml5Editor = function(container, textAreaId, instanceId) {
 
         //Used to keep IDE from whining.
-        $('#'+textAreaId);
+        //$('#'+textAreaId);
 
-        $(container).attr('contentEditable',true).attr('id',instanceId+'_'+textAreaId).css('cursor','text');
+        $(container).attr('contentEditable',true)
+            .attr('id',instanceId+'_'+textAreaId).css('cursor','text');
 
         var editor = CKEDITOR.inline(instanceId+'_'+textAreaId,  me.config );
 
         return editor
+    };
+
+    /**
+     * Converts a given element to a rich edit. WARNING: changes ele ID
+     * @param ele
+     * @return {*}
+     */
+    me.convertToHtml5Editor = function (ele) {
+        var id = $.fn.generateUUID();
+        ele.attr('id', id);
+        ele.attr('contenteditable', true);
+        CKEDITOR.inline(id, rcmCkConfig);
     };
 
     /**
