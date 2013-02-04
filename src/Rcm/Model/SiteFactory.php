@@ -102,6 +102,10 @@ class SiteFactory extends EntityMgrAware
             );
         }
 
+        //THIS SHOULD PROBABLY GO SOMEWHERE ELSE. BUT WHERE?
+        //NEED FOR MONTH NAME TRANSLATIONS IN EVENT PLUGIN
+        $al =setlocale(LC_TIME,'es_ES');
+
         return $site;
     }
 
