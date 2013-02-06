@@ -76,6 +76,15 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
      */
     public function getLoggedInAdminPermissions()
     {
+
+        //HACK FOR DEVELOPING WHEN LOGIN BACKEND IS DOWN
+        //NEVER LET THIS GO LIVE
+//        return $this->entityMgr
+//            ->getRepository('\Rcm\Entity\AdminPermissions')
+//            ->findOneByAccountNumber(7);
+
+
+
         $user=$this->getLoggedInUser();
         if(!$user){
             return null;
