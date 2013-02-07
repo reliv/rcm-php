@@ -13,7 +13,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     /**
      * @var \Rcm\Entity\Site
      */
-    private $site=null;
+    protected $site=null;
 
     protected $instanceRepo;
 
