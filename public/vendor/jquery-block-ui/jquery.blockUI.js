@@ -122,12 +122,12 @@
             // styles applied when using $.growlUI
             growlCSS: {
                 width:		'350px',
-                top:		'10px',
+                top:		'80px',
                 left:		'',
                 right:		'10px',
                 border:		'none',
                 padding:	'5px',
-                opacity:	0.6,
+                opacity:	0.8,
                 cursor:		'default',
                 color:		'#fff',
                 backgroundColor: '#000',

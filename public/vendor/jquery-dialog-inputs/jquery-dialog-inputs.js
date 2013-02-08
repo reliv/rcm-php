@@ -1,6 +1,27 @@
 var inputImageEventsDelegated = false;
 
 (function ($) {
+    var richEditToolbars = {
+
+        'basic' : [
+            { name: 'document', items : [ 'Source' ] },
+            { name: 'undoRedo', items : ['Undo','Redo'] },
+            { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
+            { name: 'insert', items : [ 'SpecialChar' ]},
+            { name: 'links', items : [ 'Link','Unlink','Anchor' ] }
+        ],
+
+        'defaults' : [
+            { name:'document', items:[ 'Source' ] },
+            { name:'undoRedo', items:['Undo', 'Redo'] },
+            { name:'basicstyles', items:[ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+            { name:'paragraph', items:[ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
+                '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+            { name:'clipboard', items:['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord'] },
+            { name:'insert', items:[ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Templates'] },
+            { name:'links', items:[ 'Link', 'Unlink', 'Anchor' ] }
+        ]
+    };
     var methods = {
         image:function (description, src) {
 
@@ -62,6 +83,29 @@ var inputImageEventsDelegated = false;
 
             var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
                 '<input name="' + name + '" value="' + value + '"></p>');
+
+            return p;
+        },
+
+        textWithAjaxValidator: function (description, value, urlToValidator, disallowSpaces) {
+
+            if (value == undefined) {
+                value = '';
+            }
+
+            var validatorId = $.fn.generateUUID();
+            var name = $.fn.generateUUID();
+
+            var p = $('<p class="dialogElement ajaxTextInput" data-dialogElementName="' + name + '">' +
+                '<label for="' + name + '">' + description + '</label><br>' +
+                '<span id="' + validatorId +'" style="float: right;"></span> ' +
+                '<input id="' + name + '" name="' + name + '" value="' + value + '"></p>'
+            );
+
+            $('body').on('keyup', "#" + name, function () {
+                var validationContainer = $("#"+validatorId);
+                methods.validateInput(this, validationContainer, urlToValidator, disallowSpaces);
+            });
 
             return p;
         },
@@ -210,18 +254,17 @@ var inputImageEventsDelegated = false;
          */
         richEdit:function (description, value, toolBarConfig) {
 
+            if (value == undefined || value == '' || value == null) {
+                value = '<p>&nbsp;</p>';
+            }
+
             if (typeof(toolBarConfig) == 'undefined') {
                 toolBarConfig = {
-                    toolbar:[
-                        { name:'document', items:[ 'Source' ] },
-                        { name:'undoRedo', items:['Undo', 'Redo'] },
-                        { name:'basicstyles', items:[ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
-                        { name:'paragraph', items:[ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
-                            '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
-                        { name:'clipboard', items:['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord'] },
-                        { name:'insert', items:[ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Templates'] },
-                        { name:'links', items:[ 'Link', 'Unlink', 'Anchor' ] }
-                    ]
+                    toolbar: richEditToolbars.defaults
+                };
+            } else if(typeof(richEditToolbars[toolBarConfig]) != 'undefined') {
+                toolBarConfig = {
+                    toolbar: richEditToolbars[toolBarConfig]
                 };
             }
 
@@ -243,6 +286,72 @@ var inputImageEventsDelegated = false;
             );
 
             return p;
+        },
+
+        validateInput : function(inputField, resultContainer, ajaxPath, disallowSpaces) {
+
+            if(typeof(disallowSpaces)=='undefined'){
+                disallowSpaces = false;
+            }
+
+            var inputValue = null;
+
+            if (disallowSpaces) {
+                /* Get the value of the input field and filter */
+                inputValue = $(inputField).val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9\-\_]/g, "");
+                $(inputField).val(inputValue);
+            } else {
+                inputValue = $(inputField).val();
+            }
+
+            /* make sure that the page name is greater then 1 char */
+            if(inputValue.length < 1) {
+                methods.inputFieldError(inputField, resultContainer);
+                $(resultContainer).html('');
+                return false;
+            }
+
+            /* Check name via rest service */
+            var pageOk = false;
+
+            var dataToSend = {
+                'checkValue' : inputValue
+            };
+
+            $.getJSON(ajaxPath, dataToSend, function(data) {
+                if (data.pageOk == 'Y') {
+                    methods.inputFieldOk(inputField, resultContainer);
+                } else if(data.pageOk != 'Y') {
+                    methods.inputFieldError(inputField, resultContainer);
+                } else {
+                    methods.inputFieldFatalError(inputField, resultContainer);
+                }
+            }).error(function(){
+                    methods.inputFieldFatalError(inputField, resultContainer);
+                });
+
+            return pageOk;
+        },
+
+        inputFieldError : function(inputField, resultContainer) {
+            $(resultContainer).removeClass('ui-icon-check');
+            $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon');
+            $(inputField).addClass('RcmErrorInputHightlight');
+            $(inputField).removeClass('RcmOkInputHightlight');
+
+        },
+
+        inputFieldFatalError : function(inputField, resultContainer) {
+            $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
+            $(inputField).addClass('RcmErrorInputHightlight');
+            $(inputField).removeClass('RcmOkInputHightlight');
+        },
+
+        inputFieldOk : function(inputField, resultContainer) {
+            $(resultContainer).removeClass('ui-icon-alert');
+            $(resultContainer).addClass('ui-icon-check').addClass('ui-icon');
+            $(inputField).removeClass('RcmErrorInputHightlight');
+            $(inputField).addClass('RcmOkInputHightlight');
         },
 
         /**

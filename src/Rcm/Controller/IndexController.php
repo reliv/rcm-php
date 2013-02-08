@@ -101,13 +101,10 @@ class IndexController extends \Rcm\Controller\BaseController
 
         if ($this->adminIsLoggedIn() && empty($pageRevisionId)) {
             $this->pageRevision = $this->page->getStagedRevision();
+        }
 
-            //If no stage exists return published
-            if (empty($this->pageRevision)) {
-                $this->pageRevision = $this->page->getPublishedRevision();
-            }
-
-        } elseif (empty($pageRevisionId)) {
+        /** Get published revision */
+        if (empty($pageRevisionId)) {
             $this->pageRevision = $this->page->getPublishedRevision();
         } else {
             $this->pageRevision = $this->page->getRevisionById($pageRevisionId);

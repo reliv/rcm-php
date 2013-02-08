@@ -312,6 +312,18 @@ html.rcmDraggingPlugins .rcmPlugin{
     float: left;
 }
 
+.adminAddButton {
+    background-color: green;
+    border-radius: 20px 20px 20px 20px;
+    color: #FFFFFF;
+    font-size: 24px;
+    height: 20px;
+    line-height: 16px;
+    margin-left: 5px;
+    margin-top: 15px;
+    cursor: pointer;
+    float: left;
+}
 
 
 

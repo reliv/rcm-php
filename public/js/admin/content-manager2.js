@@ -326,15 +326,24 @@ function RcmEdit(config) {
      * Admin Popout window
      */
 
-    me.adminPopoutWindow = function (pagePath, height, width, title) {
-        var popoutWidowDiv = $("#rcmAdminPagePopoutWindow");
-        $(popoutWidowDiv).html('');
+    me.adminPopoutWindow = function (pagePath, height, width, title, windowName) {
+
+        if (windowName == undefined || windowName == null || windowName == '') {
+            windowName = 'rcmAdminPagePopoutWindow'
+        }
+
+        $('body').find("#"+windowName).remove();
+        $('body').append('<div id="'+windowName+'"></div>');
+
+        var popoutWidowDiv = $("#"+windowName);
+
         $(popoutWidowDiv).load(pagePath+'/'+me.language, function(response, status, xhr) {
             if (status == "error") {
                 var msg = "Sorry but there was an error: ";
                 $(popoutWidowDiv).html(msg + xhr.status + " " + xhr.statusText);
             }
         });
+
         $(popoutWidowDiv).dialog({
             title: title,
             height: height,
@@ -1833,4 +1842,27 @@ function RcmEdit(config) {
 
         return pageOk;
     };
+
+    me.saveAjaxAdminWindow = function(saveUrl, send, formContainer, saveOkHeadline, saveOkMessage) {
+        $.getJSON(saveUrl,
+            send,
+            function(data) {
+                if (data.saveOk == 'Y' && data.redirect == undefined) {
+                    $(formContainer).parent().dialog("close");
+                    $.growlUI(saveOkHeadline, saveOkMessage);
+                } else if (data.saveOk == 'Y' && data.redirect) {
+                    window.location = data.redirect;
+                } else if(data.pageOk != 'Y' && data.error != '') {
+                    $(formContainer).find(".ajaxFormErrorLine").html('<br /><p style="color: #FF0000;">'+data.error+'</p><br />').show();
+                    $(formContainer).parent().scrollTop(0);
+                } else {
+                    $(formContainer).find(".ajaxFormErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
+                    $(formContainer).parent().scrollTop(0);
+                }
+            }
+        ).error(function(){
+                $(formContainer).find(".ajaxFormErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
+                $(formContainer).parent().scrollTop(0);
+        })
+    }
 }
