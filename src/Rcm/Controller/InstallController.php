@@ -72,6 +72,25 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         return $view;
     }
 
+    function createBasicPage($urlName ,$title, $metaDesc, $keywords, $html, $site){
+        $this->instances = array();
+        $this->instanceRepo->createInstanceConfig(
+            $this->createInstance('RcmHtmlArea', 4, 0),
+            array('html' => $html)
+        );
+
+        $this->pageFactory->createPage(
+            $urlName,
+            'Migration Script',
+            $title,
+            $metaDesc,
+            $keywords,
+            'GuestSitePage',
+            $site,
+            array_merge($this->instances, $this->siteWideInstances)
+        );
+    }
+
     /**
      * @TODO check for unset timezones here to so we can remove that from docs
      * @throws \Exception
