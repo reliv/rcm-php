@@ -143,9 +143,10 @@ function RcmCkEditor(config) {
      */
     me.convertToHtml5Editor = function (ele) {
         var id = $.fn.generateUUID();
-        ele.attr('id', id);
-        ele.attr('contenteditable', true);
-        CKEDITOR.inline(id, rcmCkConfig);
+        ele.attr('contenteditable', true)
+            .attr('id', id)
+            .css('cursor','text');
+        CKEDITOR.inline(id, me.config);
     };
 
     /**
