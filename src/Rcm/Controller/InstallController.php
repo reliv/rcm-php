@@ -19,6 +19,9 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
 
     protected $pluginManager;
 
+    protected $countryRepo;
+    protected $languageRepo;
+
     function __construct(
         \Doctrine\ORM\EntityManager $entityMgr,
         \Rcm\Model\PluginManager $pluginManager
@@ -26,6 +29,8 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         parent::__construct($entityMgr);
         $this->pluginManager=$pluginManager;
         $this->instanceRepo = new DoctrineSerializedRepo($entityMgr);
+        $this->countryRepo = $this->entityMgr->getRepository('\Rcm\Entity\Country');
+        $this->languageRepo = $this->entityMgr->getRepository('\Rcm\Entity\Language');
     }
 
     public function indexAction()
@@ -106,6 +111,19 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
             __DIR__
                 .'/../../../scripts/makeSymlinksForZf2ModulePublicFolders.php'
         );
+    }
+
+    function buildSite($countryName, $languageName, $subDomain =null){
+        //Create US En Site
+        /** @var \Rcm\Entity\Country $country */
+        $country = $this->countryRepo->find($countryName);
+
+        /** @var \Rcm\Entity\Language $language */
+        $language = $this->languageRepo->findOneBy(array('iso639_2b' => $languageName));
+
+        $this->entityMgr->flush();
+
+        return $this->createSite($country, $language, $subDomain);
     }
 
     function initializeDatabase($dropDatabaseFirst = false){
@@ -495,6 +513,8 @@ are permitted provided that the following conditions are met:</p>
         $this->createLoginPage();
         $this->createLicensePage();
         $this->createContactPage();
+
+        return $this->site;
     }
 
     /*
