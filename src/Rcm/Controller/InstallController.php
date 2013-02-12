@@ -487,7 +487,7 @@ are permitted provided that the following conditions are met:</p>
             $country,
             $language,
             7,
-            'local.reliv.com',
+            '',
             $this->siteWideInstances
         );
 
