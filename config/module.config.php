@@ -584,7 +584,7 @@ return array(
                     'route' => '/rcm-page-search/site/:siteId/title/:query',
                     'defaults' => array(
                         'controller' => 'rcmPageSearchApiController',
-                        'action' => 'titleSearch',
+                        'action' => 'siteTitleSearch',
                     )
                 ),
             ),

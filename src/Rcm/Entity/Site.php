@@ -63,7 +63,7 @@ class Site
      *                                  site.
      * 
      * @ORM\ManyToOne(targetEntity="Domain")
-     * @ORM\JoinColumn(name="domain_id", referencedColumnName="domainId")
+     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId")
      */
     protected $domain;
     
@@ -92,7 +92,7 @@ class Site
      * 
      * @ORM\ManyToOne(targetEntity="Language") 
      * @ORM\JoinColumn(
-     *      name="language_id",
+     *      name="languageId",
      *      referencedColumnName="languageId",
      *      onDelete="SET NULL"
      * )
