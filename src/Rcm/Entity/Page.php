@@ -98,7 +98,7 @@ class Page
     protected $stagedRevision;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Site", inversedBy="pages")
+     * @ORM\ManyToOne(targetEntity="Site", inversedBy="pages")
      * @ORM\JoinTable(
      *     name="rcm_sites_pages",
      *     joinColumns={
@@ -115,7 +115,14 @@ class Page
      *     }
      * )
      **/
-    protected $sites;
+
+    /**
+     * @var \Rcm\Entity\Site
+     *
+     * @ORM\ManyToOne(targetEntity="Site", inversedBy="pages")
+     * @ORM\JoinColumn(name="siteId", referencedColumnName="siteId")
+     **/
+    protected $site;
     
     /**
      * @var array Array of page revisions
@@ -141,7 +148,6 @@ class Page
      */
     public function __construct()
     {
-        $this->sites = new ArrayCollection();
         $this->revisions = new ArrayCollection();
         $this->createdDate = new \DateTime();
     }
@@ -160,7 +166,7 @@ class Page
             'createdDate'     => $this->createdDate,
             'lastPublished'   => $this->getLastPublished(),
             'currentRevision' => $this->getCurrentRevision(),
-            'sites'           => $this->getSites(),
+            'site'           => $this->getSite(),
             'revisions'       => $this->getRevisions(),
         );
 
@@ -371,15 +377,13 @@ class Page
     }
 
     /**
-     * Get a list of sites that use this page.
+     * Get the site that uses this page.
      *
-     * @return \DoctrinsetStagedRevisione\Common\Collections\ArrayCollection Array Collection
-     *                                                      of sites that share
-     *                                                      this page.
+     * @return \Rcm\Entity\Site
      */
-    public function getSites()
+    public function getSite()
     {
-        return $this->sites->toArray();
+        return $this->site;
     }
 
     /**
@@ -392,7 +396,7 @@ class Page
     public function setSite(
         \Rcm\Entity\Site $site
     ) {
-        $this->sites->add($site);
+        $this->site = $site;
     }
 
     /**

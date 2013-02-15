@@ -178,6 +178,17 @@ class Module
                     );
                     return $controller;
                 },
+                'rcmPageSearchApiController' => function($controllerMgr) {
+                    $serviceMgr=$controllerMgr->getServiceLocator();
+                    $controller = new \Rcm\Controller\PageSearchApiController(
+                        $serviceMgr->get('rcmUserManager'),
+                        $serviceMgr->get('rcmPluginManager'),
+                        $serviceMgr->get('em'),
+                        $serviceMgr->get('viewRenderer'),
+                        $serviceMgr->get('config')
+                    );
+                    return $controller;
+                },
                 'rcmPluginProxyController' => function($controllerMgr) {
                     $serviceMgr=$controllerMgr->getServiceLocator();
                     $controller = new \Rcm\Controller\PluginProxyController(

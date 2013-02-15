@@ -578,6 +578,17 @@ return array(
                 ),
             ),
 
+            'rcm-page-search' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-page-search/site/:siteId/title/:query',
+                    'defaults' => array(
+                        'controller' => 'rcmPageSearchApiController',
+                        'action' => 'titleSearch',
+                    )
+                ),
+            ),
+
             'adminContentProxy' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(

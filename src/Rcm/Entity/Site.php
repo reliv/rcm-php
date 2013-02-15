@@ -117,7 +117,14 @@ class Site
     protected $status;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Page", mappedBy="sites", indexBy="name")
+     * @var array Array of pages
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Page",
+     *     mappedBy="site",
+     *     indexBy="name",
+     *     cascade={"persist", "remove"}
+     * )
      */
     protected $pages;
 
@@ -364,6 +371,7 @@ class Site
      */
     public function getPageByName($name, $includeTemplates=false)
     {
+
         $page = $this->pages[$name];
 
         if (empty($page)) {
