@@ -56,6 +56,7 @@
      * @return {*}
      */
     $.fn.addImage = function (name, description, src) {
+        console.log('DEPRECATED FUNCTION USED');
         var p = $('<p class="imageInput" style="overflow-y:hidden"></p>');
         this.append(p);
         p.append('<label for="' + name + '">' + description + '</label><br>' +
@@ -97,6 +98,7 @@
      * @return String
      */
     $.fn.addInput = function (name, description, value) {
+        console.log('DEPRECATED FUNCTION USED');
         this.append('' +
             '<p><label for="' + name + '">' + description + '</label><br>' +
             '<input name="' + name + '" value="' + value + '"></p>'
@@ -116,6 +118,7 @@
      * @return String
      */
     $.fn.addInputWithAjaxValidator = function (name, description, value, urlToValidator, disallowSpaces) {
+        console.log('DEPRECATED FUNCTION USED');
         var validatorId = $.fn.generateUUID();
         this.append('' +
             '<p><label for="' + name + '">' + description + '</label><br>' +
@@ -141,6 +144,7 @@
      * @return String
      */
     $.fn.addDate = function (name, description, value) {
+        console.log('DEPRECATED FUNCTION USED');
         var id = $.fn.generateUUID()
 
         var p = $('<p><label for="' + name + '">' + description + '</label>' +
@@ -165,6 +169,7 @@
     * @return String
     */
     $.fn.addRichEdit = function (name, description, value, toolBarConfig) {
+        console.log('DEPRECATED FUNCTION USED');
 
         if(typeof(toolBarConfig)=='undefined'){
             toolBarConfig = {
@@ -214,6 +219,7 @@
      * @return {String}
      */
     $.fn.addSelect = function (name, description, choices, value, allowCustomValues) {
+        console.log('DEPRECATED FUNCTION USED');
         var p = $('<p></p>');
         var selected;
         p.append('<label for="' + name + '">' + description + '</label><br>');
@@ -289,6 +295,7 @@
      * @return {String}
      */
     $.fn.addCheckBox = function (name, description, checked) {
+        console.log('DEPRECATED FUNCTION USED');
         var checkedHtml = '';
         if (checked) {
             checkedHtml = ' checked="checked"';
@@ -315,6 +322,7 @@
     };
 
     $.fn.validateInput = function(inputField, resultContainer, ajaxPath, disallowSpaces) {
+        console.log('DEPRECATED FUNCTION USED');
 
         if(typeof(disallowSpaces)=='undefined'){
             disallowSpaces = false;
@@ -359,6 +367,8 @@
     };
 
     $.fn.inputFieldError = function(inputField, resultContainer) {
+
+        console.log('DEPRECATED FUNCTION USED');
         $(resultContainer).removeClass('ui-icon-check');
         $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon');
         $(inputField).addClass('RcmErrorInputHightlight');
@@ -367,12 +377,16 @@
     };
 
     $.fn.inputFieldFatalError = function(inputField, resultContainer) {
+
+        console.log('DEPRECATED FUNCTION USED');
         $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
         $(inputField).addClass('RcmErrorInputHightlight');
         $(inputField).removeClass('RcmOkInputHightlight');
     };
 
     $.fn.inputFieldOk = function(inputField, resultContainer) {
+
+        console.log('DEPRECATED FUNCTION USED');
         $(resultContainer).removeClass('ui-icon-alert');
         $(resultContainer).addClass('ui-icon-check').addClass('ui-icon');
         $(inputField).removeClass('RcmErrorInputHightlight');
