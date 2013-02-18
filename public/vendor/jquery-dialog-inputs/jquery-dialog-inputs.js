@@ -234,7 +234,7 @@ var inputImageEventsDelegated = false;
                 checkedHtml = ' checked="checked"';
             }
             var p = $(
-                '<p class="dialogElement" data-dialogElementName="' + name + '"><input type="checkbox"' + checkedHtml + ' name="' + name +
+                '<p class="dialogElement dialogElementCheckBox" data-dialogElementName="' + name + '"><input type="checkbox"' + checkedHtml + ' name="' + name +
                     '" value="true" />' + description + '</p>'
             );
 
@@ -405,6 +405,29 @@ var inputImageEventsDelegated = false;
     };
 
     /**
+     * Holds the original .prop() so we can call it with our modified .prop()
+     * @type {Function}
+     */
+    var originalProp = $.fn.prop;
+
+    /**
+     * .Prop over ride for check boxes
+     * @param value
+     * @constructor
+     */
+    $.fn.prop = function (value){
+        if(this.hasClass('dialogElementCheckBox')){
+            return this.find('input').prop(value);
+        }
+
+        //Catch all others
+        if (typeof value == 'undefined') {
+            return originalProp.call(this);
+        }
+        return originalProp.call(this, value);
+    };
+
+    /**
      * Holds the original .val() so we can call it with our modified .val()
      * @type {Function}
      */
@@ -437,7 +460,6 @@ var inputImageEventsDelegated = false;
         if (typeof value == 'undefined') {
             return originalVal.call(this);
         }
-
         return originalVal.call(this, value);
     };
 
