@@ -82,7 +82,7 @@ var inputImageEventsDelegated = false;
             var name = $.fn.generateUUID();
 
             var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
-                '<input name="' + name + '" value="' + value + '"></p>');
+                '<input type="text" name="' + name + '" value="' + value + '"></p>');
 
             return p;
         },
@@ -99,7 +99,7 @@ var inputImageEventsDelegated = false;
             var p = $('<p class="dialogElement ajaxTextInput" data-dialogElementName="' + name + '">' +
                 '<label for="' + name + '">' + description + '</label><br>' +
                 '<span id="' + validatorId +'" style="float: right;"></span> ' +
-                '<input id="' + name + '" name="' + name + '" value="' + value + '"></p>'
+                '<input type="text" id="' + name + '" name="' + name + '" value="' + value + '"></p>'
             );
 
             $('body').on('keyup', "#" + name, function () {
@@ -108,6 +108,59 @@ var inputImageEventsDelegated = false;
             });
 
             return p;
+        },
+
+        /**
+         * Build html for a password input
+         *
+         * @param {String} description title to show user
+         * @param {String} value the current value
+         *
+         * @return String
+         */
+        password:function (description, validationDescription, value) {
+
+            if (value == undefined) {
+                value = '';
+            }
+
+            //Give it a random name so labels and multi-dialogs work
+            var name = $.fn.generateUUID();
+
+            var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
+                '<input type="password" id="' + name + '"  name="' + name + '" value="' + value + '"></p>');
+
+            //Give it a random name so labels and multi-dialogs work
+            var validationName = $.fn.generateUUID();
+
+            var validationP = $('<p class="dialogElement"><label for="' + validationName + '">' + validationDescription + '</label><br>' +
+                '<input type="password" id="' + validationName + '" name="' + validationName + '" value="' + value + '"></p>');
+
+            var divId =  $.fn.generateUUID();
+
+            var div = $("<div></div>").append(p).append(validationP);
+
+            $('body').on('keyup', "#" + validationName, function () {
+                var passwordField = $("#"+name);
+                var validationField = $("#"+validationName);
+
+                var password = $(passwordField).val();
+                var validationPassword = $(validationField).val();
+
+                if (password !== validationPassword) {
+                    $(passwordField).addClass('RcmErrorInputHightlight');
+                    $(passwordField).removeClass('RcmOkInputHightlight');
+                    $(validationField).addClass('RcmErrorInputHightlight');
+                    $(validationField).removeClass('RcmOkInputHightlight');
+                } else {
+                    $(passwordField).removeClass('RcmErrorInputHightlight');
+                    $(passwordField).addClass('RcmOkInputHightlight');
+                    $(validationField).removeClass('RcmErrorInputHightlight');
+                    $(validationField).addClass('RcmOkInputHightlight');
+                }
+            });
+
+            return div;
         },
 
         /**
@@ -312,16 +365,16 @@ var inputImageEventsDelegated = false;
             }
 
             /* Check name via rest service */
-            var pageOk = false;
+            var dataOk = false;
 
             var dataToSend = {
                 'checkValue' : inputValue
             };
 
             $.getJSON(ajaxPath, dataToSend, function(data) {
-                if (data.pageOk == 'Y') {
+                if (data.dataOk == 'Y') {
                     methods.inputFieldOk(inputField, resultContainer);
-                } else if(data.pageOk != 'Y') {
+                } else if(data.dataOk != 'Y') {
                     methods.inputFieldError(inputField, resultContainer);
                 } else {
                     methods.inputFieldFatalError(inputField, resultContainer);
@@ -330,7 +383,7 @@ var inputImageEventsDelegated = false;
                     methods.inputFieldFatalError(inputField, resultContainer);
                 });
 
-            return pageOk;
+            return dataOk;
         },
 
         inputFieldError : function(inputField, resultContainer) {

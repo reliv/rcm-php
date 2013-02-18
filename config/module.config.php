@@ -420,13 +420,24 @@ return array(
                     ),
                 ),
             ),
-            'rcm-admin-save-new-user' => array(
+            'rcm-admin-check-user-name' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route' => '/rcm-admin-check-user/:language',
                     'defaults' => array(
                         'controller' => 'rcmAdminController',
                         'action' => 'checkUserNameJson',
+                    ),
+                ),
+            ),
+
+            'rcm-admin-check-emailAddress' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-admin-check-emailAddress/:language',
+                    'defaults' => array(
+                        'controller' => 'rcmAdminController',
+                        'action' => 'checkEmailAddressJson',
                     ),
                 ),
             ),

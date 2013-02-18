@@ -109,8 +109,9 @@ class AdminPermissions
     protected $restrictedPages;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     **/
+     * @ORM\ManyToOne(targetEntity="Rcm\Entity\AdminPluginRestrictions")
+     * @ORM\JoinColumn(name="pluginRestrictionId", referencedColumnName="pluginRestrictionId")
+     */
     protected $restrictedPlugins;
 
 
@@ -143,7 +144,6 @@ class AdminPermissions
     {
         $this->sites = new \Doctrine\Common\Collections\ArrayCollection();
         $this->restrictedPages = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->restrictedPlugins = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function canEditSite(\Rcm\Entity\Site $site)

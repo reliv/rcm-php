@@ -87,9 +87,9 @@ class AdminController extends BaseController
         $page = $this->siteInfo->getPageByName($pageUrl);
 
         if (empty($page)) {
-            $data['pageOk'] = 'Y';
+            $data['dataOk'] = 'Y';
         } else {
-            $data['pageOk'] = 'N';
+            $data['dataOk'] = 'N';
         }
 
         echo json_encode($data);
@@ -100,7 +100,7 @@ class AdminController extends BaseController
     {
         $this->ensureAdminIsLoggedIn();
 
-        $userName = $this->getRequest()->getQuery()->get('userName');
+        $userName = $this->getRequest()->getQuery()->get('checkValue');
 
         /** @var $userManager /Rcm/Model/UserManagement/UserManagerInterface */
         $userManager = $this->getServiceLocator()->get('rcmUserManager');
@@ -108,9 +108,26 @@ class AdminController extends BaseController
         $user = $userManager->isCurrentUser($userName);
 
         if (empty($user)) {
-            $data['userOk'] = 'Y';
+            $data['dataOk'] = 'Y';
         } else {
-            $data['userOk'] = 'N';
+            $data['dataOk'] = 'N';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
+    public function checkEmailAddressJsonAction()
+    {
+        $this->ensureAdminIsLoggedIn();
+
+        $email = $this->getRequest()->getQuery()->get('checkValue');
+
+        $validator = new \Zend\Validator\EmailAddress();
+        if ($validator->isValid($email)) {
+            $data['dataOk'] = 'Y';
+        } else {
+            $data['dataOk'] = 'N';
         }
 
         echo json_encode($data);
@@ -380,7 +397,7 @@ class AdminController extends BaseController
             )
         );
 
-        $return['pageOk'] = 'Y';
+        $return['dataOk'] = 'Y';
         $return['redirect'] = $redirectUrl;
 
         echo json_encode($return);

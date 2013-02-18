@@ -184,7 +184,7 @@ class RcmViewInit extends AbstractHelper
 
         $renderer->headScript()->appendFile(
             $renderer->basePath()
-                . '/modules/rcm/vendor/ioncache-tag-handler/js/jquery.taghandler.js',
+                . '/modules/rcm/vendor/ioncache-tag-handler/js/jquery.taghandler.min.js',
             'text/javascript'
         );
 
