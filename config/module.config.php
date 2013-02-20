@@ -589,13 +589,24 @@ return array(
                 ),
             ),
 
-            'rcm-page-search' => array(
+            'rcm-page-title-search' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm-page-search/site/:siteId/title/:query',
+                    'route' => '/rcm-page-search/title/:query',
                     'defaults' => array(
                         'controller' => 'rcmPageSearchApiController',
                         'action' => 'siteTitleSearch',
+                    )
+                ),
+            ),
+
+            'rcm-page-search' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-page-search',
+                    'defaults' => array(
+                        'controller' => 'rcmPageSearchApiController',
+                        'action' => 'allSitePages',
                     )
                 ),
             ),

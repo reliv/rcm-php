@@ -368,53 +368,47 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
                                         id: 'page',
                                         label: 'Page',
                                         required: true,
-                                        items: [
-                                            ['test' , 'test'],
-                                            ['test2' , 'test2'],
-                                        ],
+                                        items: [],
                                         onLoad: function() {
                                             this.allowOnChange = true;
-                                            var selectBox = this;
-                                            $.getJson('')
+
                                         },
-                                        onChange: function() {
-                                            if ( this.allowOnChange ) // Dont't call on dialog load.
-                                                alert(this.items);
-                                        },
-                                        validate: function() {
-                                            var dialog = this.getDialog();
 
-                                            if ( dialog.getContentElement( 'info', 'linkType' ) && dialog.getValueOf( 'info', 'linkType' ) != 'url' )
-                                                return true;
-
-                                            if ( (/javascript\:/).test( this.getValue() ) ) {
-                                                alert( commonLang.invalidValue );
-                                                return false;
-                                            }
-
-                                            if ( this.getDialog().fakeObj ) // Edit Anchor.
-                                                return true;
-
-                                            var func = CKEDITOR.dialog.validate.notEmpty( linkLang.noUrl );
-                                            return func.apply( this );
-                                        },
                                         setup: function( data ) {
                                             this.allowOnChange = false;
-                                            if ( data.url )
-                                                this.setValue( data.url.url );
+
+                                            var selected = data.url.url
+
+                                            var selectBox = this;
+
+                                            var element_id = '#' + this.getInputElement().$.id;
+                                            $.ajax({
+                                                url: '/rcm-page-search',
+                                                dataType: 'json',
+                                                async: false,
+                                                success: function(data) {
+                                                    $.each(data, function(url, pageName) {
+                                                        $(element_id).get(0).options[$(element_id).get(0).options.length] = new Option(pageName, url);
+                                                        if (url == selected) {
+                                                            selectBox.setValue(selected);
+                                                        }
+                                                    });
+                                                },
+                                                error:function (xhr, ajaxOptions, thrownError){
+                                                    alert(xhr.status);
+                                                    alert(thrownError);
+                                                }
+                                            });
                                             this.allowOnChange = true;
 
                                         },
                                         commit: function( data ) {
-                                            // IE will not trigger the onChange event if the mouse has been used
-                                            // to carry all the operations #4724
-                                            this.onChange();
 
-                                            if ( !data.url )
-                                                data.url = {};
+                                            if ( !data.pageUrl )
+                                                data.pageUrl = '';
 
-                                            data.url.url = this.getValue();
-                                            this.allowOnChange = false;
+                                            data.pageUrl = this.getValue();
+
                                         }
                                     }
                                 ],
@@ -422,13 +416,6 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
                                     if ( !this.getDialog().getContentElement( 'info', 'linkType' ) )
                                         this.getElement().show();
                                 }
-                            },
-                            {
-                                type: 'button',
-                                id: 'browse',
-                                hidden: 'true',
-                                filebrowser: 'info:url',
-                                label: commonLang.browseServer
                             }
                         ]
                     },
@@ -1141,6 +1128,9 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 
             // Compose the URL.
             switch ( data.type || 'url' ) {
+                case 'page':
+                    attributes[ 'data-cke-saved-href' ] = data.pageUrl;
+                    break;
                 case 'url':
                     var protocol = ( data.url && data.url.protocol != undefined ) ? data.url.protocol : 'http://',
                         url = ( data.url && CKEDITOR.tools.trim( data.url.url ) ) || '';

@@ -36,6 +36,11 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
 
         /**@var \Rcm\Entity\Page $page */
         foreach ($pages as $page) {
+
+            if ($page->isTemplate()) {
+                continue;
+            }
+
             $pageName = $page->getName();
 
             $pageUrl = $this->getPageUrl($pageName);
