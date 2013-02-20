@@ -28,7 +28,6 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
         }
 
         return new \Zend\View\Model\JsonModel($pageNames);
-
     }
 
     function allSitePagesAction(){
