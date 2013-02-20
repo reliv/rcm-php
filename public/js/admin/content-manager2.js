@@ -349,6 +349,8 @@ function RcmEdit(config) {
             height: height,
             width: width
         });
+
+        return popoutWidowDiv;
     };
 
     /********************************/
