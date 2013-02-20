@@ -326,7 +326,7 @@ function RcmEdit(config) {
      * Admin Popout window
      */
 
-    me.adminPopoutWindow = function (pagePath, height, width, title, windowName) {
+    me.adminPopoutWindow = function (pagePath, height, width, title, windowName, data) {
 
         if (windowName == undefined || windowName == null || windowName == '') {
             windowName = 'rcmAdminPagePopoutWindow'
@@ -337,7 +337,7 @@ function RcmEdit(config) {
 
         var popoutWidowDiv = $("#"+windowName);
 
-        $(popoutWidowDiv).load(pagePath+'/'+me.language, function(response, status, xhr) {
+        $(popoutWidowDiv).load(pagePath+'/'+me.language, data, function(response, status, xhr) {
             if (status == "error") {
                 var msg = "Sorry but there was an error: ";
                 $(popoutWidowDiv).html(msg + xhr.status + " " + xhr.statusText);
@@ -1843,12 +1843,14 @@ function RcmEdit(config) {
         return pageOk;
     };
 
-    me.saveAjaxAdminWindow = function(saveUrl, send, formContainer, saveOkHeadline, saveOkMessage) {
+    me.saveAjaxAdminWindow = function(saveUrl, send, formContainer, saveOkHeadline, saveOkMessage, keepOpen) {
         $.getJSON(saveUrl,
             send,
             function(data) {
                 if (data.saveOk == 'Y' && data.redirect == undefined) {
-                    $(formContainer).parent().dialog("close");
+                    if (keepOpen !== true) {
+                        $(formContainer).parent().dialog("close");
+                    }
                     $.growlUI(saveOkHeadline, saveOkMessage);
                 } else if (data.saveOk == 'Y' && data.redirect) {
                     window.location = data.redirect;

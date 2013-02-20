@@ -96,25 +96,6 @@ class Page
      * @ORM\JoinColumn(name="stage_id", referencedColumnName="pageRevId")
      */
     protected $stagedRevision;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Site", inversedBy="pages")
-     * @ORM\JoinTable(
-     *     name="rcm_sites_pages",
-     *     joinColumns={
-     *         @ORM\JoinColumn(
-     *             name="page_id", 
-     *             referencedColumnName="pageId"
-     *         )
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(
-     *             name="site_id", 
-     *             referencedColumnName="siteId"
-     *         )
-     *     }
-     * )
-     **/
 
     /**
      * @var \Rcm\Entity\Site
