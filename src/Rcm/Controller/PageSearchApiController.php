@@ -20,7 +20,11 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
 
         $pageNames = array();
         foreach($results as $result){
-            $pageNames[$result['name']]=$result['pageTitle'];
+
+            $pageNames[$result['name']]= array(
+                'title' =>$result['pageTitle'],
+                'url' => $this->getPageUrl($result['name'])
+            );
         }
 
         return new \Zend\View\Model\JsonModel($pageNames);
@@ -34,17 +38,26 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
         foreach ($pages as $page) {
             $pageName = $page->getName();
 
-            $pageUrl = $this->url()->fromRoute(
-                'contentManager',
-                array(
-                    'page' => $pageName,
-                    'language' => $this->siteInfo->getLanguage()->getLanguage()
-                )
-            );
+            $pageUrl = $this->getPageUrl($pageName);
+
             $return[$pageUrl] = $pageName;
 
         }
 
         return new \Zend\View\Model\JsonModel($return);
+    }
+
+    protected function getPageUrl($pageName) {
+        $urlParams['page']= $pageName;
+
+        //Check for default language
+        if ($this->siteInfo->getDomain()->getDefaultLanguage()->getLanguage() !=  $this->siteInfo->getLanguage()->getLanguage()) {
+            $urlParams['language'] = $this->siteInfo->getLanguage()->getLanguage();
+        }
+
+        return $this->url()->fromRoute(
+            'contentManager',
+            $urlParams
+        );
     }
 }
