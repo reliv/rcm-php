@@ -9,13 +9,7 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
         $siteId = $this->getEvent()->getRouteMatch()->getParam('siteId');
 
-        $results = $this->entityMgr->createQuery('
-            select page.name from Rcm\\Entity\\PageRevision pageRevision
-            join pageRevision.page page
-            where (page.name like :query or pageRevision.pageTitle like :query)
-        ')->setParameter('query', '%'.$query.'%')
-            ->getResult();
-
+// TODO MAKE THIS RESPECT THE PROVIDED SITE ID
 //        $results = $this->entityMgr->createQuery('
 //            select page.name from Rcm\\Entity\\PageRevision pageRevision
 //            join pageRevision.page page
@@ -26,7 +20,19 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
 //        //->setParameter('siteId', '%'.$siteId.'%')
 //            ->getResult();
 
-        return new \Zend\View\Model\JsonModel($results);
+        $results = $this->entityMgr->createQuery('
+            select page.name, pageRevision.pageTitle from Rcm\\Entity\\PageRevision pageRevision
+            join pageRevision.page page
+            where (page.name like :query or pageRevision.pageTitle like :query)
+        ')->setParameter('query', '%'.$query.'%')
+            ->getResult();
+
+        $pageNames = array();
+        foreach($results as $result){
+            $pageNames[$result['name']]=$result['pageTitle'];
+        }
+
+        return new \Zend\View\Model\JsonModel($pageNames);
 
     }
 }
