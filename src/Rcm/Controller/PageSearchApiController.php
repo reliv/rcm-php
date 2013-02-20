@@ -12,12 +12,19 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
         $results = $this->entityMgr->createQuery('
             select page.name from Rcm\\Entity\\PageRevision pageRevision
             join pageRevision.page page
-            join page.site site
-            where site.siteId = :siteId
-            and (page.name like :query or pageRevision.pageTitle like :query)
+            where (page.name like :query or pageRevision.pageTitle like :query)
         ')->setParameter('query', '%'.$query.'%')
-            ->setParameter('siteId', '%'.$siteId.'%')
             ->getResult();
+
+//        $results = $this->entityMgr->createQuery('
+//            select page.name from Rcm\\Entity\\PageRevision pageRevision
+//            join pageRevision.page page
+//            /*join page.site site*/
+//            where (page.name like :query or pageRevision.pageTitle like :query)
+//            /*and site.siteId = :siteId*/
+//        ')->setParameter('query', '%'.$query.'%')
+//        //->setParameter('siteId', '%'.$siteId.'%')
+//            ->getResult();
 
         return new \Zend\View\Model\JsonModel($results);
 
