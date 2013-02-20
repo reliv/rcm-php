@@ -377,6 +377,10 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
                                         setup: function( data ) {
                                             this.allowOnChange = false;
 
+                                            if (!data.url) {
+                                                data.url = {url: ''}
+                                            }
+
                                             var selected = data.url.url
 
                                             var selectBox = this;
