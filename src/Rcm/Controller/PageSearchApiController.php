@@ -48,6 +48,8 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
 
         }
 
+        asort($return);
+
         return new \Zend\View\Model\JsonModel($return);
     }
 

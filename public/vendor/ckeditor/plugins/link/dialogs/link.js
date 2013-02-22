@@ -395,6 +395,7 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
                                                         $(element_id).get(0).options[$(element_id).get(0).options.length] = new Option(pageName, url);
                                                         if (url == selected) {
                                                             selectBox.setValue(selected);
+
                                                         }
                                                     });
                                                 },

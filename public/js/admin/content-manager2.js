@@ -1845,7 +1845,7 @@ function RcmEdit(config) {
         return pageOk;
     };
 
-    me.saveAjaxAdminWindow = function(saveUrl, send, formContainer, saveOkHeadline, saveOkMessage, keepOpen) {
+    me.saveAjaxAdminWindow = function(saveUrl, send, formContainer, saveOkHeadline, saveOkMessage, keepOpen, successCallback) {
         $.getJSON(saveUrl,
             send,
             function(data) {
@@ -1854,6 +1854,9 @@ function RcmEdit(config) {
                         $(formContainer).parent().dialog("close");
                     }
                     $.growlUI(saveOkHeadline, saveOkMessage);
+                    if (typeof successCallback === 'function') {
+                        successCallback(data);
+                    }
                 } else if (data.saveOk == 'Y' && data.redirect) {
                     window.location = data.redirect;
                 } else if(data.pageOk != 'Y' && data.error != '') {
