@@ -113,7 +113,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         );
     }
 
-    function buildSite($countryName, $languageName, $subDomain =null){
+    function buildSite($countryName, $languageName, $domain=null){
         //Create US En Site
         /** @var \Rcm\Entity\Country $country */
         $country = $this->countryRepo->find($countryName);
@@ -123,7 +123,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
 
         $this->entityMgr->flush();
 
-        return $this->createSite($country, $language, $subDomain);
+        return $this->createSite($country, $language, $domain);
     }
 
     function initializeDatabase($dropDatabaseFirst = false){
@@ -487,20 +487,15 @@ are permitted provided that the following conditions are met:</p>
     public function createSite(
         \Rcm\Entity\Country $country,
         \Rcm\Entity\Language $language,
-        $subDomain=''
+        $domain
     ) {
-        if (!empty($subDomain)) {
-            $subDomain = $subDomain.'.'.$_SERVER['HTTP_HOST'];
-        } else {
-            $subDomain = $_SERVER['HTTP_HOST'];
-        }
 
         $this->siteWideInstances = array();
 
         $this->createSiteWideContent();
 
         $this->site = $this->getSiteFactory()->createNewSite(
-            $subDomain,
+            $domain,
             'RcmGeneric',
             $country,
             $language,
