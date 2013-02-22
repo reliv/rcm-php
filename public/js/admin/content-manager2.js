@@ -1850,10 +1850,17 @@ function RcmEdit(config) {
             send,
             function(data) {
                 if (data.saveOk == 'Y' && data.redirect == undefined) {
+                    //Close Window unless told not to
                     if (keepOpen !== true) {
                         $(formContainer).parent().dialog("close");
                     }
-                    $.growlUI(saveOkHeadline, saveOkMessage);
+
+                    //Show Status Message if passed in
+                    if (saveOkHeadline && saveOkMessage){
+                        $.growlUI(saveOkHeadline, saveOkMessage);
+                    }
+
+                    //Process sucessCallback if passed in
                     if (typeof successCallback === 'function') {
                         successCallback(data);
                     }
