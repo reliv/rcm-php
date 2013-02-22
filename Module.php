@@ -90,6 +90,23 @@ class Module
                     $cypher->setKey($config['key']);
                     return $cypher;
                 },
+                'rcmSite' => function($serviceMgr){
+                    $appConfig = $serviceMgr->get('config');
+                    $siteFactory = $serviceMgr->get('Rcm\Model\SiteFactory');
+
+                    //$language = $this->getEvent()->getRouteMatch()->getParam('language');
+
+                    try {
+                        $site = $siteFactory->getSite(
+                            $_SERVER['HTTP_HOST']//,$language
+                        );
+                    } catch (\Rcm\Exception\SiteNotFoundException $e) {
+                        $site = $siteFactory->getSite(
+                            $appConfig['reliv']['defaultDomain']//,$language
+                        );
+                    }
+                    return $site;
+                },
                 'Rcm\Model\SiteFactory' =>
                 function($serviceMgr)
                 {

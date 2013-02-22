@@ -186,25 +186,9 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
      */
     public function setSiteInfo()
     {
-        $appConfig = $this->getServiceLocator()->get('config');
-        $siteFactory = $this->getServiceLocator()->get(
-            'Rcm\Model\SiteFactory'
-        );
-
-        $language = $this->getEvent()->getRouteMatch()->getParam('language');
-
-
-        try {
-            $this->siteInfo = $siteFactory->getSite(
-                $_SERVER['HTTP_HOST'],
-                $language
-            );
-        } catch (\Rcm\Exception\SiteNotFoundException $e) {
-            $this->siteInfo = $siteFactory->getSite(
-                $appConfig['reliv']['defaultDomain'],
-                $language
-            );
-        }
+        //WE INJECT THIS INSTEAD OF USING SERVICE LOCATOR FROM INSIDE CONTROLLER TO MAKE TESTING AND
+        //DEPENDENCY-VIEWING EASIER
+        $this->siteInfo = $this->getServiceLocator()->get('rcmSite');
     }
 
     function ensureAdminIsLoggedIn()

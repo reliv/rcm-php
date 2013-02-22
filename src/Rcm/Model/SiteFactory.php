@@ -69,7 +69,7 @@ class SiteFactory extends EntityMgrAware
      * @return Site
      * @throws SiteNotFoundException
      */
-    public function getSite($domainName, $language)
+    public function getSite($domainName, $language=null)
     {
         $entityMgr = $this->entityMgr;
         $siteRepo = $entityMgr->getRepository('\Rcm\Entity\Site');
