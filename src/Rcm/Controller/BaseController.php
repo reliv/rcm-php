@@ -122,7 +122,9 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         //Create Initial View Object
         $this->view = new ViewModel();
 
-        $this->setSiteInfo();
+        //WE SHOULD INJECT THIS INSTEAD OF USING SERVICE LOCATOR FROM INSIDE
+        //CONTROLLER TO MAKE TESTING AND DEPENDENCY-VIEWING EASIER
+        $this->siteInfo = $this->getServiceLocator()->get('rcmSite');
 
         //Check Domain and redirect if needed
         $domain = $this->siteInfo->getDomain();
@@ -175,20 +177,6 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         $redirectUrl = $protocol . $domainName . $requestedUri;
 
         return $this->redirect()->toUrl($redirectUrl)->setStatusCode(301);
-    }
-
-    /**
-     * Set the site info while falling back to the default domain and if
-     * necessary. This calls getSite() which will fall back to a domain's
-     * default language if necessary.
-     *
-     * @return null
-     */
-    public function setSiteInfo()
-    {
-        //WE INJECT THIS INSTEAD OF USING SERVICE LOCATOR FROM INSIDE CONTROLLER TO MAKE TESTING AND
-        //DEPENDENCY-VIEWING EASIER
-        $this->siteInfo = $this->getServiceLocator()->get('rcmSite');
     }
 
     function ensureAdminIsLoggedIn()
