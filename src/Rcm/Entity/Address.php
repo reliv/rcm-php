@@ -144,6 +144,12 @@ class Address
         $this->setZip($zip);
     }
 
+    function getZipAsString(){
+        if(is_object($this->getZip())){
+            return $this->getZip()->getPostalCode();
+        }
+    }
+
     public function setCountryFromIso3(
         $iso3,
         \Doctrine\ORM\EntityManager $entityMgr
