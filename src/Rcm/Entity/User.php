@@ -88,11 +88,17 @@ class User
      */
     protected $password;
 
-    public function setAccount($account)
+    /**
+     * @param Account $account
+     */
+    public function setAccount(Account $account)
     {
         $this->account = $account;
     }
 
+    /**
+     * @return Account
+     */
     public function getAccount()
     {
         return $this->account;
