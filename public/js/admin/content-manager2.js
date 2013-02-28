@@ -326,7 +326,7 @@ function RcmEdit(config) {
      * Admin Popout window
      */
 
-    me.adminPopoutWindow = function (pagePath, height, width, title, windowName, data) {
+    me.adminPopoutWindow = function (pagePath, height, width, title, windowName, data, successCallback) {
 
         if (windowName == undefined || windowName == null || windowName == '') {
             windowName = 'rcmAdminPagePopoutWindow'
@@ -341,6 +341,10 @@ function RcmEdit(config) {
             if (status == "error") {
                 var msg = "Sorry but there was an error: ";
                 $(popoutWidowDiv).html(msg + xhr.status + " " + xhr.statusText);
+            }
+
+            if (successCallback && typeof successCallback === 'function') {
+                successCallback.call(popoutWidowDiv);
             }
         });
 
@@ -1827,11 +1831,11 @@ function RcmEdit(config) {
         }
 
         /* Check name via rest service */
-        var pageOk = false;
+        var dataOk = false;
 
 
         $.getJSON('/rcm-admin-checkpage/'+me.language, { pageUrl: pageUrl }, function(data) {
-            if (data.pageOk == 'Y') {
+            if (data.dataOk == 'Y') {
                 me.ui.inputFieldOk(inputField, resultContainer);
             } else if(data.pageOk != 'Y') {
                 me.ui.inputFieldError(inputField, resultContainer);
@@ -1842,7 +1846,7 @@ function RcmEdit(config) {
                 me.ui.inputFieldFatalError(inputField, resultContainer);
         });
 
-        return pageOk;
+        return dataOk;
     };
 
     me.saveAjaxAdminWindow = function(saveUrl, send, formContainer, saveOkHeadline, saveOkMessage, keepOpen, successCallback) {

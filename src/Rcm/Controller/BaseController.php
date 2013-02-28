@@ -236,4 +236,18 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
             return $config['Rcm']['themes']['generic']['layouts']['default'];
         }
     }
+
+    protected function getPageUrl($pageName) {
+        $urlParams['page']= $pageName;
+
+        //Check for default language
+        if ($this->siteInfo->getDomain()->getDefaultLanguage()->getLanguage() !=  $this->siteInfo->getLanguage()->getLanguage()) {
+            $urlParams['language'] = $this->siteInfo->getLanguage()->getLanguage();
+        }
+
+        return $this->url()->fromRoute(
+            'contentManager',
+            $urlParams
+        );
+    }
 }

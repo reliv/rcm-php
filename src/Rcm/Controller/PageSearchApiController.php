@@ -53,17 +53,5 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
         return new \Zend\View\Model\JsonModel($return);
     }
 
-    protected function getPageUrl($pageName) {
-        $urlParams['page']= $pageName;
 
-        //Check for default language
-        if ($this->siteInfo->getDomain()->getDefaultLanguage()->getLanguage() !=  $this->siteInfo->getLanguage()->getLanguage()) {
-            $urlParams['language'] = $this->siteInfo->getLanguage()->getLanguage();
-        }
-
-        return $this->url()->fromRoute(
-            'contentManager',
-            $urlParams
-        );
-    }
 }

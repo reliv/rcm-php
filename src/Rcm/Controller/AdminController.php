@@ -293,13 +293,7 @@ class AdminController extends BaseController
             false
         );
 
-        $redirectUrl = $this->url()->fromRoute(
-            'contentManager',
-            array(
-                'page' => $pageUrl,
-                'language' => $this->siteInfo->getLanguage()->getLanguage()
-            )
-        );
+        $redirectUrl = $this->getPageUrl($pageUrl);
 
         $return['pageOk'] = 'Y';
         $return['redirect'] = $redirectUrl . '?rcmShowLayoutEditor=Y';
@@ -389,13 +383,7 @@ class AdminController extends BaseController
             $asTemplate
         );
 
-        $redirectUrl = $this->url()->fromRoute(
-            'contentManager',
-            array(
-                'page' => $pageUrl,
-                'language' => $this->siteInfo->getLanguage()->getLanguage()
-            )
-        );
+        $redirectUrl = $this->getPageUrl($pageUrl);
 
         $return['dataOk'] = 'Y';
         $return['redirect'] = $redirectUrl;

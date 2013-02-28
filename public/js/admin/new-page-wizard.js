@@ -1,8 +1,9 @@
-function rcmNewPageWizardCreatePage() {
+function rcmNewPageWizardCreatePage(dialogContainer) {
     var pageUrl = $("#rcmNewFromTemplateUrl").val();
     var pageName = $("#rcmNewFromTemplateName").val();
     var revision = $("#rcmPageRevision").val();
     var selectedLayout = null;
+    var skipRedirect = $("#skipRedirect").val();
 
     if (revision < 0) {
         selectedLayout = $("#rcmNewPageSelectedLayout").val();
@@ -19,9 +20,16 @@ function rcmNewPageWizardCreatePage() {
 
         function(data) {
             var rcmNewFromTemplateErrorLine = $("#rcmNewFromTemplateErrorLine");
-            if (data.pageOk == 'Y' && data.redirect) {
-                window.location = data.redirect;
-            } else if(data.pageOk != 'Y' && data.error != '') {
+            if (data.dataOk == 'Y' && data.redirect) {
+
+                if (skipRedirect && skipRedirect=='Y') {
+                    $("#redirectUrl").val(data.redirect);
+                    $(dialogContainer).dialog("close");
+                } else {
+                    window.location = data.redirect;
+                }
+
+            } else if(data.dataOk != 'Y' && data.error != '') {
                 $(rcmNewFromTemplateErrorLine).html('<br /><p style="color: #FF0000;">'+data.error+'</p><br />').show();
             } else {
                 $(rcmNewFromTemplateErrorLine).html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
@@ -56,11 +64,11 @@ $('#rcmNewFromTemplateUrl').keyup(function(){
 });
 
 
-$( "#rcmAdminPagePopoutWindow" ).dialog(
+$( "#rcmNewFromTemplateWizard").parent().dialog(
     "option",
     "buttons",
     [
-        { text: "Ok", click: function() { rcmNewPageWizardCreatePage() }},
+        { text: "Ok", click: function() { rcmNewPageWizardCreatePage(this) }},
         { text: "Cancel", click: function() { $(this).dialog("close"); }}
     ]
 );
