@@ -708,12 +708,12 @@ are permitted provided that the following conditions are met:</p>
         $newAdminUser->setLastName($lastName);
         $newAdminUser->setSsn('555555555');
 
-        /** @var \Rcm\Entity\Address $billingAddress  */
-        $billingAddress = $newAdminUser->getBillingAddress();
-        $billingAddress->setAddressLine1('55 Spring Branch Rd');
-        $billingAddress->setCity('Troy');
-        $billingAddress->setState('MO');
-        $billingAddress->setCountry($country);
+        /** @var \Rcm\Entity\Address $billAddress  */
+        $billAddress = $newAdminUser->getBillAddress();
+        $billAddress->setAddressLine1('55 Spring Branch Rd');
+        $billAddress->setCity('Troy');
+        $billAddress->setState('MO');
+        $billAddress->setCountry($country);
 
         /** @var \Rcm\Entity\PostalCode $postalCodeEntity  */
         $postalCodeEntity = $postCodeRepo->findOneBy(
@@ -721,10 +721,10 @@ are permitted provided that the following conditions are met:</p>
                 'postalCode' => '63379'
             )
         );
-        $billingAddress->setZip($postalCodeEntity);
+        $billAddress->setZip($postalCodeEntity);
 
         /** @var \Rcm\Entity\Address $shipAddress  */
-        $shipAddress = $newAdminUser->getShippingAddress();
+        $shipAddress = $newAdminUser->getShipAddress();
         $shipAddress->setAddressLine1('55 Spring Branch Rd');
         $shipAddress->setCity('Troy');
         $shipAddress->setState('MO');

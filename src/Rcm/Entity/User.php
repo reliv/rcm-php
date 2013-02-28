@@ -50,15 +50,15 @@ class User
 
     /**
      * @ORM\OneToOne(targetEntity="Address")
-     * @ORM\JoinColumn(name="billingAddressId", referencedColumnName="addressId")
+     * @ORM\JoinColumn(name="billAddressId", referencedColumnName="addressId")
      */
-    protected $billingAddress;
+    protected $billAddress;
 
     /**
      * @ORM\OneToOne(targetEntity="Address")
-     * @ORM\JoinColumn(name="shippingAddressId", referencedColumnName="addressId")
+     * @ORM\JoinColumn(name="shipAddressId", referencedColumnName="addressId")
      */
-    protected $shippingAddress;
+    protected $shipAddress;
 
     /**
      * @var boolean gender is male
@@ -409,20 +409,20 @@ class User
         return '***-**-' . substr($this->ssn, -4);
     }
 
-    public function setBillingAddress($billingAddress)
+    public function setBillAddress($billAddress)
     {
-        if (isset($billingAddress) && !is_a($billingAddress, '\Rcm\Entity\Address')) {
+        if (isset($billAddress) && !is_a($billAddress, '\Rcm\Entity\Address')) {
             throw new InvalidArgumentException();
         }
-        $this->billingAddress = $billingAddress;
+        $this->billAddress = $billAddress;
     }
 
     /**
      * @returns \Rcm\Entity\Address
      */
-    public function getBillingAddress()
+    public function getBillAddress()
     {
-        return $this->billingAddress;
+        return $this->billAddress;
     }
 
     /**
@@ -449,20 +449,20 @@ class User
         return $this->createdDate;
     }
 
-    public function setShippingAddress($shippingAddress)
+    public function setShipAddress($shipAddress)
     {
-        if (isset($shippingAddress) && !is_a($shippingAddress, '\Rcm\Entity\Address')) {
+        if (isset($shipAddress) && !is_a($shipAddress, '\Rcm\Entity\Address')) {
             throw new InvalidArgumentException();
         }
-        $this->shippingAddress = $shippingAddress;
+        $this->shipAddress = $shipAddress;
     }
 
     /**
      * @returns \Rcm\Entity\Address
      */
-    public function getShippingAddress()
+    public function getShipAddress()
     {
-        return $this->shippingAddress;
+        return $this->shipAddress;
     }
 
     /**

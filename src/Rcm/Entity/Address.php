@@ -93,6 +93,21 @@ class Address
     protected $isCommercial;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $geoCode;
+
+    public function setGeoCode($geoCode)
+    {
+        $this->geoCode = $geoCode;
+    }
+
+    public function getGeoCode()
+    {
+        return $this->geoCode;
+    }
+
+    /**
      * Sets the IsCommercial property
      *
      * @param boolean $isCommercial
