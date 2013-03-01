@@ -603,7 +603,7 @@ return array(
             'rcm-page-search' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm-page-search',
+                    'route' => '/rcm-page-search[/:language]',
                     'defaults' => array(
                         'controller' => 'rcmPageSearchApiController',
                         'action' => 'allSitePages',
