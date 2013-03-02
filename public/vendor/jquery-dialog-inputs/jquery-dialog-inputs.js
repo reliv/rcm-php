@@ -591,3 +591,7 @@ var inputImageEventsDelegated = false;
 jQuery.dialogIn = function (inputType, label, option1, option2, option3) {
     return $.fn.dialogIn.apply(this, arguments);
 };
+
+jQuery.generateUUID = function() {
+    return $.fn.generateUUID();
+}
