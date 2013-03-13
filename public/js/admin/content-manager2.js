@@ -1,3 +1,12 @@
+//TEMPORARY HACK
+setInterval(
+    function(){
+        console.log('1');
+        $( "#rcmAdminPagePopoutWindow").css('height','auto');
+    },
+    500
+);
+
 /**
  * Main Javascript file for the content manager.  This file is required for
  * the admin side of the content manager and is pulled in through the admin
