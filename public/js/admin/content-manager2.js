@@ -1,7 +1,6 @@
 //TEMPORARY HACK
 setInterval(
     function(){
-        console.log('1');
         $( "#rcmAdminPagePopoutWindow").css('height','auto');
     },
     500
