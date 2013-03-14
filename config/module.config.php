@@ -81,12 +81,6 @@ return array(
                                 'cssClass' => 'rcmEditPageIcon rcmEditPage',
                                 'href' => '#',
                             ),
-//                            'Edit Site Plugins' => array(
-//                                'display' => 'Edit Site Plugins',
-//                                'aclGroups' => 'admin',
-//                                'cssClass' => 'rcmEditSiteWideIcon rcmEditSiteWide',
-//                                'href' => '#',
-//                            ),
                             'Page Layout' => array(
                                 'display' => 'Add/Remove Plugins on Page',
                                 'aclGroups' => 'admin',
@@ -219,12 +213,12 @@ return array(
                 'cssClass' => 'draftsIcon',
                 'href' => '#',
                 'links' => array(
-                    'Create Site' => array(
-                        'display' => 'Create a New Site',
-                        'aclGroups' => 'admin',
-                        'cssClass' => 'draftsIcon',
-                        'href' => '#',
-                    ),
+//                    'Create Site' => array(
+//                        'display' => 'Create a New Site',
+//                        'aclGroups' => 'admin',
+//                        'cssClass' => 'draftsIcon',
+//                        'href' => '#',
+//                    ),
 
                     'Site-Wide Plugins' => array(
                         'display' => 'Site-Wide Plugins',
@@ -238,13 +232,13 @@ return array(
                                 'cssClass' => 'rcmEditSiteWideIcon rcmEditSiteWide',
                                 'href' => '#',
                             ),
-
-                            'Rollback Site-Wide Plugin' => array(
-                                'display' => 'Rollback Site-Wide Plugin',
-                                'aclGroups' => 'admin',
-                                'cssClass' => 'rcmEditSiteWideIcon rcmEditSiteWide',
-                                'href' => '#',
-                            ),
+//
+//                            'Rollback Site-Wide Plugin' => array(
+//                                'display' => 'Rollback Site-Wide Plugin',
+//                                'aclGroups' => 'admin',
+//                                'cssClass' => 'rcmEditSiteWideIcon rcmEditSiteWide',
+//                                'href' => '#',
+//                            ),
                         ),
                     ),
 
@@ -256,67 +250,67 @@ return array(
                     ),
                 ),
             ),
-            'Users' => array(
-                'display' => 'Users',
-                'aclGroups' => 'admin',
-                'cssClass' => 'draftsIcon',
-                'href' => '#',
-                'links' => array(
-                    'New' => array(
-                        'display' => 'New',
-                        'aclGroups' => 'admin',
-                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
-                        'href' => '#',
-                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-new-user', 430, 740, 'Add New User'); return false;"
-                    ),
-
-                    'Modify' => array(
-                        'display' => 'Page',
-                        'aclGroups' => 'admin',
-                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
-                        'href' => '#',
-                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
-                    ),
-
-                    'Suspend' => array(
-                        'display' => 'Page',
-                        'aclGroups' => 'admin',
-                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
-                        'href' => '#',
-                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
-                    ),
-
-                    'Delete' => array(
-                        'display' => 'Page',
-                        'aclGroups' => 'admin',
-                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
-                        'href' => '#',
-                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
-                    ),
-                )
-            ),
-
-            'Help' => array(
-                'display' => 'Help',
-                'aclGroups' => 'admin',
-                'cssClass' => 'draftsIcon',
-                'href' => '#',
-                'links' => array(
-                    'Contents' => array(
-                        'display' => 'Contents',
-                        'aclGroups' => 'admin',
-                        'cssClass' => 'draftsIcon',
-                        'href' => '#',
-                    ),
-
-                    'About Wespress' => array(
-                        'display' => 'About Wespress',
-                        'aclGroups' => 'admin',
-                        'cssClass' => 'draftsIcon',
-                        'href' => '#',
-                    )
-                )
-            ),
+//            'Users' => array(
+//                'display' => 'Users',
+//                'aclGroups' => 'admin',
+//                'cssClass' => 'draftsIcon',
+//                'href' => '#',
+//                'links' => array(
+//                    'New' => array(
+//                        'display' => 'New',
+//                        'aclGroups' => 'admin',
+//                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
+//                        'href' => '#',
+//                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-new-user', 430, 740, 'Add New User'); return false;"
+//                    ),
+//
+//                    'Modify' => array(
+//                        'display' => 'Page',
+//                        'aclGroups' => 'admin',
+//                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
+//                        'href' => '#',
+//                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
+//                    ),
+//
+//                    'Suspend' => array(
+//                        'display' => 'Page',
+//                        'aclGroups' => 'admin',
+//                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
+//                        'href' => '#',
+//                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
+//                    ),
+//
+//                    'Delete' => array(
+//                        'display' => 'Page',
+//                        'aclGroups' => 'admin',
+//                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
+//                        'href' => '#',
+//                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
+//                    ),
+//                )
+//            ),
+//
+//            'Help' => array(
+//                'display' => 'Help',
+//                'aclGroups' => 'admin',
+//                'cssClass' => 'draftsIcon',
+//                'href' => '#',
+//                'links' => array(
+//                    'Contents' => array(
+//                        'display' => 'Contents',
+//                        'aclGroups' => 'admin',
+//                        'cssClass' => 'draftsIcon',
+//                        'href' => '#',
+//                    ),
+//
+//                    'About Wespress' => array(
+//                        'display' => 'About Wespress',
+//                        'aclGroups' => 'admin',
+//                        'cssClass' => 'draftsIcon',
+//                        'href' => '#',
+//                    )
+//                )
+//            ),
 
         ),
     ),
