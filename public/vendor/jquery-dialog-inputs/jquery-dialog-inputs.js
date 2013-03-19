@@ -87,7 +87,7 @@ var inputImageEventsDelegated = false;
             return p;
         },
 
-        textWithAjaxValidator: function (description, value, urlToValidator, disallowSpaces) {
+        textWithAjaxValidator: function (description, value, urlToValidator, disallowSpaces, successCallback) {
 
             if (value == undefined) {
                 value = '';
@@ -104,7 +104,7 @@ var inputImageEventsDelegated = false;
 
             $('body').on('keyup', "#" + name, function () {
                 var validationContainer = $("#"+validatorId);
-                methods.validateInput(this, validationContainer, urlToValidator, disallowSpaces);
+                methods.validateInput(this, validationContainer, urlToValidator, disallowSpaces, successCallback);
             });
 
             return p;
@@ -213,6 +213,8 @@ var inputImageEventsDelegated = false;
                 customClass = ' class="selectAllowCustomValues"';
             }
             var select = $('<select' + customClass + ' name="' + name + '"><select>');
+
+            select.append('<option></option>');
 
             for (var key in choices) {
                 selected = '';
@@ -341,7 +343,7 @@ var inputImageEventsDelegated = false;
             return p;
         },
 
-        validateInput : function(inputField, resultContainer, ajaxPath, disallowSpaces) {
+        validateInput : function(inputField, resultContainer, ajaxPath, disallowSpaces, successCallback) {
 
             if(typeof(disallowSpaces)=='undefined'){
                 disallowSpaces = false;
@@ -374,6 +376,9 @@ var inputImageEventsDelegated = false;
             $.getJSON(ajaxPath, dataToSend, function(data) {
                 if (data.dataOk == 'Y') {
                     methods.inputFieldOk(inputField, resultContainer);
+                    if (typeof(successCallback) === 'function') {
+                        successCallback.call(this, inputValue);
+                    }
                 } else if(data.dataOk != 'Y') {
                     methods.inputFieldError(inputField, resultContainer);
                 } else {

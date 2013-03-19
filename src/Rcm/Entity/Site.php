@@ -151,6 +151,21 @@ class Site
      * )
      **/
     protected $sitePlugins;
+
+    /**
+     * @var boolean Status of site.
+     *
+     * @ORM\Column(type="boolean")
+     **/
+    protected $loginRequired = false;
+
+    /**
+     * @var string URL to login page.
+     *
+     * @ORM\Column(type="string")
+     **/
+    protected $loginPage;
+
     
     /**
      * Constructor for site
@@ -441,6 +456,38 @@ class Site
         }
 
         return $templates;
+    }
+
+    /**
+     * @param boolean $loginRequired
+     */
+    public function setLoginRequired($loginRequired)
+    {
+        $this->loginRequired = $loginRequired;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getLoginRequired()
+    {
+        return $this->loginRequired;
+    }
+
+    /**
+     * @param string $loginPage
+     */
+    public function setLoginPage($loginPage)
+    {
+        $this->loginPage = $loginPage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLoginPage()
+    {
+        return $this->loginPage;
     }
 
 }

@@ -114,14 +114,18 @@ class SiteFactory extends EntityMgrAware
     /**
      * Creates a new site entity
      *
-     * @param string   $domainName       domain name
-     * @param Country  $country          country
-     * @param Language $language         language
-     * @param integer  $ownerAccountNum  owner account number
-     * @param array   $additionalDomain an additional domain that redirects
-     *                                   to this site
+     * @param string               $domainName             domain name
+     * @param string               $theme                  Theme to use for the new site
+     * @param \Rcm\Entity\Country  $country                country
+     * @param \Rcm\Entity\Language $language               language
+     * @param integer              $ownerAccountNum        owner account number
+     * @param string               $loginPageUrl           URL to login page
+     * @param boolean              $loginRequired          Require login for site access
+     * @param array                $additionalDomain       an additional domain that redirects
+     *                                                     to this site
+     * @param array                $initialSiteWidePlugins Initial SiteWide plugins for the site.
      *
-     * @return Site
+     * @return \Rcm\Entity\Site
      */
     public function createNewSite(
         $domainName,
@@ -129,6 +133,8 @@ class SiteFactory extends EntityMgrAware
         \Rcm\Entity\Country $country,
         \Rcm\Entity\Language $language,
         $ownerAccountNum,
+        $loginPageUrl = '',
+        $loginRequired = false,
         $additionalDomain = array(),
         $initialSiteWidePlugins = array()
     ) {
@@ -169,6 +175,8 @@ class SiteFactory extends EntityMgrAware
         $site->setCountry($country);
         $site->setStatus("A");
         $site->setTheme($theme);
+        $site->setLoginRequired($loginRequired);
+        $site->setLoginPage($loginPageUrl);
 
         if (!empty($initialSiteWidePlugins)
             && is_array($initialSiteWidePlugins)
