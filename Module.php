@@ -19,6 +19,8 @@
 namespace Rcm;
 
 use \Zend\ModuleManager\ModuleManager;
+use \Zend\Session\SessionManager;
+use \Zend\Session\Container;
 
 /**
  * ZF2 Module Config.  Required by ZF2
@@ -36,6 +38,55 @@ use \Zend\ModuleManager\ModuleManager;
  */
 class Module
 {
+
+    public function onBootstrap($e)
+    {
+        $this->bootstrapSession($e);
+    }
+
+    public function bootstrapSession($e)
+    {
+        /** @var \Zend\Session\SessionManager $session  */
+        $session = $e->getApplication()
+            ->getServiceManager()
+            ->get('rcmSesssionManager');
+
+        if (!empty($_GET['sess_id'])) {
+            // Set Session ID
+            $session->setId($_GET['sess_id']);
+            $session->start();
+
+            //Regenerate ID
+            $session->regenerateId(true);
+            $container = new Container('initialized');
+            $container->init = 1;
+
+            //Redirect
+            $redirectUrl = $_SERVER['REQUEST_URI'];
+            $redirectUrl = str_replace('?sess_id='.$_GET['sess_id'].'&', '?', $redirectUrl);
+            $redirectUrl = str_replace('?sess_id='.$_GET['sess_id'], '', $redirectUrl);
+            $redirectUrl = str_replace('&sess_id='.$_GET['sess_id'], '', $redirectUrl);
+
+            header('Location: '.$redirectUrl,true,301);
+            exit;
+
+        } else {
+
+            //Process normally
+            $session->start();
+            $container = new Container('initialized');
+            if (!isset($container->init)) {
+                $session->regenerateId(true);
+                $container->init = 1;
+            }
+        }
+
+        //Logout if requested
+        if (!empty($_GET['logout']) && $_GET['logout'] == 'Y') {
+            $session->destroy();
+        }
+    }
+
     /**
      * getAutoloaderConfig() is a requirement for all Modules in ZF2.  This
      * function is included as part of that standard.  See Docs on ZF2 for more
@@ -166,6 +217,49 @@ class Module
 
                     return $cache;
                 },
+
+                'rcmSesssionManager' => function ($sm) {
+                    $config = $sm->get('config');
+                    if (isset($config['session'])) {
+                        $session = $config['session'];
+
+                        $sessionConfig = null;
+                        if (isset($session['config'])) {
+                            $class = isset($session['config']['class'])  ? $session['config']['class'] : 'Zend\Session\Config\SessionConfig';
+                            $options = isset($session['config']['options']) ? $session['config']['options'] : array();
+                            $sessionConfig = new $class();
+                            $sessionConfig->setOptions($options);
+                        }
+
+                        $sessionStorage = null;
+                        if (isset($session['storage'])) {
+                            $class = $session['storage'];
+                            $sessionStorage = new $class();
+                        }
+
+                        $sessionSaveHandler = null;
+                        if (isset($session['save_handler'])) {
+                            // class should be fetched from service manager since it will require constructor arguments
+                            $sessionSaveHandler = $sm->get($session['save_handler']);
+                        }
+
+                        $sessionManager = new SessionManager($sessionConfig, $sessionStorage, $sessionSaveHandler);
+
+                        if (isset($session['validator'])) {
+                            $chain = $sessionManager->getValidatorChain();
+                            foreach ($session['validator'] as $validator) {
+                                $validator = new $validator();
+                                $chain->attach('session.validate', array($validator, 'isValid'));
+
+                            }
+                        }
+                    } else {
+                        $sessionManager = new SessionManager();
+                    }
+                    Container::setDefaultManager($sessionManager);
+                    return $sessionManager;
+                },
+
             ),
         );
     }

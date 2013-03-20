@@ -205,7 +205,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         }
     }
 
-    protected function adminSaveInit()
+    protected function adminSaveInit($pageType='N')
     {
 
         $this->ensureAdminIsLoggedIn();
@@ -216,7 +216,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         );
 
         /** @var \Rcm\Entity\Page $page  */
-        $this->page = $this->siteInfo->getPageByName($pageName);
+        $this->page = $this->siteInfo->getPageByName($pageName, $pageType);
 
         if (empty($this->page)) {
             throw new \Rcm\Exception\InvalidArgumentException(
