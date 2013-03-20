@@ -121,6 +121,7 @@ class SiteFactory extends EntityMgrAware
      * @param integer              $ownerAccountNum        owner account number
      * @param string               $loginPageUrl           URL to login page
      * @param boolean              $loginRequired          Require login for site access
+     * @param array|string         $permitteTypes          Account Type(s) needed to access site
      * @param array                $additionalDomain       an additional domain that redirects
      *                                                     to this site
      * @param array                $initialSiteWidePlugins Initial SiteWide plugins for the site.
@@ -135,10 +136,15 @@ class SiteFactory extends EntityMgrAware
         $ownerAccountNum,
         $loginPageUrl = '',
         $loginRequired = false,
+        $permittedTypes = array(),
         $additionalDomain = array(),
         $initialSiteWidePlugins = array()
     ) {
         $entityMgr = $this->entityMgr;
+
+        if ($loginRequired && (empty($permittedTypes) || empty($loginPageUrl))) {
+            throw new \Exception('Site set to restricted, but no login page or permitted types provided');
+        }
 
         //Check for existing domain
         try {
@@ -177,6 +183,12 @@ class SiteFactory extends EntityMgrAware
         $site->setTheme($theme);
         $site->setLoginRequired($loginRequired);
         $site->setLoginPage($loginPageUrl);
+
+        if (!empty($permittedTypes) && is_array($permittedTypes)) {
+            $site->addPermittedAccountTypesByArray($permittedTypes);
+        } elseif (!empty($permittedTypes) && !is_array($permittedTypes)) {
+            $site->addPermittedAccountType($permittedTypes);
+        }
 
         if (!empty($initialSiteWidePlugins)
             && is_array($initialSiteWidePlugins)

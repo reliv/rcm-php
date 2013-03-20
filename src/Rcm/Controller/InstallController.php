@@ -53,7 +53,11 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         /** @var \Rcm\Entity\Language $language  */
         $language = $languageRepo->findOneBy(array('iso639_2b' => 'eng'));
 
-        $this->createSite($country, $language);
+        $this->createSite(
+            $country,
+            $language,
+            $_SERVER['HTTP_HOST']
+        );
 
 
 

@@ -124,12 +124,23 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
 
         //WE SHOULD INJECT THIS INSTEAD OF USING SERVICE LOCATOR FROM INSIDE
         //CONTROLLER TO MAKE TESTING AND DEPENDENCY-VIEWING EASIER
+        /** @var \Rcm\Entity\Site siteInfo  */
         $this->siteInfo = $this->getServiceLocator()->get('rcmSite');
 
         //Check Domain and redirect if needed
         $domain = $this->siteInfo->getDomain();
         if (!$this->isRequestDomainPrimary($domain)) {
             return $this->redirectToPrimary($domain);
+        }
+
+        //Check for restricted site
+        if($this->siteInfo->isLoginRequired()
+            && (
+                empty($this->loggedInUser)
+                || (!$this->siteInfo->isPermitted($this->loggedInUser->getAcountType()) && !$this->adminIsLoggedIn())
+            )
+        ) {
+            $this->redirectToLoginPage();
         }
     }
 
@@ -177,6 +188,11 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         $redirectUrl = $protocol . $domainName . $requestedUri;
 
         return $this->redirect()->toUrl($redirectUrl)->setStatusCode(301);
+    }
+
+    public function redirectToLoginPage()
+    {
+        return $this->redirect()->toUrl($this->siteInfo->getLoginPage())->setStatusCode(301);
     }
 
     function ensureAdminIsLoggedIn()

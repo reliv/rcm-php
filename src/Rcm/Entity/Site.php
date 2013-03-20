@@ -162,11 +162,18 @@ class Site
     /**
      * @var string URL to login page.
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      **/
     protected $loginPage;
 
-    
+    /**
+     * @var string Comma seperated list of account types permitted
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $permittedAccountTypes;
+
+
     /**
      * Constructor for site
      */
@@ -469,7 +476,7 @@ class Site
     /**
      * @return boolean
      */
-    public function getLoginRequired()
+    public function isLoginRequired()
     {
         return $this->loginRequired;
     }
@@ -489,5 +496,40 @@ class Site
     {
         return $this->loginPage;
     }
+
+    public function addPermittedAccountTypesByArray(Array $permittedAccountTypes) {
+        $types = explode(',', $this->permittedAccountTypes);
+        $newTypes = array_unique(array_merge($permittedAccountTypes, $types));
+        $this->permittedAccountTypes = implode(',', $newTypes);
+    }
+
+    /**
+     * @param string $permittedAccountType
+     */
+    public function addPermittedAccountType($permittedAccountType)
+    {
+        $types = explode(',', $this->permittedAccountTypes);
+        $types[] = $permittedAccountType;
+        $this->permittedAccountTypes = implode(',', $types);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPermittedAccountTypes()
+    {
+        return explode(',', $this->permittedAccountTypes);
+    }
+
+    public function isPermitted($accountType) {
+        $permitted = $this->getPermittedAccountTypes();
+
+        if (in_array($accountType, $permitted)) {
+            return true;
+        }
+
+        return false;
+    }
+
 
 }

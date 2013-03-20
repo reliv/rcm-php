@@ -110,21 +110,7 @@ class User
      */
     protected $account;
 
-    public function setPassword($password, \Zend\Crypt\BlockCipher $cypher)
-    {
-        if(empty($password)){
-            $this->password = null;
-        }
-        $this->password = $cypher->encrypt($password);
-    }
 
-    public function getPassword(\Zend\Crypt\BlockCipher $cypher)
-    {
-        if(empty($this->password)){
-            return null;
-        }
-        return $cypher->decrypt($this->password);
-    }
 
     /**
      * @var integer phone number
@@ -162,6 +148,13 @@ class User
     protected $createdDate;
 
     /**
+     * @var string Account Type
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $acountType;
+
+    /**
      * @var integer social security number
      *
      * @ORM\Column(type="bigint", nullable=true)
@@ -173,9 +166,29 @@ class User
         $this->setCreatedDate(new \DateTime("now"));
     }
 
+    function toArray() {
+        return get_object_vars($this);
+    }
+
     function digitsOnly($value)
     {
         return preg_replace('/[^0-9]*/', '', $value);
+    }
+
+    public function setPassword($password, \Zend\Crypt\BlockCipher $cypher)
+    {
+        if(empty($password)){
+            $this->password = null;
+        }
+        $this->password = $cypher->encrypt($password);
+    }
+
+    public function getPassword(\Zend\Crypt\BlockCipher $cypher)
+    {
+        if(empty($this->password)){
+            return null;
+        }
+        return $cypher->decrypt($this->password);
     }
 
     function setDateOfBirthViaMMDDYYY($dateOfBirth, $sanityCheck = true)
@@ -619,4 +632,22 @@ class User
     {
         return $this->getFirstName().' '.$this->getLastName();
     }
+
+    /**
+     * @param string $acountType
+     */
+    public function setAcountType($acountType)
+    {
+        $this->acountType = $acountType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAcountType()
+    {
+        return $this->acountType;
+    }
+
+
 }
