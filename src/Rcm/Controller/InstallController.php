@@ -282,14 +282,8 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     function createLoginPage(){
         $this->instances = array();
 
-        $content = array(
-            "loginHeader" => "Login",
-            "userNameCopy" => "Username:",
-            "loginPasswordCopy" => "Password",
-            "loginSubmitCopy" => "Login",
-            "loginForgotPasswordCopy" => "",
-            "loginErrorInvalidCopy" => "Incorrect Username or Password",
-            "bottomLoginText" => ""
+        $content = $this->getNewInstanceConfig(
+            'vendor/reliv/RcmPlugins/RcmLogin/'
         );
 
         $this->createJsonInstance('RcmLogin', $content, 2, 0);

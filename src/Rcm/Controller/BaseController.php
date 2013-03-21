@@ -87,7 +87,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
      * @param \Zend\View\Renderer\PhpRenderer          $viewRenderer
      * @param array                                    $config
      */
-    function __construct(
+    public function __construct(
         \Rcm\Model\UserManagement\UserManagerInterface $userMgr,
         \Rcm\Model\PluginManager $pluginManager,
         EntityManager $entityMgr,
@@ -105,7 +105,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
     /**
      * @return bool
      */
-    function adminIsLoggedIn(){
+    public function adminIsLoggedIn(){
         return is_a(
             $this->loggedInAdminPermissions,'\Rcm\Entity\AdminPermissions'
         );
