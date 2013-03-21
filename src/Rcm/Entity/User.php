@@ -152,7 +152,14 @@ class User
      *
      * @ORM\Column(type="string")
      */
-    protected $acountType;
+    protected $accountType;
+
+    /**
+     * @var string rank
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $rank;
 
     /**
      * @var integer social security number
@@ -173,6 +180,22 @@ class User
     function digitsOnly($value)
     {
         return preg_replace('/[^0-9]*/', '', $value);
+    }
+
+    /**
+     * @param string $rank
+     */
+    public function setRank($rank)
+    {
+        $this->rank = $rank;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRank()
+    {
+        return $this->rank;
     }
 
     public function setPassword($password, \Zend\Crypt\BlockCipher $cypher)
@@ -634,19 +657,19 @@ class User
     }
 
     /**
-     * @param string $acountType
+     * @param string $accountType
      */
-    public function setAcountType($acountType)
+    public function setAccountType($accountType)
     {
-        $this->acountType = $acountType;
+        $this->accountType = $accountType;
     }
 
     /**
      * @return string
      */
-    public function getAcountType()
+    public function getAccountType()
     {
-        return $this->acountType;
+        return $this->accountType;
     }
 
 

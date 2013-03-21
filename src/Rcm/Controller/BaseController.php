@@ -137,7 +137,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         if($this->siteInfo->isLoginRequired()
             && (
                 empty($this->loggedInUser)
-                || (!$this->siteInfo->isPermitted($this->loggedInUser->getAcountType()) && !$this->adminIsLoggedIn())
+                || (!$this->siteInfo->isPermitted($this->loggedInUser->getAccountType()) && !$this->adminIsLoggedIn())
             )
         ) {
             $this->redirectToLoginPage();
