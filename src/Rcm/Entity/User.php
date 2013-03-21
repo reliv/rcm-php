@@ -150,14 +150,14 @@ class User
     /**
      * @var string Account Type
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $accountType;
 
     /**
      * @var string rank
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $rank;
 
