@@ -198,6 +198,10 @@ class Module
                         'doctrine.entitymanager.ormdefault'
                     );
                 },
+
+                'rcmIpInfo' => function(){
+                    return new \Rcm\Model\IpInfo();
+                },
                 'rcmCache' => function($serviceMgr) {
                     $config = $serviceMgr->get('config');
 
