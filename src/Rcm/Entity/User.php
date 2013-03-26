@@ -442,7 +442,7 @@ class User
 
     function getSsnMasked()
     {
-        return '***-**-' . substr($this->ssn, -4);
+        return '*' . substr($this->ssn, -4);
     }
 
     public function setBillAddress($billAddress)
