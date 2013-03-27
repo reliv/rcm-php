@@ -216,7 +216,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         );
 
         /** @var \Rcm\Entity\Page $page  */
-        $this->page = $this->siteInfo->getPageByName($pageName, $pageType);
+        $this->page = $this->getPageByName($pageName, $pageType);
 
         if (empty($this->page)) {
             throw new \Rcm\Exception\InvalidArgumentException(
@@ -253,7 +253,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         }
     }
 
-    protected function getPageUrl($pageName) {
+    protected function getPageUrl($pageName, $pageType='N') {
         $urlParams['page']= $pageName;
 
         //Check for default language
@@ -261,9 +261,27 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
             $urlParams['language'] = $this->siteInfo->getLanguage()->getLanguage();
         }
 
+        if ($pageType != 'N') {
+            $urlParams['pageType'] = $pageType;
+
+            return $this->url()->fromRoute(
+                'contentManagerWithPageType',
+                $urlParams
+            );
+        }
+
         return $this->url()->fromRoute(
             'contentManager',
             $urlParams
         );
+    }
+
+    protected function getPageByName($pageName, $pageType='N') {
+        $pageRepo = $this->entityMgr->getRepository('\Rcm\Entity\Page');
+        return $pageRepo->findOneBy(array(
+            'site' => $this->siteInfo,
+            'name' => $pageName,
+            'pageType' => $pageType
+        ));
     }
 }

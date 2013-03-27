@@ -60,7 +60,7 @@ $("#rcmNewFromTemplateWizard").find("#rcmPageRevision").change(function(){
 
 $('#rcmNewFromTemplateUrl').keyup(function(){
     var validationContainer = $("#rcmNewFromTemplateValidatorIndicator");
-    rcmEdit.checkPageName(this, validationContainer);
+    rcmEdit.checkPageName(this, 'N', validationContainer);
 });
 
 

@@ -50,8 +50,7 @@ class AdminController extends BaseController
 
         $viewVars['rcmTemplates'] = $this->siteInfo->getTemplates();
 
-        $viewVars['newPageLayoutContainers'] = $this->getPageLayoutsForNewPages(
-        );
+        $viewVars['newPageLayoutContainers'] = $this->getPageLayoutsForNewPages();
 
         return $viewVars;
 
@@ -81,10 +80,15 @@ class AdminController extends BaseController
         $this->ensureAdminIsLoggedIn();
 
         $pageUrl = $this->getRequest()->getQuery()->get('pageUrl');
+        $pageType = $this->getRequest()->getQuery()->get('pageType');
         $pageUrl = urlencode($pageUrl);
 
+        if (empty($pageType)) {
+            $pageType = 'N';
+        }
+
         $em = $this->entityMgr;
-        $page = $this->siteInfo->getPageByName($pageUrl);
+        $page = $this->getPageByName($pageUrl, $pageType);
 
         if (empty($page)) {
             $data['dataOk'] = 'Y';
@@ -155,8 +159,8 @@ class AdminController extends BaseController
         $body = $this->viewRenderer->render($pluginView);
         $pluginHtml =
             $this->viewRenderer->plugin('headScript')
-            . $this->viewRenderer->plugin('headLink')
-            . $body;
+                . $this->viewRenderer->plugin('headLink')
+                . $body;
 
         $jsonModel = new \Zend\View\Model\JsonModel();
         $jsonModel->setVariables(
@@ -289,8 +293,7 @@ class AdminController extends BaseController
             '',
             $pageLayout,
             $this->siteInfo,
-            null,
-            false
+            null
         );
 
         $redirectUrl = $this->getPageUrl($pageUrl);
@@ -319,13 +322,15 @@ class AdminController extends BaseController
     {
         $pageUrl = $this->getRequest()->getQuery()->get('pageName');
         $pageRevision = $this->getRequest()->getQuery()->get('revision');
-        $this->savePageAs($pageUrl, $pageRevision, '', true);
+        $this->savePageAs($pageUrl, $pageRevision, '', 'T');
     }
 
     private function savePageAs(
-        $pageUrl, $pageRevision, $pageTitle = '', $asTemplate = false
-    )
-    {
+        $pageUrl,
+        $pageRevision,
+        $pageTitle = '',
+        $pageType = 'N'
+    ) {
         $this->ensureAdminIsLoggedIn();
         $config = $this->config;
         $pageManager = new \Rcm\Model\PageFactory($this->entityMgr);
@@ -339,7 +344,7 @@ class AdminController extends BaseController
         }
 
         $em = $this->entityMgr;
-        $page = $this->siteInfo->getPageByName($pageUrl);
+        $page = $this->getPageByName($pageUrl, $pageType);
 
         if (!empty($page)) {
             $return['error'] = $errors['pageExists'];
@@ -347,7 +352,7 @@ class AdminController extends BaseController
             exit;
         }
 
-        $repo = $em->getRepository("\Rcm\Entity\PageRevision");
+        $repo = $em->getRepository('\Rcm\Entity\PageRevision');
 
         /** @var \Rcm\Entity\PageRevision $currentRevision */
         $currentRevision = $repo->findOneBy(
@@ -380,10 +385,10 @@ class AdminController extends BaseController
             $currentRevision->getPageLayout(),
             $this->siteInfo,
             $currentInstances,
-            $asTemplate
+            $pageType
         );
 
-        $redirectUrl = $this->getPageUrl($pageUrl);
+        $redirectUrl = $this->getPageUrl($pageUrl, $pageType);
 
         $return['dataOk'] = 'Y';
         $return['redirect'] = $redirectUrl;
@@ -431,8 +436,7 @@ class AdminController extends BaseController
     private function savePluginAssets(
         $postedAssets,
         \Rcm\Entity\PluginInstance $newInstance
-    )
-    {
+    ) {
 
         if (empty($postedAssets)) {
             return;

@@ -1817,7 +1817,7 @@ function RcmEdit(config) {
     /**     Page Manager        */
     /****************************/
 
-    me.checkPageName = function(inputField, resultContainer) {
+    me.checkPageName = function(inputField, pagetype, resultContainer) {
 
         /* Get the value of the input field and filter */
         var pageUrl = $(inputField).val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9\-\_]/g, "");
@@ -1834,7 +1834,7 @@ function RcmEdit(config) {
         var dataOk = false;
 
 
-        $.getJSON('/rcm-admin-checkpage/'+me.language, { pageUrl: pageUrl }, function(data) {
+        $.getJSON('/rcm-admin-checkpage/'+me.language, { pageUrl: pageUrl, pageType: pagetype }, function(data) {
             if (data.dataOk == 'Y') {
                 me.ui.inputFieldOk(inputField, resultContainer);
             } else if(data.pageOk != 'Y') {

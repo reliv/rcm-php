@@ -69,7 +69,8 @@ class PageFactory extends EntityMgrAware
         $pageLayout,
         \Rcm\Entity\Site $baseSite,
         $plugins='',
-        $template=false
+        $pageType = 'N',
+        $publish = false
     ) {
         $entityMgr = $this->entityMgr;
 
@@ -77,11 +78,15 @@ class PageFactory extends EntityMgrAware
         $page->setName($name);
         $page->setAuthor($author);
         $page->setCreatedDate(new \DateTime("now"));
-        $page->setLastPublished(new \DateTime("now"));
+
+        if ($publish === true) {
+            $page->setLastPublished(new \DateTime("now"));
+        }
+
         $page->setSite($baseSite);
 
-        if ($template === true) {
-            $page->setIsTemplate();
+        if ($pageType !== 'N') {
+            $page->setPageType($pageType);
         }
         
         $pageRevision = new \Rcm\Entity\PageRevision();
@@ -98,7 +103,12 @@ class PageFactory extends EntityMgrAware
         }
 
         $page->addPageRevision($pageRevision);
-        $page->setPublishedRevision($pageRevision);
+
+        if ($publish === true || $pageType === 'T') {
+            $page->setPublishedRevision($pageRevision);
+        } else {
+            $page->setStagedRevision($pageRevision);
+        }
         
         $baseSite->addPage($page);
 

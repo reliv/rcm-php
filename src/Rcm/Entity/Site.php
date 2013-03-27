@@ -122,7 +122,6 @@ class Site
      * @ORM\OneToMany(
      *     targetEntity="Page",
      *     mappedBy="site",
-     *     indexBy="name",
      *     cascade={"persist", "remove"}
      * )
      */
@@ -379,32 +378,7 @@ class Site
      */
     public function addPage(\Rcm\Entity\Page $page)
     {
-        $name = $page->getName();
-        $this->pages[$name] = $page;
-    }
-
-    /**
-     * Get page by name
-     *
-     * @param string  $name             Page Name to get
-     * @param boolean $includeTemplates Include Templates in search?
-     *
-     * @return \Rcm\Entity\Page
-     */
-    public function getPageByName($name, $includeTemplates=false)
-    {
-
-        $page = $this->pages[$name];
-
-        if (empty($page)) {
-            return null;
-        }
-
-        if ($includeTemplates === false && $page->isTemplate()) {
-            return null;
-        }
-
-        return $page;
+        $this->pages[] = $page;
     }
 
     /**

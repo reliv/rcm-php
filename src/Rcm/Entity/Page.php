@@ -98,6 +98,13 @@ class Page
     protected $stagedRevision;
 
     /**
+     * @var string Page Type N=Normal, P=Product, B=Blog, T=Template
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $pageType='N';
+
+    /**
      * @var \Rcm\Entity\Site
      *
      * @ORM\ManyToOne(targetEntity="Site", inversedBy="pages")
@@ -116,13 +123,6 @@ class Page
      * )
      */
     protected $revisions;
-
-    /**
-     * @var string Page Layout
-     *
-     * @ORM\Column(type="boolean")
-     */
-    protected $isTemplate=false;
     
     /**
      * Constructor for Page Entity.  Adds a hydrator to site reference
@@ -429,9 +429,9 @@ class Page
         return $this->revisions;
     }
 
-    public function setIsTemplate()
+    public function setTemplate()
     {
-        $this->isTemplate = true;
+        $this->setPageType('T');
     }
 
     /**
@@ -439,7 +439,36 @@ class Page
      */
     public function isTemplate()
     {
-        return $this->isTemplate;
+        return $this->checkPageType('T');
+    }
+
+    public function setProductPage() {
+        $this->setPageType('P');
+    }
+
+    public function isProductPage() {
+        return $this->checkPageType('P');
+    }
+
+
+    public function checkPageType($pageType) {
+        if ($this->pageType == $pageType) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function setPageType($type) {
+        if ($type != 'N'
+            && $type != 'P'
+            && $type != 'B'
+            && $type != 'T'
+        ) {
+            throw new \Exception('Invalid Product Type Passed');
+        }
+
+        $this->pageType = $type;
     }
 
     /**

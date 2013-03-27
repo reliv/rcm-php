@@ -20,7 +20,7 @@
 namespace Rcm\Controller;
 
 use Rcm\Entity\PageRevision,
-\Rcm\Entity\PluginInstance;
+    \Rcm\Entity\PluginInstance;
 
 /**
  * Index Controller for the entire application
@@ -67,17 +67,18 @@ class IndexController extends \Rcm\Controller\BaseController
     {
         $plugins = array();
         $pageName = $this->getEvent()->getRouteMatch()->getParam('page');
+        $pageType = $this->getEvent()->getRouteMatch()->getParam('pageType');
         $pageRevisionId= $this->getEvent()->getRouteMatch()->getParam('revision');
 
         if (empty($pageName)) {
             $pageName = 'index';
         }
 
-        if ($this->adminIsLoggedIn()) {
-            $this->page = $this->siteInfo->getPageByName($pageName, true);
-        } else {
-            $this->page = $this->siteInfo->getPageByName($pageName);
+        if (empty($pageType)) {
+            $pageType = 'N';
         }
+
+        $this->page = $this->getPageByName($pageName, $pageType);
 
         if (!$this->page) {
             $this->response->setStatusCode(404);
@@ -95,20 +96,28 @@ class IndexController extends \Rcm\Controller\BaseController
             )->setStatusCode(301);
         }
 
+
+        /**
+         * If Admin we're going to first check of explict page revision
+         */
+
+        if ($this->adminIsLoggedIn() && !empty($pageRevisionId)) {
+            $this->pageRevision = $this->page->getRevisionById($pageRevisionId);
+        }
         /**
          *   If Admin we're going to check for a staged revision.
          */
 
-        if ($this->adminIsLoggedIn() && empty($pageRevisionId)) {
+        elseif ($this->adminIsLoggedIn() && empty($pageRevisionId)) {
+            /** @var \Rcm\Entity\PageRevision pageRevision  */
             $this->pageRevision = $this->page->getStagedRevision();
         }
 
         /** Get published revision */
-        if (empty($pageRevisionId)) {
+        if(empty($pageRevisionId) && empty($this->pageRevision)) {
             $this->pageRevision = $this->page->getPublishedRevision();
-        } else {
-            $this->pageRevision = $this->page->getRevisionById($pageRevisionId);
         }
+
 
         if (!$this->pageRevision) {
             $this->response->setStatusCode(404);
@@ -125,7 +134,7 @@ class IndexController extends \Rcm\Controller\BaseController
                         ->pluginManager->prepPluginInstance(
                             $instance->getInstance(),
                             $this->getEvent()
-                    );
+                        );
                     $plugins[$container][$order]['width'] = $instance->getWidth();
                     $plugins[$container][$order]['height'] = $instance->getHeight();
                     $plugins[$container][$order]['float'] = $instance->getDivFloat();

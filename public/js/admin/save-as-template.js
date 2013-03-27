@@ -5,12 +5,13 @@ function rcmSubmitSaveAsTemplate() {
     $.getJSON('/rcm-admin-save-as-template/'+rcmEdit.language,
         {
             pageName: pageName,
+            pageType: 'T',
             revision: revisionId
         },
         function(data) {
-            if (data.pageOk == 'Y' && data.redirect) {
+            if (data.dataOk == 'Y' && data.redirect) {
                 window.location = data.redirect;
-            } else if(data.pageOk != 'Y' && data.error != '') {
+            } else if(data.dataOk != 'Y' && data.error != '') {
                 $("#rcmSaveTemplateError").html('<br /><p style="color: #FF0000;">'+data.error+'</p><br />').show();
             } else {
                 $("#rcmSaveTemplateError").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
@@ -23,7 +24,7 @@ function rcmSubmitSaveAsTemplate() {
 
 $('#rcmTemplateNameInput').keyup(function(){
     var validationContainer = $("#newSaveTemplateIndicator");
-    rcmEdit.checkPageName(this, validationContainer);
+    rcmEdit.checkPageName(this, 'T', validationContainer);
 });
 
 $( "#rcmAdminPagePopoutWindow" ).dialog(

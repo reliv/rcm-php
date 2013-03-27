@@ -371,6 +371,7 @@ return array(
 
     'router' => array(
         'routes' => array(
+
             'contentManager' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -381,6 +382,21 @@ return array(
                     )
                 ),
             ),
+
+            'contentManagerWithPageType' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm/:pageType/:page[/:language][/:revision]',
+                    'constraints' => array(
+                        'pageType' => '[a-zA-Z]',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'rcmIndexController',
+                        'action' => 'index',
+                    )
+                ),
+            ),
+
 
             'contentManagerSave' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',

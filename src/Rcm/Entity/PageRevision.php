@@ -182,7 +182,7 @@ class PageRevision
      *
      * @return array Array representation of the object
      */
-    public function toArray() 
+    public function toArray()
     {
         $return = array(
             'pageRevId'       => $this->getPageRevId(),
@@ -347,7 +347,7 @@ class PageRevision
      */
     public function setPageTitle($pageTitle)
     {
-        $this->pageTitle = htmlentities($pageTitle);
+        $this->pageTitle = $pageTitle;
     }
 
     /**
@@ -371,7 +371,7 @@ class PageRevision
      */
     public function setDescription($description)
     {
-        $this->description = htmlentities($description);
+        $this->description = $description;
     }
 
     /**
@@ -395,7 +395,7 @@ class PageRevision
      */
     public function setKeywords($keywords)
     {
-        $this->keywords = htmlentities($keywords);
+        $this->keywords = $keywords;
     }
 
     /**
