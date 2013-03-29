@@ -46,7 +46,7 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
     /**
      * @param \Rcm\Entity\User $user
      */
-    function setLoggedInUser(User $user)
+    function setLoggedInUser(User $user, $junk)
     {
         $this->session->userId=$user->getUserId();
     }
