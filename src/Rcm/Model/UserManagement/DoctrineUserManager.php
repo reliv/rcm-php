@@ -45,6 +45,7 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
 
     /**
      * @param \Rcm\Entity\User $user
+     * @TODO REMOVE $junk BUT KEEP STRICT STANDRDS PASSING
      */
     function setLoggedInUser(User $user, $junk)
     {
