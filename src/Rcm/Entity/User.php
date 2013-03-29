@@ -168,6 +168,13 @@ class User
      */
     protected $ssn;
 
+    /**
+     * @var boolean gender is male
+     * *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $isQualified;
+
     function __construct()
     {
         $this->setCreatedDate(new \DateTime("now"));
@@ -181,6 +188,24 @@ class User
     {
         return preg_replace('/[^0-9]*/', '', $value);
     }
+
+    /**
+     * @param boolean $isQualified
+     */
+    public function setIsQualified($isQualified)
+    {
+        $this->isQualified = $isQualified;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsQualified()
+    {
+        return $this->isQualified;
+    }
+
+
 
     /**
      * @param string $rank
