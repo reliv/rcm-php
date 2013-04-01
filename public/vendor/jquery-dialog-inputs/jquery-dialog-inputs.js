@@ -207,7 +207,11 @@ var inputImageEventsDelegated = false;
 
             var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"></p>');
             var selected;
-            p.append('<label for="' + name + '">' + description + '</label><br>');
+
+            if (description) {
+                p.append('<label for="' + name + '">' + description + '</label><br>');
+            }
+
             var customClass = '';
             if (allowCustomValues) {
                 customClass = ' class="selectAllowCustomValues"';
