@@ -325,7 +325,7 @@ class AdminController extends BaseController
         $this->savePageAs($pageUrl, $pageRevision, '', 'T');
     }
 
-    private function savePageAs(
+    protected function savePageAs(
         $pageUrl,
         $pageRevision,
         $pageTitle = '',

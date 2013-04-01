@@ -1849,28 +1849,28 @@ function RcmEdit(config) {
         return dataOk;
     };
 
-    me.saveAjaxAdminWindow = function(saveUrl, send, formContainer, saveOkHeadline, saveOkMessage, keepOpen, successCallback) {
+    me.saveAjaxAdminWindow = function(saveUrl, send, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) {
         $.getJSON(saveUrl,
             send,
             function(data) {
-                if (data.saveOk == 'Y' && data.redirect == undefined) {
+                if (data.dataOk == 'Y' && data.redirect == undefined) {
                     //Close Window unless told not to
                     if (keepOpen !== true) {
                         $(formContainer).parent().dialog("close");
                     }
 
                     //Show Status Message if passed in
-                    if (saveOkHeadline && saveOkMessage){
-                        $.growlUI(saveOkHeadline, saveOkMessage);
+                    if (dataOkHeadline && dataOkMessage){
+                        $.growlUI(dataOkHeadline, dataOkMessage);
                     }
 
                     //Process sucessCallback if passed in
                     if (typeof successCallback === 'function') {
                         successCallback(data);
                     }
-                } else if (data.saveOk == 'Y' && data.redirect) {
+                } else if (data.dataOk == 'Y' && data.redirect) {
                     window.location = data.redirect;
-                } else if(data.pageOk != 'Y' && data.error != '') {
+                } else if(data.dataOk != 'Y' && data.error != '') {
                     $(formContainer).find(".ajaxFormErrorLine").html('<br /><p style="color: #FF0000;">'+data.error+'</p><br />').show();
                     $(formContainer).parent().scrollTop(0);
                 } else {

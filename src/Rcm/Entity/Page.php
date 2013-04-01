@@ -98,7 +98,7 @@ class Page
     protected $stagedRevision;
 
     /**
-     * @var string Page Type N=Normal, P=Product, B=Blog, T=Template
+     * @var string Page Type N=Normal, P=Product, B=Blog, T=Template, Z=System (do not use)
      *
      * @ORM\Column(type="string")
      */
@@ -464,6 +464,7 @@ class Page
             && $type != 'P'
             && $type != 'B'
             && $type != 'T'
+            && $type != 'Z'
         ) {
             throw new \Exception('Invalid Product Type Passed');
         }
