@@ -263,3 +263,7 @@
 .rcmSaveMenu ul {
     display: none;
 }
+
+.ui-dialog{
+    z-index: 1000000;
+}
