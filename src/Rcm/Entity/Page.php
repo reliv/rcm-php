@@ -472,6 +472,10 @@ class Page
         $this->pageType = $type;
     }
 
+    public function getPageType() {
+        return $this->pageType;
+    }
+
     /**
      * Return the last draft saved.
      *

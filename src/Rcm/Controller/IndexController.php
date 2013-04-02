@@ -199,6 +199,11 @@ class IndexController extends \Rcm\Controller\BaseController
         );
 
         $layout->setVariable(
+            'pageType',
+            $this->page->getPageType()
+        );
+
+        $layout->setVariable(
             'layoutContainers',
             $this->getLayoutEditorContents()
         );

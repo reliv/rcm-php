@@ -183,14 +183,26 @@ class AdminController extends BaseController
         $newRevision = clone $this->pageRevision;
         $newRevision = $this->processPostedInstances($postedData, $newRevision);
 
-        return $this->redirect()->toRoute(
-            'contentManager',
-            array(
-                'page' => $this->page->getName(),
-                'language' => $this->siteInfo->getLanguage()->getLanguage(),
-                'revision' => $newRevision->getPageRevId()
-            )
-        )->setStatusCode(301);
+        if ($this->page->getPageType() != 'N') {
+            return $this->redirect()->toRoute(
+                'contentManagerWithPageType',
+                array(
+                    'pageType' => $this->page->getPageType(),
+                    'page' => $this->page->getName(),
+                    'language' => $this->siteInfo->getLanguage()->getLanguage(),
+                    'revision' => $newRevision->getPageRevId()
+                )
+            )->setStatusCode(301);
+        } else {
+            return $this->redirect()->toRoute(
+                'contentManager',
+                array(
+                    'page' => $this->page->getName(),
+                    'language' => $this->siteInfo->getLanguage()->getLanguage(),
+                    'revision' => $newRevision->getPageRevId()
+                )
+            )->setStatusCode(301);
+        }
     }
 
     public function publishPageAction()

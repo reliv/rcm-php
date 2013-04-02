@@ -335,6 +335,7 @@ class RcmViewInit extends AbstractHelper
                 rcmEdit.setLanguage('".$renderer->language."');
                 rcmEdit.setPage('".$renderer->page->getName()."');
                 rcmEdit.setPageRevision('".$renderer->pageRevision."');
+                rcmEdit.setPageType('".$renderer->pageType."')
                 rcmEdit.setNewInstanceId(".$renderer->newPluginCount.");
                 rcmEdit.setEditor(rcmEditor);
                 rcmEdit.setNewPluginInstanceAjaxPath('".$renderer->url(

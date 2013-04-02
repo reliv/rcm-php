@@ -48,6 +48,10 @@ function RcmEdit(config) {
         me.pageRevision = pageRevision;
     };
 
+    me.setPageType = function(pageType) {
+        me.pageType = pageType;
+    };
+
     /**
      * Set the language to be used for redirectes and JSON queries
      *
@@ -160,7 +164,7 @@ function RcmEdit(config) {
             'name="saveData" value="" />').val(dataToSend);
 
         var form = $('<form method="post" action="/rcm-admin-save/' +
-            this.page+'/'+this.language+'/'+this.pageRevision+'" name="rcmDataForm" id="rcmDataForm"></form>').append(input);
+            this.page+'/'+this.pageType+'/'+this.language+'/'+this.pageRevision+'" name="rcmDataForm" id="rcmDataForm"></form>').append(input);
 
         $("body").append(form);
 

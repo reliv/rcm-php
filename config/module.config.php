@@ -401,7 +401,7 @@ return array(
             'contentManagerSave' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm-admin-save/:page/:language/:revision',
+                    'route' => '/rcm-admin-save/:page/:pageType/:language/:revision',
                     'defaults' => array(
                         'controller' => 'rcmAdminController',
                         'action' => 'savePage',

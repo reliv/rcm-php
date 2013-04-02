@@ -215,6 +215,10 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
             'revision'
         );
 
+        $pageType = $this->getEvent()->getRouteMatch()->getParam(
+            'pageType'
+        );
+
         /** @var \Rcm\Entity\Page $page  */
         $this->page = $this->getPageByName($pageName, $pageType);
 
