@@ -69,7 +69,7 @@ class PageFactory extends EntityMgrAware
         $pageLayout,
         \Rcm\Entity\Site $baseSite,
         $plugins='',
-        $pageType = 'N',
+        $pageType = 'n',
         $publish = false
     ) {
         $entityMgr = $this->entityMgr;
@@ -85,7 +85,7 @@ class PageFactory extends EntityMgrAware
 
         $page->setSite($baseSite);
 
-        if ($pageType !== 'N') {
+        if ($pageType !== 'n') {
             $page->setPageType($pageType);
         }
         
@@ -104,7 +104,7 @@ class PageFactory extends EntityMgrAware
 
         $page->addPageRevision($pageRevision);
 
-        if ($publish === true || $pageType === 'T') {
+        if ($publish === true || $pageType === 't') {
             $page->setPublishedRevision($pageRevision);
         } else {
             $page->setStagedRevision($pageRevision);

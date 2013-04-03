@@ -388,7 +388,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm/:pageType/:page[/:language][/:revision]',
                     'constraints' => array(
-                        'pageType' => '[a-zA-Z]',
+                        'pageType' => '[a-z]',
                     ),
                     'defaults' => array(
                         'controller' => 'rcmIndexController',

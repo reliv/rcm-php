@@ -98,11 +98,11 @@ class Page
     protected $stagedRevision;
 
     /**
-     * @var string Page Type N=Normal, P=Product, B=Blog, T=Template, Z=System (do not use)
+     * @var string Page Type n=Normal, p=Product, b=Blog, t=Template, z=System (do not use)
      *
      * @ORM\Column(type="string")
      */
-    protected $pageType='N';
+    protected $pageType='n';
 
     /**
      * @var \Rcm\Entity\Site
@@ -431,7 +431,7 @@ class Page
 
     public function setTemplate()
     {
-        $this->setPageType('T');
+        $this->setPageType('t');
     }
 
     /**
@@ -439,15 +439,15 @@ class Page
      */
     public function isTemplate()
     {
-        return $this->checkPageType('T');
+        return $this->checkPageType('t');
     }
 
     public function setProductPage() {
-        $this->setPageType('P');
+        $this->setPageType('p');
     }
 
     public function isProductPage() {
-        return $this->checkPageType('P');
+        return $this->checkPageType('p');
     }
 
 
@@ -460,11 +460,11 @@ class Page
     }
 
     public function setPageType($type) {
-        if ($type != 'N'
-            && $type != 'P'
-            && $type != 'B'
-            && $type != 'T'
-            && $type != 'Z'
+        if ($type != 'n'
+            && $type != 'p'
+            && $type != 'b'
+            && $type != 't'
+            && $type != 'z'
         ) {
             throw new \Exception('Invalid Product Type Passed');
         }

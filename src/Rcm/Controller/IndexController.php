@@ -75,7 +75,7 @@ class IndexController extends \Rcm\Controller\BaseController
         }
 
         if (empty($pageType)) {
-            $pageType = 'N';
+            $pageType = 'n';
         }
 
         $this->page = $this->getPageByName($pageName, $pageType);

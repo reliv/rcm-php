@@ -5,7 +5,7 @@ function rcmSubmitSaveAsTemplate() {
     $.getJSON('/rcm-admin-save-as-template/'+rcmEdit.language,
         {
             pageName: pageName,
-            pageType: 'T',
+            pageType: 't',
             revision: revisionId
         },
         function(data) {
@@ -24,7 +24,7 @@ function rcmSubmitSaveAsTemplate() {
 
 $('#rcmTemplateNameInput').keyup(function(){
     var validationContainer = $("#newSaveTemplateIndicator");
-    rcmEdit.checkPageName(this, 'T', validationContainer);
+    rcmEdit.checkPageName(this, 't', validationContainer);
 });
 
 $( "#rcmAdminPagePopoutWindow" ).dialog(

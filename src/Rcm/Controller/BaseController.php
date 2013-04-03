@@ -205,7 +205,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         }
     }
 
-    protected function adminSaveInit($pageType='N')
+    protected function adminSaveInit($pageType='n')
     {
 
         $this->ensureAdminIsLoggedIn();
@@ -257,7 +257,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         }
     }
 
-    protected function getPageUrl($pageName, $pageType='N') {
+    protected function getPageUrl($pageName, $pageType='n') {
         $urlParams['page']= $pageName;
 
         //Check for default language
@@ -265,7 +265,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
             $urlParams['language'] = $this->siteInfo->getLanguage()->getLanguage();
         }
 
-        if ($pageType != 'N') {
+        if ($pageType != 'n') {
             $urlParams['pageType'] = $pageType;
 
             return $this->url()->fromRoute(
@@ -280,7 +280,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         );
     }
 
-    protected function getPageByName($pageName, $pageType='N') {
+    protected function getPageByName($pageName, $pageType='n') {
         $pageRepo = $this->entityMgr->getRepository('\Rcm\Entity\Page');
         return $pageRepo->findOneBy(array(
             'site' => $this->siteInfo,

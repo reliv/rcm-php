@@ -70,6 +70,8 @@ class AdminTitleBar extends AbstractHelper
             return null;
         }
 
+        $pagetype = $page->getPageType();
+
         /** @var \Rcm\Entity\PageRevision $currentRevision  */
         $currentRevision = $page->getRevisionById($displayedRevision);
         $currentRevisionId = $currentRevision->getPageRevId();
@@ -127,6 +129,7 @@ class AdminTitleBar extends AbstractHelper
                 $html .= '<li><a href="';
                 $html .= $this->getRevisionLink(
                     $page,
+                    $pagetype,
                     $currentPublishedRev,
                     $language
                 );
@@ -137,6 +140,7 @@ class AdminTitleBar extends AbstractHelper
                 $html .= '<li><a href="';
                 $html .= $this->getRevisionLink(
                     $page,
+                    $pagetype,
                     $currentStagedRev,
                     $language
                 );
@@ -147,6 +151,7 @@ class AdminTitleBar extends AbstractHelper
                 $html .= '<li><a href="';
                 $html .= $this->getRevisionLink(
                     $page,
+                    $pagetype,
                     $lastSavedDraft,
                     $language
                 );
@@ -172,24 +177,40 @@ class AdminTitleBar extends AbstractHelper
      * Get a revision link for title bar
      *
      * @param \Rcm\Entity\Page         $page     RCM Page Entity
+     * @param string                   $pageType Type of page
      * @param \Rcm\Entity\PageRevision $revision RCM Page Revision Entity
      * @param string                   $language Language to use for link
      *
      * @return mixed
      */
     protected function getRevisionLink(\Rcm\Entity\Page $page,
+        $pageType,
         \Rcm\Entity\PageRevision $revision,
         $language
     ) {
         $renderer = $this->getView();
 
-        return $renderer->url(
-            'contentManager',
-            array(
-                'page' => $page->getName(),
-                'language' => $language,
-                'revision' => $revision->getPageRevId()
-            )
-        );
+        if ($pageType != 'n') {
+            $revisionUrl =  $renderer->url(
+                'contentManagerWithPageType',
+                array(
+                    'page' => $page->getName(),
+                    'pageType' => $pageType,
+                    'language' => $language,
+                    'revision' => $revision->getPageRevId()
+                )
+            );
+        } else {
+            $revisionUrl =  $renderer->url(
+                'contentManager',
+                array(
+                    'page' => $page->getName(),
+                    'language' => $language,
+                    'revision' => $revision->getPageRevId()
+                )
+            );
+        }
+
+        return $revisionUrl;
     }
 }

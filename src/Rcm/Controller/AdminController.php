@@ -84,7 +84,7 @@ class AdminController extends BaseController
         $pageUrl = urlencode($pageUrl);
 
         if (empty($pageType)) {
-            $pageType = 'N';
+            $pageType = 'n';
         }
 
         $em = $this->entityMgr;
@@ -183,7 +183,7 @@ class AdminController extends BaseController
         $newRevision = clone $this->pageRevision;
         $newRevision = $this->processPostedInstances($postedData, $newRevision);
 
-        if ($this->page->getPageType() != 'N') {
+        if ($this->page->getPageType() != 'n') {
             return $this->redirect()->toRoute(
                 'contentManagerWithPageType',
                 array(
@@ -341,7 +341,7 @@ class AdminController extends BaseController
         $pageUrl,
         $pageRevision,
         $pageTitle = '',
-        $pageType = 'N'
+        $pageType = 'n'
     ) {
         $this->ensureAdminIsLoggedIn();
         $config = $this->config;
