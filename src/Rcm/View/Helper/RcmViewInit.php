@@ -120,6 +120,10 @@ class RcmViewInit extends AbstractHelper
             $renderer->basePath() . '/modules/rcm/vendor/jquery-block-ui/jquery.blockUI.js', 'text/javascript'
         );
 
+        $renderer->headScript()->appendFile(
+            $renderer->basePath() . '/modules/rcm/vendor/jquery-formatcurrency/jquery.format-currency-1.4.0.min.js', 'text/javascript'
+        );
+
         $script = '$.blockUI.defaults.baseZ = 2000; $.blockUI.defaults.applyPlatformOpacityRules = false;';
 
         $renderer->headScript()->appendScript($script,'text/javascript');
