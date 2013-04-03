@@ -522,7 +522,7 @@ return array(
             'contentManagerPublish' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm-admin-publish/:page/:language/:revision',
+                    'route' => '/rcm-admin-publish/:pageType/:page/:language/:revision',
                     'defaults' => array(
                         'controller'=> 'rcmAdminController',
                         'action' => 'publishPage',
@@ -533,7 +533,7 @@ return array(
             'contentManagerStage' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm-admin-stage/:page/:language/:revision',
+                    'route' => '/rcm-admin-stage/:pageType/:page/:language/:revision',
                     'defaults' => array(
                         'controller'=> 'rcmAdminController',
                         'action' => 'stagePage',

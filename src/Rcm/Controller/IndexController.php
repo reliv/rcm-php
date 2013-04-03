@@ -377,14 +377,39 @@ class IndexController extends \Rcm\Controller\BaseController
      */
     protected function getLink($type, $revisionId)
     {
-        return $this->url()->fromRoute(
-            $type,
-            array(
-                'page' => $this->page->getName(),
-                'language' => $this->siteInfo->getLanguage()->getLanguage(),
-                'revision' => $revisionId
-            )
-        );
+        $pageType = $this->page->getPageType();
+
+        if ($pageType != 'n' && $type == 'contentManager') {
+            return $this->url()->fromRoute(
+                'contentManagerWithPageType',
+                array(
+                    'page' => $this->page->getName(),
+                    'pageType' => $pageType,
+                    'language' => $this->siteInfo->getLanguage()->getLanguage(),
+                    'revision' => $revisionId
+                )
+            );
+        } elseif ($pageType != 'n' && $type == 'contentManager') {
+            return $this->url()->fromRoute(
+                $type,
+                array(
+                    'page' => $this->page->getName(),
+                    'language' => $this->siteInfo->getLanguage()->getLanguage(),
+                    'revision' => $revisionId
+                )
+            );
+        } else {
+            return $this->url()->fromRoute(
+                $type,
+                array(
+                    'page' => $this->page->getName(),
+                    'pageType' => $pageType,
+                    'language' => $this->siteInfo->getLanguage()->getLanguage(),
+                    'revision' => $revisionId
+                )
+            );
+        }
+
     }
 
     /**

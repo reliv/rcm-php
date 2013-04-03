@@ -227,14 +227,26 @@ class AdminController extends BaseController
         $entityMgr->flush();
 
 
-        return $this->redirect()->toRoute(
-            'contentManager',
-            array(
-                'page' => $this->page->getName(),
-                'language' => $this->siteInfo->getLanguage()->getLanguage(),
-                'revision' => $this->pageRevision->getPageRevId()
-            )
-        )->setStatusCode(301);
+        if ($this->page->getPageType() != 'n') {
+            return $this->redirect()->toRoute(
+                'contentManagerWithPageType',
+                array(
+                    'pageType' => $this->page->getPageType(),
+                    'page' => $this->page->getName(),
+                    'language' => $this->siteInfo->getLanguage()->getLanguage(),
+                    'revision' => $this->pageRevision->getPageRevId()
+                )
+            )->setStatusCode(301);
+        } else {
+            return $this->redirect()->toRoute(
+                'contentManager',
+                array(
+                    'page' => $this->page->getName(),
+                    'language' => $this->siteInfo->getLanguage()->getLanguage(),
+                    'revision' => $this->pageRevision->getPageRevId()
+                )
+            )->setStatusCode(301);
+        }
     }
 
     public function stagePageAction()
@@ -261,13 +273,24 @@ class AdminController extends BaseController
         $entityMgr->flush();
 
 
-        return $this->redirect()->toRoute(
-            'contentManager',
-            array(
-                'page' => $page->getName(),
-                'language' => $this->siteInfo->getLanguage()->getLanguage()
-            )
-        )->setStatusCode(301);
+        if ($this->page->getPageType() != 'n') {
+            return $this->redirect()->toRoute(
+                'contentManagerWithPageType',
+                array(
+                    'pageType' => $this->page->getPageType(),
+                    'page' => $this->page->getName(),
+                    'language' => $this->siteInfo->getLanguage()->getLanguage(),
+                )
+            )->setStatusCode(301);
+        } else {
+            return $this->redirect()->toRoute(
+                'contentManager',
+                array(
+                    'page' => $page->getName(),
+                    'language' => $this->siteInfo->getLanguage()->getLanguage()
+                )
+            )->setStatusCode(301);
+        }
     }
 
     public function createBlankPageAction()
