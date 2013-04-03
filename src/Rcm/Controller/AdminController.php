@@ -334,7 +334,7 @@ class AdminController extends BaseController
     {
         $pageUrl = $this->getRequest()->getQuery()->get('pageName');
         $pageRevision = $this->getRequest()->getQuery()->get('revision');
-        $this->savePageAs($pageUrl, $pageRevision, '', 'T');
+        $this->savePageAs($pageUrl, $pageRevision, '', 't');
     }
 
     protected function savePageAs(
