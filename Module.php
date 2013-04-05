@@ -82,7 +82,7 @@ class Module
         }
 
         //Logout if requested
-        if (!empty($_GET['logout']) && $_GET['logout'] == 'Y') {
+        if (!empty($_GET['logout'])) {
             $session->destroy();
         }
     }
