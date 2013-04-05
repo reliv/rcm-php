@@ -7,15 +7,11 @@ function RcmCkEditor(config) {
 
     /**
      * Always refers to this object unlike the 'this' JS variable;
-     *
-     * @type {RcmEdit}
      */
     var me = this;
 
     /**
      * Set the config items
-     *
-     * @type {String}
      */
     me.config = config;
 
@@ -53,7 +49,7 @@ function RcmCkEditor(config) {
      * Add the CKEditor Toolbars
      */
     me.addCkToolbars = function() {
-        editor = CKEDITOR.inline( 'hiddenEditor',  me.config );
+        var editor = CKEDITOR.inline( 'hiddenEditor',  me.config );
         editor.on("instanceReady", function(event) {
 
             var cmTopAdminPanel = $("#ContentManagerTopAdminPanel");
@@ -79,13 +75,6 @@ function RcmCkEditor(config) {
 
     };
 
-    /**
-     * Setup Rich Edits.
-     *
-     * @param container
-     * @param textAreaId
-     * @return {*|jQuery}
-     */
     me.addRichEditor = function(container, textAreaId, instanceId) {
         //Hack to keep CKEdits the correct size
 //        var parent = $(container).parent();
@@ -121,13 +110,6 @@ function RcmCkEditor(config) {
         return false;
     };
 
-    /**
-     * Setup HTML5 edits.
-     *
-     * @param container
-     * @param textAreaId
-     * @return {*}
-     */
     me.addHtml5Editor = function(container, textAreaId, instanceId) {
 
         var ele=$(container);
@@ -142,9 +124,20 @@ function RcmCkEditor(config) {
             ele.attr('contentEditable',true)
             .attr('id',instanceId+'_'+textAreaId).css('cursor','text');
 
-            return CKEDITOR.inline(instanceId+'_'+textAreaId,  me.config );
+        if ($(containter).is('div')
+            || $(containter).is('p')
+            || $(containter).is('h1')
+            || $(containter).is('h2')
+            || $(containter).is('h3')
+            ) {
+            var editor = CKEDITOR.inline(instanceId+'_'+textAreaId,  me.config );
 
+            return editor
         }
+
+        $(container).attr('contentEditable',true).css('cursor','text');
+
+        return container
     };
 
     /**
@@ -167,7 +160,17 @@ function RcmCkEditor(config) {
      * @return {*}
      */
     me.getHtml5EditorData = function(editor)  {
-        return me.getRichEditorData(editor);
+
+        if ($.isFunction(editor.getData)) {
+            return me.getRichEditorData(editor);
+        }
+
+        var returnData = {};
+        returnData.assets = me.getAssets($(editor).html());
+        returnData.html = $(editor).html();
+
+        return returnData;
+
     };
 
     me.getAssets = function (htmlToCheck) {
