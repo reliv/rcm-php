@@ -1010,7 +1010,7 @@ function RcmEdit(config) {
                     me.rcmPlugins.activeEditors[index].editor
                 );
             }
-
+addHtml5Editor
             //Setup the data to return
 
             if (dataToReturn[instanceId] == undefined) {
