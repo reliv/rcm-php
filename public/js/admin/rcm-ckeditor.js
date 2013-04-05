@@ -15,11 +15,6 @@ function RcmCkEditor(config) {
      */
     me.config = config;
 
-    var incompatibleEditTags = [
-        'button',
-        'label'
-    ];
-
     /**
      * Add the toolbars for CKEditor
      */
@@ -112,24 +107,15 @@ function RcmCkEditor(config) {
 
     me.addHtml5Editor = function(container, textAreaId, instanceId) {
 
-        var ele=$(container);
+        //Used to keep IDE from whining.
+        //$('#'+textAreaId);
 
-        if($.inArray(incompatibleEditTags,container.tagName)){
-            ele.attr('contenteditable',true);
-
-            return ele;
-
-        }else{
-
-            ele.attr('contentEditable',true)
+        $(container).attr('contentEditable',true)
             .attr('id',instanceId+'_'+textAreaId).css('cursor','text');
 
         if ($(container).is('div')
             || $(container).is('p')
-            || $(container).is('h1')
-            || $(container).is('h2')
-            || $(container).is('h3')
-            ) {
+        ) {
             var editor = CKEDITOR.inline(instanceId+'_'+textAreaId,  me.config );
 
             return editor

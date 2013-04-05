@@ -988,8 +988,6 @@ function RcmEdit(config) {
     me.rcmPlugins.getSaveDataFromPluginEdits = function() {
         var dataToReturn = {};
 
-        var saveData;
-
         $.each(me.rcmPlugins.activeEditors, function(index, value) {
             if (!me.rcmPlugins.activeEditors.hasOwnProperty(index)) {
                 return;
@@ -1004,15 +1002,15 @@ function RcmEdit(config) {
 
 
             if (me.rcmPlugins.activeEditors[index].type == 'rich') {
-                saveData = me.editor.getRichEditorData(
+                var saveData = me.editor.getRichEditorData(
                     me.rcmPlugins.activeEditors[index].editor
                 );
             } else {
-                saveData = me.editor.getHtml5EditorData(
+                var saveData = me.editor.getHtml5EditorData(
                     me.rcmPlugins.activeEditors[index].editor
                 );
             }
-addHtml5Editor
+
             //Setup the data to return
 
             if (dataToReturn[instanceId] == undefined) {
@@ -1608,7 +1606,7 @@ addHtml5Editor
             }
 
             $(newDiv).find("a").unbind('click').click(function(e){
-                e.preventDefault();
+                //e.preventDefault();
             });
 
             me.rcmPlugins.initPluginEditMode(newDiv);
