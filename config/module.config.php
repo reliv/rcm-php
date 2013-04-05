@@ -366,6 +366,7 @@ return array(
             'adminTitleBar' => '\Rcm\View\Helper\AdminTitleBar',
             'rcmViewInit' => '\Rcm\View\Helper\RcmViewInit',
             'renderPlugin' => 'Rcm\View\Helper\RenderPlugin',
+            'rcmJsLoginManager'=>'\Rcm\View\Helper\JsLoginManager',
         ),
     ),
 
