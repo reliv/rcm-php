@@ -113,11 +113,11 @@ function RcmCkEditor(config) {
         $(container).attr('contentEditable',true)
             .attr('id',instanceId+'_'+textAreaId).css('cursor','text');
 
-        if ($(containter).is('div')
-            || $(containter).is('p')
-            || $(containter).is('h1')
-            || $(containter).is('h2')
-            || $(containter).is('h3')
+        if ($(container).is('div')
+            || $(container).is('p')
+            || $(container).is('h1')
+            || $(container).is('h2')
+            || $(container).is('h3')
             ) {
             var editor = CKEDITOR.inline(instanceId+'_'+textAreaId,  me.config );
 
