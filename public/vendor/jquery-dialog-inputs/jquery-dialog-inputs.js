@@ -87,6 +87,30 @@ var inputImageEventsDelegated = false;
             return p;
         },
 
+
+        /**
+         * Build html for a text input
+         *
+         * @param {String} description title to show user
+         * @param {String} value the current value
+         *
+         * @return String
+         */
+        url:function (description, value) {
+
+            if (value == undefined) {
+                value = '';
+            }
+
+            //Give it a random name so labels and multi-dialogs work
+            var name = $.fn.generateUUID();
+
+            var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
+                '<input type="text" name="' + name + '" value="' + value + '"></p>');
+
+            return p;
+        },
+
         textWithAjaxValidator: function (description, value, urlToValidator, disallowSpaces, successCallback) {
 
             if (value == undefined) {
