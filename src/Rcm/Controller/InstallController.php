@@ -96,7 +96,9 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
             $keywords,
             'GuestSitePage',
             $site,
-            array_merge($this->instances, $this->siteWideInstances)
+            array_merge($this->instances, $this->siteWideInstances),
+            'n',
+            true
         );
     }
 

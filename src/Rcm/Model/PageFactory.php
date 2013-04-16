@@ -70,7 +70,8 @@ class PageFactory extends EntityMgrAware
         \Rcm\Entity\Site $baseSite,
         $plugins='',
         $pageType = 'n',
-        $publish = false
+        $publish = false,
+        $skipDbFlush = false
     ) {
         $entityMgr = $this->entityMgr;
 
@@ -115,8 +116,10 @@ class PageFactory extends EntityMgrAware
         $entityMgr->persist($baseSite);
         $entityMgr->persist($pageRevision);
         $entityMgr->persist($page);
-        
-        $entityMgr->flush();
+
+        if(!$skipDbFlush){
+            $entityMgr->flush();
+        }
 
         return $page;
     }
