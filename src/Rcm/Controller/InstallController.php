@@ -19,6 +19,11 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
 
     protected $pluginManager;
 
+    /**
+     * @var \Rcm\Model\PageFactory
+     */
+    protected $pageFactory;
+
     protected $countryRepo;
     protected $languageRepo;
 
@@ -31,6 +36,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         $this->instanceRepo = new DoctrineSerializedRepo($entityMgr);
         $this->countryRepo = $this->entityMgr->getRepository('\Rcm\Entity\Country');
         $this->languageRepo = $this->entityMgr->getRepository('\Rcm\Entity\Language');
+        $this->pageFactory = new \Rcm\Model\PageFactory($this->entityMgr);
     }
 
     public function indexAction()
@@ -98,6 +104,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
             $site,
             array_merge($this->instances, $this->siteWideInstances),
             'n',
+            true,
             true
         );
     }

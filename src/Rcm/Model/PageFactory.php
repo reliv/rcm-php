@@ -44,20 +44,18 @@ use Rcm\Model\EntityMgrAware,
 
 class PageFactory extends EntityMgrAware
 {
-
-
     /**
-     * Creates a page and saves it to the db
-     *
-     * @param string $name            name
-     * @param string $author          author
-     * @param string $pageTitle       page title
-     * @param string $pageDescription page description
-     * @param string $metaKeywords    meta keywords
-     * @param string $pageLayout      page layout
-     * @param Site   $baseSite        base site
-     * @param array  $plugins         plugin array
-     *
+     * @param $name
+     * @param $author
+     * @param $pageTitle
+     * @param $pageDescription
+     * @param $metaKeywords
+     * @param $pageLayout
+     * @param \Rcm\Entity\Site $baseSite
+     * @param string $plugins
+     * @param string $pageType
+     * @param bool $publish
+     * @param bool $skipDbFlush Used to speed up large batch jobs
      * @return \Rcm\Entity\Page
      */
     public function createPage(
