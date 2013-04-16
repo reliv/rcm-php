@@ -603,7 +603,7 @@ return array(
             'rcm-page-title-search' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm-page-search/title/:query',
+                    'route' => '/rcm-page-search/title/[:query]',
                     'defaults' => array(
                         'controller' => 'rcmPageSearchApiController',
                         'action' => 'siteTitleSearch',

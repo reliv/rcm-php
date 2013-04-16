@@ -102,11 +102,28 @@ var inputImageEventsDelegated = false;
                 value = '';
             }
 
+
+
             //Give it a random name so labels and multi-dialogs work
             var name = $.fn.generateUUID();
 
-            var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
-                '<input type="text" name="' + name + '" value="' + value + '"></p>');
+            var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"></p>');
+
+            p.append('<label for="' + name + '">' + description + '</label><br>');
+            var input=$('<input type="text" name="' + name + '" value="' + value + '">');
+            p.append(input);
+
+            $.getJSON('/rcm-page-search/title',function(data){
+                var pageUrls = [];
+                $.each(data, function(pageUrl){
+                    pageUrls.push(pageUrl);
+                });
+                console.log(pageUrls);
+                input.autocomplete({
+                    source: pageUrls,
+                    minLength: 0
+                });
+            });
 
             return p;
         },
