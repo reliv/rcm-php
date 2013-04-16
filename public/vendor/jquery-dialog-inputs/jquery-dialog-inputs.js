@@ -118,7 +118,6 @@ var inputImageEventsDelegated = false;
                 $.each(data, function(pageUrl){
                     pageUrls.push(pageUrl);
                 });
-                console.log(pageUrls);
                 input.autocomplete({
                     source: pageUrls,
                     minLength: 0
