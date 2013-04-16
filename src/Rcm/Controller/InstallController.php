@@ -91,7 +91,8 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         $this->instances = array();
         $this->instanceRepo->createInstanceConfig(
             $this->createInstance('RcmHtmlArea', 4, 0),
-            array('html' => $html)
+            array('html' => $html),
+            true
         );
 
         $this->pageFactory->createPage(
