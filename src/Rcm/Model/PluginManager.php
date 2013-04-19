@@ -60,10 +60,22 @@ class PluginManager
 
         $pluginController = $this->getPluginController($pluginName);
 
-        //If the plugin controller can accept a ZF2 event, pass it
-        if (!empty($event) && method_exists($pluginController, 'setEvent')) {
-            $pluginController->setEvent($event);
+        if (!empty($event)){
+
+            //If the plugin controller can accept a ZF2 event, pass it
+            if(method_exists($pluginController, 'setEvent')) {
+                $pluginController->setEvent($event);
+            }
+
+            //If the plugin controller can accept a ZF2 request, pass it
+            if(method_exists($pluginController, 'setRequest')) {
+                $pluginController->setRequest($event->getRequest());
+            }
+
+            $d=$event->getRequest();
         }
+
+
 
         if(!method_exists($pluginController,$action)){
             throw new \Rcm\Exception\PluginActionNotImplemented();
@@ -137,6 +149,7 @@ class PluginManager
             $view = $this->callPlugin(
                 $instance,
                 'renderInstance',
+                array(),
                 $event
             );
         }
