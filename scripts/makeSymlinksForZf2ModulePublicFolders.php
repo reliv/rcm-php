@@ -78,8 +78,6 @@ foreach ($modulePhpFiles as $modulePhpFilePath) {
         /*echo "Symlink\n    From: $symlinkPath\n"
             . "    To: $modulePublicPath\n";*/
         symlink($modulePublicPath, $symlinkPath);
-
-
     }
 
 }
