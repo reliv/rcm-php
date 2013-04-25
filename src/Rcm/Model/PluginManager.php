@@ -71,8 +71,6 @@ class PluginManager
             if(method_exists($pluginController, 'setRequest')) {
                 $pluginController->setRequest($event->getRequest());
             }
-
-            $d=$event->getRequest();
         }
 
 
@@ -143,6 +141,7 @@ class PluginManager
             $view = $this->callPlugin(
                 $instance,
                 'renderDefaultInstance',
+                array(),
                 $event
             );
         } else {
