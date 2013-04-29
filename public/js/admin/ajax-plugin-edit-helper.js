@@ -24,11 +24,66 @@ var AjaxPluginEditHelper = function (instanceId, pluginUrlName) {
         );
     };
 
-    me.buildTranslateInputs = function (defaultTrans, currentTrans) {
-        var inputs = [];
-        $.each(defaultTrans, function (key, value) {
-            $.dialogIn('text', key, value, currentTrans[key]);
+    /**
+     * An input group is an array of text inputs, useful for html selects.
+     * This function builds an array of input groups.
+     * @param groupDataKeyNames
+     * @param data
+     * @param defaultData
+     * @return {Object}
+     */
+    me.buildInputGroups = function(groupDataKeyNames, data, defaultData){
+        var inputGroups = {};
+        $.each(groupDataKeyNames,function(){
+            inputGroups[this] = me.buildInputGroup(
+                data[this],
+                defaultData[this]
+            );
+        });
+        return inputGroups;
+    };
+
+    /**
+     * An input group is an array of text inputs, useful for html selects.
+     * This function transfers the data from html text boxes to the data array
+     * @param inputGroups
+     * @param data
+     * @return {*}
+     */
+    me.captureInputGroups = function(inputGroups, data){
+        $.each(inputGroups,function(inputGroupName,inputGroup){
+            data = me.captureInputGroup(inputGroupName,inputGroup,data);
+        });
+        return data;
+    };
+
+    /**
+     * An input group is an array of text inputs, useful for html selects.
+     * This function builds a single input group
+     * @param currentTranslations
+     * @param defaultTranslations
+     * @return {Object}
+     */
+    me.buildInputGroup = function (currentTranslations, defaultTranslations) {
+        var inputs = {};
+        $.each(defaultTranslations, function (key, value) {
+            inputs[key]  = $.dialogIn('text', value, currentTranslations[key]);
         });
         return inputs
-    }
+    };
+
+    /**
+     * An input group is an array of text inputs, useful for html selects.
+     * This function transfers the data from html text boxes to the data array
+     * @param inputGroupName
+     * @param inputGroup
+     * @param data
+     * @return {*}
+     */
+    me.captureInputGroup = function(inputGroupName, inputGroup, data){
+        $.each(data[inputGroupName],function(key){
+            data[inputGroupName][key]=inputGroup[key].val()
+        });
+        return data;
+    };
 };
