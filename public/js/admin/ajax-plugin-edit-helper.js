@@ -23,7 +23,7 @@ var AjaxPluginEditHelper = function (instanceId, pluginUrlName) {
             }
         );
     };
-
+    
     /**
      * An input group is an array of text inputs, useful for html selects.
      * This function builds an array of input groups.
@@ -85,5 +85,14 @@ var AjaxPluginEditHelper = function (instanceId, pluginUrlName) {
             data[inputGroupName][key]=inputGroup[key].val()
         });
         return data;
+    };
+
+    me.buildEmailInputGroup = function(emailGroupData){
+        return {
+            fromEmail:$.dialogIn('text','From',emailGroupData['fromEmail']),
+            fromName:$.dialogIn('text','From',emailGroupData['fromName']),
+            subject:$.dialogIn('text','Subject',emailGroupData['subject']),
+            body:$.dialogIn('richEdit','Body',emailGroupData['body'])
+        };
     };
 };

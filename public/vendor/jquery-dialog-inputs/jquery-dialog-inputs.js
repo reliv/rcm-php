@@ -637,7 +637,7 @@ var inputImageEventsDelegated = false;
  * @param [option3]
  * @return {Object}
  */
-jQuery.dialogIn = function (inputType, label, option1, option2, option3) {
+jQuery.dialogIn = function (inputType, description, value, option2, option3) {
     return $.fn.dialogIn.apply(this, arguments);
 };
 
