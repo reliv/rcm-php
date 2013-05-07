@@ -645,6 +645,10 @@ return array(
                 ),
             ),
 
+            /**
+             * Do not change the name of this route. Doing so will break the
+             * override-based disabling of this route
+             */
             'rcmInstall' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
