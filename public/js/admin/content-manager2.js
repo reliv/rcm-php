@@ -1690,7 +1690,7 @@ function RcmEdit(config) {
         //Declare a function for the file picker to call when user picks a file
         window.elFinderFileSelected = function(filePath){
             callBack(filePath);
-        }
+        };
 
         //Open the file picker window
         var url=config.filebrowserBrowseUrl;
@@ -1698,7 +1698,7 @@ function RcmEdit(config) {
             url += '/' + fileType;
         }
         me.popup(url, config.filebrowserWindowWidth, config.filebrowserWindowHeight);
-    }
+    };
 
     /**
      * Displays a file picker window that is connected to an input box.
@@ -1711,12 +1711,13 @@ function RcmEdit(config) {
     me.showFileBrowserForInputBox = function(urlInputBox, fileType){
         me.showFileBrowser(
             function(path){
+                console.log(path);
                 urlInputBox.attr('value', path);
                 urlInputBox.trigger('change');
             },
             fileType
         )
-    }
+    };
 
     /**
      * Opens Browser in a popup. The "width" and "height" parameters accept
