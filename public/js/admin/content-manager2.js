@@ -1685,15 +1685,9 @@ function RcmEdit(config) {
      */
     me.showFileBrowser = function(callBack, fileType){
 
-        console.log('new');
-
         //Declare a function for the file picker to call when user picks a file
-        window['elFinderFileSelected'] = function(fileInfo){
-            console.log(1);
-            console.log(fileInfo);
-            console.log(2);
-            console.log(fileInfo['url']);
-            callBack(fileInfo['url']);
+        window['elFinderFileSelected'] = function(url){
+            callBack(url);
         };
 
         //Open the file picker window
@@ -1715,7 +1709,6 @@ function RcmEdit(config) {
     me.showFileBrowserForInputBox = function(urlInputBox, fileType){
         me.showFileBrowser(
             function(path){
-                console.log(path);
                 urlInputBox.attr('value', path);
                 urlInputBox.trigger('change');
             },
