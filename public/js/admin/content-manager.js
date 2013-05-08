@@ -1127,7 +1127,7 @@ function RcmEdit(config) {
             },
             fileType
         )
-    }
+    };
 
     /**
      * Opens Browser in a popup. The "width" and "height" parameters accept
