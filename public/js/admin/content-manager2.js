@@ -1682,13 +1682,15 @@ function RcmEdit(config) {
      *
      * @param {Function} callBack this is called when the user picks a file
      * @param {String} fileType optional file type to allow
-     *
-     * @return {Null}
      */
     me.showFileBrowser = function(callBack, fileType){
 
         //Declare a function for the file picker to call when user picks a file
         window.elFinderFileSelected = function(fileInfo){
+            console.log(1);
+            console.log(fileInfo);
+            console.log(2);
+            console.log(fileInfo['url']);
             callBack(fileInfo['url']);
         };
 
