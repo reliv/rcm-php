@@ -1689,7 +1689,7 @@ function RcmEdit(config) {
 
         //Declare a function for the file picker to call when user picks a file
         window.elFinderFileSelected = function(fileInfo){
-            callBack(fileInfo['baseUrl']+fileInfo['name']);
+            callBack(fileInfo['url']);
         };
 
         //Open the file picker window
