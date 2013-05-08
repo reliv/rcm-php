@@ -252,13 +252,12 @@ var inputImageEventsDelegated = false;
                 p.append('<label for="' + name + '">' + description + '</label><br>');
             }
 
-            var customClass = '';
-            if (allowCustomValues) {
-                customClass = ' class="selectAllowCustomValues"';
-            }
-            var select = $('<select' + customClass + ' name="' + name + '"><select>');
+            var select = $('<select name="' + name + '"><select>');
 
-            select.append('<option></option>');
+            if (allowCustomValues) {
+                select.append('<option></option>');
+            }
+
 
             for (var key in choices) {
                 selected = '';
@@ -286,12 +285,10 @@ var inputImageEventsDelegated = false;
             p.append(inputBox);
 
             //Ensure events are attached for the custom input box
-            if (allowCustomValues && !this.selectAllowCustomValuesDelegated) {
-
-                this.selectAllowCustomValuesDelegated = true;
+            if (allowCustomValues) {
 
                 //Hide/show the custom text box if the 'Custom Value' is modded
-                this.delegate('select.selectAllowCustomValues', 'change', function (event) {
+                select.change(function (event) {
                     var select = $(event.target);
                     var textBox = select.parent().children('input');
                     if (select.children('option.custom').attr('selected')
@@ -304,7 +301,7 @@ var inputImageEventsDelegated = false;
                 });
 
                 //Move any input box input to the select key value
-                this.delegate('input.selectAllowCustomValues', 'change', function (event) {
+                inputBox.change(function (event) {
                     var textBox = $(event.target);
                     textBox.parent().children('select')
                         .children('option.custom').val(textBox.val());
