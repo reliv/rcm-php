@@ -10,14 +10,14 @@ var rcmCkConfig = {
         top : 'ckEditortoolbar',
         bottom : 'ckEditorfooter'
     },
-    extraPlugins: 'sharedspace',
-    removePlugins : 'resize, floatingspace',
+    extraPlugins: 'sourcedialog,sharedspace',
+    removePlugins : 'resize,floatingspace,sourcearea',
 //    skin : 'kama',
 //    contentsCss: '/modules/reliv-guest-site/css/guestSiteFonts.css',
     autoGrow_onStartup : true,
     autoGrow_minHeight: '35',
     toolbar: [
-        { name: 'document', items : [ 'Source' ] },
+        { name: 'document', items : [ 'Sourcedialog' ] },
         { name: 'undoRedo', items : ['Undo','Redo'] },
         { name: 'SpellCheck', items : [ 'SpellChecker', 'Scayt' ] },
         { name: 'styles', items : [ 'Format' ] },
@@ -26,7 +26,7 @@ var rcmCkConfig = {
             '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
         { name: 'clipboard', items : ['Cut','Copy','Paste','PasteText','PasteFromWord'] },
         { name: 'insert', items : [ 'Image', 'Table','HorizontalRule','SpecialChar','Templates'] },
-        { name: 'links', items : [ 'Link','Unlink','Anchor' ] },
+        { name: 'links', items : [ 'Link','Unlink','Anchor' ] }
     ],
     filebrowserBrowseUrl : '/elfinder/ckeditor',
     filebrowserImageBrowseUrl : '/elfinder/ckeditor/images',
