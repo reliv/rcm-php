@@ -34,7 +34,7 @@ var inputImageEventsDelegated = false;
 
             var p = $('<p class="dialogElement imageInput" data-dialogElementName="' + name + '" style="overflow-y:hidden"></p>');
             p.append('<label for="' + name + '">' + description + '</label><br>' +
-                '<img style="max-width:120px;float:left;margin-right:10px" src="' + src + '" onerror="this.src=\'/modules/rcm/images/file-broken-icon.png\';">');
+                '<img style="max-width:120px;float:left;margin-right:10px" src="' + src + '" onerror="this.src=\'/modules/rcm/images/no-image.png\';">');
             var urlBox = $('<input style="width:370px;margin-right:10px" name="' + name + '" value="' + src + '">');
             p.append(urlBox);
             p.append('<button type="button" class="image-button ui-button ui-widget ' +
