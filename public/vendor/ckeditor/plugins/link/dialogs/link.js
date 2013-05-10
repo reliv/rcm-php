@@ -3,7 +3,7 @@
  For licensing, see LICENSE.html or http://ckeditor.com/license
 
 
- MOFIDIED FOR RCM
+ MODIFIED FOR RCM
 
 
  */
