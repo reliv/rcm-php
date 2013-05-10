@@ -180,7 +180,13 @@ class AdminController extends BaseController
         $postedData = $this->getPageSaveData();
 
         $oldRevId = $this->pageRevision->getPageRevId();
-        $stagedId = $this->page->getStagedRevision()->getPageRevId();
+        $stagedRevision = $this->page->getStagedRevision();
+
+        if (!empty($stagedRevision)) {
+            $stagedId = $stagedRevision->getPageRevId();
+        } else {
+            $stagedId = null;
+        }
 
         /** @var \Rcm\Entity\PageRevision $newRevision */
         $newRevision = clone $this->pageRevision;
