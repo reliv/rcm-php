@@ -179,10 +179,22 @@ class AdminController extends BaseController
         $this->adminSaveInit();
         $postedData = $this->getPageSaveData();
 
+        $oldRevId = $this->pageRevision->getPageRevId();
+        $stagedId = $this->page->getStagedRevision()->getPageRevId();
+
         /** @var \Rcm\Entity\PageRevision $newRevision */
         $newRevision = clone $this->pageRevision;
         $newRevision->setAuthor($this->loggedInUser->getFullName());
+
         $newRevision = $this->processPostedInstances($postedData, $newRevision);
+
+        if ($stagedId == $oldRevId) {
+            $this->page->setStagedRevision($newRevision);
+
+            $this->entityMgr->persist($this->page);
+            $this->entityMgr->persist($newRevision);
+            $this->entityMgr->flush();
+        }
 
         if ($this->page->getPageType() != 'n') {
             return $this->redirect()->toRoute(

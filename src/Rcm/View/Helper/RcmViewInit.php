@@ -359,9 +359,11 @@ class RcmViewInit extends AbstractHelper
 
         $pageRevision = $renderer->pageRevision;
 
+        $currentRevision = $page->getCurrentRevision();
+
         $publishButton = '';
 
-        if ($pageRevision != $page->getCurrentRevision()->getPageRevId()) {
+        if (empty($currentRevision) || $pageRevision != $currentRevision->getPageRevId()) {
             $publishButton ='<a href="'.$renderer->publishButtonHref.'" class="rcmPublishButton">Publish</a>';
         }
 
