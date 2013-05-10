@@ -178,6 +178,13 @@ class IndexController extends \Rcm\Controller\BaseController
 
         $layout->setVariable('rcmAdminMode', true);
 
+        $publishLink = $this->getPublishLink($this->pageRevision->getPageRevId());
+
+        $layout->setVariable(
+            'publishButtonHref',
+            $publishLink
+        );
+
         $layout->setVariable(
             'adminPanel',
             $this->setupAdminToolBar()

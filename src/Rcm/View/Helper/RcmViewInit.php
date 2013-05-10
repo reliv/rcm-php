@@ -354,13 +354,23 @@ class RcmViewInit extends AbstractHelper
 
     protected function getAdminTopBody(\Zend\View\Renderer\PhpRenderer $renderer)
     {
+        /** @var \Rcm\Entity\Page $page */
+        $page = $renderer->page;
+
+        $pageRevision = $renderer->pageRevision;
+
+        $publishButton = '';
+
+        if ($pageRevision != $page->getCurrentRevision()->getPageRevId()) {
+            $publishButton ='<a href="'.$renderer->publishButtonHref.'" class="rcmPublishButton">Publish</a>';
+        }
 
         $this->appendBodyTop('<div id="rcmAdminPagePopoutWindow"></div>');
         $this->appendBodyTop('
             <div id="ContentManagerTopAdminPanel">
 
                 <div id="rcmAdminMenuBar">
-                    '.$renderer->adminTitleBar($renderer->page, $renderer->pageRevision, $renderer->language) .'
+                    '.$renderer->adminTitleBar($page, $pageRevision, $renderer->language) .'
 
                     <ul id="rcmAdminMenu">
                         '.$renderer->addAdminNavigation($renderer->adminPanel).'
@@ -369,6 +379,7 @@ class RcmViewInit extends AbstractHelper
                     <div class="editSaveCancel">
 
                         <div id="rcmAdminToolbarEdit">
+                            '.$publishButton.'
                             <a href="#" class="rcmEditButton">Edit</a>
                         </div>
 
