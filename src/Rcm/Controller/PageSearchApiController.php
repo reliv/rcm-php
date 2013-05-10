@@ -10,7 +10,7 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
         $siteId = $this->siteInfo->getSiteId();
 
         $results = $this->entityMgr->createQuery('
-            select page.name, pageRevision.pageTitle from Rcm\\Entity\\PageRevision pageRevision
+            select page.name, pageRevision.pageTitle, page.pageType from Rcm\\Entity\\PageRevision pageRevision
             join pageRevision.page page
             join page.site site
             where (page.name like :query or pageRevision.pageTitle like :query) and site.siteId like :siteId
@@ -23,7 +23,7 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
 
             $pageNames[$result['name']]= array(
                 'title' =>$result['pageTitle'],
-                'url' => $this->getPageUrl($result['name'])
+                'url' => $this->getPageUrl($result['name'], $result['pageType'])
             );
         }
 
@@ -42,7 +42,7 @@ class PageSearchApiController extends  \Rcm\Controller\BaseController
 
             $pageName = $page->getName();
 
-            $pageUrl = $this->getPageUrl($pageName);
+            $pageUrl = $this->getPageUrl($pageName, $page->getPageType());
 
             $return[$pageUrl] = $pageName;
 
