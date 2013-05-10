@@ -10,7 +10,7 @@ var rcmCkConfig = {
         top : 'ckEditortoolbar',
         bottom : 'ckEditorfooter'
     },
-    extraPlugins: 'sourcedialog,sharedspace',
+    extraPlugins: 'justify,sourcedialog,sharedspace',
     removePlugins : 'resize,floatingspace,sourcearea',
 //    skin : 'kama',
 //    contentsCss: '/modules/reliv-guest-site/css/guestSiteFonts.css',
@@ -22,8 +22,8 @@ var rcmCkConfig = {
         { name: 'SpellCheck', items : [ 'SpellChecker', 'Scayt' ] },
         { name: 'styles', items : [ 'Format' ] },
         { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
-        { name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv',
-            '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
+        { name: 'justify', items : [ 'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
+        { name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv' ] },
         { name: 'clipboard', items : ['Cut','Copy','Paste','PasteText','PasteFromWord'] },
         { name: 'insert', items : [ 'Image', 'Table','HorizontalRule','SpecialChar','Templates'] },
         { name: 'links', items : [ 'Link','Unlink','Anchor' ] }
