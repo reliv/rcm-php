@@ -1884,5 +1884,22 @@ function RcmEdit(config) {
                 $(formContainer).find(".ajaxFormErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
                 $(formContainer).parent().scrollTop(0);
         })
-    }
+    };
+
+    /**
+     * Makes a text input autocomplete page names
+     * @param {jQuery} inputEle
+     */
+    me.attachPageListAutoComplete = function(inputEle){
+        $.getJSON('/rcm-page-search/title',function(data){
+            var pageUrls = [];
+            $.each(data, function(pageUrl){
+                pageUrls.push(pageUrl);
+            });
+            inputEle.autocomplete({
+                source: pageUrls,
+                minLength: 0
+            });
+        });
+    };
 }
