@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * test
+ */
 namespace Rcm\Controller;
 
 class PageSearchApiController extends  \Rcm\Controller\BaseController
