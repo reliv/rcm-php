@@ -898,21 +898,21 @@ function RcmEdit(config) {
             };
 
             if ($.isFunction(pluginObject.getSaveData)) {
-                try{
+//                try{
                     dataToReturn[instanceId].pluginData = pluginObject.getSaveData();
-                }catch(err){
-                    console.log(err.toString());
-                    throw 'An error occurred saving plugin. Check JS Console.';
-                }
+//                }catch(err){
+//                    console.log(err.toString());
+//                    throw 'An error occurred saving plugin. Check JS Console.';
+//                }
             }
 
             if ($.isFunction(pluginObject.getAssets)) {
-                try{
+//                try{
                     dataToReturn[instanceId].pluginData.assets =  pluginObject.getAssets();
-                }catch(err){
-                    console.log(err.toString());
-                    throw 'An error occurred saving plugin. Check JS Console.';
-                }
+//                }catch(err){
+//                    console.log(err.toString());
+//                    throw 'An error occurred saving plugin. Check JS Console.';
+//                }
             }
 
         });
