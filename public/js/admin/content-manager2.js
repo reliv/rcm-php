@@ -1045,7 +1045,6 @@ function RcmEdit(config) {
         } catch (e) {
 
         }
-
     };
 
     me.rcmPlugins.removeEdits = function (pluginContainer) {
