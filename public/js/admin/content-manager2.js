@@ -35,7 +35,7 @@ function RcmEdit(config) {
      *
      * @param page
      */
-    me.setPage = function(page) {
+    me.setPage = function (page) {
         me.page = page;
     };
 
@@ -44,11 +44,11 @@ function RcmEdit(config) {
      *
      * @param pageRevision
      */
-    me.setPageRevision = function(pageRevision) {
+    me.setPageRevision = function (pageRevision) {
         me.pageRevision = pageRevision;
     };
 
-    me.setPageType = function(pageType) {
+    me.setPageType = function (pageType) {
         me.pageType = pageType;
     };
 
@@ -57,7 +57,7 @@ function RcmEdit(config) {
      *
      * @param language
      */
-    me.setLanguage = function(language) {
+    me.setLanguage = function (language) {
         me.language = language;
     };
 
@@ -66,7 +66,7 @@ function RcmEdit(config) {
      *
      * $param newInstanceId
      */
-    me.setNewInstanceId = function(newInstanceId) {
+    me.setNewInstanceId = function (newInstanceId) {
         me.newInstanceID = newInstanceId;
     };
 
@@ -104,7 +104,7 @@ function RcmEdit(config) {
     /**
      * Setup the admin environment
      */
-    me.init = function() {
+    me.init = function () {
 
         if (typeof(me.editor.init) !== 'function') {
             console.error('No Editor Strategy Passed In.  Please Setup Your' +
@@ -121,7 +121,7 @@ function RcmEdit(config) {
     /**
      * Starts The Edit Mode
      */
-    me.switchToEditMode = function(){
+    me.switchToEditMode = function () {
         $('html').addClass('rcmEditingPlugins');
         me.ui.initEditMode();
         me.editor.initEditMode();
@@ -132,7 +132,7 @@ function RcmEdit(config) {
     /**
      * Cancel Edit Mode
      */
-    me.cancelEditMode = function() {
+    me.cancelEditMode = function () {
         if (me.editMode === false) {
             return;
         }
@@ -145,7 +145,7 @@ function RcmEdit(config) {
     /**
      * Save the current page
      */
-    me.savePage = function() {
+    me.savePage = function () {
         if (me.editMode === false) {
             return;
         }
@@ -164,7 +164,7 @@ function RcmEdit(config) {
             'name="saveData" value="" />').val(dataToSend);
 
         var form = $('<form method="post" action="/rcm-admin-save/' +
-            this.page+'/'+this.pageType+'/'+this.language+'/'+this.pageRevision+'" name="rcmDataForm" id="rcmDataForm"></form>').append(input);
+            this.page + '/' + this.pageType + '/' + this.language + '/' + this.pageRevision + '" name="rcmDataForm" id="rcmDataForm"></form>').append(input);
 
         $("body").append(form);
 
@@ -181,7 +181,7 @@ function RcmEdit(config) {
      *
      * @return {Object}
      */
-    me.getUrlParams = function(){
+    me.getUrlParams = function () {
         var params = {};
 
         if (location.search) {
@@ -201,12 +201,11 @@ function RcmEdit(config) {
      *
      * @return {Number}
      */
-    me.getNewInstanceId = function() {
+    me.getNewInstanceId = function () {
         var newInstanceId = me.newInstanceID;
         me.newInstanceId--;
         return newInstanceId;
     };
-
 
 
     /*******************************/
@@ -336,12 +335,12 @@ function RcmEdit(config) {
             windowName = 'rcmAdminPagePopoutWindow'
         }
 
-        $('body').find("#"+windowName).remove();
-        $('body').append('<div id="'+windowName+'"></div>');
+        $('body').find("#" + windowName).remove();
+        $('body').append('<div id="' + windowName + '"></div>');
 
-        var popoutWidowDiv = $("#"+windowName);
+        var popoutWidowDiv = $("#" + windowName);
 
-        $(popoutWidowDiv).load(pagePath+'/'+me.language, data, function(response, status, xhr) {
+        $(popoutWidowDiv).load(pagePath + '/' + me.language, data, function (response, status, xhr) {
             if (status == "error") {
                 var msg = "Sorry but there was an error: ";
                 $(popoutWidowDiv).html(msg + xhr.status + " " + xhr.statusText);
@@ -368,7 +367,7 @@ function RcmEdit(config) {
     /**
      * Use this to show and edit the Page Properties
      */
-    me.showPageProperties = function() {
+    me.showPageProperties = function () {
 
         if (me.editMode == false) {
             me.switchToEditMode();
@@ -381,18 +380,18 @@ function RcmEdit(config) {
         //Show the dialog
         var form = $('<form>')
             .addInput('metaTitle', 'Page Title', $(pageTitle).html())
-            .addInput('metaDesc',  'Page Description', $(pageDesc).attr('content'))
-            .addInput('metaKeywords',  'Keywords', $(pageKeywords).attr('content'))
+            .addInput('metaDesc', 'Page Description', $(pageDesc).attr('content'))
+            .addInput('metaKeywords', 'Keywords', $(pageKeywords).attr('content'))
             .dialog({
-                title:'Properties',
-                modal:true,
-                width:620,
-                buttons:{
-                    Cancel:function () {
+                title: 'Properties',
+                modal: true,
+                width: 620,
+                buttons: {
+                    Cancel: function () {
 
                         $(this).dialog("close");
                     },
-                    Ok:function () {
+                    Ok: function () {
 
                         //Grab the non-jquery form so we can get its fields
                         var domForm = form.get(0);
@@ -404,15 +403,15 @@ function RcmEdit(config) {
                         $(this).dialog("close");
                     }
                 }
-        });
+            });
     };
 
-    me.savePageProperties = function() {
+    me.savePageProperties = function () {
         return  {
-            main : {
-                metaTitle : $("title").html(),
-                metaDesc  : $('meta[name="description"]').attr('content'),
-                metaKeyWords : $('meta[name="keywords"]').attr('content')
+            main: {
+                metaTitle: $("title").html(),
+                metaDesc: $('meta[name="description"]').attr('content'),
+                metaKeyWords: $('meta[name="keywords"]').attr('content')
             }
         };
     };
@@ -425,14 +424,14 @@ function RcmEdit(config) {
     /**
      * initial init method.  Used when the main init method is fired.
      */
-    me.ui.init = function() {
+    me.ui.init = function () {
         me.ui.addEditButtonClickEvent();
         me.ui.addEditMenuLinkClickEvent();
         me.ui.addEditSiteWideMenuLinkClickEvent();
         me.ui.addPagePropertiesMenuLinkClickEvent();
         me.ui.addEditLayoutMenuLinkClickEvent();
 
-        $("#rcmAdminTitleBarMenu li").click(function(){
+        $("#rcmAdminTitleBarMenu li").click(function () {
             $("#rcmAdminTitleBarMenu li ul").toggle();
         });
 
@@ -441,7 +440,7 @@ function RcmEdit(config) {
     /**
      * Prep the ui for edit mode.
      */
-    me.ui.initEditMode = function() {
+    me.ui.initEditMode = function () {
         me.ui.disablePageLinks();
         me.ui.switchEasyEditNavButtons();
         me.ui.disableLink($(".rcmEditPage"));
@@ -451,8 +450,8 @@ function RcmEdit(config) {
     /**
      * Add Clink Binds to the Edit Buttons
      */
-    me.ui.addEditButtonClickEvent = function() {
-        $(".rcmEditButton").click(function(e){
+    me.ui.addEditButtonClickEvent = function () {
+        $(".rcmEditButton").click(function (e) {
             me.switchToEditMode();
             e.preventDefault();
         });
@@ -461,8 +460,8 @@ function RcmEdit(config) {
     /**
      * Add Click Binds to Edit Nav Link
      */
-    me.ui.addEditMenuLinkClickEvent = function() {
-        $(".rcmEditPage").click(function(e){
+    me.ui.addEditMenuLinkClickEvent = function () {
+        $(".rcmEditPage").click(function (e) {
             me.switchToEditMode();
             e.preventDefault();
         });
@@ -471,8 +470,8 @@ function RcmEdit(config) {
     /**
      * Add Click Binds to Edit Site Wide Nav Link
      */
-    me.ui.addEditSiteWideMenuLinkClickEvent = function() {
-        $(".rcmEditSiteWide").click(function(){
+    me.ui.addEditSiteWideMenuLinkClickEvent = function () {
+        $(".rcmEditSiteWide").click(function () {
             me.rcmPlugins.initSiteWidePlugins();
         });
     };
@@ -480,8 +479,8 @@ function RcmEdit(config) {
     /**
      *  Add Click Binds to Page Properties
      */
-    me.ui.addPagePropertiesMenuLinkClickEvent = function() {
-        $(".rcmPageProperties").click(function(){
+    me.ui.addPagePropertiesMenuLinkClickEvent = function () {
+        $(".rcmPageProperties").click(function () {
             me.showPageProperties();
         })
     };
@@ -489,8 +488,8 @@ function RcmEdit(config) {
     /**
      *  Add Click Binds to Layout Editor
      */
-    me.ui.addEditLayoutMenuLinkClickEvent = function() {
-        $(".rcmShowLayoutEditor").click(function(){
+    me.ui.addEditLayoutMenuLinkClickEvent = function () {
+        $(".rcmShowLayoutEditor").click(function () {
             me.layoutEditor.startLayoutEditor();
         })
     };
@@ -498,7 +497,7 @@ function RcmEdit(config) {
     /**
      * Switch the easy edit nav buttons for edit mode
      */
-    me.ui.switchEasyEditNavButtons = function() {
+    me.ui.switchEasyEditNavButtons = function () {
 
         if (me.editMode === true) {
             return;
@@ -507,11 +506,11 @@ function RcmEdit(config) {
         $("#rcmAdminToolbarSaveCancel").show();
         $("#rcmAdminToolbarEdit").hide();
 
-        $(".rcmCancelButton").click(function(){
+        $(".rcmCancelButton").click(function () {
             me.cancelEditMode();
         });
 
-        $(".rcmSaveButton").click(function(){
+        $(".rcmSaveButton").click(function () {
             me.savePage();
         });
     };
@@ -519,7 +518,7 @@ function RcmEdit(config) {
     /**
      * Show Please Wait in Easy Nav
      */
-    me.ui.showPleaseWaitInEasyNav = function() {
+    me.ui.showPleaseWaitInEasyNav = function () {
         $("#rcmAdminToolbarEdit").hide();
         $("#rcmAdminToolbarSaveCancel").hide();
         $("#rcmAdminToolbarPleaseWait").show();
@@ -529,8 +528,8 @@ function RcmEdit(config) {
      * Disable all page links so you can't accidentally navigate to another
      * pate while editing.
      */
-    me.ui.disablePageLinks = function() {
-        $("#RcmRealPage").find("a").unbind('click').click(function(e){
+    me.ui.disablePageLinks = function () {
+        $("#RcmRealPage").find("a").unbind('click').click(function (e) {
             e.preventDefault();
         });
     };
@@ -542,7 +541,7 @@ function RcmEdit(config) {
      */
     me.ui.disableLink = function (container) {
         $(container).unbind('click').click(
-            function(){
+            function () {
                 $(this).preventDefault();
                 return false;
             }
@@ -596,12 +595,12 @@ function RcmEdit(config) {
      * @param container
      * @return {*|jQuery}
      */
-    me.ui.getElementHeight = function(container) {
+    me.ui.getElementHeight = function (container) {
         var elementToUse = container;
 
         var loopCounter = 0;
 
-        while($(elementToUse).height() == 0 && loopCounter < 10) {
+        while ($(elementToUse).height() == 0 && loopCounter < 10) {
             elementToUse = $(elementToUse).parent();
             loopCounter++;
         }
@@ -615,12 +614,12 @@ function RcmEdit(config) {
      * @param container
      * @return {*|jQuery}
      */
-    me.ui.getElementWidth = function(container) {
+    me.ui.getElementWidth = function (container) {
         var elementToUse = container;
 
         var loopCounter = 0;
 
-        while($(elementToUse).width() == 0 && loopCounter < 10) {
+        while ($(elementToUse).width() == 0 && loopCounter < 10) {
             elementToUse = $(container).parent();
             loopCounter++;
         }
@@ -631,17 +630,17 @@ function RcmEdit(config) {
     /**
      * Add an Unlock option to the right click menu for locked plugins.
      */
-    me.ui.addUnlockRightClick = function() {
+    me.ui.addUnlockRightClick = function () {
         $('.rcmLockOverlay').dblclick(me.ui.unlock);
         $.contextMenu({
             selector: '.rcmLockOverlay',
 
             //Here are the right click menu options
-            items:{
-                unlockMe:{
-                    name:'Unlock',
-                    icon:'delete',
-                    callback:me.ui.unlock
+            items: {
+                unlockMe: {
+                    name: 'Unlock',
+                    icon: 'delete',
+                    callback: me.ui.unlock
                 }
             }
         });
@@ -659,7 +658,7 @@ function RcmEdit(config) {
     };
 
 
-    me.ui.inputFieldError = function(inputField, resultContainer) {
+    me.ui.inputFieldError = function (inputField, resultContainer) {
         $(resultContainer).removeClass('ui-icon-check');
         $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon');
         $(inputField).addClass('RcmErrorInputHightlight');
@@ -667,13 +666,13 @@ function RcmEdit(config) {
 
     };
 
-    me.ui.inputFieldFatalError = function(inputField, resultContainer) {
+    me.ui.inputFieldFatalError = function (inputField, resultContainer) {
         $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
         $(inputField).addClass('RcmErrorInputHightlight');
         $(inputField).removeClass('RcmOkInputHightlight');
     };
 
-    me.ui.inputFieldOk = function(inputField, resultContainer) {
+    me.ui.inputFieldOk = function (inputField, resultContainer) {
         $(resultContainer).removeClass('ui-icon-alert');
         $(resultContainer).addClass('ui-icon-check').addClass('ui-icon');
         $(inputField).removeClass('RcmErrorInputHightlight');
@@ -687,7 +686,7 @@ function RcmEdit(config) {
     /**
      * Initiate the edit mode for all plugins.
      */
-    me.rcmPlugins.initEditMode = function() {
+    me.rcmPlugins.initEditMode = function () {
         me.rcmPlugins.initAllPagePlugins();
 
     };
@@ -697,8 +696,8 @@ function RcmEdit(config) {
      * mode of the editor.  Layout manager and Site wide plugins will
      * start out disabled.
      */
-    me.rcmPlugins.initAllPagePlugins = function() {
-        $("#RcmRealPage").find(".rcmPlugin").each(function(){
+    me.rcmPlugins.initAllPagePlugins = function () {
+        $("#RcmRealPage").find(".rcmPlugin").each(function () {
 
             var containerData = me.rcmPlugins.getPluginContainerInfo(this);
 
@@ -717,12 +716,12 @@ function RcmEdit(config) {
         me.editMode = true;
     };
 
-    me.rcmPlugins.GetAllInstancesAndOrder = function() {
+    me.rcmPlugins.GetAllInstancesAndOrder = function () {
         var dataToReturn = {};
 
-        $(".rcmContainer").each(function(){
+        $(".rcmContainer").each(function () {
             var containerNumber = $(this).attr('data-containerId');
-            $(this).find(".rcmPlugin").each(function(index, value){
+            $(this).find(".rcmPlugin").each(function (index, value) {
                 var instanceId = $(value).attr('data-rcmPluginInstanceId');
                 var pluginName = $(value).attr('data-rcmPluginName');
                 var siteWide = $(value).attr('data-rcmsitewideplugin');
@@ -731,12 +730,12 @@ function RcmEdit(config) {
                 var pluginFloat = $(value).css('float');
 
                 dataToReturn[instanceId] = {
-                    'container' : containerNumber,
-                    'order' : index,
-                    'pluginName' : pluginName,
-                    'pluginFloat' : pluginFloat,
-                    'siteWide' : siteWide,
-                    'pluginDisplayName' : pluginDisplayName
+                    'container': containerNumber,
+                    'order': index,
+                    'pluginName': pluginName,
+                    'pluginFloat': pluginFloat,
+                    'siteWide': siteWide,
+                    'pluginDisplayName': pluginDisplayName
                 }
 
                 var pluginResized = $(value).attr('data-rcmPluginResized');
@@ -757,13 +756,13 @@ function RcmEdit(config) {
     /**
      * Init all Site Wide plugins for edit mode.
      */
-    me.rcmPlugins.initSiteWidePlugins = function() {
+    me.rcmPlugins.initSiteWidePlugins = function () {
 
         var editButton = this;
 
         $().confirm(
             'Unlock Site-Wide Plugins?<br><Br>Please Note: Any changes you make to a site-wide plugin will be published and made live when you save your changes.',
-            function() {
+            function () {
                 me.ui.switchEasyEditNavButtons();
                 me.rcmPlugins.preformUnlockSiteWide();
                 me.ui.disableLink(editButton);
@@ -775,8 +774,8 @@ function RcmEdit(config) {
     /**
      * Unlock Site Wide Plugins
      */
-    me.rcmPlugins.preformUnlockSiteWide = function() {
-        $("#RcmRealPage").find(".rcmPlugin").each(function(){
+    me.rcmPlugins.preformUnlockSiteWide = function () {
+        $("#RcmRealPage").find(".rcmPlugin").each(function () {
 
             var containerData = me.rcmPlugins.getPluginContainerInfo(this);
 
@@ -794,7 +793,7 @@ function RcmEdit(config) {
         me.editMode = true;
     };
 
-    me.rcmPlugins.savePlugins = function() {
+    me.rcmPlugins.savePlugins = function () {
         var dataToReturn = {};
 
         var pluginData = me.rcmPlugins.getSaveDataFromCalledPlugins();
@@ -810,7 +809,7 @@ function RcmEdit(config) {
      *
      * @param container
      */
-    me.rcmPlugins.initPluginEditMode = function(container) {
+    me.rcmPlugins.initPluginEditMode = function (container) {
         me.rcmPlugins.callPluginEditInit(container);
         me.rcmPlugins.initPluginRichEdits(container);
         me.rcmPlugins.initHtml5Edits(container);
@@ -818,13 +817,12 @@ function RcmEdit(config) {
     };
 
 
-
     /**
      * Disable edit regions of a container
      *
      * @param container
      */
-    me.rcmPlugins.lockPlugin = function(container) {
+    me.rcmPlugins.lockPlugin = function (container) {
         me.ui.addOverlay(container);
         $(container).fadeTo(500, 0.2);
     };
@@ -834,7 +832,7 @@ function RcmEdit(config) {
      *
      * @param container
      */
-    me.rcmPlugins.unlockPlugin = function(container) {
+    me.rcmPlugins.unlockPlugin = function (container) {
         me.ui.removeOverlay(container);
         $(container).fadeTo(500, 1);
     };
@@ -844,25 +842,25 @@ function RcmEdit(config) {
      *
      * @param pluginContainer rcmPluginContainer
      */
-    me.rcmPlugins.callPluginEditInit = function(pluginContainer) {
+    me.rcmPlugins.callPluginEditInit = function (pluginContainer) {
 
         var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
         var pluginContainer = $(pluginContainer).find('.rcmPluginContainer');
 
-        if(typeof(window[containerData.editClass])=='function'){
+        if (typeof(window[containerData.editClass]) == 'function') {
 //            try {
-                var plugin = new window[containerData.editClass](
-                    containerData.instanceId,
-                    $(pluginContainer)
-                );
+            var plugin = new window[containerData.editClass](
+                containerData.instanceId,
+                $(pluginContainer)
+            );
 
-                plugin.initEdit();
+            plugin.initEdit();
 
-                me.rcmPlugins.calledPlugins.push({
-                    pluginObject : plugin,
-                    instanceId   : containerData.instanceId,
-                    pluginName   : containerData.pluginName
-                });
+            me.rcmPlugins.calledPlugins.push({
+                pluginObject: plugin,
+                instanceId: containerData.instanceId,
+                pluginName: containerData.pluginName
+            });
 //            } catch (err) {
 //                console.log(err.toString());
 //                throw "An error occurred initing editing for a plugin"
@@ -875,11 +873,11 @@ function RcmEdit(config) {
      *
      * @return {Array}
      */
-    me.rcmPlugins.getSaveDataFromCalledPlugins = function() {
+    me.rcmPlugins.getSaveDataFromCalledPlugins = function () {
 
         var dataToReturn = {};
 
-        $.each(me.rcmPlugins.calledPlugins, function(index, value){
+        $.each(me.rcmPlugins.calledPlugins, function (index, value) {
 
             if (!me.rcmPlugins.calledPlugins.hasOwnProperty(index)) {
                 return;
@@ -894,12 +892,12 @@ function RcmEdit(config) {
             var pluginObject = me.rcmPlugins.calledPlugins[index].pluginObject;
 
             dataToReturn[instanceId] = {
-                pluginData : {}
+                pluginData: {}
             };
 
             if ($.isFunction(pluginObject.getSaveData)) {
 //                try{
-                    dataToReturn[instanceId].pluginData = pluginObject.getSaveData();
+                dataToReturn[instanceId].pluginData = pluginObject.getSaveData();
 //                }catch(err){
 //                    console.log(err.toString());
 //                    throw 'An error occurred saving plugin. Check JS Console.';
@@ -908,7 +906,7 @@ function RcmEdit(config) {
 
             if ($.isFunction(pluginObject.getAssets)) {
 //                try{
-                    dataToReturn[instanceId].pluginData.assets =  pluginObject.getAssets();
+                dataToReturn[instanceId].pluginData.assets = pluginObject.getAssets();
 //                }catch(err){
 //                    console.log(err.toString());
 //                    throw 'An error occurred saving plugin. Check JS Console.';
@@ -925,33 +923,33 @@ function RcmEdit(config) {
      *
      * @param pluginContainer
      */
-    me.rcmPlugins.initPluginRichEdits = function(pluginContainer) {
+    me.rcmPlugins.initPluginRichEdits = function (pluginContainer) {
 
         var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
 
-        $(pluginContainer).find("[data-richEdit]").each(function() {
+        $(pluginContainer).find("[data-richEdit]").each(function () {
 
             var textAreaId = $(this).attr('data-richEdit');
 
-            if(textAreaId == undefined || textAreaId == '') {
+            if (textAreaId == undefined || textAreaId == '') {
                 return;
             }
 
             var newTextAreaId = 'rcm_richEdit_'
-                +containerData.pluginName
-                +'_'
-                +containerData.instanceId
-                +'_'
-                +textAreaId;
+                + containerData.pluginName
+                + '_'
+                + containerData.instanceId
+                + '_'
+                + textAreaId;
 
             var newEditor = me.editor.addRichEditor(this, newTextAreaId, containerData.instanceId);
 
             me.rcmPlugins.activeEditors.push({
-                editor : newEditor,
-                instanceId   : containerData.instanceId,
-                textId       : textAreaId,
-                pluginName   : containerData.pluginName,
-                type         : 'rich'
+                editor: newEditor,
+                instanceId: containerData.instanceId,
+                textId: textAreaId,
+                pluginName: containerData.pluginName,
+                type: 'rich'
             });
         });
     };
@@ -960,22 +958,22 @@ function RcmEdit(config) {
      * Find and initialize the HTML5 edits with the plugin passed
      * @param pluginContainer
      */
-    me.rcmPlugins.initHtml5Edits = function(pluginContainer) {
+    me.rcmPlugins.initHtml5Edits = function (pluginContainer) {
 
         var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
 
-        $(pluginContainer).find('[data-textEdit]').each(function() {
+        $(pluginContainer).find('[data-textEdit]').each(function () {
 
             var textAreaId = $(this).attr('data-textEdit');
 
             var newEditor = me.editor.addHtml5Editor(this, textAreaId, containerData.instanceId);
 
             me.rcmPlugins.activeEditors.push({
-                editor : newEditor,
-                instanceId   : containerData.instanceId,
-                textId       : textAreaId,
-                pluginName   : containerData.pluginName,
-                type         : 'html5'
+                editor: newEditor,
+                instanceId: containerData.instanceId,
+                textId: textAreaId,
+                pluginName: containerData.pluginName,
+                type: 'html5'
             });
         });
     };
@@ -985,10 +983,10 @@ function RcmEdit(config) {
      *
      * @return {Array}
      */
-    me.rcmPlugins.getSaveDataFromPluginEdits = function() {
+    me.rcmPlugins.getSaveDataFromPluginEdits = function () {
         var dataToReturn = {};
 
-        $.each(me.rcmPlugins.activeEditors, function(index, value) {
+        $.each(me.rcmPlugins.activeEditors, function (index, value) {
             if (!me.rcmPlugins.activeEditors.hasOwnProperty(index)) {
                 return;
             }
@@ -1015,9 +1013,9 @@ function RcmEdit(config) {
 
             if (dataToReturn[instanceId] == undefined) {
                 dataToReturn[instanceId] = {
-                    pluginName : '',
-                    pluginData : {
-                        assets : []
+                    pluginName: '',
+                    pluginData: {
+                        assets: []
                     }
                 };
             }
@@ -1031,24 +1029,30 @@ function RcmEdit(config) {
         return dataToReturn;
     };
 
-    me.refreshEditors = function (){
-        $.each(
-            me.rcmPlugins.activeEditors,
-            function(){
-                var editor = this.editor;
-                if(editor.hasOwnProperty('mode')){//Is it a ckEdit?
-                    editor.setMode('source');
-                    editor.setMode('wysiwyg');
-                }
-            }
-        );
+    /**
+     * @TODO MAKE NON CKEDIT SPECIFC
+     */
+    me.refreshEditors = function (pluginContainer) {
+        rcmEdit.rcmPlugins.removeEdits(pluginContainer);
+        rcmEdit.rcmPlugins.removeTextEdits(pluginContainer);
+        $(pluginContainer).find("[data-richedit]").find("div").each(function () {
+            var currentHtml = $(this).html();
+            $(this).parent().html(currentHtml);
+        });
+        try {
+            rcmEdit.rcmPlugins.initPluginRichEdits(pluginContainer);
+            rcmEdit.rcmPlugins.initHtml5Edits(pluginContainer);
+        } catch (e) {
+
+        }
+
     };
 
-    me.rcmPlugins.removeEdits = function(pluginContainer) {
+    me.rcmPlugins.removeEdits = function (pluginContainer) {
         var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
-        $(pluginContainer).find('[data-richedit]').each(function() {
+        $(pluginContainer).find('[data-richedit]').each(function () {
             var tempContainer = this;
-            $.each(me.rcmPlugins.activeEditors, function(index, value){
+            $.each(me.rcmPlugins.activeEditors, function (index, value) {
                 if (value.instanceId == containerData.instanceId
                     && value.textId == $(tempContainer).attr('data-richedit')
                     && value.pluginName == containerData.pluginName
@@ -1059,26 +1063,26 @@ function RcmEdit(config) {
         });
     };
 
-    me.rcmPlugins.removeTextEdits = function(pluginContainer) {
+    me.rcmPlugins.removeTextEdits = function (pluginContainer) {
         var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
 
-        $(pluginContainer).find('[data-textedit]').each(function(){
+        $(pluginContainer).find('[data-textedit]').each(function () {
             var tempContainer = this;
-            $.each(me.rcmPlugins.activeEditors, function(index, value){
+            $.each(me.rcmPlugins.activeEditors, function (index, value) {
                 if (value.instanceId == containerData.instanceId
                     && value.textId == $(tempContainer).attr('data-textedit')
                     && value.pluginName == containerData.pluginName
-                ) {
+                    ) {
                     me.rcmPlugins.activeEditors[index] = {};
                 }
             });
         });
     };
 
-    me.rcmPlugins.removeCalledPlugin = function(pluginContainer) {
+    me.rcmPlugins.removeCalledPlugin = function (pluginContainer) {
         var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
 
-        $.each(me.rcmPlugins.calledPlugins, function(index, value){
+        $.each(me.rcmPlugins.calledPlugins, function (index, value) {
             if (value.instanceId == containerData.instanceId
                 && value.pluginName == containerData.pluginName
                 ) {
@@ -1092,7 +1096,7 @@ function RcmEdit(config) {
      *
      * @param pluginContainer
      */
-    me.rcmPlugins.getPluginContainerInfo = function(pluginContainer) {
+    me.rcmPlugins.getPluginContainerInfo = function (pluginContainer) {
         var containerData = {};
 
         containerData.pluginName = $(pluginContainer).attr('data-rcmPluginName');
@@ -1116,7 +1120,7 @@ function RcmEdit(config) {
     /**
      * Initiate the layout editor
      */
-    me.layoutEditor.init = function() {
+    me.layoutEditor.init = function () {
         me.layoutEditor.checkUrlAndShow();
         me.layoutEditor.addLayoutPopOut();
         me.layoutEditor.addLayoutClose();
@@ -1125,14 +1129,14 @@ function RcmEdit(config) {
     /**
      * Check URL to see if we should show the layout editor
      */
-    me.layoutEditor.checkUrlAndShow = function() {
+    me.layoutEditor.checkUrlAndShow = function () {
         var myParams = me.getUrlParams();
 
         if (myParams == undefined || myParams.rcmShowLayoutEditor == undefined) {
             return;
         }
 
-        if(myParams.rcmShowLayoutEditor == 'Y') {
+        if (myParams.rcmShowLayoutEditor == 'Y') {
             me.layoutEditor.startLayoutEditor();
         }
     };
@@ -1140,7 +1144,7 @@ function RcmEdit(config) {
     /**
      * Show the layout editor
      */
-    me.layoutEditor.startLayoutEditor = function() {
+    me.layoutEditor.startLayoutEditor = function () {
         if (me.editMode == false) {
             me.switchToEditMode();
         }
@@ -1150,7 +1154,7 @@ function RcmEdit(config) {
         });
 
         //Add Menu Accordian
-        $( "#rcmLayoutAccordion" ).accordion({ active: 22, collapsible: true });
+        $("#rcmLayoutAccordion").accordion({ active: 22, collapsible: true });
 
         me.layoutEditor.makePluginsDraggable();
 
@@ -1164,9 +1168,9 @@ function RcmEdit(config) {
     /**
      * Closes the layout editor and returns the edit mode back to normal
      */
-    me.layoutEditor.stopLayoutEditor = function() {
+    me.layoutEditor.stopLayoutEditor = function () {
         var rcmLayoutEditorColumn = $("#rcmLayoutEditorColumn");
-        $( "#rcmLayoutAccordion" ).accordion("destroy");
+        $("#rcmLayoutAccordion").accordion("destroy");
         rcmLayoutEditorColumn.resizable("destroy");
         rcmLayoutEditorColumn.hide('slide');
         me.layoutEditor.stopPluginsSortable();
@@ -1175,43 +1179,41 @@ function RcmEdit(config) {
 
     };
 
-    me.layoutEditor.addCMSHandles = function() {
-        var pluginContainers = $("#RcmRealPage").find(".rcmPlugin").each(function(){
+    me.layoutEditor.addCMSHandles = function () {
+        var pluginContainers = $("#RcmRealPage").find(".rcmPlugin").each(function () {
             me.layoutEditor.addPluginToolbar(this);
         });
     };
 
-    me.layoutEditor.addPluginToolbar = function(pluginContainer)
-    {
+    me.layoutEditor.addPluginToolbar = function (pluginContainer) {
         $(pluginContainer).prepend("<span class='rcmSortableHandle rcmLayoutEditHelper' title='Move Plugin' />");
         //$(pluginContainer).prepend("<span class='rcmDeletePluginMenuItem rcmLayoutEditHelper' title='Delete Plugin' />");
         //$(pluginContainer).prepend("<span class='rcmSiteWidePluginMenuItem rcmLayoutEditHelper' title='Make Site-Wide' />");
 
 
-        var pullDownMenu ='<span class="rcmContainerMenu rcmLayoutEditHelper" title="Container Menu"><ul><li><a href="#"></a><ul><li><a href="#" class="rcmSiteWidePluginMenuItem">Mark as site-wide</a> </li><li><a href="#" class="rcmDeletePluginMenuItem">Delete Plugin</a> </li></ul></li></ul></span>'
+        var pullDownMenu = '<span class="rcmContainerMenu rcmLayoutEditHelper" title="Container Menu"><ul><li><a href="#"></a><ul><li><a href="#" class="rcmSiteWidePluginMenuItem">Mark as site-wide</a> </li><li><a href="#" class="rcmDeletePluginMenuItem">Delete Plugin</a> </li></ul></li></ul></span>'
         $(pluginContainer).prepend(pullDownMenu);
 
 
-
         $(pluginContainer).hover(
-            function() {
-                $(this).find(".rcmLayoutEditHelper").each(function(){
+            function () {
+                $(this).find(".rcmLayoutEditHelper").each(function () {
                     $(this).show();
                 });
             },
-            function(){
-                $(this).find(".rcmLayoutEditHelper").each(function(){
+            function () {
+                $(this).find(".rcmLayoutEditHelper").each(function () {
                     $(this).hide();
                 })
             }
         );
 
-        $(pluginContainer).find(".rcmDeletePluginMenuItem").click(function(e) {
+        $(pluginContainer).find(".rcmDeletePluginMenuItem").click(function (e) {
             me.layoutEditor.deleteConfirm(this);
             e.preventDefault();
         });
 
-        $(pluginContainer).find(".rcmSiteWidePluginMenuItem").click(function(e) {
+        $(pluginContainer).find(".rcmSiteWidePluginMenuItem").click(function (e) {
             me.layoutEditor.makeSiteWide($(this).parents(".rcmPlugin"));
             e.preventDefault();
         });
@@ -1221,21 +1223,21 @@ function RcmEdit(config) {
 
     };
 
-    me.layoutEditor.deleteConfirm = function(pluginContainer) {
+    me.layoutEditor.deleteConfirm = function (pluginContainer) {
         $().confirm(
             'Are you sure you want to delete this plugin?',
-            function(){
+            function () {
                 me.layoutEditor.deletePlugin($(pluginContainer).parents(".rcmPlugin"));
             }
         );
     };
 
-    me.layoutEditor.checkResize = function(pluginContainer) {
+    me.layoutEditor.checkResize = function (pluginContainer) {
         //Check for reset
         var pluginResized = $(pluginContainer).attr('data-rcmPluginResized');
         if (pluginResized == 'Y') {
             $(pluginContainer).find(".rcmContainerMenu").find("ul li ul").prepend('<li><a href="#" class="rcmResetContainerSizeMenuItem">Reset size to default</a> </li>')
-            $(pluginContainer).find(".rcmResetContainerSizeMenuItem").click(function(e) {
+            $(pluginContainer).find(".rcmResetContainerSizeMenuItem").click(function (e) {
                 $(this).parents(".rcmPlugin").attr('data-rcmPluginResized', 'N');
                 $(this).parents(".rcmPlugin").attr('style', '');
                 $(pluginContainer).find(".rcmResetContainerSizeMenuItem").remove();
@@ -1244,7 +1246,7 @@ function RcmEdit(config) {
         }
     };
 
-    me.layoutEditor.removePluginToolbar = function() {
+    me.layoutEditor.removePluginToolbar = function () {
         $('.rcmLayoutEditHelper').remove();
         $(".rcmPlugin").unbind('mouseenter mouseleave');
     };
@@ -1252,11 +1254,11 @@ function RcmEdit(config) {
     /**
      * Add popout click event to icon
      */
-    me.layoutEditor.addLayoutPopOut = function() {
+    me.layoutEditor.addLayoutPopOut = function () {
         var rcmLayoutMenuPopOut = $("#rcmLayoutMenuPopout");
 
         rcmLayoutMenuPopOut.removeAttr('style');
-        rcmLayoutMenuPopOut.click(function() {
+        rcmLayoutMenuPopOut.click(function () {
             me.layoutEditor.popOutLayoutEditor();
         });
     };
@@ -1264,8 +1266,8 @@ function RcmEdit(config) {
     /**
      * Add Close Button Clicks
      */
-    me.layoutEditor.addLayoutClose = function() {
-        $("#rcmLayoutMenuClose").click(function(){
+    me.layoutEditor.addLayoutClose = function () {
+        $("#rcmLayoutMenuClose").click(function () {
             me.layoutEditor.stopLayoutEditor();
         })
     };
@@ -1273,7 +1275,7 @@ function RcmEdit(config) {
     /**
      * Pop out the layout editor
      */
-    me.layoutEditor.popOutLayoutEditor = function() {
+    me.layoutEditor.popOutLayoutEditor = function () {
         var layoutEditorColumn = $("#rcmLayoutEditorColumn");
         var rcmLayoutMenuPopOut = $("#rcmLayoutMenuPopout");
 
@@ -1282,7 +1284,7 @@ function RcmEdit(config) {
         layoutEditorColumn.css('position', 'fixed');
         layoutEditorColumn.css('top', 0);
         layoutEditorColumn.css('left', 0);
-        layoutEditorColumn.height($( "#rcmLayoutAccordion").outerHeight()+50);
+        layoutEditorColumn.height($("#rcmLayoutAccordion").outerHeight() + 50);
         layoutEditorColumn.zIndex(9999999999);
         layoutEditorColumn.draggable();
         layoutEditorColumn.show().resizable({
@@ -1290,7 +1292,7 @@ function RcmEdit(config) {
         });
 
         rcmLayoutMenuPopOut.css('background-position', '-242px -34px');
-        rcmLayoutMenuPopOut.click(function(){
+        rcmLayoutMenuPopOut.click(function () {
             me.layoutEditor.pinLayoutEditor();
         });
     };
@@ -1298,7 +1300,7 @@ function RcmEdit(config) {
     /**
      * Pin the layout editor to the left side of the page
      */
-    me.layoutEditor.pinLayoutEditor = function() {
+    me.layoutEditor.pinLayoutEditor = function () {
 
         var layoutEditorColumn = $("#rcmLayoutEditorColumn");
 
@@ -1316,15 +1318,15 @@ function RcmEdit(config) {
     /**
      * Make plugins in the layout editor menu draggable
      */
-    me.layoutEditor.makePluginsDraggable = function() {
-        $("#rcmLayoutAccordion").find(".rcmPluginDrag").each(function(v, e){
+    me.layoutEditor.makePluginsDraggable = function () {
+        $("#rcmLayoutAccordion").find(".rcmPluginDrag").each(function (v, e) {
             $(e).draggable({
-                cursorAt : {left:40, top : 10},
-                helper: function(){
+                cursorAt: {left: 40, top: 10},
+                helper: function () {
                     return me.layoutEditor.pluginDraggableHelper(this)
                 },
 
-                drag:function(){
+                drag: function () {
                     me.layoutEditor.pluginDraggableDrag(this);
                 },
                 revert: 'invalid',
@@ -1337,8 +1339,8 @@ function RcmEdit(config) {
     /**
      * Disable dragging on plugins
      */
-    me.layoutEditor.stopPluginsDraggable = function() {
-        $("#rcmLayoutAccordion").find(".rcmPluginDrag").each(function(v, e){
+    me.layoutEditor.stopPluginsDraggable = function () {
+        $("#rcmLayoutAccordion").find(".rcmPluginDrag").each(function (v, e) {
             $(e).draggable("destroy");
         });
     };
@@ -1349,14 +1351,14 @@ function RcmEdit(config) {
      * @param container
      * @return {*|jQuery|HTMLElement}
      */
-    me.layoutEditor.pluginDraggableHelper = function(container) {
+    me.layoutEditor.pluginDraggableHelper = function (container) {
         var pluginContainer = $(container).find(".rcmPlugin");
         var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
 
         if (containerData.isSiteWide != 'Y') {
             $(pluginContainer).attr(
                 'data-rcmPluginInstanceId',
-                $(pluginContainer).attr('data-rcmPluginInstanceId')*10
+                $(pluginContainer).attr('data-rcmPluginInstanceId') * 10
             );
         }
         var helper = $(pluginContainer).clone(false);
@@ -1373,7 +1375,7 @@ function RcmEdit(config) {
      * Callback for Draggable - Start.  Preforms Ajax Request for new
      * Plugin instance to add to page.
      */
-    me.layoutEditor.pluginDraggableStart = function(helper, pluginContainer) {
+    me.layoutEditor.pluginDraggableStart = function (helper, pluginContainer) {
 
         var pluginInstanceContainer = $(pluginContainer).find('.rcmPluginContainer');
 
@@ -1384,8 +1386,8 @@ function RcmEdit(config) {
         var pluginData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
 
         $.getJSON(
-            me.newPluginInstanceAjaxPath+'/'+pluginData.pluginName+'/'+pluginData.instanceId,
-            function(data) {
+            me.newPluginInstanceAjaxPath + '/' + pluginData.pluginName + '/' + pluginData.instanceId,
+            function (data) {
                 me.layoutEditor.getInstanceSuccessCallback(data, helper, pluginContainer)
             }
         );
@@ -1398,7 +1400,7 @@ function RcmEdit(config) {
      * @param helper
      * @param pluginContainer
      */
-    me.layoutEditor.setHelperWidth = function(helper, pluginContainer) {
+    me.layoutEditor.setHelperWidth = function (helper, pluginContainer) {
         var divWidth = me.ui.getElementWidth(pluginContainer);
 
         if (divWidth > 1000) {
@@ -1415,7 +1417,7 @@ function RcmEdit(config) {
      * @param helper
      * @param pluginContainer
      */
-    me.layoutEditor.getInstanceSuccessCallback = function(data, helper, pluginContainer) {
+    me.layoutEditor.getInstanceSuccessCallback = function (data, helper, pluginContainer) {
 
         if (data.js != undefined && data.js != '') {
             me.layoutEditor.loadPluginJs(data.js);
@@ -1433,7 +1435,7 @@ function RcmEdit(config) {
      * @param jsPath
      */
     me.layoutEditor.loadPluginJs = function (jsPath) {
-        var scriptAlreadyLoadedCheck = $('script[src="'+jsPath+'"]');
+        var scriptAlreadyLoadedCheck = $('script[src="' + jsPath + '"]');
 
         if (scriptAlreadyLoadedCheck.length < 1) {
             $.getScript(jsPath);
@@ -1443,7 +1445,7 @@ function RcmEdit(config) {
     /**
      * Callback for Draggable - Drag event
      */
-    me.layoutEditor.pluginDraggableDrag = function(container) {
+    me.layoutEditor.pluginDraggableDrag = function (container) {
         /* This is required for adding items to an empty
          * sortable. the sortable "change" event handles
          * everything else.
@@ -1453,7 +1455,7 @@ function RcmEdit(config) {
         /*
          * If placeholder exists and has not yet been filled with a plugin
          */
-        if(placeHolder.length && !placeHolder.html().length){
+        if (placeHolder.length && !placeHolder.html().length) {
             me.layoutEditor.pluginDragPlaceHolder($(container).find(".rcmPlugin"));
         }
     };
@@ -1463,10 +1465,10 @@ function RcmEdit(config) {
      *
      * @param container
      */
-    me.layoutEditor.pluginDragPlaceHolder = function(container){
+    me.layoutEditor.pluginDragPlaceHolder = function (container) {
         var placeHolder = $('.rcmPluginSortPlaceHolder');
         //If placeholder exists and has not yet been filled with a plugin
-        if(placeHolder.length && !placeHolder.html().length){
+        if (placeHolder.length && !placeHolder.html().length) {
             //Copy plugin css classes
             placeHolder.attr(
                 'class',
@@ -1482,25 +1484,25 @@ function RcmEdit(config) {
     /**
      * Makes plugins sortable.
      */
-    me.layoutEditor.makePluginsSortable = function() {
+    me.layoutEditor.makePluginsSortable = function () {
         $(".rcmContainer").sortable({
             connectWith: '.rcmContainer',
             dropOnEmpty: true,
             helper: "original",
-            tolerance : 'pointer',
+            tolerance: 'pointer',
             placeholder: "rcmPluginSortPlaceHolder",
             forcePlaceholderSize: false,
-            handle:'.rcmSortableHandle',
-            change: function(event, ui) {
+            handle: '.rcmSortableHandle',
+            change: function (event, ui) {
                 me.layoutEditor.pluginSortableChange(ui);
             },
-            receive: function(event, ui) {
+            receive: function (event, ui) {
                 me.layoutEditor.pluginSortableReceive(this, ui);
             },
-            start: function(event, ui){
+            start: function (event, ui) {
                 me.layoutEditor.pluginSortableStart(ui);
             },
-            stop: function (event, ui){
+            stop: function (event, ui) {
                 $('html').removeClass('rcmDraggingPlugins');
 
                 var initialInstance = $(ui.item).find(".initialState");
@@ -1518,7 +1520,7 @@ function RcmEdit(config) {
 
         $('#RcmRealPage').find('.rcmPlugin').resizable({
             grid: 10,
-            start: function(event, ui){
+            start: function (event, ui) {
                 ui.element.attr('data-rcmPluginResized', 'Y');
                 me.layoutEditor.checkResize(ui.element);
             }
@@ -1528,8 +1530,8 @@ function RcmEdit(config) {
     /**
      * Makes plugins sortable.
      */
-    me.layoutEditor.stopPluginsSortable = function() {
-        $(".rcmContainer").each(function(v, e){
+    me.layoutEditor.stopPluginsSortable = function () {
+        $(".rcmContainer").each(function (v, e) {
             $(e).sortable("destroy");
         });
     };
@@ -1540,13 +1542,13 @@ function RcmEdit(config) {
      *
      * @param ui
      */
-    me.layoutEditor.pluginSortableChange = function(ui) {
+    me.layoutEditor.pluginSortableChange = function (ui) {
         var pluginDiv;
         var placeHolder = $('.rcmPluginSortPlaceHolder');
 
-        if(placeHolder.length && !placeHolder.html().length){
+        if (placeHolder.length && !placeHolder.html().length) {
 
-            if(ui.item.hasClass('rcmPluginDrag')){
+            if (ui.item.hasClass('rcmPluginDrag')) {
                 pluginDiv = $(ui.item).find(".rcmPlugin");
             } else {
                 pluginDiv = ui.item;
@@ -1561,7 +1563,7 @@ function RcmEdit(config) {
         }
     };
 
-    me.layoutEditor.pluginSortableStart = function(ui) {
+    me.layoutEditor.pluginSortableStart = function (ui) {
         $('html').addClass('rcmDraggingPlugins');
 
         /* Advise the editor that we are moving it's container */
@@ -1575,15 +1577,13 @@ function RcmEdit(config) {
     };
 
 
-
-
     /**
      * Tells the sortable objects what to do with a new plugin.
      *
      * @param container
      * @param ui
      */
-    me.layoutEditor.pluginSortableReceive = function(container, ui) {
+    me.layoutEditor.pluginSortableReceive = function (container, ui) {
         //Get the current Item
         var newItem = $(container).find(".rcmPluginDrag");
 
@@ -1597,15 +1597,14 @@ function RcmEdit(config) {
         var containerData = me.rcmPlugins.getPluginContainerInfo(newDiv);
 
 
-
         if ($(initialInstance).is('.initialState')) {
             $(newItem).replaceWith($(newDiv));
 
             if (containerData.isSiteWide == 'Y') {
-                $('#'+containerData.displayName).hide();
+                $('#' + containerData.displayName).hide();
             }
 
-            $(newDiv).find("a").unbind('click').click(function(e){
+            $(newDiv).find("a").unbind('click').click(function (e) {
                 //e.preventDefault();
             });
 
@@ -1620,14 +1619,13 @@ function RcmEdit(config) {
      *
      * @param container
      */
-    me.layoutEditor.deletePlugin = function(container)
-    {
+    me.layoutEditor.deletePlugin = function (container) {
         var containerData = me.rcmPlugins.getPluginContainerInfo(container);
 
         var displayName = containerData.displayName.replace(/\s/g, '-');
 
         if (containerData.isSiteWide == 'Y') {
-            $('#'+containerData.displayName).show();
+            $('#' + containerData.displayName).show();
         }
 
         me.rcmPlugins.removeEdits(container);
@@ -1641,19 +1639,18 @@ function RcmEdit(config) {
      * Make Site Wide
      *
      */
-    me.layoutEditor.makeSiteWide = function(container)
-    {
+    me.layoutEditor.makeSiteWide = function (container) {
         var form = $('<form></form>')
-            .addInput('text', 'Plugin Name','')
+            .addInput('text', 'Plugin Name', '')
             .dialog({
-                title:'Create Site Wide Plugin',
-                modal:true,
-                width:620,
-                buttons:{
-                    Cancel:function () {
+                title: 'Create Site Wide Plugin',
+                modal: true,
+                width: 620,
+                buttons: {
+                    Cancel: function () {
                         $(this).dialog("close");
                     },
-                    Ok:function () {
+                    Ok: function () {
 
                         //Get user-entered data from form
                         var newPluginName = form.find('[name=text]').val();
@@ -1668,7 +1665,7 @@ function RcmEdit(config) {
 
     };
 
-    me.pluginContextMenu = function(operation, options){
+    me.pluginContextMenu = function (operation, options) {
         $.contextMenu(operation, options);
     };
 
@@ -1683,16 +1680,16 @@ function RcmEdit(config) {
      * @param {Function} callBack this is called when the user picks a file
      * @param {String} fileType optional file type to allow
      */
-    me.showFileBrowser = function(callBack, fileType){
+    me.showFileBrowser = function (callBack, fileType) {
 
         //Declare a function for the file picker to call when user picks a file
-        window['elFinderFileSelected'] = function(url){
+        window['elFinderFileSelected'] = function (url) {
             callBack(url);
         };
 
         //Open the file picker window
-        var url=config.filebrowserBrowseUrl;
-        if(fileType){
+        var url = config.filebrowserBrowseUrl;
+        if (fileType) {
             url += '/' + fileType;
         }
         me.popup(url, config.filebrowserWindowWidth, config.filebrowserWindowHeight);
@@ -1706,9 +1703,9 @@ function RcmEdit(config) {
      *
      * @return {Null}
      */
-    me.showFileBrowserForInputBox = function(urlInputBox, fileType){
+    me.showFileBrowserForInputBox = function (urlInputBox, fileType) {
         me.showFileBrowser(
-            function(path){
+            function (path) {
                 urlInputBox.attr('value', path);
                 urlInputBox.trigger('change');
             },
@@ -1727,53 +1724,49 @@ function RcmEdit(config) {
      * @param {String} height Popup window height.
      * @param {String} options Popup window features.
      */
-    me.popup = function( url, width, height, options )
-    {
+    me.popup = function (url, width, height, options) {
         width = width || '80%';
         height = height || '70%';
 
-        if ( typeof width == 'string' && width.length > 1 && width.substr( width.length - 1, 1 ) == '%' )
-            width = parseInt( window.screen.width * parseInt( width, 10 ) / 100, 10 );
+        if (typeof width == 'string' && width.length > 1 && width.substr(width.length - 1, 1) == '%')
+            width = parseInt(window.screen.width * parseInt(width, 10) / 100, 10);
 
-        if ( typeof height == 'string' && height.length > 1 && height.substr( height.length - 1, 1 ) == '%' )
-            height = parseInt( window.screen.height * parseInt( height, 10 ) / 100, 10 );
+        if (typeof height == 'string' && height.length > 1 && height.substr(height.length - 1, 1) == '%')
+            height = parseInt(window.screen.height * parseInt(height, 10) / 100, 10);
 
-        if ( width < 640 )
+        if (width < 640)
             width = 640;
 
-        if ( height < 420 )
+        if (height < 420)
             height = 420;
 
-        var top = parseInt( ( window.screen.height - height ) / 2, 10 ),
-            left = parseInt( ( window.screen.width  - width ) / 2, 10 );
+        var top = parseInt(( window.screen.height - height ) / 2, 10),
+            left = parseInt(( window.screen.width - width ) / 2, 10);
 
         options = ( options || 'location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes' ) +
-            ',width='  + width +
+            ',width=' + width +
             ',height=' + height +
-            ',top='  + top +
+            ',top=' + top +
             ',left=' + left;
 
-        var popupWindow = window.open( '', null, options, true );
+        var popupWindow = window.open('', null, options, true);
 
         // Blocked by a popup blocker.
-        if ( !popupWindow )
+        if (!popupWindow)
             return false;
 
-        try
-        {
+        try {
             // Chrome 18 is problematic, but it's not really needed here (#8855).
             var ua = navigator.userAgent.toLowerCase();
-            if ( ua.indexOf( ' chrome/18' ) == -1 )
-            {
-                popupWindow.moveTo( left, top );
-                popupWindow.resizeTo( width, height );
+            if (ua.indexOf(' chrome/18') == -1) {
+                popupWindow.moveTo(left, top);
+                popupWindow.resizeTo(width, height);
             }
             popupWindow.focus();
             popupWindow.location.href = url;
         }
-        catch ( e )
-        {
-            popupWindow = window.open( url, null, options, true );
+        catch (e) {
+            popupWindow = window.open(url, null, options, true);
         }
 
         return true;
@@ -1782,14 +1775,14 @@ function RcmEdit(config) {
     /****************************/
     /**     User Manager       **/
     /****************************/
-    me.checkUserName = function(inputField, resultContainer) {
+    me.checkUserName = function (inputField, resultContainer) {
 
         /* Get the value of the input field and filter */
         var userName = $(inputField).val().toLowerCase().replace(/\s/g, '-').replace(/[^@\.A-Za-z0-9\-\_]/g, "");
         $(inputField).val(userName);
 
         /* make sure that the user name is not empty */
-        if(userName.length < 0) {
+        if (userName.length < 0) {
             me.ui.inputFieldError(inputField, resultContainer);
             $(resultContainer).html('');
             return false;
@@ -1798,35 +1791,34 @@ function RcmEdit(config) {
         /* Check name via rest service */
         var userOk = false;
 
-        $.getJSON('/rcm-admin-check-user/'+me.language, { userName: userName }, function(data) {
+        $.getJSON('/rcm-admin-check-user/' + me.language, { userName: userName },function (data) {
             if (data.userOk == 'Y') {
                 me.ui.inputFieldOk(inputField, resultContainer);
-            } else if(data.userOk != 'Y') {
+            } else if (data.userOk != 'Y') {
                 me.ui.inputFieldError(inputField, resultContainer);
             } else {
                 me.ui.inputFieldFatalError(inputField, resultContainer);
             }
-        }).error(function(){
+        }).error(function () {
                 me.ui.inputFieldFatalError(inputField, resultContainer);
-        });
+            });
 
         return userOk;
     };
-
 
 
     /****************************/
     /**     Page Manager        */
     /****************************/
 
-    me.checkPageName = function(inputField, pagetype, resultContainer) {
+    me.checkPageName = function (inputField, pagetype, resultContainer) {
 
         /* Get the value of the input field and filter */
         var pageUrl = $(inputField).val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9\-\_]/g, "");
         $(inputField).val(pageUrl);
 
         /* make sure that the page name is greater then 1 char */
-        if(pageUrl.length < 1) {
+        if (pageUrl.length < 1) {
             me.ui.inputFieldError(inputField, resultContainer);
             $(resultContainer).html('');
             return false;
@@ -1836,25 +1828,25 @@ function RcmEdit(config) {
         var dataOk = false;
 
 
-        $.getJSON('/rcm-admin-checkpage/'+me.language, { pageUrl: pageUrl, pageType: pagetype }, function(data) {
+        $.getJSON('/rcm-admin-checkpage/' + me.language, { pageUrl: pageUrl, pageType: pagetype },function (data) {
             if (data.dataOk == 'Y') {
                 me.ui.inputFieldOk(inputField, resultContainer);
-            } else if(data.pageOk != 'Y') {
+            } else if (data.pageOk != 'Y') {
                 me.ui.inputFieldError(inputField, resultContainer);
             } else {
                 me.ui.inputFieldFatalError(inputField, resultContainer);
             }
-        }).error(function(){
+        }).error(function () {
                 me.ui.inputFieldFatalError(inputField, resultContainer);
-        });
+            });
 
         return dataOk;
     };
 
-    me.saveAjaxAdminWindow = function(saveUrl, send, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) {
+    me.saveAjaxAdminWindow = function (saveUrl, send, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) {
         $.getJSON(saveUrl,
             send,
-            function(data) {
+            function (data) {
                 if (data.dataOk == 'Y' && data.redirect == undefined) {
                     //Close Window unless told not to
                     if (keepOpen !== true) {
@@ -1862,7 +1854,7 @@ function RcmEdit(config) {
                     }
 
                     //Show Status Message if passed in
-                    if (dataOkHeadline && dataOkMessage){
+                    if (dataOkHeadline && dataOkMessage) {
                         $.growlUI(dataOkHeadline, dataOkMessage);
                     }
 
@@ -1872,28 +1864,28 @@ function RcmEdit(config) {
                     }
                 } else if (data.dataOk == 'Y' && data.redirect) {
                     window.location = data.redirect;
-                } else if(data.dataOk != 'Y' && data.error != '') {
-                    $(formContainer).find(".ajaxFormErrorLine").html('<br /><p style="color: #FF0000;">'+data.error+'</p><br />').show();
+                } else if (data.dataOk != 'Y' && data.error != '') {
+                    $(formContainer).find(".ajaxFormErrorLine").html('<br /><p style="color: #FF0000;">' + data.error + '</p><br />').show();
                     $(formContainer).parent().scrollTop(0);
                 } else {
                     $(formContainer).find(".ajaxFormErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
                     $(formContainer).parent().scrollTop(0);
                 }
             }
-        ).error(function(){
+        ).error(function () {
                 $(formContainer).find(".ajaxFormErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
                 $(formContainer).parent().scrollTop(0);
-        })
+            })
     };
 
     /**
      * Makes a text input autocomplete page names
      * @param {jQuery} inputEle
      */
-    me.attachPageListAutoComplete = function(inputEle){
-        $.getJSON('/rcm-page-search/title',function(data){
+    me.attachPageListAutoComplete = function (inputEle) {
+        $.getJSON('/rcm-page-search/title', function (data) {
             var pageUrls = [];
-            $.each(data, function(pageUrl){
+            $.each(data, function (pageUrl) {
                 pageUrls.push(pageUrl);
             });
             inputEle.autocomplete({
