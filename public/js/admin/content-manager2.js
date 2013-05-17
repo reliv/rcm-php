@@ -800,7 +800,7 @@ function RcmEdit(config) {
         var pluginData = me.rcmPlugins.getSaveDataFromCalledPlugins();
         var pluginEdits = me.rcmPlugins.getSaveDataFromPluginEdits();
 
-        dataToReturn = $.extend(true, pluginEdits, pluginData);
+        dataToReturn = $.extend(true, pluginData, pluginEdits);
 
         return dataToReturn;
     };
