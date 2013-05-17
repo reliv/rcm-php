@@ -31,7 +31,10 @@ var rcmCkConfig = {
     filebrowserBrowseUrl : '/elfinder/ckeditor',
     filebrowserImageBrowseUrl : '/elfinder/ckeditor/images',
     filebrowserWindowHeight : '400',
-    filebrowserWindowWidth : null
+    filebrowserWindowWidth : null,
+    basicEntities : false,
+    allowedContent : true,
+    removeFormatAttributes: null
 };
 
 var rcmTinyMceConfig = {
