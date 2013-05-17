@@ -86,12 +86,21 @@ class IndexController extends \Rcm\Controller\BaseController
         }
 
         //Redirect user to published revision if not logged in
-        if (!empty($pageRevisionId) && !$this->adminIsLoggedIn()) {
+        if (!empty($pageRevisionId) && !$this->adminIsLoggedIn() && $pageType == 'n') {
             return $this->redirect()->toRoute(
                 'contentManager',
                 array(
                     'page' => $this->page->getName(),
                     'language' => $this->siteInfo->getLanguage()->getLanguage()
+                )
+            )->setStatusCode(301);
+        } elseif (!empty($pageRevisionId) && !$this->adminIsLoggedIn() && $pageType != 'n') {
+            return $this->redirect()->toRoute(
+                'contentManagerWithPageType',
+                array(
+                    'page' => $this->page->getName(),
+                    'language' => $this->siteInfo->getLanguage()->getLanguage(),
+                    'pageType' => $pageType
                 )
             )->setStatusCode(301);
         }
