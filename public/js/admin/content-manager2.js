@@ -927,8 +927,6 @@ function RcmEdit(config) {
 
         var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
 
-        console.log(containerData);
-
         $(pluginContainer).find("[data-richEdit]").each(function () {
 
             var textAreaId = $(this).attr('data-richEdit');
