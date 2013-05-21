@@ -146,12 +146,6 @@ class Address
         }
     }
 
-    function getPostalCode(){
-        if(is_object($this->getPostalCode())){
-            return $this->getPostalCode();
-        }
-    }
-
     public function setCountryFromIso3(
         $iso3,
         \Doctrine\ORM\EntityManager $entityMgr
@@ -238,5 +232,9 @@ class Address
             }
         }
         $this->postalCode = $postalCode;
+    }
+
+    function getPostalCode(){
+        return $this->postalCode;
     }
 }
