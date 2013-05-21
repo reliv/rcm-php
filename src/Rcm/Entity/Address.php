@@ -20,7 +20,7 @@
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
-Rcm\Exception\InvalidArgumentException;
+    Rcm\Exception\InvalidArgumentException;
 
 /**
  * Address Object
@@ -72,10 +72,9 @@ class Address
     protected $state;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PostalCode")
-     * @ORM\JoinColumn(referencedColumnName="postalId")
+     * @ORM\Column(type="string")
      */
-    protected $zip;
+    protected $postalCode;
 
     /**
      * @var \Rcm\Entity\Country country
@@ -136,32 +135,20 @@ class Address
         $addressLine2 = null,
         $city = null,
         $state = null,
-        $zip = null
+        $postalCode = null
     ) {
         $this->setAddressLine1($addressLine1);
         $this->setAddressLine2($addressLine2);
         $this->setCity($city);
         $this->setState($state);
-        if(isset($zip)){
-            $this->setZip($zip);
+        if(isset($postalCode)){
+            $this->setPostalCode($postalCode);
         }
     }
 
-    public function setZipFromInt(
-        $postalCode,
-        \Doctrine\ORM\EntityManager $entityMgr
-    ){
-        $zip = $entityMgr->getRepository('\Rcm\Entity\PostalCode')
-            ->findOneByPostalCode($postalCode);
-        if(!$zip){
-            throw new InvalidArgumentException();
-        }
-        $this->setZip($zip);
-    }
-
-    function getZipAsString(){
-        if(is_object($this->getZip())){
-            return $this->getZip()->getPostalCode();
+    function getPostalCode(){
+        if(is_object($this->getPostalCode())){
+            return $this->getPostalCode();
         }
     }
 
@@ -176,7 +163,7 @@ class Address
         }
         $this->setCountry($country);
     }
-    
+
     public function setAddressLine1($addressLine1)
     {
         $this->addressLine1 = strip_tags($addressLine1);
@@ -237,19 +224,19 @@ class Address
         return $this->state;
     }
 
-    public function setZip($zip)
-    {
-        if(isset($zip)&&!is_a($zip,'\Rcm\Entity\PostalCode')){
-            throw new InvalidArgumentException();
+    public function setPostalCode(
+        $postalCode,
+        $checkCountry=null,
+        $entityMgrForCheckingCountry=null
+    ) {
+        if($checkCountry=='USA'){
+            $postalCodeObject = $entityMgrForCheckingCountry
+                ->getRepository('\Rcm\Entity\PostalCode')
+                ->findOneByPostalCode($postalCode);
+            if(!$postalCodeObject){
+                throw new InvalidArgumentException();
+            }
         }
-        $this->zip = $zip;
-    }
-
-    /**
-     * @return \Rcm\Entity\PostalCode
-     */
-    public function getZip()
-    {
-        return $this->zip;
+        $this->postalCode = $postalCode;
     }
 }
