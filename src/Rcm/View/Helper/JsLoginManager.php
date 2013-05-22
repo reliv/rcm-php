@@ -10,10 +10,13 @@ class JsLoginManager extends \Zend\Form\View\Helper\AbstractHelper
             $renderer->basePath() . '/modules/rcm/js/rcm-login-mgr.js',
             'text/javascript'
         );
+        /*
+         * Couldn't use the url() zf2 helper here because of a bug in it for scheme routes
+         */
         return '
         <script type="text/javascript">
         window["rcmLoginMgr"] = new RcmLoginMgr(
-                "'. $renderer->url('contentManagerLogin') .'"
+                "https://'. $_SERVER['HTTP_HOST'] .'/login/auth"
             );
         </script>';
     }
