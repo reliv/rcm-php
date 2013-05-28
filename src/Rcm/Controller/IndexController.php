@@ -82,7 +82,7 @@ class IndexController extends \Rcm\Controller\BaseController
 
         if (!$this->page) {
             $this->response->setStatusCode(404);
-            return $this->view;
+            $this->page = $this->getPageByName('not-found', 'n');
         }
 
         //Redirect user to published revision if not logged in
