@@ -6,7 +6,7 @@ var RcmLoginMgr = function(loginUrl) {
 
     me.successCallback = null;
 
-    me.doLogin = function(username, password, failCallback) {
+    me.doLogin = function(username, password, successCallBack, failCallback) {
 
         me.failCallback=failCallback;
 
@@ -22,19 +22,19 @@ var RcmLoginMgr = function(loginUrl) {
             data : data,
             dataType: "json",
             success : function(data){
-                me.processResponse(data,failCallback)
+                me.processResponse(data,successCallBack,failCallback)
             },
             error : function(){failCallback('systemFailure');}
         });
     };
 
-    me.processResponse = function(data,failCallback) {
+    me.processResponse = function(data,successCallBack,failCallback) {
         if(!data['dataOk']) {
             me.processError(data['error'],failCallback);
             return;
         }
-
-        window.location=data['redirectUrl'];
+        successCallBack();
+        //window.location=data['redirectUrl'];
     };
 
     me.processError = function(error, failCallback) {
