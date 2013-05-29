@@ -83,6 +83,9 @@ class IndexController extends \Rcm\Controller\BaseController
         if (!$this->page) {
             $this->response->setStatusCode(404);
             $this->page = $this->getPageByName('not-found', 'n');
+            if (!$this->page) {
+                throw new \Exception('Could not find the 404 page. Create a page named "not-found" to fix this.');
+            }
         }
 
         //Redirect user to published revision if not logged in
