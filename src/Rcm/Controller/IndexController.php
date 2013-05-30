@@ -167,7 +167,7 @@ class IndexController extends \Rcm\Controller\BaseController
         $layoutView->setVariable('metaDesc', $this->pageRevision->getDescription());
         $layoutView->setVariable('metaKeys', $this->pageRevision->getKeywords());
 
-        if ($this->adminIsLoggedIn()) {
+        if ($this->adminIsLoggedIn() && $pageName == $this->page->getName()) {
             $this->doAdmin();
         }
 
