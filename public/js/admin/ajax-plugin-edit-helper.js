@@ -19,7 +19,7 @@ var AjaxPluginEditHelper = function (instanceId, pluginUrlName) {
         $.getJSON(
             pluginBaseUrl + 'instance-config-and-new-instance-config',
             function (result) {
-                callback(result.instanceConfig, result.newInstanceConfig);
+                callback(result.instanceConfig, result.defaultInstanceConfig);
             }
         );
     };

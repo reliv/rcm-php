@@ -172,7 +172,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     }
 
     function getNewInstanceConfig($pluginPath){
-        return include $pluginPath.'/config/newInstanceConfig.php';
+        return include $pluginPath.'/config/defaultInstanceConfig.php';
     }
 
     function createHomePage(){
