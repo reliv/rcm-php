@@ -1040,8 +1040,8 @@ function RcmEdit(config) {
             $(this).parent().html(currentHtml);
         });
         try {
-            rcmEdit.rcmPlugins.initPluginRichEdits(pluginContainer);
-            rcmEdit.rcmPlugins.initHtml5Edits(pluginContainer);
+            rcmEdit.rcmPlugins.initPluginRichEdits(pluginContainer.parent());
+            rcmEdit.rcmPlugins.initHtml5Edits(pluginContainer.parent());
         } catch (e) {
 
         }
