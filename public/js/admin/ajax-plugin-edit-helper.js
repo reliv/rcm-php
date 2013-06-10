@@ -82,15 +82,17 @@ var AjaxPluginEditHelper = function (instanceId, pluginUrlName) {
      */
     me.captureInputGroup = function(inputGroupName, inputGroup, data){
         $.each(data[inputGroupName],function(key){
-            data[inputGroupName][key]=inputGroup[key].val()
+            if(inputGroup[key]){
+                data[inputGroupName][key]=inputGroup[key].val()
+            }
         });
         return data;
     };
 
     me.buildEmailInputGroup = function(emailGroupData){
         return {
-            fromEmail:$.dialogIn('text','From',emailGroupData['fromEmail']),
-            fromName:$.dialogIn('text','From',emailGroupData['fromName']),
+            fromEmail:$.dialogIn('text','From Email',emailGroupData['fromEmail']),
+            fromName:$.dialogIn('text','From Name',emailGroupData['fromName']),
             subject:$.dialogIn('text','Subject',emailGroupData['subject']),
             body:$.dialogIn('richEdit','Body',emailGroupData['body'])
         };
