@@ -19,7 +19,6 @@
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://ci.reliv.com/confluence
  */
 // ZF2 project root folder that contains public, module, vendor, etc.
 $projectRootDir = realpath(__DIR__ . '/../../../..');
