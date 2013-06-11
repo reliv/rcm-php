@@ -3,11 +3,8 @@
  *
  * JavaScript object creates a progress indicator for multi part forms
  *
- * @category  ApertureSlider
- * @package   ApertureSlider
  * @author    Rod Mcnew
  * @license   License.txt New BSD License
- * @version   Release: 2.0
  */
 
 /**

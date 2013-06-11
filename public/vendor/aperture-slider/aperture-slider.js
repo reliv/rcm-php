@@ -3,11 +3,8 @@
  *
  * JavaScript object that can be used to create sliding multi-part forms.
  *
- * @category  ApertureSlider
- * @package   ApertureSlider
  * @author    Rod Mcnew
  * @license   License.txt New BSD License
- * @version   Release: 2.0
  */
 
 /**
