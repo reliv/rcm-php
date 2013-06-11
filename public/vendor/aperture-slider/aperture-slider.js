@@ -21,14 +21,14 @@ var ApertureSlider = function (apertureDiv, configOverride) {
      * @type {Object}
      */
     var config = {
-        frameWidth:800,
-        minHeight:400,
-        framesPerView:1, //Values > 1 not compatible with hideOffScreenFrames
-        animationDelay:400,
-        frameSeparation:100, //Must be 0 if framesPerView > 1
-        hideOffScreenFrames:true, //Prevents focus in off-screen forms.
-        backButtonSupport:false, //Requires jQuery bbq library
-        bbqStateId:'s'
+        frameWidth: 800,
+        minHeight: 400,
+        framesPerView: 1, //Values > 1 not compatible with hideOffScreenFrames
+        animationDelay: 400,
+        frameSeparation: 100, //Must be 0 if framesPerView > 1
+        hideOffScreenFrames: true, //Prevents focus in off-screen forms.
+        backButtonSupport: false, //Requires jQuery bbq library
+        bbqStateId: 's'
     };
 
     /**
@@ -69,7 +69,7 @@ var ApertureSlider = function (apertureDiv, configOverride) {
         filmWidth = (frameCount * totalFrameWidth * 2); // * 2 for good measure
         apertureWidth = config.framesPerView * config.frameWidth;
         maxFrameIndex = frameCount - config.framesPerView + 1;
-        if(maxFrameIndex < 0){
+        if (maxFrameIndex < 0) {
             maxFrameIndex = 1;
         }
 
@@ -155,7 +155,7 @@ var ApertureSlider = function (apertureDiv, configOverride) {
 
             filmDiv.animate(
                 {
-                    'margin-left':-(newFrame - 1) * totalFrameWidth
+                    'margin-left': -(newFrame - 1) * totalFrameWidth
                 },
                 config.animationDelay,
                 function () {

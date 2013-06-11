@@ -17,7 +17,7 @@ var ApertureProgressIndicator = function (containerDiv, stepCount) {
     for (var i = 1; i <= stepCount; i++) {
         containerDiv.append($('<span>' + i + '</span>'))
     }
-    this.setProgress = function(step){
+    this.setProgress = function (step) {
         var progressChunks = containerDiv.find('span');
         $.each(progressChunks, function (i, progressChunk) {
             i++;
