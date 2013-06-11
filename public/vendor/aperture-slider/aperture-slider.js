@@ -5,9 +5,9 @@
  *
  * @category  ApertureSlider
  * @package   ApertureSlider
- * @author    Rod Mcnew <rmcnew@relivinc.com>
+ * @author    Rod Mcnew
  * @license   License.txt New BSD License
- * @version   Release: 1.0
+ * @version   Release: 2.0
  */
 
 /**
