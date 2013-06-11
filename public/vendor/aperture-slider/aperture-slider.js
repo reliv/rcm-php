@@ -8,13 +8,12 @@
  * @author    Rod Mcnew <rmcnew@relivinc.com>
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://ci.reliv.com/confluence
  */
 
 /**
  * Aperture Slider Constructor
  *
- * @param {Object} apertureDiv jQuery object for the aperture div
+ * @param {jQuery} apertureDiv jQuery object for the aperture div
  * @param {Object} [configOverride] defaults are below
  * @constructor
  */
@@ -36,7 +35,7 @@ var ApertureSlider = function (apertureDiv, configOverride) {
     };
 
     /**
-     * Always refers to me object unlike the 'me' JS variable;
+     * Always refers to me object unlike the 'this' JS variable;
      *
      * @type {ApertureSlider}
      */
@@ -60,7 +59,7 @@ var ApertureSlider = function (apertureDiv, configOverride) {
     /**
      * Runs immediately after this class is instantiated
      */
-    me.init = function () {
+    this.init = function () {
 
 
         //Get all the divs we need to work with
@@ -112,11 +111,11 @@ var ApertureSlider = function (apertureDiv, configOverride) {
     /**
      * Sets the current frame. This is the meat of this class.
      *
-     * @param {Integer} newFrame the frame that we want to switch to
+     * @param {int} newFrame the frame that we want to switch to
      * @param {Function} [callback] is called when sliding is complete
      * @param {Boolean} [skipPushState] used internally only
      */
-    me.goToFrame = function (newFrame, callback, skipPushState) {
+    this.goToFrame = function (newFrame, callback, skipPushState) {
 
         if (newFrame < minFrameIndex) {
             newFrame = minFrameIndex;
@@ -188,18 +187,18 @@ var ApertureSlider = function (apertureDiv, configOverride) {
 
     };
 
-    me.focusOnFirstInput = function () {
+    this.focusOnFirstInput = function () {
         var input = me.getCurrentFrameDiv().find('input').first();
         if (input) {
             input.focus();
         }
     };
 
-    me.getCurrentFrameDiv = function () {
+    this.getCurrentFrameDiv = function () {
         return me.getFrameDiv(currentFrame);
     };
 
-    me.getFrameDiv = function (frameNumber) {
+    this.getFrameDiv = function (frameNumber) {
         return $(frameDivs.get(frameNumber - 1));
     };
 
@@ -208,16 +207,16 @@ var ApertureSlider = function (apertureDiv, configOverride) {
      *
      * @return {Number}
      */
-    me.getCurrentFrame = function () {
+    this.getCurrentFrame = function () {
         return currentFrame;
     };
 
     /**
      *
-     * @param {Integer} frameDelta amount to change frame index by
+     * @param {int} frameDelta amount to change frame index by
      * @param {Function} [callback] is called when sliding is complete
      */
-    me.go = function (frameDelta, callback) {
+    this.go = function (frameDelta, callback) {
         me.goToFrame(currentFrame + frameDelta, callback);
     };
 
@@ -226,7 +225,7 @@ var ApertureSlider = function (apertureDiv, configOverride) {
      *
      * @param {Function} [callback] is called when sliding is complete
      */
-    me.goForward = function (callback) {
+    this.goForward = function (callback) {
         me.go(1, callback);
     };
 
@@ -235,7 +234,7 @@ var ApertureSlider = function (apertureDiv, configOverride) {
      *
      * @param {Function} [callback] is called when sliding is complete
      */
-    me.goBack = function (callback) {
+    this.goBack = function (callback) {
         me.go(-1, callback);
     };
 
@@ -244,7 +243,7 @@ var ApertureSlider = function (apertureDiv, configOverride) {
      *
      * @param {Function} [callback] is called when sliding is complete
      */
-    me.pageForward = function (callback) {
+    this.pageForward = function (callback) {
         me.go(config.framesPerView - 1, callback)
     };
 
@@ -253,7 +252,7 @@ var ApertureSlider = function (apertureDiv, configOverride) {
      *
      * @param {Function} [callback] is called when sliding is complete
      */
-    me.pageBack = function (callback) {
+    this.pageBack = function (callback) {
         me.go(0 - config.framesPerView + 1, callback)
     };
 
@@ -262,14 +261,14 @@ var ApertureSlider = function (apertureDiv, configOverride) {
      *
      * @return {Number}
      */
-    me.getFrameCount = function () {
+    this.getFrameCount = function () {
         return frameCount;
     };
 
     /**
      * Handle browser back, forward, and refreash buttons
      */
-    me.handleHashChange = function () {
+    this.handleHashChange = function () {
         if (config.backButtonSupport) {
             var frame = $.bbq.getState(config.bbqStateId, true) || 1;
             me.goToFrame(
@@ -284,7 +283,7 @@ var ApertureSlider = function (apertureDiv, configOverride) {
      *
      * @param frame
      */
-    me.pushStateToHistory = function (frame) {
+    this.pushStateToHistory = function (frame) {
         if (config.backButtonSupport) {
             var state = {};
             state[config.bbqStateId] = frame;
@@ -292,5 +291,5 @@ var ApertureSlider = function (apertureDiv, configOverride) {
         }
     };
 
-    me.init();
+    this.init();
 };
