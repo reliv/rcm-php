@@ -1,25 +1,11 @@
 <?php
 /**
- * ZF2 Module Public Asset Installer
+ * ZF2 All Module Classmap Generator
  *
- * This PHP CLI script allows ZF2 modules to have routable public asset
- * folders. Urls like /vendor/RodsZf2Module/css/style.css will map to
- * /vendor/rod/RodsZf2Module/public/css/style.css This is accomplished by
- * creating symlinks. This script must run from your ZF2 project root folder.
- * This script is similar to the Symfony 2 command
- * "php app/console assets:install"..
+ * Searches for all ZF2 modules in a folder and then runs the ZF2 classmap generator on each module
  *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Rod McNew <rmcnew@relivinc.com>
- * @copyright 2012 Reliv International
+ * @author    Rod McNew
  * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://ci.reliv.com/confluence
  */
 // ZF2 project root folder that contains public, module, vendor, etc.
 $projectRootDir = realpath(__DIR__ . '/../../../..');
