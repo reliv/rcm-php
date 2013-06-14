@@ -27,6 +27,9 @@ class PhoneModel
     }
 
     function formatPhoneNumber($phoneNum){
+        if(empty($phoneNum)){
+            return null;
+        }
         if(!$this->validatePhoneNumber($phoneNum)){
             throw new \Rcm\Exception\RuntimeException(
                 'Cannot format invalid phone number: "'.$phoneNum.'"'
