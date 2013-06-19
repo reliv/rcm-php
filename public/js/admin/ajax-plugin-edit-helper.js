@@ -3,7 +3,7 @@
  *
  * @constructor
  */
-var AjaxPluginEditHelper = function (instanceId, pluginUrlName) {
+var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
 
     /**
      * Always refers to this object unlike the 'this' JS variable;
@@ -97,4 +97,28 @@ var AjaxPluginEditHelper = function (instanceId, pluginUrlName) {
             body:$.dialogIn('richEdit','Body',emailGroupData['body'])
         };
     };
+
+    this.attachPropertiesDialog = function(showMainPropertiesCallback){
+        //Double clicking will show properties dialog
+        container.delegate('div', 'dblclick', function (event) {
+            event.stopPropagation();
+            showMainPropertiesCallback();
+        });
+
+        //Add right click menu
+        rcmEdit.pluginContextMenu({
+            selector: rcm.getPluginContainerSelector(instanceId),
+            //Here are the right click menu options
+            items: {
+                edit: {
+                    name: 'Edit Properties',
+                    icon: 'edit',
+                    callback: function () {
+                        showMainPropertiesCallback();
+                    }
+                }
+
+            }
+        });
+    }
 };
