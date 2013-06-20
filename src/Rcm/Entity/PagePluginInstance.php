@@ -88,7 +88,7 @@ class PagePluginInstance
     protected $divFloat = 'left';
 
     /**
-     * @ORM\ManyToOne(targetEntity="PluginInstance")
+     * @ORM\ManyToOne(targetEntity="PluginInstance",fetch="EAGER")
      * @ORM\JoinColumn(
      *      name="instance_id",
      *      referencedColumnName="instanceId",
