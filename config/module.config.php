@@ -675,7 +675,14 @@ return array(
                     'Rcm' => 'relivContentManager'
                 )
             )
-        )
+        ),
+        'configuration' => array(
+            'orm_default' => array(
+                'metadata_cache'    => 'doctrine_cache',
+                'query_cache'       => 'doctrine_cache',
+                'result_cache'      => 'doctrine_cache',
+            )
+        ),
     ),
 
     'rcmCache' => array(
