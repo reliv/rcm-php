@@ -221,8 +221,6 @@ class Module
                         )
                     );
 
-
-
                     return $cache;
                 },
 

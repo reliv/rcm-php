@@ -89,27 +89,12 @@ class SiteFactory extends EntityMgrAware
         }
 
         //Get Site Entity
-        $query = $entityMgr->createQuery('
-            SELECT site, domain, pwsInfo, language, country
-            FROM \Rcm\Entity\Site site
-            JOIN site.domain domain
-            JOIN site.pwsInfo pwsInfo
-            JOIN site.language language
-            JOIN site.country country
-            WHERE
-              site.domain = :domain
-              AND site.language = :language
-        ');
-
-        $query->setParameter('domain', $domain);
-        $query->setParameter('language', $languageEntity);
-        $query->setMaxResults(1);
-        $query->useQueryCache(true);
-        $query->useResultCache(true, 3600, 'site_'.$domainName.'_'.$language);
-
-        $results = $query->getResult();
-
-        $site = $results[0];
+        $site = $siteRepo->findOneBy(
+            array(
+                'domain' => $domain,
+                'language' => $languageEntity
+            )
+        );
 
         if (!$site) {
             throw new SiteNotFoundException(

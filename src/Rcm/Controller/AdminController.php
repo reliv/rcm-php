@@ -159,8 +159,8 @@ class AdminController extends BaseController
         $body = $this->viewRenderer->render($pluginView);
         $pluginHtml =
             $this->viewRenderer->plugin('headScript')
-                . $this->viewRenderer->plugin('headLink')
-                . $body;
+            . $this->viewRenderer->plugin('headLink')
+            . $body;
 
         $jsonModel = new \Zend\View\Model\JsonModel();
         $jsonModel->setVariables(
@@ -201,10 +201,6 @@ class AdminController extends BaseController
             $this->entityMgr->persist($newRevision);
             $this->entityMgr->flush();
         }
-
-        $config = $entityMgr->getConfiguration(); //Get an instance of the configuration
-        $queryCacheDriver = $config->getQueryCacheImpl(); //Gets Query Cache Driver
-        $queryCacheDriver->delete($this->siteInfo->getSiteId().'_'.$this->page->getName().'_'.$this->page->getPageType());
 
         if ($this->page->getPageType() != 'n') {
             return $this->redirect()->toRoute(
@@ -248,10 +244,6 @@ class AdminController extends BaseController
 
         $entityMgr->persist($this->page);
         $entityMgr->flush();
-
-        $config = $entityMgr->getConfiguration(); //Get an instance of the configuration
-        $queryCacheDriver = $config->getQueryCacheImpl(); //Gets Query Cache Driver
-        $queryCacheDriver->delete($this->siteInfo->getSiteId().'_'.$this->page->getName().'_'.$this->page->getPageType());
 
 
         if ($this->page->getPageType() != 'n') {
@@ -298,10 +290,6 @@ class AdminController extends BaseController
 
         $entityMgr->persist($page);
         $entityMgr->flush();
-
-        $config = $entityMgr->getConfiguration(); //Get an instance of the configuration
-        $queryCacheDriver = $config->getQueryCacheImpl(); //Gets Query Cache Driver
-        $queryCacheDriver->delete($this->siteInfo->getSiteId().'_'.$this->page->getName().'_'.$this->page->getPageType());
 
 
         if ($this->page->getPageType() != 'n') {
@@ -742,7 +730,7 @@ class AdminController extends BaseController
 
         if ($newPluginInstance->getInstance()->isSiteWide()
             && $newPluginInstance->getInstance()->getDisplayName()
-                != $data['pluginDisplayName']
+            != $data['pluginDisplayName']
         ) {
             $newPluginInstance->getInstance()->setDisplayName(
                 $data['pluginDisplayName']
