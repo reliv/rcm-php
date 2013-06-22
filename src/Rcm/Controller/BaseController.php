@@ -281,11 +281,28 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
     }
 
     protected function getPageByName($pageName, $pageType='n') {
-        $pageRepo = $this->entityMgr->getRepository('\Rcm\Entity\Page');
-        return $pageRepo->findOneBy(array(
+
+        $query = $this->entityMgr->createQuery('
+            SELECT page
+            FROM \Rcm\Entity\Page page
+            WHERE
+              page.site = :site
+              AND page.name = :pageName
+              AND page.pageType = :pageType
+        ');
+
+        $query->setParameters(array(
             'site' => $this->siteInfo,
-            'name' => $pageName,
-            'pageType' => $pageType
+            'pageName' => $pageName,
+            'pageType' => $pageType,
         ));
+
+        $query->setMaxResults(1);
+        $query->useQueryCache(true);
+        $query->useResultCache(true, 3600, $this->siteInfo->getSiteId().'_'.$pageName.'_'.$pageType);
+
+        $result = $query->getResult();
+
+        return $result[0];
     }
 }

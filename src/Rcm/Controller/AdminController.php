@@ -202,6 +202,10 @@ class AdminController extends BaseController
             $this->entityMgr->flush();
         }
 
+        $config = $entityMgr->getConfiguration(); //Get an instance of the configuration
+        $queryCacheDriver = $config->getQueryCacheImpl(); //Gets Query Cache Driver
+        $queryCacheDriver->delete($this->siteInfo->getSiteId().'_'.$this->page->getName().'_'.$this->page->getPageType());
+
         if ($this->page->getPageType() != 'n') {
             return $this->redirect()->toRoute(
                 'contentManagerWithPageType',
@@ -244,6 +248,10 @@ class AdminController extends BaseController
 
         $entityMgr->persist($this->page);
         $entityMgr->flush();
+
+        $config = $entityMgr->getConfiguration(); //Get an instance of the configuration
+        $queryCacheDriver = $config->getQueryCacheImpl(); //Gets Query Cache Driver
+        $queryCacheDriver->delete($this->siteInfo->getSiteId().'_'.$this->page->getName().'_'.$this->page->getPageType());
 
 
         if ($this->page->getPageType() != 'n') {
@@ -290,6 +298,10 @@ class AdminController extends BaseController
 
         $entityMgr->persist($page);
         $entityMgr->flush();
+
+        $config = $entityMgr->getConfiguration(); //Get an instance of the configuration
+        $queryCacheDriver = $config->getQueryCacheImpl(); //Gets Query Cache Driver
+        $queryCacheDriver->delete($this->siteInfo->getSiteId().'_'.$this->page->getName().'_'.$this->page->getPageType());
 
 
         if ($this->page->getPageType() != 'n') {

@@ -130,6 +130,11 @@ class Module
     {
         return array(
             'factories' => array(
+                'doctrine.cache.doctrine_cache' => function ($sm) {
+                    $zendCache = $sm->get('rcmCache');
+                    $cache = new \DoctrineModule\Cache\ZendStorageCache($zendCache);
+                    return $cache;
+                },
                 'cypher'=>function($serviceMgr){
                     $config=$serviceMgr->get('config');
                     $config=$config['encryption']['blockCypher'];
@@ -141,6 +146,7 @@ class Module
                     $cypher->setKey($config['key']);
                     return $cypher;
                 },
+
                 'rcmSite' => function($serviceMgr){
                     $appConfig = $serviceMgr->get('config');
                     $siteFactory = $serviceMgr->get('Rcm\Model\SiteFactory');
@@ -149,11 +155,11 @@ class Module
 
                     try {
                         $site = $siteFactory->getSite(
-                            $_SERVER['HTTP_HOST']//,$language
+                            $_SERVER['HTTP_HOST']//, $language
                         );
                     } catch (\Rcm\Exception\SiteNotFoundException $e) {
                         $site = $siteFactory->getSite(
-                            $appConfig['reliv']['defaultDomain']//,$language
+                            $appConfig['reliv']['defaultDomain']//, $language
                         );
                     }
                     return $site;
@@ -207,17 +213,15 @@ class Module
 
                     $cache = \Zend\Cache\StorageFactory::factory(
                         array(
-                            'adapter' => 'filesystem',
-                            'plugins' => array(
-                                'exception_handler' => array('throw_exceptions' => true),
-                                'serializer'
+                            'adapter' => array(
+                                'name' => $config['rcmCache']['adapter'],
+                                'options' => $config['rcmCache']['options'],
                             ),
+                            'plugins' => $config['rcmCache']['plugins'],
                         )
                     );
 
-                   $cache->setOptions(array(
-                        'cache_dir' => '/www/sites/reliv/data/cache'
-                   ));
+
 
                     return $cache;
                 },

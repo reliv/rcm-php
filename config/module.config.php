@@ -677,4 +677,12 @@ return array(
             )
         )
     ),
+
+    'rcmCache' => array(
+        'adapter' => 'Memory',
+        'plugins' => array(),
+        'options' => array(
+            'namespace' => 'RcmCache'
+        )
+    )
 );
