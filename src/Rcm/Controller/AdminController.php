@@ -22,12 +22,7 @@ namespace Rcm\Controller;
 use \Rcm\Controller\BaseController,
     \Rcm\Entity\PageRevision,
     \Rcm\Entity\PluginInstance,
-    \Rcm\Entity\PluginAsset,
-    \Doctrine\ORM\EntityManager,
-    \Rcm\Model\UserManagement\UserManagerInterface,
-    \Rcm\Model\PluginManager,
-    \Zend\View\Renderer\PhpRenderer,
-    \RcmShoppingCart\Model\ProductModel;
+    \Rcm\Entity\PluginAsset;
 
 /**
  * Index Controller for the entire application
@@ -48,20 +43,7 @@ use \Rcm\Controller\BaseController,
 class AdminController extends BaseController
 {
 
-    protected $productModel;
 
-    public function __construct(
-        UserManagerInterface $userMgr,
-        PluginManager $pluginManager,
-        EntityManager $entityMgr,
-        PhpRenderer $viewRenderer,
-        $config,
-        ProductModel $productModel
-    ) {
-        parent::__construct($userMgr, $pluginManager, $entityMgr, $viewRenderer, $config);
-
-        $this->productModel = $productModel;
-    }
 
     public function newPageWizardAction()
     {
