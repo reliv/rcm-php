@@ -333,7 +333,7 @@
                 tags = _sortTags(tags);
             }
 
-            if (opts.autocomplete && typeof($.fn.autocomplete) == 'function' && opts.allowEdit) {
+            if (_isAutoCompleteWithNoAjaxSearch(opts)) {
                 $(this).find(".tagInputField").autocomplete("option", "source", tags.availableTags);
             }
 
@@ -345,6 +345,10 @@
 
             if (typeof(opts.afterAdd) == "function" && !skipCallback) {
                 opts.afterAdd.call(this, value);
+            }
+
+            if (opts.maxTags > 0 && tags.assignedTags.length >= opts.maxTags) {
+                tagField.hide();
             }
 
             return tags;
@@ -367,6 +371,8 @@
 
             var tags = _getData(this, 'tags');
 
+            var tagField = $(this).find(".tagInputField");
+
             $(this).find('[data-tag="'+value+'"]').remove();
 
             $.each(tags.assignedTags, function (i, e) {
@@ -381,11 +387,15 @@
                 tags = _sortTags(tags);
             }
 
-            if (opts.autocomplete && typeof($.fn.autocomplete) == 'function' && opts.allowEdit) {
+            if (_isAutoCompleteWithNoAjaxSearch(opts)) {
                 $(this).find(".tagInputField").autocomplete("option", "source", tags.availableTags);
             }
 
             _saveData(this, 'tags', tags);
+
+            if (opts.maxTags > 0 && tags.assignedTags.length < opts.maxTags) {
+                tagField.show();
+            }
 
             return tags;
         },
@@ -417,7 +427,7 @@
                 tags = _sortTags(tags);
             }
 
-            if (opts.autocomplete && typeof($.fn.autocomplete) == 'function' && opts.allowEdit) {
+            if (_isAutoCompleteWithNoAjaxSearch(opts)) {
                 $(this).find(".tagInputField").autocomplete("option", "source", tags.availableTags);
             }
 
@@ -449,7 +459,7 @@
                 }
             });
 
-            if (opts.autocomplete && typeof($.fn.autocomplete) == 'function' && opts.allowEdit) {
+            if (_isAutoCompleteWithNoAjaxSearch(opts)) {
                 $(this).find(".tagInputField").autocomplete("option", "source", tags.availableTags);
             }
 
@@ -686,14 +696,17 @@
         if (opts.initLoad) {
             source = tags.availableTags;
         } else if (opts.getURL) {
-            source = function () {
+            source = function (request, response) {
+                if (!opts.initLoad) {
+                    opts.getData[opts.queryname] = request.term;
+                }
                 $.ajax({
                     url: opts.getURL,
                     cache: false,
                     data: opts.getData,
                     dataType: 'json',
                     success: function (data) {
-                        _processTags(tagContainer, data)
+                        response( data.availableTags );
                     },
                     error: function (xhr, text, error) {
                         _debug(xhr, {text : text, error : error });
@@ -1017,14 +1030,13 @@
             return false;
         }
 
-        var check = true;
-
-        return check;
+        return true;
     };
 
     /**
      * Check to see if the tag already exists in the list.
      *
+     * @param value
      * @param tags
      * @param type
      * @returns {boolean}
@@ -1098,6 +1110,15 @@
         }
 
         return data[keyName];
+    };
+
+    var _isAutoCompleteWithNoAjaxSearch = function(opts) {
+
+        if (opts.autocomplete && typeof($.fn.autocomplete) == 'function' && opts.allowEdit && opts.initLoad) {
+            return true;
+        }
+
+        return false;
     };
 
     /**
