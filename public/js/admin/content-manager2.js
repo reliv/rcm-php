@@ -1850,6 +1850,8 @@ function RcmEdit(config) {
                     //Close Window unless told not to
                     if (keepOpen !== true) {
                         $(formContainer).parent().dialog("close");
+                    } else {
+                        $(formContainer).find(".ajaxFormErrorLine").html('').hide();
                     }
 
                     //Show Status Message if passed in

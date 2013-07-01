@@ -123,7 +123,7 @@ class Page
      * )
      */
     protected $revisions;
-    
+
     /**
      * Constructor for Page Entity.  Adds a hydrator to site reference
      */
@@ -326,6 +326,11 @@ class Page
         \Rcm\Entity\PageRevision $currentRevision
     ) {
         $this->setPublishedRevision($currentRevision);
+    }
+
+    public function removeCurrentRevision() {
+        $this->setStagedRevision($this->currentRevision);
+        $this->currentRevision = null;
     }
 
     /**
