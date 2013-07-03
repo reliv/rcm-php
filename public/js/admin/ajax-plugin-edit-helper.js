@@ -15,15 +15,16 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
         + instanceId + '/';
 
     me.getInstanceConfigAndNewInstanceConfigFromServer = function (callback) {
-
+        container.hide();//Hide while loading to prevent weirdness
         $.getJSON(
             pluginBaseUrl + 'instance-config-and-new-instance-config',
             function (result) {
+                container.show();
                 callback(result.instanceConfig, result.defaultInstanceConfig);
             }
         );
     };
-    
+
     /**
      * An input group is an array of text inputs, useful for html selects.
      * This function builds an array of input groups.
@@ -32,9 +33,9 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
      * @param defaultData
      * @return {Object}
      */
-    me.buildInputGroups = function(groupDataKeyNames, data, defaultData){
+    me.buildInputGroups = function (groupDataKeyNames, data, defaultData) {
         var inputGroups = {};
-        $.each(groupDataKeyNames,function(){
+        $.each(groupDataKeyNames, function () {
             inputGroups[this] = me.buildInputGroup(
                 data[this],
                 defaultData[this]
@@ -50,9 +51,9 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
      * @param data
      * @return {*}
      */
-    me.captureInputGroups = function(inputGroups, data){
-        $.each(inputGroups,function(inputGroupName,inputGroup){
-            data = me.captureInputGroup(inputGroupName,inputGroup,data);
+    me.captureInputGroups = function (inputGroups, data) {
+        $.each(inputGroups, function (inputGroupName, inputGroup) {
+            data = me.captureInputGroup(inputGroupName, inputGroup, data);
         });
         return data;
     };
@@ -67,7 +68,7 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
     me.buildInputGroup = function (currentTranslations, defaultTranslations) {
         var inputs = {};
         $.each(defaultTranslations, function (key, value) {
-            inputs[key]  = $.dialogIn('text', value, currentTranslations[key]);
+            inputs[key] = $.dialogIn('text', value, currentTranslations[key]);
         });
         return inputs
     };
@@ -80,25 +81,25 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
      * @param data
      * @return {*}
      */
-    me.captureInputGroup = function(inputGroupName, inputGroup, data){
-        $.each(data[inputGroupName],function(key){
-            if(inputGroup[key]){
-                data[inputGroupName][key]=inputGroup[key].val()
+    me.captureInputGroup = function (inputGroupName, inputGroup, data) {
+        $.each(data[inputGroupName], function (key) {
+            if (inputGroup[key]) {
+                data[inputGroupName][key] = inputGroup[key].val()
             }
         });
         return data;
     };
 
-    me.buildEmailInputGroup = function(emailGroupData){
+    me.buildEmailInputGroup = function (emailGroupData) {
         return {
-            fromEmail:$.dialogIn('text','From Email',emailGroupData['fromEmail']),
-            fromName:$.dialogIn('text','From Name',emailGroupData['fromName']),
-            subject:$.dialogIn('text','Subject',emailGroupData['subject']),
-            body:$.dialogIn('richEdit','Body',emailGroupData['body'])
+            fromEmail: $.dialogIn('text', 'From Email', emailGroupData['fromEmail']),
+            fromName: $.dialogIn('text', 'From Name', emailGroupData['fromName']),
+            subject: $.dialogIn('text', 'Subject', emailGroupData['subject']),
+            body: $.dialogIn('richEdit', 'Body', emailGroupData['body'])
         };
     };
 
-    this.attachPropertiesDialog = function(showMainPropertiesCallback){
+    this.attachPropertiesDialog = function (showMainPropertiesCallback) {
         //Double clicking will show properties dialog
         container.delegate('div', 'dblclick', function (event) {
             event.stopPropagation();
