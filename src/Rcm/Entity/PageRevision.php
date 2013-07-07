@@ -477,7 +477,7 @@ class PageRevision
      */
     public function addInstance(\Rcm\Entity\PagePluginInstance $instance)
     {
-        $this->pluginInstances[$instance->getInstanceId()] = $instance;
+        $this->pluginInstances[] = $instance;
     }
 
     public function getInstanceById($instanceId)
