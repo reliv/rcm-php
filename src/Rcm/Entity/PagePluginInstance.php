@@ -57,7 +57,7 @@ class PagePluginInstance
      *
      * @ORM\Column(type="integer")
      */
-    protected $layoutContainer;
+        protected $layoutContainer;
 
     /**
      * @var integer Order of Layout Placement
