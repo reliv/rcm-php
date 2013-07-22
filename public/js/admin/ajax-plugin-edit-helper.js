@@ -20,6 +20,7 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
             pluginBaseUrl + 'instance-config-and-new-instance-config',
             function (result) {
                 container.show();
+                window['rcmEdit'].refreshEditors(container);
                 callback(result.instanceConfig, result.defaultInstanceConfig);
             }
         );
