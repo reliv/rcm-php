@@ -365,6 +365,7 @@ var inputImageEventsDelegated = false;
                     '</p>'
             );
             p.append(div);
+            p.append('<br>');
             // This terrible timeout hack is needed because the new version of
             // ckEditor only works on elements that are in the DOM
             setTimeout(
