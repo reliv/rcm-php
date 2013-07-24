@@ -226,7 +226,7 @@ var inputImageEventsDelegated = false;
          * Build html for a select drop down box
          *
          * @param {String} description title to show user
-         * @param {Array} choices options [html key => display value]
+         * @param {Object} choices options {value: display, value2: display2}
          * @param {String} [value] current choice key
          * @param {Boolean} [allowCustomValues] allow user to enter custom values that
          *                  are no in the select

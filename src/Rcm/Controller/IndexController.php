@@ -171,6 +171,7 @@ class IndexController extends \Rcm\Controller\BaseController
             $this->doAdmin();
         }
 
+        $layoutView->setVariable('pageName', $this->page->getName());
         return $this->view;
     }
 

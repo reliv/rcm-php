@@ -134,11 +134,11 @@ class SiteFactory extends EntityMgrAware
         \Rcm\Entity\Country $country,
         \Rcm\Entity\Language $language,
         $ownerAccountNum,
+        $initialSiteWidePlugins = array(),
+        $additionalDomain = array(),
         $loginPageUrl = '',
         $loginRequired = false,
-        $permittedTypes = array(),
-        $additionalDomain = array(),
-        $initialSiteWidePlugins = array()
+        $permittedTypes = array()
     ) {
         $entityMgr = $this->entityMgr;
 
