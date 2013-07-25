@@ -183,6 +183,7 @@ class SiteFactory extends EntityMgrAware
         $site->setTheme($theme);
         $site->setLoginRequired($loginRequired);
         $site->setLoginPage($loginPageUrl);
+        $site->setCurrencySymbol('$');
 
         if (!empty($permittedTypes) && is_array($permittedTypes)) {
             $site->addPermittedAccountTypesByArray($permittedTypes);
