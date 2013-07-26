@@ -26,14 +26,12 @@ var RcmLoginMgr = function(loginUrl) {
             },
             error : function(){failCallback('systemFailure');}
         });
-
-        return false;
     };
 
     me.processResponse = function(data,successCallBack,failCallback) {
         if(!data['dataOk']) {
             me.processError(data['error'],failCallback);
-            return ;
+            return;
         }
         successCallBack();
         //window.location=data['redirectUrl'];
