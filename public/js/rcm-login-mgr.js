@@ -26,6 +26,8 @@ var RcmLoginMgr = function(loginUrl) {
             },
             error : function(){failCallback('systemFailure');}
         });
+
+        return false;
     };
 
     me.processResponse = function(data,successCallBack,failCallback) {
