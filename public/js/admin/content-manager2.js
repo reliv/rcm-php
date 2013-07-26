@@ -1851,6 +1851,16 @@ function RcmEdit(config) {
         });
     };
 
+    me.saveAjaxAdminWindowUsingPost = function(saveUrl, send, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) {
+        $.post('/rcm-admin-shopping-cart-product-save/'+rcmEdit.language,
+            sendData,
+            function(data) {me.saveAjaxAdminWindowSuccess(data, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) },
+            'json'
+        ).error(function () {
+            me.saveAjaxAdminWindowSuccessError(formContainer);
+        });
+    };
+
     me.saveAjaxAdminWindowSuccess = function(data, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) {
         if (data.dataOk == 'Y' && data.redirect == undefined) {
             //Close Window unless told not to
