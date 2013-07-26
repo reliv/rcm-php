@@ -63,7 +63,7 @@ class Site
      *                                  site.
      * 
      * @ORM\ManyToOne(targetEntity="Domain")
-     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId")
+     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId", onDelete="SET NULL")
      */
     protected $domain;
     
