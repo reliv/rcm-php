@@ -22,6 +22,7 @@ use \Zend\ModuleManager\ModuleManager;
 use \Zend\Session\SessionManager;
 use \Zend\Session\Container;
 use \Rcm\Controller\StateApiController;
+use \Rcm\Factory\DoctrineInjector;
 /**
  * ZF2 Module Config.  Required by ZF2
  *
