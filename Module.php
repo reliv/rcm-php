@@ -42,6 +42,10 @@ class Module
     public function onBootstrap($e)
     {
         $this->bootstrapSession($e);
+        $sm = $e->getApplication()->getServiceManager();
+        $em = $sm->get('doctrine.entitymanager.orm_default');
+        $dem = $em->getEventManager();
+        $dem->addEventListener(array( \Doctrine\ORM\Events::postLoad ), new DoctrineInjector($sm) );
     }
 
     public function bootstrapSession($e)

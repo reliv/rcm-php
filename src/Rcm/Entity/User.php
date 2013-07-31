@@ -4,6 +4,7 @@ namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
 Rcm\Exception\InvalidArgumentException;
+use Zend\Crypt\BlockCipher;
 
 /**
  * @ORM\Entity
@@ -87,6 +88,11 @@ class User
      * @ORM\Column(type="string", nullable=true)
      */
     protected $password;
+
+    /**
+     * NOT STORED IN DB! THIS IS AN INJECTED DEPENDENCY
+     */
+    protected $passwordCypher;
 
     /**
      * @param Account $account
@@ -189,6 +195,22 @@ class User
         return preg_replace('/[^0-9]*/', '', $value);
     }
 
+
+    /**
+     * @param mixed $passwordCypher
+     */
+    public function setPasswordCypher(BlockCipher $passwordCypher)
+    {
+        $this->passwordCypher = $passwordCypher;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPasswordCypher()
+    {
+        return $this->passwordCypher;
+    }
     /**
      * @param boolean $isQualified
      */
@@ -223,20 +245,20 @@ class User
         return $this->rank;
     }
 
-    public function setPassword($password, \Zend\Crypt\BlockCipher $cypher)
+    public function setPassword($password)
     {
         if(empty($password)){
             $this->password = null;
         }
-        $this->password = $cypher->encrypt($password);
+        $this->password = $this->passwordCypher->encrypt($password);
     }
 
-    public function getPassword(\Zend\Crypt\BlockCipher $cypher)
+    public function getPassword()
     {
         if(empty($this->password)){
             return null;
         }
-        return $cypher->decrypt($this->password);
+        return $this->passwordCypher->decrypt($this->password);
     }
 
     function setDateOfBirthViaMMDDYYY($dateOfBirth, $sanityCheck = true)
