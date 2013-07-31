@@ -133,6 +133,17 @@ class Page
         $this->createdDate = new \DateTime();
     }
 
+    public function __clone() {
+        if ($this->pageId) {
+            $this->setPageId(null);
+            $this->stagedRevision = null;
+            $this->currentRevision = clone $this->currentRevision;
+            $this->currentRevision->setPage($this);
+
+            $this->revisions = new ArrayCollection(array($this->currentRevision));
+        }
+    }
+
     /**
      * Function to return an array representation of the object.
      *
@@ -433,6 +444,7 @@ class Page
     {
         return $this->revisions;
     }
+
 
     public function setTemplate()
     {

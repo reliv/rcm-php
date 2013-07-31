@@ -57,7 +57,7 @@ class PagePluginInstance
      *
      * @ORM\Column(type="integer")
      */
-        protected $layoutContainer;
+    protected $layoutContainer;
 
     /**
      * @var integer Order of Layout Placement
@@ -91,7 +91,8 @@ class PagePluginInstance
      * fetch="EAGER" here is very important for optimizing the number of queries
      * @ORM\ManyToOne(
      *     targetEntity="PluginInstance",
-     *     fetch="EAGER"
+     *     fetch="EAGER",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(
      *      name="instance_id",

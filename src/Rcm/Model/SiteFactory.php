@@ -20,6 +20,8 @@
 
 namespace Rcm\Model;
 
+use Rcm\Entity\Domain;
+use Rcm\Entity\PwsInfo;
 use Rcm\Model\EntityMgrAware,
     Doctrine\ORM\EntityManager,
     \Rcm\Exception\LanguageNotFoundException,
@@ -211,6 +213,55 @@ class SiteFactory extends EntityMgrAware
         $entityMgr->flush();
 
         return $site;
+
+    }
+
+    public function cloneSite(Site $siteToClone, $newDomain, $newCountry, $newLanguage) {
+
+        /** @var \Rcm\Entity\Language $siteLanguage */
+        $siteLanguage = $this->entityMgr->getRepository('\Rcm\Entity\Language')->findOneBy(array(
+            'iso639_2t' => $newLanguage
+        ));
+
+        if (empty($siteLanguage)) {
+            $siteLanguage = $this->entityMgr->getRepository('\Rcm\Entity\Language')->findOneBy(array(
+                'iso639_2b' => $newLanguage
+            ));
+        }
+
+        if (empty($siteLanguage)) {
+            throw new \Exception('Language ISO Three digit not found');
+        }
+
+        /** @var \Rcm\Entity\Country $siteCountry */
+        $siteCountry = $this->entityMgr->getRepository('\Rcm\Entity\Language')->findOneBy(array(
+            'iso3' => $newCountry
+        ));
+
+        if (empty($siteCountry)) {
+            throw new \Exception('Country ISO Three digit not found');
+        }
+
+        /** @var \Rcm\Entity\Country $siteCountry */
+        $siteDomain = $this->entityMgr->getRepository('\Rcm\Entity\Domain')->findOneBy(array(
+            'domain' => $newDomain
+        ));
+
+        if (!empty($siteDomain)) {
+            throw new \Exception('Domain already in use');
+        }
+
+        $domainToAdd = new Domain();
+        $domainToAdd->setDomainName($newDomain);
+        $domainToAdd->setDefaultLanguage($siteLanguage);
+
+        $newSite = clone $siteToClone;
+        $newSite->setDomain($domainToAdd);
+        $newSite->setLanguage($siteLanguage);
+        $newSite->setCountry($siteCountry);
+
+        $this->entityMgr->persist($newSite);
+        $this->entityMgr->flush();
 
     }
 

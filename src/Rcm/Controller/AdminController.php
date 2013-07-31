@@ -192,6 +192,7 @@ class AdminController extends BaseController
 
         /** @var \Rcm\Entity\PageRevision $newRevision */
         $newRevision = clone $this->pageRevision;
+        $newRevision->clearPluginInstances();
         $newRevision->setAuthor($this->loggedInUser->getFullName());
 
         $newRevision = $this->processPostedInstances($postedData, $newRevision);

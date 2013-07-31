@@ -133,6 +133,7 @@ class PageRevision
      * @ORM\ManyToMany(
      *     targetEntity="PagePluginInstance",
      *     indexBy="pageInstance_id",
+     *     fetch="EAGER",
      *     cascade={"persist"}
      * )
      * @ORM\JoinTable(
@@ -170,10 +171,16 @@ class PageRevision
     {
         if ($this->pageRevId) {
             $this->pageRevId = null;
-            $this->published = false;
-            $this->staged = false;
 
-            $this->pluginInstances = new ArrayCollection();
+            $currentInstance = $this->getRawPluginInstances();
+            $clonedInstances = array();
+
+            /** @var \Rcm\Entity\PagePluginInstance $pagePluginInstance */
+            foreach($currentInstance as $pagePluginInstance) {
+                $clonedInstances[] = clone $pagePluginInstance;
+            }
+
+            $this->pluginInstances = new ArrayCollection($clonedInstances);
         }
     }
 
@@ -562,4 +569,8 @@ class PageRevision
         return $this->md5;
     }
 
+    public function clearPluginInstances()
+    {
+        $this->pluginInstances = new ArrayCollection();
+    }
 }

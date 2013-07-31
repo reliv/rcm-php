@@ -129,7 +129,8 @@ class Site
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="PluginInstance"
+     *     targetEntity="PluginInstance",
+     *     fetch="EAGER"
      * )
      * @ORM\JoinTable(
      *     name="rcm_sites_instances",
@@ -187,6 +188,51 @@ class Site
     {
         $this->pages = new ArrayCollection();
         $this->sitePlugins = new ArrayCollection();
+    }
+
+    public function __clone() {
+        if ($this->siteId) {
+            $this->setSiteId(null);
+            $this->domain = array();
+
+
+            /* Get Cloned Pages */
+            $pages = $this->getPages();
+            $clonedPages = array();
+
+            /** @var \Rcm\Entity\Page $page */
+            foreach ($pages as $page) {
+
+                $pageType = $page->getPageType();
+
+                if ($pageType != 'n' && $pageType != 'z' && $pageType != 't') {
+                    continue;
+                }
+
+                $clonedPage = clone $page;
+                $clonedPage->setSite($this);
+                $clonedPages[] = $clonedPage;
+            }
+
+            $this->pages = new ArrayCollection($clonedPages);
+
+            /* Get Cloned Sitewide Plugins */
+            $sitePluginInstances = $this->getRawPluginInstances();
+            $clonedPluginInstances = array();
+
+            /** @var \Rcm\Entity\PluginInstance $page */
+            foreach ($sitePluginInstances as $sitePluginInstance) {
+                $clonedPluginInstances = clone $sitePluginInstance;
+            }
+
+            $this->sitePlugins = new ArrayCollection($clonedPluginInstances);
+            $this->pwsInfo = clone $this->pwsInfo;
+            $this->pwsInfo->setPwsId(null);
+        }
+    }
+
+    public function clonePages() {
+
     }
 
     /**
