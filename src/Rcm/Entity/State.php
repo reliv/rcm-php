@@ -102,4 +102,29 @@ class State
      * @ORM\Id
      */
     protected $state;
+
+    /**
+     * @var string State/Province code
+     *
+     * @ORM\Column(type="string")
+     * @ORM\Id
+     */
+    protected $name;
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
 }

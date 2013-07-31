@@ -448,7 +448,7 @@ return array(
                     'route' => '/api/counties/:country/states',
                     'defaults' => array(
                         'controller' => 'rcmStateApiController',
-                        'action' => 'listStatesAction',
+                        'action' => 'listStates',
                     ),
                 ),
             ),

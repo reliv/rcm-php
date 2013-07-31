@@ -12,13 +12,12 @@ class StateApiController extends EntityMgrAwareController
     function listStatesAction()
     {
         $countryIso3 = $this->getEvent()->getRouteMatch()->getParam('country');
-        $stateEntities = $this->entityMgr->getRepository('\Rcm\Entity\States')
-            ->findBy
-            (array('country', $countryIso3));
+        $stateEntities = $this->entityMgr->getRepository('\Rcm\Entity\State')
+            ->findBy(array('country'=> $countryIso3));
 
         $states=array();
         foreach($stateEntities as $state){
-            $states[$state->getState]=$state->getName();
+            $states[$state->getState()]=$state->getName();
         }
 
         if (!count($states)) {
