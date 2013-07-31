@@ -21,7 +21,7 @@ namespace Rcm;
 use \Zend\ModuleManager\ModuleManager;
 use \Zend\Session\SessionManager;
 use \Zend\Session\Container;
-
+use \Rcm\Controller\StateApiController;
 /**
  * ZF2 Module Config.  Required by ZF2
  *
@@ -323,6 +323,14 @@ class Module
                         new \Rcm\Controller\InstallController(
                             $serviceMgr->get('em'),
                             $serviceMgr->get('rcmPluginManager')
+                        );
+                    return $controller;
+                },
+                'rcmStateApiController' => function($controllerMgr) {
+                    $serviceMgr=$controllerMgr->getServiceLocator();
+                    $controller =
+                        new StateApiController(
+                            $serviceMgr->get('em')
                         );
                     return $controller;
                 },

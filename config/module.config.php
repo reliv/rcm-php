@@ -442,6 +442,17 @@ return array(
                 ),
             ),
 
+            'rcm-api-states' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/api/counties/:country/states',
+                    'defaults' => array(
+                        'controller' => 'rcmStateApiController',
+                        'action' => 'listStatesAction',
+                    ),
+                ),
+            ),
+
             'rcm-admin-check-emailAddress' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
