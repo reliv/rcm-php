@@ -155,9 +155,6 @@ class Module
                 'rcmSite' => function($serviceMgr){
                     $appConfig = $serviceMgr->get('config');
                     $siteFactory = $serviceMgr->get('Rcm\Model\SiteFactory');
-
-                    //$language = $this->getEvent()->getRouteMatch()->getParam('language');
-
                     try {
                         $site = $siteFactory->getSite(
                             $_SERVER['HTTP_HOST']//, $language
