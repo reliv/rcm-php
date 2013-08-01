@@ -3,7 +3,7 @@
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
-Rcm\Exception\InvalidArgumentException;
+    Rcm\Exception\InvalidArgumentException;
 use Zend\Crypt\BlockCipher;
 
 /**
@@ -117,7 +117,6 @@ class User
     protected $account;
 
 
-
     /**
      * @var integer phone number
      *
@@ -186,7 +185,8 @@ class User
         $this->setCreatedDate(new \DateTime("now"));
     }
 
-    function toArray() {
+    function toArray()
+    {
         return get_object_vars($this);
     }
 
@@ -199,7 +199,7 @@ class User
     /**
      * @param mixed $passwordCypher
      */
-    public function setPasswordCypher(BlockCipher $passwordCypher)
+    public function setPasswordCypher($passwordCypher)
     {
         $this->passwordCypher = $passwordCypher;
     }
@@ -211,6 +211,7 @@ class User
     {
         return $this->passwordCypher;
     }
+
     /**
      * @param boolean $isQualified
      */
@@ -226,7 +227,6 @@ class User
     {
         return $this->isQualified;
     }
-
 
 
     /**
@@ -247,18 +247,26 @@ class User
 
     public function setPassword($password)
     {
-        if(empty($password)){
+        if (empty($password)) {
             $this->password = null;
+        } else {
+            if (!is_a($this->passwordCypher, '\Zend\Crypt\BlockCipher')) {
+                throw new \Exception('password block cypher not set');
+            }
+            $this->password = $this->passwordCypher->encrypt($password);
         }
-        $this->password = $this->passwordCypher->encrypt($password);
     }
 
     public function getPassword()
     {
-        if(empty($this->password)){
+        if (empty($this->password)) {
             return null;
+        } else {
+            if(!is_a($this->passwordCypher,'\Zend\Crypt\BlockCipher')){
+                throw new \Exception('password block cypher not set');
+            }
+            return $this->passwordCypher->decrypt($this->password);
         }
-        return $this->passwordCypher->decrypt($this->password);
     }
 
     function setDateOfBirthViaMMDDYYY($dateOfBirth, $sanityCheck = true)
@@ -274,7 +282,7 @@ class User
             $dateObj = \DateTime::createFromFormat('m/d/Y', $dateOfBirth);
         }
         $now = new \DateTime();
-        $twoHundredYearsAgo=clone($now);
+        $twoHundredYearsAgo = clone($now);
         $twoHundredYearsAgo = $twoHundredYearsAgo->sub(
             new \DateInterval('P200Y')
         );
@@ -293,7 +301,7 @@ class User
 
     function getDateOfBirthViaMMDDYYY()
     {
-        if(is_object($this->dateOfBirth)){
+        if (is_object($this->dateOfBirth)) {
             return $this->dateOfBirth->format('m/d/Y');
         }
     }
@@ -654,7 +662,7 @@ class User
      */
     public function setEmail($email)
     {
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException();
         }
         $this->email = $email;
@@ -681,7 +689,7 @@ class User
      */
     public function setUsername($username)
     {
-        if(!ctype_alnum($username)){
+        if (!ctype_alnum($username)) {
             throw new InvalidArgumentException();
         }
         $this->username = $username;
@@ -700,7 +708,7 @@ class User
 
     public function getFullName()
     {
-        return $this->getFirstName().' '.$this->getLastName();
+        return $this->getFirstName() . ' ' . $this->getLastName();
     }
 
     /**

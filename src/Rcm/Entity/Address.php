@@ -96,6 +96,48 @@ class Address
      */
     protected $geoCode;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $phone;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $nameLine;
+
+    /**
+     * @param mixed $nameLine
+     */
+    public function setNameLine($nameLine)
+    {
+        $this->nameLine = $nameLine;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNameLine()
+    {
+        return $this->nameLine;
+    }
+
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
     public function setGeoCode($geoCode)
     {
         $this->geoCode = $geoCode;
