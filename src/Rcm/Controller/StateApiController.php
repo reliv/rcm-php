@@ -17,7 +17,11 @@ class StateApiController extends EntityMgrAwareController
 
         $states=array();
         foreach($stateEntities as $state){
-            $states[$state->getState()]=$state->getName();
+            $name=$state->getName();
+            if(empty($name)){
+                $name=$state->getState();
+            }
+            $states[$state->getState()]=$name;
         }
 
         if (!count($states)) {
