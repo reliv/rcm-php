@@ -33,6 +33,15 @@ return array(
             'revisionNotFound' => 'Unable to locate page revision.  Please contact the administrator.'
         ),
 
+        'createSiteErrors' => array(
+            'missingItems' => 'Some needed information is missing.  Please check and make sure to include a domain, country, and language.',
+            'countryNotFound' => 'Unable to locate country to save.  Please contact and administrator or try again.',
+            'languageNotFound' => 'Unable to locate language to save.  Please contact and administrator or try again.',
+            'domainInvalid' => 'Domain exists or is invalid.',
+            'newSiteNotImplemented' => 'Creating a new blank site has not been implemented yet.',
+            'siteNotFound' => 'Unable to locate the site to clone.  Please contact and administrator or try again.',
+        ),
+
        'adminRichEditor' => 'ckEditor',
 //        'adminRichEditor' => 'tinyMce',
         //'adminRichEditor' => 'aloha',
@@ -213,12 +222,13 @@ return array(
                 'cssClass' => 'draftsIcon',
                 'href' => '#',
                 'links' => array(
-//                    'Create Site' => array(
-//                        'display' => 'Create a New Site',
-//                        'aclGroups' => 'admin',
-//                        'cssClass' => 'draftsIcon',
-//                        'href' => '#',
-//                    ),
+                    'New Site' => array(
+                        'display' => 'New Site',
+                        'aclGroups' => 'admin',
+                        'cssClass' => 'draftsIcon',
+                        'href' => '#',
+                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-site', 430, 740, 'Add New Site'); return false;"
+                    ),
 
                     'Site-Wide Plugins' => array(
                         'display' => 'Site-Wide Plugins',
@@ -431,6 +441,18 @@ return array(
                     ),
                 ),
             ),
+
+            'rcm-admin-domain' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-admin-check-domain/:language',
+                    'defaults' => array(
+                        'controller' => 'rcmAdminController',
+                        'action' => 'checkDomainJson',
+                    ),
+                ),
+            ),
+
             'rcm-admin-check-user-name' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -486,6 +508,27 @@ return array(
                 ),
             ),
 
+            'rcm-admin-create-site' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-admin-create-site[/:language]',
+                    'defaults' => array(
+                        'controller'=> 'rcmAdminController',
+                        'action' => 'newSiteWizard',
+                    ),
+                ),
+            ),
+
+            'rcm-admin-create-site-create' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-admin-create-site/create/:language',
+                    'defaults' => array(
+                        'controller'=> 'rcmAdminController',
+                        'action' => 'createSite',
+                    ),
+                ),
+            ),
 
             'rcm-admin-create-blank-page_create' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',

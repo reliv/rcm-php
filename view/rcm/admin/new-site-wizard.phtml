@@ -1,0 +1,54 @@
+<script type="text/javascript" src="/modules/rcm/js/admin/new-site-wizard.js"></script>
+
+<style type="text/css">
+    #rcmSiteWizardDomain input {
+        width: 300px;
+    }
+</style>
+
+<div id="rcmNewFromTemplateWizard">
+    <form action="" method="post" id="newPageWizard">
+        <div id="rcmNewSiteErrorLine" style="display: none; text-align: center;">
+
+        </div>
+
+        <div id="rcmSiteWizardDomain"></div>
+
+        <p>&nbsp;</p>
+
+        <p>
+            <label for="rcmSiteWizardCountry">Site Country</label>
+            <br>
+            <select id="rcmSiteWizardCountry" name="rcmSiteWizardCountry">
+                <?php foreach ($this->rcmCountries as $country) : ?>
+                    <option value="<?php echo $country['iso3']; ?>"><?php echo $country['countryName']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </p>
+
+        <p>&nbsp;</p>
+
+        <p>
+            <label for="rcmSiteWizardLanguage">Site Default Language</label>
+            <br>
+            <select id="rcmSiteWizardLanguage" name="rcmSiteWizardLanguage">
+                <?php foreach ($this->rcmLanguages as $language) : ?>
+                    <option value="<?php echo $language['languageId']; ?>"><?php echo $language['languageName']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </p>
+
+        <p>&nbsp;</p>
+
+        <p>
+            <label for="rcmSiteWizardCloneSite">Site To Clone</label>
+            <br>
+            <select id="rcmSiteWizardCloneSite" name="rcmSiteWizardCloneSite">
+                <option value="">None</option>
+                <?php foreach ($this->rcmCurrentSites as $site) : ?>
+                    <option value="<?php echo $site['siteId']; ?>"><?php echo $site['domain']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </p>
+    </form>
+</div>

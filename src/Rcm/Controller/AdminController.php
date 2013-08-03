@@ -23,6 +23,7 @@ use \Rcm\Controller\BaseController,
     \Rcm\Entity\PageRevision,
     \Rcm\Entity\PluginInstance,
     \Rcm\Entity\PluginAsset;
+use Rcm\Entity\Domain;
 
 /**
  * Index Controller for the entire application
@@ -53,6 +54,32 @@ class AdminController extends BaseController
         $viewVars['rcmTemplates'] = $this->siteInfo->getTemplates();
 
         $viewVars['newPageLayoutContainers'] = $this->getPageLayoutsForNewPages();
+
+        return $viewVars;
+
+    }
+
+    public function newSiteWizardAction()
+    {
+        $this->ensureAdminIsLoggedIn();
+
+        $viewVars['rcmCurrentSites'] = $this->entityMgr->createQuery('
+            SELECT s.siteId, d.domain
+            FROM \Rcm\Entity\Site s
+            JOIN s.domain d
+            WHERE d.primaryDomain IS NULL
+        ')->getArrayResult();
+
+        $viewVars['rcmCountries'] = $this->entityMgr->createQuery('
+            SELECT c.iso3, c.countryName
+            FROM \Rcm\Entity\Country c
+        ')->getArrayResult();
+
+
+        $viewVars['rcmLanguages'] = $this->entityMgr->createQuery('
+            SELECT l.languageId, l.languageName
+            FROM \Rcm\Entity\Language l
+        ')->getArrayResult();
 
         return $viewVars;
 
@@ -135,6 +162,26 @@ class AdminController extends BaseController
         } else {
             $data['dataOk'] = 'N';
         }
+
+        echo json_encode($data);
+        exit;
+    }
+
+    public function checkDomainJsonAction()
+    {
+        $this->ensureAdminIsLoggedIn();
+
+        $domain = $this->getRequest()->getQuery()->get('checkValue');
+
+        if ($this->isDomainValid($domain)) {
+            $data['dataOk'] = 'Y';
+        } else {
+            $data['dataOk'] = 'N';
+            echo json_encode($data);
+            exit;
+        }
+
+
 
         echo json_encode($data);
         exit;
@@ -357,6 +404,93 @@ class AdminController extends BaseController
 
         $return['pageOk'] = 'Y';
         $return['redirect'] = $redirectUrl . '?rcmShowLayoutEditor=Y';
+
+        echo json_encode($return);
+        exit;
+    }
+
+    public function createSiteAction()
+    {
+        $config = $this->config;
+        $errors = $config['reliv']['createSiteErrors'];
+
+        $siteCountry = $this->getRequest()->getQuery()->get('country');
+        $siteLanguage = $this->getRequest()->getQuery()->get('language');
+        $siteDomain = $this->getRequest()->getQuery()->get('domain');
+        $siteToClone = $this->getRequest()->getQuery()->get('siteToClone');
+
+        if (empty($siteCountry) || empty($siteLanguage) || empty($siteDomain)) {
+            $return['error'] = $errors['missingItems'];
+            echo json_encode($return);
+            exit;
+        }
+
+        /** @var \Rcm\Entity\Country $countryEntity */
+        $countryEntity = $this->entityMgr->getRepository('\Rcm\Entity\Country')->findOneBy(
+            array(
+                'iso3' => $siteCountry
+            )
+        );
+
+        if (empty($countryEntity)) {
+            $return['error'] = $errors['countryNotFound'];
+            echo json_encode($return);
+            exit;
+        }
+
+        /** @var \Rcm\Entity\Language $languageEntity */
+        $languageEntity = $this->entityMgr->getRepository('\Rcm\Entity\Language')->findOneBy(
+            array(
+                'languageId' => $siteLanguage
+            )
+        );
+
+        if (empty($languageEntity)) {
+            $return['error'] = $errors['languageNotFound'];
+            echo json_encode($return);
+            exit;
+        }
+
+        if (!$this->isDomainValid($siteDomain)) {
+            $return['error'] = $errors['domainInvalid'];
+            echo json_encode($return);
+            exit;
+        }
+
+        $domainEntity = new Domain();
+        $domainEntity->setDefaultLanguage($languageEntity);
+        $domainEntity->setDomainName($siteDomain);
+        $this->entityMgr->persist($domainEntity);
+
+        if (empty($siteToClone)) {
+            $return['error'] = $errors['newSiteNotImplemented'];
+            echo json_encode($return);
+            exit;
+        }
+
+        /** @var \Rcm\Entity\Site $siteToCloneEntity */
+        $siteToCloneEntity = $this->entityMgr->getRepository('\Rcm\Entity\Site')->findOneBy(
+            array(
+                'siteId' => $siteToClone
+            )
+        );
+
+        if (empty($siteToCloneEntity)) {
+            $return['error'] = $errors['siteNotFound'];
+            echo json_encode($return);
+            exit;
+        }
+
+        $newSite = clone $siteToCloneEntity;
+        $newSite->setDomain($domainEntity);
+        $newSite->setCountry($countryEntity);
+        $newSite->setLanguage($languageEntity);
+
+        $this->entityMgr->persist($newSite);
+        $this->entityMgr->flush();
+
+        $return['dataOk'] = 'Y';
+        $return['redirect'] = '//'.$domainEntity->getDomainName();
 
         echo json_encode($return);
         exit;
@@ -847,6 +981,26 @@ class AdminController extends BaseController
         }
 
         return $newRevision;
+    }
+
+    protected function isDomainValid($domain)
+    {
+        $validator = new \Zend\Validator\Hostname();
+        if (!$validator->isValid($domain)) {
+            return false;
+        }
+
+        $domainCheck = $this->entityMgr->createQuery('
+            SELECT COUNT(d)
+            FROM \Rcm\Entity\Domain d
+            WHERE d.domain = :domain
+        ')->setParameter('domain', $domain)->getSingleScalarResult();
+
+        if ($domainCheck > 0 ){
+            return false;
+        }
+
+        return true;
     }
 
 }

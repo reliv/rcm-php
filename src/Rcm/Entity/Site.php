@@ -130,7 +130,8 @@ class Site
     /**
      * @ORM\ManyToMany(
      *     targetEntity="PluginInstance",
-     *     fetch="EAGER"
+     *     fetch="EAGER",
+     *     cascade={"persist", "remove"}
      * )
      * @ORM\JoinTable(
      *     name="rcm_sites_instances",
@@ -209,6 +210,11 @@ class Site
                     continue;
                 }
 
+                $currentRevision = $page->getCurrentRevision();
+                if (empty($currentRevision)) {
+                    continue;
+                }
+
                 $clonedPage = clone $page;
                 $clonedPage->setSite($this);
                 $clonedPages[] = $clonedPage;
@@ -222,17 +228,13 @@ class Site
 
             /** @var \Rcm\Entity\PluginInstance $page */
             foreach ($sitePluginInstances as $sitePluginInstance) {
-                $clonedPluginInstances = clone $sitePluginInstance;
+                $clonedPluginInstances[] = clone $sitePluginInstance;
             }
 
             $this->sitePlugins = new ArrayCollection($clonedPluginInstances);
             $this->pwsInfo = clone $this->pwsInfo;
             $this->pwsInfo->setPwsId(null);
         }
-    }
-
-    public function clonePages() {
-
     }
 
     /**
