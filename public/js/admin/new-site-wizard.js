@@ -11,14 +11,7 @@ function rcmNewSiteWizardCreateSite(dialogContainer) {
         function(data) {
             var rcmNewFromTemplateErrorLine = $("#rcmNewSiteErrorLine");
             if (data.dataOk == 'Y' && data.redirect) {
-
-                if (skipRedirect && skipRedirect=='Y') {
-                    $("#redirectUrl").val(data.redirect);
-                    $(dialogContainer).dialog("close");
-                } else {
                     window.location = data.redirect;
-                }
-
             } else if(data.dataOk != 'Y' && data.error != '') {
                 $(rcmNewFromTemplateErrorLine).html('<br /><p style="color: #FF0000;">'+data.error+'</p><br />').show();
             } else {
