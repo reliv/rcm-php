@@ -2,54 +2,61 @@
 
 namespace Rcm\Model;
 
+use Rcm\Entity\Country;
+
 class PhoneModel
 {
-    protected $phoneNumberMask="###-###-###";
+    protected $phoneMask;
 
-    public function setPhoneNumberMask($phoneNumberMask)
+    function __construct(Country $country)
     {
-        $this->phoneNumberMask = $phoneNumberMask;
+        $phoneMasks=array(
+            'USA'=>'###-###-####',
+            'CAN'=>'###-###-####'
+        );
+        $iso3=$country->getIso3();
+        if(isset($phoneMasks[$iso3])){
+            $this->phoneMask=$phoneMasks[$iso3];
+        }
     }
 
-    public function getPhoneNumberMask()
-    {
-        return $this->phoneNumberMask;
-    }
 
     function validatePhoneNumber($phoneNum)
     {
-        $phoneNum = $this->digitsOnly($phoneNum);
-        if (strlen($phoneNum) == substr_count($this->phoneNumberMask, '#')) {
+        if(!is_numeric($phoneNum)){
+            return false;
+        }
+        if (
+            empty($this->phoneMask)
+            || strlen($phoneNum) == substr_count($this->phoneMask, '#')
+        ) {
             return true;
         }
         return false;
 
     }
 
-    function formatPhoneNumber($phoneNum){
-        if(empty($phoneNum)){
+    function formatPhoneNumber($phoneNum)
+    {
+        if (empty($phoneNum)) {
             return null;
         }
-        if(!$this->validatePhoneNumber($phoneNum)){
-            throw new \Rcm\Exception\RuntimeException(
-                'Cannot format invalid phone number: "'.$phoneNum.'"'
-            );
+        if (
+            empty($this->phoneMask)
+            ||!$this->validatePhoneNumber($phoneNum)
+        ) {
+            return $phoneNum;
         }
-        $formattedPhone=$this->phoneNumberMask;
-        $maskLength=strlen($formattedPhone);
-        $phoneI=0;
-        for($i=0;$i<$maskLength;$i++){
-            $maskChar = substr($formattedPhone,$i,1);
-            if($maskChar=='#'){
-                $formattedPhone[$i]=$phoneNum[$phoneI];
+        $formattedPhone = $this->phoneMask;
+        $maskLength = strlen($formattedPhone);
+        $phoneI = 0;
+        for ($i = 0; $i < $maskLength; $i++) {
+            $maskChar = substr($formattedPhone, $i, 1);
+            if ($maskChar == '#') {
+                $formattedPhone[$i] = $phoneNum[$phoneI];
                 $phoneI++;
             }
         }
         return $formattedPhone;
-    }
-
-    function digitsOnly($value)
-    {
-        return preg_replace('/[^0-9]*/', '', $value);
     }
 }

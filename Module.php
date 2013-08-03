@@ -2,27 +2,29 @@
 
 /**
  * Module Config For ZF2
-*
-* PHP version 5.3
-*
-* LICENSE: No License yet
-*
-* @category  Reliv
-* @package   ContentManager\ZF2
-* @author    Westin Shafer <wshafer@relivinc.com>
-* @copyright 2012 Reliv International
-* @license   License.txt New BSD License
-* @version   GIT: <git_id>
-* @link      http://ci.reliv.com/confluence
-*/
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: No License yet
+ *
+ * @category  Reliv
+ * @package   ContentManager\ZF2
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://ci.reliv.com/confluence
+ */
 
 namespace Rcm;
 
+use Rcm\Model\PhoneModel;
 use \Zend\ModuleManager\ModuleManager;
 use \Zend\Session\SessionManager;
 use \Zend\Session\Container;
 use \Rcm\Controller\StateApiController;
 use \Rcm\Factory\DoctrineInjector;
+
 /**
  * ZF2 Module Config.  Required by ZF2
  *
@@ -46,12 +48,12 @@ class Module
         $sm = $e->getApplication()->getServiceManager();
         $em = $sm->get('doctrine.entitymanager.orm_default');
         $dem = $em->getEventManager();
-        $dem->addEventListener(array( \Doctrine\ORM\Events::postLoad ), new DoctrineInjector($sm) );
+        $dem->addEventListener(array(\Doctrine\ORM\Events::postLoad), new DoctrineInjector($sm));
     }
 
     public function bootstrapSession($e)
     {
-        /** @var \Zend\Session\SessionManager $session  */
+        /** @var \Zend\Session\SessionManager $session */
         $session = $e->getApplication()
             ->getServiceManager()
             ->get('rcmSesssionManager');
@@ -68,11 +70,11 @@ class Module
 
             //Redirect
             $redirectUrl = $_SERVER['REQUEST_URI'];
-            $redirectUrl = str_replace('?sess_id='.$_GET['sess_id'].'&', '?', $redirectUrl);
-            $redirectUrl = str_replace('?sess_id='.$_GET['sess_id'], '', $redirectUrl);
-            $redirectUrl = str_replace('&sess_id='.$_GET['sess_id'], '', $redirectUrl);
+            $redirectUrl = str_replace('?sess_id=' . $_GET['sess_id'] . '&', '?', $redirectUrl);
+            $redirectUrl = str_replace('?sess_id=' . $_GET['sess_id'], '', $redirectUrl);
+            $redirectUrl = str_replace('&sess_id=' . $_GET['sess_id'], '', $redirectUrl);
 
-            header('Location: '.$redirectUrl,true,301);
+            header('Location: ' . $redirectUrl, true, 301);
             exit;
 
         } else {
@@ -124,7 +126,7 @@ class Module
     {
         return include __DIR__ . '/config/module.config.php';
     }
-    
+
     /**
      * getServiceConfiguration is used by the ZF2 service manager in order
      * to create new objects.
@@ -140,9 +142,9 @@ class Module
                     $cache = new \DoctrineModule\Cache\ZendStorageCache($zendCache);
                     return $cache;
                 },
-                'cypher'=>function($serviceMgr){
-                    $config=$serviceMgr->get('config');
-                    $config=$config['encryption']['blockCypher'];
+                'cypher' => function ($serviceMgr) {
+                    $config = $serviceMgr->get('config');
+                    $config = $config['encryption']['blockCypher'];
                     $cypher = \Zend\Crypt\BlockCipher::factory(
                         'mcrypt',
                         array('algo' => $config['algo'])
@@ -152,23 +154,27 @@ class Module
                     return $cypher;
                 },
 
-                'rcmSite' => function($serviceMgr){
+                'rcmSite' => function ($serviceMgr) {
                     $appConfig = $serviceMgr->get('config');
                     $siteFactory = $serviceMgr->get('Rcm\Model\SiteFactory');
                     try {
                         $site = $siteFactory->getSite(
-                            $_SERVER['HTTP_HOST']//, $language
+                            $_SERVER['HTTP_HOST'] //, $language
                         );
                     } catch (\Rcm\Exception\SiteNotFoundException $e) {
                         $site = $siteFactory->getSite(
-                            $appConfig['reliv']['defaultDomain']//, $language
+                            $appConfig['reliv']['defaultDomain'] //, $language
                         );
                     }
                     return $site;
                 },
+                'rcmPhoneModel' => function ($serviceMgr) {
+                    return new PhoneModel($serviceMgr->get('rcmSite')
+                            ->getCountry()
+                    );
+                },
                 'Rcm\Model\SiteFactory' =>
-                function($serviceMgr)
-                {
+                function ($serviceMgr) {
                     $object = new \Rcm\Model\SiteFactory(
                         $serviceMgr->get('em')
                     );
@@ -176,15 +182,14 @@ class Module
                 },
 
                 'Rcm\Model\PageFactory' =>
-                function($serviceMgr)
-                {
+                function ($serviceMgr) {
                     $object = new \Rcm\Model\PageFactory(
                         $serviceMgr->get('em')
                     );
                     return $object;
                 },
 
-                'rcmPluginManager' => function($serviceMgr){
+                'rcmPluginManager' => function ($serviceMgr) {
                     return new \Rcm\Model\PluginManager(
                         $serviceMgr->get('modulemanager'),
                         $serviceMgr->get('config'),
@@ -192,8 +197,7 @@ class Module
                     );
                 },
 
-                'rcmUserManager' => function($serviceMgr)
-                {
+                'rcmUserManager' => function ($serviceMgr) {
                     $service = new \Rcm\Model\UserManagement\DoctrineUserManager(
                         $serviceMgr->get('cypher')
                     );
@@ -201,16 +205,16 @@ class Module
                     return $service;
                 },
 
-                'em' => function($serviceMgr){
+                'em' => function ($serviceMgr) {
                     return $serviceMgr->get(
                         'doctrine.entitymanager.ormdefault'
                     );
                 },
 
-                'rcmIpInfo' => function(){
+                'rcmIpInfo' => function () {
                     return new \Rcm\Model\IpInfo();
                 },
-                'rcmCache' => function($serviceMgr) {
+                'rcmCache' => function ($serviceMgr) {
                     $config = $serviceMgr->get('config');
 
                     $cache = \Zend\Cache\StorageFactory::factory(
@@ -233,7 +237,7 @@ class Module
 
                         $sessionConfig = null;
                         if (isset($session['config'])) {
-                            $class = isset($session['config']['class'])  ? $session['config']['class'] : 'Zend\Session\Config\SessionConfig';
+                            $class = isset($session['config']['class']) ? $session['config']['class'] : 'Zend\Session\Config\SessionConfig';
                             $options = isset($session['config']['options']) ? $session['config']['options'] : array();
                             $sessionConfig = new $class();
                             $sessionConfig->setOptions($options);
@@ -272,22 +276,23 @@ class Module
         );
     }
 
-    function getControllerConfig(){
+    function getControllerConfig()
+    {
         return array(
             'factories' => array(
-                'rcmIndexController' => function($controllerMgr) {
-                        $serviceMgr=$controllerMgr->getServiceLocator();
-                        $controller = new \Rcm\Controller\IndexController(
-                            $serviceMgr->get('rcmUserManager'),
-                            $serviceMgr->get('rcmPluginManager'),
-                            $serviceMgr->get('em'),
-                            $serviceMgr->get('viewRenderer'),
-                            $serviceMgr->get('config')
-                        );
+                'rcmIndexController' => function ($controllerMgr) {
+                    $serviceMgr = $controllerMgr->getServiceLocator();
+                    $controller = new \Rcm\Controller\IndexController(
+                        $serviceMgr->get('rcmUserManager'),
+                        $serviceMgr->get('rcmPluginManager'),
+                        $serviceMgr->get('em'),
+                        $serviceMgr->get('viewRenderer'),
+                        $serviceMgr->get('config')
+                    );
                     return $controller;
                 },
-                'rcmAdminController' => function($controllerMgr) {
-                    $serviceMgr=$controllerMgr->getServiceLocator();
+                'rcmAdminController' => function ($controllerMgr) {
+                    $serviceMgr = $controllerMgr->getServiceLocator();
                     $controller = new \Rcm\Controller\AdminController(
                         $serviceMgr->get('rcmUserManager'),
                         $serviceMgr->get('rcmPluginManager'),
@@ -297,8 +302,8 @@ class Module
                     );
                     return $controller;
                 },
-                'rcmPageSearchApiController' => function($controllerMgr) {
-                    $serviceMgr=$controllerMgr->getServiceLocator();
+                'rcmPageSearchApiController' => function ($controllerMgr) {
+                    $serviceMgr = $controllerMgr->getServiceLocator();
                     $controller = new \Rcm\Controller\PageSearchApiController(
                         $serviceMgr->get('rcmUserManager'),
                         $serviceMgr->get('rcmPluginManager'),
@@ -308,8 +313,8 @@ class Module
                     );
                     return $controller;
                 },
-                'rcmPluginProxyController' => function($controllerMgr) {
-                    $serviceMgr=$controllerMgr->getServiceLocator();
+                'rcmPluginProxyController' => function ($controllerMgr) {
+                    $serviceMgr = $controllerMgr->getServiceLocator();
                     $controller = new \Rcm\Controller\PluginProxyController(
                         $serviceMgr->get('rcmUserManager'),
                         $serviceMgr->get('rcmPluginManager'),
@@ -319,8 +324,8 @@ class Module
                     );
                     return $controller;
                 },
-                'rcmInstallController' => function($controllerMgr) {
-                    $serviceMgr=$controllerMgr->getServiceLocator();
+                'rcmInstallController' => function ($controllerMgr) {
+                    $serviceMgr = $controllerMgr->getServiceLocator();
                     $controller =
                         new \Rcm\Controller\InstallController(
                             $serviceMgr->get('em'),
@@ -328,8 +333,8 @@ class Module
                         );
                     return $controller;
                 },
-                'rcmStateApiController' => function($controllerMgr) {
-                    $serviceMgr=$controllerMgr->getServiceLocator();
+                'rcmStateApiController' => function ($controllerMgr) {
+                    $serviceMgr = $controllerMgr->getServiceLocator();
                     $controller =
                         new StateApiController(
                             $serviceMgr->get('em')
@@ -375,10 +380,11 @@ class Module
 
         $object = $event->getTarget();
 
-        if ( is_subclass_of(
+        if (is_subclass_of(
             $object,
-            __NAMESPACE__.'\Controller\BaseController'
-        )) {
+            __NAMESPACE__ . '\Controller\BaseController'
+        )
+        ) {
             $object->init();
         }
     }
