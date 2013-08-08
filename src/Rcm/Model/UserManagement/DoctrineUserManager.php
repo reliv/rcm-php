@@ -23,6 +23,11 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
 
     }
 
+    public function saveUser(User $user){
+
+    }
+
+
     public function isCurrentUser($username)
     {
         $user = $this->entityMgr->getRepository('\Rcm\Entity\User')
@@ -114,7 +119,7 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
             $actualPassword = $user->getPassword($this->cypher);
 
             if ($password == $actualPassword) {
-                $this->setLoggedInUser($user);
+                $this->setLoggedInUser($user, null);
             }
 
         }

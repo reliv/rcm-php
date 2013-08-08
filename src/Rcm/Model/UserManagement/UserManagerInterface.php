@@ -2,6 +2,8 @@
 
 namespace Rcm\Model\UserManagement;
 
+use Rcm\Entity\User;
+
 interface UserManagerInterface {
 
     /**
@@ -25,5 +27,7 @@ interface UserManagerInterface {
     public function isCurrentUser($username);
 
     public function logoutUser();
+
+    public function saveUser(User $user);
 
 }
