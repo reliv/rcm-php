@@ -14,15 +14,15 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
     var pluginBaseUrl = '/rcm-plugin-admin-proxy/' + pluginUrlName + '/'
         + instanceId + '/';
 
-    this.disableEvetns = function(){
+    this.disableEvents = function(){
         //Disable normal events
         container.find('*').unbind();
-        container.find('a').click(function (e) {
-            e.preventDefault();
-        });
-        container.find('form').submit(function(){
+        var donDoIt=function () {
             return false;
-        })
+        };
+        container.find('button').click(donDoIt);
+        container.find('a').click(donDoIt);
+        container.find('form').submit(donDoIt)
     };
 
     me.getInstanceConfigAndNewInstanceConfigFromServer = function (callback) {
