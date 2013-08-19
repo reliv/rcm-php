@@ -7,7 +7,7 @@ use Rcm\Controller\EntityMgrAwareController;
 class StateApiController extends EntityMgrAwareController
 {
     /**
-     * Returns geo codes as JSON. 404's if zip code not found.
+     * Returns states as JSON. 404's if country not found.
      */
     function listStatesAction()
     {
