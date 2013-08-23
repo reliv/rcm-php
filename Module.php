@@ -91,6 +91,8 @@ class Module
         //Logout if requested
         if (!empty($_GET['logout'])) {
             $session->destroy();
+            header('Location: \\');
+            exit;
         }
     }
 

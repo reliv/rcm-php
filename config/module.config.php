@@ -20,6 +20,10 @@
  */
 return array(
 
+    'Rcm' =>array(
+        'successfulLoginUrl' => '/'
+    ),
+
     'reliv' => array(
 
         'createBlankPagesErrors' => array(
