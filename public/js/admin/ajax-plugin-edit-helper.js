@@ -25,7 +25,7 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
         container.find('form').submit(donDoIt)
     };
 
-    me.getInstanceConfigAndNewInstanceConfigFromServer = function (callback) {
+    me.ajaxGetInstanceConfigs = function (callback) {
         container.hide();//Hide while loading to prevent weirdness
         $.getJSON(
             pluginBaseUrl + 'instance-config-and-new-instance-config',
