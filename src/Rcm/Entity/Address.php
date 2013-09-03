@@ -106,6 +106,45 @@ class Address
      */
     protected $nameLine;
 
+    public function __sleep()
+    {
+        if (!empty($this->country) && is_a($this->country, '\Rcm\Entity\Country')) {
+            $this->country = array(
+                'iso3' => $this->country->getIso3(),
+                'iso2' => $this->country->getIso2(),
+                'countryName' => $this->country->getCountryName()
+            );
+        }
+
+        return array(
+            'addressId',
+            'addressLine1',
+            'addressLine2',
+            'city',
+            'state',
+            'postalCode',
+            'country',
+            'isCommercial',
+            'geoCode',
+            'phone',
+            'nameLine'
+        );
+    }
+
+    public function __wakeup()
+    {
+        if (is_array($this->country)) {
+            $wakeUpCountry = new Country();
+            $wakeUpCountry->setIso3($this->country['iso3']);
+            $wakeUpCountry->setIso2($this->country['iso2']);
+            $wakeUpCountry->setCountryName($this->country['countryName']);
+
+            $this->setCountry($wakeUpCountry);
+        } else {
+            $this->setCountry(new Country());
+        }
+    }
+
     /**
      * @param mixed $nameLine
      */
