@@ -262,7 +262,7 @@ class User
         if (empty($this->password)) {
             return null;
         } else {
-            if(!is_a($this->passwordCypher,'\Zend\Crypt\BlockCipher')){
+            if (!is_a($this->passwordCypher, '\Zend\Crypt\BlockCipher')) {
                 throw new \Exception('password block cypher not set');
             }
             return $this->passwordCypher->decrypt($this->password);
@@ -680,19 +680,19 @@ class User
     }
 
     /**
-     * Sets the Username property
-     *
-     * @param string $username
-     *
-     * @return null
-     *
+     * @param $username
+     * @throws \Rcm\Exception\InvalidArgumentException
      */
     public function setUsername($username)
     {
-        if (!ctype_alnum($username)) {
-            throw new InvalidArgumentException();
+        if (empty($username)) {
+            $this->username = null;
+        } else {
+            if (!ctype_alnum($username)) {
+                throw new InvalidArgumentException();
+            }
+            $this->username = $username;
         }
-        $this->username = $username;
     }
 
     /**
