@@ -24,5 +24,10 @@ return array(
 
     'rcmCache' => array(
         'adapter' => 'Memory',
+    ),
+
+
+    'view_manager' => array(
+        'base_path' => '/'
     )
 );

@@ -24,6 +24,7 @@ use \Zend\Session\SessionManager;
 use \Zend\Session\Container;
 use \Rcm\Controller\StateApiController;
 use \Rcm\Factory\DoctrineInjector;
+use \Zend\Cache\StorageFactory;
 
 /**
  * ZF2 Module Config.  Required by ZF2
@@ -219,7 +220,7 @@ class Module
                 'rcmCache' => function ($serviceMgr) {
                     $config = $serviceMgr->get('config');
 
-                    $cache = \Zend\Cache\StorageFactory::factory(
+                    $cache = StorageFactory::factory(
                         array(
                             'adapter' => array(
                                 'name' => $config['rcmCache']['adapter'],

@@ -183,6 +183,7 @@ class User
     function __construct()
     {
         $this->setCreatedDate(new \DateTime("now"));
+        $this->dateOfBirth = new \DateTime("now");
     }
 
     function toArray()

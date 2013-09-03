@@ -19,8 +19,6 @@ class RcmBootstrap
 
     public static function init(Array $moduleConfig)
     {
-
-
         $mainConfig = include __DIR__.'/application.test.config.php';
 
         chdir(__DIR__.'/../../../../../');
@@ -33,6 +31,7 @@ class RcmBootstrap
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
         $serviceManager->setService('ApplicationConfig', $config);
         $serviceManager->get('ModuleManager')->loadModules();
+
         static::$serviceManager = $serviceManager;
     }
 

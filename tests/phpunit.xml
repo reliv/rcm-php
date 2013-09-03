@@ -4,6 +4,11 @@
     <testsuites>
         <testsuite name="rcmBase">
             <directory>./</directory>
+            <filter>
+                <whitelist>
+                    <directory>../</directory>
+                </whitelist>
+            </filter>
         </testsuite>
     </testsuites>
 </phpunit>

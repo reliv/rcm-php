@@ -75,7 +75,7 @@ class PluginInstance
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $md5;
+    protected $md5 = '';
 
     /**
      * @var integer Previous Entity

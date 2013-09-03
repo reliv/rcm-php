@@ -46,12 +46,14 @@ interface PluginInterface
      */
     function renderInstance($instanceId);
 
+
     /**
      * Returns a view model filled with content for a brand new instance. This
      * usually comes out of a config file rather than writable persistent
      * storage like a database.
      *
-     * @return \Zend\View\Model\ViewModel
+     * @param integer $instanceId
+     * @return mixed
      */
     function renderDefaultInstance($instanceId);
 
@@ -73,4 +75,9 @@ interface PluginInterface
      * @return null
      */
     function deleteInstance($instanceId);
+
+    /**
+     * Set Request
+     */
+    function setRequest($request);
 }
