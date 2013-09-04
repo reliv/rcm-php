@@ -24,7 +24,7 @@ class StateApiController extends EntityMgrAwareController
             if (empty($name)) {
                 $name = $state->getState();
             }
-            $states[$state->getState()] = $name;
+            $states[$state->getState()] = utf8_encode($name);
         }
 
         if (!count($states)) {
