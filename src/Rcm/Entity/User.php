@@ -686,16 +686,7 @@ class User
      */
     public function setUsername($username)
     {
-        if (empty($username)) {
-            $this->username = null;
-        } else {
-            $aValid = array('-', '_');
-
-            if (!ctype_alnum(str_replace($aValid, '',$username))) {
-                throw new InvalidArgumentException();
-            }
-            $this->username = $username;
-        }
+        $this->username = $username;
     }
 
     /**
