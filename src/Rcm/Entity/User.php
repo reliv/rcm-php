@@ -689,7 +689,9 @@ class User
         if (empty($username)) {
             $this->username = null;
         } else {
-            if (!ctype_alnum($username)) {
+            $aValid = array('-', '_');
+
+            if (!ctype_alnum(str_replace($aValid, '',$username))) {
                 throw new InvalidArgumentException();
             }
             $this->username = $username;
