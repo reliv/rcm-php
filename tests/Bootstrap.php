@@ -8,5 +8,5 @@ class Bootstrap extends RcmBootstrap
 {
 
 }
-
-Bootstrap::init(array());
+/** Array is zend special application config */
+Bootstrap::init(include 'application.test.config.php');

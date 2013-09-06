@@ -67,4 +67,5 @@ return array(
     'Rcm\Base\BaseSite'                             => __DIR__ . '/tests/Base/BaseSite.php',
     'Rcm\Base\BaseTest'                             => __DIR__ . '/tests/Base/BaseTest.php',
     'RcmGeneric\Module'                             => __DIR__ . '/themes/RcmGeneric/Module.php',
+    'Rcm\Tests\Base\DoctrineTestCase'               => __DIR__ . '/tests/Base/DoctrineTestCase.php',
 );
