@@ -19,6 +19,9 @@
 namespace Rcm;
 
 use Rcm\Model\PhoneModel;
+use Zend\Log\Logger;
+use Zend\Log\Writer\Null;
+use Zend\Log\Writer\Stream;
 use \Zend\ModuleManager\ModuleManager;
 use \Zend\Session\SessionManager;
 use \Zend\Session\Container;
@@ -231,6 +234,35 @@ class Module
                     );
 
                     return $cache;
+                },
+
+                'rcmLogger' => function($serviceManager) {
+                    $config = $serviceManager->get('config');
+
+                    if (empty($config['rcmLogger']['writer'])) {
+                        $writer = $serviceManager->get('rcmWriterStub');
+                    } else {
+                        $writer = $serviceManager->get($config['rcmLogger']['writer']);
+                    }
+
+                    $logger = new Logger();
+                    $logger->addWriter($writer);
+
+                    return $logger;
+                },
+
+                'rcmLogWriter' => function($serviceManager) {
+                    $config = $serviceManager->get('config');
+
+                    $path = $config['rcmLogWriter']['logPath'];
+
+                    $writer = new Stream($path);
+
+                    return $writer;
+                },
+
+                'rcmLogWriterStub' => function() {
+                    return new Null();
                 },
 
                 'rcmSesssionManager' => function ($sm) {

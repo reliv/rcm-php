@@ -749,5 +749,14 @@ return array(
         'options' => array(
             'namespace' => 'RcmCache'
         )
+    ),
+
+    'rcmLogger' => array(
+        'writer' => 'rcmLogWriterStub'
+    ),
+
+    'rcmLogWriter' => array(
+        'logPath' => '',
     )
+
 );

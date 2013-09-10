@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Rcm\Entity\PluginInstance;
 use Rcm\Exception\InvalidPluginException;
 use Rcm\Exception\PluginInstanceNotFoundException;
+use Rcm\Interfaces\PluginManagerInterface;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Config\Config;
 use Zend\Http\Request;
@@ -20,7 +21,7 @@ use \Rcm\Plugin\PluginInterface;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Renderer\RendererInterface;
 
-class PluginManager2
+class PluginManager2 implements PluginManagerInterface
 {
     protected $sm;
     protected $moduleManager;
@@ -91,7 +92,7 @@ class PluginManager2
 
         $return['md5'] = $pluginInstance->getMd5();
 
-        if ($return['cacheable']) {
+        if ($return['canCache']) {
             $this->cache->setItem($cacheId, $return);
         }
 
@@ -132,7 +133,7 @@ class PluginManager2
             'siteWide' => false,
             'md5' => '',
             'fromCache' => false,
-            'cacheable' => true,
+            'canCache' => true,
             'pluginName' => $pluginName,
             'instanceId' => $instanceId,
         );
@@ -158,8 +159,8 @@ class PluginManager2
             $return['icon'] = $this->config['rcmPlugin'][$pluginName]['icon'];
         }
 
-        if (isset($this->config['rcmPlugin'][$pluginName]['cacheable'])) {
-            $return['cacheable'] = $this->config['rcmPlugin'][$pluginName]['cacheable'];
+        if (isset($this->config['rcmPlugin'][$pluginName]['canCache'])) {
+            $return['canCache'] = $this->config['rcmPlugin'][$pluginName]['canCache'];
         }
 
         return $return;
@@ -183,6 +184,19 @@ class PluginManager2
 
 
         return $newPluginInstance;
+    }
+
+    public function deletePluginInstance($instanceId)
+    {
+        $query = $this->entityManager->createQuery('
+            DELETE FROM \Rcm\Entity\PluginInstance pi
+            WHERE pi.instanceId = :instanceId
+        ');
+
+        $query->setParameter('instanceId', $instanceId);
+
+        $query->execute();
+
     }
 
     public function saveNewInstance($pluginName, $saveData, $siteWide=false, $displayName='')
