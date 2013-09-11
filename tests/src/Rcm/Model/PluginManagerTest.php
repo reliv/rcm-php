@@ -107,6 +107,9 @@ class PluginManagerTest extends DoctrineTestCase
     {
         $viewData = $this->pluginManager->getNewEntity('RcmRssFeed');
 
+        print_r($viewData);
+        exit;
+
         $this->assertArrayHasKey('html', $viewData);
         $this->assertArrayHasKey('css', $viewData);
         $this->assertArrayHasKey('js', $viewData);
@@ -119,6 +122,7 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('siteWide', $viewData);
         $this->assertArrayHasKey('pluginName', $viewData);
         $this->assertArrayHasKey('md5', $viewData);
+        $this->assertArrayHasKey('canCache', $viewData);
 
 
         $this->assertContains('<h2 data-textEdit="headline">Planet PHP Feed</h2>', $viewData['html']);
@@ -147,6 +151,7 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('siteWide', $viewData);
         $this->assertArrayHasKey('pluginName', $viewData);
         $this->assertArrayHasKey('md5', $viewData);
+        $this->assertArrayHasKey('canCache', $viewData);
 
         $this->assertContains('<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']);
         $this->assertContains('/modules/rcm-rss-feed/style.css', $viewData['css'][0]);
@@ -176,6 +181,7 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('siteWide', $viewData);
         $this->assertArrayHasKey('pluginName', $viewData);
         $this->assertArrayHasKey('md5', $viewData);
+        $this->assertArrayHasKey('canCache', $viewData);
 
         $this->assertContains('<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']);
         $this->assertContains('/modules/rcm-rss-feed/style.css', $viewData['css'][0]);
@@ -204,6 +210,7 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('siteWide', $viewData);
         $this->assertArrayHasKey('pluginName', $viewData);
         $this->assertArrayHasKey('md5', $viewData);
+        $this->assertArrayHasKey('canCache', $viewData);
 
         $this->assertContains('<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']);
         $this->assertContains('/modules/rcm-rss-feed/style.css', $viewData['css'][0]);
@@ -312,6 +319,35 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertFalse($savedInstance->isSiteWide());
 
         $this->assertEquals($testInstanceId, $savedInstance->getInstanceId());
+    }
+
+    public function testDeleteInstanceId()
+    {
+        $this->setupRssFeedEntity();
+
+        $this->assertTrue($this->instanceExistsInDb(1));
+
+        $this->pluginManager->deletePluginInstance(1);
+
+        $this->assertFalse($this->instanceExistsInDb(1));
+    }
+
+    private function instanceExistsInDb($instanceId)
+    {
+        $checkQuery = $this->entityManager->createQuery('
+            SELECT COUNT(pi.instanceId) FROM \Rcm\Entity\PluginInstance pi
+            WHERE pi.instanceId = :instanceId
+        ');
+
+        $checkQuery->setParameter('instanceId', $instanceId);
+
+        $exists = $checkQuery->getSingleScalarResult();
+
+        if ($exists > 0) {
+            return true;
+        }
+
+        return false;
     }
 
 }

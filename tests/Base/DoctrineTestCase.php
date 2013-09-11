@@ -24,7 +24,7 @@ class DoctrineTestCase extends \PHPUnit_Framework_TestCase
         'rcm_countries',
         'rcm_domains',
         'rcm_languages',
-        'rcm_page_plugin_instances',
+        'rcm_container_plugin_instances',
         'rcm_page_revisions',
         'rcm_page_revisions_instances',
         'rcm_pages',
