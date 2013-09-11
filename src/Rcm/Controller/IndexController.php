@@ -54,6 +54,8 @@ class IndexController extends \Rcm\Controller\BaseController
 
     protected $pluginCount = 0;
 
+    protected $pageNotFound = false;
+
     /**
      * Index Action - This is the base action that all page requests
      * that come through the content manager use.  This action will check
@@ -86,6 +88,7 @@ class IndexController extends \Rcm\Controller\BaseController
             if (!$this->page) {
                 throw new \Exception('Could not find the 404 page. Create a page named "not-found" to fix this.');
             }
+            $this->pageNotFound = true;
         }
 
         //Redirect user to published revision if not logged in
