@@ -197,6 +197,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
 
     function ensureAdminIsLoggedIn()
     {
+        print_r($_SESSION); exit;
         if (!$this->adminIsLoggedIn()
         ) {
             throw new \Rcm\Exception\InvalidArgumentException(
