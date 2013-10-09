@@ -195,6 +195,8 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         return $this->redirect()->toUrl($this->siteInfo->getLoginPage())->setStatusCode(301);
     }
 
+
+
     function ensureAdminIsLoggedIn()
     {
         if (!$this->adminIsLoggedIn()
