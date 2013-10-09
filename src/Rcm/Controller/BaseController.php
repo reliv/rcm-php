@@ -201,7 +201,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         if (!$this->adminIsLoggedIn()
         ) {
             throw new \Rcm\Exception\InvalidArgumentException(
-                'You must be logged in to use the requested controller'
+                'You must be logged in to use the requested controller...'
             );
         }
     }
