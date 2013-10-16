@@ -4,10 +4,10 @@ namespace Rcm\Model\UserManagement;
 
 use Rcm\Model\EntityMgrAware;
 use Zend\Crypt\BlockCipher;
-use \Zend\Session\Container;
-use \Rcm\Entity\AdminPermissions;
-use \Rcm\Entity\User;
-use \Zend\Session\SessionManager;
+use Zend\Session\Container;
+use Rcm\Entity\AdminPermissions;
+use Rcm\Entity\User;
+use Zend\Session\SessionManager;
 
 class DoctrineUserManager extends EntityMgrAware
     implements UserManagerInterface
