@@ -71,7 +71,7 @@ class SiteFactory extends EntityMgrAware
      * @return Site
      * @throws SiteNotFoundException
      */
-    public function getSite($domainName, $language=null)
+    public function getSite($domainName, $language = null)
     {
         $entityMgr = $this->entityMgr;
         $siteRepo = $entityMgr->getRepository('\Rcm\Entity\Site');
@@ -107,8 +107,13 @@ class SiteFactory extends EntityMgrAware
         //THIS SHOULD PROBABLY GO SOMEWHERE ELSE. BUT WHERE?
         //NEED FOR MONTH NAME TRANSLATIONS IN EVENT PLUGIN
         $iso6391 = $languageEntity->getIso6391();
-        $localName = strtolower($iso6391).'_'.strtoupper($iso6391).'.UTF-8';
-        setlocale(LC_ALL,$localName);
+        $localName = strtolower($iso6391) . '_' . strtoupper($iso6391) . '.UTF-8';
+        setlocale(LC_ALL, $localName);
+
+        //Set numeric local to US until we can deal with commas as decimals
+        //Quick shop bv totals will break in DE with this line removed
+        setlocale(LC_NUMERIC, 'en_US_POSIX');
+        setlocale(LC_MONETARY, 'en_US_POSIX');
 
         return $site;
     }
@@ -116,17 +121,17 @@ class SiteFactory extends EntityMgrAware
     /**
      * Creates a new site entity
      *
-     * @param string               $domainName             domain name
-     * @param string               $theme                  Theme to use for the new site
-     * @param \Rcm\Entity\Country  $country                country
+     * @param string $domainName             domain name
+     * @param string $theme                  Theme to use for the new site
+     * @param \Rcm\Entity\Country $country                country
      * @param \Rcm\Entity\Language $language               language
-     * @param integer              $ownerAccountNum        owner account number
-     * @param string               $loginPageUrl           URL to login page
-     * @param boolean              $loginRequired          Require login for site access
-     * @param array|string         $permitteTypes          Account Type(s) needed to access site
-     * @param array                $additionalDomain       an additional domain that redirects
+     * @param integer $ownerAccountNum        owner account number
+     * @param string $loginPageUrl           URL to login page
+     * @param boolean $loginRequired          Require login for site access
+     * @param array|string $permitteTypes          Account Type(s) needed to access site
+     * @param array $additionalDomain       an additional domain that redirects
      *                                                     to this site
-     * @param array                $initialSiteWidePlugins Initial SiteWide plugins for the site.
+     * @param array $initialSiteWidePlugins Initial SiteWide plugins for the site.
      *
      * @return \Rcm\Entity\Site
      */
@@ -162,11 +167,11 @@ class SiteFactory extends EntityMgrAware
                 try {
                     $this->getDomain($additionalDomainName);
                 } catch (\Exception $e) {
-                    $domain[$key+1] = new \Rcm\Entity\Domain();
-                    $domain[$key+1]->setDomainName($additionalDomainName);
-                    $domain[$key+1]->setPrimary($domain[0]);
-                    $domain[0]->setAdditionalDomain($domain[$key+1]);
-                    $entityMgr->persist($domain[$key+1]);
+                    $domain[$key + 1] = new \Rcm\Entity\Domain();
+                    $domain[$key + 1]->setDomainName($additionalDomainName);
+                    $domain[$key + 1]->setPrimary($domain[0]);
+                    $domain[0]->setAdditionalDomain($domain[$key + 1]);
+                    $entityMgr->persist($domain[$key + 1]);
                 }
             }
         }
@@ -216,7 +221,8 @@ class SiteFactory extends EntityMgrAware
 
     }
 
-    public function cloneSite(Site $siteToClone, $newDomain, $newCountry, $newLanguage) {
+    public function cloneSite(Site $siteToClone, $newDomain, $newCountry, $newLanguage)
+    {
 
         /** @var \Rcm\Entity\Language $siteLanguage */
         $siteLanguage = $this->entityMgr->getRepository('\Rcm\Entity\Language')->findOneBy(array(
