@@ -185,7 +185,7 @@ class PagePluginInstance
      */
     public function setHeight($height)
     {
-        $this->height = $height;
+        $this->height = (int)$height;//cast to int to prevent sql error
     }
 
     /**
@@ -201,7 +201,7 @@ class PagePluginInstance
      */
     public function setWidth($width)
     {
-        $this->width = $width;
+        $this->width = (int)$width;//cast to int to prevent sql error
     }
 
     /**
