@@ -39,7 +39,7 @@ var ZendFormHelper = function (container) {
     };
 
     this.showProcessing = function (buttonProcessingMessage, popMessage) {
-        $.each(container.find('button, input[type=submit]'), function () {
+        $.each(container.find('button, input[type="submit"]'), function () {
             var button = $(this);
             button.addClass('disabled');
             button.attr('data-originalHtml', button.html());
