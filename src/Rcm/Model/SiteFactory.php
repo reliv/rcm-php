@@ -110,11 +110,6 @@ class SiteFactory extends EntityMgrAware
         $localName = strtolower($iso6391) . '_' . strtoupper($iso6391) . '.UTF-8';
         setlocale(LC_ALL, $localName);
 
-        //Set numeric local to US until we can deal with commas as decimals
-        //Quick shop bv totals will break in DE with this line removed
-        setlocale(LC_NUMERIC, 'en_US_POSIX');
-        setlocale(LC_MONETARY, 'en_US_POSIX');
-
         return $site;
     }
 
