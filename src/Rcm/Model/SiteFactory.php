@@ -277,13 +277,12 @@ class SiteFactory extends EntityMgrAware
      */
     public function getDomain($domainName)
     {
-
-        if (empty($domainName)) {
-            throw new \Rcm\Exception\InvalidArgumentException(
-                'No Domain Found.'
-            );
-//            $domainName='local.reliv.com';
-        }
+//
+//        if (empty($domainName)) {
+//            throw new \Rcm\Exception\DomainNotFoundException(
+//                'No Domain Found.'
+//            );
+//        }
 
 
         $query = array('domain' => $domainName);
@@ -292,7 +291,7 @@ class SiteFactory extends EntityMgrAware
         $domainEntity = $repo->findOneBy($query);
 
         if (empty($domainEntity)) {
-            throw new \Rcm\Exception\RuntimeException(
+            throw new \Rcm\Exception\DomainNotFoundException(
                 'No Domain Found in DB for: ' . $domainName
             );
         }
