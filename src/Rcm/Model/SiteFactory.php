@@ -282,6 +282,7 @@ class SiteFactory extends EntityMgrAware
             throw new \Rcm\Exception\InvalidArgumentException(
                 'No Domain Found.'
             );
+//            $domainName='local.reliv.com';
         }
 
 
