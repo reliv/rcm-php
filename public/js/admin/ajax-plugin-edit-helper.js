@@ -93,13 +93,13 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
      * @param data
      * @return {*}
      */
-    me.captureInputGroup = function (inputGroupName, inputGroup, data) {
-        $.each(data[inputGroupName], function (key) {
+    me.captureInputGroup = function (inputGroupName, inputGroup, instanceConfig) {
+        $.each(instanceConfig[inputGroupName], function (key) {
             if (inputGroup[key]) {
-                data[inputGroupName][key] = inputGroup[key].val()
+                instanceConfig[inputGroupName][key] = inputGroup[key].val()
             }
         });
-        return data;
+        return instanceConfig;
     };
 
     me.buildEmailInputGroup = function (emailGroupData) {

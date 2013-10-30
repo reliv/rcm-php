@@ -205,7 +205,8 @@ class Module
 
                 'rcmUserManager' => function ($serviceMgr) {
                     $service = new \Rcm\Model\UserManagement\DoctrineUserManager(
-                        $serviceMgr->get('cypher')
+                        $serviceMgr->get('cypher'),
+                        $serviceMgr->get('rcmSesssionManager')
                     );
                     $service->setEm($serviceMgr->get('em'));
                     return $service;

@@ -1,22 +1,22 @@
 <?php
-    /**
-     * Plugin Instances Entity
-     *
-     * This is a Doctorine 2 definition file for Plugin Instances  This file
-     * is used for any module that needs to know about plugin instances.
-     *
-     * PHP version 5.3
-     *
-     * LICENSE: No License yet
-     *
-     * @category  Reliv
-     * @package   Common\Entites
-     * @author    Westin Shafer <wshafer@relivinc.com>
-     * @copyright 2012 Reliv International
-     * @license   License.txt New BSD License
-     * @version   GIT: <git_id>
-     * @link      http://ci.reliv.com/confluence
-     */
+/**
+ * Plugin Instances Entity
+ *
+ * This is a Doctorine 2 definition file for Plugin Instances  This file
+ * is used for any module that needs to know about plugin instances.
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: No License yet
+ *
+ * @category  Reliv
+ * @package   Common\Entites
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://ci.reliv.com/confluence
+ */
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -176,7 +176,8 @@ class PagePluginInstance
         return $this->pageInstanceId;
     }
 
-    public function getInstanceId() {
+    public function getInstanceId()
+    {
         return $this->instance->getInstanceId();
     }
 
@@ -185,7 +186,12 @@ class PagePluginInstance
      */
     public function setHeight($height)
     {
-        $this->height = $height;
+        //Having floats in here was causing sql errors sometimes when saving
+        if (empty($height)) {
+            $this->height = null;
+        } else {
+            $this->height = round($height);
+        }
     }
 
     /**
@@ -193,7 +199,7 @@ class PagePluginInstance
      */
     public function getHeight()
     {
-        return $this->height.'px';
+        return $this->height . 'px';
     }
 
     /**
@@ -201,7 +207,12 @@ class PagePluginInstance
      */
     public function setWidth($width)
     {
-        $this->width = $width;
+        //Having floats in here was causing sql errors sometimes when saving
+        if (empty($width)) {
+            $this->width = null;
+        } else {
+            $this->width = round($width);
+        }
     }
 
     /**
@@ -209,7 +220,7 @@ class PagePluginInstance
      */
     public function getWidth()
     {
-        return $this->width.'px';
+        return $this->width . 'px';
     }
 
     /**
@@ -227,8 +238,6 @@ class PagePluginInstance
     {
         return $this->divFloat;
     }
-
-
 
 
 }

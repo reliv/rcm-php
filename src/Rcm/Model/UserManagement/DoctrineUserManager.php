@@ -2,28 +2,41 @@
 
 namespace Rcm\Model\UserManagement;
 
-use \Zend\Session\Container,
-    \Rcm\Entity\AdminPermissions,
-    \Rcm\Entity\User;
+use Rcm\Model\EntityMgrAware;
+use Zend\Crypt\BlockCipher;
+use Zend\Session\Container;
+use Rcm\Entity\AdminPermissions;
+use Rcm\Entity\User;
+use Zend\Session\SessionManager;
 
-class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
+class DoctrineUserManager extends EntityMgrAware
     implements UserManagerInterface
 {
     protected $session;
 
     protected $cypher;
 
-    public function __construct(\Zend\Crypt\BlockCipher $cypher)
-    {
+    /**
+     * @var SessionManager
+     */
+    protected $sessionMgr;
+
+    public function __construct(
+        BlockCipher $cypher,
+        SessionManager $sessionMgr
+    ) {
         $this->cypher = $cypher;
         $this->session = new Container('rcm_user_manager');
+        $this->sessionMgr = $sessionMgr;
     }
 
-    public function logOutUser(){
-
+    public function logOutUser()
+    {
+        $this->sessionMgr->destroy();
     }
 
-    public function saveUser(User $user){
+    public function saveUser(User $user)
+    {
 
     }
 
@@ -45,7 +58,7 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
      */
     public function getLoggedInUser()
     {
-        if(!$this->session->userId){
+        if (!$this->session->userId) {
             return null;
         }
         return $this->entityMgr->getRepository('\Rcm\Entity\User')
@@ -58,10 +71,11 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
      */
     function setLoggedInUser(User $user, $junk)
     {
-        $this->session->userId=$user->getUserId();
+        $this->session->userId = $user->getUserId();
     }
 
-    function clearLoggedInUser(){
+    function clearLoggedInUser()
+    {
         $this->destroySession();
     }
 
@@ -71,12 +85,13 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
      *
      * @return null
      */
-    function destroySession(){
+    function destroySession()
+    {
         $keysToKill = array();
-        foreach($this->session->getIterator() as $key => $val){
-            $keysToKill[]=$key;
+        foreach ($this->session->getIterator() as $key => $val) {
+            $keysToKill[] = $key;
         }
-        foreach ($keysToKill as $key){
+        foreach ($keysToKill as $key) {
             $this->session->offsetUnset($key);
         }
     }
@@ -94,9 +109,8 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
 //            ->findOneByAccountNumber(7);
 
 
-
-        $user=$this->getLoggedInUser();
-        if(!$user){
+        $user = $this->getLoggedInUser();
+        if (!$user) {
             return null;
         }
         return $this->entityMgr
@@ -109,10 +123,10 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
     {
         $user = $this->entityMgr->getRepository('\Rcm\Entity\User')
             ->findOneBy(
-            array(
-                'email' => $email,
-            )
-        );
+                array(
+                    'email' => $email,
+                )
+            );
 
         if ($user) {
 
@@ -129,7 +143,7 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
 
     public function newUser($email, $password, $accountNumber)
     {
-        if(!is_a($this->cypher,'\Zend\Crypt\BlockCipher')){
+        if (!is_a($this->cypher, '\Zend\Crypt\BlockCipher')) {
             throw new \Exception(
                 'User Manager is missing required dependencies. This ' .
                 'is likely because you are running the open source installer' .
@@ -139,7 +153,7 @@ class DoctrineUserManager extends \Rcm\Model\EntityMgrAware
         $user = new \Rcm\Entity\User();
         $user->setEmail($email);
         $user->setPassword($password, $this->cypher);
-        $account=new \Rcm\Entity\Account();
+        $account = new \Rcm\Entity\Account();
         $account->setAccountNumber($accountNumber);
         $user->setAccount($account);
         $this->entityMgr->persist($account);

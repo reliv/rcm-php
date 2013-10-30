@@ -207,7 +207,6 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
 
     protected function adminSaveInit($pageType='n')
     {
-
         $this->ensureAdminIsLoggedIn();
 
         $pageName = $this->getEvent()->getRouteMatch()->getParam('page');
