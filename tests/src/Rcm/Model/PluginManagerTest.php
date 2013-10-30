@@ -107,9 +107,6 @@ class PluginManagerTest extends DoctrineTestCase
     {
         $viewData = $this->pluginManager->getNewEntity('RcmRssFeed');
 
-        print_r($viewData);
-        exit;
-
         $this->assertArrayHasKey('html', $viewData);
         $this->assertArrayHasKey('css', $viewData);
         $this->assertArrayHasKey('js', $viewData);

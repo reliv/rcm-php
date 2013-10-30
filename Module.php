@@ -213,7 +213,7 @@ class Module
 
                 'em' => function ($serviceMgr) {
                     return $serviceMgr->get(
-                        'doctrine.entitymanager.ormdefault'
+                        'doctrineormentitymanager'
                     );
                 },
 
