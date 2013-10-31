@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Tests\Base;
+namespace RcmTest\Base;
 
 use Zend\Config\Config;
 use Zend\Mvc\Service\ServiceManagerConfig;
@@ -8,7 +8,7 @@ use Zend\ServiceManager\ServiceManager;
 
 
 //Load Base Test Cases
-require __DIR__.'/DoctrineTestCase.php';
+require __DIR__ . '/DoctrineTestCase.php';
 
 /**
  * Test bootstrap, for setting up autoloading
@@ -19,9 +19,9 @@ class RcmBootstrap
 
     public static function init(Array $moduleConfig)
     {
-        $mainConfig = include __DIR__.'/application.test.config.php';
+        $mainConfig = include __DIR__ . '/application.test.config.php';
 
-        chdir(__DIR__.'/../../../../../');
+        chdir(__DIR__.'/../../../../../../');
         static::initAutoloader();
 
         $config = new Config($mainConfig);

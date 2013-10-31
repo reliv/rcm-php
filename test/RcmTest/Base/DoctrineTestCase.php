@@ -1,8 +1,8 @@
 <?php
 
-namespace Rcm\Tests\Base;
+namespace RcmTest\Base;
 
-use Rcm\Tests\Base\RcmBootstrap;
+use RcmTest\Base;
 
 
 /**

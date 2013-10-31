@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Tests\Base;
+namespace RcmTest\Base;
 
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
