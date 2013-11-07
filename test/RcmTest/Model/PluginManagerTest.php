@@ -1,10 +1,7 @@
 <?php
 
-use \Rcm\Tests\Base\DoctrineTestCase;
+use \RcmTest\Base\DoctrineTestCase;
 use \Rcm\Model\PluginManager2;
-use \Rcm\Plugin\PluginInterface;
-
-use \Rcm\Exception\InvalidPluginException;
 
 class PluginManagerTest extends DoctrineTestCase
 {

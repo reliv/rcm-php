@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/Base/RcmBootstrap.php';
+require __DIR__.'/RcmTest/Base/RcmBootstrap.php';
 
 use \RcmTest\Base\RcmBootstrap;
 

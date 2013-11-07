@@ -1,6 +1,6 @@
 <?php
 
-use \Rcm\Tests\Base\DoctrineTestCase;
+use \RcmTest\Base\DoctrineTestCase;
 use \Rcm\Model\ContainerManager;
 
 class ContainerManagerTest extends DoctrineTestCase
