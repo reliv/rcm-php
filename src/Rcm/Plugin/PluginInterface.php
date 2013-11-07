@@ -17,6 +17,8 @@
  * @link      http://ci.reliv.com/confluence
  */
 namespace Rcm\Plugin;
+
+use \Zend\Http\PhpEnvironment\Request;
 /**
  * Plugin Controller Interface
  *
@@ -79,5 +81,5 @@ interface PluginInterface
     /**
      * Set Request
      */
-    function setRequest($request);
+    function setRequest(Request $request);
 }

@@ -2,8 +2,8 @@
 
 namespace Rcm\Controller;
 
-use \RcmSimpleConfigStorage\Entity\InstanceConfig as JsonContent,
-    \RcmSimpleConfigStorage\StorageEngine\DoctrineSerializedRepo;
+use \RcmDJPluginStorage\Entity\InstanceConfig as JsonContent,
+    \RcmDJPluginStorage\StorageEngine\DoctrineSerializedRepo;
 
 
 class InstallController extends \Rcm\Controller\EntityMgrAwareController
@@ -166,12 +166,12 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     }
 
     function getDefaultHtmlAreaContent(){
-        return $this->getNewInstanceConfig(
+        return $this->getDefaultInstanceConfig(
             'vendor/reliv/RcmPlugins/RcmHtmlArea/'
         );
     }
 
-    function getNewInstanceConfig($pluginPath){
+    function getDefaultInstanceConfig($pluginPath){
         return include $pluginPath.'/config/defaultInstanceConfig.php';
     }
 
@@ -292,7 +292,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     function createLoginPage(){
         $this->instances = array();
 
-        $content = $this->getNewInstanceConfig(
+        $content = $this->getDefaultInstanceConfig(
             'vendor/reliv/RcmPlugins/RcmLogin/'
         );
 
@@ -545,7 +545,7 @@ are permitted provided that the following conditions are met:</p>
 
     /**
      * Creates a plugin instance for plugins that have controllers that extend
-     * \RcmSimpleConfigStorage\JsonContentController
+     * \RcmDJPluginStorage\JsonContentController
      *
      * @param string    $pluginName
      * @param array  $jsonContent

@@ -6,7 +6,7 @@ namespace Rcm\Model;
 use Doctrine\ORM\EntityManager;
 use Rcm\Exception\PluginInstanceNotFoundException;
 use Rcm\Interfaces\PluginManagerInterface;
-use RcmSimpleConfigStorage\Exception\PluginDataNotFoundException;
+use RcmDJPluginStorage\Exception\PluginDataNotFoundException;
 use Zend\Cache\Storage\StorageInterface;
 
 class ContainerManager
