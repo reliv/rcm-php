@@ -50,6 +50,7 @@ class Module
     {
         $this->bootstrapSession($e);
         $sm = $e->getApplication()->getServiceManager();
+        var_dump($sm->get('config'));
         $em = $sm->get('doctrine.entitymanager.orm_default');
         $dem = $em->getEventManager();
         $dem->addEventListener(array(\Doctrine\ORM\Events::postLoad), new DoctrineInjector($sm));
