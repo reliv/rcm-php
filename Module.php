@@ -57,40 +57,40 @@ class Module
 
     public function bootstrapSession($e)
     {
-        /** @var \Zend\Session\SessionManager $session */
-        $session = $e->getApplication()
-            ->getServiceManager()
-            ->get('rcmSesssionManager');
-
-        if (!empty($_GET['sess_id'])) {
-            // Set Session ID
-            $session->setId($_GET['sess_id']);
-            $session->start();
-
-            //Regenerate ID
-            $session->regenerateId(true);
-            $container = new Container('initialized');
-            $container->init = 1;
-
-            //Redirect
-            $redirectUrl = $_SERVER['REQUEST_URI'];
-            $redirectUrl = str_replace('?sess_id=' . $_GET['sess_id'] . '&', '?', $redirectUrl);
-            $redirectUrl = str_replace('?sess_id=' . $_GET['sess_id'], '', $redirectUrl);
-            $redirectUrl = str_replace('&sess_id=' . $_GET['sess_id'], '', $redirectUrl);
-
-            header('Location: ' . $redirectUrl, true, 301);
-            exit;
-
-        } else {
-
-            //Process normally
-            $session->start();
-            $container = new Container('initialized');
-            if (!isset($container->init)) {
-                $session->regenerateId(true);
-                $container->init = 1;
-            }
-        }
+//        /** @var \Zend\Session\SessionManager $session */
+//        $session = $e->getApplication()
+//            ->getServiceManager()
+//            ->get('rcmSessionMgr');
+//
+//        if (!empty($_GET['sess_id'])) {
+//            // Set Session ID
+//            $session->setId($_GET['sess_id']);
+//            $session->start();
+//
+//            //Regenerate ID
+//            $session->regenerateId(true);
+//            $container = new Container('initialized');
+//            $container->init = 1;
+//
+//            //Redirect
+//            $redirectUrl = $_SERVER['REQUEST_URI'];
+//            $redirectUrl = str_replace('?sess_id=' . $_GET['sess_id'] . '&', '?', $redirectUrl);
+//            $redirectUrl = str_replace('?sess_id=' . $_GET['sess_id'], '', $redirectUrl);
+//            $redirectUrl = str_replace('&sess_id=' . $_GET['sess_id'], '', $redirectUrl);
+//
+//            header('Location: ' . $redirectUrl, true, 301);
+//            exit;
+//
+//        } else {
+//
+//            //Process normally
+//            $session->start();
+//            $container = new Container('initialized');
+//            if (!isset($container->init)) {
+//                $session->regenerateId(true);
+//                $container->init = 1;
+//            }
+//        }
 
         //Logout if requested
         if (!empty($_GET['logout'])) {
@@ -206,7 +206,7 @@ class Module
                 'rcmUserManager' => function ($serviceMgr) {
                     $service = new \Rcm\Model\UserManagement\DoctrineUserManager(
                         $serviceMgr->get('cypher'),
-                        $serviceMgr->get('rcmSesssionManager')
+                        $serviceMgr->get('rcmSessionMgr')
                     );
                     $service->setEm($serviceMgr->get('em'));
                     return $service;
@@ -266,7 +266,7 @@ class Module
                     return new Null();
                 },
 
-                'rcmSesssionManager' => function ($sm) {
+                'rcmSessionMgr' => function ($sm) {
                     $config = $sm->get('config');
                     if (isset($config['session'])) {
                         $session = $config['session'];
