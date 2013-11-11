@@ -26,7 +26,7 @@ interface UserManagerInterface {
 
     public function isCurrentUser($username);
 
-    public function logoutUser();
+    public function logout();
 
     public function saveUser(User $user);
 

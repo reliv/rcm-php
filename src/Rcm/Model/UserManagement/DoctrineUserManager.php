@@ -30,7 +30,7 @@ class DoctrineUserManager extends EntityMgrAware
         $this->sessionMgr = $sessionMgr;
     }
 
-    public function logOutUser()
+    public function logout()
     {
         $this->sessionMgr->destroy();
     }

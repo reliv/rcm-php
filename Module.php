@@ -57,44 +57,8 @@ class Module
 
     public function bootstrapSession($e)
     {
-//        /** @var \Zend\Session\SessionManager $session */
-//        $session = $e->getApplication()
-//            ->getServiceManager()
-//            ->get('rcmSessionMgr');
-//
-//        if (!empty($_GET['sess_id'])) {
-//            // Set Session ID
-//            $session->setId($_GET['sess_id']);
-//            $session->start();
-//
-//            //Regenerate ID
-//            $session->regenerateId(true);
-//            $container = new Container('initialized');
-//            $container->init = 1;
-//
-//            //Redirect
-//            $redirectUrl = $_SERVER['REQUEST_URI'];
-//            $redirectUrl = str_replace('?sess_id=' . $_GET['sess_id'] . '&', '?', $redirectUrl);
-//            $redirectUrl = str_replace('?sess_id=' . $_GET['sess_id'], '', $redirectUrl);
-//            $redirectUrl = str_replace('&sess_id=' . $_GET['sess_id'], '', $redirectUrl);
-//
-//            header('Location: ' . $redirectUrl, true, 301);
-//            exit;
-//
-//        } else {
-//
-//            //Process normally
-//            $session->start();
-//            $container = new Container('initialized');
-//            if (!isset($container->init)) {
-//                $session->regenerateId(true);
-//                $container->init = 1;
-//            }
-//        }
-
-        //Logout if requested
         if (!empty($_GET['logout'])) {
-            $session->destroy();
+            $e->getApplication()->getServiceManager()->get('rcmUserMgr')->logout();
             header('Location: /');
             exit;
         }
@@ -203,7 +167,7 @@ class Module
                     );
                 },
 
-                'rcmUserManager' => function ($serviceMgr) {
+                'rcmUserMgr' => function ($serviceMgr) {
                     $service = new \Rcm\Model\UserManagement\DoctrineUserManager(
                         $serviceMgr->get('cypher'),
                         $serviceMgr->get('rcmSessionMgr')
@@ -319,7 +283,7 @@ class Module
                 'rcmIndexController' => function ($controllerMgr) {
                     $serviceMgr = $controllerMgr->getServiceLocator();
                     $controller = new \Rcm\Controller\IndexController(
-                        $serviceMgr->get('rcmUserManager'),
+                        $serviceMgr->get('rcmUserMgr'),
                         $serviceMgr->get('rcmPluginManager'),
                         $serviceMgr->get('em'),
                         $serviceMgr->get('viewRenderer'),
@@ -330,7 +294,7 @@ class Module
                 'rcmAdminController' => function ($controllerMgr) {
                     $serviceMgr = $controllerMgr->getServiceLocator();
                     $controller = new \Rcm\Controller\AdminController(
-                        $serviceMgr->get('rcmUserManager'),
+                        $serviceMgr->get('rcmUserMgr'),
                         $serviceMgr->get('rcmPluginManager'),
                         $serviceMgr->get('em'),
                         $serviceMgr->get('viewRenderer'),
@@ -341,7 +305,7 @@ class Module
                 'rcmPageSearchApiController' => function ($controllerMgr) {
                     $serviceMgr = $controllerMgr->getServiceLocator();
                     $controller = new \Rcm\Controller\PageSearchApiController(
-                        $serviceMgr->get('rcmUserManager'),
+                        $serviceMgr->get('rcmUserMgr'),
                         $serviceMgr->get('rcmPluginManager'),
                         $serviceMgr->get('em'),
                         $serviceMgr->get('viewRenderer'),
@@ -352,7 +316,7 @@ class Module
                 'rcmPluginProxyController' => function ($controllerMgr) {
                     $serviceMgr = $controllerMgr->getServiceLocator();
                     $controller = new \Rcm\Controller\PluginProxyController(
-                        $serviceMgr->get('rcmUserManager'),
+                        $serviceMgr->get('rcmUserMgr'),
                         $serviceMgr->get('rcmPluginManager'),
                         $serviceMgr->get('em'),
                         $serviceMgr->get('viewRenderer'),

@@ -136,7 +136,7 @@ class AdminController extends BaseController
         $userName = $this->getRequest()->getQuery()->get('checkValue');
 
         /** @var $userManager /Rcm/Model/UserManagement/UserManagerInterface */
-        $userManager = $this->getServiceLocator()->get('rcmUserManager');
+        $userManager = $this->getServiceLocator()->get('rcmUserMgr');
 
         $user = $userManager->isCurrentUser($userName);
 
