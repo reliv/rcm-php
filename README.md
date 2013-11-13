@@ -45,7 +45,7 @@ return array(
 
         //RCM core and plugins
         'Rcm',
-        'RcmDJPluginStorage',
+        'RcmDjPluginStorage',
         'RcmHtmlArea',
         'RcmNavigation',
         'RcmCallToActionBox',

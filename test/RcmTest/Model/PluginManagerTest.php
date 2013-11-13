@@ -64,7 +64,7 @@ class PluginManagerTest extends DoctrineTestCase
 
         $this->entityManager->persist($pluginInstance);
 
-        $simpleConfig = new \RcmDJPluginStorage\Entity\InstanceConfig();
+        $simpleConfig = new \RcmDjPluginStorage\Entity\InstanceConfig();
         $simpleConfig->setInstanceId(1);
         $simpleConfig->setConfig($pluginConfig);
 
