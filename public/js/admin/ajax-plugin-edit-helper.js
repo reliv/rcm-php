@@ -28,7 +28,7 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
     me.ajaxGetInstanceConfigs = function (callback) {
         container.hide();//Hide while loading to prevent weirdness
         $.getJSON(
-            pluginBaseUrl + 'instance-config-and-new-instance-config',
+            pluginBaseUrl + 'instance-config',
             function (result) {
                 container.show();
                 window['rcmEdit'].refreshEditors(container);
