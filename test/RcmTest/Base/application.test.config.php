@@ -9,7 +9,7 @@ return array(
 
         //RCM core and plugins
         -2 => 'Rcm',
-        -1 => 'RcmDjPluginStorage',
+        -1 => 'RcmDoctrineJsonPluginStorage',
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(
