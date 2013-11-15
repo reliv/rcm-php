@@ -41,15 +41,15 @@ echo $this->doctype();
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <?php echo $this->headTitle($this->metaTitle) ?>
-    <?php echo $this->headMeta() ?>
-    <?php echo $this->headLink() ?>
-    <?php echo $this->headScript() ?>
+    <?=  $this->headTitle($this->metaTitle) ?>
+    <?=  $this->headMeta() ?>
+    <?=  $this->headLink() ?>
+    <?=  $this->headScript() ?>
 </head>
 
 <body>
 
-<?php echo $this->content; ?>
+<?=  $this->content; ?>
 
 </body>
 </html>

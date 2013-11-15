@@ -50,34 +50,34 @@ echo $this->doctype();
 
 <head>
     <meta charset="utf-8">
-    <?php echo $this->headTitle($this->metaTitle) ?>
-    <?php echo $this->headMeta() ?>
-    <?php echo $this->headLink() ?>
-    <?php echo $this->headScript() ?>
+    <?=  $this->headTitle($this->metaTitle) ?>
+    <?=  $this->headMeta() ?>
+    <?=  $this->headLink() ?>
+    <?=  $this->headScript() ?>
 </head>
 
 <body>
 
 <!--Required CMS Body Top-->
-<?php echo $this->rcmTop; ?>
+<?=  $this->rcmTop; ?>
 
 <!--Main Theme Body-->
 <div id="sitewrapper">
     <div id="rcmGenTopHeader">
-        <?php echo $this->getLayoutContainer(1); ?>
+        <?=  $this->getLayoutContainer(1); ?>
     </div>
 
     <div id="rcmGenMainBody">
-        <?php echo $this->getLayoutContainer(2); ?>
+        <?=  $this->getLayoutContainer(2); ?>
     </div>
 
     <div id="rcmGenFooter">
-        <?php echo $this->getLayoutContainer(3); ?>
+        <?=  $this->getLayoutContainer(3); ?>
     </div>
 </div>
 
 <!--Required CMS Body Bottom-->
-<?php echo $this->rcmBottom; ?>
+<?=  $this->rcmBottom; ?>
 
 </body>
 </html>

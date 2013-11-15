@@ -21,7 +21,7 @@
             <br>
             <select id="rcmSiteWizardCountry" name="rcmSiteWizardCountry">
                 <?php foreach ($this->rcmCountries as $country) : ?>
-                    <option value="<?php echo $country['iso3']; ?>"><?php echo $country['countryName']; ?></option>
+                    <option value="<?=  $country['iso3']; ?>"><?=  $country['countryName']; ?></option>
                 <?php endforeach; ?>
             </select>
         </p>
@@ -33,7 +33,7 @@
             <br>
             <select id="rcmSiteWizardLanguage" name="rcmSiteWizardLanguage">
                 <?php foreach ($this->rcmLanguages as $language) : ?>
-                    <option value="<?php echo $language['languageId']; ?>"><?php echo $language['languageName']; ?></option>
+                    <option value="<?=  $language['languageId']; ?>"><?=  $language['languageName']; ?></option>
                 <?php endforeach; ?>
             </select>
         </p>
@@ -46,7 +46,7 @@
             <select id="rcmSiteWizardCloneSite" name="rcmSiteWizardCloneSite">
                 <option value="">None</option>
                 <?php foreach ($this->rcmCurrentSites as $site) : ?>
-                    <option value="<?php echo $site['siteId']; ?>"><?php echo $site['domain']; ?></option>
+                    <option value="<?=  $site['siteId']; ?>"><?=  $site['domain']; ?></option>
                 <?php endforeach; ?>
             </select>
         </p>

@@ -41,7 +41,7 @@
                     <select name="rcmPageRevision" id="rcmPageRevision">
 
                         <?php foreach ($this->rcmTemplates as $template) : ?>
-                            <option value="<?php echo $template->getPublishedRevision()->getPageRevId(); ?>"><?php echo $template->getName() ?></option>
+                            <option value="<?=  $template->getPublishedRevision()->getPageRevId(); ?>"><?=  $template->getName() ?></option>
                         <?php endforeach; ?>
 
                         <option value="-1">Blank Page (Experts Only)</option>';
@@ -58,8 +58,8 @@
                 <div class="rcmNewPageLayoutWrapper">
                     <div class="rcmNewPageLayoutContainer">
                         <div class="rcmNewPageLinkOverlay"></div>
-                        <img src="<?php echo $newLayout['screenShot']; ?>" /> <br />
-                        <?php echo $newLayout['display'] ?>
+                        <img src="<?=  $newLayout['screenShot']; ?>" /> <br />
+                        <?=  $newLayout['display'] ?>
                         <input type="hidden" name="'.$newLayoutKey.'" value="N" class="rcmLayoutKeySelector" />
                     </div>
                 </div>
