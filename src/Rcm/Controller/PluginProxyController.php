@@ -21,8 +21,8 @@ namespace Rcm\Controller;
 
 use \Rcm\Controller\BaseController,
     \Rcm\Exception\PluginActionNotImplemented,
-Zend\View\Model\ViewModel,
-\Rcm\Entity\PluginInstance;
+    Zend\View\Model\ViewModel,
+    \Rcm\Entity\PluginInstance;
 
 /**
  *
@@ -55,13 +55,13 @@ class PluginProxyController extends BaseController
             return false;
         }
 
-        try{
-        /**
-         * @var \Zend\View\Model\ViewModel | \Zend\Http\Response
-         */
-        $actionResponse = $this->pluginManager
-            ->callPlugin($instance, $action.'AdminAjaxAction', array(), $this->getEvent());
-        }catch(PluginActionNotImplemented $e){
+        try {
+            /**
+             * @var \Zend\View\Model\ViewModel | \Zend\Http\Response
+             */
+            $actionResponse = $this->pluginManager
+                ->callPlugin($instance, $action . 'AdminAjaxAction', array(), $this->getEvent());
+        } catch (PluginActionNotImplemented $e) {
             $this->response->setStatusCode(404);
             return false;
         }
@@ -86,13 +86,13 @@ class PluginProxyController extends BaseController
             return false;
         }
 
-        try{
+        try {
             /**
              * @var \Zend\View\Model\ViewModel | \Zend\Http\Response
              */
             $view = $this->pluginManager
-                ->callPlugin($instance, $action.'AjaxAction', array(), $this->getEvent());
-        }catch(PluginActionNotImplemented $e){
+                ->callPlugin($instance, $action . 'AjaxAction', array(), $this->getEvent());
+        } catch (PluginActionNotImplemented $e) {
             $this->response->setStatusCode(404);
             return false;
         }
@@ -103,8 +103,8 @@ class PluginProxyController extends BaseController
     function parseParams()
     {
 
-        $routeMatch=$this->getEvent()->getRouteMatch();
-        
+        $routeMatch = $this->getEvent()->getRouteMatch();
+
         return array(
 
             //Plugin name
@@ -146,6 +146,12 @@ class PluginProxyController extends BaseController
 
     function hyphensToCamel($value)
     {
-        return preg_replace("/\-(.)/e", "strtoupper('\\1')", $value);
+        return preg_replace_callback(
+            '/-[a-zA-Z]/',
+            function ($matches) {
+                return strtoupper($matches[0][1]);
+            }
+            , $value
+        );
     }
 }
