@@ -19,10 +19,8 @@
  */
 namespace Rcm\Controller;
 
-use \Rcm\Controller\BaseController,
-    \Rcm\Exception\PluginActionNotImplemented,
-    Zend\View\Model\ViewModel,
-    \Rcm\Entity\PluginInstance;
+use \Rcm\Exception\PluginActionNotImplemented;
+use \Rcm\Entity\PluginInstance;
 
 /**
  *
@@ -146,6 +144,12 @@ class PluginProxyController extends BaseController
 
     function hyphensToCamel($value)
     {
-        return preg_replace("/-(.)/", strtoupper('$1'), $value);
+        return preg_replace_callback(
+            '/-[a-zA-Z]/',
+            function ($matches) {
+                return strtoupper($matches[0][1]);
+            }
+            , $value
+        );
     }
 }
