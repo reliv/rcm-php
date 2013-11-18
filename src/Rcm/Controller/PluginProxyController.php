@@ -146,12 +146,6 @@ class PluginProxyController extends BaseController
 
     function hyphensToCamel($value)
     {
-        return preg_replace_callback(
-            '/-[a-zA-Z]/',
-            function ($matches) {
-                return strtoupper($matches[0][1]);
-            }
-            , $value
-        );
+        return preg_replace("/-(.)/", strtoupper('$1'), $value);
     }
 }
