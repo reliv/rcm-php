@@ -32,7 +32,7 @@ use \Zend\Cache\StorageFactory;
 /**
  * ZF2 Module Config.  Required by ZF2
  *
- * ZF2 reqires a Module.php file to load up all the Module Dependencies.  This
+ * ZF2 requires a Module.php file to load up all the Module Dependencies.  This
  * file has been included as part of the ZF2 standards.
  *
  * @category  Reliv

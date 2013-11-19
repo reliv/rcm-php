@@ -79,4 +79,23 @@ class DoctrineTestCase extends \PHPUnit_Framework_TestCase
             $this->expectedTables = array_merge($this->expectedTables, $tables);
         }
     }
+
+    public function getRenderer()
+    {
+        /** @var \Zend\ServiceManager\ServiceManager $sm */
+        $sm = RcmBootstrap::getServiceManager();
+
+        /** @var \Zend\ModuleManager\ModuleManager $moduleManager */
+        $moduleManager = $sm->get('ModuleManager');
+
+        $resolver = $sm->get('ViewResolver');
+
+        $render = new \Zend\View\Renderer\PhpRenderer();
+        $render->setResolver($resolver);
+
+        $basePath = $render->plugin('basepath');
+        $basePath->setBasePath('/');
+
+        return $render;
+    }
 }

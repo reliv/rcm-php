@@ -16,16 +16,7 @@ class PluginManagerTest extends DoctrineTestCase
         /** @var \Zend\ServiceManager\ServiceManager $sm */
         $sm = Bootstrap::getServiceManager();
 
-        /** @var \Zend\ModuleManager\ModuleManager $moduleManager */
-        $moduleManager = $sm->get('ModuleManager');
-
-        $resolver = $sm->get('ViewResolver');
-
-        $render = new \Zend\View\Renderer\PhpRenderer();
-        $render->setResolver($resolver);
-
-        $basePath = $render->plugin('basepath');
-        $basePath->setBasePath('/');
+        $render = $this->getRenderer();
 
         /** @var Zend\Cache\Storage\StorageInterface $cache */
         $cache = $sm->get('rcmCache');
