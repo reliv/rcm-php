@@ -19,11 +19,11 @@ class KeyValueTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \Rcm\Entity\KeyValue
      */
-    public function testSetGetKey()
+    public function testSetGetKeyName()
     {
         $key = 'testKey';
-        $this->keyValue->setKey($key);
-        $this->assertEquals($this->keyValue->getKey(), $key);
+        $this->keyValue->setKeyName($key);
+        $this->assertEquals($this->keyValue->getKeyName(), $key);
     }
 
     /**

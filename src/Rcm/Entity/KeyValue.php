@@ -10,13 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
 class KeyValue
 {
     /**
-     * @var int Auto-Incremented Primary Key
+     * @var string key
      *
      * @ORM\Id
      * @ORM\Column(type="string")
-     * @ORM\GeneratedValue
      */
-    protected $key;
+    protected $keyName;
 
     /**
      * @var int Owners account number
@@ -26,19 +25,19 @@ class KeyValue
     protected $value;
 
     /**
-     * @param int $key
+     * @param string $keyName
      */
-    public function setKey($key)
+    public function setKeyName($keyName)
     {
-        $this->key = $key;
+        $this->keyName = $keyName;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getKey()
+    public function getKeyName()
     {
-        return $this->key;
+        return $this->keyName;
     }
 
     /**
