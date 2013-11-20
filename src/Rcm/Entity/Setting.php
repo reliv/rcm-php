@@ -5,17 +5,17 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="rcm_key_value")
+ * @ORM\Table(name="rcm_setting")
  */
-class KeyValue
+class Setting
 {
     /**
-     * @var string keyName
+     * @var string name
      *
      * @ORM\Id
      * @ORM\Column(type="string")
      */
-    protected $keyName;
+    protected $name;
 
     /**
      * @var int Owners account number
@@ -25,19 +25,19 @@ class KeyValue
     protected $value;
 
     /**
-     * @param string $keyName
+     * @param string $name
      */
-    public function setKeyName($keyName)
+    public function setName($name)
     {
-        $this->keyName = $keyName;
+        $this->name = $name;
     }
 
     /**
      * @return string
      */
-    public function getKeyName()
+    public function getName()
     {
-        return $this->keyName;
+        return $this->name;
     }
 
     /**

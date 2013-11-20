@@ -4,36 +4,35 @@
 namespace RcmTest\Entity;
 
 
-use Rcm\Entity\KeyValue;
+use Rcm\Entity\Setting;
 
-class KeyValueTest extends \PHPUnit_Framework_TestCase
+class SettingTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  \Rcm\Entity\KeyValue */
-    protected $keyValue;
+    /** @var  \Rcm\Entity\Setting */
+    protected $setting;
 
     public function setUp()
     {
-        $this->keyValue = new KeyValue();
+        $this->setting = new Setting();
     }
 
     /**
-     * @covers \Rcm\Entity\KeyValue
+     * @covers \Rcm\Entity\Setting
      */
-    public function testSetGetKeyName()
+    public function testSetGetName()
     {
-        $key = 'testKey';
-        $this->keyValue->setKeyName($key);
-        $this->assertEquals($this->keyValue->getKeyName(), $key);
+        $name = 'testName';
+        $this->setting->setName($name);
+        $this->assertEquals($this->setting->getName(), $name);
     }
 
     /**
-     * @covers \Rcm\Entity\KeyValue
+     * @covers \Rcm\Entity\Setting
      */
     public function testSetGetValue()
     {
         $value = 'testValue';
-        $this->keyValue->setValue($value);
-        $this->assertEquals($this->keyValue->getValue(), $value);
+        $this->setting->setValue($value);
+        $this->assertEquals($this->setting->getValue(), $value);
     }
-
 } 
