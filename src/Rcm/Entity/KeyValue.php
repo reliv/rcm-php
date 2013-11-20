@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class KeyValue
 {
     /**
-     * @var string key
+     * @var string keyName
      *
      * @ORM\Id
      * @ORM\Column(type="string")
