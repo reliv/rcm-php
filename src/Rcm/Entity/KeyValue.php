@@ -3,20 +3,24 @@ namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="rcm_key_value")
+ */
 class KeyValue
 {
-    /** 
+    /**
      * @var int Auto-Incremented Primary Key
-     * 
-     * @ORM\Id 
+     *
+     * @ORM\Id
      * @ORM\Column(type="string")
      * @ORM\GeneratedValue
      */
     protected $key;
-    
-    /** 
+
+    /**
      * @var int Owners account number
-     * 
+     *
      * @ORM\Column(type="text")
      */
     protected $value;
