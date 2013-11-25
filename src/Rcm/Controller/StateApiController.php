@@ -2,6 +2,7 @@
 
 namespace Rcm\Controller;
 use Rcm\Controller\EntityMgrAwareController;
+use Zend\View\Model\JsonModel;
 
 
 class StateApiController extends EntityMgrAwareController
@@ -33,7 +34,7 @@ class StateApiController extends EntityMgrAwareController
             exit($httpCode);
         }
 
-        exit(json_encode($states));
+        return new JsonModel($states);
     }
 }
 
