@@ -1,7 +1,7 @@
 RCM Install Instructions
 ==============
 
-If you don't already have the ZF2 skeleton app, download it from github
+If you don't already have the ZF2 skeleton app, download it from github 
 ```bash
 git clone https://github.com/zendframework/ZendSkeletonApplication.git
 ```
