@@ -109,11 +109,11 @@ class RcmViewInit extends AbstractHelper
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery/js/jquery.js', 'text/javascript'
+            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui/js/jquery-1.9.1.js', 'text/javascript'
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui/js/jquery-ui-1.10.0.custom.min.js', 'text/javascript'
+            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui/js/jquery-ui-1.10.3.custom.min.js', 'text/javascript'
         );
 
         $renderer->headScript()->appendFile(
@@ -134,7 +134,7 @@ class RcmViewInit extends AbstractHelper
     protected function setCss(\Zend\View\Renderer\PhpRenderer $renderer)
     {
         $renderer->headLink()->appendStylesheet(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.0.custom.min.css'
+            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.min.css'
         );
     }
 
