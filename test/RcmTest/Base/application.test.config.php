@@ -16,6 +16,7 @@ return array(
             -1 => __DIR__.'/../../config/test.php',
         ),
         'module_paths' => array(
+
             -3 => './vendor',
             -2 => './vendor/reliv',
             -1 => './vendor/reliv/RcmPlugins',
