@@ -13,7 +13,7 @@ return array(
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(
-            -1 => __DIR__.'/../../config/test.php',
+            -1 => __DIR__.'/test.config.php',
         ),
         'module_paths' => array(
 

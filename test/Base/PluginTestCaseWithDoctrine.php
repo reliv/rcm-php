@@ -2,16 +2,21 @@
 
 namespace RcmTest\Base;
 
+require_once __DIR__ . '/DoctrineTestCase.php';
+require_once __DIR__ . '/PluginTestCaseInterface.php';
+
+use RcmTest\Base\DoctrineTestCase;
+use RcmTest\Base\PluginTestCaseInterface;
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
 
-class PluginTestCase extends DoctrineTestCase
+class PluginTestCaseWithDoctrine
+    extends DoctrineTestCase
+    implements PluginTestCaseInterface
 {
     public function setUp()
     {
         parent::setUp();
-
-
     }
 
     public function createDefaultSiteInstance()

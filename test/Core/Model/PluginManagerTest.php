@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../../Base/DoctrineTestCase.php';
+
 use \RcmTest\Base\DoctrineTestCase;
 use \Rcm\Model\PluginManager2;
 
@@ -11,17 +13,21 @@ class PluginManagerTest extends DoctrineTestCase
 
     public function setUp()
     {
+        $this->addModule('RcmRssFeed');
+        $this->addModule('RcmHtmlArea');
+
         parent::setUp();
 
         /** @var \Zend\ServiceManager\ServiceManager $sm */
-        $sm = Bootstrap::getServiceManager();
+        $sm = $this->getServiceManager();
 
         $render = $this->getRenderer();
 
         /** @var Zend\Cache\Storage\StorageInterface $cache */
         $cache = $sm->get('rcmCache');
-
         $cache->clearByNamespace('RcmCache');
+
+        $moduleManager = $sm->get('ModuleManager');
 
         $this->pluginManager = new PluginManager2(
             $this->entityManager,
@@ -29,7 +35,7 @@ class PluginManagerTest extends DoctrineTestCase
             $sm,
             $moduleManager,
             $render,
-            new \Zend\Http\Request(),
+            new \Zend\Http\PhpEnvironment\Request(),
             $cache
         );
     }

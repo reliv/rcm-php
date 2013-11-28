@@ -1,4 +1,6 @@
 <?php
+//Load Base Test Cases
+require_once __DIR__ . '/../../Base/DoctrineTestCase.php';
 
 use \RcmTest\Base\DoctrineTestCase;
 use \Rcm\Model\ContainerManager;
@@ -10,10 +12,12 @@ class ContainerManagerTest extends DoctrineTestCase
 
     public function setUp()
     {
+
+        $this->addModule('RcmRssFeed');
         parent::setUp();
 
         /** @var \Zend\ServiceManager\ServiceManager $sm */
-        $sm = Bootstrap::getServiceManager();
+        $sm = $this->getServiceManager();
 
         $mockPluginManager = $this->getMockBuilder('\Rcm\Model\PluginManager2');
         $mockPluginManager->disableOriginalConstructor();
