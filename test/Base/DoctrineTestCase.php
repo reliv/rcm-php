@@ -80,22 +80,5 @@ class DoctrineTestCase extends BaseTestCase
         }
     }
 
-    public function getRenderer()
-    {
-        /** @var \Zend\ServiceManager\ServiceManager $sm */
-        $sm = $this->getServiceManager();
 
-        /** @var \Zend\ModuleManager\ModuleManager $moduleManager */
-        $moduleManager = $sm->get('ModuleManager');
-
-        $resolver = $sm->get('ViewResolver');
-
-        $render = new \Zend\View\Renderer\PhpRenderer();
-        $render->setResolver($resolver);
-
-        $basePath = $render->plugin('basepath');
-        $basePath->setBasePath('/');
-
-        return $render;
-    }
 }

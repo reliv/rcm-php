@@ -15,6 +15,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     protected $config;
     protected $serviceManager;
+    protected $renderer;
 
     public function setUp()
     {
@@ -159,5 +160,31 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $serviceManager->get('ModuleManager')->loadModules();
 
         $this->serviceManager = $serviceManager;
+    }
+
+    /*
+     * Get the default Renderer
+     */
+    public function getRenderer()
+    {
+        if (empty($this->renderer)
+            || !is_object($this->renderer)
+            || !is_a($this->renderer, '\Zend\View\Renderer\RendererInterface')
+        ) {
+            /** @var \Zend\ServiceManager\ServiceManager $sm */
+            $sm = $this->getServiceManager();
+
+            $resolver = $sm->get('ViewResolver');
+
+            $render = new \Zend\View\Renderer\PhpRenderer();
+            $render->setResolver($resolver);
+
+            $basePath = $render->plugin('basepath');
+            $basePath->setBasePath('/');
+
+            $this->renderer = $render;
+        }
+
+        return $this->renderer;
     }
 }
