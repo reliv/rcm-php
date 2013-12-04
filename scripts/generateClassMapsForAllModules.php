@@ -26,6 +26,6 @@ foreach ($modulePhpFiles as $modulePhpFilePath) {
     // Module's main folder
     $modulePath = realpath(dirname($modulePhpFilePath[0]));
 
-    echo exec('cd '.$modulePath.';/usr/local/zend/share/ZendFramework2/bin/classmap_generator.php')."\n";
+    echo exec('cd '.$modulePath.';php '.$projectRootDir.'/vendor/zendframework/zendframework/bin/classmap_generator.php')."\n";
 
 }
