@@ -23,8 +23,6 @@ class PluginTestCaseWithDoctrine
     {
         $country = $this->getDefaultCountry();
         $language = $this->getDefaultLanguage();
-
-
     }
 
     public function getDefaultCountry()
