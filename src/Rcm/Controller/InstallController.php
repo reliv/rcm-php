@@ -2,7 +2,7 @@
 
 namespace Rcm\Controller;
 
-use \RcmDoctrineJsonPluginStorage\Entity\InstanceConfig as JsonContent,
+use \RcmDoctrineJsonPluginStorage\Entity\DoctrineJsonInstanceConfig as JsonContent,
     \RcmDoctrineJsonPluginStorage\StorageEngine\DoctrineSerializedRepo;
 
 
