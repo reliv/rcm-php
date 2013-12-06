@@ -187,12 +187,13 @@
 	border-top: 0;
 	overflow: auto;
 }
+
 .ui-autocomplete {
 	position: absolute;
 	top: 0;
 	left: 0;
 	cursor: default;
-    z-index: 10047;
+    z-index: 10050;
 }
 .ui-button {
 	display: inline-block;
