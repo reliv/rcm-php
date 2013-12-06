@@ -82,6 +82,10 @@
     float: left;
 }
 
+#rcmNewPageTemplateWizard .rcmNewPageTemplateInput {
+    width: 95%;
+}
+
 .rcmNewPageLayoutContainer {
     border: 1px dashed #000000;
     border-radius: 5px;
