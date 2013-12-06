@@ -1,6 +1,6 @@
 var rcmConfig = {
     filebrowserBrowseUrl: '/elfinder',
-    filebrowserWindowHeight : '400',
+    filebrowserWindowHeight : null,
     filebrowserWindowWidth : null
 };
 
@@ -30,7 +30,7 @@ var rcmCkConfig = {
     ],
     filebrowserBrowseUrl : '/elfinder/ckeditor',
     filebrowserImageBrowseUrl : '/elfinder/ckeditor/images',
-    filebrowserWindowHeight : '400',
+    filebrowserWindowHeight : null,
     filebrowserWindowWidth : null,
     basicEntities : false,
     allowedContent : true,
