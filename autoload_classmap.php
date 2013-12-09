@@ -64,10 +64,10 @@ return array(
   'ContainerManagerTest'                          => __DIR__ . '/test/Core/Model/ContainerManagerTest.php',
   'PluginManagerTest'                             => __DIR__ . '/test/Core/Model/PluginManagerTest.php',
   'RcmTest\Base\DoctrineTestCase'                 => __DIR__ . '/test/Base/DoctrineTestCase.php',
-  'RcmTest\Base\PluginTestCaseInterface'          => __DIR__ . '/test/Base/PluginTestCaseInterface.php',
+  'RcmTest\Base\BaseTestCaseInterface'          => __DIR__ . '/test/Base/BaseTestCaseInterface.php',
   'RcmTest\Base\BaseTestCase'                     => __DIR__ . '/test/Base/BaseTestCase.php',
-  'RcmTest\Base\PluginTestCase'                   => __DIR__ . '/test/Base/PluginTestCase.php',
-  'RcmTest\Base\PluginTestCaseWithDoctrine'       => __DIR__ . '/test/Base/PluginTestCaseWithDoctrine.php',
+  'RcmTest\Base\BaseTestCase'                   => __DIR__ . '/test/Base/BaseTestCase.php',
+  'RcmTest\Base\BaseTestCaseWithDoctrine'       => __DIR__ . '/test/Base/BaseTestCaseWithDoctrine.php',
   'Rcm\Module'                                    => __DIR__ . '/Module.php',
   'RcmGeneric\Module'                             => __DIR__ . '/themes/RcmGeneric/Module.php',
 );
