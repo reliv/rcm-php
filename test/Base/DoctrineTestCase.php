@@ -79,6 +79,4 @@ class DoctrineTestCase extends BaseTestCase
             $this->expectedTables = array_merge($this->expectedTables, $tables);
         }
     }
-
-
 }

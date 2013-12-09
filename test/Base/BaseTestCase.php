@@ -38,12 +38,4 @@ class BaseTestCase extends Zf2TestCase
 
         return $language;
     }
-
-    /**
-     * Prevent warning when testing individual suites like:
-     * No tests found in class "RcmTest\Base\Zf2TestCase".
-     */
-    public function testNothing(){
-        $this->assertTrue(true);
-    }
 }
