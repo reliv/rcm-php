@@ -22,8 +22,6 @@ class PluginTestCase
     {
         $country = $this->getDefaultCountry();
         $language = $this->getDefaultLanguage();
-
-
     }
 
     public function getDefaultCountry()
