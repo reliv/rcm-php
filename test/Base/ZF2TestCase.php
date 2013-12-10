@@ -2,9 +2,6 @@
 
 namespace RcmTest\Base;
 
-use Rcm\Entity\Country;
-use Rcm\Entity\Language;
-use Rcm\Entity\Site;
 use Zend\Config\Config;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
@@ -25,8 +22,6 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
         $this->initAutoLoader();
         $this->setupConfig();
         $this->startZf2();
-
-        parent::setUp();
     }
 
 //    public function tearDown()
@@ -69,7 +64,7 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
         $newConfig = new Config($config);
         $currentConfig = $this->getExtraConfig();
 
-        $newConfig->merge($currentConfig);
+        $currentConfig->merge($newConfig);
     }
 
     /**
