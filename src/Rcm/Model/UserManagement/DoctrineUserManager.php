@@ -5,9 +5,7 @@ namespace Rcm\Model\UserManagement;
 use Rcm\Model\EntityMgrAware;
 use Zend\Crypt\BlockCipher;
 use Zend\Session\Container;
-use Rcm\Entity\AdminPermissions;
 use Rcm\Entity\User;
-use Zend\Session\SessionManager;
 
 class DoctrineUserManager extends EntityMgrAware
     implements UserManagerInterface
@@ -16,26 +14,17 @@ class DoctrineUserManager extends EntityMgrAware
 
     protected $cypher;
 
-    /**
-     * @var SessionManager
-     */
-    protected $sessionMgr;
+    const SESSION_NAME='rcm_user_manager';
 
-    const SESSION_NAME = 'rcm_user_manager';
-
-    public function __construct(
-        BlockCipher $cypher,
-        SessionManager $sessionMgr
-    )
+    public function __construct(BlockCipher $cypher)
     {
         $this->cypher = $cypher;
         $this->session = new Container(self::SESSION_NAME);
-        $this->sessionMgr = $sessionMgr;
     }
 
     public function logout()
     {
-        $this->destroyLoginSession();
+        $this->session->getManager()->destroy();
     }
 
     public function saveUser(User $user)
@@ -74,13 +63,7 @@ class DoctrineUserManager extends EntityMgrAware
      */
     function setLoggedInUser(User $user, $junk)
     {
-        $this->session['userId'] = $user->getUserId();
-    }
-
-    function destroyLoginSession()
-    {
-        $this->session['user']=null;
-        $this->session->getManager()->getStorage()->clear(self::SESSION_NAME);
+        $this->session->userId = $user->getUserId();
     }
 
     /**
