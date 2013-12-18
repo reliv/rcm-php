@@ -21,18 +21,21 @@ class DoctrineUserManager extends EntityMgrAware
      */
     protected $sessionMgr;
 
+    const SESSION_NAME = 'rcm_user_manager';
+
     public function __construct(
         BlockCipher $cypher,
         SessionManager $sessionMgr
-    ) {
+    )
+    {
         $this->cypher = $cypher;
-        $this->session = new Container('rcm_user_manager');
+        $this->session = new Container(self::SESSION_NAME);
         $this->sessionMgr = $sessionMgr;
     }
 
     public function logout()
     {
-        $this->sessionMgr->destroy();
+        $this->destroyLoginSession();
     }
 
     public function saveUser(User $user)
@@ -71,29 +74,13 @@ class DoctrineUserManager extends EntityMgrAware
      */
     function setLoggedInUser(User $user, $junk)
     {
-        $this->session->userId = $user->getUserId();
+        $this->session['userId'] = $user->getUserId();
     }
 
-    function clearLoggedInUser()
+    function destroyLoginSession()
     {
-        $this->destroySession();
-    }
-
-    /**
-     * Deletes all keys in this session container. Is two-foreach process due to
-     * weirdness with zf2 sessions
-     *
-     * @return null
-     */
-    function destroySession()
-    {
-        $keysToKill = array();
-        foreach ($this->session->getIterator() as $key => $val) {
-            $keysToKill[] = $key;
-        }
-        foreach ($keysToKill as $key) {
-            $this->session->offsetUnset($key);
-        }
+        $this->session['user']=null;
+        $this->session->getManager()->getStorage()->clear(self::SESSION_NAME);
     }
 
     /**
