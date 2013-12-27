@@ -1479,6 +1479,17 @@ function RcmEdit(config) {
         }
     };
 
+    me.layoutEditor.pluginResizeStartHandler=function(event, ui) {
+        ui.element.attr('data-rcmPluginResized', 'Y');
+        me.layoutEditor.checkResize(ui.element);
+    };
+
+    me.layoutEditor.makePluginsResizable = function () {
+        $('#RcmRealPage').find('.rcmPlugin').resizable({
+            grid: 10,
+            start: me.layoutEditor.pluginResizeStartHandler
+        });
+    };
 
     /**
      * Makes plugins sortable.
@@ -1516,14 +1527,7 @@ function RcmEdit(config) {
             cancel: '[data-textedit]'
         });
 
-
-        $('#RcmRealPage').find('.rcmPlugin').resizable({
-            grid: 10,
-            start: function (event, ui) {
-                ui.element.attr('data-rcmPluginResized', 'Y');
-                me.layoutEditor.checkResize(ui.element);
-            }
-        });
+        me.layoutEditor.makePluginsResizable();
     };
 
     /**
@@ -1611,6 +1615,9 @@ function RcmEdit(config) {
             me.layoutEditor.addPluginToolbar(newDiv);
 
         }
+
+        //Make sure the new plugin is sizable
+        me.layoutEditor.makePluginsResizable();
     };
 
     /**
