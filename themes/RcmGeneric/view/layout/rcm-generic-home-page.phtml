@@ -36,7 +36,7 @@ $this->headMeta()->appendName(
 $rcmRequired = $this->rcmViewInit();
 
 /** Theme  **/
-$this->headScript()->appendFile(
+$this->headScript()->prependFile(
     $this->basePath() . '/modules/rcm/js/rcm.js', 'text/javascript'
 );
 

@@ -11,7 +11,7 @@
  *
  * @category  Reliv
  * @package   Common\Entites
- * @author    Rod Mcnew <rmcnew@relivinc.com>
+ * @author    Rod McNew <rmcnew@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
@@ -34,7 +34,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @category  Reliv
  * @package   Common\Entites
- * @author    Rod Mcnew <rmcnew@relivinc.com>
+ * @author    Rod McNew <rmcnew@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0

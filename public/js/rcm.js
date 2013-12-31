@@ -13,19 +13,43 @@ function Rcm() {
      */
     var me = this;
 
-    me.getPluginContainer = function(instanceId){
+    /**
+     * Allows your angular controllers and modules to play nice with the other
+     * plugins' angular controllers and modules. Call this above each angular
+     * controller your create. The directive 'ng-app' is NOT needed in the view.
+     * @param moduleName string usually same as plugin name
+     * @param controllerName the angular controller name
+     */
+    this.angularBootstrap = function (moduleName, controllerName) {
+        angular.element(document).ready(function () {
+            $.each(
+                $('[ng-controller=' + controllerName + ']'),
+                function (key, element) {
+
+                    angular.bootstrap(element, [moduleName]);
+                }
+            );
+        });
+    };
+
+    /**
+     *
+     * @param instanceId
+     * @returns {jQuery}
+     */
+    this.getPluginContainer = function (instanceId) {
         return $(me.getPluginContainerSelector(instanceId));
     };
 
-    me.getPluginContainerSelector = function(instanceId){
+    this.getPluginContainerSelector = function (instanceId) {
 
         /* Check for actual container.  Helpful for duplicates on page */
-        var container = $('#RcmRealPage [data-rcmPluginInstanceId="'+instanceId+'"]');
+        var container = $('#RcmRealPage [data-rcmPluginInstanceId="' + instanceId + '"]');
 
         if (container.length < 1) {
-            return('[data-rcmPluginInstanceId="'+instanceId+'"] .rcmPluginContainer');
+            return('[data-rcmPluginInstanceId="' + instanceId + '"] .rcmPluginContainer');
         } else {
-            return('#RcmRealPage [data-rcmPluginInstanceId="'+instanceId+'"] .rcmPluginContainer');
+            return('#RcmRealPage [data-rcmPluginInstanceId="' + instanceId + '"] .rcmPluginContainer');
         }
     };
 
@@ -40,7 +64,7 @@ function Rcm() {
      *
      * @return {Object}
      */
-    me.getUrlParams = function(){
+    this.getUrlParams = function () {
         var params = {};
 
         if (location.search) {
@@ -55,8 +79,7 @@ function Rcm() {
         return params;
     };
 
-    me.updateURLParameter = function(url, param, paramVal)
-    {
+    this.updateURLParameter = function (url, param, paramVal) {
         var TheAnchor = null;
         var newAdditionalURL = "";
         var tempArray = url.split("?");
@@ -64,36 +87,32 @@ function Rcm() {
         var additionalURL = tempArray[1];
         var temp = "";
 
-        if (additionalURL)
-        {
+        if (additionalURL) {
             var tmpAnchor = additionalURL.split("#");
             var TheParams = tmpAnchor[0];
             TheAnchor = tmpAnchor[1];
-            if(TheAnchor)
+            if (TheAnchor)
                 additionalURL = TheParams;
 
             tempArray = additionalURL.split("&");
 
-            for (i=0; i<tempArray.length; i++)
-            {
-                if(tempArray[i].split('=')[0] != param)
-                {
+            for (i = 0; i < tempArray.length; i++) {
+                if (tempArray[i].split('=')[0] != param) {
                     newAdditionalURL += temp + tempArray[i];
                     temp = "&";
                 }
             }
         }
-        else
-        {
+        else {
             var tmpAnchor = baseURL.split("#");
             var TheParams = tmpAnchor[0];
-            TheAnchor  = tmpAnchor[1];
+            TheAnchor = tmpAnchor[1];
 
-            if(TheParams)
+            if (TheParams)
                 baseURL = TheParams;
         }
 
-        if(TheAnchor)
+        if (TheAnchor)
             paramVal += "#" + TheAnchor;
 
         var rows_txt = temp + "" + param + "=" + paramVal;

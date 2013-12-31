@@ -3,7 +3,7 @@
  *
  * JavaScript object creates a progress indicator for multi part forms
  *
- * @author    Rod Mcnew
+ * @author    Rod McNew
  * @license   License.txt New BSD License
  */
 

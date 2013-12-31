@@ -2,7 +2,7 @@
 
 namespace RcmTest\Base;
 
-require_once __DIR__ . '/Zf2TestCase.php';
+require_once __DIR__ . '/ZF2TestCase.php';
 
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
