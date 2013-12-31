@@ -32,6 +32,11 @@ function Rcm() {
         });
     };
 
+    /**
+     *
+     * @param instanceId
+     * @returns {jQuery}
+     */
     this.getPluginContainer = function (instanceId) {
         return $(me.getPluginContainerSelector(instanceId));
     };
