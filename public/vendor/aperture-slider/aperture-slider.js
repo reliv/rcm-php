@@ -3,7 +3,7 @@
  *
  * JavaScript object that can be used to create sliding multi-part forms.
  *
- * @author    Rod Mcnew
+ * @author    Rod McNew
  * @license   License.txt New BSD License
  */
 
