@@ -37,7 +37,7 @@ $rcmRequired = $this->rcmViewInit();
 
 /** Theme  **/
 $this->headScript()->prependFile(
-    $this->basePath() . '/modules/rcm/js/rcm.js', 'text/javascript'
+    $this->basePath() . '/modules/rcm/js/rcm.js?cache-breaker-2013-12-31-1', 'text/javascript'
 );
 
 $this->headLink()->appendStylesheet($this->basePath() . '/modules/rcm-generic/css/layout.css');
