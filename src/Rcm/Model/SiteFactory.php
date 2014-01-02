@@ -29,6 +29,7 @@ use Rcm\Model\EntityMgrAware,
     Rcm\Entity\Site,
     \Rcm\Entity\Country,
     \Rcm\Entity\Language;
+use Zend\I18n\View\Helper\NumberFormat;
 
 /**
  * Site Factory
@@ -111,8 +112,8 @@ class SiteFactory extends EntityMgrAware
         setlocale(LC_ALL, $localName);
 
         var_dump(\Locale::getDefault());
-
-        return $site;
+        $numberFormatter = new NumberFormat();
+        echo $numberFormatter->__invoke(1000000.99);die;
     }
 
     /**
