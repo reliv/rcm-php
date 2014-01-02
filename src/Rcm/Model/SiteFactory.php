@@ -111,6 +111,8 @@ class SiteFactory extends EntityMgrAware
         $localName = strtolower($iso6391)
             . '_' . strtoupper($site->getCountry()->getIso2()) . '.UTF-8';
         setlocale(LC_ALL, $localName);
+
+        return $site;
     }
 
     /**
