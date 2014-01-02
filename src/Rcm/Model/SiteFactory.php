@@ -112,6 +112,7 @@ class SiteFactory extends EntityMgrAware
             $localName='de_DE.UTF-8';
 
         setlocale(LC_ALL, $localName);
+        echo number_format(1000000.99);die;
 
         return $site;
     }
