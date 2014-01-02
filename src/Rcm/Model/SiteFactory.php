@@ -115,6 +115,10 @@ class SiteFactory extends EntityMgrAware
 
         echo $localName;
 
+        $formatter = new \NumberFormatter("0",\NumberFormatter::DECIMAL);
+
+        echo $formatter->format(1000000.99);
+
         return $site;
     }
 
