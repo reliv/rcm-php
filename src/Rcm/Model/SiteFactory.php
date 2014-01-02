@@ -107,15 +107,14 @@ class SiteFactory extends EntityMgrAware
         //THIS SHOULD PROBABLY GO SOMEWHERE ELSE. BUT WHERE?
         //NEED FOR MONTH NAME TRANSLATIONS IN EVENT PLUGIN
         $iso6391 = $languageEntity->getIso6391();
-//        $localName = strtolower($iso6391) . '_' . strtoupper($site->getCountry()->getIso2()) . '.utf8';
+        $localName = strtolower($iso6391) . '_' . strtoupper($site->getCountry()->getIso2()) . '.utf8';
 
-            $localName='de_DE.UTF-8';
+//            $localName='de_DE.UTF-8';
 
         setlocale(LC_ALL, $localName);
         echo setlocal(LC_ALL,"0");
+
         echo $localName;
-        echo '<hr>';
-        echo number_format(1000000.99,2);
         die;
 
         return $site;
