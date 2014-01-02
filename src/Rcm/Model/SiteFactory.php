@@ -111,13 +111,13 @@ class SiteFactory extends EntityMgrAware
 
 //            $localName='de_DE.UTF-8';
 
-        setlocale(LC_ALL, $localName);
-
-        echo $localName;
-
-        $formatter = new \NumberFormatter("0",\NumberFormatter::DECIMAL);
-
-        echo $formatter->format(1000000.99);
+//        setlocale(LC_ALL, $localName);
+//
+//        echo $localName;
+//
+//        $formatter = new \NumberFormatter("0",\NumberFormatter::DECIMAL);
+//
+//        echo $formatter->format(1000000.99);
 
         return $site;
     }
