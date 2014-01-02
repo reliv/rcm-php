@@ -114,7 +114,6 @@ class SiteFactory extends EntityMgrAware
         setlocale(LC_ALL, $localName);
 
         echo $localName;
-        die;
 
         return $site;
     }
