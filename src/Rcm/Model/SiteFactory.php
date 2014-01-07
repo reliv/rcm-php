@@ -15,7 +15,6 @@
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://ci.reliv.com/confluence
  */
 
 namespace Rcm\Model;
@@ -46,7 +45,6 @@ use Zend\I18n\View\Helper\NumberFormat;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: Release: 1.0
- * @link      http://ci.reliv.com/confluence
  */
 
 class SiteFactory extends EntityMgrAware
