@@ -28,7 +28,8 @@ use Rcm\Model\EntityMgrAware,
     \Rcm\Exception\SiteNotFoundException,
     Rcm\Entity\Site,
     \Rcm\Entity\Country,
-    \Rcm\Entity\Language;
+    \Rcm\Entity\Language,
+    Locale;
 
 /**
  * Site Factory
@@ -66,7 +67,7 @@ class SiteFactory extends EntityMgrAware
      * to a domainName's default language if necessary.
      *
      * @param string $domainName site domain name
-     * @param string $language   site language
+     * @param string $language site language
      *
      * @return Site
      * @throws SiteNotFoundException
@@ -107,24 +108,24 @@ class SiteFactory extends EntityMgrAware
         //THIS SHOULD PROBABLY GO SOMEWHERE ELSE. BUT WHERE?
         //NEED FOR MONTH NAME TRANSLATIONS IN EVENT PLUGIN
         $iso6391 = $languageEntity->getIso6391();
-        $localName = strtolower($iso6391) . '_' . strtoupper($iso6391) . '.UTF-8';
-        setlocale(LC_ALL, $localName);
-
+        $localName = strtolower($iso6391) . '_' . strtoupper($iso6391);
+        setlocale(LC_ALL, $localName . '.UTF-8');
+        Locale::setDefault($localName);
         return $site;
     }
 
     /**
      * Creates a new site entity
      *
-     * @param string $domainName             domain name
-     * @param string $theme                  Theme to use for the new site
-     * @param \Rcm\Entity\Country $country                country
-     * @param \Rcm\Entity\Language $language               language
-     * @param integer $ownerAccountNum        owner account number
-     * @param string $loginPageUrl           URL to login page
-     * @param boolean $loginRequired          Require login for site access
-     * @param array|string $permitteTypes          Account Type(s) needed to access site
-     * @param array $additionalDomain       an additional domain that redirects
+     * @param string $domainName domain name
+     * @param string $theme Theme to use for the new site
+     * @param \Rcm\Entity\Country $country country
+     * @param \Rcm\Entity\Language $language language
+     * @param integer $ownerAccountNum owner account number
+     * @param string $loginPageUrl URL to login page
+     * @param boolean $loginRequired Require login for site access
+     * @param array|string $permitteTypes Account Type(s) needed to access site
+     * @param array $additionalDomain an additional domain that redirects
      *                                                     to this site
      * @param array $initialSiteWidePlugins Initial SiteWide plugins for the site.
      *
@@ -141,7 +142,8 @@ class SiteFactory extends EntityMgrAware
         $loginPageUrl = '',
         $loginRequired = false,
         $permittedTypes = array()
-    ) {
+    )
+    {
         $entityMgr = $this->entityMgr;
 
         if ($loginRequired && (empty($permittedTypes) || empty($loginPageUrl))) {

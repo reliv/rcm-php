@@ -1002,5 +1002,4 @@ class AdminController extends BaseController
 
         return true;
     }
-
 }
