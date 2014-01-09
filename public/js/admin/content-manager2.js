@@ -861,10 +861,6 @@ function RcmEdit(config) {
                 instanceId: containerData.instanceId,
                 pluginName: containerData.pluginName
             });
-//            } catch (err) {
-//                console.log(err.toString());
-//                throw "An error occurred initing editing for a plugin"
-//            }
         }
     };
 
@@ -896,21 +892,11 @@ function RcmEdit(config) {
             };
 
             if ($.isFunction(pluginObject.getSaveData)) {
-//                try{
                 dataToReturn[instanceId].pluginData = pluginObject.getSaveData();
-//                }catch(err){
-//                    console.log(err.toString());
-//                    throw 'An error occurred saving plugin. Check JS Console.';
-//                }
             }
 
             if ($.isFunction(pluginObject.getAssets)) {
-//                try{
                 dataToReturn[instanceId].pluginData.assets = pluginObject.getAssets();
-//                }catch(err){
-//                    console.log(err.toString());
-//                    throw 'An error occurred saving plugin. Check JS Console.';
-//                }
             }
 
         });
