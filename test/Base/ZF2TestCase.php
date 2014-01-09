@@ -17,6 +17,8 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
     protected $serviceManager;
     protected $renderer;
 
+    protected $autoLoaderStarted=false;
+
     public function setUp()
     {
         $this->initAutoLoader();
@@ -61,6 +63,10 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
      */
     public function addApplicationConfig(Array $config)
     {
+        if (!$this->autoLoaderStarted) {
+            $this->initAutoLoader();
+        }
+
         $newConfig = new Config($config);
         $currentConfig = $this->getExtraConfig();
 
@@ -90,6 +96,10 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function initAutoLoader()
     {
+        if ($this->autoLoaderStarted) {
+            return;
+        }
+
         chdir(__DIR__.'/../../../../../');
         include 'init_autoloader.php';
     }
