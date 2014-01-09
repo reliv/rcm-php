@@ -291,24 +291,4 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
             'pageType' => $pageType
         ));
     }
-
-    public function addFormattedDataToProductArray(array $product)
-    {
-        /**
-         * TODO Inject these instead of using service locator
-         *
-         * Also: This code should not be in the RCM repo but neither should the
-         * other product code
-         */
-        $numberFormatter=$this->serviceLocator->get('rcmNumberFormatter');
-        $currencyFormatter=$this->serviceLocator->get('rcmNumberFormatter');
-        foreach ($product['skus'] as $key => $sku) {
-            $product['skus'][$key]['view'] = array(
-                'price' => $currencyFormatter->format($sku['price']),
-                'bv' =>  $numberFormatter->format($sku['bv']),
-                'pv' => $numberFormatter->format($sku['pv'])
-            );
-        }
-        return $product;
-    }
 }
