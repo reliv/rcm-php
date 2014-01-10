@@ -17,19 +17,14 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
     protected $serviceManager;
     protected $renderer;
 
+    protected $autoLoaderStarted=false;
+
     public function setUp()
     {
         $this->initAutoLoader();
         $this->setupConfig();
         $this->startZf2();
     }
-
-//    public function tearDown()
-//    {
-//        $this->clearAutoLoader();
-//
-//        parent::tearDown();
-//    }
 
     public function addModule($module)
     {
@@ -61,9 +56,9 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
      */
     public function addApplicationConfig(Array $config)
     {
+        $this->initAutoLoader();
         $newConfig = new Config($config);
         $currentConfig = $this->getExtraConfig();
-
         $currentConfig->merge($newConfig);
     }
 
@@ -90,19 +85,14 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function initAutoLoader()
     {
+        if ($this->autoLoaderStarted) {
+            return;
+        }
+
         chdir(__DIR__.'/../../../../../');
         include 'init_autoloader.php';
-    }
 
-    /**
-     * Clears the spl autoloader.
-     */
-    protected function clearAutoLoader()
-    {
-        $functions = spl_autoload_functions();
-        foreach($functions as $function) {
-            spl_autoload_unregister($function);
-        }
+        $this->autoLoaderStarted = true;
     }
 
     /**
