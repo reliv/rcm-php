@@ -27,6 +27,7 @@ use \Zend\Session\Container;
 use \Rcm\Controller\StateApiController;
 use \Rcm\Factory\DoctrineInjector;
 use \Zend\Cache\StorageFactory;
+use \Rcm\Model\Logger as RcmLogger;
 
 /**
  * ZF2 Module Config.  Required by ZF2
@@ -199,7 +200,12 @@ class Module
                     return $cache;
                 },
 
-                'rcmLogger' => function($serviceManager) {
+                'RcmLogger' => function($serviceManager) {
+                    $zendLogger = $serviceManager->get('rcmZendLogger');
+                    $logger = new RcmLogger($zendLogger);
+                    return $logger;
+                 },
+                'rcmZendLogger' => function($serviceManager) {
                     $config = $serviceManager->get('config');
 
                     if (empty($config['rcmLogger']['writer'])) {
