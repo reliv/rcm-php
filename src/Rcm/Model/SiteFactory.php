@@ -23,8 +23,7 @@ namespace Rcm\Model;
 use Rcm\Entity\Domain,
     Rcm\Exception\LanguageNotFoundException,
     Rcm\Exception\SiteNotFoundException,
-    Rcm\Entity\Site,
-    Locale;
+    Rcm\Entity\Site;
 
 /**
  * Site Factory
