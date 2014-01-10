@@ -19,17 +19,10 @@
 
 namespace Rcm\Model;
 
-use Rcm\Entity\Domain;
-use Rcm\Entity\PwsInfo;
-use Rcm\Model\EntityMgrAware,
-    Doctrine\ORM\EntityManager,
-    \Rcm\Exception\LanguageNotFoundException,
-    \Rcm\Exception\SiteNotFoundException,
-    Rcm\Entity\Site,
-    \Rcm\Entity\Country,
-    \Rcm\Entity\Language,
-    Locale,
-    Zend\I18n\View\Helper\NumberFormat;
+use Rcm\Entity\Domain,
+    Rcm\Exception\LanguageNotFoundException,
+    Rcm\Exception\SiteNotFoundException,
+    Rcm\Entity\Site;
 
 /**
  * Site Factory
@@ -107,7 +100,7 @@ class SiteFactory extends EntityMgrAware
         //THIS SHOULD PROBABLY GO SOMEWHERE ELSE. BUT WHERE?
         //NEED FOR MONTH NAME TRANSLATIONS IN EVENT PLUGIN
         $iso6391 = $languageEntity->getIso6391();
-        $localName = strtolower($iso6391) . '_' . strtoupper($iso6391) . '.UTF-8';
+        $localName = strtolower($iso6391) . '_' . $site->getCountry()->getIso2() . '.UTF-8';
         setlocale(LC_ALL, $localName);
 
         return $site;
