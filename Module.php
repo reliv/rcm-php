@@ -13,7 +13,6 @@
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://ci.reliv.com/confluence
  */
 
 namespace Rcm;
@@ -29,6 +28,7 @@ use \Zend\Session\Container;
 use \Rcm\Controller\StateApiController;
 use \Rcm\Factory\DoctrineInjector;
 use \Zend\Cache\StorageFactory;
+use \Rcm\Model\Logger as RcmLogger;
 
 /**
  * ZF2 Module Config.  Required by ZF2
@@ -42,7 +42,6 @@ use \Zend\Cache\StorageFactory;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://ci.reliv.com/confluence
  */
 class Module
 {
@@ -203,8 +202,13 @@ class Module
                         return $cache;
                     },
 
-                'rcmLogger' => function ($serviceManager) {
-                        $config = $serviceManager->get('config');
+                'RcmLogger' => function($serviceManager) {
+                    $zendLogger = $serviceManager->get('rcmZendLogger');
+                    $logger = new RcmLogger($zendLogger);
+                    return $logger;
+                 },
+                'rcmZendLogger' => function($serviceManager) {
+                    $config = $serviceManager->get('config');
 
                         if (empty($config['rcmLogger']['writer'])) {
                             $writer = $serviceManager->get('rcmWriterStub');

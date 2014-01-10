@@ -11,7 +11,6 @@
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://ci.reliv.com/confluence
  */
 
 namespace Rcm\Entity;
@@ -29,7 +28,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://ci.reliv.com/confluence
  * 
  * @ORM\Entity
  * @ORM\Table(name="rcm_states")

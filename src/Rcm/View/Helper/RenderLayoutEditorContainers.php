@@ -32,7 +32,6 @@ use \Zend\View\Helper\AbstractHelper;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://ci.reliv.com/confluence
  *
  */
 class RenderLayoutEditorContainers extends AbstractHelper
