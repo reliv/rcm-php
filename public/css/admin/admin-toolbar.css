@@ -14,7 +14,7 @@
 
 #rcmAdminMenu a {
     display: block;
-    width: 4em;
+    /*width: 4em;*/
     color: #000000;
     text-decoration: none;
     padding: 0.10em 1.2em;
@@ -27,13 +27,12 @@
 #rcmAdminMenu li {
     float: left;
     padding: 0;
-    width: 6em;
+    /*width: 6em;*/
 
 }
 
 #rcmAdminMenu li:hover {
     background: #00A3E6;
-    behavior: url('/modules/rcm/vendor/pie/PIE.htc');
     border-radius: 3px 3px 0px 0px;
 
 }
@@ -46,7 +45,6 @@
     font-weight: normal;
     border-width: 0.25em;
     margin: 0;
-    behavior: url('/modules/rcm/vendor/pie/PIE.htc');
     border-radius: 0px 10px 10px 5px;
 }
 
@@ -58,7 +56,7 @@
 #rcmAdminMenu li li {
     padding-right: 1em;
     padding-left: 1em;
-    width: 220px;
+    width: 226px;
 }
 
 #rcmAdminMenu li ul a {
@@ -117,7 +115,6 @@
     background:-moz-linear-gradient( center top, #3d94f6 5%, #1e62d0 100% );
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d94f6', endColorstr='#1e62d0');
     background-color:#3d94f6;
-    behavior: url('/modules/rcm/vendor/pie/PIE.htc');
     border-radius:42px;
     display:inline-block;
     color:#ffffff;
