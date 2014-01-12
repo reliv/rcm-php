@@ -10,8 +10,6 @@ function RcmEdit(config) {
 
     /**
      * Always refers to this object unlike the 'this' JS variable;
-     *
-     * @type {RcmEdit}
      */
     var me = this;
 
@@ -1845,7 +1843,7 @@ function RcmEdit(config) {
     };
 
     me.saveAjaxAdminWindowUsingPost = function(saveUrl, send, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) {
-        $.post('/rcm-admin-shopping-cart-product-save/'+rcmEdit.language,
+        $.post(saveUrl,
             send,
             function(data) {me.saveAjaxAdminWindowSuccess(data, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) },
             'json'
