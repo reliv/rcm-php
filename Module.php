@@ -19,6 +19,7 @@
 namespace Rcm;
 
 use Rcm\Model\PhoneModel;
+use Rcm\View\Helper\OutOfDateBrowserWarning;
 use Zend\Log\Logger;
 use Zend\Log\Writer\Null;
 use Zend\Log\Writer\Stream;
@@ -343,6 +344,19 @@ class Module
                 },
 
 
+            )
+        );
+    }
+
+    function getViewHelperConfig()
+    {
+        return array(
+            'factories' => array(
+                // the array key here is the name you will call the view helper by in your view scripts
+                'rcmOutOfDateBrowserWarning' => function ($viewServiceMgr) {
+                        $serviceMgr = $viewServiceMgr->getServiceLocator();
+                        return new OutOfDateBrowserWarning();
+                    },
             )
         );
     }
