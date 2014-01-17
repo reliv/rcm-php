@@ -25,7 +25,6 @@ function Rcm() {
             $.each(
                 $('[ng-controller=' + controllerName + ']'),
                 function (key, element) {
-
                     angular.bootstrap(element, [moduleName]);
                 }
             );
