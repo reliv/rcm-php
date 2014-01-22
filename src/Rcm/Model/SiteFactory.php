@@ -15,21 +15,14 @@
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://ci.reliv.com/confluence
  */
 
 namespace Rcm\Model;
 
-use Rcm\Entity\Domain;
-use Rcm\Entity\PwsInfo;
-use Rcm\Model\EntityMgrAware,
-    Doctrine\ORM\EntityManager,
-    \Rcm\Exception\LanguageNotFoundException,
-    \Rcm\Exception\SiteNotFoundException,
-    Rcm\Entity\Site,
-    \Rcm\Entity\Country,
-    \Rcm\Entity\Language;
-use Zend\I18n\View\Helper\NumberFormat;
+use Rcm\Entity\Domain,
+    Rcm\Exception\LanguageNotFoundException,
+    Rcm\Exception\SiteNotFoundException,
+    Rcm\Entity\Site;
 
 /**
  * Site Factory
@@ -46,7 +39,6 @@ use Zend\I18n\View\Helper\NumberFormat;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: Release: 1.0
- * @link      http://ci.reliv.com/confluence
  */
 
 class SiteFactory extends EntityMgrAware
@@ -108,26 +100,28 @@ class SiteFactory extends EntityMgrAware
         //THIS SHOULD PROBABLY GO SOMEWHERE ELSE. BUT WHERE?
         //NEED FOR MONTH NAME TRANSLATIONS IN EVENT PLUGIN
         $iso6391 = $languageEntity->getIso6391();
-        $localName = strtolower($iso6391)
-            . '_' . strtoupper($site->getCountry()->getIso2()) . '.UTF-8';
+        $localName = strtolower($iso6391) . '_' . $site->getCountry()->getIso2() . '.UTF-8';
         setlocale(LC_ALL, $localName);
 
         return $site;
     }
 
     /**
-     * @param $domainName
-     * @param $theme
-     * @param Country $country
-     * @param Language $language
-     * @param $ownerAccountNum
-     * @param array $initialSiteWidePlugins
-     * @param array $additionalDomain
-     * @param string $loginPageUrl
-     * @param bool $loginRequired
-     * @param array $permittedTypes
-     * @return Site
-     * @throws \Exception
+     * Creates a new site entity
+     *
+     * @param string $domainName             domain name
+     * @param string $theme                  Theme to use for the new site
+     * @param \Rcm\Entity\Country $country                country
+     * @param \Rcm\Entity\Language $language               language
+     * @param integer $ownerAccountNum        owner account number
+     * @param string $loginPageUrl           URL to login page
+     * @param boolean $loginRequired          Require login for site access
+     * @param array|string $permitteTypes          Account Type(s) needed to access site
+     * @param array $additionalDomain       an additional domain that redirects
+     *                                                     to this site
+     * @param array $initialSiteWidePlugins Initial SiteWide plugins for the site.
+     *
+     * @return \Rcm\Entity\Site
      */
     public function createNewSite(
         $domainName,

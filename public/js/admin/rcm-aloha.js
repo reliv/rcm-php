@@ -36,7 +36,6 @@ function RcmAlohaEditor(config) {
 
     me.addAlohaToolbars = function() {
         Aloha.ready( function() {
-            console.log(Aloha.settings);
             Aloha.jQuery('#hiddenEditorContainer').aloha();
         });
 

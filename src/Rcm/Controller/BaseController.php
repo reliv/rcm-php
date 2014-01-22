@@ -18,7 +18,6 @@
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://ci.reliv.com/confluence
  */
 
 namespace Rcm\Controller;
@@ -41,7 +40,6 @@ use Doctrine\ORM\EntityManager;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://ci.reliv.com/confluence
  *
  */
 class BaseController extends \Rcm\Controller\EntityMgrAwareController
@@ -82,10 +80,10 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
 
     /**
      * @param \Rcm\Model\UserManagement\UserManagerInterface $userMgr
-     * @param \Rcm\Model\PluginManager                 $pluginManager
-     * @param \Doctrine\ORM\EntityManager              $entityMgr
-     * @param \Zend\View\Renderer\PhpRenderer          $viewRenderer
-     * @param array                                    $config
+     * @param \Rcm\Model\PluginManager $pluginManager
+     * @param \Doctrine\ORM\EntityManager $entityMgr
+     * @param \Zend\View\Renderer\PhpRenderer $viewRenderer
+     * @param array $config
      */
     public function __construct(
         \Rcm\Model\UserManagement\UserManagerInterface $userMgr,
@@ -93,11 +91,12 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         EntityManager $entityMgr,
         \Zend\View\Renderer\PhpRenderer $viewRenderer,
         $config
-    ) {
+    )
+    {
         parent::__construct($entityMgr);
-        $this->loggedInUser=$userMgr->getLoggedInUser();
-        $this->loggedInAdminPermissions=$userMgr->getLoggedInAdminPermissions();
-        $this->pluginManager=$pluginManager;
+        $this->loggedInUser = $userMgr->getLoggedInUser();
+        $this->loggedInAdminPermissions = $userMgr->getLoggedInAdminPermissions();
+        $this->pluginManager = $pluginManager;
         $this->viewRenderer = $viewRenderer;
         $this->config = $config;
     }
@@ -105,9 +104,10 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
     /**
      * @return bool
      */
-    public function adminIsLoggedIn(){
+    public function adminIsLoggedIn()
+    {
         return is_a(
-            $this->loggedInAdminPermissions,'\Rcm\Entity\AdminPermissions'
+            $this->loggedInAdminPermissions, '\Rcm\Entity\AdminPermissions'
         );
     }
 
@@ -124,7 +124,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
 
         //WE SHOULD INJECT THIS INSTEAD OF USING SERVICE LOCATOR FROM INSIDE
         //CONTROLLER TO MAKE TESTING AND DEPENDENCY-VIEWING EASIER
-        /** @var \Rcm\Entity\Site siteInfo  */
+        /** @var \Rcm\Entity\Site siteInfo */
         $this->siteInfo = $this->getServiceLocator()->get('rcmSite');
 
         //Check Domain and redirect if needed
@@ -134,7 +134,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         }
 
         //Check for restricted site
-        if($this->siteInfo->isLoginRequired()
+        if ($this->siteInfo->isLoginRequired()
             && (
                 empty($this->loggedInUser)
                 || (!$this->siteInfo->isPermitted($this->loggedInUser->getAccountType()) && !$this->adminIsLoggedIn())
@@ -205,7 +205,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         }
     }
 
-    protected function adminSaveInit($pageType='n')
+    protected function adminSaveInit($pageType = 'n')
     {
         $this->ensureAdminIsLoggedIn();
 
@@ -218,7 +218,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
             'pageType'
         );
 
-        /** @var \Rcm\Entity\Page $page  */
+        /** @var \Rcm\Entity\Page $page */
         $this->page = $this->getPageByName($pageName, $pageType);
 
         if (empty($this->page)) {
@@ -227,7 +227,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
             );
         }
 
-        /** @var \Rcm\Entity\PageRevision $pageRevision  */
+        /** @var \Rcm\Entity\PageRevision $pageRevision */
         $this->pageRevision = $this->page->getRevisionById($pageRevisionId);
 
 
@@ -256,11 +256,12 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         }
     }
 
-    protected function getPageUrl($pageName, $pageType='n') {
-        $urlParams['page']= $pageName;
+    protected function getPageUrl($pageName, $pageType = 'n')
+    {
+        $urlParams['page'] = $pageName;
 
         //Check for default language
-        if ($this->siteInfo->getDomain()->getDefaultLanguage()->getLanguage() !=  $this->siteInfo->getLanguage()->getLanguage()) {
+        if ($this->siteInfo->getDomain()->getDefaultLanguage()->getLanguage() != $this->siteInfo->getLanguage()->getLanguage()) {
             $urlParams['language'] = $this->siteInfo->getLanguage()->getLanguage();
         }
 
@@ -279,7 +280,8 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         );
     }
 
-    protected function getPageByName($pageName, $pageType='n') {
+    protected function getPageByName($pageName, $pageType = 'n')
+    {
         $pageRepo = $this->entityMgr->getRepository('\Rcm\Entity\Page');
         return $pageRepo->findOneBy(array(
             'site' => $this->siteInfo,

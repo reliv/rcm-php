@@ -15,7 +15,6 @@
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://ci.reliv.com/confluence
  */
 namespace Rcm\Entity;
 
@@ -34,7 +33,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://ci.reliv.com/confluence
  * 
  * @ORM\Entity
  * @ORM\Table(name="rcm_sites")
@@ -175,14 +173,6 @@ class Site
     protected $permittedAccountTypes;
 
     /**
-     * @var string currency symbol.
-     *
-     * @ORM\Column(type="string", length=8)
-     *
-     */
-    protected $currencySymbol;
-
-    /**
      * Constructor for site
      */
     public function __construct()
@@ -235,22 +225,6 @@ class Site
             $this->pwsInfo = clone $this->pwsInfo;
             $this->pwsInfo->setPwsId(null);
         }
-    }
-
-    /**
-     * @param string $currencySymbol
-     */
-    public function setCurrencySymbol($currencySymbol)
-    {
-        $this->currencySymbol = $currencySymbol;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrencySymbol()
-    {
-        return $this->currencySymbol;
     }
 
     /**

@@ -15,7 +15,6 @@
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://ci.reliv.com/confluence
  */
 
 namespace Rcm\View\Helper;
@@ -34,7 +33,6 @@ use \Zend\View\Helper\AbstractHelper;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://ci.reliv.com/confluence
  *
  */
 class RcmViewInit extends AbstractHelper
@@ -119,10 +117,10 @@ class RcmViewInit extends AbstractHelper
         $renderer->headScript()->appendFile(
             $renderer->basePath() . '/modules/rcm/vendor/jquery-block-ui/jquery.blockUI.js', 'text/javascript'
         );
-
-        $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery-formatcurrency/jquery.format-currency-1.4.0.min.js', 'text/javascript'
-        );
+//
+//        $renderer->headScript()->appendFile(
+//            $renderer->basePath() . '/modules/rcm/vendor/jquery-formatcurrency/jquery.format-currency-1.4.0.min.js', 'text/javascript'
+//        );
 
         $script = '$.blockUI.defaults.baseZ = 2000; $.blockUI.defaults.applyPlatformOpacityRules = false;';
 
