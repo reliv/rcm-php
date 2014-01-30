@@ -59,9 +59,8 @@ class DoctrineUserManager extends EntityMgrAware
 
     /**
      * @param \Rcm\Entity\User $user
-     * @TODO REMOVE $junk BUT KEEP STRICT STANDARDS PASSING
      */
-    function setLoggedInUser(User $user, $junk)
+    public function setLoggedInUser(User $user)
     {
         $this->session->userId = $user->getUserId();
     }
@@ -71,14 +70,6 @@ class DoctrineUserManager extends EntityMgrAware
      */
     public function getLoggedInAdminPermissions()
     {
-
-        //HACK FOR DEVELOPING WHEN LOGIN BACKEND IS DOWN
-        //NEVER LET THIS GO LIVE
-//        return $this->entityMgr
-//            ->getRepository('\Rcm\Entity\AdminPermissions')
-//            ->findOneByAccountNumber(7);
-
-
         $user = $this->getLoggedInUser();
         if (!$user) {
             return null;
