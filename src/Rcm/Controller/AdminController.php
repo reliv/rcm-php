@@ -43,7 +43,6 @@ class AdminController extends BaseController
 {
 
 
-
     public function newPageWizardAction()
     {
         $this->ensureAdminIsLoggedIn();
@@ -61,23 +60,29 @@ class AdminController extends BaseController
     {
         $this->ensureAdminIsLoggedIn();
 
-        $viewVars['rcmCurrentSites'] = $this->entityMgr->createQuery('
-            SELECT s.siteId, d.domain
-            FROM \Rcm\Entity\Site s
-            JOIN s.domain d
-            WHERE d.primaryDomain IS NULL
-        ')->getArrayResult();
+        $viewVars['rcmCurrentSites'] = $this->entityMgr->createQuery(
+            '
+                        SELECT s.siteId, d.domain
+                        FROM \Rcm\Entity\Site s
+                        JOIN s.domain d
+                        WHERE d.primaryDomain IS NULL
+                    '
+        )->getArrayResult();
 
-        $viewVars['rcmCountries'] = $this->entityMgr->createQuery('
-            SELECT c.iso3, c.countryName
-            FROM \Rcm\Entity\Country c
-        ')->getArrayResult();
+        $viewVars['rcmCountries'] = $this->entityMgr->createQuery(
+            '
+                        SELECT c.iso3, c.countryName
+                        FROM \Rcm\Entity\Country c
+                    '
+        )->getArrayResult();
 
 
-        $viewVars['rcmLanguages'] = $this->entityMgr->createQuery('
-            SELECT l.languageId, l.languageName
-            FROM \Rcm\Entity\Language l
-        ')->getArrayResult();
+        $viewVars['rcmLanguages'] = $this->entityMgr->createQuery(
+            '
+                        SELECT l.languageId, l.languageName
+                        FROM \Rcm\Entity\Language l
+                    '
+        )->getArrayResult();
 
         return $viewVars;
 
@@ -180,7 +185,6 @@ class AdminController extends BaseController
         }
 
 
-
         echo json_encode($data);
         exit;
     }
@@ -204,8 +208,7 @@ class AdminController extends BaseController
 
         $pluginView = $instance->getView();
         $body = $this->viewRenderer->render($pluginView);
-        $pluginHtml =
-            $this->viewRenderer->plugin('headScript')
+        $pluginHtml = $this->viewRenderer->plugin('headScript')
             . $this->viewRenderer->plugin('headLink')
             . $body;
 
@@ -424,11 +427,12 @@ class AdminController extends BaseController
         }
 
         /** @var \Rcm\Entity\Country $countryEntity */
-        $countryEntity = $this->entityMgr->getRepository('\Rcm\Entity\Country')->findOneBy(
-            array(
-                'iso3' => $siteCountry
-            )
-        );
+        $countryEntity = $this->entityMgr->getRepository('\Rcm\Entity\Country')
+            ->findOneBy(
+                array(
+                    'iso3' => $siteCountry
+                )
+            );
 
         if (empty($countryEntity)) {
             $return['error'] = $errors['countryNotFound'];
@@ -437,11 +441,13 @@ class AdminController extends BaseController
         }
 
         /** @var \Rcm\Entity\Language $languageEntity */
-        $languageEntity = $this->entityMgr->getRepository('\Rcm\Entity\Language')->findOneBy(
-            array(
-                'languageId' => $siteLanguage
-            )
-        );
+        $languageEntity = $this->entityMgr->getRepository(
+            '\Rcm\Entity\Language'
+        )->findOneBy(
+                array(
+                    'languageId' => $siteLanguage
+                )
+            );
 
         if (empty($languageEntity)) {
             $return['error'] = $errors['languageNotFound'];
@@ -467,11 +473,12 @@ class AdminController extends BaseController
         }
 
         /** @var \Rcm\Entity\Site $siteToCloneEntity */
-        $siteToCloneEntity = $this->entityMgr->getRepository('\Rcm\Entity\Site')->findOneBy(
-            array(
-                'siteId' => $siteToClone
-            )
-        );
+        $siteToCloneEntity = $this->entityMgr->getRepository('\Rcm\Entity\Site')
+            ->findOneBy(
+                array(
+                    'siteId' => $siteToClone
+                )
+            );
 
         if (empty($siteToCloneEntity)) {
             $return['error'] = $errors['siteNotFound'];
@@ -488,7 +495,7 @@ class AdminController extends BaseController
         $this->entityMgr->flush();
 
         $return['dataOk'] = 'Y';
-        $return['redirect'] = '//'.$domainEntity->getDomainName();
+        $return['redirect'] = '//' . $domainEntity->getDomainName();
 
         echo json_encode($return);
         exit;
@@ -519,7 +526,8 @@ class AdminController extends BaseController
         $pageRevision,
         $pageTitle = '',
         $pageType = 'n'
-    ) {
+    )
+    {
         $this->ensureAdminIsLoggedIn();
         $config = $this->config;
         $pageManager = new \Rcm\Model\PageFactory($this->entityMgr);
@@ -625,7 +633,8 @@ class AdminController extends BaseController
     private function savePluginAssets(
         $postedAssets,
         \Rcm\Entity\PluginInstance $newInstance
-    ) {
+    )
+    {
 
         if (empty($postedAssets)) {
             return;
@@ -988,13 +997,15 @@ class AdminController extends BaseController
             return false;
         }
 
-        $domainCheck = $this->entityMgr->createQuery('
-            SELECT COUNT(d)
-            FROM \Rcm\Entity\Domain d
-            WHERE d.domain = :domain
-        ')->setParameter('domain', $domain)->getSingleScalarResult();
+        $domainCheck = $this->entityMgr->createQuery(
+            '
+                        SELECT COUNT(d)
+                        FROM \Rcm\Entity\Domain d
+                        WHERE d.domain = :domain
+                    '
+        )->setParameter('domain', $domain)->getSingleScalarResult();
 
-        if ($domainCheck > 0 ){
+        if ($domainCheck > 0) {
             return false;
         }
 

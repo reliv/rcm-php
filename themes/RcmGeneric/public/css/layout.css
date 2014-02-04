@@ -39,10 +39,7 @@ body {
 @font-face {
     font-family: 'RokkittRegular';
     src: url('rokkitt-regular-webfont.eot');
-    src: url('rokkitt-regular-webfont.eot?#iefix') format('embedded-opentype'),
-    url('rokkitt-regular-webfont.woff') format('woff'),
-    url('rokkitt-regular-webfont.ttf') format('truetype'),
-    url('rokkitt-regular-webfont.svg#RokkittRegular') format('svg');
+    src: url('rokkitt-regular-webfont.eot?#iefix') format('embedded-opentype'), url('rokkitt-regular-webfont.woff') format('woff'), url('rokkitt-regular-webfont.ttf') format('truetype'), url('rokkitt-regular-webfont.svg#RokkittRegular') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -50,22 +47,22 @@ body {
 /*  Header */
 #rcmGenTopHeader {
     background: url('/modules/rcm-generic/images/bg-navigation.jpg') no-repeat center 90px;
-    width:940px;
-    margin:0 auto;
-    height:105px;
-    padding:36px 10px 0;
+    width: 940px;
+    margin: 0 auto;
+    height: 105px;
+    padding: 36px 10px 0;
     overflow: hidden;
 
 }
 
 #sitewrapper .SiteName {
-    display:block;
-    float:left;
-    outline:none;
+    display: block;
+    float: left;
+    outline: none;
 }
 
 #sitewrapper .SiteName img {
-    border:0;
+    border: 0;
 }
 
 #sitewrapper .SiteName h1 {
@@ -77,51 +74,49 @@ body {
     top: -30px;
 }
 
-
 /*  Navigation */
 #sitewrapper .SiteNavigation {
-    padding:13px 0 0;
-    float:right !important;
+    padding: 13px 0 0;
+    float: right !important;
 }
 
 #sitewrapper .SiteNavigation ul {
-    margin:0;
-    list-style:none;
+    margin: 0;
+    list-style: none;
 
 }
 
 #sitewrapper .SiteNavigation ul li {
-    float:left;
-    margin:0 0 0 63px;
+    float: left;
+    margin: 0 0 0 63px;
     padding: 0;
 }
 
-#sitewrapper .SiteNavigation ul li.selected a, #sitewrapper .SiteNavigation ul li a:hover{
-    color:#f78117;
+#sitewrapper .SiteNavigation ul li.selected a, #sitewrapper .SiteNavigation ul li a:hover {
+    color: #f78117;
 }
 
 #sitewrapper .SiteNavigation ul li a {
-    font-size:16px;
-    text-decoration:none;
-    color:#5e5e5e;
+    font-size: 16px;
+    text-decoration: none;
+    color: #5e5e5e;
     font-family: 'RokkittRegular';
-    outline:none;
+    outline: none;
     display: inline;
     font-weight: normal;
 }
 
-
 /* Body */
 #rcmGenMainBody {
-    width:940px;
-    margin:0 auto;
-    padding:10px 10px 17px;
-    overflow:hidden;
+    width: 940px;
+    margin: 0 auto;
+    padding: 10px 10px 17px;
+    overflow: hidden;
     min-height: 600px;
 }
 
 .homePageTable td p {
-    text-align:justify;
+    text-align: justify;
 }
 
 .homePageTableTd {
@@ -129,26 +124,26 @@ body {
 }
 
 body, p {
-    color:#5d5d5d;
+    color: #5d5d5d;
     font-family: 'RokkittRegular';
-    font-size:16px;
-    line-height:25px;
+    font-size: 16px;
+    line-height: 25px;
     text-shadow: 0 1px 0 #fcfcfc;
-    margin:0;
+    margin: 0;
 }
 
 a {
-    color:#606060;
+    color: #606060;
     font-family: 'RokkittRegular';
     text-decoration: underline;
-    outline:none;
-    font-weight:normal;
+    outline: none;
+    font-weight: normal;
     text-shadow: 0 1px 0 #fcfcfc;
 }
 
 p a {
-    outline:none;
-    color:#636363;
+    outline: none;
+    color: #636363;
 }
 
 /*  Announcment boxess */
@@ -158,63 +153,63 @@ p a {
 }
 
 .rcmContainer .RcmPortalAnnouncementBox:first-child {
-    margin:60px 0 0;
+    margin: 60px 0 0;
 }
 
 .rcmContainer .RcmPortalAnnouncementBox a:first-child {
-    margin:0;
-    padding:0;
-    background:none;
-    width:auto;
+    margin: 0;
+    padding: 0;
+    background: none;
+    width: auto;
     display: inline;
     text-decoration: underline;
 }
 
 .rcmContainer .RcmPortalAnnouncementBox p {
-    width:258px;
-    text-align:justify;
-    color:#828081;
+    width: 258px;
+    text-align: justify;
+    color: #828081;
     font-family: 'RokkittRegular';
-    margin-top:17px;
-    line-height:20px;
-    font-size:14px;
-    background:none;
-    padding:0;
+    margin-top: 17px;
+    line-height: 20px;
+    font-size: 14px;
+    background: none;
+    padding: 0;
 }
 
-.rcmContainer .RcmPortalAnnouncementBox .bottom  {
-    height:246px;
+.rcmContainer .RcmPortalAnnouncementBox .bottom {
+    height: 246px;
 }
 
 .rcmContainer .RcmPortalAnnouncementBox .linkStyle a {
-    color:#606060;
+    color: #606060;
     font-family: 'RokkittRegular';
-    font-style:italic;
-    text-decoration:none;
-    padding:98px 0 0;
-    margin:32px auto 0;
-    display:block;
+    font-style: italic;
+    text-decoration: none;
+    padding: 98px 0 0;
+    margin: 32px auto 0;
+    display: block;
     width: 150px;
-    background:url(/modules/rcm-generic/images/button-more.jpg) no-repeat center top;
-    outline:none;
-    font-size:16px;
-    font-weight:normal;
+    background: url(/modules/rcm-generic/images/button-more.jpg) no-repeat center top;
+    outline: none;
+    font-size: 16px;
+    font-weight: normal;
     text-shadow: 0 1px 0 #fcfcfc;
     float: none;
     text-align: center;
 }
 
-.rcmContainer .RcmPortalAnnouncementBox a:hover{
-    color:#F78117;
+.rcmContainer .RcmPortalAnnouncementBox a:hover {
+    color: #F78117;
 }
 
 .rcmContainer .RcmPortalAnnouncementBox {
-    float:left;
-    background:url(/modules/rcm-generic/images/interface.jpg) no-repeat 0 -68px!important;
-    margin:60px 0 0 0;
-    height:410px;
-    width:281px;
-    padding:0;
+    float: left;
+    background: url(/modules/rcm-generic/images/interface.jpg) no-repeat 0 -68px !important;
+    margin: 60px 0 0 0;
+    height: 410px;
+    width: 281px;
+    padding: 0;
     border: none;
     padding-right: 15px;
 
@@ -241,81 +236,92 @@ div .linkStyle {
 /*  Footer */
 
 #rcmGenFooter {
-    width:940px;
-    background:url(../images/bg-footer.jpg) no-repeat center top;
-    padding:65px 10px 30px;
-    margin:0 auto;
-    overflow:hidden;
+    width: 940px;
+    background: url(../images/bg-footer.jpg) no-repeat center top;
+    padding: 65px 10px 30px;
+    margin: 0 auto;
+    overflow: hidden;
 }
+
 #rcmGenFooter ul {
-    list-style:none;
-    margin:0 0 0 60px;
-    padding:0;
-    overflow:hidden;
-    float:left;
+    list-style: none;
+    margin: 0 0 0 60px;
+    padding: 0;
+    overflow: hidden;
+    float: left;
 }
+
 #rcmGenFooter ul li:first-child a {
-    border:none;
-    padding:0 6px 0 0;
+    border: none;
+    padding: 0 6px 0 0;
 }
+
 #rcmGenFooter ul li {
-    float:left;
+    float: left;
     padding: 0;
 }
+
 #rcmGenFooter ul li a:hover {
-    color:#F78117;
+    color: #F78117;
 }
+
 #rcmGenFooter ul li a {
     border-width: 1px;
-    border-color:#5b5b5b;
+    border-color: #5b5b5b;
     border-style: none none none solid;
-    color:#5b5b5b;
-    font-size:10px;
+    color: #5b5b5b;
+    font-size: 10px;
     font-family: Trebuchet MS;
-    text-decoration:none;
-    font-weight:bold;
-    padding:0 6px;
-    outline:none;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0 6px;
+    outline: none;
 }
+
 #rcmGenFooter p {
-    color:#5b5b5b;
-    font-size:10px;
+    color: #5b5b5b;
+    font-size: 10px;
     font-family: Trebuchet MS;
-    font-weight:bold;
-    float:left;
-    margin:0px 0 0 100px;
+    font-weight: bold;
+    float: left;
+    margin: 0px 0 0 100px;
     line-height: 10px;
 }
+
 #rcmGenFooter div.connect {
-    float:left;
-    margin:0 0 0 92px;
+    float: left;
+    margin: 0 0 0 92px;
 }
+
 #rcmGenFooter div.connect a {
-    float:left;
-    outline:none;
+    float: left;
+    outline: none;
 }
+
 #rcmGenFooter div.connect a#facebook {
-    width:27px;
-    height:28px;
-    display:block;
-    text-indent:-9999px;
-    background:url(../images/icons.gif) no-repeat;
+    width: 27px;
+    height: 28px;
+    display: block;
+    text-indent: -9999px;
+    background: url(../images/icons.gif) no-repeat;
 }
-#rcmGenFooter div.connect a#twitter{
-    width:36px;
-    height:28px;
-    display:block;
-    text-indent:-9999px;
-    background:url(../images/icons.gif) no-repeat 0 -48px;
-    margin:0 0 0 68px;
+
+#rcmGenFooter div.connect a#twitter {
+    width: 36px;
+    height: 28px;
+    display: block;
+    text-indent: -9999px;
+    background: url(../images/icons.gif) no-repeat 0 -48px;
+    margin: 0 0 0 68px;
 }
-#rcmGenFooter div.connect a#vimeo{
-    width:32px;
-    height:28px;
-    display:block;
-    text-indent:-9999px;
-    background:url(../images/icons.gif) no-repeat 0 -96px;
-    margin:0 0 0 73px;
+
+#rcmGenFooter div.connect a#vimeo {
+    width: 32px;
+    height: 28px;
+    display: block;
+    text-indent: -9999px;
+    background: url(../images/icons.gif) no-repeat 0 -96px;
+    margin: 0 0 0 73px;
 }
 
 

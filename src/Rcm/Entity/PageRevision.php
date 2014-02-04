@@ -24,7 +24,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Page Revision Information Entity
  *
- * This object contains a list of page revisions for use with the 
+ * This object contains a list of page revisions for use with the
  * content managment system.
  *
  * @category  Reliv
@@ -37,7 +37,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="rcm_page_revisions")
  */
-
 class PageRevision
 {
     /**
@@ -111,7 +110,7 @@ class PageRevision
      *
      * @ORM\Column(type="boolean")
      */
-    protected $published=false;
+    protected $published = false;
 
     /**
      * @var string Md5 of posted data
@@ -125,7 +124,7 @@ class PageRevision
      *
      * @ORM\Column(type="boolean")
      */
-    protected $staged=false;
+    protected $staged = false;
 
     /**
      * @ORM\ManyToMany(
@@ -155,9 +154,9 @@ class PageRevision
     protected $pluginInstances;
 
     protected $isDirty = false;
-    
+
     /**
-     * Constructor for Page Revision Entity. 
+     * Constructor for Page Revision Entity.
      */
     public function __construct()
     {
@@ -174,7 +173,7 @@ class PageRevision
             $clonedInstances = array();
 
             /** @var \Rcm\Entity\PagePluginInstance $pagePluginInstance */
-            foreach($currentInstance as $pagePluginInstance) {
+            foreach ($currentInstance as $pagePluginInstance) {
                 $clonedInstances[] = clone $pagePluginInstance;
             }
 
@@ -190,14 +189,14 @@ class PageRevision
     public function toArray()
     {
         $return = array(
-            'pageRevId'       => $this->getPageRevId(),
-            'author'          => $this->getAuthor(),
-            'createdDate'     => $this->getCreatedDate(),
-            'page'            => $this->getPage(),
-            'pageTitle'       => $this->getPageTitle(),
-            'description'     => $this->getDescription(),
-            'keywords'        => $this->getKeywords(),
-            'pageLayout'      => $this->getPageLayout(),
+            'pageRevId' => $this->getPageRevId(),
+            'author' => $this->getAuthor(),
+            'createdDate' => $this->getCreatedDate(),
+            'page' => $this->getPage(),
+            'pageTitle' => $this->getPageTitle(),
+            'description' => $this->getDescription(),
+            'keywords' => $this->getKeywords(),
+            'pageLayout' => $this->getPageLayout(),
             'pluginInstances' => $this->getPluginInstances()
         );
 
@@ -215,7 +214,7 @@ class PageRevision
             return null;
         }
 
-        /** @var \Rcm\Entity\PagePluginInstance $instance  */
+        /** @var \Rcm\Entity\PagePluginInstance $instance */
         foreach ($this->pluginInstances->toArray() as $instance) {
 
             $container = $instance->getLayoutContainer();
@@ -463,7 +462,7 @@ class PageRevision
         ) {
             throw new \Rcm\Exception\RuntimeException(
                 'Passed instance must be an array or a single '
-                .'of \Rcm\Entity\PagePluginInstance'
+                . 'of \Rcm\Entity\PagePluginInstance'
             );
         }
 
@@ -475,7 +474,7 @@ class PageRevision
     /**
      * Add instance to Entity
      *
-     * @param \Rcm\Entity\PagePluginInstance $instance Plugin Instance to
+     * @param \Rcm\Entity\PagePluginInstance $instance     Plugin Instance to
      *                                                     add to revision.
      *
      * @return null
@@ -511,8 +510,9 @@ class PageRevision
 
     public function removeInstance(
         \Rcm\Entity\PagePluginInstance $instance
-    ) {
-       $this->pluginInstances->removeElement($instance);
+    )
+    {
+        $this->pluginInstances->removeElement($instance);
     }
 
     public function publishRevision()

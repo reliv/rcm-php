@@ -56,7 +56,7 @@ class GetContentBasePath extends AbstractHelper
 //        $adminMode = $view->getVariable('rcmAdminMode');
 //
 //        if($adminMode){
-            return '';
+        return '';
 //        }else{
 //            // TODO REMOVE HARD CODED PATH
 //            return '/published-content' . '/' .$instanceId;

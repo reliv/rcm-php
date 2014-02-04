@@ -35,7 +35,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="rcm_phone_number")
  */
-
 class PhoneNumber
 {
     /**

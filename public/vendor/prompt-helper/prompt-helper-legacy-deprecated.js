@@ -1,4 +1,4 @@
-(function( $ ){
+(function ($) {
 
     /**
      *
@@ -61,7 +61,7 @@
         this.append(p);
         p.append('<label for="' + name + '">' + description + '</label><br>' +
             '<img style="max-width:120px;float:left;margin-right:10px" src="' + src + '">');
-        var urlBox=$('<input style="width:370px;margin-right:10px" name="' + name + '" value="' + src + '">');
+        var urlBox = $('<input style="width:370px;margin-right:10px" name="' + name + '" value="' + src + '">');
         p.append(urlBox);
         p.append('<button type="button" class="image-button ui-button ui-widget ' +
             'ui-state-default ui-corner-all ui-button-text-only" role="button" ' +
@@ -69,19 +69,19 @@
             '<span class="ui-button-text">Browse</span>' +
             '</button>');
 
-        if(!this.addImageEventsDelegated){
+        if (!this.addImageEventsDelegated) {
 
             this.addImageEventsDelegated = true;
 
-            this.delegate('.imageInput button, .imageInput img','click',
-                function(){
+            this.delegate('.imageInput button, .imageInput img', 'click',
+                function () {
                     rcmEdit.showFileBrowserForInputBox(
                         $(this).parent().children('input')
-                        ,'images'
+                        , 'images'
                     );
                 }
             );
-            this.delegate('.imageInput input','change', function(){
+            this.delegate('.imageInput input', 'change', function () {
                 $(this).parent().children('img').attr('src', $(this).val());
             });
         }
@@ -122,12 +122,12 @@
         var validatorId = $.fn.generateUUID();
         this.append('' +
             '<p><label for="' + name + '">' + description + '</label><br>' +
-            '<div id="' + validatorId +'" style="float: right;"></div> ' +
+            '<div id="' + validatorId + '" style="float: right;"></div> ' +
             '<input id="' + name + '" name="' + name + '" value="' + value + '"></p>'
         );
 
-        this.find('#'+name).keyup(function(){
-            var validationContainer = $("#"+validatorId);
+        this.find('#' + name).keyup(function () {
+            var validationContainer = $("#" + validatorId);
             $.fn.validateInput(this, validationContainer, urlToValidator, disallowSpaces);
         });
 
@@ -157,49 +157,49 @@
     };
 
     /**
-    * DEPRECATED - DO NOT USE
-    *
-    * Due to ckEditor limitations, this must be called AFTER .dialog is called
-    *
-    * @param {String} name html name
-    * @param {String} description title to show user
-    * @param {String} value the current value
-    * @param {Object} [toolBarConfig] tool bar config for ckEditor
-    *
-    * @return String
-    */
+     * DEPRECATED - DO NOT USE
+     *
+     * Due to ckEditor limitations, this must be called AFTER .dialog is called
+     *
+     * @param {String} name html name
+     * @param {String} description title to show user
+     * @param {String} value the current value
+     * @param {Object} [toolBarConfig] tool bar config for ckEditor
+     *
+     * @return String
+     */
     $.fn.addRichEdit = function (name, description, value, toolBarConfig) {
         console.log('DEPRECATED FUNCTION USED');
 
-        if(typeof(toolBarConfig)=='undefined'){
+        if (typeof(toolBarConfig) == 'undefined') {
             toolBarConfig = {
                 toolbar: [
-                    { name: 'document', items : [ 'Source' ] },
-                    { name: 'undoRedo', items : ['Undo','Redo'] },
-                    { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
-                    { name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv',
-                        '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
-                    { name: 'clipboard', items : ['Cut','Copy','Paste','PasteText','PasteFromWord'] },
-                    { name: 'insert', items : [ 'Image', 'Table','HorizontalRule','SpecialChar','Templates'] },
-                    { name: 'links', items : [ 'Link','Unlink','Anchor' ] }
+                    { name: 'document', items: [ 'Source' ] },
+                    { name: 'undoRedo', items: ['Undo', 'Redo'] },
+                    { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+                    { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
+                        '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+                    { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord'] },
+                    { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Templates'] },
+                    { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] }
                 ]
             };
         }
 
         var id = $.fn.generateUUID();
-        var div = $('<div id="' + id + '" class="'+name+'" contenteditable="true">' + value +'</div>');
+        var div = $('<div id="' + id + '" class="' + name + '" contenteditable="true">' + value + '</div>');
         var p = $(
             '<p>' +
                 '<label>' + description + '</label><br>' +
-            '</p>'
+                '</p>'
         );
         this.append(p);
         p.append(div);
         // This terrible timeout hack is needed because the new version of
         // ckEditor only works on elements that are in the DOM
         setTimeout(
-            function(){
-                CKEDITOR.replace(id,toolBarConfig);
+            function () {
+                CKEDITOR.replace(id, toolBarConfig);
             },
             100
         );
@@ -224,15 +224,15 @@
         var selected;
         p.append('<label for="' + name + '">' + description + '</label><br>');
         var customClass = '';
-        if(allowCustomValues){
+        if (allowCustomValues) {
             customClass = ' class="selectAllowCustomValues"';
         }
-        var select=$('<select' + customClass + ' name="' + name + '"><select>');
+        var select = $('<select' + customClass + ' name="' + name + '"><select>');
 
         for (var key in choices) {
             selected = '';
             if (key == value) {
-                selected=' selected="selected"';
+                selected = ' selected="selected"';
             }
             select.append('<option value="' + key + '"' + selected + '>' + choices[key] + '</option>')
         }
@@ -243,9 +243,9 @@
             var displayNone = ' style="display:none"';
             var customValue = '';
             if (!(value in choices)) {
-                selected=' selected="selected"';
+                selected = ' selected="selected"';
                 displayNone = '';
-                customValue=value;
+                customValue = value;
             }
             select.append('<option class="custom" value="' + customValue + '"' + selected + '>Custom Value</option>');
             inputBox = $('<input' + customClass + displayNone + ' size="80" value="' + customValue + '">');
@@ -257,25 +257,25 @@
         this.append(p);
 
         //Ensure events are attached for the custom input box
-        if(allowCustomValues&&!this.selectAllowCustomValuesDelegated){
+        if (allowCustomValues && !this.selectAllowCustomValuesDelegated) {
 
-            this.selectAllowCustomValuesDelegated=true;
+            this.selectAllowCustomValuesDelegated = true;
 
             //Hide/show the custom text box if the 'Custom Value' is modded
-            this.delegate('select.selectAllowCustomValues','change',function(event){
+            this.delegate('select.selectAllowCustomValues', 'change', function (event) {
                 var select = $(event.target);
                 var textBox = select.parent().children('input');
-                if(select.children('option.custom').attr('selected')
+                if (select.children('option.custom').attr('selected')
                     == 'selected'
                     ) {
                     textBox.show();
-                }else{
+                } else {
                     textBox.hide();
                 }
             });
 
             //Move any input box input to the select key value
-            this.delegate('input.selectAllowCustomValues','change',function(event){
+            this.delegate('input.selectAllowCustomValues', 'change', function (event) {
                 var textBox = $(event.target);
                 textBox.parent().children('select')
                     .children('option.custom').val(textBox.val());
@@ -311,20 +311,20 @@
      * DEPRECATED - DO NOT USE
      * @return {String}
      */
-    $.fn.generateUUID = function(){
+    $.fn.generateUUID = function () {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
             /[xy]/g,
-            function(c) {
-                var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            function (c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
             }
         );
     };
 
-    $.fn.validateInput = function(inputField, resultContainer, ajaxPath, disallowSpaces) {
+    $.fn.validateInput = function (inputField, resultContainer, ajaxPath, disallowSpaces) {
         console.log('DEPRECATED FUNCTION USED');
 
-        if(typeof(disallowSpaces)=='undefined'){
+        if (typeof(disallowSpaces) == 'undefined') {
             disallowSpaces = false;
         }
 
@@ -337,7 +337,7 @@
         }
 
         /* make sure that the page name is greater then 1 char */
-        if(inputValue.length < 1) {
+        if (inputValue.length < 1) {
             $.fn.inputFieldError(inputField, resultContainer);
             $(resultContainer).html('');
             return false;
@@ -351,22 +351,22 @@
 
         dataToSend[fieldId] = inputValue;
 
-        $.getJSON(ajaxPath, dataToSend, function(data) {
+        $.getJSON(ajaxPath, dataToSend,function (data) {
             if (data.pageOk == 'Y') {
                 $.fn.inputFieldOk(inputField, resultContainer);
-            } else if(data.pageOk != 'Y') {
+            } else if (data.pageOk != 'Y') {
                 $.fn.inputFieldError(inputField, resultContainer);
             } else {
                 $.fn.inputFieldFatalError(inputField, resultContainer);
             }
-        }).error(function(){
-                $.fn.inputFieldFatalError(inputField, resultContainer);
-            });
+        }).error(function () {
+            $.fn.inputFieldFatalError(inputField, resultContainer);
+        });
 
         return pageOk;
     };
 
-    $.fn.inputFieldError = function(inputField, resultContainer) {
+    $.fn.inputFieldError = function (inputField, resultContainer) {
 
         console.log('DEPRECATED FUNCTION USED');
         $(resultContainer).removeClass('ui-icon-check');
@@ -376,7 +376,7 @@
 
     };
 
-    $.fn.inputFieldFatalError = function(inputField, resultContainer) {
+    $.fn.inputFieldFatalError = function (inputField, resultContainer) {
 
         console.log('DEPRECATED FUNCTION USED');
         $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
@@ -384,7 +384,7 @@
         $(inputField).removeClass('RcmOkInputHightlight');
     };
 
-    $.fn.inputFieldOk = function(inputField, resultContainer) {
+    $.fn.inputFieldOk = function (inputField, resultContainer) {
 
         console.log('DEPRECATED FUNCTION USED');
         $(resultContainer).removeClass('ui-icon-alert');
@@ -392,4 +392,4 @@
         $(inputField).removeClass('RcmErrorInputHightlight');
         $(inputField).addClass('RcmOkInputHightlight');
     };
-})( jQuery );
+})(jQuery);

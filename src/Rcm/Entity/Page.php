@@ -39,7 +39,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="rcm_pages")
  */
-
 class Page
 {
     /**
@@ -50,35 +49,35 @@ class Page
      * @ORM\GeneratedValue
      */
     protected $pageId;
-    
+
     /**
      * @var string Page name
      *
      * @ORM\Column(type="string")
      */
     protected $name;
-    
+
     /**
      * @var string Authors name
      *
      * @ORM\Column(type="string")
      */
     protected $author;
-    
+
     /**
      * @var \DateTime Date page was first created
      *
      * @ORM\Column(type="datetime")
      */
     protected $createdDate;
-    
+
     /**
      * @var \DateTime Date page was last published
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $lastPublished;
-    
+
     /**
      * @var \Rcm\Entity\PageRevision Integer Current Page Revision ID
      *
@@ -100,7 +99,7 @@ class Page
      *
      * @ORM\Column(type="string")
      */
-    protected $pageType='n';
+    protected $pageType = 'n';
 
     /**
      * @var \Rcm\Entity\Site
@@ -109,7 +108,7 @@ class Page
      * @ORM\JoinColumn(name="siteId", referencedColumnName="siteId")
      **/
     protected $site;
-    
+
     /**
      * @var array Array of page revisions
      *
@@ -131,14 +130,16 @@ class Page
         $this->createdDate = new \DateTime();
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->pageId) {
             $this->setPageId(null);
             $this->stagedRevision = null;
             $this->currentRevision = clone $this->currentRevision;
             $this->currentRevision->setPage($this);
 
-            $this->revisions = new ArrayCollection(array($this->currentRevision));
+            $this->revisions
+                = new ArrayCollection(array($this->currentRevision));
         }
     }
 
@@ -150,14 +151,14 @@ class Page
     public function toArray()
     {
         $return = array(
-            'pageId'          => $this->getPageId(),
-            'name'            => $this->getName(),
-            'author'          => $this->getAuthor(),
-            'createdDate'     => $this->createdDate,
-            'lastPublished'   => $this->getLastPublished(),
+            'pageId' => $this->getPageId(),
+            'name' => $this->getName(),
+            'author' => $this->getAuthor(),
+            'createdDate' => $this->createdDate,
+            'lastPublished' => $this->getLastPublished(),
             'currentRevision' => $this->getCurrentRevision(),
-            'site'           => $this->getSite(),
-            'revisions'       => $this->getRevisions(),
+            'site' => $this->getSite(),
+            'revisions' => $this->getRevisions(),
         );
 
         return $return;
@@ -306,9 +307,10 @@ class Page
      *
      * @return null
      */
-    public function setPublishedRevision (
+    public function setPublishedRevision(
         \Rcm\Entity\PageRevision $revision
-    ) {
+    )
+    {
         $revision->publishRevision();
         $this->currentRevision = $revision;
     }
@@ -326,18 +328,20 @@ class Page
     /**
      * Sets the CurrentRevision property
      *
-     * @param \Rcm\Entity\PageRevision $currentRevision Revision object
+     * @param \Rcm\Entity\PageRevision $currentRevision         Revision object
      *                                                          to add
      *
      * @return null
      */
     public function setCurrentRevision(
         \Rcm\Entity\PageRevision $currentRevision
-    ) {
+    )
+    {
         $this->setPublishedRevision($currentRevision);
     }
 
-    public function removeCurrentRevision() {
+    public function removeCurrentRevision()
+    {
         $this->setStagedRevision($this->currentRevision);
         $this->currentRevision = null;
     }
@@ -355,19 +359,21 @@ class Page
     /**
      * Sets the current staged property
      *
-     * @param \Rcm\Entity\PageRevision $revision Revision object
+     * @param \Rcm\Entity\PageRevision $revision                Revision object
      *                                                          to add
      *
      * @return null
      */
     public function setStagedRevision(
         \Rcm\Entity\PageRevision $revision
-    ) {
+    )
+    {
         $revision->stageRevision();
         $this->stagedRevision = $revision;
     }
 
-    public function removedStagedRevistion() {
+    public function removedStagedRevistion()
+    {
         $this->stagedRevision = null;
     }
 
@@ -390,7 +396,8 @@ class Page
      */
     public function setSite(
         \Rcm\Entity\Site $site
-    ) {
+    )
+    {
         $this->site = $site;
     }
 
@@ -404,7 +411,8 @@ class Page
         return $this->revisions->toArray();
     }
 
-    public function getRevisionById($revId) {
+    public function getRevisionById($revId)
+    {
         return $this->revisions[$revId];
     }
 
@@ -415,9 +423,10 @@ class Page
      *
      * @return void
      */
-    public function addPageRevision (
+    public function addPageRevision(
         \Rcm\Entity\PageRevision $revision
-    ) {
+    )
+    {
         $this->revisions->add($revision);
     }
 
@@ -457,16 +466,19 @@ class Page
         return $this->checkPageType('t');
     }
 
-    public function setProductPage() {
+    public function setProductPage()
+    {
         $this->setPageType('p');
     }
 
-    public function isProductPage() {
+    public function isProductPage()
+    {
         return $this->checkPageType('p');
     }
 
 
-    public function checkPageType($pageType) {
+    public function checkPageType($pageType)
+    {
         if ($this->pageType == $pageType) {
             return true;
         }
@@ -474,7 +486,8 @@ class Page
         return false;
     }
 
-    public function setPageType($type) {
+    public function setPageType($type)
+    {
         if ($type != 'n'
             && $type != 'p'
             && $type != 'b'
@@ -487,7 +500,8 @@ class Page
         $this->pageType = $type;
     }
 
-    public function getPageType() {
+    public function getPageType()
+    {
         return $this->pageType;
     }
 
@@ -510,7 +524,7 @@ class Page
                 continue;
             }
 
-            if ( !empty($staged)
+            if (!empty($staged)
                 && $revision->getPageRevId() == $staged->getPageRevId()
             ) {
                 continue;

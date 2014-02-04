@@ -37,5 +37,5 @@ class RuntimeException
     extends \RuntimeException
     implements \Rcm\Exception\ExceptionInterface
 {
-    
+
 }

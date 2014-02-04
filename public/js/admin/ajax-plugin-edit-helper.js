@@ -14,10 +14,10 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginUrlName) {
     var pluginBaseUrl = '/rcm-plugin-admin-proxy/' + pluginUrlName + '/'
         + instanceId + '/';
 
-    this.disableEvents = function(){
+    this.disableEvents = function () {
         //Disable normal events
         container.find('*').unbind();
-        var donDoIt=function () {
+        var donDoIt = function () {
             return false;
         };
         container.find('button').click(donDoIt);

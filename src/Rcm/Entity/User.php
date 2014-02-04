@@ -682,6 +682,7 @@ class User
 
     /**
      * @param $username
+     *
      * @throws \Rcm\Exception\InvalidArgumentException
      */
     public function setUsername($username)

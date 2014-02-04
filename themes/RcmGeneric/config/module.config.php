@@ -22,21 +22,21 @@ return array(
 
     'Rcm' => array(
         'themes' => array(
-            'RcmGeneric'=>array(
+            'RcmGeneric' => array(
                 'screenShot' => '/modules/reliv-guest-site/images/GuestSiteTheme.png',
                 'display' => 'Default Site',
                 'layouts' => array(
                     'default' => array(
-                        'display'      => 'Generic Page',
-                        'file'         => 'rcm-generic-home-page.phtml',
-                        'screenShot'   => '/modules/reliv-guest-site/images/GuestLayoutPageScreenshot.png',
-                        'hidden'       => true,
+                        'display' => 'Generic Page',
+                        'file' => 'rcm-generic-home-page.phtml',
+                        'screenShot' => '/modules/reliv-guest-site/images/GuestLayoutPageScreenshot.png',
+                        'hidden' => true,
                     ),
                     'homePage' => array(
-                        'display'      => 'Home Page',
-                        'file'         => 'rcm-generic-home-page.phtml',
-                        'screenShot'   => '/modules/reliv-guest-site/images/GuestLayoutPageScreenshot.png',
-                        'hidden'       => true,
+                        'display' => 'Home Page',
+                        'file' => 'rcm-generic-home-page.phtml',
+                        'screenShot' => '/modules/reliv-guest-site/images/GuestLayoutPageScreenshot.png',
+                        'hidden' => true,
                     ),
                 ),
             ),

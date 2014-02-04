@@ -1,59 +1,59 @@
 /*
-    json_parse_state.js
-    2012-06-01
+ json_parse_state.js
+ 2012-06-01
 
-    Public Domain.
+ Public Domain.
 
-    NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+ NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
 
-    This file creates a json_parse function.
+ This file creates a json_parse function.
 
-        json_parse(text, reviver)
-            This method parses a JSON text to produce an object or array.
-            It can throw a SyntaxError exception.
+ json_parse(text, reviver)
+ This method parses a JSON text to produce an object or array.
+ It can throw a SyntaxError exception.
 
-            The optional reviver parameter is a function that can filter and
-            transform the results. It receives each of the keys and values,
-            and its return value is used instead of the original value.
-            If it returns what it received, then the structure is not modified.
-            If it returns undefined then the member is deleted.
+ The optional reviver parameter is a function that can filter and
+ transform the results. It receives each of the keys and values,
+ and its return value is used instead of the original value.
+ If it returns what it received, then the structure is not modified.
+ If it returns undefined then the member is deleted.
 
-            Example:
+ Example:
 
-            // Parse the text. Values that look like ISO date strings will
-            // be converted to Date objects.
+ // Parse the text. Values that look like ISO date strings will
+ // be converted to Date objects.
 
-            myData = json_parse(text, function (key, value) {
-                var a;
-                if (typeof value === 'string') {
-                    a =
-/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/.exec(value);
-                    if (a) {
-                        return new Date(Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4],
-                            +a[5], +a[6]));
-                    }
-                }
-                return value;
-            });
+ myData = json_parse(text, function (key, value) {
+ var a;
+ if (typeof value === 'string') {
+ a =
+ /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/.exec(value);
+ if (a) {
+ return new Date(Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4],
+ +a[5], +a[6]));
+ }
+ }
+ return value;
+ });
 
-    This is a reference implementation. You are free to copy, modify, or
-    redistribute.
+ This is a reference implementation. You are free to copy, modify, or
+ redistribute.
 
-    This code should be minified before deployment.
-    See http://javascript.crockford.com/jsmin.html
+ This code should be minified before deployment.
+ See http://javascript.crockford.com/jsmin.html
 
-    USE YOUR OWN COPY. IT IS EXTREMELY UNWISE TO LOAD CODE FROM SERVERS YOU DO
-    NOT CONTROL.
-*/
+ USE YOUR OWN COPY. IT IS EXTREMELY UNWISE TO LOAD CODE FROM SERVERS YOU DO
+ NOT CONTROL.
+ */
 
 /*jslint regexp: false*/
 
 /*members "", "\"", ",", "\/", ":", "[", "\\", "]", acomma, avalue, b,
-    call, colon, container, exec, f, false, firstavalue, firstokey,
-    fromCharCode, go, hasOwnProperty, key, length, n, null, ocomma, okey,
-    ovalue, pop, prototype, push, r, replace, slice, state, t, test, true,
-    value, "{", "}"
-*/
+ call, colon, container, exec, f, false, firstavalue, firstokey,
+ fromCharCode, go, hasOwnProperty, key, length, n, null, ocomma, okey,
+ ovalue, pop, prototype, push, r, replace, slice, state, t, test, true,
+ value, "{", "}"
+ */
 
 var json_parse = (function () {
     "use strict";
@@ -62,18 +62,18 @@ var json_parse = (function () {
 // than the dangerous eval function to parse a JSON text.
 
     var state,      // The state of the parser, one of
-                    // 'go'         The starting state
-                    // 'ok'         The final, accepting state
-                    // 'firstokey'  Ready for the first key of the object or
-                    //              the closing of an empty object
-                    // 'okey'       Ready for the next key of the object
-                    // 'colon'      Ready for the colon
-                    // 'ovalue'     Ready for the value half of a key/value pair
-                    // 'ocomma'     Ready for a comma or closing }
-                    // 'firstavalue' Ready for the first value of an array or
-                    //              an empty array
-                    // 'avalue'     Ready for the next value of an array
-                    // 'acomma'     Ready for a comma or closing ]
+    // 'go'         The starting state
+    // 'ok'         The final, accepting state
+    // 'firstokey'  Ready for the first key of the object or
+    //              the closing of an empty object
+    // 'okey'       Ready for the next key of the object
+    // 'colon'      Ready for the colon
+    // 'ovalue'     Ready for the value half of a key/value pair
+    // 'ocomma'     Ready for a comma or closing }
+    // 'firstavalue' Ready for the first value of an array or
+    //              an empty array
+    // 'avalue'     Ready for the next value of an array
+    // 'acomma'     Ready for a comma or closing ]
         stack,      // The stack, for controlling nesting.
         container,  // The current container object or array
         key,        // The current key
@@ -315,7 +315,7 @@ var json_parse = (function () {
 
 // For each token...
 
-            for (;;) {
+            for (; ;) {
                 r = tx.exec(source);
                 if (!r) {
                     break;

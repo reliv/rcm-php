@@ -1,6 +1,7 @@
 <?php
 
 namespace Rcm\Controller;
+
 use Rcm\Controller\EntityMgrAwareController;
 use Zend\View\Model\JsonModel;
 

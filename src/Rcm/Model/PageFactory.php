@@ -39,21 +39,21 @@ use Rcm\Model\EntityMgrAware,
  * @license   License.txt New BSD License
  * @version   GIT: Release: 1.0
  */
-
 class PageFactory extends EntityMgrAware
 {
     /**
-     * @param $name
-     * @param $author
-     * @param $pageTitle
-     * @param $pageDescription
-     * @param $metaKeywords
-     * @param $pageLayout
+     * @param                  $name
+     * @param                  $author
+     * @param                  $pageTitle
+     * @param                  $pageDescription
+     * @param                  $metaKeywords
+     * @param                  $pageLayout
      * @param \Rcm\Entity\Site $baseSite
-     * @param string $plugins
-     * @param string $pageType
-     * @param bool $publish
-     * @param bool $skipDbFlush Used to speed up large batch jobs
+     * @param string           $plugins
+     * @param string           $pageType
+     * @param bool             $publish
+     * @param bool             $skipDbFlush Used to speed up large batch jobs
+     *
      * @return \Rcm\Entity\Page
      */
     public function createPage(
@@ -64,11 +64,12 @@ class PageFactory extends EntityMgrAware
         $metaKeywords,
         $pageLayout,
         \Rcm\Entity\Site $baseSite,
-        $plugins='',
+        $plugins = '',
         $pageType = 'n',
         $publish = false,
         $skipDbFlush = false
-    ) {
+    )
+    {
         $entityMgr = $this->entityMgr;
 
         $page = new \Rcm\Entity\Page();
@@ -85,7 +86,7 @@ class PageFactory extends EntityMgrAware
         if ($pageType !== 'n') {
             $page->setPageType($pageType);
         }
-        
+
         $pageRevision = new \Rcm\Entity\PageRevision();
         $pageRevision->setAuthor($author);
         $pageRevision->setCreatedDate(new \DateTime("now"));
@@ -106,14 +107,14 @@ class PageFactory extends EntityMgrAware
         } else {
             $page->setStagedRevision($pageRevision);
         }
-        
+
         $baseSite->addPage($page);
 
         $entityMgr->persist($baseSite);
         $entityMgr->persist($pageRevision);
         $entityMgr->persist($page);
 
-        if(!$skipDbFlush){
+        if (!$skipDbFlush) {
             $entityMgr->flush();
         }
 

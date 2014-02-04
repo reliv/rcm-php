@@ -44,7 +44,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  *     uniqueConstraints={@ORM\UniqueConstraint(name="url", columns={"url"})}
  * )
  */
-
 class PluginAsset
 {
     /**
@@ -64,7 +63,7 @@ class PluginAsset
      *         name="assetId", referencedColumnName="assetId")
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(
+     * @ORM\JoinColumn(
      *             name="instanceId",
      *             referencedColumnName="instanceId"
      *         )
@@ -83,10 +82,11 @@ class PluginAsset
      * Constructor
      *
      * @param string $url asset's url
-     * 
+     *
      * @return null
      */
-    function __construct($url){
+    function __construct($url)
+    {
         $this->pluginInstances = new ArrayCollection();
         $this->setUrl($url);
     }
@@ -96,8 +96,9 @@ class PluginAsset
      *
      * @return null
      */
-    function addPluginInstance($pluginInstance){
-        if(!$this->pluginInstances->contains($pluginInstance)){
+    function addPluginInstance($pluginInstance)
+    {
+        if (!$this->pluginInstances->contains($pluginInstance)) {
             $this->pluginInstances[] = $pluginInstance;
         }
     }

@@ -35,5 +35,5 @@ class PluginActionNotImplemented
     extends \Exception
     implements \Rcm\Exception\ExceptionInterface
 {
-    
+
 }

@@ -1,5 +1,6 @@
 <?php
 namespace Rcm\View\Helper;
+
 class JsLoginManager extends \Zend\Form\View\Helper\AbstractHelper
 {
     public function __invoke()
@@ -16,7 +17,7 @@ class JsLoginManager extends \Zend\Form\View\Helper\AbstractHelper
         return '
         <script type="text/javascript">
         window["rcmLoginMgr"] = new RcmLoginMgr(
-                "https://'. $_SERVER['HTTP_HOST'] .'/login/auth"
+                "https://' . $_SERVER['HTTP_HOST'] . '/login/auth"
             );
         </script>';
     }

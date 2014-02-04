@@ -17,7 +17,8 @@ class EntityMgrAwareController extends AbstractActionController
      *
      * @param \Doctrine\ORM\EntityManager $entityMgr doctrine entity manager
      */
-    function __construct(EntityManager $entityMgr){
+    function __construct(EntityManager $entityMgr)
+    {
         $this->entityMgr = $entityMgr;
     }
 
@@ -28,7 +29,8 @@ class EntityMgrAwareController extends AbstractActionController
      *
      * @return null
      */
-    function setEm(EntityManager $entityMgr){
+    function setEm(EntityManager $entityMgr)
+    {
         $this->entityMgr = $entityMgr;
     }
 }

@@ -1463,7 +1463,7 @@ function RcmEdit(config) {
         }
     };
 
-    me.layoutEditor.pluginResizeStartHandler=function(event, ui) {
+    me.layoutEditor.pluginResizeStartHandler = function (event, ui) {
         ui.element.attr('data-rcmPluginResized', 'Y');
         me.layoutEditor.checkResize(ui.element);
     };
@@ -1790,8 +1790,8 @@ function RcmEdit(config) {
                 me.ui.inputFieldFatalError(inputField, resultContainer);
             }
         }).error(function () {
-                me.ui.inputFieldFatalError(inputField, resultContainer);
-            });
+            me.ui.inputFieldFatalError(inputField, resultContainer);
+        });
 
         return userOk;
     };
@@ -1827,8 +1827,8 @@ function RcmEdit(config) {
                 me.ui.inputFieldFatalError(inputField, resultContainer);
             }
         }).error(function () {
-                me.ui.inputFieldFatalError(inputField, resultContainer);
-            });
+            me.ui.inputFieldFatalError(inputField, resultContainer);
+        });
 
         return dataOk;
     };
@@ -1836,23 +1836,27 @@ function RcmEdit(config) {
     me.saveAjaxAdminWindow = function (saveUrl, send, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) {
         $.getJSON(saveUrl,
             send,
-            function(data) {me.saveAjaxAdminWindowSuccess(data, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) }
+            function (data) {
+                me.saveAjaxAdminWindowSuccess(data, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback)
+            }
         ).error(function () {
                 me.saveAjaxAdminWindowSuccessError(formContainer);
-        });
+            });
     };
 
-    me.saveAjaxAdminWindowUsingPost = function(saveUrl, send, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) {
+    me.saveAjaxAdminWindowUsingPost = function (saveUrl, send, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) {
         $.post(saveUrl,
             send,
-            function(data) {me.saveAjaxAdminWindowSuccess(data, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) },
+            function (data) {
+                me.saveAjaxAdminWindowSuccess(data, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback)
+            },
             'json'
         ).error(function () {
-            me.saveAjaxAdminWindowSuccessError(formContainer);
-        });
+                me.saveAjaxAdminWindowSuccessError(formContainer);
+            });
     };
 
-    me.saveAjaxAdminWindowSuccess = function(data, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) {
+    me.saveAjaxAdminWindowSuccess = function (data, formContainer, dataOkHeadline, dataOkMessage, keepOpen, successCallback) {
         if (data.dataOk == 'Y' && data.redirect == undefined) {
             //Close Window unless told not to
             if (keepOpen !== true) {
@@ -1882,7 +1886,7 @@ function RcmEdit(config) {
 
     };
 
-    me.saveAjaxAdminWindowSuccessError = function(formContainer) {
+    me.saveAjaxAdminWindowSuccessError = function (formContainer) {
         $(formContainer).find(".ajaxFormErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
         $(formContainer).parent().scrollTop(0);
     };

@@ -25,6 +25,7 @@ class EnsureHttps
 
     /**
      * returns if https or not
+     *
      * @return bool
      */
     public function isHttps()

@@ -25,7 +25,7 @@ function RcmAlohaEditor(config) {
     /**
      * Add the toolbars for CKEditor
      */
-    me.init = function() {
+    me.init = function () {
         me.addHiddenEditorForToolbars();
         alert("This Editor is NOT ready for the CMS!  Please select another editor for the time being.")
     };
@@ -34,8 +34,8 @@ function RcmAlohaEditor(config) {
      * Add the toolbar menu and keep it in view
      */
 
-    me.addAlohaToolbars = function() {
-        Aloha.ready( function() {
+    me.addAlohaToolbars = function () {
+        Aloha.ready(function () {
             Aloha.jQuery('#hiddenEditorContainer').aloha();
         });
 
@@ -45,7 +45,7 @@ function RcmAlohaEditor(config) {
     /**
      * Add a hidden editor to keep the toolbars in view.
      */
-    me.addHiddenEditorForToolbars = function() {
+    me.addHiddenEditorForToolbars = function () {
         var hiddenEditor = $('<div id="hiddenEditor"></div>');
         var hiddenEditorContainer = $('<div id="hiddenEditorContainer"' +
             'style="' +

@@ -13,7 +13,9 @@ interface PluginManagerInterface
 
     public function savePlugin($instanceId, $saveData);
 
-    public function saveNewInstance($pluginName, $saveData, $siteWide, $displayName);
+    public function saveNewInstance(
+        $pluginName, $saveData, $siteWide, $displayName
+    );
 
     public function getPluginController($pluginName);
 

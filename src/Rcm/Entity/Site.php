@@ -33,41 +33,40 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * 
+ *
  * @ORM\Entity
  * @ORM\Table(name="rcm_sites")
  */
-
 class Site
 {
-    /** 
+    /**
      * @var int Auto-Incremented Primary Key
-     * 
-     * @ORM\Id 
-     * @ORM\Column(type="integer") 
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $siteId;
-    
-    /** 
+
+    /**
      * @var int Owners account number
-     * 
+     *
      * @ORM\Column(type="string")
      */
     protected $owner;
-    
+
     /**
-     * @var array Array of domains that belong to the 
+     * @var array Array of domains that belong to the
      *                                  site.
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Domain")
      * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId", onDelete="SET NULL")
      */
     protected $domain;
-    
+
     /**
      * @var \Rcm\Entity\PwsInfo Information related to PWS sites
-     * 
+     *
      * @ORM\OneToOne(
      *      targetEntity="PwsInfo",
      *      mappedBy="site",
@@ -84,11 +83,11 @@ class Site
      * @todo Determine the types of statuses for the site
      */
     protected $theme;
-    
-    /** 
+
+    /**
      * @var \Rcm\Entity\Language Default lanugage for the site
-     * 
-     * @ORM\ManyToOne(targetEntity="Language") 
+     *
+     * @ORM\ManyToOne(targetEntity="Language")
      * @ORM\JoinColumn(
      *      name="languageId",
      *      referencedColumnName="languageId",
@@ -96,7 +95,7 @@ class Site
      * )
      **/
     protected $language;
-    
+
     /**
      * @var \Rcm\Entity\Country country
      *
@@ -104,12 +103,12 @@ class Site
      * @ORM\JoinColumn(name="country",referencedColumnName="iso3")
      */
     protected $country;
-    
-    /** 
-     * @var string Status of site.  
-     * 
-     * @ORM\Column(type="string", length=2) 
-     * 
+
+    /**
+     * @var string Status of site.
+     *
+     * @ORM\Column(type="string", length=2)
+     *
      * @todo Determine the types of statuses for the site
      */
     protected $status;
@@ -181,7 +180,8 @@ class Site
         $this->sitePlugins = new ArrayCollection();
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->siteId) {
             $this->setSiteId(null);
             $this->domain = array();
@@ -438,7 +438,7 @@ class Site
 
     /**
      * Add a plugin to the site.
-     * 
+     *
      * @param \Rcm\Entity\PluginInstance $plugin Site wide plugin.
      *
      * @return null
@@ -516,7 +516,10 @@ class Site
         return $this->loginPage;
     }
 
-    public function addPermittedAccountTypesByArray(Array $permittedAccountTypes) {
+    public function addPermittedAccountTypesByArray(
+        Array $permittedAccountTypes
+    )
+    {
         $types = explode(',', $this->permittedAccountTypes);
         $newTypes = array_unique(array_merge($permittedAccountTypes, $types));
         $this->permittedAccountTypes = implode(',', $newTypes);
@@ -540,7 +543,8 @@ class Site
         return explode(',', $this->permittedAccountTypes);
     }
 
-    public function isPermitted($accountType) {
+    public function isPermitted($accountType)
+    {
         $permitted = $this->getPermittedAccountTypes();
 
         if (in_array($accountType, $permitted)) {

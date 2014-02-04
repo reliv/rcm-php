@@ -35,5 +35,5 @@ class DomainNotFoundException
     extends \InvalidArgumentException
     implements \Rcm\Exception\ExceptionInterface
 {
-    
+
 }

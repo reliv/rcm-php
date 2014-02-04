@@ -1,23 +1,23 @@
 /*
-    cycle.js
-    2012-08-19
+ cycle.js
+ 2012-08-19
 
-    Public Domain.
+ Public Domain.
 
-    NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+ NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
 
-    This code should be minified before deployment.
-    See http://javascript.crockford.com/jsmin.html
+ This code should be minified before deployment.
+ See http://javascript.crockford.com/jsmin.html
 
-    USE YOUR OWN COPY. IT IS EXTREMELY UNWISE TO LOAD CODE FROM SERVERS YOU DO
-    NOT CONTROL.
-*/
+ USE YOUR OWN COPY. IT IS EXTREMELY UNWISE TO LOAD CODE FROM SERVERS YOU DO
+ NOT CONTROL.
+ */
 
 /*jslint evil: true, regexp: true */
 
 /*members $ref, apply, call, decycle, hasOwnProperty, length, prototype, push,
-    retrocycle, stringify, test, toString
-*/
+ retrocycle, stringify, test, toString
+ */
 
 if (typeof JSON.decycle !== 'function') {
     JSON.decycle = function decycle(object) {
@@ -51,59 +51,59 @@ if (typeof JSON.decycle !== 'function') {
                 nu;         // The new object or array
 
             switch (typeof value) {
-            case 'object':
+                case 'object':
 
 // typeof null === 'object', so get out if this value is not really an object.
 // Also get out if it is a weird builtin object.
 
-                if (value === null ||
+                    if (value === null ||
                         value instanceof Boolean ||
-                        value instanceof Date    ||
-                        value instanceof Number  ||
-                        value instanceof RegExp  ||
+                        value instanceof Date ||
+                        value instanceof Number ||
+                        value instanceof RegExp ||
                         value instanceof String) {
-                    return value;
-                }
+                        return value;
+                    }
 
 // If the value is an object or array, look to see if we have already
 // encountered it. If so, return a $ref/path object. This is a hard way,
 // linear search that will get slower as the number of unique objects grows.
 
-                for (i = 0; i < objects.length; i += 1) {
-                    if (objects[i] === value) {
-                        return {$ref: paths[i]};
+                    for (i = 0; i < objects.length; i += 1) {
+                        if (objects[i] === value) {
+                            return {$ref: paths[i]};
+                        }
                     }
-                }
 
 // Otherwise, accumulate the unique value and its path.
 
-                objects.push(value);
-                paths.push(path);
+                    objects.push(value);
+                    paths.push(path);
 
 // If it is an array, replicate the array.
 
-                if (Object.prototype.toString.apply(value) === '[object Array]') {
-                    nu = [];
-                    for (i = 0; i < value.length; i += 1) {
-                        nu[i] = derez(value[i], path + '[' + i + ']');
-                    }
-                } else {
+                    if (Object.prototype.toString.apply(value) === '[object Array]') {
+                        nu = [];
+                        for (i = 0; i < value.length; i += 1) {
+                            nu[i] = derez(value[i], path + '[' + i + ']');
+                        }
+                    } else {
 
 // If it is an object, replicate the object.
 
-                    nu = {};
-                    for (name in value) {
-                        if (Object.prototype.hasOwnProperty.call(value, name)) {
-                            nu[name] = derez(value[name],
-                                path + '[' + JSON.stringify(name) + ']');
+                        nu = {};
+                        for (name in value) {
+                            if (Object.prototype.hasOwnProperty.call(value, name)) {
+                                nu[name] = derez(value[name],
+                                    path + '[' + JSON.stringify(name) + ']');
+                            }
                         }
                     }
-                }
-                return nu;
-            case 'number':
-            case 'string':
-            case 'boolean':
-                return value;
+                    return nu;
+                case 'number':
+                case 'string':
+                case 'boolean':
+                    return value;
             }
         }(object, '$'));
     };

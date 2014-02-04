@@ -42,7 +42,6 @@ use Rcm\Entity\Page;
  *     }
  * )
  */
-
 class AdminPermissions
 {
     /**
@@ -116,32 +115,33 @@ class AdminPermissions
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $createNew=false;
+    protected $createNew = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $createFromTemplate=false;
+    protected $createFromTemplate = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $managePageLayout=false;
+    protected $managePageLayout = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $editPage=false;
+    protected $editPage = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $editSiteWidePlugins=false;
+    protected $editSiteWidePlugins = false;
 
     public function __construct()
     {
         $this->sites = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->restrictedPages = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->restrictedPages
+            = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function canEditSite(\Rcm\Entity\Site $site)
@@ -194,7 +194,8 @@ class AdminPermissions
         return $this->createNew;
     }
 
-    public function setCreateNewPage($allowed=false) {
+    public function setCreateNewPage($allowed = false)
+    {
         $this->createNew = $allowed;
         return $this;
     }
@@ -204,7 +205,7 @@ class AdminPermissions
         return $this->createFromTemplate;
     }
 
-    public function setCreateFromTemplate($allowed=false)
+    public function setCreateFromTemplate($allowed = false)
     {
         $this->createFromTemplate = $allowed;
         return $this;
@@ -215,7 +216,7 @@ class AdminPermissions
         return $this->managePageLayout;
     }
 
-    public function setManagePageLayout($allowed=false)
+    public function setManagePageLayout($allowed = false)
     {
         $this->managePageLayout = $allowed;
         return $this;
@@ -226,7 +227,7 @@ class AdminPermissions
         return $this->editSiteWidePlugins;
     }
 
-    public function setEditSiteWidePlugins($allowed=false)
+    public function setEditSiteWidePlugins($allowed = false)
     {
         $this->editSiteWidePlugins = $allowed;
 

@@ -14,6 +14,6 @@ the text/x-component content-type, and cannot easily be configured to do so (as 
 case with some shared hosting providers).
 */
 
-header( 'Content-type: text/x-component' );
-include( 'PIE.htc' );
+header('Content-type: text/x-component');
+include('PIE.htc');
 ?>

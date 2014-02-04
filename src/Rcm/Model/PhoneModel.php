@@ -10,20 +10,20 @@ class PhoneModel
 
     function __construct(Country $country)
     {
-        $phoneMasks=array(
-            'USA'=>'###-###-####',
-            'CAN'=>'###-###-####'
+        $phoneMasks = array(
+            'USA' => '###-###-####',
+            'CAN' => '###-###-####'
         );
-        $iso3=$country->getIso3();
-        if(isset($phoneMasks[$iso3])){
-            $this->phoneMask=$phoneMasks[$iso3];
+        $iso3 = $country->getIso3();
+        if (isset($phoneMasks[$iso3])) {
+            $this->phoneMask = $phoneMasks[$iso3];
         }
     }
 
 
     function validatePhoneNumber($phoneNum)
     {
-        if(!is_numeric($phoneNum)){
+        if (!is_numeric($phoneNum)) {
             return false;
         }
         if (
@@ -43,7 +43,7 @@ class PhoneModel
         }
         if (
             empty($this->phoneMask)
-            ||!$this->validatePhoneNumber($phoneNum)
+            || !$this->validatePhoneNumber($phoneNum)
         ) {
             return $phoneNum;
         }

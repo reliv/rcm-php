@@ -80,10 +80,10 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
 
     /**
      * @param \Rcm\Model\UserManagement\UserManagerInterface $userMgr
-     * @param \Rcm\Model\PluginManager $pluginManager
-     * @param \Doctrine\ORM\EntityManager $entityMgr
-     * @param \Zend\View\Renderer\PhpRenderer $viewRenderer
-     * @param array $config
+     * @param \Rcm\Model\PluginManager                       $pluginManager
+     * @param \Doctrine\ORM\EntityManager                    $entityMgr
+     * @param \Zend\View\Renderer\PhpRenderer                $viewRenderer
+     * @param array                                          $config
      */
     public function __construct(
         \Rcm\Model\UserManagement\UserManagerInterface $userMgr,
@@ -137,7 +137,10 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         if ($this->siteInfo->isLoginRequired()
             && (
                 empty($this->loggedInUser)
-                || (!$this->siteInfo->isPermitted($this->loggedInUser->getAccountType()) && !$this->adminIsLoggedIn())
+                || (!$this->siteInfo->isPermitted(
+                        $this->loggedInUser->getAccountType()
+                    )
+                    && !$this->adminIsLoggedIn())
             )
         ) {
             $this->redirectToLoginPage();
@@ -192,7 +195,8 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
 
     public function redirectToLoginPage()
     {
-        return $this->redirect()->toUrl($this->siteInfo->getLoginPage())->setStatusCode(301);
+        return $this->redirect()->toUrl($this->siteInfo->getLoginPage())
+            ->setStatusCode(301);
     }
 
     function ensureAdminIsLoggedIn()
@@ -261,8 +265,11 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         $urlParams['page'] = $pageName;
 
         //Check for default language
-        if ($this->siteInfo->getDomain()->getDefaultLanguage()->getLanguage() != $this->siteInfo->getLanguage()->getLanguage()) {
-            $urlParams['language'] = $this->siteInfo->getLanguage()->getLanguage();
+        if ($this->siteInfo->getDomain()->getDefaultLanguage()->getLanguage()
+            != $this->siteInfo->getLanguage()->getLanguage()
+        ) {
+            $urlParams['language'] = $this->siteInfo->getLanguage()
+                ->getLanguage();
         }
 
         if ($pageType != 'n') {
@@ -283,10 +290,12 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
     protected function getPageByName($pageName, $pageType = 'n')
     {
         $pageRepo = $this->entityMgr->getRepository('\Rcm\Entity\Page');
-        return $pageRepo->findOneBy(array(
-            'site' => $this->siteInfo,
-            'name' => $pageName,
-            'pageType' => $pageType
-        ));
+        return $pageRepo->findOneBy(
+            array(
+                'site' => $this->siteInfo,
+                'name' => $pageName,
+                'pageType' => $pageType
+            )
+        );
     }
 }

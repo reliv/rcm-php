@@ -18,6 +18,7 @@
 namespace Rcm\Plugin;
 
 use \Zend\Http\PhpEnvironment\Request;
+
 /**
  * Plugin Controller Interface
  *
@@ -53,6 +54,7 @@ interface PluginInterface
      * storage like a database.
      *
      * @param integer $instanceId
+     *
      * @return mixed
      */
     function renderDefaultInstance($instanceId);
@@ -65,7 +67,7 @@ interface PluginInterface
      *
      * @return null
      */
-    function saveInstance($instanceId,$data);
+    function saveInstance($instanceId, $data);
 
     /**
      * Deletes a plugin instance from persistent storage

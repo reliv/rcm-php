@@ -4,7 +4,8 @@ namespace Rcm\Model\UserManagement;
 
 use Rcm\Entity\User;
 
-interface UserManagerInterface {
+interface UserManagerInterface
+{
 
     /**
      * @return \Rcm\Entity\AdminPermissions | null

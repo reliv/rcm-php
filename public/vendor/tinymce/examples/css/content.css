@@ -1,105 +1,105 @@
 body {
-	background-color: #FFFFFF;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
-	scrollbar-3dlight-color: #F0F0EE;
-	scrollbar-arrow-color: #676662;
-	scrollbar-base-color: #F0F0EE;
-	scrollbar-darkshadow-color: #DDDDDD;
-	scrollbar-face-color: #E0E0DD;
-	scrollbar-highlight-color: #F0F0EE;
-	scrollbar-shadow-color: #F0F0EE;
-	scrollbar-track-color: #F5F5F5;
+    background-color: #FFFFFF;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    scrollbar-3dlight-color: #F0F0EE;
+    scrollbar-arrow-color: #676662;
+    scrollbar-base-color: #F0F0EE;
+    scrollbar-darkshadow-color: #DDDDDD;
+    scrollbar-face-color: #E0E0DD;
+    scrollbar-highlight-color: #F0F0EE;
+    scrollbar-shadow-color: #F0F0EE;
+    scrollbar-track-color: #F5F5F5;
 }
 
 td {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10px;
 }
 
 pre {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10px;
 }
 
 .example1 {
-	font-weight: bold;
-	font-size: 14px
+    font-weight: bold;
+    font-size: 14px
 }
 
 .example2 {
-	font-weight: bold;
-	font-size: 12px;
-	color: #FF0000
+    font-weight: bold;
+    font-size: 12px;
+    color: #FF0000
 }
 
 .tablerow1 {
-	background-color: #BBBBBB;
+    background-color: #BBBBBB;
 }
 
 thead {
-	background-color: #FFBBBB;
+    background-color: #FFBBBB;
 }
 
 tfoot {
-	background-color: #BBBBFF;
+    background-color: #BBBBFF;
 }
 
 th {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 13px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 13px;
 }
 
 /* Basic formats */
 
 .bold {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .italic {
-	font-style: italic;
+    font-style: italic;
 }
 
 .underline {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* Global align classes */
 
 .left {
-	text-align: inherit;
+    text-align: inherit;
 }
 
 .center {
-	text-align: center;
+    text-align: center;
 }
 
 .right {
-	text-align: right;
+    text-align: right;
 }
 
 .full {
-	text-align: justify
+    text-align: justify
 }
 
 /* Image and table specific aligns */
 
 img.left, table.left {
-	float: left;
-	text-align: inherit;
+    float: left;
+    text-align: inherit;
 }
 
 img.center, table.center {
-	margin-left: auto;
-	margin-right: auto;
-	text-align: inherit;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: inherit;
 }
 
 img.center {
-	display: block;
+    display: block;
 }
 
 img.right, table.right {
-	float: right;
-	text-align: inherit;
+    float: right;
+    text-align: inherit;
 }

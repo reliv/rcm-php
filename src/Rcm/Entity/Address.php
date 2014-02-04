@@ -37,7 +37,6 @@ use Doctrine\ORM\Mapping as ORM,
  * @ORM\Table(name="rcm_addresses")
  * @ORM\DiscriminatorColumn(name="entityName", type="string")
  */
-
 class Address
 {
     /**
@@ -106,7 +105,11 @@ class Address
 
     public function __sleep()
     {
-        if (!empty($this->country) && is_a($this->country, '\Rcm\Entity\Country')) {
+        if (!empty($this->country)
+            && is_a(
+                $this->country, '\Rcm\Entity\Country'
+            )
+        ) {
             $this->country = array(
                 'iso3' => $this->country->getIso3(),
                 'iso2' => $this->country->getIso2(),
@@ -215,12 +218,13 @@ class Address
         $city = null,
         $state = null,
         $postalCode = null
-    ) {
+    )
+    {
         $this->setAddressLine1($addressLine1);
         $this->setAddressLine2($addressLine2);
         $this->setCity($city);
         $this->setState($state);
-        if(isset($postalCode)){
+        if (isset($postalCode)) {
             $this->setPostalCode($postalCode);
         }
     }
@@ -228,10 +232,11 @@ class Address
     public function setCountryFromIso3(
         $iso3,
         \Doctrine\ORM\EntityManager $entityMgr
-    ) {
+    )
+    {
         $country = $entityMgr->getRepository('\Rcm\Entity\Country')
             ->find($iso3);
-        if(!$country){
+        if (!$country) {
             throw new InvalidArgumentException();
         }
         $this->setCountry($country);
@@ -299,21 +304,23 @@ class Address
 
     public function setPostalCode(
         $postalCode,
-        $checkCountry=null,
-        $entityMgrForCheckingCountry=null
-    ) {
-        if($checkCountry=='USA'){
+        $checkCountry = null,
+        $entityMgrForCheckingCountry = null
+    )
+    {
+        if ($checkCountry == 'USA') {
             $postalCodeObject = $entityMgrForCheckingCountry
                 ->getRepository('\Rcm\Entity\PostalCode')
                 ->findOneByPostalCode($postalCode);
-            if(!$postalCodeObject){
+            if (!$postalCodeObject) {
                 throw new InvalidArgumentException();
             }
         }
         $this->postalCode = $postalCode;
     }
 
-    function getPostalCode(){
+    function getPostalCode()
+    {
         return $this->postalCode;
     }
 }

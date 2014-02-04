@@ -35,5 +35,5 @@ class InvalidArgumentException
     extends \InvalidArgumentException
     implements \Rcm\Exception\ExceptionInterface
 {
-    
+
 }

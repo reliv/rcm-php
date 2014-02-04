@@ -53,7 +53,7 @@ foreach ($modulePhpFiles as $modulePhpFilePath) {
 
     // Module's main folder
     $modulePath = realpath(dirname($modulePhpFilePath[0]));
-    
+
     // Module's public folder
     $modulePublicPath = $modulePath . '/public';
 
@@ -62,7 +62,7 @@ foreach ($modulePhpFiles as $modulePhpFilePath) {
 
     // Check if this module has a public folder
     if (is_dir($modulePublicPath)) {
-        
+
         // Path where the symlink will be written. lower-case-hyphens are
         // used because this path will end up in URLs
         $symlinkPath = $publicLinkHome . camelToHyphens($moduleName);
@@ -100,6 +100,7 @@ function camelToHyphens($value)
  *
  * @return string
  */
-function hyphensToCamel($value){
+function hyphensToCamel($value)
+{
     return preg_replace("/\-(.)/e", "strtoupper('\\1')", $value);
 }

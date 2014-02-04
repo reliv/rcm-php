@@ -7,11 +7,13 @@ class DoctrineInjector
 {
     protected $serviceMgr;
 
-    public function __construct(ServiceManager $serviceMgr){
+    public function __construct(ServiceManager $serviceMgr)
+    {
         $this->serviceMgr = $serviceMgr;
     }
 
-    public function postLoad($eventArgs){
+    public function postLoad($eventArgs)
+    {
         $entity = $eventArgs->getEntity();
 
         if (is_subclass_of($entity, '\Rcm\Entity\User')) {

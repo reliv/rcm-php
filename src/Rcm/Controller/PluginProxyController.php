@@ -56,7 +56,10 @@ class PluginProxyController extends BaseController
              * @var \Zend\View\Model\ViewModel | \Zend\Http\Response
              */
             $actionResponse = $this->pluginManager
-                ->callPlugin($instance, $action . 'AdminAjaxAction', array(), $this->getEvent());
+                ->callPlugin(
+                    $instance, $action . 'AdminAjaxAction', array(),
+                    $this->getEvent()
+                );
         } catch (PluginActionNotImplemented $e) {
             $this->response->setStatusCode(404);
             return false;
@@ -87,7 +90,10 @@ class PluginProxyController extends BaseController
              * @var \Zend\View\Model\ViewModel | \Zend\Http\Response
              */
             $view = $this->pluginManager
-                ->callPlugin($instance, $action . 'AjaxAction', array(), $this->getEvent());
+                ->callPlugin(
+                    $instance, $action . 'AjaxAction', array(),
+                    $this->getEvent()
+                );
         } catch (PluginActionNotImplemented $e) {
             $this->response->setStatusCode(404);
             return false;

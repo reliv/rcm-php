@@ -69,12 +69,15 @@ class GetLayoutContainer extends AbstractHelper
             throw new \Exception('Content Manager Not Initialized.  Please make sure that you run RcmViewInit in your layout before calling this.');
         }
 
-        $html = '<div class="rcmContainer" data-containerId="'.$containerNum.'" id="rcmContainer_'.$containerNum.'">';
+        $html = '<div class="rcmContainer" data-containerId="' . $containerNum
+            . '" id="rcmContainer_' . $containerNum . '">';
 
         if (!empty($renderer->renderedContainers[$containerNum])
             && is_array($renderer->renderedContainers[$containerNum])
         ) {
-            foreach ($renderer->renderedContainers[$containerNum] as $pluginHtml) {
+            foreach (
+                $renderer->renderedContainers[$containerNum] as $pluginHtml
+            ) {
                 $html .= $pluginHtml;
             }
         }

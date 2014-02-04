@@ -53,13 +53,16 @@ class Module
         $sm = $e->getApplication()->getServiceManager();
         $em = $sm->get('doctrine.entitymanager.orm_default');
         $dem = $em->getEventManager();
-        $dem->addEventListener(array(\Doctrine\ORM\Events::postLoad), new DoctrineInjector($sm));
+        $dem->addEventListener(
+            array(\Doctrine\ORM\Events::postLoad), new DoctrineInjector($sm)
+        );
     }
 
     public function bootstrapSession($e)
     {
         if (!empty($_GET['logout'])) {
-            $e->getApplication()->getServiceManager()->get('rcmUserMgr')->logout();
+            $e->getApplication()->getServiceManager()->get('rcmUserMgr')
+                ->logout();
             header('Location: /');
             exit;
         }
@@ -111,7 +114,8 @@ class Module
 
                 'doctrine.cache.doctrine_cache' => function ($sm) {
                         $zendCache = $sm->get('rcmCache');
-                        $cache = new \DoctrineModule\Cache\ZendStorageCache($zendCache);
+                        $cache
+                            = new \DoctrineModule\Cache\ZendStorageCache($zendCache);
                         return $cache;
                     },
                 'cypher' => function ($serviceMgr) {
@@ -128,7 +132,9 @@ class Module
 
                 'rcmSite' => function ($serviceMgr) {
                         $appConfig = $serviceMgr->get('config');
-                        $siteFactory = $serviceMgr->get('Rcm\Model\SiteFactory');
+                        $siteFactory = $serviceMgr->get(
+                            'Rcm\Model\SiteFactory'
+                        );
                         try {
                             $site = $siteFactory->getSite(
                                 $_SERVER['HTTP_HOST'] //, $language
@@ -170,7 +176,8 @@ class Module
                     },
 
                 'rcmUserMgr' => function ($serviceMgr) {
-                        $service = new \Rcm\Model\UserManagement\DoctrineUserManager(
+                        $service
+                            = new \Rcm\Model\UserManagement\DoctrineUserManager(
                             $serviceMgr->get('cypher'),
                             $serviceMgr->get('rcmSessionMgr')
                         );
@@ -203,18 +210,20 @@ class Module
                         return $cache;
                     },
 
-                'RcmLogger' => function($serviceManager) {
-                    $zendLogger = $serviceManager->get('rcmZendLogger');
-                    $logger = new RcmLogger($zendLogger);
-                    return $logger;
-                 },
-                'rcmZendLogger' => function($serviceManager) {
-                    $config = $serviceManager->get('config');
+                'RcmLogger' => function ($serviceManager) {
+                        $zendLogger = $serviceManager->get('rcmZendLogger');
+                        $logger = new RcmLogger($zendLogger);
+                        return $logger;
+                    },
+                'rcmZendLogger' => function ($serviceManager) {
+                        $config = $serviceManager->get('config');
 
                         if (empty($config['rcmLogger']['writer'])) {
                             $writer = $serviceManager->get('rcmWriterStub');
                         } else {
-                            $writer = $serviceManager->get($config['rcmLogger']['writer']);
+                            $writer = $serviceManager->get(
+                                $config['rcmLogger']['writer']
+                            );
                         }
 
                         $logger = new Logger();
@@ -244,8 +253,11 @@ class Module
 
                             $sessionConfig = null;
                             if (isset($session['config'])) {
-                                $class = isset($session['config']['class']) ? $session['config']['class'] : 'Zend\Session\Config\SessionConfig';
-                                $options = isset($session['config']['options']) ? $session['config']['options'] : array();
+                                $class = isset($session['config']['class'])
+                                    ? $session['config']['class']
+                                    : 'Zend\Session\Config\SessionConfig';
+                                $options = isset($session['config']['options'])
+                                    ? $session['config']['options'] : array();
                                 $sessionConfig = new $class();
                                 $sessionConfig->setOptions($options);
                             }
@@ -259,16 +271,22 @@ class Module
                             $sessionSaveHandler = null;
                             if (isset($session['save_handler'])) {
                                 // class should be fetched from service manager since it will require constructor arguments
-                                $sessionSaveHandler = $sm->get($session['save_handler']);
+                                $sessionSaveHandler = $sm->get(
+                                    $session['save_handler']
+                                );
                             }
 
-                            $sessionManager = new SessionManager($sessionConfig, $sessionStorage, $sessionSaveHandler);
+                            $sessionManager
+                                = new SessionManager($sessionConfig, $sessionStorage, $sessionSaveHandler);
 
                             if (isset($session['validator'])) {
                                 $chain = $sessionManager->getValidatorChain();
                                 foreach ($session['validator'] as $validator) {
                                     $validator = new $validator();
-                                    $chain->attach('session.validate', array($validator, 'isValid'));
+                                    $chain->attach(
+                                        'session.validate',
+                                        array($validator, 'isValid')
+                                    );
 
                                 }
                             }
@@ -312,7 +330,8 @@ class Module
                     },
                 'rcmPageSearchApiController' => function ($controllerMgr) {
                         $serviceMgr = $controllerMgr->getServiceLocator();
-                        $controller = new \Rcm\Controller\PageSearchApiController(
+                        $controller
+                            = new \Rcm\Controller\PageSearchApiController(
                             $serviceMgr->get('rcmUserMgr'),
                             $serviceMgr->get('rcmPluginManager'),
                             $serviceMgr->get('em'),
@@ -334,19 +353,17 @@ class Module
                     },
                 'rcmInstallController' => function ($controllerMgr) {
                         $serviceMgr = $controllerMgr->getServiceLocator();
-                        $controller =
-                            new \Rcm\Controller\InstallController(
-                                $serviceMgr->get('em'),
-                                $serviceMgr->get('rcmPluginManager')
-                            );
+                        $controller = new \Rcm\Controller\InstallController(
+                            $serviceMgr->get('em'),
+                            $serviceMgr->get('rcmPluginManager')
+                        );
                         return $controller;
                     },
                 'rcmStateApiController' => function ($controllerMgr) {
                         $serviceMgr = $controllerMgr->getServiceLocator();
-                        $controller =
-                            new StateApiController(
-                                $serviceMgr->get('em')
-                            );
+                        $controller = new StateApiController(
+                            $serviceMgr->get('em')
+                        );
                         return $controller;
                     },
 

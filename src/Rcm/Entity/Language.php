@@ -2,7 +2,7 @@
 /**
  * Language Database Entity
  *
- * This is a Doctorine 2 definition file for Language Objects.  This file is 
+ * This is a Doctorine 2 definition file for Language Objects.  This file is
  * used for any module that needs to know language information.
  *
  * PHP version 5.3
@@ -32,59 +32,58 @@ use Doctrine\ORM\Mapping as ORM;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * 
+ *
  * @ORM\Entity
  * @ORM\Table(name="rcm_languages")
  */
-
 class Language
 {
-    /** 
+    /**
      * @var int Auto-Incremented Primary Key
-     * 
-     * @ORM\Id 
-     * @ORM\Column(type="integer") 
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $languageId;
-    
-    /** 
+
+    /**
      * @var string English name for the language
-     * 
-     * @ORM\Column(type="string", unique = true) 
+     *
+     * @ORM\Column(type="string", unique = true)
      */
     protected $languageName;
-    
-    /** 
-     * @var string Deprecated:  Two digit langage code.  Here mainly for 
+
+    /**
+     * @var string Deprecated:  Two digit langage code.  Here mainly for
      *              backwards compatibility and use with API's that are not able
-     *              to use the three digit code.  Please try use the three digit 
+     *              to use the three digit code.  Please try use the three digit
      *              biblical code (iso639-2b) instead.
      *
      * @link http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes ISO Standard
-     * 
-     * @ORM\Column(type="string", length=2) 
+     *
+     * @ORM\Column(type="string", length=2)
      */
     protected $iso639_1;
-    
-    /** 
+
+    /**
      * @var string Three digit ISO "bibliographic" language code.
      *
      * @link http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes ISO Standard
-     * 
+     *
      * @ORM\Column(type="string", length=3)
      */
     protected $iso639_2b;
-    
-    /** 
+
+    /**
      * @var string Three digit ISO "terminological" language code.  This is the
      *              prefered langage code to use for the websites.  Note:
      *              there are times when this is empty.  In that case use the
      *              $iso639_2b
      *
      * @link http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes ISO Standard
-     * 
-     * @ORM\Column(type="string", length=3) 
+     *
+     * @ORM\Column(type="string", length=3)
      */
     protected $iso639_2t;
 
@@ -96,30 +95,30 @@ class Language
      * @ORM\Column(type="string")
      */
     protected $oldWebLanguage;
-    
+
     /**
      * Function to return an array representation of the object.
-     * 
+     *
      * @return array
      */
-    public function toArray() 
+    public function toArray()
     {
         return get_object_vars($this);
     }
-    
+
     /**
-     * Alias of getThreeDigit() - Returns the three digit ISO "terminological" 
+     * Alias of getThreeDigit() - Returns the three digit ISO "terminological"
      * language code of the object.
      *
      * @link http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes ISO Standard
-     * 
+     *
      * @return string Returns three digit language code
      */
-    public function getLanguage() 
+    public function getLanguage()
     {
         return $this->getThreeDigit();
     }
-    
+
     /**
      * Returns the two digit ISO language code of the object.
      *
@@ -127,11 +126,11 @@ class Language
      *
      * @return string Returns three digit language code
      */
-    public function getTwoDigit() 
+    public function getTwoDigit()
     {
         return $this->iso639_1;
     }
-    
+
     /**
      * Returns the three digit ISO "terminological" language code of the object.
      *
@@ -139,12 +138,12 @@ class Language
      *
      * @return string Returns three digit language code
      */
-    public function getThreeDigit() 
+    public function getThreeDigit()
     {
         if (empty($this->iso639_2t)) {
             return $this->iso639_2b;
         }
-        
+
         return $this->iso639_2t;
     }
 

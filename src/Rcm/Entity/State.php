@@ -28,18 +28,17 @@ use Doctrine\ORM\Mapping as ORM;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * 
+ *
  * @ORM\Entity
  * @ORM\Table(name="rcm_states")
  */
-
 class State
 {
     /**
      * @var string ISO Three Char Country Code
      *
      * @link http://en.wikipedia.org/wiki/ISO_3166-1 ISO Standard
-     *  
+     *
      * @ORM\Column(type="string", length=3)
      * @ORM\Id
      */
