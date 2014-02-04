@@ -2,7 +2,7 @@
 /**
  * Domain Name Database Entity
  *
- * This is a Doctorine 2 definition file for Domain Name Objects.  This file 
+ * This is a Doctorine 2 definition file for Domain Name Objects.  This file
  * is used for any module that needs to know Domain Name information.
  *
  * PHP version 5.3
@@ -26,7 +26,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Country Database Entity
  *
  * This object contains registered domains names and also will note which domain
- * name is the primary domain. 
+ * name is the primary domain.
  *
  * @category  Reliv
  * @package   Common\Entites
@@ -34,26 +34,25 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * 
+ *
  * @ORM\Entity
  * @ORM\Table(name="rcm_domains")
  */
-
 class Domain
 {
-    /** 
+    /**
      * @var int Auto-Incremented Primary Key
-     * 
-     * @ORM\Id 
-     * @ORM\Column(type="integer") 
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $domainId;
-    
-    /** 
+
+    /**
      * @var string Valid Domain Name
-     * 
-     * @ORM\Column(type="string") 
+     *
+     * @ORM\Column(type="string")
      */
     protected $domain;
 
@@ -105,7 +104,7 @@ class Domain
      *
      * @SuppressWarnings(PHPMD)
      */
-    public function toArray($skipPrimary=false, $skipAdditional=false)
+    public function toArray($skipPrimary = false, $skipAdditional = false)
     {
         $array = array(
             'domainId' => $this->domainId,
@@ -259,16 +258,17 @@ class Domain
      */
     public function setAdditionalDomain(
         \Rcm\Entity\Domain $domain
-    ) {
+    )
+    {
         $this->additionalDomains->add($domain);
     }
 
-    
+
     /**
      * Check Domain Name
-     * 
+     *
      * @param string $domain Domain Name to check.
-     * 
+     *
      * @return boolean
      */
     public function domainIsValid($domain)
@@ -276,14 +276,14 @@ class Domain
         /*
          * @link http://regexlib.com/REDetails.aspx?regexp_id=391 Pattern
          */
-        $pattern 
-            ='/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}'
-                .'[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/';
-        
+        $pattern
+            = '/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}'
+            . '[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/';
+
         if (preg_match($pattern, $domain)) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -297,7 +297,8 @@ class Domain
      */
     public function setDefaultLanguage(
         \Rcm\Entity\Language $defaultLanguage
-    ) {
+    )
+    {
         $this->defaultLanguage = $defaultLanguage;
     }
 

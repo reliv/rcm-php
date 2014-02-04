@@ -4,7 +4,7 @@
  * Country Database Entity
  *
  * This is a Doctorine 2 definition file for Country Objects.  This file is used
- * for any module that needs to know Country information.  
+ * for any module that needs to know Country information.
  *
  * PHP version 5.3
  *
@@ -25,8 +25,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Country Database Entity
  *
- * This object contains ISO country codes as well as a map to the old site 
- * countries.  Also contained is a map to internal country codes that may be 
+ * This object contains ISO country codes as well as a map to the old site
+ * countries.  Also contained is a map to internal country codes that may be
  * needed when an API used in the system does not use standard ISO codes
  *
  * @category  Reliv
@@ -35,18 +35,17 @@ use Doctrine\ORM\Mapping as ORM;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * 
+ *
  * @ORM\Entity
  * @ORM\Table(name="rcm_countries")
  */
-
 class Country
 {
     /**
      * @var string ISO Three Digit Country Code
      *
      * @link http://en.wikipedia.org/wiki/ISO_3166-1 ISO Standard
-     *  
+     *
      * @ORM\Column(type="string", length=3, unique = true)
      * @ORM\Id
      */

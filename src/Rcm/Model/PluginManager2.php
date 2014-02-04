@@ -39,7 +39,8 @@ class PluginManager2 implements PluginManagerInterface
         RendererInterface $renderer,
         Request $request,
         StorageInterface $cache
-    ) {
+    )
+    {
         $this->sm = $sm;
         $this->request = $request;
 
@@ -63,7 +64,7 @@ class PluginManager2 implements PluginManagerInterface
 
     public function getPluginByInstanceId($instanceId)
     {
-        $cacheId = 'rcmPluginInstance_'.$instanceId;
+        $cacheId = 'rcmPluginInstance_' . $instanceId;
 
         if ($this->cache->hasItem($cacheId)) {
             $return = $this->cache->getItem($cacheId);
@@ -74,10 +75,13 @@ class PluginManager2 implements PluginManagerInterface
         $pluginInstance = $this->getInstanceEntity($instanceId);
 
         if (empty($pluginInstance)) {
-            throw new PluginInstanceNotFoundException('Plugin for instanceid '.$instanceId.' not found.');
+            throw new PluginInstanceNotFoundException('Plugin for instanceid '
+                . $instanceId . ' not found.');
         }
 
-        $return = $this->getPluginViewData($pluginInstance->getName(), $instanceId);
+        $return = $this->getPluginViewData(
+            $pluginInstance->getName(), $instanceId
+        );
 
         if ($pluginInstance->isSiteWide()) {
 
@@ -108,20 +112,20 @@ class PluginManager2 implements PluginManagerInterface
         //If the plugin controller can accept a ZF2 request, pass it
         $controller->setRequest($this->request);
 
-        if ($instanceId < 0){
-            $viewModel= $controller->renderDefaultInstance($instanceId);
+        if ($instanceId < 0) {
+            $viewModel = $controller->renderDefaultInstance($instanceId);
         } else {
             $viewModel = $controller->renderInstance($instanceId);
         }
 
-        $headlink =  $this->renderer->plugin('headlink');
-        $headScript =  $this->renderer->plugin('headscript');
+        $headlink = $this->renderer->plugin('headlink');
+        $headScript = $this->renderer->plugin('headscript');
 
-        $html =  $this->renderer->render($viewModel);
+        $html = $this->renderer->render($viewModel);
         $css = $headlink->getContainer()->getArrayCopy();
         $js = $headScript->getContainer()->getArrayCopy();
 
-        $return =  array(
+        $return = array(
             'html' => $html,
             'css' => $this->getContainerSrc($css),
             'js' => $this->getContainerSrc($js),
@@ -140,19 +144,23 @@ class PluginManager2 implements PluginManagerInterface
 
 
         if (isset($this->config['rcmPlugin'][$pluginName]['editJs'])) {
-            $return['editJs'] = $this->config['rcmPlugin'][$pluginName]['editJs'];
+            $return['editJs']
+                = $this->config['rcmPlugin'][$pluginName]['editJs'];
         }
 
         if (isset($this->config['rcmPlugin'][$pluginName]['editCss'])) {
-            $return['editCss'] = $this->config['rcmPlugin'][$pluginName]['editCss'];
+            $return['editCss']
+                = $this->config['rcmPlugin'][$pluginName]['editCss'];
         }
 
         if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
-            $return['displayName'] = $this->config['rcmPlugin'][$pluginName]['display'];
+            $return['displayName']
+                = $this->config['rcmPlugin'][$pluginName]['display'];
         }
 
         if (isset($this->config['rcmPlugin'][$pluginName]['tooltip'])) {
-            $return['tooltip'] = $this->config['rcmPlugin'][$pluginName]['tooltip'];
+            $return['tooltip']
+                = $this->config['rcmPlugin'][$pluginName]['tooltip'];
         }
 
         if (isset($this->config['rcmPlugin'][$pluginName]['icon'])) {
@@ -160,7 +168,8 @@ class PluginManager2 implements PluginManagerInterface
         }
 
         if (isset($this->config['rcmPlugin'][$pluginName]['canCache'])) {
-            $return['canCache'] = $this->config['rcmPlugin'][$pluginName]['canCache'];
+            $return['canCache']
+                = $this->config['rcmPlugin'][$pluginName]['canCache'];
         }
 
         return $return;
@@ -188,10 +197,12 @@ class PluginManager2 implements PluginManagerInterface
 
     public function deletePluginInstance($instanceId)
     {
-        $query = $this->entityManager->createQuery('
-            DELETE FROM \Rcm\Entity\PluginInstance pi
-            WHERE pi.instanceId = :instanceId
-        ');
+        $query = $this->entityManager->createQuery(
+            '
+                        DELETE FROM \Rcm\Entity\PluginInstance pi
+                        WHERE pi.instanceId = :instanceId
+                    '
+        );
 
         $query->setParameter('instanceId', $instanceId);
 
@@ -199,14 +210,16 @@ class PluginManager2 implements PluginManagerInterface
 
     }
 
-    public function saveNewInstance($pluginName, $saveData, $siteWide=false, $displayName='')
+    public function saveNewInstance(
+        $pluginName, $saveData, $siteWide = false, $displayName = ''
+    )
     {
         $pluginInstance = $this->getNewPluginInstanceEntity($pluginName);
 
         if ($siteWide) {
             $pluginInstance->setSiteWide();
 
-            if (!empty($displayName)){
+            if (!empty($displayName)) {
                 $pluginInstance->setDisplayName($displayName);
             }
         }
@@ -226,6 +239,7 @@ class PluginManager2 implements PluginManagerInterface
 
     /**
      * @param string $pluginName
+     *
      * @return PluginInstance
      */
     public function getNewPluginInstanceEntity($pluginName)
@@ -234,7 +248,9 @@ class PluginManager2 implements PluginManagerInterface
         $pluginInstance->setPlugin($pluginName);
 
         if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
-            $pluginInstance->setDisplayName($this->config['rcmPlugin'][$pluginName]['display']);
+            $pluginInstance->setDisplayName(
+                $this->config['rcmPlugin'][$pluginName]['display']
+            );
         }
 
         $this->entityManager->persist($pluginInstance);
@@ -251,7 +267,7 @@ class PluginManager2 implements PluginManagerInterface
 
         $return = array();
 
-        foreach($container as $item) {
+        foreach ($container as $item) {
             if ($item->type == 'text/css') {
                 $return[] = $item->href;
             } elseif ($item->type == 'text/javascript') {
@@ -291,7 +307,7 @@ class PluginManager2 implements PluginManagerInterface
     {
         $loadedModules = $this->moduleManager->getLoadedModules();
 
-        if(!isset($loadedModules[$pluginName])){
+        if (!isset($loadedModules[$pluginName])) {
             throw new InvalidPluginException(
                 "Plugin $pluginName is not loaded or configured. Check
                 config/application.config.php"
@@ -303,6 +319,7 @@ class PluginManager2 implements PluginManagerInterface
 
     /**
      * @param $instanceId
+     *
      * @return \Rcm\Entity\PluginInstance
      */
     private function getInstanceEntity($instanceId)

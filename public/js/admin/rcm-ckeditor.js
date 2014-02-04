@@ -18,7 +18,7 @@ function RcmCkEditor(config) {
     /**
      * Add the toolbars for CKEditor
      */
-    me.init = function() {
+    me.init = function () {
         CKEDITOR.disableAutoInline = true;
         me.addHiddenEditorForToolbars();
         me.addCkToolbars();
@@ -27,8 +27,8 @@ function RcmCkEditor(config) {
          chrome's window or developer tools */
         $(window).resize(function () {
             setTimeout(
-                function(){
-                    $('iframe').attr('style','height:100%;width:100%;')
+                function () {
+                    $('iframe').attr('style', 'height:100%;width:100%;')
                 },
                 100
             );
@@ -38,14 +38,15 @@ function RcmCkEditor(config) {
     /**
      * Initialize edit mode
      */
-    me.initEditMode = function() {};
+    me.initEditMode = function () {
+    };
 
     /**
      * Add the CKEditor Toolbars
      */
-    me.addCkToolbars = function() {
-        var editor = CKEDITOR.inline( 'hiddenEditor',  me.config );
-        editor.on("instanceReady", function(event) {
+    me.addCkToolbars = function () {
+        var editor = CKEDITOR.inline('hiddenEditor', me.config);
+        editor.on("instanceReady", function (event) {
 
             var cmTopAdminPanel = $("#ContentManagerTopAdminPanel");
             $("#ToolBarSpacer").height(
@@ -70,7 +71,7 @@ function RcmCkEditor(config) {
 
     };
 
-    me.addRichEditor = function(container, textAreaId, instanceId) {
+    me.addRichEditor = function (container, textAreaId, instanceId) {
         //Hack to keep CKEdits the correct size
 //        var parent = $(container).parent();
 //        $(parent).width($(parent).width());
@@ -78,16 +79,16 @@ function RcmCkEditor(config) {
         //Get Current HTML of div area
         var htmlToAddToTextArea = $(container).html();
 
-        var newTextAres = $('<div id="'+instanceId+'_'+textAreaId+'" contenteditable="true">'+htmlToAddToTextArea+'</div>');
+        var newTextAres = $('<div id="' + instanceId + '_' + textAreaId + '" contenteditable="true">' + htmlToAddToTextArea + '</div>');
 
         $(container).html(newTextAres);
 
-        var editor = CKEDITOR.inline( instanceId+'_'+textAreaId,  me.config );
+        var editor = CKEDITOR.inline(instanceId + '_' + textAreaId, me.config);
 
         return editor;
     };
 
-    me.getRichEditorData = function(editor)  {
+    me.getRichEditorData = function (editor) {
         var returnData = {};
 
         if ($.isFunction(editor.getData)) {
@@ -105,23 +106,23 @@ function RcmCkEditor(config) {
         return false;
     };
 
-    me.addHtml5Editor = function(container, textAreaId, instanceId) {
+    me.addHtml5Editor = function (container, textAreaId, instanceId) {
 
         //Used to keep IDE from whining.
         //$('#'+textAreaId);
 
-        $(container).attr('contentEditable',true)
-            .attr('id',instanceId+'_'+textAreaId).css('cursor','text');
+        $(container).attr('contentEditable', true)
+            .attr('id', instanceId + '_' + textAreaId).css('cursor', 'text');
 
         if ($(container).is('div')
             || $(container).is('p')
-        ) {
-            var editor = CKEDITOR.inline(instanceId+'_'+textAreaId,  me.config );
+            ) {
+            var editor = CKEDITOR.inline(instanceId + '_' + textAreaId, me.config);
 
             return editor
         }
 
-        $(container).attr('contentEditable',true).css('cursor','text');
+        $(container).attr('contentEditable', true).css('cursor', 'text');
 
         return container
     };
@@ -135,7 +136,7 @@ function RcmCkEditor(config) {
         var id = $.fn.generateUUID();
         ele.attr('contenteditable', true)
             .attr('id', id)
-            .css('cursor','text');
+            .css('cursor', 'text');
         CKEDITOR.inline(id, me.config);
     };
 
@@ -145,7 +146,7 @@ function RcmCkEditor(config) {
      * @param editor
      * @return {*}
      */
-    me.getHtml5EditorData = function(editor)  {
+    me.getHtml5EditorData = function (editor) {
 
         if ($.isFunction(editor.getData)) {
             return me.getRichEditorData(editor);
@@ -164,22 +165,22 @@ function RcmCkEditor(config) {
         var assets = [];
 
         //Record what assets this ckEdit is using
-        var html=$('<div></div>');
+        var html = $('<div></div>');
         html.append(htmlToCheck);
 
-        html.find('img').each(function(key, ele){
+        html.find('img').each(function (key, ele) {
             assets.push(
                 $(ele).attr('src')
             );
         });
 
-        html.find('a').each(function(key, ele){
+        html.find('a').each(function (key, ele) {
             assets.push(
                 $(ele).attr('href')
             );
         });
 
-        html.find('embed').each(function(key, ele){
+        html.find('embed').each(function (key, ele) {
             assets.push(
                 $(ele).attr('src')
             );
@@ -191,7 +192,7 @@ function RcmCkEditor(config) {
     /**
      * Add a hidden editor to keep the toolbars in view.
      */
-    me.addHiddenEditorForToolbars = function() {
+    me.addHiddenEditorForToolbars = function () {
         var hiddenEditor = $('<div id="hiddenEditor"></div>');
         var hiddenEditorContainer = $('<div id="hiddenEditorContainer"' +
             'style="' +
@@ -212,7 +213,9 @@ function RcmCkEditor(config) {
             var editor = textarea.ckeditorGet();
             try {
                 var ckData = editor.getData();
-            } catch (err) {return}
+            } catch (err) {
+                return
+            }
 
             editor.destroy();
             $(container).html(ckData);
@@ -221,16 +224,16 @@ function RcmCkEditor(config) {
         }
     };
 
-    me.stopDrag = function(container) {
+    me.stopDrag = function (container) {
         var tempDiv = $(container).find('.tempDragEditorDiv');
 
         if (tempDiv.length > 0) {
             var textAreaId = $(tempDiv).attr('id');
             var ckData = $(tempDiv).html();
-            var replacementTextarea = $('<textarea id="'+textAreaId+'"></textarea>');
+            var replacementTextarea = $('<textarea id="' + textAreaId + '"></textarea>');
             $(replacementTextarea).html(ckData);
             $(tempDiv).replaceWith(replacementTextarea);
-            $("#"+textAreaId).ckeditor(rcmCkConfig).focus();
+            $("#" + textAreaId).ckeditor(rcmCkConfig).focus();
         }
     };
 }

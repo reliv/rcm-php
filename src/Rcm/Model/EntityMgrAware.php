@@ -16,7 +16,8 @@ abstract class EntityMgrAware
      *
      * @param \Doctrine\ORM\EntityManager $entityMgr doctrine entity manager
      */
-    function __construct(EntityManager $entityMgr){
+    function __construct(EntityManager $entityMgr)
+    {
         $this->entityMgr = $entityMgr;
     }
 
@@ -27,7 +28,8 @@ abstract class EntityMgrAware
      *
      * @return null
      */
-    function setEm(EntityManager $entityMgr){
+    function setEm(EntityManager $entityMgr)
+    {
         $this->entityMgr = $entityMgr;
     }
 }

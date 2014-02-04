@@ -19,7 +19,7 @@
  */
 return array(
 
-    'Rcm' =>array(
+    'Rcm' => array(
         'successfulLoginUrl' => '/'
     ),
 
@@ -45,7 +45,7 @@ return array(
             'siteNotFound' => 'Unable to locate the site to clone.  Please contact and administrator or try again.',
         ),
 
-       'adminRichEditor' => 'ckEditor',
+        'adminRichEditor' => 'ckEditor',
 //        'adminRichEditor' => 'tinyMce',
         //'adminRichEditor' => 'aloha',
 
@@ -78,7 +78,6 @@ return array(
                             ),
                         )
                     ),
-
 
 
                     'Edit' => array(
@@ -137,15 +136,6 @@ return array(
 //                            ),
 //                        )
 //                    ),
-
-
-
-
-
-
-
-
-
 
 
                     /*'Go To Page...' => array(
@@ -337,7 +327,7 @@ return array(
             'editStyle.css' => array(
                 'destination' => __DIR__ . '/../../../../public/css',
                 'header' =>
-                __DIR__ . '/../../../../public/css/editStyleHeader.css',
+                    __DIR__ . '/../../../../public/css/editStyleHeader.css',
             ),
             'script.js' => array(
                 'destination' => __DIR__ . '/../../../../public/js',
@@ -346,7 +336,7 @@ return array(
             'editScript.js' => array(
                 'destination' => __DIR__ . '/../../../../public/js',
                 'header' =>
-                __DIR__ . '/../../../../public/js/editScriptHeader.js',
+                    __DIR__ . '/../../../../public/js/editScriptHeader.js',
             ),
         ),
     ),
@@ -357,10 +347,10 @@ return array(
             __DIR__ . '/../view',
         ),
         'display_not_found_reason' => true,
-        'display_exceptions'       => true,
-        'doctype'                  => 'HTML5',
-        'not_found_template'       => 'error/404',
-        'exception_template'       => 'error/index',
+        'display_exceptions' => true,
+        'doctype' => 'HTML5',
+        'not_found_template' => 'error/404',
+        'exception_template' => 'error/index',
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml'
         ),
@@ -375,11 +365,11 @@ return array(
             'getLayoutContainer' => '\Rcm\View\Helper\GetLayoutContainer',
             'addAdminNavigation' => '\Rcm\View\Helper\AddAdminNavigation',
             'renderLayoutEditorContainers'
-                => '\Rcm\View\Helper\RenderLayoutEditorContainers',
+            => '\Rcm\View\Helper\RenderLayoutEditorContainers',
             'adminTitleBar' => '\Rcm\View\Helper\AdminTitleBar',
             'rcmViewInit' => '\Rcm\View\Helper\RcmViewInit',
             'renderPlugin' => 'Rcm\View\Helper\RenderPlugin',
-            'rcmJsLoginManager'=>'\Rcm\View\Helper\JsLoginManager',
+            'rcmJsLoginManager' => '\Rcm\View\Helper\JsLoginManager',
         ),
     ),
 
@@ -494,7 +484,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-create-blank-page[/:language]',
                     'defaults' => array(
-                        'controller'=> 'rcmAdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'newPageWizard',
                     ),
                 ),
@@ -505,7 +495,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-create-new-user[/:language]',
                     'defaults' => array(
-                        'controller'=> 'rcmAdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'createNewUser',
                     ),
                 ),
@@ -516,7 +506,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-create-site[/:language]',
                     'defaults' => array(
-                        'controller'=> 'rcmAdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'newSiteWizard',
                     ),
                 ),
@@ -527,7 +517,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-create-site/create/:language',
                     'defaults' => array(
-                        'controller'=> 'rcmAdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'createSite',
                     ),
                 ),
@@ -538,7 +528,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-create-blank-page/create/:language',
                     'defaults' => array(
-                        'controller'=> 'rcmAdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'createBlankPage',
                     ),
                 ),
@@ -582,7 +572,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-publish/:pageType/:page/:language/:revision',
                     'defaults' => array(
-                        'controller'=> 'rcmAdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'publishPage',
                     ),
                 ),
@@ -593,7 +583,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-admin-stage/:pageType/:page/:language/:revision',
                     'defaults' => array(
-                        'controller'=> 'rcmAdminController',
+                        'controller' => 'rcmAdminController',
                         'action' => 'stagePage',
                     ),
                 ),
@@ -603,7 +593,7 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route' =>
-                    '/rcm-plugin-admin-proxy/:pluginName/:instanceId/:pluginActionName',
+                        '/rcm-plugin-admin-proxy/:pluginName/:instanceId/:pluginActionName',
                     'defaults' => array(
                         'controller' => 'rcmPluginProxyController',
                         'action' => 'adminProxy',
@@ -615,9 +605,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route' =>
-                    '/plugin-ajax-proxy/:pluginName/:instanceId/:pluginActionName',
+                        '/plugin-ajax-proxy/:pluginName/:instanceId/:pluginActionName',
                     'defaults' => array(
-                        'controller' =>'rcmPluginProxyController',
+                        'controller' => 'rcmPluginProxyController',
                         'action' => 'ajaxProxy',
                     )
                 ),
@@ -627,7 +617,7 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route' =>
-                    '/assets/modules/:moduleName/',
+                        '/assets/modules/:moduleName/',
                     'defaults' => array(
                         'controller' => 'Rcm\Controller\AssetsController',
                         'action' => 'modules',
@@ -683,7 +673,7 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route' =>
-                    '/content/',
+                        '/content/',
                     'defaults' => array(
                         'controller' => 'AdminContentController',
                         'action' => 'content',
@@ -735,9 +725,9 @@ return array(
         ),
         'configuration' => array(
             'orm_default' => array(
-                'metadata_cache'    => 'doctrine_cache',
-                'query_cache'       => 'doctrine_cache',
-                'result_cache'      => 'doctrine_cache',
+                'metadata_cache' => 'doctrine_cache',
+                'query_cache' => 'doctrine_cache',
+                'result_cache' => 'doctrine_cache',
             )
         ),
     ),

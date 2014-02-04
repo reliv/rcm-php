@@ -14,7 +14,7 @@ class DoctrineUserManager extends EntityMgrAware
 
     protected $cypher;
 
-    const SESSION_NAME='rcm_user_manager';
+    const SESSION_NAME = 'rcm_user_manager';
 
     public function __construct(BlockCipher $cypher)
     {

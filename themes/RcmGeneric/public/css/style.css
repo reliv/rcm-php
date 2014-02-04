@@ -23,8 +23,7 @@ time, mark, audio, video {
 
 }
 
-.cke_contents, .cke_contents iframe, .cke_wrapper
-{
+.cke_contents, .cke_contents iframe, .cke_wrapper {
     background-color: Transparent !important;
 }
 
@@ -51,7 +50,6 @@ a {
 /**
 * End Css Reset
 */
-
 
 html, body, p {
     font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -90,49 +88,49 @@ a {
     font-weight: normal;
 }
 
-#navWrap, #footWrap{
+#navWrap, #footWrap {
     background-color: #8DC63F;
-    color:white;
+    color: white;
 }
 
-#nav, #foot, #aboveNav, #belowFoot{
+#nav, #foot, #aboveNav, #belowFoot {
     width: 980px;
-    margin:0 auto;
+    margin: 0 auto;
     padding: 0 10px;
 }
 
-#belowFoot{
-    margin-top:10px;
+#belowFoot {
+    margin-top: 10px;
 }
 
-#rightCol{
-    float:right;
-    width:200px;
+#rightCol {
+    float: right;
+    width: 200px;
     padding-left: 10px;
 }
 
-#centerCol{
-    width:760px;
+#centerCol {
+    width: 760px;
 }
 
-#centerCol, #rightCol{
+#centerCol, #rightCol {
     min-height: 400px;
 }
 
-#mainCols{
-    width:980px;
+#mainCols {
+    width: 980px;
     margin: 20px auto;
 }
 
-h1{
-    color:#00A4E4;
+h1 {
+    color: #00A4E4;
 }
 
-h2{
-    color:#8DC63F;
+h2 {
+    color: #8DC63F;
 }
 
-.RcmNavigation.SiteNavigation  li .popup {
+.RcmNavigation.SiteNavigation li .popup {
     width: 300px;
 }
 
@@ -146,19 +144,19 @@ h2{
     width: 602px;
 }
 
-.RcmNavigation.SiteNavigation .column li a{
+.RcmNavigation.SiteNavigation .column li a {
     font-weight: bold;
     color: #000000;
 }
 
-.RcmNavigation.SiteNavigation li ul li{
+.RcmNavigation.SiteNavigation li ul li {
     padding: 0 20px 0 50px;
     background-repeat: no-repeat;
     background-position: 30px top;
     background-image: url('/modules/rcm/generic-site/images/menu-arrow.jpg');
 }
 
-.RcmNavigation.SiteNavigation li ul li a{
+.RcmNavigation.SiteNavigation li ul li a {
     color: #000000;
     line-height: 21px;
 }
@@ -167,7 +165,7 @@ h2{
     background-color: transparent;
 }
 
-.RcmNavigation.SiteNavigation li ul li a{
+.RcmNavigation.SiteNavigation li ul li a {
     color: #8dc63f;
 }
 
@@ -179,7 +177,7 @@ h2{
     border: 3px solid #8DC63F;
 }
 
-.RcmNavigation.SiteNavigation .columnCount_2 .column_1{
+.RcmNavigation.SiteNavigation .columnCount_2 .column_1 {
     border-right: 2px solid #8DC63F;
 }
 

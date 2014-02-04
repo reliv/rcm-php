@@ -9,15 +9,15 @@ use Zend\ServiceManager\ServiceManager;
 class Zf2TestCase extends \PHPUnit_Framework_TestCase
 {
 
-    protected $modules=array();
-    protected $moduleSerchPath=array();
-    protected $moduleConfig=array();
+    protected $modules = array();
+    protected $moduleSerchPath = array();
+    protected $moduleConfig = array();
 
     protected $config;
     protected $serviceManager;
     protected $renderer;
 
-    protected $autoLoaderStarted=false;
+    protected $autoLoaderStarted = false;
 
     public function setUp()
     {
@@ -89,7 +89,7 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        chdir(__DIR__.'/../../../../../');
+        chdir(__DIR__ . '/../../../../../');
         include 'init_autoloader.php';
 
         $this->autoLoaderStarted = true;
@@ -102,7 +102,7 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getExtraConfig()
     {
-        if (!is_a($this->moduleConfig,'Zend\Config\Config')) {
+        if (!is_a($this->moduleConfig, 'Zend\Config\Config')) {
             $this->moduleConfig = new Config(array());
         }
 
@@ -126,8 +126,13 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
             $moreConfig['modules'] = $this->modules;
         }
 
-        if (!empty($this->moduleSerchPath) && is_array($this->moduleSerchPath)) {
-            $moreConfig['module_listener_options'] = array('module_paths' => $this->moduleSerchPath);
+        if (!empty($this->moduleSerchPath)
+            && is_array(
+                $this->moduleSerchPath
+            )
+        ) {
+            $moreConfig['module_listener_options']
+                = array('module_paths' => $this->moduleSerchPath);
         }
 
         if (!empty($moreConfig)) {

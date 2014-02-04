@@ -1,21 +1,21 @@
 <?php
-    /**
-     * Add Layout Editor Plugin Containers Helper.
-     *
-     * Contains the view helper to add a layout container to a page layout
-     *
-     * PHP version 5.3
-     *
-     * LICENSE: No License yet
-     *
-     * @category  Reliv
-     * @package   Common\View\Helper
-     * @author    Westin Shafer <wshafer@relivinc.com>
-     * @copyright 2012 Reliv International
-     * @license   License.txt New BSD License
-     * @version   GIT: <git_id>
-     * @link      http://ci.reliv.com/confluence
-     */
+/**
+ * Add Layout Editor Plugin Containers Helper.
+ *
+ * Contains the view helper to add a layout container to a page layout
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: No License yet
+ *
+ * @category  Reliv
+ * @package   Common\View\Helper
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://ci.reliv.com/confluence
+ */
 
 namespace Rcm\View\Helper;
 
@@ -61,7 +61,7 @@ class RenderLayoutEditorContainers extends AbstractHelper
         $renderer = $this->getView();
         $basePath = $renderer->basePath();
 
-        /** @var \Zend\View\Helper\ViewModel $helper  */
+        /** @var \Zend\View\Helper\ViewModel $helper */
         $helper = $renderer->plugin('view_model');
         $view = $helper->getCurrent();
 
@@ -76,7 +76,7 @@ class RenderLayoutEditorContainers extends AbstractHelper
         $html .= '<div id="rcmLayoutAccordion">';
 
         foreach ($containers as $containerName => $containerContents) {
-            $html .= '<h3><a href="#">'.$containerName.'</a></h3>';
+            $html .= '<h3><a href="#">' . $containerName . '</a></h3>';
             $html .= '<div>';
 
             /** @var \Rcm\Entity\PluginInstance $plugin */
@@ -88,7 +88,7 @@ class RenderLayoutEditorContainers extends AbstractHelper
                 //Add Plugin Css
                 if ($plugin->hasAdminCss()) {
                     $renderer->headLink()->appendStylesheet(
-                        $basePath. $plugin->getAdminEditCss()
+                        $basePath . $plugin->getAdminEditCss()
                     );
                 }
 
@@ -109,13 +109,15 @@ class RenderLayoutEditorContainers extends AbstractHelper
 
         $html .= '<div class="rcmPluginDrag">';
 
-        $html .= '<div class="layoutPluginContainerIcon" title="'.$renderer->escapeHtml($plugin->getTooltip()).'" >';
+        $html .= '<div class="layoutPluginContainerIcon" title="'
+            . $renderer->escapeHtml($plugin->getTooltip()) . '" >';
 
         $iconSrc = $plugin->getIcon();
 
         $html .= '<div class="rcmLayoutImage" >';
         if (!empty($iconSrc)) {
-            $html .= '<img src="'.$iconSrc.'" alt="" width="40" height="40" />';
+            $html
+                .= '<img src="' . $iconSrc . '" alt="" width="40" height="40" />';
         } else {
             $html .= '<img src="/images/GenericIcon.png" width="40" height="40" alt="" />';
         }
@@ -140,7 +142,9 @@ class RenderLayoutEditorContainers extends AbstractHelper
                 $style = '';
             }
 
-            $html = '<div id="'.str_replace(' ', '-', $plugin->getDisplayName()).'" '.$style.'>'.$html.'</div>';
+            $html
+                = '<div id="' . str_replace(' ', '-', $plugin->getDisplayName())
+                . '" ' . $style . '>' . $html . '</div>';
         }
 
         return $html;

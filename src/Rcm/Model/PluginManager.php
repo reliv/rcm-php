@@ -20,6 +20,7 @@ class PluginManager
      * control" but it is needed in order to load plugin controllers. These
      * controllers can not be injected into this class because only this class
      * knows which ones need to be loaded.
+     *
      * @var $serviceLocator \Zend\ServiceManager\ServiceManager
      */
     protected $serviceLocator;
@@ -33,7 +34,8 @@ class PluginManager
         \Zend\ModuleManager\ModuleManager $moduleManager,
         $config,
         \Zend\ServiceManager\ServiceManager $serviceLocator
-    ) {
+    )
+    {
         $this->moduleManager = $moduleManager;
         $this->config = $config;
         $this->serviceLocator = $serviceLocator;
@@ -51,7 +53,7 @@ class PluginManager
         \Rcm\Entity\PluginInstance $instance,
         $action,
         $dataToPass = array(),
-        $event=null
+        $event = null
     )
     {
         $pluginName = $instance->getName();
@@ -60,22 +62,21 @@ class PluginManager
 
         $pluginController = $this->getPluginController($pluginName);
 
-        if (!empty($event)){
+        if (!empty($event)) {
 
             //If the plugin controller can accept a ZF2 event, pass it
-            if(method_exists($pluginController, 'setEvent')) {
+            if (method_exists($pluginController, 'setEvent')) {
                 $pluginController->setEvent($event);
             }
 
             //If the plugin controller can accept a ZF2 request, pass it
-            if(method_exists($pluginController, 'setRequest')) {
+            if (method_exists($pluginController, 'setRequest')) {
                 $pluginController->setRequest($event->getRequest());
             }
         }
 
 
-
-        if(!method_exists($pluginController,$action)){
+        if (!method_exists($pluginController, $action)) {
             throw new \Rcm\Exception\PluginActionNotImplemented();
         }
 
@@ -90,6 +91,7 @@ class PluginManager
 
     /**
      * Gets cached plugin controller. Creates one if not in cache
+     *
      * @param $pluginName
      *
      * @return mixed
@@ -104,8 +106,8 @@ class PluginManager
         if (!$pluginController instanceof \Rcm\Plugin\PluginInterface) {
             throw new \Exception(
                 'Class "' . get_class($pluginController) . '" for plugin "'
-                    . $pluginName . '" does not implement '
-                    . '\Rcm\Plugin\PluginInterface'
+                . $pluginName . '" does not implement '
+                . '\Rcm\Plugin\PluginInterface'
             );
         }
 
@@ -122,7 +124,7 @@ class PluginManager
     {
         $loadedModules = $this->moduleManager->getLoadedModules();
 
-        if(!isset($loadedModules[$pluginName])){
+        if (!isset($loadedModules[$pluginName])) {
             throw new \Exception(
                 "Plugin $pluginName is not loaded or configured. Check
                 config/application.config.php"
@@ -184,11 +186,11 @@ class PluginManager
         \Zend\EventManager\Event $event
     )
     {
-        $this->loadPlugin($instance,$event);
+        $this->loadPlugin($instance, $event);
 
         $pluginName = $instance->getName();
 
-        $config=$this->config;
+        $config = $this->config;
 
         if (isset($config['rcmPlugin'][$pluginName]['editJs'])) {
             $instance->setAdminEditJs(

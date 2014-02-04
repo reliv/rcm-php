@@ -37,7 +37,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="rcm_page_plugin_instances")
  */
-
 class PagePluginInstance
 {
 

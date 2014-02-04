@@ -31,7 +31,7 @@ $this->headMeta()->appendName(
     'viewport', 'width=device-width, initial-scale=1.0'
 );
 
-/** @var \Rcm\View\Helper\GetRcmRequired $rcmRequired  */
+/** @var \Rcm\View\Helper\GetRcmRequired $rcmRequired */
 
 
 echo $this->doctype();
@@ -40,15 +40,15 @@ echo $this->doctype();
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <?=  $this->headTitle($this->metaTitle) ?>
-    <?=  $this->headMeta() ?>
-    <?=  $this->headLink() ?>
-    <?=  $this->headScript() ?>
+    <?= $this->headTitle($this->metaTitle) ?>
+    <?= $this->headMeta() ?>
+    <?= $this->headLink() ?>
+    <?= $this->headScript() ?>
 </head>
 
 <body>
 
-<?=  $this->content; ?>
+<?= $this->content; ?>
 
 </body>
 </html>

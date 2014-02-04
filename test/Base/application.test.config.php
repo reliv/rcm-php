@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'modules' =>  array(
+    'modules' => array(
 
         //Rcm Dependencies
         -4 => 'DoctrineModule',
@@ -12,8 +12,8 @@ return array(
         -1 => 'RcmDoctrineJsonPluginStorage',
     ),
     'module_listener_options' => array(
-        'config_glob_paths'    => array(
-            -1 => __DIR__.'/test.config.php',
+        'config_glob_paths' => array(
+            -1 => __DIR__ . '/test.config.php',
         ),
         'module_paths' => array(
 

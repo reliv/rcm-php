@@ -1,21 +1,21 @@
 <?php
-    /**
-     * Admin User Database Entity
-     *
-     * This is a Doctorine 2 definition file for Admin User Objects.
-     *
-     * PHP version 5.3
-     *
-     * LICENSE: No License yet
-     *
-     * @category  Reliv
-     * @package   Common\Entites
-     * @author    Westin Shafer <wshafer@relivinc.com>
-     * @copyright 2012 Reliv International
-     * @license   License.txt New BSD License
-     * @version   GIT: <git_id>
-     * @link      http://ci.reliv.com/confluence
-     */
+/**
+ * Admin User Database Entity
+ *
+ * This is a Doctorine 2 definition file for Admin User Objects.
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: No License yet
+ *
+ * @category  Reliv
+ * @package   Common\Entites
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://ci.reliv.com/confluence
+ */
 
 namespace Rcm\Entity;
 
@@ -38,7 +38,6 @@ use Rcm\Entity\Page;
  * @ORM\Entity
  * @ORM\Table(name="rcm_admin_plugin_restrictions")
  */
-
 class AdminPluginRestrictions
 {
     /**

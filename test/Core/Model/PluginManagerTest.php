@@ -40,10 +40,10 @@ class PluginManagerTest extends DoctrineTestCase
         );
     }
 
-    private function setupRssFeedEntity($siteWide=false)
+    private function setupRssFeedEntity($siteWide = false)
     {
 
-        $pluginConfig = array (
+        $pluginConfig = array(
             'headline' => 'Testing Feed',
             'rssFeedUrl' => 'http://www.planet-php.net/rdf/',
             'rssFeedLimit' => '6',
@@ -54,14 +54,15 @@ class PluginManagerTest extends DoctrineTestCase
         $pluginInstance->setInstanceId(1);
         $pluginInstance->setMd5('91f65ba866e687ed8f482192cce57bd1');
 
-        if ($siteWide){
+        if ($siteWide) {
             $pluginInstance->setSiteWide();
             $pluginInstance->setDisplayName('Test Site Wide Instance');
         }
 
         $this->entityManager->persist($pluginInstance);
 
-        $simpleConfig = new \RcmDoctrineJsonPluginStorage\Entity\DoctrineJsonInstanceConfig();
+        $simpleConfig
+            = new \RcmDoctrineJsonPluginStorage\Entity\DoctrineJsonInstanceConfig();
         $simpleConfig->setInstanceId(1);
         $simpleConfig->setConfig($pluginConfig);
 
@@ -75,7 +76,9 @@ class PluginManagerTest extends DoctrineTestCase
      */
     public function testEnsureValidPlugin()
     {
-        $this->assertTrue($this->pluginManager->ensurePluginIsValid('RcmHtmlArea'));
+        $this->assertTrue(
+            $this->pluginManager->ensurePluginIsValid('RcmHtmlArea')
+        );
     }
 
     /**
@@ -92,9 +95,13 @@ class PluginManagerTest extends DoctrineTestCase
      */
     public function testGetPluginController()
     {
-        $pluginController = $this->pluginManager->getPluginController('RcmHtmlArea');
+        $pluginController = $this->pluginManager->getPluginController(
+            'RcmHtmlArea'
+        );
 
-        $this->assertTrue(is_a($pluginController, '\Rcm\Plugin\PluginInterface'));
+        $this->assertTrue(
+            is_a($pluginController, '\Rcm\Plugin\PluginInterface')
+        );
     }
 
     public function testGetNewEntity()
@@ -116,9 +123,16 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('canCache', $viewData);
 
 
-        $this->assertContains('<h2 data-textEdit="headline">Planet PHP Feed</h2>', $viewData['html']);
-        $this->assertContains('/modules/rcm-rss-feed/style.css', $viewData['css'][0]);
-        $this->assertContains('/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]);
+        $this->assertContains(
+            '<h2 data-textEdit="headline">Planet PHP Feed</h2>',
+            $viewData['html']
+        );
+        $this->assertContains(
+            '/modules/rcm-rss-feed/style.css', $viewData['css'][0]
+        );
+        $this->assertContains(
+            '/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]
+        );
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertFalse($viewData['siteWide']);
         $this->assertFalse($viewData['fromCache']);
@@ -144,9 +158,15 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('md5', $viewData);
         $this->assertArrayHasKey('canCache', $viewData);
 
-        $this->assertContains('<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']);
-        $this->assertContains('/modules/rcm-rss-feed/style.css', $viewData['css'][0]);
-        $this->assertContains('/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]);
+        $this->assertContains(
+            '<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']
+        );
+        $this->assertContains(
+            '/modules/rcm-rss-feed/style.css', $viewData['css'][0]
+        );
+        $this->assertContains(
+            '/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]
+        );
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertFalse($viewData['siteWide']);
         $this->assertFalse($viewData['fromCache']);
@@ -174,9 +194,15 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('md5', $viewData);
         $this->assertArrayHasKey('canCache', $viewData);
 
-        $this->assertContains('<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']);
-        $this->assertContains('/modules/rcm-rss-feed/style.css', $viewData['css'][0]);
-        $this->assertContains('/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]);
+        $this->assertContains(
+            '<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']
+        );
+        $this->assertContains(
+            '/modules/rcm-rss-feed/style.css', $viewData['css'][0]
+        );
+        $this->assertContains(
+            '/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]
+        );
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertFalse($viewData['siteWide']);
         $this->assertTrue($viewData['fromCache']);
@@ -203,10 +229,18 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('md5', $viewData);
         $this->assertArrayHasKey('canCache', $viewData);
 
-        $this->assertContains('<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']);
-        $this->assertContains('/modules/rcm-rss-feed/style.css', $viewData['css'][0]);
-        $this->assertContains('/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]);
-        $this->assertContains('Test Site Wide Instance', $viewData['displayName']);
+        $this->assertContains(
+            '<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']
+        );
+        $this->assertContains(
+            '/modules/rcm-rss-feed/style.css', $viewData['css'][0]
+        );
+        $this->assertContains(
+            '/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]
+        );
+        $this->assertContains(
+            'Test Site Wide Instance', $viewData['displayName']
+        );
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertTrue($viewData['siteWide']);
         $this->assertFalse($viewData['fromCache']);
@@ -222,43 +256,65 @@ class PluginManagerTest extends DoctrineTestCase
 
     public function testGetNewPluginInstanceEntity()
     {
-        $instance = $this->pluginManager->getNewPluginInstanceEntity('RcmHtmlArea');
+        $instance = $this->pluginManager->getNewPluginInstanceEntity(
+            'RcmHtmlArea'
+        );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $instance);
 
         $this->assertTrue($instance->getName() == 'RcmHtmlArea');
-        $this->assertTrue($instance->getDisplayName() == 'Rich Content Area', 'Display Name incorrect.  Display name set as '.$instance->getDisplayName());
+        $this->assertTrue(
+            $instance->getDisplayName() == 'Rich Content Area',
+            'Display Name incorrect.  Display name set as '
+            . $instance->getDisplayName()
+        );
         $this->assertFalse($instance->isSiteWide());
         $this->assertEmpty($instance->getMd5());
     }
 
     public function testSaveNewInstance()
     {
-        $instanceConfig =  array('html' => 'This is a test');
+        $instanceConfig = array('html' => 'This is a test');
 
-        $newInstance = $this->pluginManager->saveNewInstance('RcmHtmlArea',$instanceConfig);
+        $newInstance = $this->pluginManager->saveNewInstance(
+            'RcmHtmlArea', $instanceConfig
+        );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $newInstance);
 
         $this->assertTrue($newInstance->getName() == 'RcmHtmlArea');
-        $this->assertTrue($newInstance->getDisplayName() == 'Rich Content Area', 'Display Name incorrect.  Display name set as '.$newInstance->getDisplayName());
+        $this->assertTrue(
+            $newInstance->getDisplayName() == 'Rich Content Area',
+            'Display Name incorrect.  Display name set as '
+            . $newInstance->getDisplayName()
+        );
         $this->assertGreaterThan(0, $newInstance->getInstanceId());
-        $this->assertContains(md5(serialize($instanceConfig)), $newInstance->getMd5());
+        $this->assertContains(
+            md5(serialize($instanceConfig)), $newInstance->getMd5()
+        );
         $this->assertFalse($newInstance->isSiteWide());
     }
 
     public function testSaveNewSiteWideInstance()
     {
-        $instanceConfig =  array('html' => 'This is a test');
+        $instanceConfig = array('html' => 'This is a test');
 
-        $newInstance = $this->pluginManager->saveNewInstance('RcmHtmlArea',$instanceConfig, true, 'Test Display Name');
+        $newInstance = $this->pluginManager->saveNewInstance(
+            'RcmHtmlArea', $instanceConfig, true, 'Test Display Name'
+        );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $newInstance);
 
         $this->assertTrue($newInstance->getName() == 'RcmHtmlArea');
-        $this->assertTrue($newInstance->getDisplayName() == 'Test Display Name', 'Display Name incorrect.  Display name set as '.$newInstance->getDisplayName());
+        $this->assertTrue(
+            $newInstance->getDisplayName() == 'Test Display Name',
+            'Display Name incorrect.  Display name set as '
+            . $newInstance->getDisplayName()
+        );
         $this->assertGreaterThan(0, $newInstance->getInstanceId());
-        $this->assertContains(md5(serialize($instanceConfig)), $newInstance->getMd5());
+        $this->assertContains(
+            md5(serialize($instanceConfig)), $newInstance->getMd5()
+        );
         $this->assertTrue($newInstance->isSiteWide());
     }
 
@@ -267,25 +323,37 @@ class PluginManagerTest extends DoctrineTestCase
      */
     public function testSavePlugin()
     {
-        $instanceConfig =  array('html' => 'This is a test');
+        $instanceConfig = array('html' => 'This is a test');
 
-        $testInstance = $this->pluginManager->saveNewInstance('RcmHtmlArea',$instanceConfig);
+        $testInstance = $this->pluginManager->saveNewInstance(
+            'RcmHtmlArea', $instanceConfig
+        );
 
         $testInstanceId = $testInstance->getInstanceId();
 
         $newInstanceConfig = array('html' => 'This is a test too');
 
-        $savedInstance = $this->pluginManager->savePlugin($testInstanceId, $newInstanceConfig);
+        $savedInstance = $this->pluginManager->savePlugin(
+            $testInstanceId, $newInstanceConfig
+        );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $savedInstance);
 
         $this->assertTrue($savedInstance->getName() == 'RcmHtmlArea');
-        $this->assertTrue($savedInstance->getDisplayName() == 'Rich Content Area', 'Display Name incorrect.  Display name set as '.$savedInstance->getDisplayName());
+        $this->assertTrue(
+            $savedInstance->getDisplayName() == 'Rich Content Area',
+            'Display Name incorrect.  Display name set as '
+            . $savedInstance->getDisplayName()
+        );
         $this->assertGreaterThan(0, $savedInstance->getInstanceId());
-        $this->assertContains(md5(serialize($newInstanceConfig)), $savedInstance->getMd5());
+        $this->assertContains(
+            md5(serialize($newInstanceConfig)), $savedInstance->getMd5()
+        );
         $this->assertFalse($savedInstance->isSiteWide());
 
-        $this->assertNotEquals($testInstanceId, $savedInstance->getInstanceId());
+        $this->assertNotEquals(
+            $testInstanceId, $savedInstance->getInstanceId()
+        );
     }
 
     /**
@@ -293,20 +361,30 @@ class PluginManagerTest extends DoctrineTestCase
      */
     public function testSavePluginWithSameData()
     {
-        $instanceConfig =  array('html' => 'This is a test');
+        $instanceConfig = array('html' => 'This is a test');
 
-        $testInstance = $this->pluginManager->saveNewInstance('RcmHtmlArea',$instanceConfig);
+        $testInstance = $this->pluginManager->saveNewInstance(
+            'RcmHtmlArea', $instanceConfig
+        );
 
         $testInstanceId = $testInstance->getInstanceId();
 
-        $savedInstance = $this->pluginManager->savePlugin($testInstanceId, $instanceConfig);
+        $savedInstance = $this->pluginManager->savePlugin(
+            $testInstanceId, $instanceConfig
+        );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $savedInstance);
 
         $this->assertTrue($savedInstance->getName() == 'RcmHtmlArea');
-        $this->assertTrue($savedInstance->getDisplayName() == 'Rich Content Area', 'Display Name incorrect.  Display name set as '.$savedInstance->getDisplayName());
+        $this->assertTrue(
+            $savedInstance->getDisplayName() == 'Rich Content Area',
+            'Display Name incorrect.  Display name set as '
+            . $savedInstance->getDisplayName()
+        );
         $this->assertGreaterThan(0, $savedInstance->getInstanceId());
-        $this->assertContains(md5(serialize($instanceConfig)), $savedInstance->getMd5());
+        $this->assertContains(
+            md5(serialize($instanceConfig)), $savedInstance->getMd5()
+        );
         $this->assertFalse($savedInstance->isSiteWide());
 
         $this->assertEquals($testInstanceId, $savedInstance->getInstanceId());
@@ -325,10 +403,12 @@ class PluginManagerTest extends DoctrineTestCase
 
     private function instanceExistsInDb($instanceId)
     {
-        $checkQuery = $this->entityManager->createQuery('
-            SELECT COUNT(pi.instanceId) FROM \Rcm\Entity\PluginInstance pi
-            WHERE pi.instanceId = :instanceId
-        ');
+        $checkQuery = $this->entityManager->createQuery(
+            '
+                        SELECT COUNT(pi.instanceId) FROM \Rcm\Entity\PluginInstance pi
+                        WHERE pi.instanceId = :instanceId
+                    '
+        );
 
         $checkQuery->setParameter('instanceId', $instanceId);
 

@@ -1,6 +1,6 @@
-.cke_contents iframe{
+.cke_contents iframe {
     /* This is ESSENTIAL for the ck editors less than 300px wide in chrome */
-    display:block;
+    display: block;
 }
 
 #rcmAdminMenuBar {
@@ -61,7 +61,7 @@
     width: 590px;
 }
 
-.ui-dialog  form.simple .ui-tabs-panel input {
+.ui-dialog form.simple .ui-tabs-panel input {
     width: 550px;
 }
 
@@ -73,7 +73,6 @@
     width: 100%;
     min-height: 30px;
 }
-
 
 /*  New Page Wizard */
 .rcmNewPageLayoutWrapper {
@@ -143,7 +142,7 @@
     display: table-cell;
     vertical-align: middle;
     height: 40px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .layoutPluginContainerIcon {
@@ -153,7 +152,9 @@
 .rcmSortableHandle {
     left: -2px;
     cursor: move;
-    background: url('/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png') no-repeat 0px -82px; width: 9px; height: 9px;
+    background: url('/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png') no-repeat 0px -82px;
+    width: 9px;
+    height: 9px;
 }
 
 .rcmLayoutEditHelper {
@@ -168,30 +169,27 @@
     width: 15px;
 }
 
-
-
 .rcmSettingPlugin {
     background: url('/modules/rcm/vendor/jquery/css/smoothness/images/ui-icons_454545_256x240.png') no-repeat -145px -146px;
     right: 16px;
 }
 
-
-html.rcmEditingPlugins .rcmPlugin:hover{
+html.rcmEditingPlugins .rcmPlugin:hover {
     border: 2px dotted grey;
 }
 
-html.rcmDraggingPlugins .rcmContainer{
+html.rcmDraggingPlugins .rcmContainer {
     border: 2px dotted grey;
 }
 
-html.rcmDraggingPlugins .rcmPlugin{
+html.rcmDraggingPlugins .rcmPlugin {
     border-color: transparent;
 }
 
-.rcmPluginSortPlaceHolder{
+.rcmPluginSortPlaceHolder {
     float: left;
-    opacity:0.4;
-    filter:alpha(opacity=40);
+    opacity: 0.4;
+    filter: alpha(opacity=40);
 }
 
 /* layout editor Bar */
@@ -229,7 +227,7 @@ html.rcmDraggingPlugins .rcmPlugin{
     border-radius: 5px;
 }
 
-.rcmBlockUi{
+.rcmBlockUi {
     color: white;
     font-size: 70px;
 }
@@ -243,7 +241,6 @@ html.rcmDraggingPlugins .rcmPlugin{
 .defaultSkin table.mceLayout tr.mceLast td, .defaultSkin table.mceLayout {
     border: none !important;
 }
-
 
 /* Container Menu */
 .rcmContainerMenu {
@@ -263,13 +260,13 @@ html.rcmDraggingPlugins .rcmPlugin{
     display: block;
     font-weight: bold;
     text-decoration: none;
-    margin:0;
-    padding:0;
-    color:black;
+    margin: 0;
+    padding: 0;
+    color: black;
 }
 
-.rcmContainerMenu li{
-    padding-right:20px;
+.rcmContainerMenu li {
+    padding-right: 20px;
     padding-top: 10px;
     float: left;
 }
@@ -279,12 +276,12 @@ html.rcmDraggingPlugins .rcmPlugin{
     color: #000000;
 }
 
-.rcmContainerMenu li ul li{
+.rcmContainerMenu li ul li {
     padding: 5px 30px 5px 5px;
-    float:none;
+    float: none;
 }
 
-.rcmContainerMenu li ul li a{
+.rcmContainerMenu li ul li a {
     font-weight: normal;
     color: #FFFFFF;
 }

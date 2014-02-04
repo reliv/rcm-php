@@ -24,7 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PWS Information Entity
  *
- * This object contains contains things like when a PWS site was 
+ * This object contains contains things like when a PWS site was
  * activated/canceled
  *
  * @category  Reliv
@@ -33,49 +33,48 @@ use Doctrine\ORM\Mapping as ORM;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * 
+ *
  * @ORM\Entity
  * @ORM\Table(name="rcm_sites_pws_info")
  */
-
 class PwsInfo
 {
-    /** 
+    /**
      * @var int Auto-Incremented Primary Key
-     * 
-     * @ORM\Id 
-     * @ORM\Column(type="integer") 
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $pwsId;
-    
+
     /**
      * @var \Rcm\Entity\Site Site Object that the domain name belongs
      *                                to.
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Site", inversedBy="pwsInfo")
      * @ORM\JoinColumn(name="site_id", referencedColumnName="siteId")
      */
     protected $site;
-    
-    /** 
+
+    /**
      * @var \DateTime Timestamp of when a site was active
-     * 
-     * @ORM\Column(type="datetime") 
+     *
+     * @ORM\Column(type="datetime")
      */
     protected $activeDate;
-    
-     /** 
+
+    /**
      * @var \DateTime Timestamp of when a site was canceled
-     * 
-     * @ORM\Column(type="datetime", nullable=true) 
+     *
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $cancelDate;
-    
-    /** 
+
+    /**
      * @var \DateTime Timestamp of when a site activation was last updated
      *
-     * @ORM\Column(type="datetime") 
+     * @ORM\Column(type="datetime")
      */
     protected $lastUpdated;
 
@@ -203,7 +202,7 @@ class PwsInfo
      *
      * @return array Array representation of the object
      */
-    public function toArray() 
+    public function toArray()
     {
         return get_object_vars($this);
     }

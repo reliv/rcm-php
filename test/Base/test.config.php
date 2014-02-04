@@ -6,7 +6,7 @@ return array(
             'orm_default' => array(
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOSqlite\Driver',
                 'params' => array(
-                    'memory'=> true,
+                    'memory' => true,
                 )
             )
         )
@@ -16,7 +16,7 @@ return array(
             'algo' => 'aes',
             'key' => 'mLo8VALnCxcd6NR4FPPdRnU8OO7kBzIlHIV89yrd5te1OKZvgfrPYAZDc'
         ),
-        'cookieBlockCypher'=>array(
+        'cookieBlockCypher' => array(
             'algo' => 'aes',
             'key' => 'eSxY6o2HDhlKrIPgBZgq11hUyH7SSbEiUlTCxu5aKpJhiYvd5htUMx8YZ'
         )

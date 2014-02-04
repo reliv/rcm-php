@@ -28,7 +28,8 @@ class ContainerManager
         EntityManager $em,
         PluginManagerInterface $pluginManager,
         StorageInterface $cache
-    ) {
+    )
+    {
         $this->entityManager = $em;
         $this->pluginManager = $pluginManager;
         $this->cache = $cache;
@@ -36,7 +37,7 @@ class ContainerManager
 
     public function getPageContainer($containerId)
     {
-        $cacheId = 'rcmContainer_'.$containerId;
+        $cacheId = 'rcmContainer_' . $containerId;
 
         if ($this->cache->hasItem($cacheId)) {
             $return = $this->cache->getItem($cacheId);
@@ -46,8 +47,7 @@ class ContainerManager
 
         $containerData = $this->getContainerPlugins($containerId);
 
-        if (empty($containerData['containerPlugins']))
-        {
+        if (empty($containerData['containerPlugins'])) {
             return array(
                 'containerPlugins' => array(),
                 'fromCache' => false,
@@ -57,14 +57,13 @@ class ContainerManager
 
         $canCache = true;
 
-        foreach ($containerData['containerPlugins'] as $key => $containerPlugin)
-        {
+        foreach ($containerData['containerPlugins'] as $key => $containerPlugin) {
             // Untestable code.  DB should always require a plugin instance ID, but because it comes from an outside
             // data store we need to make sure it's here.
             // @codeCoverageIgnoreStart
             if (empty($containerPlugin['plugin_instance_id'])) {
                 throw new PluginInstanceNotFoundException('No Plugin Instance ID found for container Plugin '
-                    .$containerPlugin['containerPluginId']
+                    . $containerPlugin['containerPluginId']
                 );
             }
             // @codeCoverageIgnoreEnd
@@ -75,8 +74,8 @@ class ContainerManager
 
             if (empty($pluginData)) {
                 throw new PluginDataNotFoundException('No data for plugin returned from the Plugin Manager'
-                    .'for container plugin'
-                    .$containerPlugin['containerPluginId']
+                    . 'for container plugin'
+                    . $containerPlugin['containerPluginId']
                 );
             }
 
@@ -84,7 +83,8 @@ class ContainerManager
                 $canCache = false;
             }
 
-            $containerData['containerPlugins'][$key]['pluginData'] = $pluginData;
+            $containerData['containerPlugins'][$key]['pluginData']
+                = $pluginData;
         }
 
         $container = array(
@@ -103,7 +103,7 @@ class ContainerManager
     public function getContainerPlugins($containerId)
     {
 
-        $cacheId = 'rcmContainerPluginWrapper_'.$containerId;
+        $cacheId = 'rcmContainerPluginWrapper_' . $containerId;
 
         if ($this->cache->hasItem($cacheId)) {
             $return = $this->cache->getItem($cacheId);
@@ -111,19 +111,21 @@ class ContainerManager
             return $return;
         }
 
-        $query = $this->entityManager->createQuery('
-            SELECT cp.containerPluginId,
-              cp.container,
-              cp.renderOrder,
-              cp.height,
-              cp.width,
-              cp.divFloat,
-              ip.instanceId as plugin_instance_id
-            FROM \Rcm\Entity\ContainerPlugin cp
-            JOIN cp.instance ip
-            WHERE cp.container = :containerId
-            ORDER BY cp.renderOrder
-        ');
+        $query = $this->entityManager->createQuery(
+            '
+                        SELECT cp.containerPluginId,
+                          cp.container,
+                          cp.renderOrder,
+                          cp.height,
+                          cp.width,
+                          cp.divFloat,
+                          ip.instanceId as plugin_instance_id
+                        FROM \Rcm\Entity\ContainerPlugin cp
+                        JOIN cp.instance ip
+                        WHERE cp.container = :containerId
+                        ORDER BY cp.renderOrder
+                    '
+        );
 
         $query->setParameter('containerId', $containerId);
 

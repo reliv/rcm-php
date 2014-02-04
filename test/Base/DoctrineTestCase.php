@@ -13,33 +13,35 @@ class DoctrineTestCase extends BaseTestCase
     /** @var \Doctrine\Orm\EntityManager */
     public $entityManager;
 
-    protected $expectedTables = array (
-        'rcm_account',
-        'rcm_addresses',
-        'rcm_admin_allowed_sites',
-        'rcm_admin_disallowed_pages',
-        'rcm_admin_permissions',
-        'rcm_admin_plugin_restrictions',
-        'rcm_countries',
-        'rcm_domains',
-        'rcm_languages',
-        'rcm_container_plugin_instances',
-        'rcm_page_revisions',
-        'rcm_page_revisions_instances',
-        'rcm_pages',
-        'rcm_phone_number',
-        'rcm_plugin_assets',
-        'rcm_plugin_instances',
-        'rcm_plugin_instances_assets',
-        'rcm_postal_codes',
-        'rcm_sites',
-        'rcm_sites_instances',
-        'rcm_sites_pws_info',
-        'rcm_states',
-        'rcm_user'
-    );
+    protected $expectedTables
+        = array(
+            'rcm_account',
+            'rcm_addresses',
+            'rcm_admin_allowed_sites',
+            'rcm_admin_disallowed_pages',
+            'rcm_admin_permissions',
+            'rcm_admin_plugin_restrictions',
+            'rcm_countries',
+            'rcm_domains',
+            'rcm_languages',
+            'rcm_container_plugin_instances',
+            'rcm_page_revisions',
+            'rcm_page_revisions_instances',
+            'rcm_pages',
+            'rcm_phone_number',
+            'rcm_plugin_assets',
+            'rcm_plugin_instances',
+            'rcm_plugin_instances_assets',
+            'rcm_postal_codes',
+            'rcm_sites',
+            'rcm_sites_instances',
+            'rcm_sites_pws_info',
+            'rcm_states',
+            'rcm_user'
+        );
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $serviceManager = $this->getServiceManager();
         $this->entityManager = $serviceManager->get('em');
@@ -60,19 +62,24 @@ class DoctrineTestCase extends BaseTestCase
         $tool->createSchema($classes);
     }
 
-    public function testDbSetup() {
+    public function testDbSetup()
+    {
 
         $conn = $this->entityManager->getConnection()->getSchemaManager();
 
         $currentTables = $conn->listTableNames();
 
         foreach ($this->expectedTables as $table) {
-            $this->assertTrue(in_array($table, $currentTables, false), $table.' Not found in db memory.');
+            $this->assertTrue(
+                in_array($table, $currentTables, false),
+                $table . ' Not found in db memory.'
+            );
         }
 
     }
 
-    public function addExpectedDbTables($tables) {
+    public function addExpectedDbTables($tables)
+    {
         if (!is_array($tables)) {
             $this->expectedTables[] = $tables;
         } else {

@@ -46,7 +46,9 @@ class AdminTitleBar extends AbstractHelper
      *
      * @return string Rendered HTML from plugins for the container specified
      */
-    public function __invoke(\Rcm\Entity\Page $page, $displayedRevision, $language)
+    public function __invoke(
+        \Rcm\Entity\Page $page, $displayedRevision, $language
+    )
     {
         return $this->renderAdminTitleBar($page, $displayedRevision, $language);
     }
@@ -60,23 +62,25 @@ class AdminTitleBar extends AbstractHelper
      *
      * @return null|string
      */
-    public function renderAdminTitleBar(\Rcm\Entity\Page $page,
+    public function renderAdminTitleBar(
+        \Rcm\Entity\Page $page,
         $displayedRevision,
         $language
-    ) {
+    )
+    {
         if (empty($displayedRevision) || !is_numeric($displayedRevision)) {
             return null;
         }
 
         $pagetype = $page->getPageType();
 
-        /** @var \Rcm\Entity\PageRevision $currentRevision  */
+        /** @var \Rcm\Entity\PageRevision $currentRevision */
         $currentRevision = $page->getRevisionById($displayedRevision);
         $currentRevisionId = $currentRevision->getPageRevId();
         $currentRevisionTitle = $currentRevision->getPageTitle();
         $currentRevisionTitle .= ' - Draft';
 
-        $currentPublishedRev= $page->getCurrentRevision();
+        $currentPublishedRev = $page->getCurrentRevision();
 
         if (!empty($currentPublishedRev)) {
             $currentPublishedRevId = $currentPublishedRev->getPageRevId();
@@ -120,7 +124,7 @@ class AdminTitleBar extends AbstractHelper
         $html .= "<li ";
 
         if (!empty($currentPublishedRevId) || !empty($currentStagedRevId)) {
-            $html .= 'class="rcmTitleBarHasAdditional" >'.$currentRevisionTitle;
+            $html .= 'class="rcmTitleBarHasAdditional" >' . $currentRevisionTitle;
             $html .= '<ul>';
 
             if (!empty($currentPublishedRevId)) {
@@ -153,14 +157,14 @@ class AdminTitleBar extends AbstractHelper
                     $lastSavedDraft,
                     $language
                 );
-                $html .= '" >Last Saved Draft - '.$lastSavedDraft->getAuthor();
+                $html .= '" >Last Saved Draft - ' . $lastSavedDraft->getAuthor();
                 $html .= '</a></li>';
             }
 
             $html .= '</ul>';
 
         } else {
-            $html .= '>'.$currentRevisionTitle;
+            $html .= '>' . $currentRevisionTitle;
         }
 
 
@@ -181,15 +185,17 @@ class AdminTitleBar extends AbstractHelper
      *
      * @return mixed
      */
-    protected function getRevisionLink(\Rcm\Entity\Page $page,
+    protected function getRevisionLink(
+        \Rcm\Entity\Page $page,
         $pageType,
         \Rcm\Entity\PageRevision $revision,
         $language
-    ) {
+    )
+    {
         $renderer = $this->getView();
 
         if ($pageType != 'n') {
-            $revisionUrl =  $renderer->url(
+            $revisionUrl = $renderer->url(
                 'contentManagerWithPageType',
                 array(
                     'page' => $page->getName(),
@@ -199,7 +205,7 @@ class AdminTitleBar extends AbstractHelper
                 )
             );
         } else {
-            $revisionUrl =  $renderer->url(
+            $revisionUrl = $renderer->url(
                 'contentManager',
                 array(
                     'page' => $page->getName(),

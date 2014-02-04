@@ -35,7 +35,8 @@ class ContainerManagerTest extends DoctrineTestCase
         );
     }
 
-    private function setupContainerEntity(){
+    private function setupContainerEntity()
+    {
         $pluginInstance = new \Rcm\Entity\PluginInstance();
         $pluginInstance->setInstanceId(1);
         $pluginInstance->setDisplayName('Rss Feed Reader');
@@ -84,10 +85,10 @@ class ContainerManagerTest extends DoctrineTestCase
         return array(
             0 => array(
                 'html' => '<h2 data-textEdit="headline">Planet PHP Feed</h2>',
-                'css' => array (
+                'css' => array(
                     '0' => '/modules/rcm-rss-feed/style.css',
                 ),
-                'js' => array (
+                'js' => array(
                     '0' => '/modules/rcm-rss-feed/RssReader.js',
                 ),
                 'editJs' => '/modules/rcm-rss-feed/edit.js',
@@ -105,10 +106,10 @@ class ContainerManagerTest extends DoctrineTestCase
 
             1 => array(
                 'html' => '<h2 data-textEdit="headline">Planet PHP Feed</h2>',
-                'css' => array (
+                'css' => array(
                     '0' => '/modules/rcm-rss-feed/style.css',
                 ),
-                'js' => array (
+                'js' => array(
                     '0' => '/modules/rcm-rss-feed/RssReader.js',
                 ),
                 'editJs' => '/modules/rcm-rss-feed/edit.js',
@@ -129,8 +130,8 @@ class ContainerManagerTest extends DoctrineTestCase
     protected function getDefaultExpectedResult($mockPluginData)
     {
         return array(
-            'containerPlugins' => array (
-                '0' => array (
+            'containerPlugins' => array(
+                '0' => array(
                     'containerPluginId' => 1,
                     'container' => 'top',
                     'renderOrder' => 0,
@@ -141,7 +142,7 @@ class ContainerManagerTest extends DoctrineTestCase
                     'pluginData' => $mockPluginData[0],
                 ),
 
-                '1' => array (
+                '1' => array(
                     'containerPluginId' => 2,
                     'container' => 'top',
                     'renderOrder' => 10,
@@ -167,15 +168,19 @@ class ContainerManagerTest extends DoctrineTestCase
 
         $this->assertArrayHasKey('containerPlugins', $return);
         $this->assertArrayHasKey('fromCache', $return);
-        $this->assertArrayHasKey('containerPluginId', $return['containerPlugins'][0]);
+        $this->assertArrayHasKey(
+            'containerPluginId', $return['containerPlugins'][0]
+        );
         $this->assertArrayHasKey('container', $return['containerPlugins'][0]);
         $this->assertArrayHasKey('renderOrder', $return['containerPlugins'][0]);
         $this->assertArrayHasKey('height', $return['containerPlugins'][0]);
         $this->assertArrayHasKey('width', $return['containerPlugins'][0]);
         $this->assertArrayHasKey('divFloat', $return['containerPlugins'][0]);
-        $this->assertArrayHasKey('plugin_instance_id', $return['containerPlugins'][0]);
+        $this->assertArrayHasKey(
+            'plugin_instance_id', $return['containerPlugins'][0]
+        );
 
-        $expected = array (
+        $expected = array(
             'containerPluginId' => 1,
             'container' => 'top',
             'renderOrder' => 0,
@@ -200,15 +205,19 @@ class ContainerManagerTest extends DoctrineTestCase
 
         $this->assertArrayHasKey('containerPlugins', $return);
         $this->assertArrayHasKey('fromCache', $return);
-        $this->assertArrayHasKey('containerPluginId', $return['containerPlugins'][0]);
+        $this->assertArrayHasKey(
+            'containerPluginId', $return['containerPlugins'][0]
+        );
         $this->assertArrayHasKey('container', $return['containerPlugins'][0]);
         $this->assertArrayHasKey('renderOrder', $return['containerPlugins'][0]);
         $this->assertArrayHasKey('height', $return['containerPlugins'][0]);
         $this->assertArrayHasKey('width', $return['containerPlugins'][0]);
         $this->assertArrayHasKey('divFloat', $return['containerPlugins'][0]);
-        $this->assertArrayHasKey('plugin_instance_id', $return['containerPlugins'][0]);
+        $this->assertArrayHasKey(
+            'plugin_instance_id', $return['containerPlugins'][0]
+        );
 
-        $expected = array (
+        $expected = array(
             'containerPluginId' => 1,
             'container' => 'top',
             'renderOrder' => 0,
@@ -227,7 +236,9 @@ class ContainerManagerTest extends DoctrineTestCase
     {
         $this->setupContainerEntity();
 
-        $return = $this->containerManager->getContainerPlugins('thisShouldBeEmpty');
+        $return = $this->containerManager->getContainerPlugins(
+            'thisShouldBeEmpty'
+        );
 
         $this->assertArrayHasKey('containerPlugins', $return);
         $this->assertArrayHasKey('fromCache', $return);
@@ -242,7 +253,9 @@ class ContainerManagerTest extends DoctrineTestCase
         $this->setupContainerEntity();
 
         $this->containerManager->getContainerPlugins('thisShouldBeEmpty');
-        $return = $this->containerManager->getContainerPlugins('thisShouldBeEmpty');
+        $return = $this->containerManager->getContainerPlugins(
+            'thisShouldBeEmpty'
+        );
 
         $this->assertArrayHasKey('containerPlugins', $return);
         $this->assertArrayHasKey('fromCache', $return);
@@ -271,11 +284,15 @@ class ContainerManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('canCache', $return);
 
         $this->assertTrue(is_array($return['containerPlugins']));
-        $this->assertTrue(is_array($return['containerPlugins'][0]['pluginData']));
+        $this->assertTrue(
+            is_array($return['containerPlugins'][0]['pluginData'])
+        );
         $this->assertFalse($return['fromCache']);
         $this->assertTrue($return['canCache']);
 
-        $this->assertEquals($this->getDefaultExpectedResult($mockResults), $return);
+        $this->assertEquals(
+            $this->getDefaultExpectedResult($mockResults), $return
+        );
     }
 
     public function testGetPageContainerWithCache()
@@ -299,7 +316,9 @@ class ContainerManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('canCache', $return);
 
         $this->assertTrue(is_array($return['containerPlugins']));
-        $this->assertTrue(is_array($return['containerPlugins'][0]['pluginData']));
+        $this->assertTrue(
+            is_array($return['containerPlugins'][0]['pluginData'])
+        );
         $this->assertTrue($return['fromCache']);
         $this->assertTrue($return['canCache']);
 
@@ -333,7 +352,9 @@ class ContainerManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('canCache', $return);
 
         $this->assertTrue(is_array($return['containerPlugins']));
-        $this->assertTrue(is_array($return['containerPlugins'][0]['pluginData']));
+        $this->assertTrue(
+            is_array($return['containerPlugins'][0]['pluginData'])
+        );
         $this->assertFalse($return['fromCache']);
         $this->assertFalse($return['canCache']);
 

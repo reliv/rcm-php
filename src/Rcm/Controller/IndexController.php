@@ -68,7 +68,9 @@ class IndexController extends \Rcm\Controller\BaseController
         $plugins = array();
         $pageName = $this->getEvent()->getRouteMatch()->getParam('page');
         $pageType = $this->getEvent()->getRouteMatch()->getParam('pageType');
-        $pageRevisionId= $this->getEvent()->getRouteMatch()->getParam('revision');
+        $pageRevisionId = $this->getEvent()->getRouteMatch()->getParam(
+            'revision'
+        );
 
         if (empty($pageName)) {
             $pageName = 'index';
@@ -90,7 +92,9 @@ class IndexController extends \Rcm\Controller\BaseController
         }
 
         //Redirect user to published revision if not logged in
-        if (!empty($pageRevisionId) && !$this->adminIsLoggedIn() && $pageType == 'n') {
+        if (!empty($pageRevisionId) && !$this->adminIsLoggedIn()
+            && $pageType == 'n'
+        ) {
             return $this->redirect()->toRoute(
                 'contentManager',
                 array(
@@ -98,7 +102,9 @@ class IndexController extends \Rcm\Controller\BaseController
                     'language' => $this->siteInfo->getLanguage()->getLanguage()
                 )
             )->setStatusCode(301);
-        } elseif (!empty($pageRevisionId) && !$this->adminIsLoggedIn() && $pageType != 'n') {
+        } elseif (!empty($pageRevisionId) && !$this->adminIsLoggedIn()
+            && $pageType != 'n'
+        ) {
             return $this->redirect()->toRoute(
                 'contentManagerWithPageType',
                 array(
@@ -116,18 +122,17 @@ class IndexController extends \Rcm\Controller\BaseController
 
         if ($this->adminIsLoggedIn() && !empty($pageRevisionId)) {
             $this->pageRevision = $this->page->getRevisionById($pageRevisionId);
-        }
-        /**
+        } /**
          *   If Admin we're going to check for a staged revision.
          */
 
         elseif ($this->adminIsLoggedIn() && empty($pageRevisionId)) {
-            /** @var \Rcm\Entity\PageRevision pageRevision  */
+            /** @var \Rcm\Entity\PageRevision pageRevision */
             $this->pageRevision = $this->page->getStagedRevision();
         }
 
         /** Get published revision */
-        if(empty($pageRevisionId) && empty($this->pageRevision)) {
+        if (empty($pageRevisionId) && empty($this->pageRevision)) {
             $this->pageRevision = $this->page->getPublishedRevision();
         }
 
@@ -149,8 +154,10 @@ class IndexController extends \Rcm\Controller\BaseController
                             $this->getEvent()
                         );
                     $plugins[$container][$order]['width'] = $instance->getWidth();
-                    $plugins[$container][$order]['height'] = $instance->getHeight();
-                    $plugins[$container][$order]['float'] = $instance->getDivFloat();
+                    $plugins[$container][$order]['height']
+                        = $instance->getHeight();
+                    $plugins[$container][$order]['float']
+                        = $instance->getDivFloat();
                 }
             }
         }
@@ -159,14 +166,20 @@ class IndexController extends \Rcm\Controller\BaseController
 
         $layoutTemplatePath = $this->getLayout();
 
-        $layoutView->setTemplate('layout/'.$layoutTemplatePath);
+        $layoutView->setTemplate('layout/' . $layoutTemplatePath);
         $layoutView->setVariable('plugins', $plugins);
 
-        /** @var \Zend\Mvc\Controller\Plugin\Layout $layoutView  */
+        /** @var \Zend\Mvc\Controller\Plugin\Layout $layoutView */
 
-        $layoutView->setVariable('metaTitle', $this->pageRevision->getPageTitle());
-        $layoutView->setVariable('metaDesc', $this->pageRevision->getDescription());
-        $layoutView->setVariable('metaKeys', $this->pageRevision->getKeywords());
+        $layoutView->setVariable(
+            'metaTitle', $this->pageRevision->getPageTitle()
+        );
+        $layoutView->setVariable(
+            'metaDesc', $this->pageRevision->getDescription()
+        );
+        $layoutView->setVariable(
+            'metaKeys', $this->pageRevision->getKeywords()
+        );
 
         if ($this->adminIsLoggedIn() && $pageName == $this->page->getName()) {
             $this->doAdmin();
@@ -192,7 +205,9 @@ class IndexController extends \Rcm\Controller\BaseController
 
         $layout->setVariable('rcmAdminMode', true);
 
-        $publishLink = $this->getPublishLink($this->pageRevision->getPageRevId());
+        $publishLink = $this->getPublishLink(
+            $this->pageRevision->getPageRevId()
+        );
 
         $layout->setVariable(
             'publishButtonHref',
@@ -245,7 +260,7 @@ class IndexController extends \Rcm\Controller\BaseController
      * @return string
      * @throws \InvalidArgumentException
      */
-    protected  function getLayout()
+    protected function getLayout()
     {
         //Get Page Layout
         $config = $this->config;
@@ -259,14 +274,13 @@ class IndexController extends \Rcm\Controller\BaseController
         } elseif (!empty($config['Rcm']['themes']['generic']['layouts'][$layout]['file'])) {
             return $config['Rcm']['themes']['generic']['layouts'][$layout]['file'];
         } elseif (
-            !empty($config['Rcm']['themes']['generic']['layouts']['default']['file'])
+        !empty($config['Rcm']['themes']['generic']['layouts']['default']['file'])
         ) {
             return $config['Rcm']['themes']['generic']['layouts']['default']['file'];
         } else {
             throw new \InvalidArgumentException('No Layouts Found in config');
         }
     }
-
 
 
     /**
@@ -303,7 +317,9 @@ class IndexController extends \Rcm\Controller\BaseController
             $instance = new \Rcm\Entity\PluginInstance();
             $instance->setPlugin($pluginName);
             $instance->setInstanceId($this->pluginCount);
-            $this->pluginManager->prepPluginInstance($instance, $this->getEvent());
+            $this->pluginManager->prepPluginInstance(
+                $instance, $this->getEvent()
+            );
 
             $return[$plugin['type']][$pluginName] = $instance;
         }
@@ -330,7 +346,9 @@ class IndexController extends \Rcm\Controller\BaseController
             if (!empty($instanceCheck)) {
                 $instance->setOnPage(true);
             } else {
-                $this->pluginManager->prepPluginInstance($instance, $this->getEvent());
+                $this->pluginManager->prepPluginInstance(
+                    $instance, $this->getEvent()
+                );
             }
 
             $return[] = $instance;
@@ -443,7 +461,7 @@ class IndexController extends \Rcm\Controller\BaseController
 
             $linkDisplay
                 = $revision->getCreatedDate()->format('Y-m-d');
-            $linkDisplay .= ' - '.$revision->getAuthor();
+            $linkDisplay .= ' - ' . $revision->getAuthor();
 
             $linkHref = $this->getLink(
                 'contentManager',
@@ -457,7 +475,8 @@ class IndexController extends \Rcm\Controller\BaseController
             }
 
             if ($revision->wasPublished()
-                && $this->page->getCurrentRevision()->getPageRevId() != $revision->getPageRevId()
+                && $this->page->getCurrentRevision()->getPageRevId()
+                != $revision->getPageRevId()
             ) {
                 $restoreLinks[$revision->getPageRevId()] = array(
                     'display' => $linkDisplay,
@@ -501,7 +520,8 @@ class IndexController extends \Rcm\Controller\BaseController
         return $links;
     }
 
-    protected function getTemplates() {
+    protected function getTemplates()
+    {
         $em = $this->entityMgr;
         $repo = $em->getRepository('\Rcm\Entity\Page');
 

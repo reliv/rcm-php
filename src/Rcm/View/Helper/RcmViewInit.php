@@ -67,15 +67,19 @@ class RcmViewInit extends AbstractHelper
         return $this;
     }
 
-    public function getBodyTop() {
+    public function getBodyTop()
+    {
         return $this->bodyTop;
     }
 
-    public function getBodyBottom() {
+    public function getBodyBottom()
+    {
         return $this->bodyBottom;
     }
 
-    protected function getRequiredAdmin(\Zend\View\Renderer\PhpRenderer $renderer)
+    protected function getRequiredAdmin(
+        \Zend\View\Renderer\PhpRenderer $renderer
+    )
     {
         $this->setAdminHead($renderer);
         $this->getAdminInitScript($renderer);
@@ -107,24 +111,31 @@ class RcmViewInit extends AbstractHelper
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui/js/jquery-1.9.1.js', 'text/javascript'
+            $renderer->basePath()
+            . '/modules/rcm/vendor/jquery-ui/js/jquery-1.9.1.js',
+            'text/javascript'
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui/js/jquery-ui-1.10.3.custom.min.js', 'text/javascript'
+            $renderer->basePath()
+            . '/modules/rcm/vendor/jquery-ui/js/jquery-ui-1.10.3.custom.min.js',
+            'text/javascript'
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery-block-ui/jquery.blockUI.js', 'text/javascript'
+            $renderer->basePath()
+            . '/modules/rcm/vendor/jquery-block-ui/jquery.blockUI.js',
+            'text/javascript'
         );
 //
 //        $renderer->headScript()->appendFile(
 //            $renderer->basePath() . '/modules/rcm/vendor/jquery-formatcurrency/jquery.format-currency-1.4.0.min.js', 'text/javascript'
 //        );
 
-        $script = '$.blockUI.defaults.baseZ = 2000; $.blockUI.defaults.applyPlatformOpacityRules = false;';
+        $script
+            = '$.blockUI.defaults.baseZ = 2000; $.blockUI.defaults.applyPlatformOpacityRules = false;';
 
-        $renderer->headScript()->appendScript($script,'text/javascript');
+        $renderer->headScript()->appendScript($script, 'text/javascript');
 
 
     }
@@ -132,7 +143,8 @@ class RcmViewInit extends AbstractHelper
     protected function setCss(\Zend\View\Renderer\PhpRenderer $renderer)
     {
         $renderer->headLink()->appendStylesheet(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.min.css'
+            $renderer->basePath()
+            . '/modules/rcm/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.min.css'
         );
     }
 
@@ -164,35 +176,38 @@ class RcmViewInit extends AbstractHelper
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/prompt-helper/prompt-helper-legacy-deprecated.js',
-            'text/javascript'
-        );
-
-        $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery-ui-alert-confirm/jquery-ui-alert-confirm.js',
-            'text/javascript'
-        );
-
-        $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/vendor/jquery-dialog-inputs/jquery-dialog-inputs.js',
+            $renderer->basePath()
+            . '/modules/rcm/vendor/prompt-helper/prompt-helper-legacy-deprecated.js',
             'text/javascript'
         );
 
         $renderer->headScript()->appendFile(
             $renderer->basePath()
-                .'/modules/rcm/vendor/medialize-jquery-context-menu/src/jquery.contextMenu.js',
+            . '/modules/rcm/vendor/jquery-ui-alert-confirm/jquery-ui-alert-confirm.js',
             'text/javascript'
         );
 
         $renderer->headScript()->appendFile(
             $renderer->basePath()
-                . '/modules/rcm/vendor/ioncache-tag-handler/js/jquery.taghandler.min.js',
+            . '/modules/rcm/vendor/jquery-dialog-inputs/jquery-dialog-inputs.js',
             'text/javascript'
         );
 
         $renderer->headScript()->appendFile(
             $renderer->basePath()
-                .'/modules/rcm/vendor/medialize-jquery-context-menu/src/jquery.contextMenu.js',
+            . '/modules/rcm/vendor/medialize-jquery-context-menu/src/jquery.contextMenu.js',
+            'text/javascript'
+        );
+
+        $renderer->headScript()->appendFile(
+            $renderer->basePath()
+            . '/modules/rcm/vendor/ioncache-tag-handler/js/jquery.taghandler.min.js',
+            'text/javascript'
+        );
+
+        $renderer->headScript()->appendFile(
+            $renderer->basePath()
+            . '/modules/rcm/vendor/medialize-jquery-context-menu/src/jquery.contextMenu.js',
             'text/javascript'
         );
     }
@@ -200,25 +215,27 @@ class RcmViewInit extends AbstractHelper
     protected function setAdminCss(\Zend\View\Renderer\PhpRenderer $renderer)
     {
         $renderer->headLink()->appendStylesheet(
-            $renderer->basePath(). '/modules/rcm/css/admin/admin-toolbar.css'
+            $renderer->basePath() . '/modules/rcm/css/admin/admin-toolbar.css'
         );
 
         $renderer->headLink()->appendStylesheet(
-            $renderer->basePath(). '/modules/rcm/css/admin/cm-admin.css'
-        );
-
-        $renderer->headLink()->appendStylesheet(
-            $renderer->basePath()
-                .'/modules/rcm/vendor/medialize-jquery-context-menu/src/jquery.contextMenu.css'
+            $renderer->basePath() . '/modules/rcm/css/admin/cm-admin.css'
         );
 
         $renderer->headLink()->appendStylesheet(
             $renderer->basePath()
-                .'/modules/rcm/vendor/ioncache-tag-handler/css/jquery.taghandler.css'
+            . '/modules/rcm/vendor/medialize-jquery-context-menu/src/jquery.contextMenu.css'
+        );
+
+        $renderer->headLink()->appendStylesheet(
+            $renderer->basePath()
+            . '/modules/rcm/vendor/ioncache-tag-handler/css/jquery.taghandler.css'
         );
     }
 
-    protected function getAdminRichEditor(\Zend\View\Renderer\PhpRenderer $renderer)
+    protected function getAdminRichEditor(
+        \Zend\View\Renderer\PhpRenderer $renderer
+    )
     {
 
         if ($renderer->adminRichEditor == 'tinyMce') {
@@ -231,14 +248,15 @@ class RcmViewInit extends AbstractHelper
 
     }
 
-    protected function getTinyMceEditor(\Zend\View\Renderer\PhpRenderer $renderer)
+    protected function getTinyMceEditor(
+        \Zend\View\Renderer\PhpRenderer $renderer
+    )
     {
         $renderer->headScript()->appendFile(
             $renderer->basePath()
-                . '/modules/rcm/vendor/tinymce/jscripts/tiny_mce/jquery.tinymce.js',
+            . '/modules/rcm/vendor/tinymce/jscripts/tiny_mce/jquery.tinymce.js',
             'text/javascript'
         );
-
 
 
         $renderer->headScript()->appendFile(
@@ -256,7 +274,7 @@ class RcmViewInit extends AbstractHelper
     protected function getAlohaEditor(\Zend\View\Renderer\PhpRenderer $renderer)
     {
         $renderer->headLink()->appendStylesheet(
-            $renderer->basePath(). '/modules/rcm/vendor/aloha/css/aloha.css'
+            $renderer->basePath() . '/modules/rcm/vendor/aloha/css/aloha.css'
         );
 
         $renderer->headScript()->setAllowArbitraryAttributes(true)->appendFile(
@@ -302,11 +320,13 @@ class RcmViewInit extends AbstractHelper
         );
     }
 
-    protected function getPluginAdminEditJs(\Zend\View\Renderer\PhpRenderer $renderer)
+    protected function getPluginAdminEditJs(
+        \Zend\View\Renderer\PhpRenderer $renderer
+    )
     {
         $hasPageJs = array();
 
-        foreach($renderer->plugins as $container => $orders){
+        foreach ($renderer->plugins as $container => $orders) {
             /** @var \Rcm\Entity\PluginInstance $pluginInstance */
             foreach ($orders as $pluginInstance) {
                 $pluginEntity = $pluginInstance['plugin'];
@@ -316,7 +336,8 @@ class RcmViewInit extends AbstractHelper
                         'text/javascript'
                     );
 
-                    $hasPageJs[$pluginEntity->getName()] = $pluginEntity->getName();
+                    $hasPageJs[$pluginEntity->getName()]
+                        = $pluginEntity->getName();
 
                 }
 
@@ -329,28 +350,33 @@ class RcmViewInit extends AbstractHelper
         }
     }
 
-    protected function getAdminInitScript(\Zend\View\Renderer\PhpRenderer $renderer)
+    protected function getAdminInitScript(
+        \Zend\View\Renderer\PhpRenderer $renderer
+    )
     {
-        $script = "
+        $script
+            = "
             $(function(){
                 window.rcmEdit = new RcmEdit(rcmConfig);
-                rcmEdit.setLanguage('".$renderer->language."');
-                rcmEdit.setPage('".$renderer->page->getName()."');
-                rcmEdit.setPageRevision('".$renderer->pageRevision."');
-                rcmEdit.setPageType('".$renderer->pageType."')
-                rcmEdit.setNewInstanceId(".$renderer->newPluginCount.");
+                rcmEdit.setLanguage('" . $renderer->language . "');
+                rcmEdit.setPage('" . $renderer->page->getName() . "');
+                rcmEdit.setPageRevision('" . $renderer->pageRevision . "');
+                rcmEdit.setPageType('" . $renderer->pageType . "')
+                rcmEdit.setNewInstanceId(" . $renderer->newPluginCount . ");
                 rcmEdit.setEditor(rcmEditor);
-                rcmEdit.setNewPluginInstanceAjaxPath('".$renderer->url(
-                    'contentManagerNewInstanceAjax'
-                )."');
+                rcmEdit.setNewPluginInstanceAjaxPath('" . $renderer->url(
+                'contentManagerNewInstanceAjax'
+            ) . "');
                 rcmEdit.init();
             });
         ";
 
-        $renderer->headScript()->appendScript($script,'text/javascript');
+        $renderer->headScript()->appendScript($script, 'text/javascript');
     }
 
-    protected function getAdminTopBody(\Zend\View\Renderer\PhpRenderer $renderer)
+    protected function getAdminTopBody(
+        \Zend\View\Renderer\PhpRenderer $renderer
+    )
     {
         /** @var \Rcm\Entity\Page $page */
         $page = $renderer->page;
@@ -361,25 +387,32 @@ class RcmViewInit extends AbstractHelper
 
         $publishButton = '';
 
-        if (empty($currentRevision) || $pageRevision != $currentRevision->getPageRevId()) {
-            $publishButton ='<a href="'.$renderer->publishButtonHref.'" class="rcmPublishButton">Publish</a>';
+        if (empty($currentRevision)
+            || $pageRevision != $currentRevision->getPageRevId()
+        ) {
+            $publishButton = '<a href="' . $renderer->publishButtonHref
+                . '" class="rcmPublishButton">Publish</a>';
         }
 
         $this->appendBodyTop('<div id="rcmAdminPagePopoutWindow"></div>');
-        $this->appendBodyTop('
-            <div id="ContentManagerTopAdminPanel">
+        $this->appendBodyTop(
+            '
+                        <div id="ContentManagerTopAdminPanel">
 
-                <div id="rcmAdminMenuBar">
-                    '.$renderer->adminTitleBar($page, $pageRevision, $renderer->language) .'
+                            <div id="rcmAdminMenuBar">
+                                ' . $renderer->adminTitleBar(
+                $page, $pageRevision, $renderer->language
+            ) . '
 
                     <ul id="rcmAdminMenu">
-                        '.$renderer->addAdminNavigation($renderer->adminPanel).'
+                        ' . $renderer->addAdminNavigation($renderer->adminPanel)
+            . '
                     </ul>
 
                     <div class="editSaveCancel">
 
                         <div id="rcmAdminToolbarEdit">
-                            '.$publishButton.'
+                            ' . $publishButton . '
                             <a href="#" class="rcmEditButton">Edit</a>
                         </div>
 
@@ -401,24 +434,29 @@ class RcmViewInit extends AbstractHelper
 
             <div id="rcmLayoutEditorContainer">
                 <div id="rcmLayoutEditorColumn">
-                    '.$renderer->renderLayoutEditorContainers($renderer->layoutContainers).'
+                    ' . $renderer->renderLayoutEditorContainers(
+                $renderer->layoutContainers
+            ) . '
                 </div>
             </div>
 
             <div id="RcmRealPage">
-        ');
+        '
+        );
 
 
     }
 
     protected function getAdminBottomBody()
     {
-        $this->appendBodyBottom('
-            </div>
+        $this->appendBodyBottom(
+            '
+                        </div>
 
 
-            <div id="ckEditorfooter"></div>
-        ');
+                        <div id="ckEditorfooter"></div>
+                    '
+        );
 
 
     }
@@ -438,17 +476,21 @@ class RcmViewInit extends AbstractHelper
     /**  Init Plugins */
     public function initPlugins(\Zend\View\Renderer\PhpRenderer $renderer)
     {
-        /** @var \Zend\View\Helper\ViewModel $helper  */
+        /** @var \Zend\View\Helper\ViewModel $helper */
         $helper = $renderer->plugin('view_model');
         $view = $helper->getCurrent();
         $renderedContainers = array();
-        $containers  =  $renderer->plugins;
+        $containers = $renderer->plugins;
 
-        if (!empty($containers) && is_array($containers) ) {
+        if (!empty($containers) && is_array($containers)) {
             /** @var \Rcm\Entity\PagePluginInstance $plugin */
             foreach ($containers as $containerNum => $plugins) {
                 foreach ($plugins as $plugin) {
-                    $renderedContainers[$containerNum][] = $renderer->renderPlugin($plugin['plugin'], $plugin['height'], $plugin['width'], $plugin['float']);
+                    $renderedContainers[$containerNum][]
+                        = $renderer->renderPlugin(
+                        $plugin['plugin'], $plugin['height'], $plugin['width'],
+                        $plugin['float']
+                    );
                 }
             }
         }

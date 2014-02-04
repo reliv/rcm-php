@@ -1,4 +1,4 @@
-(function( $ ){
+(function ($) {
     /**
      * Pops up an alert dialog using jQuery UI
      *
@@ -6,9 +6,9 @@
      * @param {Function} [okCallBack] optional callback for ok button
      * @param {String} [title] optional the title bar text
      */
-    $.fn.alert = function(text, okCallBack, title){
+    $.fn.alert = function (text, okCallBack, title) {
 
-        if(typeof(title)=='undefined'){
+        if (typeof(title) == 'undefined') {
             title = 'Alert';
         }
 
@@ -16,11 +16,11 @@
             title: title,
             modal: true,
             buttons: {
-                "Ok": function() {
-                    if(typeof(okCallBack)=='function'){
+                "Ok": function () {
+                    if (typeof(okCallBack) == 'function') {
                         okCallBack();
                     }
-                    $( this ).dialog( "close" );
+                    $(this).dialog("close");
                 }
             }
         });
@@ -34,9 +34,9 @@
      * @param {Function} [cancelCallBack] optional callback for cancel button click
      * @param {String} [title] optional the title bar text
      */
-    $.fn.confirm = function(text, okCallBack, cancelCallBack, title){
+    $.fn.confirm = function (text, okCallBack, cancelCallBack, title) {
 
-        if(typeof(title)=='undefined'){
+        if (typeof(title) == 'undefined') {
             title = 'Confirm';
         }
 
@@ -46,23 +46,23 @@
             title: title,
             modal: true,
             buttons: {
-                "Ok": function() {
-                    if(typeof(okCallBack)=='function'){
+                "Ok": function () {
+                    if (typeof(okCallBack) == 'function') {
                         okCallBack();
                     }
-                    $( this ).dialog( "close" );
+                    $(this).dialog("close");
                 },
-                Cancel: function() {
-                    if(typeof(cancelCallBack)=='function'){
+                Cancel: function () {
+                    if (typeof(cancelCallBack) == 'function') {
                         cancelCallBack();
                     }
-                    $( this ).dialog( "close" );
+                    $(this).dialog("close");
                 }
             }
         });
 
     };
-})( jQuery );
+})(jQuery);
 
 
 jQuery.alert = function () {

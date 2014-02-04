@@ -3,27 +3,27 @@ var inputImageEventsDelegated = false;
 (function ($) {
     var richEditToolbars = {
 
-        'basic' : [
-            { name: 'document', items : [ 'Source' ] },
-            { name: 'undoRedo', items : ['Undo','Redo'] },
-            { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
-            { name: 'insert', items : [ 'SpecialChar' ]},
-            { name: 'links', items : [ 'Link','Unlink','Anchor' ] }
+        'basic': [
+            { name: 'document', items: [ 'Source' ] },
+            { name: 'undoRedo', items: ['Undo', 'Redo'] },
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+            { name: 'insert', items: [ 'SpecialChar' ]},
+            { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] }
         ],
 
-        'defaults' : [
-            { name:'document', items:[ 'Source' ] },
-            { name:'undoRedo', items:['Undo', 'Redo'] },
-            { name:'basicstyles', items:[ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
-            { name:'paragraph', items:[ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
+        'defaults': [
+            { name: 'document', items: [ 'Source' ] },
+            { name: 'undoRedo', items: ['Undo', 'Redo'] },
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
                 '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
-            { name:'clipboard', items:['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord'] },
-            { name:'insert', items:[ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Templates'] },
-            { name:'links', items:[ 'Link', 'Unlink', 'Anchor' ] }
+            { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord'] },
+            { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Templates'] },
+            { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] }
         ]
     };
     var methods = {
-        image:function (description, src) {
+        image: function (description, src) {
 
             //Give it a random name so labels and multi-dialogs work
             var name = $.fn.generateUUID();
@@ -65,7 +65,6 @@ var inputImageEventsDelegated = false;
         },
 
 
-
         /**
          * Build html for a text input
          *
@@ -74,7 +73,7 @@ var inputImageEventsDelegated = false;
          *
          * @return String
          */
-        text:function (description, value) {
+        text: function (description, value) {
 
             if (value == undefined) {
                 value = '';
@@ -98,12 +97,11 @@ var inputImageEventsDelegated = false;
          *
          * @return String
          */
-        url:function (description, value) {
+        url: function (description, value) {
 
             if (value == undefined) {
                 value = '';
             }
-
 
 
             //Give it a random name so labels and multi-dialogs work
@@ -112,7 +110,7 @@ var inputImageEventsDelegated = false;
             var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"></p>');
 
             p.append('<label for="' + name + '">' + description + '</label><br>');
-            var input=$('<input type="text" name="' + name + '" value="' + value + '">');
+            var input = $('<input type="text" name="' + name + '" value="' + value + '">');
             p.append(input);
 
             rcmEdit.attachPageListAutoComplete(input);
@@ -131,12 +129,12 @@ var inputImageEventsDelegated = false;
 
             var p = $('<p class="dialogElement ajaxTextInput" data-dialogElementName="' + name + '">' +
                 '<label for="' + name + '">' + description + '</label><br>' +
-                '<span id="' + validatorId +'" style="float: right;"></span> ' +
+                '<span id="' + validatorId + '" style="float: right;"></span> ' +
                 '<input type="text" id="' + name + '" name="' + name + '" value="' + value + '"></p>'
             );
 
             $('body').on('keyup', "#" + name, function () {
-                var validationContainer = $("#"+validatorId);
+                var validationContainer = $("#" + validatorId);
                 methods.validateInput(this, validationContainer, urlToValidator, disallowSpaces, successCallback);
             });
 
@@ -151,7 +149,7 @@ var inputImageEventsDelegated = false;
          *
          * @return String
          */
-        password:function (description, validationDescription, value) {
+        password: function (description, validationDescription, value) {
 
             if (value == undefined) {
                 value = '';
@@ -169,13 +167,13 @@ var inputImageEventsDelegated = false;
             var validationP = $('<p class="dialogElement"><label for="' + validationName + '">' + validationDescription + '</label><br>' +
                 '<input type="password" id="' + validationName + '" name="' + validationName + '" value="' + value + '"></p>');
 
-            var divId =  $.fn.generateUUID();
+            var divId = $.fn.generateUUID();
 
             var div = $("<div></div>").append(p).append(validationP);
 
             $('body').on('keyup', "#" + validationName, function () {
-                var passwordField = $("#"+name);
-                var validationField = $("#"+validationName);
+                var passwordField = $("#" + name);
+                var validationField = $("#" + validationName);
 
                 var password = $(passwordField).val();
                 var validationPassword = $(validationField).val();
@@ -204,7 +202,7 @@ var inputImageEventsDelegated = false;
          *
          * @return String
          */
-        date:function (description, value) {
+        date: function (description, value) {
 
             if (value == undefined) {
                 value = '';
@@ -233,7 +231,7 @@ var inputImageEventsDelegated = false;
          *
          * @return {String}
          */
-        select:function (description, choices, value, allowCustomValues) {
+        select: function (description, choices, value, allowCustomValues) {
 
             //Give it a random name so labels and multi-dialogs work
             var name = $.fn.generateUUID();
@@ -313,7 +311,7 @@ var inputImageEventsDelegated = false;
          *
          * @return {String}
          */
-        checkBox:function (description, checked) {
+        checkBox: function (description, checked) {
 
             //Give it a random name so labels and multi-dialogs work
             var name = $.fn.generateUUID();
@@ -341,7 +339,7 @@ var inputImageEventsDelegated = false;
          *
          * @return String
          */
-        richEdit:function (description, value, toolBarConfig) {
+        richEdit: function (description, value, toolBarConfig) {
 
             if (value == undefined || value == '' || value == null) {
                 value = '<p>&nbsp;</p>';
@@ -351,7 +349,7 @@ var inputImageEventsDelegated = false;
                 toolBarConfig = {
                     toolbar: richEditToolbars.defaults
                 };
-            } else if(typeof(richEditToolbars[toolBarConfig]) != 'undefined') {
+            } else if (typeof(richEditToolbars[toolBarConfig]) != 'undefined') {
                 toolBarConfig = {
                     toolbar: richEditToolbars[toolBarConfig]
                 };
@@ -378,9 +376,9 @@ var inputImageEventsDelegated = false;
             return p;
         },
 
-        validateInput : function(inputField, resultContainer, ajaxPath, disallowSpaces, successCallback) {
+        validateInput: function (inputField, resultContainer, ajaxPath, disallowSpaces, successCallback) {
 
-            if(typeof(disallowSpaces)=='undefined'){
+            if (typeof(disallowSpaces) == 'undefined') {
                 disallowSpaces = false;
             }
 
@@ -395,7 +393,7 @@ var inputImageEventsDelegated = false;
             }
 
             /* make sure that the page name is greater then 1 char */
-            if(inputValue.length < 1) {
+            if (inputValue.length < 1) {
                 methods.inputFieldError(inputField, resultContainer);
                 $(resultContainer).html('');
                 return false;
@@ -405,28 +403,28 @@ var inputImageEventsDelegated = false;
             var dataOk = false;
 
             var dataToSend = {
-                'checkValue' : inputValue
+                'checkValue': inputValue
             };
 
-            $.getJSON(ajaxPath, dataToSend, function(data) {
+            $.getJSON(ajaxPath, dataToSend,function (data) {
                 if (data.dataOk == 'Y') {
                     methods.inputFieldOk(inputField, resultContainer);
                     if (typeof(successCallback) === 'function') {
                         successCallback.call(this, inputValue);
                     }
-                } else if(data.dataOk != 'Y') {
+                } else if (data.dataOk != 'Y') {
                     methods.inputFieldError(inputField, resultContainer);
                 } else {
                     methods.inputFieldFatalError(inputField, resultContainer);
                 }
-            }).error(function(){
-                    methods.inputFieldFatalError(inputField, resultContainer);
-                });
+            }).error(function () {
+                methods.inputFieldFatalError(inputField, resultContainer);
+            });
 
             return dataOk;
         },
 
-        inputFieldError : function(inputField, resultContainer) {
+        inputFieldError: function (inputField, resultContainer) {
             $(resultContainer).removeClass('ui-icon-check');
             $(resultContainer).addClass('ui-icon-alert').addClass('ui-icon');
             $(inputField).addClass('RcmErrorInputHightlight');
@@ -434,13 +432,13 @@ var inputImageEventsDelegated = false;
 
         },
 
-        inputFieldFatalError : function(inputField, resultContainer) {
+        inputFieldFatalError: function (inputField, resultContainer) {
             $(resultContainer).html('<p style="color: #FF0000;">Error!</p>');
             $(inputField).addClass('RcmErrorInputHightlight');
             $(inputField).removeClass('RcmOkInputHightlight');
         },
 
-        inputFieldOk : function(inputField, resultContainer) {
+        inputFieldOk: function (inputField, resultContainer) {
             $(resultContainer).removeClass('ui-icon-alert');
             $(resultContainer).addClass('ui-icon-check').addClass('ui-icon');
             $(inputField).removeClass('RcmErrorInputHightlight');
@@ -453,7 +451,7 @@ var inputImageEventsDelegated = false;
          * @param dialogElement
          * @return {*}
          */
-        getDialogElementVal:function () {
+        getDialogElementVal: function () {
 
             var dialogElement = arguments[0];
             var newVal = (arguments[1]) ? arguments[1] : null;
@@ -508,8 +506,8 @@ var inputImageEventsDelegated = false;
      * @param value
      * @constructor
      */
-    $.fn.prop = function (value){
-        if(this.hasClass('dialogElementCheckBox')){
+    $.fn.prop = function (value) {
+        if (this.hasClass('dialogElementCheckBox')) {
             return this.find('input').prop(value);
         }
 
@@ -632,6 +630,6 @@ jQuery.dialogIn = function (inputType, description, value, option2, option3) {
     return $.fn.dialogIn.apply(this, arguments);
 };
 
-jQuery.generateUUID = function() {
+jQuery.generateUUID = function () {
     return $.fn.generateUUID();
 }

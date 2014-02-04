@@ -3,7 +3,7 @@
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
-\Doctrine\Common\Collections\ArrayCollection;
+    \Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -32,8 +32,9 @@ class Account
      */
     protected $users;
 
-    function __construct(){
-        $this->people=New ArrayCollection();
+    function __construct()
+    {
+        $this->people = New ArrayCollection();
     }
 
     public function setPeople($people)
@@ -83,7 +84,7 @@ class Account
     public function setPrimaryUser(\Rcm\Entity\User $primaryUser)
     {
         $this->primaryUser = $primaryUser;
-        if(!$this->people->contains($primaryUser)){
+        if (!$this->people->contains($primaryUser)) {
             $this->addUser($primaryUser);
         }
     }
@@ -93,7 +94,8 @@ class Account
         return $this->primaryUser;
     }
 
-    function addUser(\Rcm\Entity\User $person){
+    function addUser(\Rcm\Entity\User $person)
+    {
         $this->people->add($person);
     }
 

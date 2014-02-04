@@ -1,22 +1,22 @@
 <?php
-    /**
-     * Plugin Instances Entity
-     *
-     * This is a Doctorine 2 definition file for Plugin Instances  This file
-     * is used for any module that needs to know about plugin instances.
-     *
-     * PHP version 5.3
-     *
-     * LICENSE: No License yet
-     *
-     * @category  Reliv
-     * @package   Common\Entites
-     * @author    Westin Shafer <wshafer@relivinc.com>
-     * @copyright 2012 Reliv International
-     * @license   License.txt New BSD License
-     * @version   GIT: <git_id>
-     * @link      http://ci.reliv.com/confluence
-     */
+/**
+ * Plugin Instances Entity
+ *
+ * This is a Doctorine 2 definition file for Plugin Instances  This file
+ * is used for any module that needs to know about plugin instances.
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: No License yet
+ *
+ * @category  Reliv
+ * @package   Common\Entites
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://ci.reliv.com/confluence
+ */
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -39,7 +39,6 @@ use \Rcm\Entity\PluginInstance;
  * @ORM\Entity
  * @ORM\Table(name="rcm_container_plugin_instances")
  */
-
 class ContainerPlugin
 {
 
@@ -182,7 +181,8 @@ class ContainerPlugin
     /**
      * @return int
      */
-    public function getInstanceId() {
+    public function getInstanceId()
+    {
         return $this->instance->getInstanceId();
     }
 
@@ -199,7 +199,7 @@ class ContainerPlugin
      */
     public function getHeight()
     {
-        return $this->height.'px';
+        return $this->height . 'px';
     }
 
     /**
@@ -215,7 +215,7 @@ class ContainerPlugin
      */
     public function getWidth()
     {
-        return $this->width.'px';
+        return $this->width . 'px';
     }
 
     /**

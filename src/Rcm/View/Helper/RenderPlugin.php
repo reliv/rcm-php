@@ -42,26 +42,34 @@ class RenderPlugin extends AbstractHelper
      *
      * @return string Rendered HTML from plugins for the container specified
      */
-    public function __invoke(\Rcm\Entity\PluginInstance $plugin, $height=null, $width=null, $float=null, $renderView=true)
+    public function __invoke(
+        \Rcm\Entity\PluginInstance $plugin, $height = null, $width = null,
+        $float = null, $renderView = true
+    )
     {
-        return $this->renderPlugin($plugin, $height, $width, $float, $renderView);
+        return $this->renderPlugin(
+            $plugin, $height, $width, $float, $renderView
+        );
     }
 
-    protected function renderPlugin(\Rcm\Entity\PluginInstance $plugin, $height=null, $width=null, $float=null, $renderView=true)
+    protected function renderPlugin(
+        \Rcm\Entity\PluginInstance $plugin, $height = null, $width = null,
+        $float = null, $renderView = true
+    )
     {
         $pluginInstanceId = $plugin->getInstanceId();
         $pluginName = $plugin->getName();
 
         $html = '<div class="rcmPlugin ';
-        $html .= $pluginName.' ';
+        $html .= $pluginName . ' ';
 
         if ($plugin->isSiteWide()) {
-            $html .= str_replace(' ', '', $plugin->getDisplayName()). ' ';
+            $html .= str_replace(' ', '', $plugin->getDisplayName()) . ' ';
         }
 
         $html .= '" ';
-        $html .= 'data-rcmPluginName="'.$pluginName.'" ';
-        $html .= 'data-rcmPluginInstanceId="'.$pluginInstanceId.'" ';
+        $html .= 'data-rcmPluginName="' . $pluginName . '" ';
+        $html .= 'data-rcmPluginInstanceId="' . $pluginInstanceId . '" ';
 
         if ($plugin->isSiteWide()) {
             $html .= 'data-rcmSiteWidePlugin="Y" ';
@@ -70,28 +78,31 @@ class RenderPlugin extends AbstractHelper
 
         }
 
-        if ((!empty($width) && $width != 'px') || (!empty($height) && $height != 'px')) {
+        if ((!empty($width) && $width != 'px')
+            || (!empty($height)
+                && $height != 'px')
+        ) {
             $html .= 'data-rcmPluginResized="Y" ';
         } else {
             $html .= 'data-rcmPluginResized="N" ';
         }
 
-        $html .= 'data-rcmPluginDisplayName="'.$plugin->getDisplayName().'" ';
+        $html
+            .= 'data-rcmPluginDisplayName="' . $plugin->getDisplayName() . '" ';
 
         $html .= 'style="';
 
 
-
         if (!empty($width) && $width != 'px') {
-            $html .= " width: ".$width.";";
+            $html .= " width: " . $width . ";";
         }
 
         if (!empty($height) && $height != 'px') {
-            $html .= " height: ".$height.";";
+            $html .= " height: " . $height . ";";
         }
 
         if (!empty($float)) {
-            $html .= " float: ".$float.";";
+            $html .= " float: " . $float . ";";
         }
 
         $html .= '">';

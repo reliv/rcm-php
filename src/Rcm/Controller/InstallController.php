@@ -2,7 +2,8 @@
 
 namespace Rcm\Controller;
 
-use \RcmDoctrineJsonPluginStorage\Entity\DoctrineJsonInstanceConfig as JsonContent,
+use
+    \RcmDoctrineJsonPluginStorage\Entity\DoctrineJsonInstanceConfig as JsonContent,
     \RcmDoctrineJsonPluginStorage\StorageEngine\DoctrineSerializedRepo;
 
 
@@ -13,7 +14,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     /**
      * @var \Rcm\Entity\Site
      */
-    protected $site=null;
+    protected $site = null;
 
     protected $instanceRepo;
 
@@ -30,12 +31,17 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     function __construct(
         \Doctrine\ORM\EntityManager $entityMgr,
         \Rcm\Model\PluginManager $pluginManager
-    ) {
+    )
+    {
         parent::__construct($entityMgr);
-        $this->pluginManager=$pluginManager;
+        $this->pluginManager = $pluginManager;
         $this->instanceRepo = new DoctrineSerializedRepo($entityMgr);
-        $this->countryRepo = $this->entityMgr->getRepository('\Rcm\Entity\Country');
-        $this->languageRepo = $this->entityMgr->getRepository('\Rcm\Entity\Language');
+        $this->countryRepo = $this->entityMgr->getRepository(
+            '\Rcm\Entity\Country'
+        );
+        $this->languageRepo = $this->entityMgr->getRepository(
+            '\Rcm\Entity\Language'
+        );
         $this->pageFactory = new \Rcm\Model\PageFactory($this->entityMgr);
     }
 
@@ -53,10 +59,10 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         $countryRepo = $this->entityMgr->getRepository('\Rcm\Entity\Country');
         $languageRepo = $this->entityMgr->getRepository('\Rcm\Entity\Language');
 
-        /** @var \Rcm\Entity\Country $country  */
+        /** @var \Rcm\Entity\Country $country */
         $country = $countryRepo->find('USA');
 
-        /** @var \Rcm\Entity\Language $language  */
+        /** @var \Rcm\Entity\Language $language */
         $language = $languageRepo->findOneBy(array('iso639_2b' => 'eng'));
 
         $this->createSite(
@@ -66,8 +72,7 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         );
 
 
-
-        $this->createUser('admin@admin.com','admin');
+        $this->createUser('admin@admin.com', 'admin');
 
         /*$this->createBaseAdminUser(
             $country,
@@ -81,13 +86,16 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
 
 
         $view = new \Zend\View\Model\ViewModel(
-            array('content'=>'Install Complete')
+            array('content' => 'Install Complete')
         );
         $view->setTemplate('rcm/literal');
         return $view;
     }
 
-    function createBasicPage($urlName ,$title, $metaDesc, $keywords, $html, $site){
+    function createBasicPage(
+        $urlName, $title, $metaDesc, $keywords, $html, $site
+    )
+    {
         $this->instances = array();
         $this->instanceRepo->createInstanceConfig(
             $this->createInstance('RcmHtmlArea', 4, 0),
@@ -114,35 +122,41 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
      * @TODO check for unset timezones here to so we can remove that from docs
      * @throws \Exception
      */
-    function checkEnvironmentRequirements(){
-        if(get_magic_quotes_gpc()){
+    function checkEnvironmentRequirements()
+    {
+        if (get_magic_quotes_gpc()) {
             throw new \Exception('Magic quotes must be OFF for Rcm');
         }
     }
 
-    function fixSymLinks(){
+    function fixSymLinks()
+    {
         require(
             __DIR__
-                .'/../../../scripts/makeSymlinksForZf2ModulePublicFolders.php'
+            . '/../../../scripts/makeSymlinksForZf2ModulePublicFolders.php'
         );
     }
 
-    function buildSite($countryName, $languageName, $domain=null){
+    function buildSite($countryName, $languageName, $domain = null)
+    {
         //Create US En Site
         /** @var \Rcm\Entity\Country $country */
         $country = $this->countryRepo->find($countryName);
 
         /** @var \Rcm\Entity\Language $language */
-        $language = $this->languageRepo->findOneBy(array('iso639_2b' => $languageName));
+        $language = $this->languageRepo->findOneBy(
+            array('iso639_2b' => $languageName)
+        );
 
         $this->entityMgr->flush();
 
         return $this->createSite($country, $language, $domain);
     }
 
-    function initializeDatabase($dropDatabaseFirst = false){
+    function initializeDatabase($dropDatabaseFirst = false)
+    {
 
-        if($dropDatabaseFirst){
+        if ($dropDatabaseFirst) {
             $this->dropDatabase();
         }
 
@@ -154,28 +168,33 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
     /**
      * this is needed to override the parent's init which does things we don't want to do here
      */
-    function init(){
+    function init()
+    {
     }
 
-    function createUser($email,$password){
-        $userManager=$this->serviceLocator->get('rcmUserMgr');
-        $userManager->newUser($email,$password,1);
-        $adminPermissions= new \Rcm\Entity\AdminPermissions();
+    function createUser($email, $password)
+    {
+        $userManager = $this->serviceLocator->get('rcmUserMgr');
+        $userManager->newUser($email, $password, 1);
+        $adminPermissions = new \Rcm\Entity\AdminPermissions();
         $adminPermissions->setAccountNumber(1);
         $this->entityMgr->persist($adminPermissions);
     }
 
-    function getDefaultHtmlAreaContent(){
+    function getDefaultHtmlAreaContent()
+    {
         return $this->getDefaultInstanceConfig(
             'vendor/reliv/RcmPlugins/RcmHtmlArea/'
         );
     }
 
-    function getDefaultInstanceConfig($pluginPath){
-        return include $pluginPath.'/config/defaultInstanceConfig.php';
+    function getDefaultInstanceConfig($pluginPath)
+    {
+        return include $pluginPath . '/config/defaultInstanceConfig.php';
     }
 
-    function createHomePage(){
+    function createHomePage()
+    {
         $this->instances = array();
 
         $this->createJsonInstance(
@@ -289,7 +308,8 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         );
     }
 
-    function createLoginPage(){
+    function createLoginPage()
+    {
         $this->instances = array();
 
         $content = $this->getDefaultInstanceConfig(
@@ -310,10 +330,12 @@ class InstallController extends \Rcm\Controller\EntityMgrAwareController
         );
     }
 
-    function createLicensePage(){
+    function createLicensePage()
+    {
         $this->instances = array();
 
-        $content = array( 'html' => '
+        $content = array(
+            'html' => '
 <h1>R-Writer License (New BSD)</h1>
 <p>Copyright<sup>&copy;</sup> 2012, Reliv\' International, Inc.</p>
 <p>All rights reserved.</p>
@@ -380,7 +402,8 @@ are permitted provided that the following conditions are met:</p>
         </ul>
     </li>
 </ul>
-        ');
+        '
+        );
 
         $this->createJsonInstance(
             'RcmHtmlArea', $content, 2, 0
@@ -398,7 +421,8 @@ are permitted provided that the following conditions are met:</p>
         );
     }
 
-    function createContactPage(){
+    function createContactPage()
+    {
         $this->instances = array();
 
         $this->createJsonInstance(
@@ -416,12 +440,14 @@ are permitted provided that the following conditions are met:</p>
             $this->getCurrentInstances()
         );
     }
-    
-    function getCurrentInstances(){
+
+    function getCurrentInstances()
+    {
         return array_merge($this->instances, $this->siteWideInstances);
     }
 
-    function createSiteWideContent(){
+    function createSiteWideContent()
+    {
 
         $this->createJsonInstance(
             'RcmHtmlArea',
@@ -462,12 +488,12 @@ are permitted provided that the following conditions are met:</p>
             )
         );
 
-        $content= array(
-            'html'=>'
-                <li><a href="'.$homeLink.'">Home</a></li>
-                <li><a href="'.$loginLink.'">Login</a></li>
-                <li><a href="'.$licenseLink.'">License</a></li>
-                <li><a href="'.$contactLink.'">Contact</a></li>
+        $content = array(
+            'html' => '
+                <li><a href="' . $homeLink . '">Home</a></li>
+                <li><a href="' . $loginLink . '">Login</a></li>
+                <li><a href="' . $licenseLink . '">License</a></li>
+                <li><a href="' . $contactLink . '">Contact</a></li>
             '
         );
         $this->createJsonInstance(
@@ -478,8 +504,8 @@ are permitted provided that the following conditions are met:</p>
             'RcmNavigation', $content, 3, 0, true, 'Footer Navigation'
         );
 
-        $content= array(
-            'html'=>'<p>R-Writer is free software and licensed under the New BSD License</p>'
+        $content = array(
+            'html' => '<p>R-Writer is free software and licensed under the New BSD License</p>'
         );
 
 
@@ -496,7 +522,8 @@ are permitted provided that the following conditions are met:</p>
         \Rcm\Entity\Country $country,
         \Rcm\Entity\Language $language,
         $domain
-    ) {
+    )
+    {
 
         $this->siteWideInstances = array();
 
@@ -547,7 +574,7 @@ are permitted provided that the following conditions are met:</p>
      * Creates a plugin instance for plugins that have controllers that extend
      * \RcmDoctrineJsonPluginStorage\JsonContentController
      *
-     * @param string    $pluginName
+     * @param string $pluginName
      * @param array  $jsonContent
      * @param int    $container
      * @param int    $renderOrder
@@ -564,17 +591,18 @@ are permitted provided that the following conditions are met:</p>
         $siteWide = false,
         $siteWidePluginName = '',
         $forceWidth = null
-    ){
-            $this->instanceRepo->createInstanceConfig(
-                $this->createInstance(
-                    $pluginName,
-                    $container,
-                    $renderOrder,
-                    $siteWide,
-                    $siteWidePluginName,
-                    $forceWidth
-                ),
-                $jsonContent
+    )
+    {
+        $this->instanceRepo->createInstanceConfig(
+            $this->createInstance(
+                $pluginName,
+                $container,
+                $renderOrder,
+                $siteWide,
+                $siteWidePluginName,
+                $forceWidth
+            ),
+            $jsonContent
         );
     }
 
@@ -602,7 +630,7 @@ are permitted provided that the following conditions are met:</p>
 
         $pageInstance->setLayoutContainer($container);
         $pageInstance->setRenderOrderNumber($renderOrder);
-        if(is_numeric($forceWidth)){
+        if (is_numeric($forceWidth)) {
             $pageInstance->setWidth($forceWidth);
         }
 
@@ -632,14 +660,15 @@ are permitted provided that the following conditions are met:</p>
      *
      * @return null
      */
-    function dropDatabase(){
+    function dropDatabase()
+    {
 
-        try{
+        try {
 
             $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityMgr);
             $schemaTool->dropDatabase();
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
 
             //This fixes errors with removing tables wth foreign keys in MYSQL
             $conn = $this->entityMgr->getConnection();
@@ -658,7 +687,8 @@ are permitted provided that the following conditions are met:</p>
      *
      * @return null
      */
-    function buildDatabase(){
+    function buildDatabase()
+    {
         $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityMgr);
         $schemaTool->createSchema(
             $this->entityMgr->getMetadataFactory()->getAllMetadata()
@@ -671,7 +701,8 @@ are permitted provided that the following conditions are met:</p>
      *
      * @return \Rcm\Model\SiteFactory
      */
-    function getSiteFactory(){
+    function getSiteFactory()
+    {
         return $this->getServiceLocator()->get('Rcm\Model\SiteFactory');
     }
 
@@ -680,7 +711,8 @@ are permitted provided that the following conditions are met:</p>
      *
      * @return \Rcm\Model\PageFactory
      */
-    function getPageFactory(){
+    function getPageFactory()
+    {
         return $this->getServiceLocator()->get('Rcm\Model\PageFactory');
     }
 
@@ -691,19 +723,20 @@ are permitted provided that the following conditions are met:</p>
         $firstName,
         $lastName,
         $email
-    ) {
+    )
+    {
         $entityMgr = $this->entityMgr;
         $postCodeRepo = $entityMgr->getRepository(
             '\Rcm\Entity\PostalCode'
         );
 
         //Create New Admin User
-        /** @var \RcmLogin\Model\UserManagement\DoctrineUserManager $userManager  */
+        /** @var \RcmLogin\Model\UserManagement\DoctrineUserManager $userManager */
         $userManager = $this->getServiceLocator()->get(
             'RcmLogin\Model\UserManagement\DoctrineUserManager'
         );
 
-        /** @var \RcmLogin\Entity\User $newAdminUser  */
+        /** @var \RcmLogin\Entity\User $newAdminUser */
         $newAdminUser = $userManager->getNewUserInstance();
 
         $newAdminUser->setAccountNumber($rcn);
@@ -716,14 +749,14 @@ are permitted provided that the following conditions are met:</p>
         $newAdminUser->setLastName($lastName);
         $newAdminUser->setSsn('555555555');
 
-        /** @var \Rcm\Entity\Address $billAddress  */
+        /** @var \Rcm\Entity\Address $billAddress */
         $billAddress = $newAdminUser->getBillAddress();
         $billAddress->setAddressLine1('55 Spring Branch Rd');
         $billAddress->setCity('Troy');
         $billAddress->setState('MO');
         $billAddress->setCountry($country);
 
-        /** @var \Rcm\Entity\PostalCode $postalCodeEntity  */
+        /** @var \Rcm\Entity\PostalCode $postalCodeEntity */
         $postalCodeEntity = $postCodeRepo->findOneBy(
             array(
                 'postalCode' => '63379'
@@ -731,7 +764,7 @@ are permitted provided that the following conditions are met:</p>
         );
         $billAddress->setZip($postalCodeEntity);
 
-        /** @var \Rcm\Entity\Address $shipAddress  */
+        /** @var \Rcm\Entity\Address $shipAddress */
         $shipAddress = $newAdminUser->getShipAddress();
         $shipAddress->setAddressLine1('55 Spring Branch Rd');
         $shipAddress->setCity('Troy');
@@ -741,7 +774,7 @@ are permitted provided that the following conditions are met:</p>
 
         $phoneNumbers = $newAdminUser->getPhoneNumbers();
 
-        /** @var \Rcm\Entity\PhoneNumber $homePhone  */
+        /** @var \Rcm\Entity\PhoneNumber $homePhone */
         $homePhone = $phoneNumbers['h'];
         $mobilePhone = clone $homePhone;
 
@@ -759,7 +792,7 @@ are permitted provided that the following conditions are met:</p>
         $newAdminUser->setPhoneNumber($mobilePhone);
 
 
-        /** @var \RcmLogin\Entity\AdminUser $adminInfo  */
+        /** @var \RcmLogin\Entity\AdminUser $adminInfo */
         $adminInfo = $newAdminUser->getAdminInfo();
 
         foreach ($siteInfo as $oneSite) {

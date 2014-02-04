@@ -1,4 +1,4 @@
-var RcmLoginMgr = function(loginUrl) {
+var RcmLoginMgr = function (loginUrl) {
 
     var me = this;
 
@@ -6,40 +6,42 @@ var RcmLoginMgr = function(loginUrl) {
 
     me.successCallback = null;
 
-    me.doLogin = function(username, password, successCallBack, failCallback) {
+    me.doLogin = function (username, password, successCallBack, failCallback) {
 
-        me.failCallback=failCallback;
+        me.failCallback = failCallback;
 
         var data = {
-            username : username,
-            password :  password
+            username: username,
+            password: password
         };
 
         $.ajax({
             type: 'POST',
-            url : me.loginUrl,
-            cache : false,
-            data : data,
+            url: me.loginUrl,
+            cache: false,
+            data: data,
             dataType: "json",
-            success : function(data){
-                me.processResponse(data,successCallBack,failCallback)
+            success: function (data) {
+                me.processResponse(data, successCallBack, failCallback)
             },
-            error : function(){failCallback('systemFailure');}
+            error: function () {
+                failCallback('systemFailure');
+            }
         });
     };
 
-    me.processResponse = function(data,successCallBack,failCallback) {
-        if(!data['dataOk']) {
-            me.processError(data['error'],failCallback);
+    me.processResponse = function (data, successCallBack, failCallback) {
+        if (!data['dataOk']) {
+            me.processError(data['error'], failCallback);
             return;
         }
         successCallBack();
         //window.location=data['redirectUrl'];
     };
 
-    me.processError = function(error, failCallback) {
-        if(error!='missing'&&error!='invalid'){
-            error='systemFailure';
+    me.processError = function (error, failCallback) {
+        if (error != 'missing' && error != 'invalid') {
+            error = 'systemFailure';
         }
         failCallback(error);
     };

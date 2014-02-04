@@ -37,7 +37,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="rcm_plugin_instances")
  */
-
 class PluginInstance
 {
     /**
@@ -48,18 +47,18 @@ class PluginInstance
      * @ORM\GeneratedValue
      */
     protected $instanceId;
-    
+
     /**
      * @ORM\Column(type="string")
      **/
     protected $plugin;
-    
+
     /**
      * @var Boolean Site wide instance
      *
      * @ORM\Column(type="boolean")
      */
-    protected $siteWide=false;
+    protected $siteWide = false;
 
     /**
      * @var string Name of Site wide Plugin
@@ -120,7 +119,8 @@ class PluginInstance
         $this->assets = new ArrayCollection();
     }
 
-    public function clearAssets(){
+    public function clearAssets()
+    {
         $this->assets = new ArrayCollection();
     }
 
@@ -129,7 +129,7 @@ class PluginInstance
      *
      * @return array Array representation of the object
      */
-    public function toArray() 
+    public function toArray()
     {
         return get_object_vars($this);
     }
@@ -162,10 +162,10 @@ class PluginInstance
     {
         $this->instanceId = $instanceId;
     }
-    
+
     /**
      * Get list of plugins
-     * 
+     *
      * @return string
      */
     public function getPlugin()
@@ -257,7 +257,8 @@ class PluginInstance
      *
      * @return \Zend\View\Model\ViewModel
      */
-    public function getView(){
+    public function getView()
+    {
         return $this->viewModel;
     }
 
@@ -283,6 +284,7 @@ class PluginInstance
 
     /**
      * Set the Admin CSS needed to to edit the plugin
+     *
      * @param string $cssPath
      */
     public function setAdminEditCss($cssPath)
@@ -292,13 +294,16 @@ class PluginInstance
 
     /**
      * Get the Admin CSS path needed to edit the plugin.
+     *
      * @return sting CSS Path
      */
-    public function getAdminEditCss(){
+    public function getAdminEditCss()
+    {
         return $this->adminEditCss;
     }
 
-    public function hasAdminJs() {
+    public function hasAdminJs()
+    {
         if (!empty($this->adminEditJs)) {
             return true;
         }
@@ -306,7 +311,8 @@ class PluginInstance
         return false;
     }
 
-    public function hasAdminCss() {
+    public function hasAdminCss()
+    {
         if (!empty($this->adminEditCss)) {
             return true;
         }

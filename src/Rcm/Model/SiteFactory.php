@@ -40,7 +40,6 @@ use Rcm\Entity\Domain,
  * @license   License.txt New BSD License
  * @version   GIT: Release: 1.0
  */
-
 class SiteFactory extends EntityMgrAware
 {
     /**
@@ -100,7 +99,8 @@ class SiteFactory extends EntityMgrAware
         //THIS SHOULD PROBABLY GO SOMEWHERE ELSE. BUT WHERE?
         //NEED FOR MONTH NAME TRANSLATIONS IN EVENT PLUGIN
         $iso6391 = $languageEntity->getIso6391();
-        $localName = strtolower($iso6391) . '_' . $site->getCountry()->getIso2() . '.UTF-8';
+        $localName = strtolower($iso6391) . '_' . $site->getCountry()->getIso2()
+            . '.UTF-8';
         setlocale(LC_ALL, $localName);
 
         return $site;
@@ -109,17 +109,17 @@ class SiteFactory extends EntityMgrAware
     /**
      * Creates a new site entity
      *
-     * @param string $domainName             domain name
-     * @param string $theme                  Theme to use for the new site
-     * @param \Rcm\Entity\Country $country                country
+     * @param string               $domainName             domain name
+     * @param string               $theme                  Theme to use for the new site
+     * @param \Rcm\Entity\Country  $country                country
      * @param \Rcm\Entity\Language $language               language
-     * @param integer $ownerAccountNum        owner account number
-     * @param string $loginPageUrl           URL to login page
-     * @param boolean $loginRequired          Require login for site access
-     * @param array|string $permitteTypes          Account Type(s) needed to access site
-     * @param array $additionalDomain       an additional domain that redirects
+     * @param integer              $ownerAccountNum        owner account number
+     * @param string               $loginPageUrl           URL to login page
+     * @param boolean              $loginRequired          Require login for site access
+     * @param array|string         $permitteTypes          Account Type(s) needed to access site
+     * @param array                $additionalDomain       an additional domain that redirects
      *                                                     to this site
-     * @param array $initialSiteWidePlugins Initial SiteWide plugins for the site.
+     * @param array                $initialSiteWidePlugins Initial SiteWide plugins for the site.
      *
      * @return \Rcm\Entity\Site
      */
@@ -134,10 +134,14 @@ class SiteFactory extends EntityMgrAware
         $loginPageUrl = '',
         $loginRequired = false,
         $permittedTypes = array()
-    ) {
+    )
+    {
         $entityMgr = $this->entityMgr;
 
-        if ($loginRequired && (empty($permittedTypes) || empty($loginPageUrl))) {
+        if ($loginRequired
+            && (empty($permittedTypes)
+                || empty($loginPageUrl))
+        ) {
             throw new \Exception('Site set to restricted, but no login page or permitted types provided');
         }
 
@@ -209,18 +213,27 @@ class SiteFactory extends EntityMgrAware
 
     }
 
-    public function cloneSite(Site $siteToClone, $newDomain, $newCountry, $newLanguage)
+    public function cloneSite(
+        Site $siteToClone, $newDomain, $newCountry, $newLanguage
+    )
     {
 
         /** @var \Rcm\Entity\Language $siteLanguage */
-        $siteLanguage = $this->entityMgr->getRepository('\Rcm\Entity\Language')->findOneBy(array(
-            'iso639_2t' => $newLanguage
-        ));
+        $siteLanguage = $this->entityMgr->getRepository('\Rcm\Entity\Language')
+            ->findOneBy(
+                array(
+                    'iso639_2t' => $newLanguage
+                )
+            );
 
         if (empty($siteLanguage)) {
-            $siteLanguage = $this->entityMgr->getRepository('\Rcm\Entity\Language')->findOneBy(array(
-                'iso639_2b' => $newLanguage
-            ));
+            $siteLanguage = $this->entityMgr->getRepository(
+                '\Rcm\Entity\Language'
+            )->findOneBy(
+                    array(
+                        'iso639_2b' => $newLanguage
+                    )
+                );
         }
 
         if (empty($siteLanguage)) {
@@ -228,18 +241,24 @@ class SiteFactory extends EntityMgrAware
         }
 
         /** @var \Rcm\Entity\Country $siteCountry */
-        $siteCountry = $this->entityMgr->getRepository('\Rcm\Entity\Language')->findOneBy(array(
-            'iso3' => $newCountry
-        ));
+        $siteCountry = $this->entityMgr->getRepository('\Rcm\Entity\Language')
+            ->findOneBy(
+                array(
+                    'iso3' => $newCountry
+                )
+            );
 
         if (empty($siteCountry)) {
             throw new \Exception('Country ISO Three digit not found');
         }
 
         /** @var \Rcm\Entity\Country $siteCountry */
-        $siteDomain = $this->entityMgr->getRepository('\Rcm\Entity\Domain')->findOneBy(array(
-            'domain' => $newDomain
-        ));
+        $siteDomain = $this->entityMgr->getRepository('\Rcm\Entity\Domain')
+            ->findOneBy(
+                array(
+                    'domain' => $newDomain
+                )
+            );
 
         if (!empty($siteDomain)) {
             throw new \Exception('Domain already in use');

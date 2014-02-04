@@ -277,7 +277,7 @@
          * @param skipCallback set to true to skip callbacks
          * @return {Object}
          */
-        addTag: function(value, skipCallback) {
+        addTag: function (value, skipCallback) {
             var opts = _getData(this, 'opts');
 
             if (!opts) {
@@ -292,7 +292,7 @@
             }
 
             if (opts.maxTags > 0 && tags.assignedTags.length >= opts.maxTags) {
-                alert(opts.msgMaxTags +' '+ opts.maxTags);
+                alert(opts.msgMaxTags + ' ' + opts.maxTags);
                 return tags;
             }
 
@@ -308,10 +308,10 @@
             tags.assignedTags.push(value);
             tags.availableTags = $(this).tagHandler('removeOption', value);
 
-            var newLi = $('<li data-tag="'+value+'"></li>');
+            var newLi = $('<li data-tag="' + value + '"></li>');
             $(newLi).addClass("tagItem");
 
-            var newSpan = $('<span>'+value+'</span>');
+            var newSpan = $('<span>' + value + '</span>');
 
             if (opts.jqueryTheme) {
                 $(newLi).addClass("ui-menu-item")
@@ -361,7 +361,7 @@
          * @param value
          * @return {*}
          */
-        removeTag : function(value) {
+        removeTag: function (value) {
 
             var opts = _getData(this, 'opts');
 
@@ -373,7 +373,7 @@
 
             var tagField = $(this).find(".tagInputField");
 
-            $(this).find('[data-tag="'+value+'"]').remove();
+            $(this).find('[data-tag="' + value + '"]').remove();
 
             $.each(tags.assignedTags, function (i, e) {
                 if (e === value) {
@@ -443,7 +443,7 @@
          * @param value
          * @return {Array}
          */
-        removeOption : function (value) {
+        removeOption: function (value) {
 
             var opts = _getData(this, 'opts');
 
@@ -483,7 +483,7 @@
 
             var tags = _getData(this, 'tags');
             var saveContainer = $("#" + containerId + "_save");
-            var loadContainer = $("#" + containerId+ "_loader");
+            var loadContainer = $("#" + containerId + "_loader");
 
             var sendData = {
                 tags: tags.assignedTags
@@ -522,7 +522,7 @@
          * Destory the active tagHandler and return the container to it original state.  Please note that any tags
          * that have been entered or selected will be lost.
          */
-        destroy : function() {
+        destroy: function () {
             var original = _getData(this, 'original');
 
             //Need to select wrapper div to replace the whole thing
@@ -536,7 +536,7 @@
          * to restart the tagHandler and refresh it's items via ajax.  Please note that any that have been made or
          * and tags that have not been saved will be lost.
          */
-        reload : function() {
+        reload: function () {
             var opts = _getData(this, 'opts');
             var original = _getData(this, 'original');
 
@@ -563,7 +563,7 @@
      * @param options
      * @private
      */
-    var _initTagHandler = function(options) {
+    var _initTagHandler = function (options) {
 
         /**
          * var to store the initial state of the tagger.
@@ -588,16 +588,16 @@
             var assignedTags = [];
 
             //Check for existing LI's and convert to tags
-            $(this).find('li').each(function() {
+            $(this).find('li').each(function () {
                 initialOpts.assignedTags.push($(this).html());
                 $(this).remove();
             });
 
             _saveData(this, 'opts', initialOpts);
             _saveData(this, 'tags', {
-                availableTags : [],
-                originalTags : [],
-                assignedTags : assignedTags
+                availableTags: [],
+                originalTags: [],
+                assignedTags: assignedTags
             });
 
             // adds an id to the tagContainer in case it doesn't have one
@@ -628,7 +628,7 @@
      * @param tagContainer
      * @private
      */
-    var _addTaggerWrappers = function(tagContainer) {
+    var _addTaggerWrappers = function (tagContainer) {
 
         var opts = _getData(tagContainer, 'opts');
 
@@ -706,10 +706,10 @@
                     data: opts.getData,
                     dataType: 'json',
                     success: function (data) {
-                        response( data.availableTags );
+                        response(data.availableTags);
                     },
                     error: function (xhr, text, error) {
-                        _debug(xhr, {text : text, error : error });
+                        _debug(xhr, {text: text, error: error });
                         throw new Error(opts.msgError);
                     }
                 });
@@ -740,7 +740,7 @@
      * @param tagContainer
      * @private
      */
-    var _initInitialTags = function(tagContainer) {
+    var _initInitialTags = function (tagContainer) {
 
         var opts = _getData(tagContainer, 'opts');
 
@@ -764,7 +764,7 @@
 
                 },
                 error: function (xhr, text, error) {
-                    _debug(xhr, {text : text, error : error });
+                    _debug(xhr, {text: text, error: error });
                     throw new Error(opts.msgError);
                 }
             });
@@ -807,7 +807,7 @@
             // when either of those keys are pressed
             $(inputField).keypress($(tagContainer), _tagKeyPressHandler);
 
-            $(inputField).keydown($(tagContainer),_tagKeyDownHandler);
+            $(inputField).keydown($(tagContainer), _tagKeyDownHandler);
 
             $(tagContainer).click(function () {
                 $(inputField).focus();
@@ -815,7 +815,7 @@
             });
 
             $(inputField).focus(function () {
-                if ( $(inputField).val() === ''
+                if ($(inputField).val() === ''
                     && opts.autocomplete
                     && typeof($.fn.autocomplete) == 'function'
                     && tags.availableTags.length > 0
@@ -834,7 +834,7 @@
      * @param e
      * @private
      */
-    var _tagClickHandler = function(e) {
+    var _tagClickHandler = function (e) {
 
         var tagContainer = e.data;
 
@@ -897,7 +897,7 @@
             }
 
             if (opts.maxTags > 0 && tags.assignedTags.length >= opts.maxTags) {
-                alert(opts.msgMaxTags +' '+ opts.maxTags);
+                alert(opts.msgMaxTags + ' ' + opts.maxTags);
             }
             else {
                 var newTag = $.trim($el.val());
@@ -915,7 +915,7 @@
      * @param e
      * @private
      */
-    var _tagKeyDownHandler = function(e) {
+    var _tagKeyDownHandler = function (e) {
         var tagContainer = e.data;
 
         var opts = _getData(tagContainer, 'opts');
@@ -967,7 +967,7 @@
      * @private
      */
     var _processTags = function (tagContainer, tagsToAdd) {
-        $(tagsToAdd.availableTags).each(function(i, e){
+        $(tagsToAdd.availableTags).each(function (i, e) {
             $(tagContainer).tagHandler('addOption', e);
         });
 
@@ -1064,7 +1064,7 @@
      * @return {Object}
      * @private
      */
-    var _sortTags = function(tags) {
+    var _sortTags = function (tags) {
         tags.availableTags = tags.availableTags.sort();
         tags.assignedTags = tags.assignedTags.sort();
         tags.originalTags = tags.originalTags.sort();
@@ -1112,7 +1112,7 @@
         return data[keyName];
     };
 
-    var _isAutoCompleteWithNoAjaxSearch = function(opts) {
+    var _isAutoCompleteWithNoAjaxSearch = function (opts) {
 
         if (opts.autocomplete && typeof($.fn.autocomplete) == 'function' && opts.allowEdit && opts.initLoad) {
             return true;
@@ -1127,7 +1127,7 @@
      * @return {Object}
      * @private
      */
-    var _getDefaults = function() {
+    var _getDefaults = function () {
         return {
             allowEdit: true,
             allowAdd: true,
@@ -1155,7 +1155,7 @@
             sortTags: true,
             updateData: {},
             updateURL: '',
-            jqueryTheme : false
+            jqueryTheme: false
         };
     };
 

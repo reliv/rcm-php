@@ -10,9 +10,9 @@ class Logger
      * @var ZendLogger
      */
     private $logger;
-    private $sendToBrowser=false;
-    private $sendToCli=false;
-    private $outputStarted=false;
+    private $sendToBrowser = false;
+    private $sendToCli = false;
+    private $outputStarted = false;
 
     public function __construct(ZendLogger $logger)
     {

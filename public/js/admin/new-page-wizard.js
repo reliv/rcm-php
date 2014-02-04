@@ -10,7 +10,7 @@ function rcmNewPageWizardCreatePage(dialogContainer) {
     }
 
     $.getJSON(
-        '/rcm-admin-create-from-template/'+rcmEdit.language,
+        '/rcm-admin-create-from-template/' + rcmEdit.language,
         {
             pageUrl: pageUrl,
             pageName: pageName,
@@ -18,37 +18,37 @@ function rcmNewPageWizardCreatePage(dialogContainer) {
             selectedLayout: selectedLayout
         },
 
-        function(data) {
+        function (data) {
             var rcmNewPageTemplateErrorLine = $("#rcmNewPageTemplateErrorLine");
             if (data.dataOk == 'Y' && data.redirect) {
 
-                if (skipRedirect && skipRedirect=='Y') {
+                if (skipRedirect && skipRedirect == 'Y') {
                     $("#redirectUrl").val(data.redirect);
                     $(dialogContainer).dialog("close");
                 } else {
                     window.location = data.redirect;
                 }
 
-            } else if(data.dataOk != 'Y' && data.error != '') {
-                $(rcmNewPageTemplateErrorLine).html('<br /><p style="color: #FF0000;">'+data.error+'</p><br />').show();
+            } else if (data.dataOk != 'Y' && data.error != '') {
+                $(rcmNewPageTemplateErrorLine).html('<br /><p style="color: #FF0000;">' + data.error + '</p><br />').show();
             } else {
                 $(rcmNewPageTemplateErrorLine).html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
             }
         }
-    ).error(function(){
-        $("#rcmNewPageTemplateErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
-    })
+    ).error(function () {
+            $("#rcmNewPageTemplateErrorLine").html('<br /><p style="color: #FF0000;">Communication Error!</p><br />').show();
+        })
 }
 
 
-$(".rcmNewPageLayoutContainer").click(function(){
+$(".rcmNewPageLayoutContainer").click(function () {
     $(".rcmNewPageLinkOverlay").removeClass("rcmNewPageLinkOverlayActive");
     $(this).find(".rcmNewPageLinkOverlay").addClass("rcmNewPageLinkOverlayActive");
     var selectedValue = $(this).find(".rcmLayoutKeySelector").attr('name');
     $("#rcmNewPageSelectedLayout").val(selectedValue);
 });
 
-$("#rcmNewPageTemplateWizard").find("#rcmPageRevision").change(function(){
+$("#rcmNewPageTemplateWizard").find("#rcmPageRevision").change(function () {
     var revision = $("#rcmPageRevision").val();
 
     if (revision < 0) {
@@ -58,17 +58,21 @@ $("#rcmNewPageTemplateWizard").find("#rcmPageRevision").change(function(){
     }
 });
 
-$('#rcmNewPageTemplateUrl').keyup(function(){
+$('#rcmNewPageTemplateUrl').keyup(function () {
     var validationContainer = $("#rcmNewPageTemplateValidatorIndicator");
     rcmEdit.checkPageName(this, 'N', validationContainer);
 });
 
 
-$( "#rcmNewPageTemplateWizard").parent().dialog(
+$("#rcmNewPageTemplateWizard").parent().dialog(
     "option",
     "buttons",
     [
-        { text: "Ok", click: function() { rcmNewPageWizardCreatePage(this) }},
-        { text: "Cancel", click: function() { $(this).dialog("close"); }}
+        { text: "Ok", click: function () {
+            rcmNewPageWizardCreatePage(this)
+        }},
+        { text: "Cancel", click: function () {
+            $(this).dialog("close");
+        }}
     ]
 );
