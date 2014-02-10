@@ -60,7 +60,7 @@ class DoctrineUserManager extends EntityMgrAware
     /**
      * @param \Rcm\Entity\User $user
      */
-    public function setLoggedInUser(User $user)
+    public function setLoggedInUser(User $user, $extra)
     {
         $this->session->userId = $user->getUserId();
     }
