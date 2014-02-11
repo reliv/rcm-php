@@ -1086,7 +1086,7 @@ function RcmEdit(config) {
 
         var pluginContainer = container;
         if (!pluginContainer.hasClass('rcmPlugin')) {
-            pluginContainer = container.closest('rcmPlugin');
+            pluginContainer = container.closest('.rcmPlugin');
         }
 
         var containerData = {
@@ -1101,6 +1101,12 @@ function RcmEdit(config) {
         }
 
         containerData.editClass = containerData.pluginName + 'Edit';
+
+        console.log('------------------------------------------------------');
+        console.log('hasclass',pluginContainer.hasClass('rcmPlugin'));
+        console.log('cont',container);
+        console.log('aftercont',pluginContainer);
+        console.log('data', containerData);
 
         return containerData;
     };
@@ -1512,7 +1518,9 @@ function RcmEdit(config) {
 
                 if (!$(initialInstance).is('.initialState')) {
                     /* Let the editor know that dragging has stopped */
-                    me.rcmPlugins.initRichEdits(ui.item);
+                    me.rcmPlugins.initRichEdits(
+                        ui.item, me.getPluginContainerInfo(ui.item)
+                    );
                 }
 
 
