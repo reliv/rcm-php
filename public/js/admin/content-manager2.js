@@ -697,17 +697,19 @@ function RcmEdit(config) {
     me.rcmPlugins.initAllPagePlugins = function () {
         $("#RcmRealPage").find(".rcmPlugin").each(function () {
 
-            var containerData = me.rcmPlugins.getPluginContainerInfo(this);
+            var container = $(this);
+
+            var containerData = me.rcmPlugins.getPluginContainerInfo(container);
 
             if (containerData.isSiteWide == 'Y') {
                 if (me.editMode != true) {
-                    me.rcmPlugins.lockPlugin(this);
+                    me.rcmPlugins.lockPlugin(container);
                 }
 
                 return;
             }
 
-            me.rcmPlugins.initPluginEditMode(this);
+            me.rcmPlugins.initPluginEditMode(container);
         });
 
         me.ui.addUnlockRightClick();
@@ -775,16 +777,18 @@ function RcmEdit(config) {
     me.rcmPlugins.preformUnlockSiteWide = function () {
         $("#RcmRealPage").find(".rcmPlugin").each(function () {
 
-            var containerData = me.rcmPlugins.getPluginContainerInfo(this);
+            var container = $(this);
+
+            var containerData = me.rcmPlugins.getPluginContainerInfo(container);
 
             if (containerData.isSiteWide != 'Y') {
                 if (me.editMode != true) {
-                    me.rcmPlugins.lockPlugin(this);
+                    me.rcmPlugins.lockPlugin(container);
                 }
 
                 return;
             }
-            me.rcmPlugins.initPluginEditMode(this);
+            me.rcmPlugins.initPluginEditMode(container);
         });
 
         me.ui.addUnlockRightClick();
@@ -808,9 +812,10 @@ function RcmEdit(config) {
      * @param container
      */
     me.rcmPlugins.initPluginEditMode = function (container) {
+        var pluginData = me.rcmPlugins.getPluginContainerInfo(container);
         me.rcmPlugins.callPluginEditInit(container);
-        me.rcmPlugins.initPluginRichEdits(container);
-        me.rcmPlugins.initHtml5Edits(container);
+        me.rcmPlugins.initRichEdits(container, pluginData);
+        me.rcmPlugins.initTextEdits(container, pluginData);
         me.rcmPlugins.unlockPlugin(container);
     };
 
@@ -905,13 +910,10 @@ function RcmEdit(config) {
     /**
      * Find and initialize the Rich edits within the plugin passed.
      *
-     * @param pluginContainer
+     * @param container
      */
-    me.rcmPlugins.initPluginRichEdits = function (pluginContainer) {
-
-        var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
-
-        $(pluginContainer).find("[data-richEdit]").each(function () {
+    me.rcmPlugins.initRichEdits = function (container, pluginData) {
+        $(container).find("[data-richEdit]").each(function () {
 
             var textAreaId = $(this).attr('data-richEdit');
 
@@ -920,19 +922,19 @@ function RcmEdit(config) {
             }
 
             var newTextAreaId = 'rcm_richEdit_'
-                + containerData.pluginName
+                + pluginData.pluginName
                 + '_'
-                + containerData.instanceId
+                + pluginData.instanceId
                 + '_'
                 + textAreaId;
 
-            var newEditor = me.editor.addRichEditor(this, newTextAreaId, containerData.instanceId);
+            var newEditor = me.editor.addRichEditor(this, newTextAreaId, pluginData.instanceId);
 
             me.rcmPlugins.activeEditors.push({
                 editor: newEditor,
-                instanceId: containerData.instanceId,
+                instanceId: pluginData.instanceId,
                 textId: textAreaId,
-                pluginName: containerData.pluginName,
+                pluginName: pluginData.pluginName,
                 type: 'rich'
             });
         });
@@ -940,23 +942,20 @@ function RcmEdit(config) {
 
     /**
      * Find and initialize the HTML5 edits with the plugin passed
-     * @param pluginContainer
+     * @param container
      */
-    me.rcmPlugins.initHtml5Edits = function (pluginContainer) {
-
-        var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
-
-        $(pluginContainer).find('[data-textEdit]').each(function () {
+    me.rcmPlugins.initTextEdits = function (container, pluginData) {
+        $(container).find('[data-textEdit]').each(function () {
 
             var textAreaId = $(this).attr('data-textEdit');
 
-            var newEditor = me.editor.addHtml5Editor(this, textAreaId, containerData.instanceId);
+            var newEditor = me.editor.addHtml5Editor(this, textAreaId, pluginData.instanceId);
 
             me.rcmPlugins.activeEditors.push({
                 editor: newEditor,
-                instanceId: containerData.instanceId,
+                instanceId: pluginData.instanceId,
                 textId: textAreaId,
-                pluginName: containerData.pluginName,
+                pluginName: pluginData.pluginName,
                 type: 'html5'
             });
         });
@@ -1014,47 +1013,51 @@ function RcmEdit(config) {
     };
 
     /**
-     * @TODO MAKE NON CKEDIT SPECIFC
+     * Refresh all editors in a plugin container
+     * @param container can be a pluginContainer or a container inside a plugin
      */
-    me.refreshEditors = function (pluginContainer) {
-        rcmEdit.rcmPlugins.removeEdits(pluginContainer);
-        rcmEdit.rcmPlugins.removeTextEdits(pluginContainer);
-        $(pluginContainer).find("[data-richedit]").find("div").each(function () {
-            var currentHtml = $(this).html();
-            $(this).parent().html(currentHtml);
-        });
-        try {
-            rcmEdit.rcmPlugins.initPluginRichEdits(pluginContainer.parent());
-            rcmEdit.rcmPlugins.initHtml5Edits(pluginContainer.parent());
-        } catch (e) {
+    me.refreshEditors = function (container, callback) {
+        //Get plugin data
+        var pluginData = me.rcmPlugins.getPluginContainerInfo(container);
 
+        // Refresh text editors
+        me.rcmPlugins.removeTextEdits(container, pluginData);
+        me.rcmPlugins.initTextEdits(container, pluginData);
+
+        // Refresh rich editors
+        me.rcmPlugins.removeRichEdits(container, pluginData);
+        me.rcmPlugins.initRichEdits(container, pluginData);
+
+        if(typeof callback == 'function'){
+            callback();
         }
     };
 
-    me.rcmPlugins.removeEdits = function (pluginContainer) {
-        var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
-        $(pluginContainer).find('[data-richedit]').each(function () {
+    me.rcmPlugins.removeRichEdits = function (container, pluginData) {
+        $(container).find('[data-richedit]').each(function () {
             var tempContainer = this;
             $.each(me.rcmPlugins.activeEditors, function (index, value) {
-                if (value.instanceId == containerData.instanceId
+                if (value.instanceId == pluginData.instanceId
                     && value.textId == $(tempContainer).attr('data-richedit')
-                    && value.pluginName == containerData.pluginName
+                    && value.pluginName == pluginData.pluginName
                     ) {
                     me.rcmPlugins.activeEditors[index] = {};
                 }
             });
         });
+        $(container).find('[data-richedit]').find('div').each(function () {
+            var currentHtml = $(this).html();
+            $(this).parent().html(currentHtml);
+        });
     };
 
-    me.rcmPlugins.removeTextEdits = function (pluginContainer) {
-        var containerData = me.rcmPlugins.getPluginContainerInfo(pluginContainer);
-
-        $(pluginContainer).find('[data-textedit]').each(function () {
+    me.rcmPlugins.removeTextEdits = function (container, pluginData) {
+        $(container).find('[data-textedit]').each(function () {
             var tempContainer = this;
             $.each(me.rcmPlugins.activeEditors, function (index, value) {
-                if (value.instanceId == containerData.instanceId
+                if (value.instanceId == pluginData.instanceId
                     && value.textId == $(tempContainer).attr('data-textedit')
-                    && value.pluginName == containerData.pluginName
+                    && value.pluginName == pluginData.pluginName
                     ) {
                     me.rcmPlugins.activeEditors[index] = {};
                 }
@@ -1077,15 +1080,21 @@ function RcmEdit(config) {
     /**
      * Get the container info
      *
-     * @param pluginContainer
+     * @param container can be plugin container or a container inside a plugin
      */
-    me.rcmPlugins.getPluginContainerInfo = function (pluginContainer) {
-        var containerData = {};
+    me.rcmPlugins.getPluginContainerInfo = function (container) {
 
-        containerData.pluginName = $(pluginContainer).attr('data-rcmPluginName');
-        containerData.isSiteWide = $(pluginContainer).attr('data-rcmSiteWidePlugin');
-        containerData.instanceId = $(pluginContainer).attr('data-rcmPluginInstanceId');
-        containerData.displayName = $(pluginContainer).attr('data-rcmPluginDisplayName');
+        var pluginContainer = container;
+        if (!pluginContainer.hasClass('rcmPlugin')) {
+            pluginContainer = container.closest('rcmPlugin');
+        }
+
+        var containerData = {
+            pluginName: $(pluginContainer).attr('data-rcmPluginName'),
+            isSiteWide: $(pluginContainer).attr('data-rcmSiteWidePlugin'),
+            instanceId: $(pluginContainer).attr('data-rcmPluginInstanceId'),
+            displayName: $(pluginContainer).attr('data-rcmPluginDisplayName')
+        };
 
         if (containerData.displayName != undefined) {
             containerData.displayName = containerData.displayName.replace(/\s/g, '-');
@@ -1503,7 +1512,7 @@ function RcmEdit(config) {
 
                 if (!$(initialInstance).is('.initialState')) {
                     /* Let the editor know that dragging has stopped */
-                    me.rcmPlugins.initPluginRichEdits(ui.item);
+                    me.rcmPlugins.initRichEdits(ui.item);
                 }
 
 
@@ -1558,7 +1567,7 @@ function RcmEdit(config) {
 
         if (richEdit.length > 0) {
             var pluginContainer = $(richEdit).closest('.rcmPlugin');
-            me.rcmPlugins.removeEdits(pluginContainer);
+            me.rcmPlugins.removeRichEdits(pluginContainer);
             me.editor.startDrag(richEdit);
         }
     };
@@ -1618,7 +1627,7 @@ function RcmEdit(config) {
             $('#' + containerData.displayName).show();
         }
 
-        me.rcmPlugins.removeEdits(container);
+        me.rcmPlugins.removeRichEdits(container);
         me.rcmPlugins.removeTextEdits(container);
         me.rcmPlugins.removeCalledPlugin(container);
 
