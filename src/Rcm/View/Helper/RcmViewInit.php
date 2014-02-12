@@ -10,7 +10,6 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
- * @package   Common\View\Helper
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
@@ -28,7 +27,6 @@ use \Zend\View\Helper\AbstractHelper;
  * layouts for the CMS to work correctly.
  *
  * @category  Reliv
- * @package   Common\View\Helper
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License

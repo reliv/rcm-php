@@ -11,7 +11,6 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
- * @package   RcmPlugins\Navigation
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License

@@ -7,7 +7,6 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
- * @package   Main\RelivApplication\ZF2
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
@@ -24,7 +23,6 @@ namespace RcmGeneric;
  * file has been included as part of the ZF2 standards.
  *
  * @category  Reliv
- * @package   Main\RelivApplication\ZF2
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License

@@ -13,7 +13,6 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
- * @package   Common\Entites
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
@@ -35,7 +34,6 @@ use Doctrine\ORM\EntityManager;
  * country and language, along with many other global properties.
  *
  * @category  Reliv
- * @package   Main\Application\Controllers\Index
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License

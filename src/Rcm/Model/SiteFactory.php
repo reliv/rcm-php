@@ -10,7 +10,6 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
- * @package   Rcm\Model\
  * @author    Rod McNew <rmcnew@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
@@ -34,7 +33,6 @@ use Rcm\Entity\Domain,
  * LICENSE: No License yet
  *
  * @category  Reliv
- * @package   Rcm\Model\
  * @author    Rod McNew <rmcnew@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
