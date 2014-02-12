@@ -10,7 +10,6 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
- * @package   Main\Application\Controllers\Index
  * @author    Rod McNew <rmcnew@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
@@ -24,7 +23,6 @@ use \Rcm\Entity\PluginInstance;
 /**
  *
  * @category  Reliv
- * @package   Main\Application\Controllers\Index
  * @author    Rod McNew <rmcnew@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License

@@ -9,7 +9,6 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
- * @package   Common\Entites
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
@@ -27,7 +26,6 @@ use Doctrine\ORM\Mapping as ORM,
  * Object to use for all addresses in the system.
  *
  * @category  Reliv
- * @package   Common\Entites
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License

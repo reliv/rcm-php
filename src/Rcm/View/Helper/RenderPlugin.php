@@ -7,7 +7,6 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
- * @package   Common\View\Helper
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
@@ -24,7 +23,6 @@ use \Zend\View\Helper\AbstractHelper;
  * This is a view helper to render out page containers inside page layouts.
  *
  * @category  Reliv
- * @package   Common\View\Helper
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License

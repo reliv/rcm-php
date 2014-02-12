@@ -10,7 +10,6 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
- * @package   Common\Entites
  * @author    Rod McNew <rmcnew@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
@@ -32,7 +31,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * to track what images, links, ect. that a plugin instance makes reference to
  *
  * @category  Reliv
- * @package   Common\Entites
  * @author    Rod McNew <rmcnew@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License

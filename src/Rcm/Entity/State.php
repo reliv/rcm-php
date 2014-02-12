@@ -6,7 +6,6 @@
  * This table Contains a list of states for each country
  *
  * @category  Reliv
- * @package   Rcm\Entites
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
@@ -23,7 +22,6 @@ use Doctrine\ORM\Mapping as ORM;
  * This table Contains a list of states for each country
  *
  * @category  Reliv
- * @package   Rcm\Entites
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
