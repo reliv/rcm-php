@@ -883,7 +883,6 @@ function RcmEdit(config) {
             }
 
             if (me.rcmPlugins.calledPlugins[index].instanceId == undefined) {
-                console.log('no id found')
                 return;
             }
 
@@ -1028,7 +1027,7 @@ function RcmEdit(config) {
         me.rcmPlugins.removeRichEdits(container, pluginData);
         me.rcmPlugins.initRichEdits(container, pluginData);
 
-        if(typeof callback == 'function'){
+        if (typeof callback == 'function') {
             callback();
         }
     };
@@ -1101,12 +1100,6 @@ function RcmEdit(config) {
         }
 
         containerData.editClass = containerData.pluginName + 'Edit';
-
-        console.log('------------------------------------------------------');
-        console.log('hasclass',pluginContainer.hasClass('rcmPlugin'));
-        console.log('cont',container);
-        console.log('aftercont',pluginContainer);
-        console.log('data', containerData);
 
         return containerData;
     };
@@ -1575,7 +1568,10 @@ function RcmEdit(config) {
 
         if (richEdit.length > 0) {
             var pluginContainer = $(richEdit).closest('.rcmPlugin');
-            me.rcmPlugins.removeRichEdits(pluginContainer);
+            me.rcmPlugins.removeRichEdits(
+                pluginContainer,
+                me.rcmPlugins.getPluginContainerInfo(pluginContainer)
+            );
             me.editor.startDrag(richEdit);
         }
     };
@@ -1629,14 +1625,12 @@ function RcmEdit(config) {
     me.layoutEditor.deletePlugin = function (container) {
         var containerData = me.rcmPlugins.getPluginContainerInfo(container);
 
-        var displayName = containerData.displayName.replace(/\s/g, '-');
-
         if (containerData.isSiteWide == 'Y') {
             $('#' + containerData.displayName).show();
         }
 
-        me.rcmPlugins.removeRichEdits(container);
-        me.rcmPlugins.removeTextEdits(container);
+        me.rcmPlugins.removeRichEdits(container, containerData);
+        me.rcmPlugins.removeTextEdits(container, containerData);
         me.rcmPlugins.removeCalledPlugin(container);
 
         $(container).remove();
