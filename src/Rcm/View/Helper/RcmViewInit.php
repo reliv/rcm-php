@@ -169,7 +169,7 @@ class RcmViewInit extends AbstractHelper
         );
 
         $renderer->headScript()->appendFile(
-            $renderer->basePath() . '/modules/rcm/js/admin/content-manager2.js',
+            $renderer->basePath() . '/modules/rcm/js/admin/content-manager.js',
             'text/javascript'
         );
 
