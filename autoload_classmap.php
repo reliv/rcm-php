@@ -99,7 +99,7 @@ return array(
         __DIR__ . '/src/Rcm/View/Helper/RenderLayoutEditorContainers.php',
     'Rcm\View\Helper\RenderPlugin' =>
         __DIR__ . '/src/Rcm/View/Helper/RenderPlugin.php',
-    'RcmTest\Base\BaseTestCase' => __DIR__ . '/test/Base/BaseTestCase.php',
+    'RcmTest\Base\BaseTestCase' => __DIR__ . '/test/Base/RelivFunctionalTestCase.php',
     'RcmTest\Base\DoctrineTestCase' =>
         __DIR__ . '/test/Base/DoctrineTestCase.php',
     'RcmTest\Base\Zf2TestCase' => __DIR__ . '/test/Base/ZF2TestCase.php',
