@@ -93,6 +93,19 @@ var ZendFormHelper = function (container) {
         checker();
     };
 
+    this.createHiddenCheckBoxCont = function (checkSelector, contSelector) {
+        var hiddenCont = container.find(contSelector);
+        var checker = function(){
+            if (container.find(checkSelector).is(':checked')) {
+                hiddenCont.hide();
+            } else {
+                hiddenCont.show();
+            }
+        };
+        container.find(checkSelector).change(checker);
+        checker();
+    };
+
     this.blockUiWithMessage = function (message) {
         $.blockUI({
             message: '<br>' + message + '<br>',
