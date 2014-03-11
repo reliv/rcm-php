@@ -107,6 +107,9 @@
     display: none;
 }
 
+span.ui-helper-hidden-accessible {
+    display: none;
+}
 .rcmEditButton {
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #3d94f6), color-stop(1, #1e62d0));
     background: -moz-linear-gradient(center top, #3d94f6 5%, #1e62d0 100%);
