@@ -101,6 +101,37 @@ class Address
      */
     protected $nameLine;
 
+    /**
+     * Returns true if other address is the same is this one
+     * @param $otherAddress
+     *
+     * @return bool
+     */
+    public function addressSame($otherAddress)
+    {
+        $streetAddressOther = strtoupper($otherAddress->getAddressLine1());
+        $streetAddressThis = strtoupper($this->getAddressLine1());
+        $aptAddressOther = strtoupper($otherAddress->getAddressLine2());
+        $aptAddressThis = strtoupper($this->getAddressLine2());
+        $OtherCity = strtoupper($otherAddress->getCity());
+        $ThisCity = strtoupper($this->getCity());
+        $OtherState = $otherAddress->getState();
+        $ThisState = $this->getState();
+        $OtherCountry = $otherAddress->getCountry();
+        $ThisCountry = $this->getCountry();
+        $OtherGeoCode = $otherAddress->getGeoCode();
+        $ThisGeoCode = $this->getGeoCode();
+
+        return $streetAddressOther == $streetAddressThis
+        && $aptAddressOther == $aptAddressThis
+        && $OtherCity == $ThisCity
+        && $OtherState == $ThisState
+        && $OtherCountry == $ThisCountry;
+       // && $OtherGeoCode == $ThisGeoCode;
+    }
+
+    
+
     public function __sleep()
     {
         if (!empty($this->country)
