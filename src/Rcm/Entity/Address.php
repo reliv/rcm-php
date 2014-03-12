@@ -124,7 +124,7 @@ class Address
         && $aptAddressOther == $aptAddressThis
         && $otherCity == $thisCity
         && $otherState == $thisState
-        && $otherCountry == $thisCountry;
+        && $otherCountry == $thisCountry; 
 
     }
 
