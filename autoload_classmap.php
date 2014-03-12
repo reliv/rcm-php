@@ -12,7 +12,6 @@ return array(
   'Rcm\Controller\PluginProxyController'          => __DIR__ . '/src/Rcm/Controller/PluginProxyController.php',
   'Rcm\Controller\StateApiController'             => __DIR__ . '/src/Rcm/Controller/StateApiController.php',
   'Rcm\Entity\Account'                            => __DIR__ . '/src/Rcm/Entity/Account.php',
-  'Rcm\Entity\Address'                            => __DIR__ . '/src/Rcm/Entity/Address.php',
   'Rcm\Entity\AdminPermissions'                   => __DIR__ . '/src/Rcm/Entity/AdminPermissions.php',
   'Rcm\Entity\AdminPluginRestrictions'            => __DIR__ . '/src/Rcm/Entity/AdminPluginRestrictions.php',
   'Rcm\Entity\ContainerPlugin'                    => __DIR__ . '/src/Rcm/Entity/ContainerPlugin.php',

@@ -749,7 +749,7 @@ are permitted provided that the following conditions are met:</p>
         $newAdminUser->setLastName($lastName);
         $newAdminUser->setSsn('555555555');
 
-        /** @var \Rcm\Entity\Address $billAddress */
+        /** @var \RelivApplication\Entity\Address $billAddress */
         $billAddress = $newAdminUser->getBillAddress();
         $billAddress->setAddressLine1('55 Spring Branch Rd');
         $billAddress->setCity('Troy');
@@ -764,7 +764,7 @@ are permitted provided that the following conditions are met:</p>
         );
         $billAddress->setZip($postalCodeEntity);
 
-        /** @var \Rcm\Entity\Address $shipAddress */
+        /** @var \RelivApplication\Entity\Address $shipAddress */
         $shipAddress = $newAdminUser->getShipAddress();
         $shipAddress->setAddressLine1('55 Spring Branch Rd');
         $shipAddress->setCity('Troy');
