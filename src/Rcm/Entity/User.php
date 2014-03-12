@@ -50,13 +50,13 @@ class User
     protected $dateOfBirth;
 
     /**
-     * @ORM\OneToOne(targetEntity="RelivApplication\Entity\Address")
+     * @ORM\OneToOne(targetEntity="RcmShoppingCart\Entity\Address")
      * @ORM\JoinColumn(name="billAddressId", referencedColumnName="addressId")
      */
     protected $billAddress;
 
     /**
-     * @ORM\OneToOne(targetEntity="RelivApplication\Entity\Address")
+     * @ORM\OneToOne(targetEntity="RcmShoppingCart\Entity\Address")
      * @ORM\JoinColumn(name="shipAddressId", referencedColumnName="addressId")
      */
     protected $shipAddress;
@@ -503,14 +503,14 @@ class User
 
     public function setBillAddress($billAddress)
     {
-        if (isset($billAddress) && !is_a($billAddress, '\RelivApplication\Entity\Address')) {
+        if (isset($billAddress) && !is_a($billAddress, '\RcmShoppingCart\Entity\Address')) {
             throw new InvalidArgumentException();
         }
         $this->billAddress = $billAddress;
     }
 
     /**
-     * @returns \RelivApplication\Entity\Address
+     * @returns \RcmShoppingCart\Entity\Address
      */
     public function getBillAddress()
     {
@@ -543,14 +543,14 @@ class User
 
     public function setShipAddress($shipAddress)
     {
-        if (isset($shipAddress) && !is_a($shipAddress, '\RelivApplication\Entity\Address')) {
+        if (isset($shipAddress) && !is_a($shipAddress, '\RcmShoppingCart\Entity\Address')) {
             throw new InvalidArgumentException();
         }
         $this->shipAddress = $shipAddress;
     }
 
     /**
-     * @returns \RelivApplication\Entity\Address
+     * @returns \RcmShoppingCart\Entity\Address
      */
     public function getShipAddress()
     {
