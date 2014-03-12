@@ -113,21 +113,19 @@ class Address
         $streetAddressThis = strtoupper($this->getAddressLine1());
         $aptAddressOther = strtoupper($otherAddress->getAddressLine2());
         $aptAddressThis = strtoupper($this->getAddressLine2());
-        $OtherCity = strtoupper($otherAddress->getCity());
-        $ThisCity = strtoupper($this->getCity());
-        $OtherState = $otherAddress->getState();
-        $ThisState = $this->getState();
-        $OtherCountry = $otherAddress->getCountry();
-        $ThisCountry = $this->getCountry();
-        $OtherGeoCode = $otherAddress->getGeoCode();
-        $ThisGeoCode = $this->getGeoCode();
+        $otherCity = strtoupper($otherAddress->getCity());
+        $thisCity = strtoupper($this->getCity());
+        $otherState = $otherAddress->getState();
+        $thisState = $this->getState();
+        $otherCountry = $otherAddress->getCountry();
+        $thisCountry = $this->getCountry();
 
         return $streetAddressOther == $streetAddressThis
         && $aptAddressOther == $aptAddressThis
-        && $OtherCity == $ThisCity
-        && $OtherState == $ThisState
-        && $OtherCountry == $ThisCountry;
-       // && $OtherGeoCode == $ThisGeoCode;
+        && $otherCity == $thisCity
+        && $otherState == $thisState
+        && $otherCountry == $thisCountry;
+
     }
 
     
