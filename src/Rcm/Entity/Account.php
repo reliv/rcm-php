@@ -5,31 +5,17 @@ namespace Rcm\Entity;
 use Doctrine\ORM\Mapping as ORM,
     \Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="rcm_account")
- */
 class Account
 {
     /**
      * @var integer Account Number
-     *
-     * @ORM\Id
-     * @ORM\Column(type="string")
-     */
     protected $accountNumber;
 
     /**
      * @var \Rcm\Entity\User primary person on the account
-     *
-     * @ORM\OneToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="primaryUserId", referencedColumnName="userId")
      */
     protected $primaryUser;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Account", mappedBy="account")
-     */
     protected $users;
 
     function __construct()

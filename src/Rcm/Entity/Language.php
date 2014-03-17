@@ -90,7 +90,7 @@ class Language
      * @var string Old Web Language Code. Used to map old legacy code to a
      *             language entity.
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $oldWebLanguage;
 

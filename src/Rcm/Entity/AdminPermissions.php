@@ -52,10 +52,10 @@ class AdminPermissions
     protected $permissionsId;
 
     /**
-     * @ORM\OneToOne(targetEntity="Rcm\Entity\User")
-     * @ORM\JoinColumn(name="userId", referencedColumnName="userId")
+     * @var $accountNumber string
+     * @ORM\Column(type="integer", nullable=true)
      */
-    protected $user;
+    protected $userId;
 
     /**
      * @var $accountNumber string

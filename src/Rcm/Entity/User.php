@@ -6,86 +6,54 @@ use Doctrine\ORM\Mapping as ORM,
     Rcm\Exception\InvalidArgumentException;
 use Zend\Crypt\BlockCipher;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="rcm_user")
- */
 class User
 {
     /**
      * @var int Auto-Incremented Primary Key
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
      */
     protected $userId;
 
     /**
      * @var string  first name
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
     protected $firstName;
 
     /**
      * @var string  middle initial
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
     protected $middleInitial;
 
     /**
      * @var string  last name
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
     protected $lastName;
 
     /**
      * @var \DateTime  last name
-     *
-     * @ORM\Column(type="date", nullable=true)
      */
     protected $dateOfBirth;
 
-    /**
-     * @ORM\OneToOne(targetEntity="RcmShoppingCart\Entity\Address")
-     * @ORM\JoinColumn(name="billAddressId", referencedColumnName="addressId")
-     */
     protected $billAddress;
 
-    /**
-     * @ORM\OneToOne(targetEntity="RcmShoppingCart\Entity\Address")
-     * @ORM\JoinColumn(name="shipAddressId", referencedColumnName="addressId")
-     */
     protected $shipAddress;
 
     /**
      * @var boolean gender is male
-     * *
-     * @ORM\Column(type="boolean", nullable=true)
      */
     protected $genderIsMale;
 
     /**
      * @var string email
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
     protected $email;
 
     /**
      * @var string user id
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
     protected $username;
 
     /**
      * @var string password
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
     protected $password;
 
@@ -109,74 +77,51 @@ class User
     {
         return $this->account;
     }
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Account", inversedBy="users")
-     * @ORM\JoinColumn(name="accountNumber", referencedColumnName="accountNumber")
-     */
     protected $account;
 
 
     /**
      * @var integer phone number
-     *
-     * @ORM\Column(type="bigint", nullable=true)
      */
     protected $daytimePhone;
 
     /**
      * @var integer phone number
-     *
-     * @ORM\Column(type="bigint", nullable=true)
      */
     protected $eveningPhone;
 
     /**
      * @var integer phone number
-     *
-     * @ORM\Column(type="bigint", nullable=true)
      */
     protected $cellPhone;
 
     /**
      * @var integer phone number
-     *
-     * @ORM\Column(type="bigint", nullable=true)
      */
     protected $faxPhone;
 
     /**
      * @var \DateTime when this entity was created
-     *
-     * @ORM\Column(type="datetime")
      */
     protected $createdDate;
 
     /**
      * @var string Account Type
-     *
-     * @ORM\Column(type="string",nullable=true)
      */
     protected $accountType;
 
     /**
      * @var string rank
-     *
-     * @ORM\Column(type="string",nullable=true)
      */
     protected $rank;
 
     /**
      * @var integer social security number
-     *
-     * @ORM\Column(type="bigint", nullable=true)
      */
     protected $ssn;
 
     /**
      * @var boolean gender is male
-     * *
-     * @ORM\Column(type="boolean", nullable=true)
      */
     protected $isQualified;
 
