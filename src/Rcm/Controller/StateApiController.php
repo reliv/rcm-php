@@ -14,7 +14,7 @@ class StateApiController extends EntityMgrAwareController
     function listStatesAction()
     {
         $countryIso3 = $this->getEvent()->getRouteMatch()->getParam('country');
-        $stateEntities = $this->entityMgr->getRepository('\Rcm\Entity\State')
+        $stateEntities = $this->entityMgr->getRepository('\RelivApplication\Entity\State')
             ->findBy(
                 array('country' => $countryIso3),
                 array('name' => 'ASC')
