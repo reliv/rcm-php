@@ -448,14 +448,14 @@ class User
 
     public function setBillAddress($billAddress)
     {
-        if (isset($billAddress) && !is_a($billAddress, '\RcmShoppingCart\Entity\Address')) {
+        if (isset($billAddress) && !is_a($billAddress, '\RelivApplication\Entity\Address')) {
             throw new InvalidArgumentException();
         }
         $this->billAddress = $billAddress;
     }
 
     /**
-     * @returns \RcmShoppingCart\Entity\Address
+     * @returns \RelivApplication\Entity\Address
      */
     public function getBillAddress()
     {
@@ -488,14 +488,14 @@ class User
 
     public function setShipAddress($shipAddress)
     {
-        if (isset($shipAddress) && !is_a($shipAddress, '\RcmShoppingCart\Entity\Address')) {
+        if (isset($shipAddress) && !is_a($shipAddress, '\RelivApplication\Entity\Address')) {
             throw new InvalidArgumentException();
         }
         $this->shipAddress = $shipAddress;
     }
 
     /**
-     * @returns \RcmShoppingCart\Entity\Address
+     * @returns \RelivApplication\Entity\Address
      */
     public function getShipAddress()
     {
