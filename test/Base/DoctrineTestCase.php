@@ -13,10 +13,7 @@ class DoctrineTestCase extends BaseTestCase
     /** @var \Doctrine\Orm\EntityManager */
     public $entityManager;
 
-    protected $expectedTables
-        = array(
-            'rcm_account',
-            'rcm_addresses',
+    protected $expectedTables = array(
             'rcm_admin_allowed_sites',
             'rcm_admin_disallowed_pages',
             'rcm_admin_permissions',
@@ -32,12 +29,9 @@ class DoctrineTestCase extends BaseTestCase
             'rcm_plugin_assets',
             'rcm_plugin_instances',
             'rcm_plugin_instances_assets',
-            'rcm_postal_codes',
             'rcm_sites',
             'rcm_sites_instances',
-            'rcm_sites_pws_info',
-            'rcm_states',
-            'rcm_user'
+            'rcm_sites_pws_info'
         );
 
     public function setUp()
