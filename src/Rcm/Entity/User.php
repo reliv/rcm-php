@@ -448,8 +448,11 @@ class User
 
     public function setBillAddress($billAddress)
     {
-        if (isset($billAddress) && !is_a($billAddress, '\RelivApplication\Entity\Address')) {
-            throw new InvalidArgumentException();
+        $className='\RelivApplication\Entity\Address';
+        if (isset($billAddress) && !is_a($billAddress, $className)) {
+            throw new InvalidArgumentException(
+                'billAddress must be a '.$className
+            );
         }
         $this->billAddress = $billAddress;
     }
