@@ -24,7 +24,7 @@ return array(
   'Rcm\Entity\PhoneNumber'                        => __DIR__ . '/src/Rcm/Entity/PhoneNumber.php',
   'Rcm\Entity\PluginAsset'                        => __DIR__ . '/src/Rcm/Entity/PluginAsset.php',
   'Rcm\Entity\PluginInstance'                     => __DIR__ . '/src/Rcm/Entity/PluginInstance.php',
-  'Rcm\Entity\PwsInfo'                            => __DIR__ . '/src/Rcm/Entity/PwsInfo.php',
+  'Rcm\Entity\ExtraSiteInfo'                            => __DIR__ . '/src/Rcm/Entity/ExtraSiteInfo.php',
   'Rcm\Entity\Setting'                            => __DIR__ . '/src/Rcm/Entity/Setting.php',
   'Rcm\Entity\Site'                               => __DIR__ . '/src/Rcm/Entity/Site.php',
   'Rcm\Entity\User'                               => __DIR__ . '/src/Rcm/Entity/User.php',
