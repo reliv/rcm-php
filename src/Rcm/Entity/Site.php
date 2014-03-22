@@ -58,7 +58,7 @@ class Site
      *                                  site.
      *
      * @ORM\ManyToOne(targetEntity="Domain")
-     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId", onDelete="SET NULL", onUpdate="CASCADE")
      */
     protected $domain;
 
@@ -101,7 +101,8 @@ class Site
      * @ORM\JoinColumn(
      *      name="languageId",
      *      referencedColumnName="languageId",
-     *      onDelete="SET NULL"
+     *      onDelete="SET NULL",
+     *      onUpdate="CASCADE"
      * )
      **/
     protected $language;
@@ -133,7 +134,8 @@ class Site
      *
      * @ORM\OneToMany(
      *     targetEntity="Page",
-     *     mappedBy="site"
+     *     mappedBy="site",
+     *     cascade={"persist", "remove"}
      * )
      */
     protected $pages;
@@ -150,21 +152,24 @@ class Site
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="PluginInstance"
+     *     targetEntity="PluginInstance",
+     *     fetch="EAGER",
+     *     cascade={"persist", "remove"}
      * )
      * @ORM\JoinTable(
-     *     name="rcm_site_plugin_instances",
+     *     name="rcm_sites_instances",
      *     joinColumns={
      *         @ORM\JoinColumn(
-     *             name="siteId",
+     *             name="site_id",
      *             referencedColumnName="siteId",
-     *             onDelete="CASCADE"
+     *             onDelete="CASCADE",
+     *             onUpdate="CASCADE"
      *         )
      *     },
      *     inverseJoinColumns={
      *         @ORM\JoinColumn(
-     *             name="pluginInstanceId",
-     *             referencedColumnName="pluginInstanceId",
+     *             name="instance_id",
+     *             referencedColumnName="instanceId",
      *             onDelete="CASCADE"
      *         )
      *     }
@@ -244,8 +249,8 @@ class Site
             }
 
             $this->sitePlugins = new ArrayCollection($clonedPluginInstances);
-            $this->extraSiteInfo = clone $this->extraSiteInfo;
-            $this->extraSiteInfo->setPwsId(null);
+            $this->pwsInfo = clone $this->pwsInfo;
+            $this->pwsInfo->setPwsId(null);
         }
     }
 
@@ -487,7 +492,7 @@ class Site
      *
      * @return null
      */
-    public function addSiteWidePlugin(PluginInstance $plugin)
+    public function addSiteWidePlugin(\Rcm\Entity\PluginInstance $plugin)
     {
         $this->sitePlugins->add($plugin);
     }
@@ -518,7 +523,6 @@ class Site
     {
         $templates = array();
 
-        /** @var \Rcm\Entity\Page $page */
         foreach ($this->pages as $page) {
             $publishedVersion = $page->getPublishedRevision();
             if ($page->isTemplate() && !empty($publishedVersion)) {
