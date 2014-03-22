@@ -147,7 +147,7 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
-     * @covers \Rcm\Service\PluginManager::ensurePluginIsValid
+     * @covers \Rcm\Model\PluginManager2::ensurePluginIsValid
      */
     public function testEnsureValidPlugin()
     {
@@ -157,7 +157,7 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
-     * @covers \Rcm\Service\PluginManager::ensurePluginIsValid
+     * @covers \Rcm\Model\PluginManager2::ensurePluginIsValid
      * @expectedException \Rcm\Exception\InvalidPluginException
      */
     public function testEnsurePluginNotValid()
@@ -166,7 +166,7 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
-     * @covers \Rcm\Service\PluginManager::getPluginController
+     * @covers \Rcm\Model\PluginManager2::getPluginController
      */
     public function testGetPluginController()
     {
