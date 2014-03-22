@@ -8,7 +8,7 @@ use \Rcm\Service\PluginManager;
 class PluginManagerTest extends BaseTestCase
 {
 
-    /** @var  \Rcm\Service\PluginManager */
+    /** @var  \Rcm\Model\PluginManager2 */
     protected $pluginManager;
 
     protected $instanceCounter = 1000000;
