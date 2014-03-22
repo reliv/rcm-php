@@ -6,7 +6,7 @@
  * Time: 11:10 AM
  * To change this template use File | Settings | File Templates.
  */
-namespace Rcm\Model;
+namespace Rcm\Service;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\PluginInstance;
@@ -21,7 +21,7 @@ use \Rcm\Plugin\PluginInterface;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Renderer\RendererInterface;
 
-class PluginManager2 implements PluginManagerInterface
+class PluginManager implements PluginManagerInterface
 {
     protected $sm;
     protected $moduleManager;

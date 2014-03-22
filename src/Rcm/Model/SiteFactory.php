@@ -22,6 +22,7 @@ use Rcm\Entity\Domain,
     Rcm\Exception\LanguageNotFoundException,
     Rcm\Exception\SiteNotFoundException,
     Rcm\Entity\Site;
+use Rcm\Entity\ExtraSiteInfo;
 
 /**
  * Site Factory
@@ -157,7 +158,7 @@ class SiteFactory extends EntityMgrAware
                 try {
                     $this->getDomain($additionalDomainName);
                 } catch (\Exception $e) {
-                    $domain[$key + 1] = new \Rcm\Entity\Domain();
+                    $domain[$key + 1] = new Domain();
                     $domain[$key + 1]->setDomainName($additionalDomainName);
                     $domain[$key + 1]->setPrimary($domain[0]);
                     $domain[0]->setAdditionalDomain($domain[$key + 1]);
@@ -166,21 +167,20 @@ class SiteFactory extends EntityMgrAware
             }
         }
 
-        $pwsInfo = new \Rcm\Entity\PwsInfo();
+        $pwsInfo = new ExtraSiteInfo();
         $pwsInfo->setActiveDate(new \DateTime("now"));
         $pwsInfo->setLastUpdated(new \DateTime("now"));
 
         $site = new \Rcm\Entity\Site();
         $site->setDomain($domain[0]);
         $site->setOwner($ownerAccountNum);
-        $site->setPwsInfo($pwsInfo);
+        $site->setExtraSiteInfo($pwsInfo);
         $site->setLanguage($language);
         $site->setCountry($country);
         $site->setStatus("A");
         $site->setTheme($theme);
         $site->setLoginRequired($loginRequired);
         $site->setLoginPage($loginPageUrl);
-        $site->setCurrencySymbol('$');
 
         if (!empty($permittedTypes) && is_array($permittedTypes)) {
             $site->addPermittedAccountTypesByArray($permittedTypes);

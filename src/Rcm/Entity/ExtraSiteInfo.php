@@ -33,9 +33,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @version   Release: 1.0
  *
  * @ORM\Entity
- * @ORM\Table(name="rcm_sites_pws_info")
+ * @ORM\Table(name="rcm_sites_extra_info")
  */
-class PwsInfo
+class ExtraSiteInfo
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -51,7 +51,7 @@ class PwsInfo
      *                                to.
      *
      * @ORM\ManyToOne(targetEntity="Site", inversedBy="pwsInfo")
-     * @ORM\JoinColumn(name="site_id", referencedColumnName="siteId")
+     * @ORM\JoinColumn(name="siteId", referencedColumnName="siteId", onDelete="CASCADE", onUpdate="CASCADE")
      */
     protected $site;
 
