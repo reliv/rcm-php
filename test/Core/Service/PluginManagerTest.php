@@ -3,12 +3,12 @@
 require_once __DIR__ . '/../../Base/DoctrineTestCase.php';
 
 use \RcmTest\Base\DoctrineTestCase;
-use \Rcm\Model\PluginManager2;
+use \Rcm\Service\PluginManager;
 
 class PluginManagerTest extends DoctrineTestCase
 {
 
-    /** @var  \Rcm\Model\PluginManager2 */
+    /** @var  \Rcm\Service\PluginManager */
     protected $pluginManager;
 
     public function setUp()
@@ -23,13 +23,13 @@ class PluginManagerTest extends DoctrineTestCase
 
         $render = $this->getRenderer();
 
-        /** @var Zend\Cache\Storage\StorageInterface $cache */
+        /** @var \Zend\Cache\Storage\StorageInterface $cache */
         $cache = $sm->get('rcmCache');
         $cache->clearByNamespace('RcmCache');
 
         $moduleManager = $sm->get('ModuleManager');
 
-        $this->pluginManager = new PluginManager2(
+        $this->pluginManager = new PluginManager(
             $this->entityManager,
             $sm->get('config'),
             $sm,
@@ -72,7 +72,7 @@ class PluginManagerTest extends DoctrineTestCase
     }
 
     /**
-     * @covers \Rcm\Model\PluginManager2::ensurePluginIsValid
+     * @covers \Rcm\Service\PluginManager::ensurePluginIsValid
      */
     public function testEnsureValidPlugin()
     {
@@ -82,7 +82,7 @@ class PluginManagerTest extends DoctrineTestCase
     }
 
     /**
-     * @covers \Rcm\Model\PluginManager2::ensurePluginIsValid
+     * @covers \Rcm\Service\PluginManager::ensurePluginIsValid
      * @expectedException \Rcm\Exception\InvalidPluginException
      */
     public function testEnsurePluginNotValid()
@@ -91,7 +91,7 @@ class PluginManagerTest extends DoctrineTestCase
     }
 
     /**
-     * @covers \Rcm\Model\PluginManager2::getPluginController
+     * @covers \Rcm\Service\PluginManager::getPluginController
      */
     public function testGetPluginController()
     {
