@@ -58,7 +58,7 @@ class Site
      *                                  site.
      *
      * @ORM\ManyToOne(targetEntity="Domain")
-     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId", onDelete="SET NULL", onUpdate="CASCADE")
+     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId", onDelete="SET NULL")
      */
     protected $domain;
 
@@ -101,8 +101,7 @@ class Site
      * @ORM\JoinColumn(
      *      name="languageId",
      *      referencedColumnName="languageId",
-     *      onDelete="SET NULL",
-     *      onUpdate="CASCADE"
+     *      onDelete="SET NULL"
      * )
      **/
     protected $language;
@@ -153,8 +152,6 @@ class Site
     /**
      * @ORM\ManyToMany(
      *     targetEntity="PluginInstance",
-     *     fetch="EAGER",
-     *     cascade={"persist", "remove"}
      * )
      * @ORM\JoinTable(
      *     name="rcm_sites_instances",
@@ -162,15 +159,15 @@ class Site
      *         @ORM\JoinColumn(
      *             name="site_id",
      *             referencedColumnName="siteId",
-     *             onDelete="CASCADE",
-     *             onUpdate="CASCADE"
+     *             onDelete="CASCADE"
      *         )
      *     },
      *     inverseJoinColumns={
      *         @ORM\JoinColumn(
-     *             name="instance_id",
+     *             name="instanceId",
      *             referencedColumnName="instanceId",
-     *             onDelete="CASCADE"
+     *             onDelete="CASCADE",
+     *             onUpdate="CASCADE"
      *         )
      *     }
      * )
