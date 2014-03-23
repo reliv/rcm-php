@@ -151,7 +151,6 @@ function RcmCkEditor(config) {
         }
 
         var returnData = {};
-        returnData.assets = me.getAssets($(editor).html());
         returnData.html = $(editor).html();
 
         return returnData;

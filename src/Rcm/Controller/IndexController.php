@@ -170,13 +170,13 @@ class IndexController extends \Rcm\Controller\BaseController
         /** @var \Zend\Mvc\Controller\Plugin\Layout $layoutView */
 
         $layoutView->setVariable(
-            'metaTitle', $this->pageRevision->getPageTitle()
+            'metaTitle', $this->page->getPageTitle()
         );
         $layoutView->setVariable(
-            'metaDesc', $this->pageRevision->getDescription()
+            'metaDesc', $this->page->getDescription()
         );
         $layoutView->setVariable(
-            'metaKeys', $this->pageRevision->getKeywords()
+            'metaKeys', $this->page->getKeywords()
         );
 
         if ($this->adminIsLoggedIn() && $pageName == $this->page->getName()) {
@@ -262,7 +262,7 @@ class IndexController extends \Rcm\Controller\BaseController
     {
         //Get Page Layout
         $config = $this->config;
-        $layout = $this->pageRevision->getPageLayout();
+        $layout = $this->page->getPageLayout();
         $theme = $this->siteInfo->getTheme();
 
         if (!empty($config['Rcm']['themes'][$theme]['layouts'][$layout]['file'])) {

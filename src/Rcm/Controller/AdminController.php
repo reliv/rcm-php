@@ -281,12 +281,12 @@ class AdminController extends BaseController
         $this->adminSaveInit();
         $entityMgr = $this->entityMgr;
 
-        $this->page->setCurrentRevision($this->pageRevision);
+        $this->page->setCurrentRevision($this->revision);
 
         $staged = $this->page->getStagedRevision();
 
         if (!empty($staged)
-            && $this->pageRevision == $this->page->getStagedRevision()
+            && $this->revision == $this->page->getStagedRevision()
         ) {
             $staged->unStageRevision();
             $this->page->removedStagedRevistion();
@@ -506,20 +506,20 @@ class AdminController extends BaseController
     {
         $pageUrl = $this->getRequest()->getQuery()->get('pageUrl');
         $pageName = $this->getRequest()->getQuery()->get('pageName');
-        $pageRevision = $this->getRequest()->getQuery()->get('revision');
+        $revision = $this->getRequest()->getQuery()->get('revision');
 
-        if ($pageRevision < 0) {
+        if ($revision < 0) {
             $this->createBlankPageAction();
         }
 
-        $this->savePageAs($pageUrl, $pageRevision, $pageName);
+        $this->savePageAs($pageUrl, $revision, $pageName);
     }
 
     public function saveAsTemplateAction()
     {
         $pageUrl = $this->getRequest()->getQuery()->get('pageName');
-        $pageRevision = $this->getRequest()->getQuery()->get('revision');
-        $this->savePageAs($pageUrl, $pageRevision, '', 't');
+        $revision = $this->getRequest()->getQuery()->get('revision');
+        $this->savePageAs($pageUrl, $revision, '', 't');
     }
 
     protected function savePageAs(
@@ -664,7 +664,7 @@ class AdminController extends BaseController
             $entityMgr->flush();
             return $newRev;
         } else {
-            return $this->pageRevision;
+            return $this->revision;
         }
     }
 
@@ -690,7 +690,7 @@ class AdminController extends BaseController
         $newMD5 = md5(serialize($data));
         $newRev->setMd5($newMD5);
 
-        $oldMD5 = $this->pageRevision->getMd5();
+        $oldMD5 = $this->revision->getMd5();
 
         if ($newMD5 != $oldMD5) {
             $newRev->setIsDirty(true);
@@ -839,15 +839,15 @@ class AdminController extends BaseController
             );
 
             $entityMgr->getConnection()->update(
-                'rcm_page_plugin_instances',
-                array('instance_id' => $newPluginInstance->getInstanceId()),
-                array('instance_id' => $currentInstance->getInstanceId())
+                'rcm_plugin_wrappers',
+                array('pluginInstanceId' => $newPluginInstance->getInstanceId()),
+                array('pluginInstanceId' => $currentInstance->getInstanceId())
             );
 
             $entityMgr->getConnection()->update(
-                'rcm_sites_instances',
-                array('instance_id' => $newPluginInstance->getInstanceId()),
-                array('instance_id' => $currentInstance->getInstanceId())
+                'rcm_site_plugin_instances',
+                array('pluginInstanceId' => $newPluginInstance->getInstanceId()),
+                array('pluginInstanceId' => $currentInstance->getInstanceId())
             );
 
             $newRev->addInstance($newPluginInstance);

@@ -61,49 +61,6 @@ class Revision
     protected $createdDate;
 
     /**
-     * @var \Rcm\Entity\Page
-     *
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="revisions")
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="pageId", onDelete="CASCADE")
-     **/
-    protected $page;
-
-    /**
-     * @var string Page Title
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $pageTitle;
-
-    /**
-     * @var string Page Description
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $description;
-
-    /**
-     * @var string Meta Keywords
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $keywords;
-
-    /**
-     * @var string Meta Keywords
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $favIcon;
-
-    /**
-     * @var string Page Layout
-     *
-     * @ORM\Column(type="string")
-     */
-    protected $pageLayout;
-
-    /**
      * @var string Page Layout
      *
      * @ORM\Column(type="boolean")
