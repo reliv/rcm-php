@@ -42,8 +42,8 @@ function RcmEdit(config) {
      *
      * @param pageRevision
      */
-    me.setPageRevision = function (pageRevision) {
-        me.pageRevision = pageRevision;
+    me.setRevision = function (revision) {
+        me.revision = revision;
     };
 
     me.setPageType = function (pageType) {
@@ -895,10 +895,6 @@ function RcmEdit(config) {
 
             if ($.isFunction(pluginObject.getSaveData)) {
                 dataToReturn[instanceId].pluginData = pluginObject.getSaveData();
-            }
-
-            if ($.isFunction(pluginObject.getAssets)) {
-                dataToReturn[instanceId].pluginData.assets = pluginObject.getAssets();
             }
 
         });

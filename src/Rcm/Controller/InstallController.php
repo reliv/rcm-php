@@ -2,6 +2,8 @@
 
 namespace Rcm\Controller;
 
+use Rcm\Entity\PluginWrapper;
+use Rcm\Entity\PluginInstance;
 use
     \RcmInstanceConfig\Entity\DoctrineJsonInstanceConfig as JsonContent,
     \RcmInstanceConfig\StorageEngine\DoctrineSerializedRepo;
@@ -626,7 +628,7 @@ are permitted provided that the following conditions are met:</p>
         $forceWidth = null
     )
     {
-        $pageInstance = new \Rcm\Entity\PagePluginInstance();
+        $pageInstance = new PluginWrapper();
 
         $pageInstance->setLayoutContainer($container);
         $pageInstance->setRenderOrderNumber($renderOrder);
@@ -634,7 +636,7 @@ are permitted provided that the following conditions are met:</p>
             $pageInstance->setWidth($forceWidth);
         }
 
-        $instance = new \Rcm\Entity\PluginInstance();
+        $instance = new PluginInstance();
         $instance->setPlugin($pluginName);
         $pageInstance->setInstance($instance);
 

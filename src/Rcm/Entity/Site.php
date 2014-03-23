@@ -58,7 +58,7 @@ class Site
      *                                  site.
      *
      * @ORM\ManyToOne(targetEntity="Domain")
-     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId", onDelete="SET NULL", onUpdate="CASCADE")
+     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId", onDelete="SET NULL")
      */
     protected $domain;
 
@@ -87,8 +87,7 @@ class Site
      * @ORM\JoinColumn(
      *      name="languageId",
      *      referencedColumnName="languageId",
-     *      onDelete="SET NULL",
-     *      onUpdate="CASCADE"
+     *      onDelete="SET NULL"
      * )
      **/
     protected $language;
@@ -97,7 +96,7 @@ class Site
      * @var \Rcm\Entity\Country country
      *
      * @ORM\ManyToOne(targetEntity="Country")
-     * @ORM\JoinColumn(name="country",referencedColumnName="iso3", onDelete="SET NULL", onUpdate="CASCADE")
+     * @ORM\JoinColumn(name="country",referencedColumnName="iso3", onDelete="SET NULL")
      */
     protected $country;
 
@@ -120,7 +119,7 @@ class Site
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="PluginInstance",
+     *     targetEntity="PluginInstance"
      * )
      * @ORM\JoinTable(
      *     name="rcm_site_plugin_instances",
@@ -128,16 +127,14 @@ class Site
      *         @ORM\JoinColumn(
      *             name="siteId",
      *             referencedColumnName="siteId",
-     *             onDelete="CASCADE",
-     *             onUpdate="CASCADE"
+     *             onDelete="CASCADE"
      *         )
      *     },
      *     inverseJoinColumns={
      *         @ORM\JoinColumn(
-     *             name="instanceId",
-     *             referencedColumnName="instanceId",
-     *             onDelete="CASCADE",
-     *             onUpdate="CASCADE"
+     *             name="pluginInstanceId",
+     *             referencedColumnName="pluginInstanceId",
+     *             onDelete="CASCADE"
      *         )
      *     }
      * )
