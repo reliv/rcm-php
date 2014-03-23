@@ -2,8 +2,8 @@
 /**
  * Page Information Entity
  *
- * This is a Doctorine 2 definition file for Page info.  This file
- * is used for any module that needs to know page information.
+ * This is a Doctorine 2 definition file for plugin containers.  This file
+ * is used for any module that needs to know container information.
  *
  * PHP version 5.3
  *
@@ -23,8 +23,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Page Information Entity
  *
- * This object contains a list of pages for use with the content managment
- * system.
+ * This is a Doctorine 2 definition file for plugin containers.  This file
+ * is used for any module that needs to know container information.
  *
  * @category  Reliv
  * @author    Westin Shafer <wshafer@relivinc.com>
@@ -47,7 +47,7 @@ class Container
     protected $containerId;
 
     /**
-     * @var string Page name
+     * @var string Container name
      *
      * @ORM\Column(type="string")
      */
