@@ -17,10 +17,9 @@
  */
 namespace Rcm\Controller;
 
-use \Rcm\Controller\BaseController,
-    \Rcm\Entity\PageRevision,
-    \Rcm\Entity\PluginInstance,
-    \Rcm\Entity\PluginAsset;
+use Rcm\Entity\Revision;
+use \Rcm\Entity\PluginInstance;
+use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Domain;
 
 /**
@@ -40,6 +39,10 @@ use Rcm\Entity\Domain;
 class AdminController extends BaseController
 {
 
+    /**
+     * @var  \Rcm\Entity\Revision
+     */
+    protected $revision;
 
     public function newPageWizardAction()
     {
@@ -227,17 +230,17 @@ class AdminController extends BaseController
         $this->adminSaveInit();
         $postedData = $this->getPageSaveData();
 
-        $oldRevId = $this->pageRevision->getPageRevId();
+        $oldRevId = $this->revision->getRevisionId();
         $stagedRevision = $this->page->getStagedRevision();
 
         if (!empty($stagedRevision)) {
-            $stagedId = $stagedRevision->getPageRevId();
+            $stagedId = $stagedRevision->getRevisionId();
         } else {
             $stagedId = null;
         }
 
-        /** @var \Rcm\Entity\PageRevision $newRevision */
-        $newRevision = clone $this->pageRevision;
+        /** @var \Rcm\Entity\Revision $newRevision */
+        $newRevision = clone $this->revision;
         $newRevision->clearPluginInstances();
         $newRevision->setAuthor($this->loggedInUser->getFullName());
 
@@ -258,7 +261,7 @@ class AdminController extends BaseController
                     'pageType' => $this->page->getPageType(),
                     'page' => $this->page->getName(),
                     'language' => $this->siteInfo->getLanguage()->getLanguage(),
-                    'revision' => $newRevision->getPageRevId()
+                    'revision' => $newRevision->getRevisionId()
                 )
             )->setStatusCode(301);
         } else {
@@ -267,7 +270,7 @@ class AdminController extends BaseController
                 array(
                     'page' => $this->page->getName(),
                     'language' => $this->siteInfo->getLanguage()->getLanguage(),
-                    'revision' => $newRevision->getPageRevId()
+                    'revision' => $newRevision->getRevisionId()
                 )
             )->setStatusCode(301);
         }
@@ -302,7 +305,7 @@ class AdminController extends BaseController
                     'pageType' => $this->page->getPageType(),
                     'page' => $this->page->getName(),
                     'language' => $this->siteInfo->getLanguage()->getLanguage(),
-                    'revision' => $this->pageRevision->getPageRevId()
+                    'revision' => $this->revision->getRevisionId()
                 )
             )->setStatusCode(301);
         } else {
@@ -311,7 +314,7 @@ class AdminController extends BaseController
                 array(
                     'page' => $this->page->getName(),
                     'language' => $this->siteInfo->getLanguage()->getLanguage(),
-                    'revision' => $this->pageRevision->getPageRevId()
+                    'revision' => $this->revision->getRevisionId()
                 )
             )->setStatusCode(301);
         }
@@ -326,7 +329,7 @@ class AdminController extends BaseController
         /** @var \Rcm\Entity\Page $page */
         $page = $this->page;
 
-        /** @var \Rcm\Entity\PageRevision $oldStagedRevision */
+        /** @var \Rcm\Entity\Revision $oldStagedRevision */
         $oldStagedRevision = $page->getStagedRevision();
 
         if (!empty($oldStagedRevision)) {
@@ -334,7 +337,7 @@ class AdminController extends BaseController
             $entityMgr->persist($oldStagedRevision);
         }
 
-        $page->setStagedRevision($this->pageRevision);
+        $page->setStagedRevision($this->revision);
 
 
         $entityMgr->persist($page);
@@ -521,7 +524,7 @@ class AdminController extends BaseController
 
     protected function savePageAs(
         $pageUrl,
-        $pageRevision,
+        $revision,
         $pageTitle = '',
         $pageType = 'n'
     )
@@ -532,7 +535,7 @@ class AdminController extends BaseController
 
         $errors = $config['reliv']['saveAsTemplateErrors'];
 
-        if (empty($pageUrl) || empty($pageRevision)) {
+        if (empty($pageUrl) || empty($revision)) {
             $return['error'] = $errors['missingItems'];
             echo json_encode($return);
             exit;
@@ -547,11 +550,11 @@ class AdminController extends BaseController
             exit;
         }
 
-        $repo = $em->getRepository('\Rcm\Entity\PageRevision');
+        $repo = $em->getRepository('\Rcm\Entity\Revision');
 
-        /** @var \Rcm\Entity\PageRevision $currentRevision */
+        /** @var \Rcm\Entity\Revision $currentRevision */
         $currentRevision = $repo->findOneBy(
-            array('pageRevId' => $pageRevision)
+            array('revisionId' => $revision)
         );
 
         if (empty($currentRevision)) {
@@ -618,7 +621,7 @@ class AdminController extends BaseController
     }
 
     private function getNewPluginInstance(
-        \Rcm\Entity\PagePluginInstance $currentInstance
+        PluginWrapper $currentInstance
     )
     {
         $newInstance = clone $currentInstance;
@@ -628,58 +631,10 @@ class AdminController extends BaseController
         return $newInstance;
     }
 
-    private function savePluginAssets(
-        $postedAssets,
-        \Rcm\Entity\PluginInstance $newInstance
-    )
-    {
-
-        if (empty($postedAssets)) {
-            return;
-        }
-
-        $assets = array();
-
-        foreach ($postedAssets as $url) {
-            $url = strtolower($url);
-
-            if (
-                !preg_match("/^#/", $url)
-                && !preg_match("/^javascript:/", $url)
-                && !empty($url)
-            ) {
-                //If we haven't already have this asset
-                if (empty($assets[$url])) {
-                    //Look in DB for the asset for this url
-                    /** @var \Rcm\Entity\PluginAsset $assetEntity */
-
-                    $repo = $this->entityMgr
-                        ->getRepository('\Rcm\Entity\PluginAsset');
-                    $assetEntity = $repo->findOneByurl($url);
-
-                    $assets[$url] = $assetEntity;
-                    //Create a new asset
-                    if (!$assets[$url]) {
-                        $assets[$url] = new PluginAsset($url);
-                    }
-                }
-                //Add our current plugin instance to the asset
-                $assets[$url]->addPluginInstance($newInstance);
-
-                $this->entityMgr->persist($assets[$url]);
-            }
-        }
-
-        $this->entityMgr->flush();
-
-        return $assets;
-    }
-
     private function processPostedInstances(
         $postedData,
-        \Rcm\Entity\PageRevision $newRev
-    )
-    {
+        Revision $newRev
+    ) {
 
         foreach ($postedData as $postedInstanceId => $data) {
             if ($postedInstanceId == 'undefined') {
@@ -693,7 +648,7 @@ class AdminController extends BaseController
         }
 
         //Check for deleted Plugins -- Must be able to save blank pages
-        $pageRev = $this->pageRevision;
+        $pageRev = $this->revision;
         $allInstancesInOldRev = $pageRev->getRawPluginInstances();
 
         foreach ($allInstancesInOldRev as $instance) {
@@ -715,7 +670,7 @@ class AdminController extends BaseController
 
     private function processMainPageData(
         $data,
-        \Rcm\Entity\PageRevision $newRev
+        \Rcm\Entity\Revision $newRev
     )
     {
 
@@ -747,14 +702,14 @@ class AdminController extends BaseController
     private function processPostedInstance(
         $instanceId,
         $data,
-        \Rcm\Entity\PageRevision $newRev
+        Revision $newRev
     )
     {
         //Get Entity Manager
         $entityMgr = $this->entityMgr;
 
         //Get Current Page Revision
-        $pageRev = $this->pageRevision;
+        $revision = $this->revision;
 
         //Set Instance To Dirty
         $instanceDirty = false;
@@ -763,7 +718,7 @@ class AdminController extends BaseController
         if ($instanceId < 0) {
             $currentInstance = $this->processNewPostedInstance($data);
         } else {
-            $currentInstance = $pageRev->getInstanceById($instanceId);
+            $currentInstance = $revision->getInstanceById($instanceId);
 
             if (empty($currentInstance)) {
                 $repo = $entityMgr->getRepository('\Rcm\Entity\PluginInstance');
@@ -780,7 +735,7 @@ class AdminController extends BaseController
         }
 
         //Get A New Plugin Instance For Saving
-        /** @var \Rcm\Entity\PagePluginInstance $newPluginInstance */
+        /** @var \Rcm\Entity\PluginWrapper $newPluginInstance */
         $newPluginInstance = $this->getNewPluginInstance($currentInstance);
 
         //Get Layout Container
@@ -844,15 +799,6 @@ class AdminController extends BaseController
             $newPluginInstance->setInstance($currentInstance->getInstance());
         } else {
             $newPluginInstance->getInstance()->setMd5($md5s['new']);
-
-            if (!empty($data['assets'])) {
-                $newPluginInstance->getInstance()->setAssets(
-                    $this->getAssets(
-                        $data['assets'],
-                        $newPluginInstance->getInstance()
-                    )
-                );
-            }
 
             $newPluginInstance->getInstance()
                 ->setPreviousEntity($currentInstance->getInstance());
@@ -944,16 +890,16 @@ class AdminController extends BaseController
     /**
      * @param $instanceData
      *
-     * @return \Rcm\Entity\PagePluginInstance
+     * @return \Rcm\Entity\PluginWrapper
      */
     private function processNewPostedInstance(
         $instanceData
     )
     {
-        $pagePluginInstance = new \Rcm\Entity\PagePluginInstance();
+        $pagePluginInstance = new PluginWrapper();
         $pagePluginInstance->setRenderOrderNumber(0);
         $pagePluginInstance->setLayoutContainer(0);
-        $newPluginInstance = new \Rcm\Entity\PluginInstance();
+        $newPluginInstance = new PluginInstance();
 
         $newPluginInstance->setPlugin($instanceData['pluginName']);
         $pagePluginInstance->setInstance($newPluginInstance);
@@ -963,10 +909,9 @@ class AdminController extends BaseController
     }
 
     private function getMd5(
-        \Rcm\Entity\PagePluginInstance $currentInstance,
+        PluginWrapper $currentInstance,
         $instanceData = array()
-    )
-    {
+    ) {
         $return = array(
             'current' => $currentInstance->getInstance()->getMd5(),
             'new' => md5(serialize($instanceData))
@@ -975,7 +920,7 @@ class AdminController extends BaseController
         return $return;
     }
 
-    protected function getClonedPageRevision(\Rcm\Entity\PageRevision $revision)
+    protected function getClonedRevision(\Rcm\Entity\Revision $revision)
     {
         $newRevision = clone $revision;
         $newRevision->setPageRevId(null);

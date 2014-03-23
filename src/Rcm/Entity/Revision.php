@@ -33,9 +33,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @version   Release: 1.0
  *
  * @ORM\Entity
- * @ORM\Table(name="rcm_page_revisions")
+ * @ORM\Table(name="rcm_revisions")
  */
-class PageRevision
+class Revision
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -44,7 +44,7 @@ class PageRevision
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
-    protected $pageRevId;
+    protected $revisionId;
 
     /**
      * @var string Authors name
@@ -64,7 +64,7 @@ class PageRevision
      * @var \Rcm\Entity\Page
      *
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="revisions")
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="pageId")
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="pageId", onDelete="CASCADE")
      **/
     protected $page;
 
@@ -126,24 +126,22 @@ class PageRevision
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="PagePluginInstance",
-     *     indexBy="pageInstance_id",
-     *     fetch="EAGER",
+     *     targetEntity="PluginWrapper",
      *     cascade={"persist"}
      * )
      * @ORM\JoinTable(
-     *     name="rcm_page_revisions_instances",
+     *     name="rcm_revisions_plugin_wrappers",
      *     joinColumns={
      *         @ORM\JoinColumn(
-     *             name="pagerev_id",
-     *             referencedColumnName="pageRevId",
+     *             name="revisionId",
+     *             referencedColumnName="revisionId",
      *             onDelete="CASCADE"
      *         )
      *     },
      *     inverseJoinColumns={
      *         @ORM\JoinColumn(
-     *             name="pageInstance_id",
-     *             referencedColumnName="pageInstanceId",
+     *             name="pluginWrapperId",
+     *             referencedColumnName="pluginWrapperId",
      *             onDelete="CASCADE"
      *         )
      *     }
@@ -164,15 +162,15 @@ class PageRevision
 
     public function __clone()
     {
-        if ($this->pageRevId) {
-            $this->pageRevId = null;
+        if ($this->revisionId) {
+            $this->revisionId = null;
 
             $currentInstance = $this->getRawPluginInstances();
             $clonedInstances = array();
 
-            /** @var \Rcm\Entity\PagePluginInstance $pagePluginInstance */
-            foreach ($currentInstance as $pagePluginInstance) {
-                $clonedInstances[] = clone $pagePluginInstance;
+            /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
+            foreach ($currentInstance as $pluginWrapper) {
+                $clonedInstances[] = clone $pluginWrapper;
             }
 
             $this->pluginInstances = new ArrayCollection($clonedInstances);
@@ -187,7 +185,7 @@ class PageRevision
     public function toArray()
     {
         $return = array(
-            'pageRevId' => $this->getPageRevId(),
+            'revisionId' => $this->getRevisionId(),
             'author' => $this->getAuthor(),
             'createdDate' => $this->getCreatedDate(),
             'page' => $this->getPage(),
@@ -212,7 +210,7 @@ class PageRevision
             return null;
         }
 
-        /** @var \Rcm\Entity\PagePluginInstance $instance */
+        /** @var \Rcm\Entity\PluginWrapper $instance */
         foreach ($this->pluginInstances->toArray() as $instance) {
 
             $container = $instance->getLayoutContainer();
@@ -241,9 +239,9 @@ class PageRevision
      * @return int PageRevId
      *
      */
-    public function getPageRevId()
+    public function getRevisionId()
     {
-        return $this->pageRevId;
+        return $this->revisionId;
     }
 
     /**
@@ -251,14 +249,14 @@ class PageRevision
      * should not be used by calling scripts.  Instead please persist the object
      * with Doctrine and allow Doctrine to set this on it's own,
      *
-     * @param int $pageRevId Unique Page Revision ID
+     * @param int $revisionId Unique Page Revision ID
      *
      * @return null
      *
      */
-    public function setPageRevId($pageRevId)
+    public function setRevisionId($revisionId)
     {
-        $this->pageRevId = $pageRevId;
+        $this->revisionId = $revisionId;
     }
 
     /**
@@ -451,16 +449,16 @@ class PageRevision
     public function addInstances($instances)
     {
         if (!is_array($instances)
-            && is_a($instances, '\Rcm\Entity\PagePluginInstance')
+            && is_a($instances, '\Rcm\Entity\PluginWrapper')
         ) {
             $this->addInstance($instances);
             return;
         } elseif (!is_array($instances)
-            && !is_a($instances, '\Rcm\Entity\PagePluginInstance')
+            && !is_a($instances, '\Rcm\Entity\PluginWrapper')
         ) {
             throw new \Rcm\Exception\RuntimeException(
                 'Passed instance must be an array or a single '
-                . 'of \Rcm\Entity\PagePluginInstance'
+                . 'of \Rcm\Entity\PluginWrapper'
             );
         }
 
@@ -472,19 +470,19 @@ class PageRevision
     /**
      * Add instance to Entity
      *
-     * @param \Rcm\Entity\PagePluginInstance $instance     Plugin Instance to
+     * @param \Rcm\Entity\PluginWrapper $instance     Plugin Instance to
      *                                                     add to revision.
      *
      * @return null
      */
-    public function addInstance(\Rcm\Entity\PagePluginInstance $instance)
+    public function addInstance(PluginWrapper $instance)
     {
         $this->pluginInstances[] = $instance;
     }
 
     public function getInstanceById($instanceId)
     {
-        /** @var \Rcm\Entity\PagePluginInstance $instance */
+        /** @var \Rcm\Entity\PluginWrapper $instance */
         foreach ($this->pluginInstances as $instance) {
             if ($instance->getInstanceId() == $instanceId) {
                 return $instance;
@@ -507,7 +505,7 @@ class PageRevision
     }
 
     public function removeInstance(
-        \Rcm\Entity\PagePluginInstance $instance
+        PluginWrapper $instance
     )
     {
         $this->pluginInstances->removeElement($instance);

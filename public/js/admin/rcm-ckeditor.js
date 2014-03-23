@@ -98,8 +98,6 @@ function RcmCkEditor(config) {
                 return false;
             }
 
-            returnData.assets = me.getAssets(returnData.html);
-
             return returnData;
         }
 
@@ -158,35 +156,6 @@ function RcmCkEditor(config) {
 
         return returnData;
 
-    };
-
-    me.getAssets = function (htmlToCheck) {
-
-        var assets = [];
-
-        //Record what assets this ckEdit is using
-        var html = $('<div></div>');
-        html.append(htmlToCheck);
-
-        html.find('img').each(function (key, ele) {
-            assets.push(
-                $(ele).attr('src')
-            );
-        });
-
-        html.find('a').each(function (key, ele) {
-            assets.push(
-                $(ele).attr('href')
-            );
-        });
-
-        html.find('embed').each(function (key, ele) {
-            assets.push(
-                $(ele).attr('src')
-            );
-        });
-
-        return assets;
     };
 
     /**

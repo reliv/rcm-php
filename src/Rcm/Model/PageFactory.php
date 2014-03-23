@@ -85,7 +85,7 @@ class PageFactory extends EntityMgrAware
             $page->setPageType($pageType);
         }
 
-        $pageRevision = new \Rcm\Entity\PageRevision();
+        $pageRevision = new \Rcm\Entity\Revision();
         $pageRevision->setAuthor($author);
         $pageRevision->setCreatedDate(new \DateTime("now"));
         $pageRevision->setPage($page);
@@ -98,7 +98,7 @@ class PageFactory extends EntityMgrAware
             $pageRevision->AddInstances($plugins);
         }
 
-        $page->addPageRevision($pageRevision);
+        $page->addRevision($pageRevision);
 
         if ($publish === true || $pageType === 't') {
             $page->setPublishedRevision($pageRevision);

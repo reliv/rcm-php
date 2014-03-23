@@ -42,12 +42,12 @@
             <tr>
                 <td valign="middle"><p>Select Template:</p></td>
                 <td valign="middle">
-                    <select name="rcmPageRevision" id="rcmPageRevision">
+                    <select name="rcmRevision" id="rcmRevision">
 
                         <?php foreach ($this->rcmTemplates as $template) : ?>
                             <option value="<?=
                             $template->getPublishedRevision()
-                                ->getPageRevId(); ?>"><?=
+                                ->getRevisionId(); ?>"><?=
                                 $template->getName() ?></option>
                         <?php endforeach; ?>
 

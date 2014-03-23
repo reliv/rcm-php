@@ -358,7 +358,7 @@ class RcmViewInit extends AbstractHelper
                 window.rcmEdit = new RcmEdit(rcmConfig);
                 rcmEdit.setLanguage('" . $renderer->language . "');
                 rcmEdit.setPage('" . $renderer->page->getName() . "');
-                rcmEdit.setPageRevision('" . $renderer->pageRevision . "');
+                rcmEdit.setRevision('" . $renderer->pageRevision . "');
                 rcmEdit.setPageType('" . $renderer->pageType . "')
                 rcmEdit.setNewInstanceId(" . $renderer->newPluginCount . ");
                 rcmEdit.setEditor(rcmEditor);
@@ -386,7 +386,7 @@ class RcmViewInit extends AbstractHelper
         $publishButton = '';
 
         if (empty($currentRevision)
-            || $pageRevision != $currentRevision->getPageRevId()
+            || $pageRevision != $currentRevision->getRevisionId()
         ) {
             $publishButton = '<a href="' . $renderer->publishButtonHref
                 . '" class="rcmPublishButton">Publish</a>';
@@ -481,7 +481,7 @@ class RcmViewInit extends AbstractHelper
         $containers = $renderer->plugins;
 
         if (!empty($containers) && is_array($containers)) {
-            /** @var \Rcm\Entity\PagePluginInstance $plugin */
+            /** @var \Rcm\Entity\PluginWrapper $plugin */
             foreach ($containers as $containerNum => $plugins) {
                 foreach ($plugins as $plugin) {
                     $renderedContainers[$containerNum][]
