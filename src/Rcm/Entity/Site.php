@@ -108,6 +108,13 @@ class Site
     protected $status;
 
     /**
+     * @var string Meta Keywords
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $favIcon;
+
+    /**
      * @var array Array of pages
      *
      * @ORM\OneToMany(
@@ -545,6 +552,23 @@ class Site
 
         return false;
     }
+
+    /**
+     * @param string $favIcon
+     */
+    public function setFavIcon($favIcon)
+    {
+        $this->favIcon = $favIcon;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFavIcon()
+    {
+        return $this->favIcon;
+    }
+
 
 
 }
