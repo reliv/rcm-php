@@ -125,6 +125,16 @@ class Site
     protected $pages;
 
     /**
+     * @var array Array of containers
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Container",
+     *     mappedBy="site"
+     * )
+     */
+    protected $containers;
+
+    /**
      * @ORM\ManyToMany(
      *     targetEntity="PluginInstance"
      * )
@@ -422,6 +432,28 @@ class Site
     public function addPage(Page $page)
     {
         $this->pages[] = $page;
+    }
+
+    /**
+     * Get all the page entities for the site.
+     *
+     * @return array Array of page entities
+     */
+    public function getContainers()
+    {
+        return $this->containers;
+    }
+
+    /**
+     * Set up a page
+     *
+     * @param \Rcm\Entity\Container $container Page Entity to add.
+     *
+     * @return null
+     */
+    public function addContainer(Container $container)
+    {
+        $this->containers[] = $container;
     }
 
     /**
