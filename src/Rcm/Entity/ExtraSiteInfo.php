@@ -51,7 +51,7 @@ class ExtraSiteInfo
      *                                to.
      *
      * @ORM\ManyToOne(targetEntity="Site", inversedBy="pwsInfo")
-     * @ORM\JoinColumn(name="siteId", referencedColumnName="siteId", onDelete="CASCADE", onUpdate="CASCADE")
+     * @ORM\JoinColumn(name="siteId", referencedColumnName="siteId", onDelete="CASCADE")
      */
     protected $site;
 

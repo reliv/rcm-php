@@ -229,8 +229,8 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
             );
         }
 
-        /** @var \Rcm\Entity\PageRevision $pageRevision */
-        $this->pageRevision = $this->page->getRevisionById($pageRevisionId);
+        /** @var \Rcm\Entity\Revision $pageRevision */
+        $this->revision = $this->page->getRevisionById($pageRevisionId);
 
 
         if (empty($this->pageRevision)) {

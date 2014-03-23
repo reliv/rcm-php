@@ -191,9 +191,9 @@ class SiteFactory extends EntityMgrAware
         if (!empty($initialSiteWidePlugins)
             && is_array($initialSiteWidePlugins)
         ) {
-            /** @var \Rcm\Entity\PagePluginInstance $sitePlugin */
+            /** @var \Rcm\Entity\PluginWrapper $sitePlugin */
             foreach ($initialSiteWidePlugins as $sitePlugin) {
-                if ($sitePlugin instanceof \Rcm\Entity\PagePluginInstance) {
+                if ($sitePlugin instanceof \Rcm\Entity\PluginWrapper) {
                     $site->addSiteWidePlugin($sitePlugin->getInstance());
                 }
             }

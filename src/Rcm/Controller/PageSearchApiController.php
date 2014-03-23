@@ -14,7 +14,7 @@ class PageSearchApiController extends \Rcm\Controller\BaseController
 
         $results = $this->entityMgr->createQuery(
             '
-                        select page.name, pageRevision.pageTitle, page.pageType from Rcm\\Entity\\PageRevision pageRevision
+                        select page.name, pageRevision.pageTitle, page.pageType from Rcm\Entity\Revision pageRevision
                         join pageRevision.page page
                         join page.site site
                         where (page.name like :query or pageRevision.pageTitle like :query) and site.siteId like :siteId

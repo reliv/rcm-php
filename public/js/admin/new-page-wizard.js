@@ -1,7 +1,7 @@
 function rcmNewPageWizardCreatePage(dialogContainer) {
     var pageUrl = $("#rcmNewPageTemplateUrl").val();
     var pageName = $("#rcmNewPageTemplateName").val();
-    var revision = $("#rcmPageRevision").val();
+    var revision = $("#rcmRevision").val();
     var selectedLayout = null;
     var skipRedirect = $("#skipRedirect").val();
 
