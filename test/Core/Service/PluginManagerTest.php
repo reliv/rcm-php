@@ -2,21 +2,31 @@
 
 require_once __DIR__ . '/../../Base/DoctrineTestCase.php';
 
-use \RcmTest\Base\DoctrineTestCase;
+use \RcmTest\Base\BaseTestCase;
 use \Rcm\Service\PluginManager;
 
-class PluginManagerTest extends DoctrineTestCase
+class PluginManagerTest extends BaseTestCase
 {
 
     /** @var  \Rcm\Service\PluginManager */
     protected $pluginManager;
 
+    protected $instanceCounter = 1000000;
+
+    protected $newPlugins = array();
+
+    protected $removeCounter = 0;
+
+    /** @var  \Zend\Cache\Storage\StorageInterface */
+    protected $cache;
+
     public function setUp()
     {
-        $this->addModule('RcmRssFeed');
-        $this->addModule('RcmHtmlArea');
+        $this->addModule('RcmMockPlugin');
 
         parent::setUp();
+
+        $em = $this->getEmMock();
 
         /** @var \Zend\ServiceManager\ServiceManager $sm */
         $sm = $this->getServiceManager();
@@ -30,7 +40,7 @@ class PluginManagerTest extends DoctrineTestCase
         $moduleManager = $sm->get('ModuleManager');
 
         $this->pluginManager = new PluginManager(
-            $this->entityManager,
+            $em,
             $sm->get('config'),
             $sm,
             $moduleManager,
@@ -38,20 +48,94 @@ class PluginManagerTest extends DoctrineTestCase
             new \Zend\Http\PhpEnvironment\Request(),
             $cache
         );
+
+        $this->cache = $cache;
     }
 
-    private function setupRssFeedEntity($siteWide = false)
+    private function getEmMock()
     {
+        $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $pluginConfig = array(
-            'headline' => 'Testing Feed',
-            'rssFeedUrl' => 'http://www.planet-php.net/rdf/',
-            'rssFeedLimit' => '6',
-        );
+        $repoMock = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectRepository')
+            ->disableOriginalConstructor()
+            ->getMock();
 
+        $repoMock->expects($this->any())
+            ->method('findOneBy')
+            ->will($this->returnCallback(array($this, 'emMockEntityCallback')));
+
+        $em->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($repoMock));
+
+        $em->expects($this->any())
+            ->method('remove')
+            ->will($this->returnCallback(array($this, 'removeCallback')));
+
+        $em->expects($this->any())
+            ->method('persist')
+            ->will($this->returnCallback(array($this, 'persistCallback')));
+
+        return $em;
+    }
+
+    public function removeCallback()
+    {
+        $this->removeCounter++;
+        return;
+    }
+
+    public function persistCallback()
+    {
+        $args = func_get_args();
+
+        if (!empty($args[0]) && is_a($args[0], 'Rcm\Entity\PluginInstance')) {
+            /** @var \Rcm\Entity\PluginInstance $pluginInstance */
+            $pluginInstance = $args[0];
+
+            $id = $pluginInstance->getInstanceId();
+
+            if (empty($id)){
+                $pluginInstance->setInstanceId($this->instanceCounter);
+                $this->newPlugins[$this->instanceCounter] = $pluginInstance;
+                $this->instanceCounter++;
+            }
+        }
+    }
+
+    public function emMockEntityCallback()
+    {
+        $args = func_get_args();
+
+        $pluginInstanceId = null;
+
+        if (!empty($args[0]) && !empty($args[0]['pluginInstanceId'])) {
+            $pluginInstanceId = $args[0]['pluginInstanceId'];
+        }
+
+        switch ($pluginInstanceId) {
+        case 5000000:
+            return $this->setupMockEntity(false, 5000000);
+        case 2:
+            return $this->setupMockEntity(true, 2);
+        case 1:
+            return $this->setupMockEntity(false, 1);
+        default:
+            if (!empty($this->newPlugins[$pluginInstanceId])){
+                return $this->newPlugins[$pluginInstanceId];
+            }
+            return null;
+        }
+
+    }
+
+    private function setupMockEntity($siteWide = false, $instanceId=1)
+    {
         $pluginInstance = new \Rcm\Entity\PluginInstance();
-        $pluginInstance->setPlugin('RcmRssFeed');
-        $pluginInstance->setInstanceId(1);
+        $pluginInstance->setPlugin('RcmMockPlugin');
+        $pluginInstance->setInstanceId($instanceId);
         $pluginInstance->setMd5('91f65ba866e687ed8f482192cce57bd1');
 
         if ($siteWide) {
@@ -59,16 +143,7 @@ class PluginManagerTest extends DoctrineTestCase
             $pluginInstance->setDisplayName('Test Site Wide Instance');
         }
 
-        $this->entityManager->persist($pluginInstance);
-
-        $simpleConfig
-            = new \RcmInstanceConfig\Entity\DoctrineJsonInstanceConfig();
-        $simpleConfig->setInstanceId(1);
-        $simpleConfig->setConfig($pluginConfig);
-
-        $this->entityManager->persist($simpleConfig);
-        $this->entityManager->flush();
-        $this->entityManager->clear();
+        return $pluginInstance;
     }
 
     /**
@@ -77,7 +152,7 @@ class PluginManagerTest extends DoctrineTestCase
     public function testEnsureValidPlugin()
     {
         $this->assertTrue(
-            $this->pluginManager->ensurePluginIsValid('RcmHtmlArea')
+            $this->pluginManager->ensurePluginIsValid('RcmMockPlugin')
         );
     }
 
@@ -96,7 +171,7 @@ class PluginManagerTest extends DoctrineTestCase
     public function testGetPluginController()
     {
         $pluginController = $this->pluginManager->getPluginController(
-            'RcmHtmlArea'
+            'RcmMockPlugin'
         );
 
         $this->assertTrue(
@@ -106,7 +181,7 @@ class PluginManagerTest extends DoctrineTestCase
 
     public function testGetNewEntity()
     {
-        $viewData = $this->pluginManager->getNewEntity('RcmRssFeed');
+        $viewData = $this->pluginManager->getNewEntity('RcmMockPlugin');
 
         $this->assertArrayHasKey('html', $viewData);
         $this->assertArrayHasKey('css', $viewData);
@@ -124,14 +199,14 @@ class PluginManagerTest extends DoctrineTestCase
 
 
         $this->assertContains(
-            '<h2 data-textEdit="headline">Planet PHP Feed</h2>',
+            '{"html":"<p>This is a test<\/p>"}',
             $viewData['html']
         );
         $this->assertContains(
-            '/modules/rcm-rss-feed/style.css', $viewData['css'][0]
+            '/modules/rcm-mock-plugin/style.css', $viewData['css'][0]
         );
         $this->assertContains(
-            '/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]
+            '/modules/rcm-mock-plugin/test.js', $viewData['js'][0]
         );
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertFalse($viewData['siteWide']);
@@ -140,8 +215,6 @@ class PluginManagerTest extends DoctrineTestCase
 
     public function testGetPluginByInstanceId()
     {
-        $this->setupRssFeedEntity();
-
         $viewData = $this->pluginManager->getPluginByInstanceId(1);
 
         $this->assertArrayHasKey('html', $viewData);
@@ -159,13 +232,13 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('canCache', $viewData);
 
         $this->assertContains(
-            '<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']
+            '{"instanceData":"<p>This is a instance id 1<\/p>"}', $viewData['html']
         );
         $this->assertContains(
-            '/modules/rcm-rss-feed/style.css', $viewData['css'][0]
+            '/modules/rcm-mock-plugin/style.css', $viewData['css'][0]
         );
         $this->assertContains(
-            '/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]
+            '/modules/rcm-mock-plugin/test.js', $viewData['js'][0]
         );
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertFalse($viewData['siteWide']);
@@ -174,8 +247,6 @@ class PluginManagerTest extends DoctrineTestCase
 
     public function testCacheForGetPluginByInstanceId()
     {
-        $this->setupRssFeedEntity();
-
         $this->pluginManager->getPluginByInstanceId(1);
 
         $viewData = $this->pluginManager->getPluginByInstanceId(1);
@@ -195,13 +266,13 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('canCache', $viewData);
 
         $this->assertContains(
-            '<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']
+            '{"instanceData":"<p>This is a instance id 1<\/p>"}', $viewData['html']
         );
         $this->assertContains(
-            '/modules/rcm-rss-feed/style.css', $viewData['css'][0]
+            '/modules/rcm-mock-plugin/style.css', $viewData['css'][0]
         );
         $this->assertContains(
-            '/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]
+            '/modules/rcm-mock-plugin/test.js', $viewData['js'][0]
         );
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertFalse($viewData['siteWide']);
@@ -211,9 +282,7 @@ class PluginManagerTest extends DoctrineTestCase
 
     public function testGetSiteWide()
     {
-        $this->setupRssFeedEntity(true);
-
-        $viewData = $this->pluginManager->getPluginByInstanceId(1);
+        $viewData = $this->pluginManager->getPluginByInstanceId(2);
 
         $this->assertArrayHasKey('html', $viewData);
         $this->assertArrayHasKey('css', $viewData);
@@ -230,16 +299,17 @@ class PluginManagerTest extends DoctrineTestCase
         $this->assertArrayHasKey('canCache', $viewData);
 
         $this->assertContains(
-            '<h2 data-textEdit="headline">Testing Feed</h2>', $viewData['html']
+            '{"instanceData":"<p>This is a instance id 2<\/p>"}', $viewData['html']
+        );
+
+        $this->assertContains(
+            '/modules/rcm-mock-plugin/style.css', $viewData['css'][0]
         );
         $this->assertContains(
-            '/modules/rcm-rss-feed/style.css', $viewData['css'][0]
+            '/modules/rcm-mock-plugin/test.js', $viewData['js'][0]
         );
         $this->assertContains(
-            '/modules/rcm-rss-feed/RssReader.js', $viewData['js'][0]
-        );
-        $this->assertContains(
-            'Test Site Wide Instance', $viewData['displayName']
+            'Test Site Wide Instance', $viewData['displayName'], 'Failed. value: '.print_r($viewData, true)
         );
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertTrue($viewData['siteWide']);
@@ -251,20 +321,20 @@ class PluginManagerTest extends DoctrineTestCase
      */
     public function testGetPluginByInstanceIdException()
     {
-        $this->pluginManager->getPluginByInstanceId(1);
+        $this->pluginManager->getPluginByInstanceId(10000);
     }
 
     public function testGetNewPluginInstanceEntity()
     {
         $instance = $this->pluginManager->getNewPluginInstanceEntity(
-            'RcmHtmlArea'
+            'RcmMockPlugin'
         );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $instance);
 
-        $this->assertTrue($instance->getName() == 'RcmHtmlArea');
+        $this->assertTrue($instance->getName() == 'RcmMockPlugin');
         $this->assertTrue(
-            $instance->getDisplayName() == 'Rich Content Area',
+            $instance->getDisplayName() == 'Mock Object Display Name',
             'Display Name incorrect.  Display name set as '
             . $instance->getDisplayName()
         );
@@ -277,14 +347,14 @@ class PluginManagerTest extends DoctrineTestCase
         $instanceConfig = array('html' => 'This is a test');
 
         $newInstance = $this->pluginManager->saveNewInstance(
-            'RcmHtmlArea', $instanceConfig
+            'RcmMockPlugin', $instanceConfig
         );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $newInstance);
 
-        $this->assertTrue($newInstance->getName() == 'RcmHtmlArea');
+        $this->assertTrue($newInstance->getName() == 'RcmMockPlugin');
         $this->assertTrue(
-            $newInstance->getDisplayName() == 'Rich Content Area',
+            $newInstance->getDisplayName() == 'Mock Object Display Name',
             'Display Name incorrect.  Display name set as '
             . $newInstance->getDisplayName()
         );
@@ -300,12 +370,12 @@ class PluginManagerTest extends DoctrineTestCase
         $instanceConfig = array('html' => 'This is a test');
 
         $newInstance = $this->pluginManager->saveNewInstance(
-            'RcmHtmlArea', $instanceConfig, true, 'Test Display Name'
+            'RcmMockPlugin', $instanceConfig, true, 'Test Display Name'
         );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $newInstance);
 
-        $this->assertTrue($newInstance->getName() == 'RcmHtmlArea');
+        $this->assertTrue($newInstance->getName() == 'RcmMockPlugin');
         $this->assertTrue(
             $newInstance->getDisplayName() == 'Test Display Name',
             'Display Name incorrect.  Display name set as '
@@ -326,7 +396,7 @@ class PluginManagerTest extends DoctrineTestCase
         $instanceConfig = array('html' => 'This is a test');
 
         $testInstance = $this->pluginManager->saveNewInstance(
-            'RcmHtmlArea', $instanceConfig
+            'RcmMockPlugin', $instanceConfig
         );
 
         $testInstanceId = $testInstance->getInstanceId();
@@ -339,9 +409,9 @@ class PluginManagerTest extends DoctrineTestCase
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $savedInstance);
 
-        $this->assertTrue($savedInstance->getName() == 'RcmHtmlArea');
+        $this->assertTrue($savedInstance->getName() == 'RcmMockPlugin');
         $this->assertTrue(
-            $savedInstance->getDisplayName() == 'Rich Content Area',
+            $savedInstance->getDisplayName() == 'Mock Object Display Name',
             'Display Name incorrect.  Display name set as '
             . $savedInstance->getDisplayName()
         );
@@ -364,7 +434,7 @@ class PluginManagerTest extends DoctrineTestCase
         $instanceConfig = array('html' => 'This is a test');
 
         $testInstance = $this->pluginManager->saveNewInstance(
-            'RcmHtmlArea', $instanceConfig
+            'RcmMockPlugin', $instanceConfig
         );
 
         $testInstanceId = $testInstance->getInstanceId();
@@ -375,9 +445,9 @@ class PluginManagerTest extends DoctrineTestCase
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $savedInstance);
 
-        $this->assertTrue($savedInstance->getName() == 'RcmHtmlArea');
+        $this->assertTrue($savedInstance->getName() == 'RcmMockPlugin');
         $this->assertTrue(
-            $savedInstance->getDisplayName() == 'Rich Content Area',
+            $savedInstance->getDisplayName() == 'Mock Object Display Name',
             'Display Name incorrect.  Display name set as '
             . $savedInstance->getDisplayName()
         );
@@ -392,33 +462,26 @@ class PluginManagerTest extends DoctrineTestCase
 
     public function testDeleteInstanceId()
     {
-        $this->setupRssFeedEntity();
-
-        $this->assertTrue($this->instanceExistsInDb(1));
-
         $this->pluginManager->deletePluginInstance(1);
-
-        $this->assertFalse($this->instanceExistsInDb(1));
+        $this->assertEquals(1, $this->removeCounter);
     }
 
-    private function instanceExistsInDb($instanceId)
+    /**
+     * @expectedException \Rcm\Exception\PluginInstanceNotFoundException
+     */
+    public function testDeleteInstanceIdNotFound()
     {
-        $checkQuery = $this->entityManager->createQuery(
-            '
-                        SELECT COUNT(pi.instanceId) FROM \Rcm\Entity\PluginInstance pi
-                        WHERE pi.instanceId = :instanceId
-                    '
-        );
+        $this->pluginManager->deletePluginInstance(40000000);
+        $this->assertEquals(2, $this->removeCounter);
+    }
 
-        $checkQuery->setParameter('instanceId', $instanceId);
-
-        $exists = $checkQuery->getSingleScalarResult();
-
-        if ($exists > 0) {
-            return true;
-        }
-
-        return false;
+    /**
+     * @expectedException \RcmMockPlugin\Exception\RuntimeException
+     */
+    public function testDeleteInstanceIdPluginControllerThrowsException()
+    {
+        $this->pluginManager->deletePluginInstance(5000000);
+        $this->assertEquals(3, $this->removeCounter);
     }
 
 }
