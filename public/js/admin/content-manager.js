@@ -40,7 +40,7 @@ function RcmEdit(config) {
     /**
      * Set the current page revision.
      *
-     * @param pageRevision
+     * @param revision
      */
     me.setRevision = function (revision) {
         me.revision = revision;
@@ -162,7 +162,7 @@ function RcmEdit(config) {
             'name="saveData" value="" />').val(dataToSend);
 
         var form = $('<form method="post" action="/rcm-admin-save/' +
-            this.page + '/' + this.pageType + '/' + this.language + '/' + this.pageRevision + '" name="rcmDataForm" id="rcmDataForm"></form>').append(input);
+            this.page + '/' + this.pageType + '/' + this.language + '/' + this.revision + '" name="rcmDataForm" id="rcmDataForm"></form>').append(input);
 
         $("body").append(form);
 
@@ -225,7 +225,7 @@ function RcmEdit(config) {
      *
      * @type {Number}
      */
-    me.pageRevision = 0;
+    me.revision = 0;
 
     /**
      * Current Language - ISO 3 digit language var.  Defaults to English
