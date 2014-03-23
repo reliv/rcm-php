@@ -14,13 +14,10 @@
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://ci.reliv.com/confluence
  */
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use \Rcm\Entity\PluginInstance;
 
 /**
  * Plugin Instances Entity
@@ -35,11 +32,10 @@ use \Rcm\Entity\PluginInstance;
  * @version   Release: 1.0
  *
  * @ORM\Entity
- * @ORM\Table(name="rcm_container_plugin_instances")
+ * @ORM\Table(name="rcm_plugin_wrappers")
  */
-class ContainerPlugin
+class PluginWrapper
 {
-
     /**
      * @var int Auto-Incremented Primary Key
      *
@@ -47,14 +43,14 @@ class ContainerPlugin
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
-    protected $containerPluginId;
+    protected $pluginWrapperId;
 
     /**
      * @var integer Layout Placement
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
      */
-    protected $container;
+    protected $layoutContainer;
 
     /**
      * @var integer Order of Layout Placement
@@ -86,18 +82,15 @@ class ContainerPlugin
 
     /**
      * fetch="EAGER" here is very important for optimizing the number of queries
-     *
-     * @var \Rcm\Entity\PluginInstance
-     *
      * @ORM\ManyToOne(
      *     targetEntity="PluginInstance",
      *     fetch="EAGER",
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(
-     *      name="instance_id",
-     *      referencedColumnName="instanceId",
-     *      onDelete="SET NULL"
+     *      name="pluginInstanceId",
+     *      referencedColumnName="pluginInstanceId",
+     *      onDelete="CASCADE"
      * )
      **/
     protected $instance;
@@ -107,9 +100,9 @@ class ContainerPlugin
      *
      * @return int Layout Container
      */
-    public function getContainer()
+    public function getLayoutContainer()
     {
-        return $this->container;
+        return $this->layoutContainer;
     }
 
     /**
@@ -120,9 +113,9 @@ class ContainerPlugin
      *
      * @return null
      */
-    public function setContainer($container)
+    public function setLayoutContainer($container)
     {
-        $this->container = $container;
+        $this->layoutContainer = $container;
     }
 
     /**
@@ -147,7 +140,7 @@ class ContainerPlugin
         $this->renderOrder = $order;
     }
 
-    public function setInstance(PluginInstance $instance)
+    public function setInstance($instance)
     {
         $this->instance = $instance;
     }
@@ -161,24 +154,21 @@ class ContainerPlugin
     }
 
     /**
-     * @param int $containerPluginId
+     * @param int $pluginWrapperId
      */
-    public function setContainerPluginId($containerPluginId)
+    public function setPluginWrapperId($pluginWrapperId)
     {
-        $this->containerPluginId = $containerPluginId;
+        $this->pluginWrapperId = $pluginWrapperId;
     }
 
     /**
      * @return int
      */
-    public function getContainerPluginId()
+    public function getPluginWrapperId()
     {
-        return $this->containerPluginId;
+        return $this->pluginWrapperId;
     }
 
-    /**
-     * @return int
-     */
     public function getInstanceId()
     {
         return $this->instance->getInstanceId();
@@ -189,7 +179,12 @@ class ContainerPlugin
      */
     public function setHeight($height)
     {
-        $this->height = $height;
+        //Having floats in here was causing sql errors sometimes when saving
+        if (empty($height)) {
+            $this->height = null;
+        } else {
+            $this->height = round($height);
+        }
     }
 
     /**
@@ -205,7 +200,12 @@ class ContainerPlugin
      */
     public function setWidth($width)
     {
-        $this->width = $width;
+        //Having floats in here was causing sql errors sometimes when saving
+        if (empty($width)) {
+            $this->width = null;
+        } else {
+            $this->width = round($width);
+        }
     }
 
     /**
@@ -231,5 +231,6 @@ class ContainerPlugin
     {
         return $this->divFloat;
     }
+
 
 }

@@ -133,35 +133,6 @@ function RcmTinyMceEditor(config) {
 
     };
 
-    me.getAssets = function (htmlToCheck) {
-
-        var assets = [];
-
-        //Record what assets this ckEdit is using
-        var html = $('<div></div>');
-        html.append(htmlToCheck);
-
-        html.find('img').each(function (key, ele) {
-            assets.push(
-                $(ele).attr('src')
-            );
-        });
-
-        html.find('a').each(function (key, ele) {
-            assets.push(
-                $(ele).attr('href')
-            );
-        });
-
-        html.find('embed').each(function (key, ele) {
-            assets.push(
-                $(ele).attr('src')
-            );
-        });
-
-        return assets;
-    };
-
 
     /*********************************/
     /*      Ugly Toolbar Hacks       */

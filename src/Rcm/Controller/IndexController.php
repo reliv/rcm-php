@@ -17,7 +17,7 @@
  */
 namespace Rcm\Controller;
 
-use Rcm\Entity\PageRevision,
+use Rcm\Entity\Revision,
     \Rcm\Entity\PluginInstance;
 
 /**
@@ -42,7 +42,7 @@ class IndexController extends \Rcm\Controller\BaseController
     protected $page;
 
     /**
-     * @var \Rcm\Entity\PageRevision
+     * @var \Rcm\Entity\Revision
      */
     protected $pageRevision;
 
@@ -125,7 +125,7 @@ class IndexController extends \Rcm\Controller\BaseController
          */
 
         elseif ($this->adminIsLoggedIn() && empty($pageRevisionId)) {
-            /** @var \Rcm\Entity\PageRevision pageRevision */
+            /** @var \Rcm\Entity\Revision pageRevision */
             $this->pageRevision = $this->page->getStagedRevision();
         }
 
@@ -144,7 +144,7 @@ class IndexController extends \Rcm\Controller\BaseController
 
         if (!empty($pageInstances)) {
             foreach ($pageInstances as $container => $ordered) {
-                /** @var \Rcm\Entity\PagePluginInstance $instance */
+                /** @var \Rcm\Entity\PluginWrapper $instance */
                 foreach ($ordered as $order => $instance) {
                     $plugins[$container][$order]['plugin'] = $this
                         ->pluginManager->prepPluginInstance(
@@ -204,7 +204,7 @@ class IndexController extends \Rcm\Controller\BaseController
         $layout->setVariable('rcmAdminMode', true);
 
         $publishLink = $this->getPublishLink(
-            $this->pageRevision->getPageRevId()
+            $this->pageRevision->getRevisionId()
         );
 
         $layout->setVariable(
@@ -229,7 +229,7 @@ class IndexController extends \Rcm\Controller\BaseController
 
         $layout->setVariable(
             'pageRevision',
-            $this->pageRevision->getPageRevId()
+            $this->pageRevision->getRevisionId()
         );
 
         $layout->setVariable(
@@ -364,7 +364,7 @@ class IndexController extends \Rcm\Controller\BaseController
     protected function setupAdminToolBar()
     {
         $adminPanel = $this->config['reliv']['adminPanel'];
-        $revisionLinks = $this->getPageRevisionLinks();
+        $revisionLinks = $this->getRevisionLinks();
 
         $adminPanel['Page']['links']['Restore']['links']
             = $revisionLinks['restore']['menu'];
@@ -372,10 +372,10 @@ class IndexController extends \Rcm\Controller\BaseController
             = $revisionLinks['drafts']['menu'];
 
         $adminPanel['Page']['links']['Publish']['links']['Publish Now']['href']
-            = $this->getPublishLink($this->pageRevision->getPageRevId());
+            = $this->getPublishLink($this->pageRevision->getRevisionId());
 
         $adminPanel['Page']['links']['Publish']['links']['Stage']['href']
-            = $this->getStagingLink($this->pageRevision->getPageRevId());
+            = $this->getStagingLink($this->pageRevision->getRevisionId());
 
         return $adminPanel;
     }
@@ -452,9 +452,9 @@ class IndexController extends \Rcm\Controller\BaseController
     /**
      * @return array
      */
-    protected function getPageRevisionLinks()
+    protected function getRevisionLinks()
     {
-        /** @var \RCM\Entity\PageRevision $revision */
+        /** @var \Rcm\Entity\Revision $revision */
         foreach ($this->page->getRevisions() as $revision) {
 
             $linkDisplay
@@ -463,7 +463,7 @@ class IndexController extends \Rcm\Controller\BaseController
 
             $linkHref = $this->getLink(
                 'contentManager',
-                $revision->getPageRevId()
+                $revision->getRevisionId()
             );
 
             $dateForSort = $revision->getCreatedDate()->format('Ymd');
@@ -473,17 +473,17 @@ class IndexController extends \Rcm\Controller\BaseController
             }
 
             if ($revision->wasPublished()
-                && $this->page->getCurrentRevision()->getPageRevId()
-                != $revision->getPageRevId()
+                && $this->page->getCurrentRevision()->getRevisionId()
+                != $revision->getRevisionId()
             ) {
-                $restoreLinks[$revision->getPageRevId()] = array(
+                $restoreLinks[$revision->getRevisionId()] = array(
                     'display' => $linkDisplay,
                     'aclGroups' => 'admin',
                     'cssClass' => 'restoreInstanceIcon',
-                    'href' => $this->getPublishLink($revision->getPageRevId()),
+                    'href' => $this->getPublishLink($revision->getRevisionId()),
                 );
             } elseif (!$revision->wasPublished()) {
-                $draftLinks[$revision->getPageRevId()] = array(
+                $draftLinks[$revision->getRevisionId()] = array(
                     'display' => $linkDisplay,
                     'aclGroups' => 'admin',
                     'cssClass' => 'restoreInstanceIcon',

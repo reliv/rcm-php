@@ -103,7 +103,7 @@ class ContainerManager
     public function getContainerPlugins($containerId)
     {
 
-        $cacheId = 'rcmContainerPluginWrapper_' . $containerId;
+        $cacheId = 'rcmPluginWrapper_' . $containerId;
 
         if ($this->cache->hasItem($cacheId)) {
             $return = $this->cache->getItem($cacheId);

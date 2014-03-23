@@ -17,6 +17,8 @@
 
 namespace Rcm\View\Helper;
 
+use Rcm\Entity\Page;
+use Rcm\Entity\Revision;
 use \Zend\View\Helper\AbstractHelper;
 
 /**
@@ -64,24 +66,23 @@ class AdminTitleBar extends AbstractHelper
         \Rcm\Entity\Page $page,
         $displayedRevision,
         $language
-    )
-    {
+    ) {
         if (empty($displayedRevision) || !is_numeric($displayedRevision)) {
             return null;
         }
 
         $pagetype = $page->getPageType();
 
-        /** @var \Rcm\Entity\PageRevision $currentRevision */
+        /** @var \Rcm\Entity\Revision $currentRevision */
         $currentRevision = $page->getRevisionById($displayedRevision);
-        $currentRevisionId = $currentRevision->getPageRevId();
+        $currentRevisionId = $currentRevision->getRevisionId();
         $currentRevisionTitle = $currentRevision->getPageTitle();
         $currentRevisionTitle .= ' - Draft';
 
         $currentPublishedRev = $page->getCurrentRevision();
 
         if (!empty($currentPublishedRev)) {
-            $currentPublishedRevId = $currentPublishedRev->getPageRevId();
+            $currentPublishedRevId = $currentPublishedRev->getRevisionId();
             $currentPublishedRevTitle = $currentPublishedRev->getPageTitle();
             $currentPublishedRevTitle .= ' - Live';
         }
@@ -89,7 +90,7 @@ class AdminTitleBar extends AbstractHelper
         $currentStagedRev = $page->getStagedRevision();
 
         if (!empty($currentStagedRev)) {
-            $currentStagedRevId = $currentStagedRev->getPageRevId();
+            $currentStagedRevId = $currentStagedRev->getRevisionId();
             $currentStagedRevTitle = $currentStagedRev->getPageTitle();
             $currentStagedRevTitle .= ' - Staged';
         }
@@ -97,7 +98,7 @@ class AdminTitleBar extends AbstractHelper
         $lastSavedDraft = $page->getLastSavedRevision();
 
         if (!empty($lastSavedDraft)) {
-            $lastSavedRevId = $lastSavedDraft->getPageRevId();
+            $lastSavedRevId = $lastSavedDraft->getRevisionId();
             $lastSavedRevTitle = $lastSavedDraft->getPageTitle();
             $lastSavedRevTitle .= ' - Latest Draft';
         }
@@ -178,15 +179,15 @@ class AdminTitleBar extends AbstractHelper
      *
      * @param \Rcm\Entity\Page         $page     RCM Page Entity
      * @param string                   $pageType Type of page
-     * @param \Rcm\Entity\PageRevision $revision RCM Page Revision Entity
+     * @param \Rcm\Entity\Revision     $revision RCM Page Revision Entity
      * @param string                   $language Language to use for link
      *
      * @return mixed
      */
     protected function getRevisionLink(
-        \Rcm\Entity\Page $page,
+        Page $page,
         $pageType,
-        \Rcm\Entity\PageRevision $revision,
+        Revision $revision,
         $language
     )
     {
