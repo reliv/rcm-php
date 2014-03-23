@@ -212,7 +212,7 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
         $this->ensureAdminIsLoggedIn();
 
         $pageName = $this->getEvent()->getRouteMatch()->getParam('page');
-        $pageRevisionId = $this->getEvent()->getRouteMatch()->getParam(
+        $revisionId = $this->getEvent()->getRouteMatch()->getParam(
             'revision'
         );
 
@@ -229,11 +229,11 @@ class BaseController extends \Rcm\Controller\EntityMgrAwareController
             );
         }
 
-        /** @var \Rcm\Entity\Revision $pageRevision */
-        $this->revision = $this->page->getRevisionById($pageRevisionId);
+        /** @var \Rcm\Entity\Revision $revision */
+        $this->revision = $this->page->getRevisionById($revisionId);
 
 
-        if (empty($this->pageRevision)) {
+        if (empty($this->revision)) {
             throw new \Rcm\Exception\InvalidArgumentException(
                 'Page Revision Not Found'
             );

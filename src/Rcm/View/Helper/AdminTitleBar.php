@@ -76,14 +76,14 @@ class AdminTitleBar extends AbstractHelper
         /** @var \Rcm\Entity\Revision $currentRevision */
         $currentRevision = $page->getRevisionById($displayedRevision);
         $currentRevisionId = $currentRevision->getRevisionId();
-        $currentRevisionTitle = $currentRevision->getPageTitle();
+        $currentRevisionTitle = $page->getPageTitle();
         $currentRevisionTitle .= ' - Draft';
 
         $currentPublishedRev = $page->getCurrentRevision();
 
         if (!empty($currentPublishedRev)) {
             $currentPublishedRevId = $currentPublishedRev->getRevisionId();
-            $currentPublishedRevTitle = $currentPublishedRev->getPageTitle();
+            $currentPublishedRevTitle = $page->getPageTitle();
             $currentPublishedRevTitle .= ' - Live';
         }
 
@@ -91,7 +91,7 @@ class AdminTitleBar extends AbstractHelper
 
         if (!empty($currentStagedRev)) {
             $currentStagedRevId = $currentStagedRev->getRevisionId();
-            $currentStagedRevTitle = $currentStagedRev->getPageTitle();
+            $currentStagedRevTitle = $page->getPageTitle();
             $currentStagedRevTitle .= ' - Staged';
         }
 
@@ -99,7 +99,7 @@ class AdminTitleBar extends AbstractHelper
 
         if (!empty($lastSavedDraft)) {
             $lastSavedRevId = $lastSavedDraft->getRevisionId();
-            $lastSavedRevTitle = $lastSavedDraft->getPageTitle();
+            $lastSavedRevTitle = $page->getPageTitle();
             $lastSavedRevTitle .= ' - Latest Draft';
         }
 
@@ -200,7 +200,7 @@ class AdminTitleBar extends AbstractHelper
                     'page' => $page->getName(),
                     'pageType' => $pageType,
                     'language' => $language,
-                    'revision' => $revision->getPageRevId()
+                    'revision' => $revision->getRevisionId()
                 )
             );
         } else {
@@ -209,7 +209,7 @@ class AdminTitleBar extends AbstractHelper
                 array(
                     'page' => $page->getName(),
                     'language' => $language,
-                    'revision' => $revision->getPageRevId()
+                    'revision' => $revision->getRevisionId()
                 )
             );
         }

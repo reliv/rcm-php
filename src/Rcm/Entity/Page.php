@@ -77,10 +77,38 @@ class Page
     protected $lastPublished;
 
     /**
+     * @var string Page Layout
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $pageLayout;
+
+    /**
+     * @var string Page Title
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $pageTitle;
+
+    /**
+     * @var string Page Description
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $description;
+
+    /**
+     * @var string Meta Keywords
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $keywords;
+
+    /**
      * @var \Rcm\Entity\Revision Integer Current Page Revision ID
      *
      * @ORM\OneToOne(targetEntity="Revision")
-     * @ORM\JoinColumn(name="pub_id", referencedColumnName="revisionId")
+     * @ORM\JoinColumn(name="publishedRevisionId", referencedColumnName="revisionId")
      */
     protected $currentRevision;
 
@@ -88,7 +116,7 @@ class Page
      * @var \Rcm\Entity\Revision Integer Staged Revision ID
      *
      * @ORM\OneToOne(targetEntity="Revision")
-     * @ORM\JoinColumn(name="stage_id", referencedColumnName="revisionId")
+     * @ORM\JoinColumn(name="stagedRevisionId", referencedColumnName="revisionId")
      */
     protected $stagedRevision;
 
@@ -108,15 +136,28 @@ class Page
     protected $site;
 
     /**
-     * @var array Array of page revisions
-     *
-     * @ORM\OneToMany(
+     * @ORM\ManyToMany(
      *     targetEntity="Revision",
-     *     mappedBy="page",
-     *     indexBy="revisionId",
-     *     cascade={"persist", "remove"}
+     *     indexBy="revisionId"
      * )
-     */
+     * @ORM\JoinTable(
+     *     name="rcm_pages_revisions",
+     *     joinColumns={
+     *         @ORM\JoinColumn(
+     *             name="pageId",
+     *             referencedColumnName="pageId",
+     *             onDelete="CASCADE"
+     *         )
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(
+     *             name="revisionId",
+     *             referencedColumnName="revisionId",
+     *             onDelete="CASCADE"
+     *         )
+     *     }
+     * )
+     **/
     protected $revisions;
 
     /**
@@ -537,6 +578,69 @@ class Page
         $return = array_pop($sorted);
 
         return $return;
+    }
 
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $keywords
+     */
+    public function setKeywords($keywords)
+    {
+        $this->keywords = $keywords;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKeywords()
+    {
+        return $this->keywords;
+    }
+
+    /**
+     * @param string $pageLayout
+     */
+    public function setPageLayout($pageLayout)
+    {
+        $this->pageLayout = $pageLayout;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPageLayout()
+    {
+        return $this->pageLayout;
+    }
+
+    /**
+     * @param string $pageTitle
+     */
+    public function setPageTitle($pageTitle)
+    {
+        $this->pageTitle = $pageTitle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPageTitle()
+    {
+        return $this->pageTitle;
     }
 }
