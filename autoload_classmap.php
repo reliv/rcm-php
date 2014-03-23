@@ -39,7 +39,6 @@ return array(
   'Rcm\Exception\SiteNotFoundException'           => __DIR__ . '/src/Rcm/Exception/SiteNotFoundException.php',
   'Rcm\Factory\DoctrineInjector'                  => __DIR__ . '/src/Rcm/Factory/DoctrineInjector.php',
   'Rcm\Interfaces\PluginManagerInterface'         => __DIR__ . '/src/Rcm/Interfaces/PluginManagerInterface.php',
-  'Rcm\Model\ContainerManager'                    => __DIR__ . '/src/Rcm/Model/ContainerManager.php',
   'Rcm\Model\EntityMgrAware'                      => __DIR__ . '/src/Rcm/Model/EntityMgrAware.php',
   'Rcm\Model\IpInfo'                              => __DIR__ . '/src/Rcm/Model/IpInfo.php',
   'Rcm\Model\Logger'                              => __DIR__ . '/src/Rcm/Model/Logger.php',
@@ -63,7 +62,6 @@ return array(
   'RcmTest\Base\BaseTestCase'                     => __DIR__ . '/test/Base/BaseTestCase.php',
   'RcmTest\Base\DoctrineTestCase'                 => __DIR__ . '/test/Base/DoctrineTestCase.php',
   'RcmTest\Base\Zf2TestCase'                      => __DIR__ . '/test/Base/ZF2TestCase.php',
-  'ContainerManagerTest'                          => __DIR__ . '/test/Core/Model/ContainerManagerTest.php',
   'PluginManagerTest'                             => __DIR__ . '/test/Core/Model/PluginManagerTest.php',
   'RcmGeneric\Module'                             => __DIR__ . '/themes/RcmGeneric/Module.php',
 );

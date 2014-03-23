@@ -46,13 +46,9 @@ class PluginManager implements PluginManagerInterface
 
         /** @var \Zend\ModuleManager\ModuleManager moduleManager */
         $this->moduleManager = $moduleManager;
-
         $this->renderer = $renderer;
-
         $this->entityManager = $em;
-
         $this->config = $config;
-
         $this->cache = $cache;
     }
 
@@ -62,9 +58,9 @@ class PluginManager implements PluginManagerInterface
         return $viewData;
     }
 
-    public function getPluginByInstanceId($instanceId)
+    public function getPluginByInstanceId($pluginInstanceId)
     {
-        $cacheId = 'rcmPluginInstance_' . $instanceId;
+        $cacheId = 'rcmPluginInstance_' . $pluginInstanceId;
 
         if ($this->cache->hasItem($cacheId)) {
             $return = $this->cache->getItem($cacheId);
@@ -72,15 +68,15 @@ class PluginManager implements PluginManagerInterface
             return $return;
         }
 
-        $pluginInstance = $this->getInstanceEntity($instanceId);
+        $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
 
         if (empty($pluginInstance)) {
             throw new PluginInstanceNotFoundException('Plugin for instanceid '
-                . $instanceId . ' not found.');
+                . $pluginInstanceId . ' not found.');
         }
 
         $return = $this->getPluginViewData(
-            $pluginInstance->getName(), $instanceId
+            $pluginInstance->getName(), $pluginInstanceId
         );
 
         if ($pluginInstance->isSiteWide()) {
@@ -103,7 +99,7 @@ class PluginManager implements PluginManagerInterface
         return $return;
     }
 
-    public function getPluginViewData($pluginName, $instanceId)
+    public function getPluginViewData($pluginName, $pluginInstanceId)
     {
 
         /** @var \Rcm\Plugin\PluginInterface $controller */
@@ -112,10 +108,10 @@ class PluginManager implements PluginManagerInterface
         //If the plugin controller can accept a ZF2 request, pass it
         $controller->setRequest($this->request);
 
-        if ($instanceId < 0) {
-            $viewModel = $controller->renderDefaultInstance($instanceId);
+        if ($pluginInstanceId < 0) {
+            $viewModel = $controller->renderDefaultInstance($pluginInstanceId);
         } else {
-            $viewModel = $controller->renderInstance($instanceId);
+            $viewModel = $controller->renderInstance($pluginInstanceId);
         }
 
         $headlink = $this->renderer->plugin('headlink');
@@ -139,7 +135,7 @@ class PluginManager implements PluginManagerInterface
             'fromCache' => false,
             'canCache' => true,
             'pluginName' => $pluginName,
-            'instanceId' => $instanceId,
+            'pluginInstanceId' => $pluginInstanceId,
         );
 
 
@@ -176,9 +172,9 @@ class PluginManager implements PluginManagerInterface
 
     }
 
-    public function savePlugin($instanceId, $saveData)
+    public function savePlugin($pluginInstanceId, $saveData)
     {
-        $pluginInstance = $this->getInstanceEntity($instanceId);
+        $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
 
         if ($pluginInstance->getMd5() == md5(serialize($saveData))) {
             return $pluginInstance;
@@ -195,19 +191,22 @@ class PluginManager implements PluginManagerInterface
         return $newPluginInstance;
     }
 
-    public function deletePluginInstance($instanceId)
+    public function deletePluginInstance($pluginInstanceId)
     {
-        $query = $this->entityManager->createQuery(
-            '
-                        DELETE FROM \Rcm\Entity\PluginInstance pi
-                        WHERE pi.instanceId = :instanceId
-                    '
-        );
+        $pluginInstanceEntity = $this->getInstanceEntity($pluginInstanceId);
 
-        $query->setParameter('instanceId', $instanceId);
+        if (empty($pluginInstanceEntity)) {
+            throw new PluginInstanceNotFoundException(
+                'No plugin found to delete'
+            );
+        }
 
-        $query->execute();
+        /** @var \Rcm\Plugin\PluginInterface $controller */
+        $controller = $this->getPluginController($pluginInstanceEntity->getName());
+        $controller->deleteInstance($pluginInstanceEntity->getInstanceId());
 
+        $this->entityManager->remove($pluginInstanceEntity);
+        $this->entityManager->flush();
     }
 
     public function saveNewInstance(
@@ -318,14 +317,14 @@ class PluginManager implements PluginManagerInterface
     }
 
     /**
-     * @param $instanceId
+     * @param $pluginInstanceId
      *
      * @return \Rcm\Entity\PluginInstance
      */
-    private function getInstanceEntity($instanceId)
+    private function getInstanceEntity($pluginInstanceId)
     {
         return $this->entityManager
-            ->getRepository("\Rcm\Entity\PluginInstance")
-            ->findOneBy(array('instanceId' => $instanceId));
+            ->getRepository('\Rcm\Entity\PluginInstance')
+            ->findOneBy(array('pluginInstanceId' => $pluginInstanceId));
     }
 }
