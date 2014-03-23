@@ -58,7 +58,7 @@ class Site
      *                                  site.
      *
      * @ORM\ManyToOne(targetEntity="Domain")
-     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId", onDelete="SET NULL", onUpdate="CASCADE")
+     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId", onDelete="SET NULL")
      */
     protected $domain;
 
@@ -101,8 +101,7 @@ class Site
      * @ORM\JoinColumn(
      *      name="languageId",
      *      referencedColumnName="languageId",
-     *      onDelete="SET NULL",
-     *      onUpdate="CASCADE"
+     *      onDelete="SET NULL"
      * )
      **/
     protected $language;
@@ -159,8 +158,7 @@ class Site
      *         @ORM\JoinColumn(
      *             name="siteId",
      *             referencedColumnName="siteId",
-     *             onDelete="CASCADE",
-     *             onUpdate="CASCADE"
+     *             onDelete="CASCADE"
      *         )
      *     },
      *     inverseJoinColumns={
