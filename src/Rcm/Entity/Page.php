@@ -17,8 +17,6 @@
  */
 namespace Rcm\Entity;
 
-use Zend\XmlRpc\Value\Integer;
-
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -79,9 +77,16 @@ class Page
     /**
      * @var string Page Layout
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $pageLayout;
+
+    /**
+     * @var string Default Site Layout
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $siteLayoutOverride;
 
     /**
      * @var string Page Title
@@ -159,6 +164,14 @@ class Page
      * )
      **/
     protected $revisions;
+
+    /**
+     * @var \Rcm\Entity\Page
+     *
+     * @ORM\ManyToOne(targetEntity="Page")
+     * @ORM\JoinColumn(name="parentId", referencedColumnName="pageId", onDelete="CASCADE", nullable=true)
+     */
+    protected $parent;
 
     /**
      * Constructor for Page Entity.  Adds a hydrator to site reference
@@ -643,4 +656,22 @@ class Page
     {
         return $this->pageTitle;
     }
+
+    /**
+     * @param \Rcm\Entity\Page $parent
+     */
+    public function setParent(Page $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * @return \Rcm\Entity\Page
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+
 }
