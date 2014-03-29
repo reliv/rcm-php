@@ -29,7 +29,7 @@ namespace Rcm\Exception;
  * @license   License.txt New BSD License
  * @version   Release: 1.0
  */
-class PageFoundException
+class ContainerNotFoundException
     extends \InvalidArgumentException
     implements \Rcm\Exception\ExceptionInterface
 {

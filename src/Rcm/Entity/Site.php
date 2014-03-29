@@ -81,6 +81,20 @@ class Site
     protected $theme;
 
     /**
+     * @var string Default Site Layout
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $siteLayout;
+
+    /**
+     * @var string Default Site Title for all pages
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $siteTitle;
+
+    /**
      * @var \Rcm\Entity\Language Default language for the site
      *
      * @ORM\ManyToOne(targetEntity="Language")
