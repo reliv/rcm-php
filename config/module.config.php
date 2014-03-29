@@ -61,13 +61,6 @@ return array(
                         'cssClass' => 'newPageIcon',
                         'href' => '#',
                         'links' => array(
-                            /*'Blog Post' => array(
-                                'display' => 'Blog Post',
-                                'aclGroups' => 'admin',
-                                'cssClass' => 'blogIcon',
-                                'href' => "#",
-                            ),*/
-
                             'Page' => array(
                                 'display' => 'Page',
                                 'aclGroups' => 'admin',
@@ -107,43 +100,6 @@ return array(
                         ),
                     ),
 
-//                    'Save' => array(
-//                        'display' => 'Save',
-//                        'aclGroups' => 'admin',
-//                        'cssClass' => 'rcmSaveIcon rcmSaveMenu',
-//                        'href' => '#',
-//                        'links' => array(
-//                            'Save Draft' => array(
-//                                'display' => 'Save Draft',
-//                                'aclGroups' => 'admin',
-//                                'cssClass' => 'rcmSaveIcon rcmSave',
-//                                'href' => '#',
-//                            ),
-//
-//                            'Save and Publish Now' => array(
-//                                'display' => 'Save Draft',
-//                                'aclGroups' => 'admin',
-//                                'cssClass' => 'rcmSaveIcon rcmSave',
-//                                'href' => '#',
-//                            ),
-//
-//                            'Save As...' => array(
-//                                'display' => 'Save As...',
-//                                'aclGroups' => 'admin',
-//                                'cssClass' => 'rcmSaveAsIcon',
-//                                'href' => '#',
-//                            ),
-//                        )
-//                    ),
-
-
-                    /*'Go To Page...' => array(
-                        'display' => 'Go To Page...',
-                        'aclGroups' => 'admin',
-                        'cssClass' => 'draftsIcon',
-                        'href' => '#',
-                    )*/
-
                     'Publish' => array(
                         'display' => 'Publish',
                         'aclGroups' => 'admin',
@@ -156,13 +112,6 @@ return array(
                                 'cssClass' => 'stageIcon',
                                 'href' => '#',
                             ),
-
-                            /*'Add To Test Case' => array(
-                                'display' => 'Add To Test Case',
-                                'aclGroups' => 'admin',
-                                'cssClass' => 'testIcon',
-                                'href' => '#',
-                            ),*/
 
                             'Publish Now' => array(
                                 'display' => 'Publish Now',
@@ -234,13 +183,6 @@ return array(
                                 'cssClass' => 'rcmEditSiteWideIcon rcmEditSiteWide',
                                 'href' => '#',
                             ),
-//
-//                            'Rollback Site-Wide Plugin' => array(
-//                                'display' => 'Rollback Site-Wide Plugin',
-//                                'aclGroups' => 'admin',
-//                                'cssClass' => 'rcmEditSiteWideIcon rcmEditSiteWide',
-//                                'href' => '#',
-//                            ),
                         ),
                     ),
 
@@ -252,67 +194,6 @@ return array(
                     ),
                 ),
             ),
-//            'Users' => array(
-//                'display' => 'Users',
-//                'aclGroups' => 'admin',
-//                'cssClass' => 'draftsIcon',
-//                'href' => '#',
-//                'links' => array(
-//                    'New' => array(
-//                        'display' => 'New',
-//                        'aclGroups' => 'admin',
-//                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
-//                        'href' => '#',
-//                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-new-user', 430, 740, 'Add New User'); return false;"
-//                    ),
-//
-//                    'Modify' => array(
-//                        'display' => 'Page',
-//                        'aclGroups' => 'admin',
-//                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
-//                        'href' => '#',
-//                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
-//                    ),
-//
-//                    'Suspend' => array(
-//                        'display' => 'Page',
-//                        'aclGroups' => 'admin',
-//                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
-//                        'href' => '#',
-//                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
-//                    ),
-//
-//                    'Delete' => array(
-//                        'display' => 'Page',
-//                        'aclGroups' => 'admin',
-//                        'cssClass' => 'rcmNewPageIcon rcmNewPage',
-//                        'href' => '#',
-//                        'onclick' => "rcmEdit.adminPopoutWindow('/rcm-admin-create-blank-page', 430, 740, 'Add New Page'); return false;"
-//                    ),
-//                )
-//            ),
-//
-//            'Help' => array(
-//                'display' => 'Help',
-//                'aclGroups' => 'admin',
-//                'cssClass' => 'draftsIcon',
-//                'href' => '#',
-//                'links' => array(
-//                    'Contents' => array(
-//                        'display' => 'Contents',
-//                        'aclGroups' => 'admin',
-//                        'cssClass' => 'draftsIcon',
-//                        'href' => '#',
-//                    ),
-//
-//                    'About Wespress' => array(
-//                        'display' => 'About Wespress',
-//                        'aclGroups' => 'admin',
-//                        'cssClass' => 'draftsIcon',
-//                        'href' => '#',
-//                    )
-//                )
-//            ),
 
         ),
     ),
@@ -345,8 +226,8 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
-        'display_not_found_reason' => true,
-        'display_exceptions' => true,
+        'display_not_found_reason' => false,
+        'display_exceptions' => false,
         'doctype' => 'HTML5',
         'not_found_template' => 'error/404',
         'exception_template' => 'error/index',
@@ -360,15 +241,7 @@ return array(
 
     'view_helpers' => array(
         'invokables' => array(
-            'getContentBasePath' => '\Rcm\View\Helper\GetContentBasePath',
-            'getLayoutContainer' => '\Rcm\View\Helper\GetLayoutContainer',
-            'addAdminNavigation' => '\Rcm\View\Helper\AddAdminNavigation',
-            'renderLayoutEditorContainers'
-            => '\Rcm\View\Helper\RenderLayoutEditorContainers',
-            'adminTitleBar' => '\Rcm\View\Helper\AdminTitleBar',
-            'rcmViewInit' => '\Rcm\View\Helper\RcmViewInit',
-            'renderPlugin' => 'Rcm\View\Helper\RenderPlugin',
-            'rcmJsLoginManager' => '\Rcm\View\Helper\JsLoginManager',
+
         ),
     ),
 
@@ -378,7 +251,7 @@ return array(
             'contentManager' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm[/:page][/:language][/:revision]',
+                    'route' => '/rcm[/:page][/:revision]',
                     'defaults' => array(
                         'controller' => 'rcmIndexController',
                         'action' => 'index',
@@ -389,7 +262,7 @@ return array(
             'contentManagerWithPageType' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm/:pageType/:page[/:language][/:revision]',
+                    'route' => '/rcm/:pageType/:page[/:revision]',
                     'constraints' => array(
                         'pageType' => '[a-z]',
                     ),
@@ -400,62 +273,6 @@ return array(
                 ),
             ),
 
-
-            'contentManagerSave' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-save/:page/:pageType/:language/:revision',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'savePage',
-                    ),
-                ),
-            ),
-
-            'contentManagerNewInstanceAjax' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-get-instance[/:type[/:instanceId]]',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'getNewInstance',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-checkpage' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-checkpage/:language',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'checkPageNameJson',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-domain' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-check-domain/:language',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'checkDomainJson',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-check-user-name' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-check-user/:language',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'checkUserNameJson',
-                    ),
-                ),
-            ),
-
             'rcm-api-states' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -463,127 +280,6 @@ return array(
                     'defaults' => array(
                         'controller' => 'rcmStateApiController',
                         'action' => 'listStates',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-check-emailAddress' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-check-emailAddress/:language',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'checkEmailAddressJson',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-create-blank-page' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-create-blank-page[/:language]',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'newPageWizard',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-create-new-user' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-create-new-user[/:language]',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'createNewUser',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-create-site' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-create-site[/:language]',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'newSiteWizard',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-create-site-create' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-create-site/create/:language',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'createSite',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-create-blank-page_create' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-create-blank-page/create/:language',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'createBlankPage',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-create-from-template' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-create-from-template/:language',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'newFromTemplate',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-get-save-as-template' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-get-save-as-template/:language',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'getSaveAsTemplate',
-                    ),
-                ),
-            ),
-
-            'rcm-admin-save-as-template' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-save-as-template/:language',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'saveAsTemplate',
-                    ),
-                ),
-            ),
-
-            'contentManagerPublish' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-publish/:pageType/:page/:language/:revision',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'publishPage',
-                    ),
-                ),
-            ),
-
-            'contentManagerStage' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-admin-stage/:pageType/:page/:language/:revision',
-                    'defaults' => array(
-                        'controller' => 'rcmAdminController',
-                        'action' => 'stagePage',
                     ),
                 ),
             ),
@@ -612,33 +308,10 @@ return array(
                 ),
             ),
 
-            'moduleAssets' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' =>
-                        '/assets/modules/:moduleName/',
-                    'defaults' => array(
-                        'controller' => 'Rcm\Controller\AssetsController',
-                        'action' => 'modules',
-                    )
-                ),
-                //Had to add child wildcard route to allow file paths at end
-                'child_routes' => array(
-                    'wildcard' => array(
-                        'type' => 'Zend\Mvc\Router\Http\Wildcard',
-                        'options' => array(
-                            'key_value_delimiter' => 'no_key_value_delimiter',
-                            'param_delimiter' => 'no_param_delimiter',
-                        ),
-                        'may_terminate' => true,
-                    ),
-                ),
-            ),
-
             'blog' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/blog[/:page[/:language]]',
+                    'route' => '/blog[/:page]',
                     'defaults' => array(
                         'controller' => 'rcmIndexController',
                         'action' => 'index',
@@ -646,65 +319,7 @@ return array(
                 ),
             ),
 
-            'rcm-page-title-search' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-page-search/title/[:query]',
-                    'defaults' => array(
-                        'controller' => 'rcmPageSearchApiController',
-                        'action' => 'siteTitleSearch',
-                    )
-                ),
-            ),
 
-            'rcm-page-search' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-page-search[/:language]',
-                    'defaults' => array(
-                        'controller' => 'rcmPageSearchApiController',
-                        'action' => 'allSitePages',
-                    )
-                ),
-            ),
-
-            'adminContentProxy' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' =>
-                        '/content/',
-                    'defaults' => array(
-                        'controller' => 'AdminContentController',
-                        'action' => 'content',
-                    )
-                ),
-                //Had to add child wildcard route to allow file paths at end
-                'child_routes' => array(
-                    'wildcard' => array(
-                        'type' => 'Zend\Mvc\Router\Http\Wildcard',
-                        'options' => array(
-                            'key_value_delimiter' => 'no_key_value_delimiter',
-                            'param_delimiter' => 'no_param_delimiter',
-                        ),
-                        'may_terminate' => true,
-                    ),
-                ),
-            ),
-
-            /**
-             * Do not change the name of this route. Doing so will break the
-             * override-based disabling of this route
-             */
-            'rcmInstall' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm/install',
-                    'defaults' => array(
-                        'controller' => 'rcmInstallController',
-                        'action' => 'index',
-                    )
-                ),
-            ),
         ),
     ),
     'doctrine' => array(
@@ -735,7 +350,7 @@ return array(
         'adapter' => 'Memory',
         'plugins' => array(),
         'options' => array(
-            'namespace' => 'RcmCache'
+            //'namespace' => 'RcmCache'
         )
     ),
 

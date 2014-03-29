@@ -12,16 +12,15 @@ use Doctrine\ORM\EntityManager;
 use Rcm\Entity\PluginInstance;
 use Rcm\Exception\InvalidPluginException;
 use Rcm\Exception\PluginInstanceNotFoundException;
-use Rcm\Interfaces\PluginManagerInterface;
+use Rcm\Exception\RuntimeException;
 use Zend\Cache\Storage\StorageInterface;
-use Zend\Config\Config;
 use Zend\Http\Request;
 use Zend\ModuleManager\ModuleManager;
 use \Rcm\Plugin\PluginInterface;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Renderer\RendererInterface;
 
-class PluginManager implements PluginManagerInterface
+class PluginManager
 {
     protected $sm;
     protected $moduleManager;
@@ -282,7 +281,12 @@ class PluginManager implements PluginManagerInterface
         $this->ensurePluginIsValid($pluginName);
 
         //Load the plugin controller
-        $pluginController = $this->sm->get($pluginName);
+        try {
+            $pluginController = $this->sm->get($pluginName);
+        } catch (\Exception $e) {
+            throw new RuntimeException('Unable to get instance of plugin: '.$pluginName, 1, $e);
+        }
+
 
         //Plugin controllers must implement this interface
         if (!$pluginController instanceof PluginInterface) {

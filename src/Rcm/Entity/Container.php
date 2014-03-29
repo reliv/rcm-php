@@ -33,7 +33,15 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @version   Release: 1.0
  *
  * @ORM\Entity
- * @ORM\Table(name="rcm_containers")
+ * @ORM\Table(
+ *   name="rcm_containers",
+ *   uniqueConstraints={
+ *     @ORM\UniqueConstraint(
+ *       name="uq_name_site",
+ *       columns={"name", "siteId"}
+ *     )
+ *   }
+ * )
  */
 class Container
 {
