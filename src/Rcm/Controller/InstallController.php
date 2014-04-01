@@ -3,8 +3,8 @@
 namespace Rcm\Controller;
 
 use
-    \RcmDoctrineJsonPluginStorage\Entity\DoctrineJsonInstanceConfig as JsonContent,
-    \RcmDoctrineJsonPluginStorage\StorageEngine\DoctrineSerializedRepo;
+    \RcmInstanceConfig\Entity\DoctrineJsonInstanceConfig as JsonContent,
+    \RcmInstanceConfig\StorageEngine\DoctrineSerializedRepo;
 
 
 class InstallController extends \Rcm\Controller\EntityMgrAwareController
@@ -572,7 +572,7 @@ are permitted provided that the following conditions are met:</p>
 
     /**
      * Creates a plugin instance for plugins that have controllers that extend
-     * \RcmDoctrineJsonPluginStorage\JsonContentController
+     * \RcmInstanceConfig\JsonContentController
      *
      * @param string $pluginName
      * @param array  $jsonContent
