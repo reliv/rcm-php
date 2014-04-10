@@ -2,14 +2,14 @@
 
 namespace Rcm\Service;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Zend\Cache\Storage\StorageInterface;
 use Doctrine\ORM\Query\Expr\Join;
 
 class DomainManager
 {
 
-    public function __construct(EntityManager $entityManager, StorageInterface $cache)
+    public function __construct(EntityManagerInterface $entityManager, StorageInterface $cache)
     {
         $this->entityManager = $entityManager;
         $this->cache = $cache;
@@ -19,6 +19,8 @@ class DomainManager
     {
         //Check Cache for list of domains
         if (!$this->cache->hasItem('rcm_domain_list')) {
+
+            /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
             $queryBuilder = $this->entityManager->createQueryBuilder();
 
             $queryBuilder->select('domain.domain,
@@ -46,6 +48,8 @@ class DomainManager
     {
         //Check Cache for list of domains
         if (!$this->cache->hasItem('rcm_redirect_list')) {
+
+            /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
             $queryBuilder = $this->entityManager->createQueryBuilder();
 
             $queryBuilder->select('r.requestUrl, r.redirectUrl')
