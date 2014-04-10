@@ -37,17 +37,6 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
-        'display_not_found_reason' => false,
-        'display_exceptions' => false,
-        'doctype' => 'HTML5',
-        'not_found_template' => 'error/404',
-        'exception_template' => 'error/index',
-        'template_map' => array(
-            'layout/layout' => __DIR__ . '/../view/layout/layout.phtml'
-        ),
-        'strategies' => array(
-            'ViewJsonStrategy',
-        ),
     ),
 
     'router' => array(
@@ -78,41 +67,6 @@ return array(
                 ),
             ),
 
-            'rcm-api-states' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-api/counties/:country/states',
-                    'defaults' => array(
-                        'controller' => 'rcmStateApiController',
-                        'action' => 'listStates',
-                    ),
-                ),
-            ),
-
-            'rcm-plugin-admin-proxy' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' =>
-                        '/rcm-plugin-admin-proxy/:pluginName/:instanceId/:pluginActionName',
-                    'defaults' => array(
-                        'controller' => 'rcmPluginProxyController',
-                        'action' => 'adminProxy',
-                    )
-                ),
-            ),
-
-            'plugin-ajax-proxy' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' =>
-                        '/plugin-ajax-proxy/:pluginName/:instanceId/:pluginActionName',
-                    'defaults' => array(
-                        'controller' => 'rcmPluginProxyController',
-                        'action' => 'ajaxProxy',
-                    )
-                ),
-            ),
-
             'blog' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -127,8 +81,10 @@ return array(
 
         ),
     ),
+
     'doctrine' => array(
         'driver' => array(
+
             'relivContentManager' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'cache' => 'array',
@@ -136,12 +92,14 @@ return array(
                     __DIR__ . '/../src/Rcm/Entity'
                 )
             ),
+
             'orm_default' => array(
                 'drivers' => array(
                     'Rcm' => 'relivContentManager'
                 )
             )
         ),
+
         'configuration' => array(
             'orm_default' => array(
                 'metadata_cache' => 'doctrine_cache',
@@ -159,12 +117,39 @@ return array(
         )
     ),
 
-    'rcmLogger' => array(
-        'writer' => 'rcmLogWriterStub'
+    'service_manager' => array(
+        'factories' => array (
+            'doctrine.cache.doctrine_cache' => 'Rcm\Factory\DoctrineCacheFactory',
+            'rcmRouteListener'              => 'Rcm\Factory\RouteListenerFactory',
+            'rcmDispatchListener'           => 'Rcm\Factory\DispatchListenerFactory',
+            'rcmContainerManager'           => 'Rcm\Factory\ContainerManagerFactory',
+            'rcmPluginManager'              => 'Rcm\Factory\PluginManagerFactory',
+            'rcmLayoutManager'              => 'Rcm\Factory\LayoutManagerFactory',
+            'rcmDomainManager'              => 'Rcm\Factory\DomainManagerFactory',
+            'rcmSiteManager'                => 'Rcm\Factory\SiteManagerFactory',
+            'rcmPageManager'                => 'Rcm\Factory\PageManagerFactory',
+            'rcmCache'                      => 'Rcm\Factory\CacheFactory',
+            'rcmSessionMgr'                 => 'Rcm\Factory\SessionManagerFactory',
+        ),
+
+        'aliases' => array(
+            'em'                            => 'doctrineormentitymanager',
+        )
     ),
 
-    'rcmLogWriter' => array(
-        'logPath' => '',
+    'controllers' => array(
+        'factories' => array (
+            'rcmIndexController'            => 'Rcm\Factory\IndexControllerFactory',
+        ),
+    ),
+
+    'view_helpers' => array(
+        'factories' => array(
+            'rcmContainer'                  => 'Rcm\Factory\ContainerViewHelperFactory',
+        ),
+        'invokables' => array(
+            'rcmOutOfDateBrowserWarning'    => 'Rcm\View\Helper\OutOfDateBrowserWarning',
+        ),
     )
 
 );

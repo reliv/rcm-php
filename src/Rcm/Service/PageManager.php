@@ -2,7 +2,7 @@
 
 namespace Rcm\Service;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Rcm\Exception\PageNotFoundException;
 use Zend\Cache\Storage\StorageInterface;
@@ -21,7 +21,7 @@ class PageManager extends ContainerAbstract
     public function __construct(
         SiteManager $siteManager,
         PluginManager $pluginManager,
-        EntityManager $entityManager,
+        EntityManagerInterface $entityManager,
         StorageInterface $cache
     ) {
         $this->entityManager = $entityManager;
@@ -70,8 +70,9 @@ class PageManager extends ContainerAbstract
             return $this->cache->getItem('rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_currentRevision');
         }
 
-        $queryBuilder = $this->entityManager->createQueryBuilder()
-            ->select('currentRevision.revisionId')
+        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('currentRevision.revisionId')
             ->from('\Rcm\Entity\Page', 'page')
             ->join('page.currentRevision', 'currentRevision')
             ->join('page.site', 'site')
@@ -99,8 +100,9 @@ class PageManager extends ContainerAbstract
             return $this->cache->getItem('rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_stagedRevision');
         }
 
-        $queryBuilder = $this->entityManager->createQueryBuilder()
-            ->select('stagedRevision.revisionId')
+        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('stagedRevision.revisionId')
             ->from('\Rcm\Entity\Page', 'page')
             ->join('page.stagedRevision', 'stagedRevision')
             ->join('page.site', 'site')
@@ -128,8 +130,9 @@ class PageManager extends ContainerAbstract
             return $this->cache->getItem('rcm_page_data_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revisionId);
         }
 
-        $queryBuilder = $this->entityManager->createQueryBuilder()
-            ->select('
+        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('
                 page,
                 currentRevision.revisionId currentRevisionId,
                 stagedRevision.revisionId stagedRevisionId,

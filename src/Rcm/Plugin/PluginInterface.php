@@ -16,7 +16,7 @@
  */
 namespace Rcm\Plugin;
 
-use \Zend\Http\PhpEnvironment\Request;
+use Zend\Stdlib\RequestInterface;
 
 /**
  * Plugin Controller Interface
@@ -79,5 +79,5 @@ interface PluginInterface
     /**
      * Set Request
      */
-    public function setRequest(Request $request);
+    public function setRequest(RequestInterface $request);
 }
