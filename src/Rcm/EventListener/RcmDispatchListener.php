@@ -27,6 +27,7 @@ class RcmDispatchListener
 
     public function setSiteLayout(MvcEvent $event)
     {
+
         /** @var \Zend\View\Model\ViewModel $viewModel */
         $viewModel = $event->getViewModel();
 
