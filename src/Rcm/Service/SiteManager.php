@@ -2,7 +2,7 @@
 
 namespace Rcm\Service;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
@@ -19,8 +19,11 @@ class SiteManager
     protected $currentSiteCountry;
     protected $currentSiteLanguage;
 
-    public function __construct(DomainManager $domainManager, EntityManager $entityManager, StorageInterface $cache)
-    {
+    public function __construct(
+        DomainManager $domainManager,
+        EntityManagerInterface $entityManager,
+        StorageInterface $cache
+    ) {
         $this->domainManager = $domainManager;
         $this->entityManager = $entityManager;
         $this->cache = $cache;
@@ -39,6 +42,7 @@ class SiteManager
             return $this->currentSiteInfo;
         }
 
+        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->entityManager->createQueryBuilder();
         $queryBuilder->select('
             partial site.{

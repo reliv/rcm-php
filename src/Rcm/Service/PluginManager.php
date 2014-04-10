@@ -8,16 +8,17 @@
  */
 namespace Rcm\Service;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Rcm\Entity\PluginInstance;
 use Rcm\Exception\InvalidPluginException;
 use Rcm\Exception\PluginInstanceNotFoundException;
 use Rcm\Exception\RuntimeException;
 use Zend\Cache\Storage\StorageInterface;
-use Zend\Http\Request;
+use Zend\Http\PhpEnvironment\Request;
+use Zend\Stdlib\RequestInterface;
 use Zend\ModuleManager\ModuleManager;
-use \Rcm\Plugin\PluginInterface;
-use Zend\ServiceManager\ServiceManager;
+use Rcm\Plugin\PluginInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Renderer\RendererInterface;
 
 class PluginManager
@@ -31,12 +32,12 @@ class PluginManager
     protected $cache;
 
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         $config,
-        ServiceManager $sm,
+        ServiceLocatorInterface $sm,
         ModuleManager $moduleManager,
         RendererInterface $renderer,
-        Request $request,
+        RequestInterface $request,
         StorageInterface $cache
     )
     {
@@ -103,6 +104,10 @@ class PluginManager
 
         /** @var \Rcm\Plugin\PluginInterface $controller */
         $controller = $this->getPluginController($pluginName);
+
+        if (!is_a($controller, '\Rcm\Plugin\PluginInterface')) {
+            throw new InvalidPluginException('Plugin '.$controller.' must implement the PluginInterface');
+        }
 
         //If the plugin controller can accept a ZF2 request, pass it
         $controller->setRequest($this->request);
