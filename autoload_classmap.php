@@ -29,7 +29,6 @@ return array(
   'Rcm\Exception\PluginInstanceNotFoundException' => __DIR__ . '/src/Rcm/Exception/PluginInstanceNotFoundException.php',
   'Rcm\Exception\RuntimeException'                => __DIR__ . '/src/Rcm/Exception/RuntimeException.php',
   'Rcm\Exception\SiteNotFoundException'           => __DIR__ . '/src/Rcm/Exception/SiteNotFoundException.php',
-  'Rcm\Model\EntityMgrAware'                      => __DIR__ . '/src/Rcm/Model/EntityMgrAware.php',
   'Rcm\Model\IpInfo'                              => __DIR__ . '/src/Rcm/Model/IpInfo.php',
   'Rcm\Model\Logger'                              => __DIR__ . '/src/Rcm/Model/Logger.php',
   'Rcm\Model\PhoneModel'                          => __DIR__ . '/src/Rcm/Model/PhoneModel.php',
