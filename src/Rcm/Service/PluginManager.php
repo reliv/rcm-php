@@ -125,6 +125,7 @@ class PluginManager
         $css = $headlink->getContainer()->getArrayCopy();
         $js = $headScript->getContainer()->getArrayCopy();
 
+
         $return = array(
             'html' => $html,
             'css' => $this->getContainerSrc($css),
@@ -270,11 +271,27 @@ class PluginManager
 
         $return = array();
 
+        $return = serialize($container);
+
+        $check = unserialize($return);
+        print_r($check);
+        exit;
+
         foreach ($container as $item) {
+
             if ($item->type == 'text/css') {
                 $return[] = $item->href;
             } elseif ($item->type == 'text/javascript') {
-                $return[] = $item->attributes['src'];
+                if (!empty($item->attributes['src'])) {
+                    $return[] = $item->attributes['src'];
+                } else {
+                    $serialized = serialize($item);
+                    $unserialized = unserialize($serialized);
+
+                    print_r($unserialized);
+                    exit;
+                }
+
             }
         }
 

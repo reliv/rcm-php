@@ -133,8 +133,7 @@ class Site
      *
      * @ORM\OneToMany(
      *     targetEntity="Page",
-     *     mappedBy="site",
-     *     cascade={"persist", "remove"}
+     *     mappedBy="site"
      * )
      */
     protected $pages;
@@ -151,23 +150,22 @@ class Site
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="PluginInstance",
+     *     targetEntity="PluginInstance"
      * )
      * @ORM\JoinTable(
-     *     name="rcm_sites_instances",
+     *     name="rcm_site_plugin_instances",
      *     joinColumns={
      *         @ORM\JoinColumn(
-     *             name="site_id",
+     *             name="siteId",
      *             referencedColumnName="siteId",
      *             onDelete="CASCADE"
      *         )
      *     },
      *     inverseJoinColumns={
      *         @ORM\JoinColumn(
-     *             name="instanceId",
-     *             referencedColumnName="instanceId",
-     *             onDelete="CASCADE",
-     *             onUpdate="CASCADE"
+     *             name="pluginInstanceId",
+     *             referencedColumnName="pluginInstanceId",
+     *             onDelete="CASCADE"
      *         )
      *     }
      * )
@@ -246,8 +244,8 @@ class Site
             }
 
             $this->sitePlugins = new ArrayCollection($clonedPluginInstances);
-            $this->pwsInfo = clone $this->pwsInfo;
-            $this->pwsInfo->setPwsId(null);
+            $this->extraSiteInfo = clone $this->extraSiteInfo;
+            $this->extraSiteInfo->setPwsId(null);
         }
     }
 
@@ -489,7 +487,7 @@ class Site
      *
      * @return null
      */
-    public function addSiteWidePlugin(\Rcm\Entity\PluginInstance $plugin)
+    public function addSiteWidePlugin(PluginInstance $plugin)
     {
         $this->sitePlugins->add($plugin);
     }
@@ -520,6 +518,7 @@ class Site
     {
         $templates = array();
 
+        /** @var \Rcm\Entity\Page $page */
         foreach ($this->pages as $page) {
             $publishedVersion = $page->getPublishedRevision();
             if ($page->isTemplate() && !empty($publishedVersion)) {

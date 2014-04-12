@@ -141,13 +141,9 @@ class Page
     protected $site;
 
     /**
-     * @var array Array of page revisions
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="PageRevision",
-     *     mappedBy="page",
-     *     indexBy="pageRevId",
-     *     cascade={"persist", "remove"}
+     * @ORM\ManyToMany(
+     *     targetEntity="Revision",
+     *     indexBy="revisionId"
      * )
      * @ORM\JoinTable(
      *     name="rcm_pages_revisions",
@@ -349,7 +345,7 @@ class Page
     /**
      * Get Published Revision
      *
-     * @return \Rcm\Entity\PageRevision
+     * @return \Rcm\Entity\Revision
      */
     public function getPublishedRevision()
     {
@@ -359,12 +355,12 @@ class Page
     /**
      * Set the current published revision for the page
      *
-     * @param \Rcm\Entity\PageRevision $revision Revision object to add
+     * @param \Rcm\Entity\Revision $revision Revision object to add
      *
      * @return null
      */
     public function setPublishedRevision(
-        \Rcm\Entity\PageRevision $revision
+        Revision $revision
     )
     {
         $revision->publishRevision();
@@ -374,7 +370,7 @@ class Page
     /**
      * Gets the CurrentRevision property
      *
-     * @return \Rcm\Entity\PageRevision CurrentRevision
+     * @return \Rcm\Entity\Revision CurrentRevision
      */
     public function getCurrentRevision()
     {
@@ -384,13 +380,12 @@ class Page
     /**
      * Sets the CurrentRevision property
      *
-     * @param \Rcm\Entity\PageRevision $currentRevision         Revision object
-     *                                                          to add
+     * @param \Rcm\Entity\Revision $currentRevision  Revision object to add
      *
      * @return null
      */
     public function setCurrentRevision(
-        \Rcm\Entity\PageRevision $currentRevision
+        Revision $currentRevision
     )
     {
         $this->setPublishedRevision($currentRevision);
@@ -405,7 +400,7 @@ class Page
     /**
      * Gets the Current Staged property
      *
-     * @return \Rcm\Entity\PageRevision CurrentRevision
+     * @return \Rcm\Entity\Revision CurrentRevision
      */
     public function getStagedRevision()
     {
@@ -415,20 +410,19 @@ class Page
     /**
      * Sets the current staged property
      *
-     * @param \Rcm\Entity\PageRevision $revision                Revision object
+     * @param \Rcm\Entity\Revision $revision                Revision object
      *                                                          to add
      *
      * @return null
      */
     public function setStagedRevision(
-        \Rcm\Entity\PageRevision $revision
-    )
-    {
+        Revision $revision
+    ) {
         $revision->stageRevision();
         $this->stagedRevision = $revision;
     }
 
-    public function removedStagedRevistion()
+    public function removedStagedRevision()
     {
         $this->stagedRevision = null;
     }
@@ -475,14 +469,13 @@ class Page
     /**
      * Set Page Revision
      *
-     * @param \Rcm\Entity\PageRevision $revision Revision object to add
+     * @param \Rcm\Entity\Revision $revision Revision object to add
      *
      * @return void
      */
-    public function addPageRevision(
-        \Rcm\Entity\PageRevision $revision
-    )
-    {
+    public function addRevision(
+        Revision $revision
+    ) {
         $this->revisions->add($revision);
     }
 
@@ -564,29 +557,29 @@ class Page
     /**
      * Return the last draft saved.
      *
-     * @return \Rcm\Entity\PageRevision
+     * @return \Rcm\Entity\Revision
      */
     public function getLastSavedRevision()
     {
         $current = $this->currentRevision;
         $staged = $this->stagedRevision;
 
-        /** @var \Rcm\Entity\PageRevision $revision */
+        /** @var \Rcm\Entity\Revision $revision */
         foreach ($this->revisions as $revision) {
 
             if (!empty($current)
-                && $revision->getPageRevId() == $current->getPageRevId()
+                && $revision->getRevisionId() == $current->getRevisionId()
             ) {
                 continue;
             }
 
             if (!empty($staged)
-                && $revision->getPageRevId() == $staged->getPageRevId()
+                && $revision->getRevisionId() == $staged->getRevisionId()
             ) {
                 continue;
             }
 
-            $sorted[$revision->getPageRevId()] = $revision;
+            $sorted[$revision->getRevisionId()] = $revision;
         }
 
         if (empty($sorted)) {
