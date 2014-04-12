@@ -134,18 +134,20 @@ class PageManager extends ContainerAbstract
         $queryBuilder = $this->entityManager->createQueryBuilder();
         $queryBuilder->select('
                 page,
+                site.siteId,
                 currentRevision.revisionId currentRevisionId,
                 stagedRevision.revisionId stagedRevisionId,
                 revision,
                 pluginWrappers,
                 pluginInstances
             ')->from('\Rcm\Entity\Page','page')
+            ->leftJoin('page.site', 'site')
             ->leftJoin('page.revisions', 'revision')
             ->leftJoin('page.currentRevision', 'currentRevision')
             ->leftJoin('page.stagedRevision', 'stagedRevision')
             ->leftJoin('revision.pluginInstances', 'pluginWrappers')
             ->leftJoin('pluginWrappers.instance', 'pluginInstances')
-            ->where('page.site = :siteId')
+            ->where('site.siteId = :siteId')
             ->andWhere('page.pageType = :pageType')
             ->andWhere('page.name = :pageName')
             ->andWhere('revision.revisionId = :revisionId')
@@ -162,6 +164,9 @@ class PageManager extends ContainerAbstract
 
         $result = $getData[0];
         $result['revision'] = $result['revisions'][$revisionId];
+        $result['siteId'] = $getData['siteId'];
+        $result['currentRevisionId'] = $getData['currentRevisionId'];
+        $result['stagedRevisionId'] = $getData['stagedRevisionId'];
         unset($result['revisions'], $getData);
 
         //$this->cache->setItem('rcm_page_data_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revision, $result);
