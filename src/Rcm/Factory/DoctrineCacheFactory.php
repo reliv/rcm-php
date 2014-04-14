@@ -6,12 +6,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DoctrineModule\Cache\ZendStorageCache;
 
-/**
- * Factory class for AssetManagerService
- *
- * @category   AssetManager
- * @package    AssetManager
- */
+
 class DoctrineCacheFactory implements FactoryInterface
 {
 
@@ -22,7 +17,7 @@ class DoctrineCacheFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Zend\Cache\Storage\StorageInterface $zendCache */
-        $zendCache = $serviceLocator->get('rcmCache');
+        $zendCache = $serviceLocator->get('Rcm\\Service\\Cache');
 
         return new ZendStorageCache($zendCache);
     }

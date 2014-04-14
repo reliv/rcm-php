@@ -83,13 +83,21 @@ class Container extends AbstractHelper
 
         if (!empty($pluginData['instance']['renderedData']['css'])) {
             foreach ($pluginData['instance']['renderedData']['css'] as $css) {
-                $view->headLink()->prependStylesheet($css);
+                $container = unserialize($css);
+
+                if (!$this->isDuplicateCss($container)) {
+                    $view->headLink()->append($container);
+                }
             }
         }
 
         if (!empty($pluginData['instance']['renderedData']['js'])) {
             foreach ($pluginData['instance']['renderedData']['js'] as $js) {
-                $view->headScript()->appendFile($js, 'text/javascript');
+                $container = unserialize($js);
+
+                if (!$this->isDuplicateScript($container)) {
+                    $view->headScript()->append($container);
+                }
             }
         }
 
@@ -127,5 +135,40 @@ class Container extends AbstractHelper
         $html .= '</div>';
 
         return $html;
+    }
+
+    protected function isDuplicateCss($container)
+    {
+        $view = $this->getView();
+
+        /** @var \Zend\View\Helper\HeadLink $headLink */
+        $headLink = $view->headLink();
+
+        foreach ($headLink->getContainer() as $item) {
+            if (($item->rel == 'stylesheet') && ($item->href == $container->href)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function isDuplicateScript($container)
+    {
+        $view = $this->getView();
+
+        /** @var \Zend\View\Helper\HeadScript $headScript */
+        $headScript = $view->headScript();
+
+        foreach ($headScript->getContainer() as $item) {
+            if (($item->source === null)
+                && array_key_exists('src', $item->attributes)
+                && ($container->attributes['src'] == $item->attributes['src']))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

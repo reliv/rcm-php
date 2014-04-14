@@ -7,12 +7,7 @@ use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Factory class for AssetManagerService
- *
- * @category   AssetManager
- * @package    AssetManager
- */
+
 class IndexControllerFactory implements FactoryInterface
 {
 
@@ -27,10 +22,10 @@ class IndexControllerFactory implements FactoryInterface
         $serviceLocator = $controllerManager->getServiceLocator();
 
         /** @var \Rcm\Service\PageManager $pageManager */
-        $pageManager = $serviceLocator->get('rcmPageManager');
+        $pageManager = $serviceLocator->get('Rcm\\Service\\PageManager');
 
         /** @var \Rcm\Service\LayoutManager $layoutManager */
-        $layoutManager = $serviceLocator->get('rcmLayoutManager');
+        $layoutManager = $serviceLocator->get('Rcm\\Service\\LayoutManager');
 
         return new IndexController(
             $pageManager,

@@ -8,12 +8,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use DoctrineModule\Cache\ZendStorageCache;
 use Zend\Session\SessionManager;
 
-/**
- * Factory class for AssetManagerService
- *
- * @category   AssetManager
- * @package    AssetManager
- */
+
 class SessionManagerFactory implements FactoryInterface
 {
 

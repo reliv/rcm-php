@@ -40,7 +40,7 @@ class DoctrineTestCase extends BaseTestCase
     {
         parent::setUp();
         $serviceManager = $this->getServiceManager();
-        $this->entityManager = $serviceManager->get('em');
+        $this->entityManager = $serviceManager->get('Doctrine\ORM\EntityManager');
         $this->setupConnection();
     }
 

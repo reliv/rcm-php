@@ -34,7 +34,7 @@ class PluginManagerTest extends BaseTestCase
         $render = $this->getRenderer();
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
-        $cache = $sm->get('rcmCache');
+        $cache = $sm->get('Rcm\\Service\\Cache');
         $cache->clearByNamespace('RcmCache');
 
         $moduleManager = $sm->get('ModuleManager');

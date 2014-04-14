@@ -2,34 +2,29 @@
 
 namespace Rcm\Factory;
 
-use Rcm\EventListener\RcmDispatchListener;
+use Rcm\EventListener\DispatchListener;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Factory class for AssetManagerService
- *
- * @category   AssetManager
- * @package    AssetManager
- */
+
 class DispatchListenerFactory implements FactoryInterface
 {
 
     /**
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return RcmDispatchListener
+     * @return DispatchListener
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Service\LayoutManager $layoutManager */
-        $layoutManager     = $serviceLocator->get('rcmLayoutManager');
+        $layoutManager     = $serviceLocator->get('Rcm\\Service\\LayoutManager');
 
         /** @var \Rcm\Service\SiteManager $siteManager */
-        $siteManager       = $serviceLocator->get('rcmSiteManager');
+        $siteManager       = $serviceLocator->get('Rcm\\Service\\SiteManager');
 
         /** @var \Zend\View\HelperPluginManager $viewHelperManager */
         $viewHelperManager = $serviceLocator->get('viewHelperManager');
 
-        return new RcmDispatchListener($layoutManager, $siteManager, $viewHelperManager);
+        return new DispatchListener($layoutManager, $siteManager, $viewHelperManager);
     }
 }

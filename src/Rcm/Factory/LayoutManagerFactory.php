@@ -6,12 +6,7 @@ use Rcm\Service\LayoutManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Factory class for AssetManagerService
- *
- * @category   AssetManager
- * @package    AssetManager
- */
+
 class LayoutManagerFactory implements FactoryInterface
 {
 
@@ -22,7 +17,7 @@ class LayoutManagerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Service\SiteManager $siteManager */
-        $siteManager = $serviceLocator->get('rcmSiteManager');
+        $siteManager = $serviceLocator->get('Rcm\\Service\\SiteManager');
         $config = $serviceLocator->get('config');
 
         return new LayoutManager(

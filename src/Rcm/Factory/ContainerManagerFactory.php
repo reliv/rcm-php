@@ -6,12 +6,6 @@ use Rcm\Service\ContainerManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Factory class for AssetManagerService
- *
- * @category   AssetManager
- * @package    AssetManager
- */
 class ContainerManagerFactory implements FactoryInterface
 {
 
@@ -22,16 +16,16 @@ class ContainerManagerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Service\SiteManager $siteManager */
-        $siteManager   = $serviceLocator->get('rcmSiteManager');
+        $siteManager   = $serviceLocator->get('Rcm\\Service\\SiteManager');
 
         /** @var \Rcm\Service\PluginManager $pluginManager */
-        $pluginManager = $serviceLocator->get('rcmPluginManager');
+        $pluginManager = $serviceLocator->get('Rcm\\Service\\PluginManager');
 
         /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = $serviceLocator->get('em');
+        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
         /** @var \Zend\Cache\Storage\StorageInterface $rcmCache */
-        $rcmCache      = $serviceLocator->get('rcmCache');
+        $rcmCache      = $serviceLocator->get('Rcm\\Service\\Cache');
 
         return new ContainerManager(
             $siteManager,

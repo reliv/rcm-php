@@ -15,6 +15,7 @@
  */
 
 namespace Rcm;
+use Zend\Mvc\MvcEvent;
 
 /**
  * ZF2 Module Config.  Required by ZF2
@@ -31,13 +32,13 @@ namespace Rcm;
 class Module
 {
 
-    public function onBootstrap($e)
+    public function onBootstrap(MvcEvent $e)
     {
         $sm = $e->getApplication()->getServiceManager();
 
         //Add Domain Checker
-        $onRouteListener = $sm->get('rcmRouteListener');
-        $onDispatchListener = $sm->get('rcmDispatchListener');
+        $onRouteListener = $sm->get('Rcm\\EventListener\\RouteListener');
+        $onDispatchListener = $sm->get('Rcm\\EventListener\\DispatchListener');
 
         /** @var \Zend\EventManager\EventManager $eventManager */
         $eventManager = $e->getApplication()->getEventManager();

@@ -8,7 +8,7 @@ use Rcm\Service\SiteManager;
 use Zend\Mvc\MvcEvent;
 use Zend\View\HelperPluginManager;
 
-class RcmDispatchListener
+class DispatchListener
 {
 
     protected $layoutManager;
