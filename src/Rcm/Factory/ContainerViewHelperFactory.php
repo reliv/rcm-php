@@ -7,12 +7,6 @@ use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Factory class for AssetManagerService
- *
- * @category   AssetManager
- * @package    AssetManager
- */
 class ContainerViewHelperFactory implements FactoryInterface
 {
 
@@ -27,7 +21,7 @@ class ContainerViewHelperFactory implements FactoryInterface
         $serviceLocator = $viewServiceManager->getServiceLocator();
 
         /** @var \Rcm\Service\ContainerManager $containerManager */
-        $containerManager = $serviceLocator->get('rcmContainerManager');
+        $containerManager = $serviceLocator->get('Rcm\\Service\\ContainerManager');
 
         /** @var \Rcm\Service\PageManager $pageManager */
         return new Container($containerManager);

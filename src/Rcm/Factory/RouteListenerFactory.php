@@ -2,28 +2,23 @@
 
 namespace Rcm\Factory;
 
-use Rcm\EventListener\RcmRouteListener;
+use Rcm\EventListener\RouteListener;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Factory class for AssetManagerService
- *
- * @category   AssetManager
- * @package    AssetManager
- */
+
 class RouteListenerFactory implements FactoryInterface
 {
 
     /**
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return RcmRouteListener
+     * @return RouteListener
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Service\DomainManager $domainManager */
-        $domainManager = $serviceLocator->get('rcmDomainManager');
+        $domainManager = $serviceLocator->get('Rcm\\Service\\DomainManager');
 
-        return new RcmRouteListener($domainManager);
+        return new RouteListener($domainManager);
     }
 }

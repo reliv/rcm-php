@@ -22,17 +22,6 @@ return array(
         'successfulLoginUrl' => '/'
     ),
 
-    'asset_manager' => array(
-        'caching' => array(
-            'default' => array(
-                'cache'     => 'Filesystem',
-                'options' => array(
-                    'dir' => __DIR__.'/../../../../public', // path/to/cache
-                ),
-            ),
-        ),
-    ),
-
     'view_manager' => array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
@@ -47,7 +36,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm[/:page][/:revision]',
                     'defaults' => array(
-                        'controller' => 'rcmIndexController',
+                        'controller' => 'Rcm\Controller\IndexController',
                         'action' => 'index',
                     )
                 ),
@@ -61,7 +50,7 @@ return array(
                         'pageType' => '[a-z]',
                     ),
                     'defaults' => array(
-                        'controller' => 'rcmIndexController',
+                        'controller' => 'Rcm\Controller\IndexController',
                         'action' => 'index',
                     )
                 ),
@@ -72,7 +61,7 @@ return array(
                 'options' => array(
                     'route' => '/blog[/:page]',
                     'defaults' => array(
-                        'controller' => 'rcmIndexController',
+                        'controller' => 'Rcm\Controller\IndexController',
                         'action' => 'index',
                     )
                 ),
@@ -119,36 +108,32 @@ return array(
 
     'service_manager' => array(
         'factories' => array (
-            'doctrine.cache.doctrine_cache' => 'Rcm\Factory\DoctrineCacheFactory',
-            'rcmRouteListener'              => 'Rcm\Factory\RouteListenerFactory',
-            'rcmDispatchListener'           => 'Rcm\Factory\DispatchListenerFactory',
-            'rcmContainerManager'           => 'Rcm\Factory\ContainerManagerFactory',
-            'rcmPluginManager'              => 'Rcm\Factory\PluginManagerFactory',
-            'rcmLayoutManager'              => 'Rcm\Factory\LayoutManagerFactory',
-            'rcmDomainManager'              => 'Rcm\Factory\DomainManagerFactory',
-            'rcmSiteManager'                => 'Rcm\Factory\SiteManagerFactory',
-            'rcmPageManager'                => 'Rcm\Factory\PageManagerFactory',
-            'rcmCache'                      => 'Rcm\Factory\CacheFactory',
-            'rcmSessionMgr'                 => 'Rcm\Factory\SessionManagerFactory',
+            'doctrine.cache.doctrine_cache'        => 'Rcm\\Factory\\DoctrineCacheFactory',
+            'Rcm\\EventListener\\RouteListener'    => 'Rcm\\Factory\\RouteListenerFactory',
+            'Rcm\\EventListener\\DispatchListener' => 'Rcm\\Factory\\DispatchListenerFactory',
+            'Rcm\\Service\\ContainerManager'       => 'Rcm\\Factory\\ContainerManagerFactory',
+            'Rcm\\Service\\PluginManager'          => 'Rcm\\Factory\\PluginManagerFactory',
+            'Rcm\\Service\\LayoutManager'          => 'Rcm\\Factory\\LayoutManagerFactory',
+            'Rcm\\Service\\DomainManager'          => 'Rcm\\Factory\\DomainManagerFactory',
+            'Rcm\\Service\\SiteManager'            => 'Rcm\\Factory\\SiteManagerFactory',
+            'Rcm\\Service\\PageManager'            => 'Rcm\\Factory\\PageManagerFactory',
+            'Rcm\\Service\\Cache'                  => 'Rcm\\Factory\\CacheFactory',
+            'Rcm\\Service\\SessionMgr'             => 'Rcm\\Factory\\SessionManagerFactory',
         ),
-
-        'aliases' => array(
-            'em'                            => 'doctrineormentitymanager',
-        )
     ),
 
     'controllers' => array(
         'factories' => array (
-            'rcmIndexController'            => 'Rcm\Factory\IndexControllerFactory',
+            'Rcm\Controller\IndexController'       => 'Rcm\Factory\IndexControllerFactory',
         ),
     ),
 
     'view_helpers' => array(
         'factories' => array(
-            'rcmContainer'                  => 'Rcm\Factory\ContainerViewHelperFactory',
+            'rcmContainer'                         => 'Rcm\Factory\ContainerViewHelperFactory',
         ),
         'invokables' => array(
-            'rcmOutOfDateBrowserWarning'    => 'Rcm\View\Helper\OutOfDateBrowserWarning',
+            'rcmOutOfDateBrowserWarning'           => 'Rcm\View\Helper\OutOfDateBrowserWarning',
         ),
     )
 

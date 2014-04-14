@@ -20,6 +20,7 @@ use Zend\ModuleManager\ModuleManager;
 use Rcm\Plugin\PluginInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Renderer\RendererInterface;
+use Zend\View\Helper\Placeholder\Container;
 
 class PluginManager
 {
@@ -112,19 +113,26 @@ class PluginManager
         //If the plugin controller can accept a ZF2 request, pass it
         $controller->setRequest($this->request);
 
+        $headlink = $this->renderer->plugin('headlink');
+        $headScript = $this->renderer->plugin('headscript');
+
+        $oldContainer = $headlink->getContainer();
+        $linkContainer = new Container();
+        $headlink->setContainer($linkContainer);
+
+        $oldHeadScriptContainer = $headScript->getContainer();
+        $headScriptContainer = new Container();
+        $headScript->setContainer($headScriptContainer);
+
         if ($pluginInstanceId < 0) {
             $viewModel = $controller->renderDefaultInstance($pluginInstanceId);
         } else {
             $viewModel = $controller->renderInstance($pluginInstanceId);
         }
 
-        $headlink = $this->renderer->plugin('headlink');
-        $headScript = $this->renderer->plugin('headscript');
-
         $html = $this->renderer->render($viewModel);
         $css = $headlink->getContainer()->getArrayCopy();
         $js = $headScript->getContainer()->getArrayCopy();
-
 
         $return = array(
             'html' => $html,
@@ -172,6 +180,9 @@ class PluginManager
             $return['canCache']
                 = $this->config['rcmPlugin'][$pluginName]['canCache'];
         }
+
+        $headlink->setContainer($oldContainer);
+        $headScript->setContainer($oldHeadScriptContainer);
 
         return $return;
 
@@ -271,27 +282,12 @@ class PluginManager
 
         $return = array();
 
-        $return = serialize($container);
-
-        $check = unserialize($return);
-        print_r($check);
-        exit;
-
         foreach ($container as $item) {
 
             if ($item->type == 'text/css') {
-                $return[] = $item->href;
+                $return[] = serialize($item);
             } elseif ($item->type == 'text/javascript') {
-                if (!empty($item->attributes['src'])) {
-                    $return[] = $item->attributes['src'];
-                } else {
-                    $serialized = serialize($item);
-                    $unserialized = unserialize($serialized);
-
-                    print_r($unserialized);
-                    exit;
-                }
-
+                $return[] = serialize($item);
             }
         }
 
@@ -306,7 +302,8 @@ class PluginManager
         try {
             $pluginController = $this->sm->get($pluginName);
         } catch (\Exception $e) {
-            throw new RuntimeException('Unable to get instance of plugin: '.$pluginName, 1, $e);
+            throw $e;
+            //throw new RuntimeException('Unable to get instance of plugin: '.$pluginName, 1);
         }
 
 

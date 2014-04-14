@@ -5,7 +5,7 @@ namespace Rcm\EventListener;
 use Rcm\Service\DomainManager;
 use Zend\Http\Response;
 
-class RcmRouteListener
+class RouteListener
 {
     protected $domainManager;
 
