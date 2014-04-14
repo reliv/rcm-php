@@ -2,8 +2,8 @@
 /**
  * Page Information Entity
  *
- * This is a Doctorine 2 definition file for Page info.  This file
- * is used for any module that needs to know page information.
+ * This is a Doctorine 2 definition file for plugin containers.  This file
+ * is used for any module that needs to know container information.
  *
  * PHP version 5.3
  *
@@ -23,8 +23,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Page Information Entity
  *
- * This object contains a list of pages for use with the content managment
- * system.
+ * This is a Doctorine 2 definition file for plugin containers.  This file
+ * is used for any module that needs to know container information.
  *
  * @category  Reliv
  * @author    Westin Shafer <wshafer@relivinc.com>
@@ -33,9 +33,17 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @version   Release: 1.0
  *
  * @ORM\Entity
- * @ORM\Table(name="rcm_pages")
+ * @ORM\Table(
+ *   name="rcm_containers",
+ *   uniqueConstraints={
+ *     @ORM\UniqueConstraint(
+ *       name="uq_name_site",
+ *       columns={"name", "siteId"}
+ *     )
+ *   }
+ * )
  */
-class Page
+class Container
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -44,10 +52,10 @@ class Page
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
-    protected $pageId;
+    protected $containerId;
 
     /**
-     * @var string Page name
+     * @var string Container name
      *
      * @ORM\Column(type="string")
      */
@@ -75,41 +83,6 @@ class Page
     protected $lastPublished;
 
     /**
-     * @var string Page Layout
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $pageLayout;
-
-    /**
-     * @var string Default Site Layout
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $siteLayoutOverride;
-
-    /**
-     * @var string Page Title
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $pageTitle;
-
-    /**
-     * @var string Page Description
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $description;
-
-    /**
-     * @var string Meta Keywords
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $keywords;
-
-    /**
      * @var \Rcm\Entity\Revision Integer Current Page Revision ID
      *
      * @ORM\OneToOne(targetEntity="Revision")
@@ -126,16 +99,9 @@ class Page
     protected $stagedRevision;
 
     /**
-     * @var string Page Type n=Normal, p=Product, b=Blog, t=Template, z=System (do not use)
-     *
-     * @ORM\Column(type="string")
-     */
-    protected $pageType = 'n';
-
-    /**
      * @var \Rcm\Entity\Site
      *
-     * @ORM\ManyToOne(targetEntity="Site", inversedBy="pages")
+     * @ORM\ManyToOne(targetEntity="Site", inversedBy="containers")
      * @ORM\JoinColumn(name="siteId", referencedColumnName="siteId")
      **/
     protected $site;
@@ -146,11 +112,11 @@ class Page
      *     indexBy="revisionId"
      * )
      * @ORM\JoinTable(
-     *     name="rcm_pages_revisions",
+     *     name="rcm_containers_revisions",
      *     joinColumns={
      *         @ORM\JoinColumn(
-     *             name="pageId",
-     *             referencedColumnName="pageId",
+     *             name="containerId",
+     *             referencedColumnName="containerId",
      *             onDelete="CASCADE"
      *         )
      *     },
@@ -166,14 +132,6 @@ class Page
     protected $revisions;
 
     /**
-     * @var \Rcm\Entity\Page
-     *
-     * @ORM\ManyToOne(targetEntity="Page")
-     * @ORM\JoinColumn(name="parentId", referencedColumnName="pageId", onDelete="CASCADE", nullable=true)
-     */
-    protected $parent;
-
-    /**
      * Constructor for Page Entity.  Adds a hydrator to site reference
      */
     public function __construct()
@@ -182,48 +140,14 @@ class Page
         $this->createdDate = new \DateTime();
     }
 
-    public function __clone()
-    {
-        if ($this->pageId) {
-            $this->setPageId(null);
-            $this->stagedRevision = null;
-            $this->currentRevision = clone $this->currentRevision;
-            $this->currentRevision->setPage($this);
-
-            $this->revisions
-                = new ArrayCollection(array($this->currentRevision));
-        }
-    }
-
-    /**
-     * Function to return an array representation of the object.
-     *
-     * @return array Array representation of the object
-     */
-    public function toArray()
-    {
-        $return = array(
-            'pageId' => $this->getPageId(),
-            'name' => $this->getName(),
-            'author' => $this->getAuthor(),
-            'createdDate' => $this->createdDate,
-            'lastPublished' => $this->getLastPublished(),
-            'currentRevision' => $this->getCurrentRevision(),
-            'site' => $this->getSite(),
-            'revisions' => $this->getRevisions(),
-        );
-
-        return $return;
-    }
-
     /**
      * Get the current Page ID
      *
      * @return int Unique page ID number
      */
-    public function getPageId()
+    public function getContainerId()
     {
-        return $this->pageId;
+        return $this->containerId;
     }
 
     /**
@@ -231,13 +155,13 @@ class Page
      * not be used by calling scripts.  Instead please persist the object
      * with Doctrine and allow Doctrine to set this on it's own,
      *
-     * @param int $pageId Unique Page ID
+     * @param int $containerId Unique Page ID
      *
      * @return void
      */
-    public function setPageId($pageId)
+    public function setContainerId($containerId)
     {
-        $this->pageId = $pageId;
+        $this->containerId = $containerId;
     }
 
     /**
@@ -502,58 +426,6 @@ class Page
     }
 
 
-    public function setTemplate()
-    {
-        $this->setPageType('t');
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isTemplate()
-    {
-        return $this->checkPageType('t');
-    }
-
-    public function setProductPage()
-    {
-        $this->setPageType('p');
-    }
-
-    public function isProductPage()
-    {
-        return $this->checkPageType('p');
-    }
-
-
-    public function checkPageType($pageType)
-    {
-        if ($this->pageType == $pageType) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function setPageType($type)
-    {
-        if ($type != 'n'
-            && $type != 'p'
-            && $type != 'b'
-            && $type != 't'
-            && $type != 'z'
-        ) {
-            throw new \Exception('Invalid Product Type Passed');
-        }
-
-        $this->pageType = $type;
-    }
-
-    public function getPageType()
-    {
-        return $this->pageType;
-    }
-
     /**
      * Return the last draft saved.
      *
@@ -592,86 +464,4 @@ class Page
 
         return $return;
     }
-
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $keywords
-     */
-    public function setKeywords($keywords)
-    {
-        $this->keywords = $keywords;
-    }
-
-    /**
-     * @return string
-     */
-    public function getKeywords()
-    {
-        return $this->keywords;
-    }
-
-    /**
-     * @param string $pageLayout
-     */
-    public function setPageLayout($pageLayout)
-    {
-        $this->pageLayout = $pageLayout;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageLayout()
-    {
-        return $this->pageLayout;
-    }
-
-    /**
-     * @param string $pageTitle
-     */
-    public function setPageTitle($pageTitle)
-    {
-        $this->pageTitle = $pageTitle;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->pageTitle;
-    }
-
-    /**
-     * @param \Rcm\Entity\Page $parent
-     */
-    public function setParent(Page $parent)
-    {
-        $this->parent = $parent;
-    }
-
-    /**
-     * @return \Rcm\Entity\Page
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-
 }

@@ -7,7 +7,7 @@ use Zend\Crypt\BlockCipher;
 use Zend\Session\Container;
 use Rcm\Entity\User;
 
-class DoctrineUserManager extends EntityMgrAware
+class DoctrineUserManager
     implements UserManagerInterface
 {
     protected $session;

@@ -63,27 +63,39 @@ class Site
     protected $domain;
 
     /**
-     * @var \Rcm\Entity\PwsInfo Information related to PWS sites
+     * @var \Rcm\Entity\ExtraSiteInfo Extra info for docs and logs.  Not needed on all requests
      *
      * @ORM\OneToOne(
-     *      targetEntity="PwsInfo",
+     *      targetEntity="ExtraSiteInfo",
      *      mappedBy="site",
-     *      cascade={"persist", "remove"}
+     *      cascade={"all"}
      * )
      */
-    protected $pwsInfo;
+    protected $extraSiteInfo;
 
     /**
      * @var string Theme of site
      *
      * @ORM\Column(type="string")
-     *
-     * @todo Determine the types of statuses for the site
      */
     protected $theme;
 
     /**
-     * @var \Rcm\Entity\Language Default lanugage for the site
+     * @var string Default Site Layout
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $siteLayout;
+
+    /**
+     * @var string Default Site Title for all pages
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $siteTitle;
+
+    /**
+     * @var \Rcm\Entity\Language Default language for the site
      *
      * @ORM\ManyToOne(targetEntity="Language")
      * @ORM\JoinColumn(
@@ -98,7 +110,7 @@ class Site
      * @var \Rcm\Entity\Country country
      *
      * @ORM\ManyToOne(targetEntity="Country")
-     * @ORM\JoinColumn(name="country",referencedColumnName="iso3")
+     * @ORM\JoinColumn(name="country",referencedColumnName="iso3", onDelete="SET NULL")
      */
     protected $country;
 
@@ -106,41 +118,53 @@ class Site
      * @var string Status of site.
      *
      * @ORM\Column(type="string", length=2)
-     *
-     * @todo Determine the types of statuses for the site
      */
     protected $status;
+
+    /**
+     * @var string Meta Keywords
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $favIcon;
 
     /**
      * @var array Array of pages
      *
      * @ORM\OneToMany(
      *     targetEntity="Page",
-     *     mappedBy="site",
-     *     cascade={"persist", "remove"}
+     *     mappedBy="site"
      * )
      */
     protected $pages;
 
     /**
+     * @var array Array of containers
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Container",
+     *     mappedBy="site"
+     * )
+     */
+    protected $containers;
+
+    /**
      * @ORM\ManyToMany(
-     *     targetEntity="PluginInstance",
-     *     fetch="EAGER",
-     *     cascade={"persist", "remove"}
+     *     targetEntity="PluginInstance"
      * )
      * @ORM\JoinTable(
-     *     name="rcm_sites_instances",
+     *     name="rcm_site_plugin_instances",
      *     joinColumns={
      *         @ORM\JoinColumn(
-     *             name="site_id",
+     *             name="siteId",
      *             referencedColumnName="siteId",
      *             onDelete="CASCADE"
      *         )
      *     },
      *     inverseJoinColumns={
      *         @ORM\JoinColumn(
-     *             name="instance_id",
-     *             referencedColumnName="instanceId",
+     *             name="pluginInstanceId",
+     *             referencedColumnName="pluginInstanceId",
      *             onDelete="CASCADE"
      *         )
      *     }
@@ -220,8 +244,8 @@ class Site
             }
 
             $this->sitePlugins = new ArrayCollection($clonedPluginInstances);
-            $this->pwsInfo = clone $this->pwsInfo;
-            $this->pwsInfo->setPwsId(null);
+            $this->extraSiteInfo = clone $this->extraSiteInfo;
+            $this->extraSiteInfo->setPwsId(null);
         }
     }
 
@@ -297,25 +321,25 @@ class Site
     }
 
     /**
-     * Gets the PwsInfo property
+     * Gets the ExtraSiteInfo property
      *
-     * @return \Rcm\Entity\PwsInfo PwsInfo
+     * @return \Rcm\Entity\ExtraSiteInfo ExtraSiteInfo
      */
-    public function getPwsInfo()
+    public function getExtraSiteInfo()
     {
-        return $this->pwsInfo;
+        return $this->extraSiteInfo;
     }
 
     /**
-     * Sets the PwsInfo property
+     * Sets the ExtraSiteInfo property
      *
-     * @param \Rcm\Entity\PwsInfo $pwsInfo PWS Info Entity
+     * @param \Rcm\Entity\ExtraSiteInfo $extraSiteInfo PWS Info Entity
      *
      * @return null
      */
-    public function setPwsInfo($pwsInfo)
+    public function setExtraSiteInfo($extraSiteInfo)
     {
-        $this->pwsInfo = $pwsInfo;
+        $this->extraSiteInfo = $extraSiteInfo;
     }
 
     /**
@@ -419,9 +443,31 @@ class Site
      *
      * @return null
      */
-    public function addPage(\Rcm\Entity\Page $page)
+    public function addPage(Page $page)
     {
         $this->pages[] = $page;
+    }
+
+    /**
+     * Get all the page entities for the site.
+     *
+     * @return array Array of page entities
+     */
+    public function getContainers()
+    {
+        return $this->containers;
+    }
+
+    /**
+     * Set up a page
+     *
+     * @param \Rcm\Entity\Container $container Page Entity to add.
+     *
+     * @return null
+     */
+    public function addContainer(Container $container)
+    {
+        $this->containers[] = $container;
     }
 
     /**
@@ -441,7 +487,7 @@ class Site
      *
      * @return null
      */
-    public function addSiteWidePlugin(\Rcm\Entity\PluginInstance $plugin)
+    public function addSiteWidePlugin(PluginInstance $plugin)
     {
         $this->sitePlugins->add($plugin);
     }
@@ -472,6 +518,7 @@ class Site
     {
         $templates = array();
 
+        /** @var \Rcm\Entity\Page $page */
         foreach ($this->pages as $page) {
             $publishedVersion = $page->getPublishedRevision();
             if ($page->isTemplate() && !empty($publishedVersion)) {
@@ -551,6 +598,23 @@ class Site
 
         return false;
     }
+
+    /**
+     * @param string $favIcon
+     */
+    public function setFavIcon($favIcon)
+    {
+        $this->favIcon = $favIcon;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFavIcon()
+    {
+        return $this->favIcon;
+    }
+
 
 
 }
