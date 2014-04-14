@@ -8,7 +8,7 @@ use \Rcm\Service\PluginManager;
 class PluginManagerTest extends BaseTestCase
 {
 
-    /** @var  \Rcm\Model\PluginManager2 */
+    /** @var  \Rcm\Service\PluginManager */
     protected $pluginManager;
 
     protected $instanceCounter = 1000000;
@@ -147,7 +147,7 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
-     * @covers \Rcm\Model\PluginManager2::ensurePluginIsValid
+     * @covers \Rcm\Service\PluginManager::ensurePluginIsValid
      */
     public function testEnsureValidPlugin()
     {
@@ -157,7 +157,7 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
-     * @covers \Rcm\Model\PluginManager2::ensurePluginIsValid
+     * @covers \Rcm\Service\PluginManager::ensurePluginIsValid
      * @expectedException \Rcm\Exception\InvalidPluginException
      */
     public function testEnsurePluginNotValid()
@@ -166,7 +166,7 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
-     * @covers \Rcm\Model\PluginManager2::getPluginController
+     * @covers \Rcm\Service\PluginManager::getPluginController
      */
     public function testGetPluginController()
     {
