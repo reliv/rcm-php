@@ -18,6 +18,8 @@ class Account
 
     protected $users;
 
+    protected $accountNumber;
+
     function __construct()
     {
         $this->people = New ArrayCollection();
