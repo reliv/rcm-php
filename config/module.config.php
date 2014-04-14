@@ -124,7 +124,7 @@ return array(
 
     'controllers' => array(
         'factories' => array (
-            'Rcm\Controller\IndexController'       => 'Rcm\Factory\IndexControllerFactory',
+            'Rcm\\Controller\\IndexController'       => 'Rcm\Factory\IndexControllerFactory',
         ),
     ),
 
