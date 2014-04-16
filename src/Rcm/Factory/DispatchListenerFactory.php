@@ -20,7 +20,7 @@ class DispatchListenerFactory implements FactoryInterface
         $layoutManager     = $serviceLocator->get('Rcm\\Service\\LayoutManager');
 
         /** @var \Rcm\Service\SiteManager $siteManager */
-        $siteManager       = $serviceLocator->get('Rcm\\Service\\SiteManager');
+        $siteManager       = $serviceLocator->get('Rcm\Service\SiteManager');
 
         /** @var \Zend\View\HelperPluginManager $viewHelperManager */
         $viewHelperManager = $serviceLocator->get('viewHelperManager');

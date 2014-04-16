@@ -115,7 +115,7 @@ return array(
             'Rcm\\Service\\PluginManager'          => 'Rcm\\Factory\\PluginManagerFactory',
             'Rcm\\Service\\LayoutManager'          => 'Rcm\\Factory\\LayoutManagerFactory',
             'Rcm\\Service\\DomainManager'          => 'Rcm\\Factory\\DomainManagerFactory',
-            'Rcm\\Service\\SiteManager'            => 'Rcm\\Factory\\SiteManagerFactory',
+            'Rcm\Service\SiteManager'            => 'Rcm\\Factory\\SiteManagerFactory',
             'Rcm\\Service\\PageManager'            => 'Rcm\\Factory\\PageManagerFactory',
             'Rcm\\Service\\Cache'                  => 'Rcm\\Factory\\CacheFactory',
             'Rcm\\Service\\SessionMgr'             => 'Rcm\\Factory\\SessionManagerFactory',

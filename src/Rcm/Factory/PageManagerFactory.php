@@ -17,7 +17,7 @@ class PageManagerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Service\SiteManager $siteManager */
-        $siteManager = $serviceLocator->get('Rcm\\Service\\SiteManager');
+        $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
 
         /** @var \Rcm\Service\PluginManager $pluginManager */
         $pluginManager = $serviceLocator->get('Rcm\\Service\\PluginManager');

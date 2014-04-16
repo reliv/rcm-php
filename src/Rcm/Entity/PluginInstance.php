@@ -99,7 +99,7 @@ class PluginInstance
 
     protected $tooltip;
 
-    protected $icon;
+    protected $instanceConfigon;
 
     protected $onPage = false;
 
@@ -319,14 +319,14 @@ class PluginInstance
         return $this->plugin;
     }
 
-    public function setIcon($icon)
+    public function setIcon($instanceConfigon)
     {
-        $this->icon = $icon;
+        $this->instanceConfigon = $instanceConfigon;
     }
 
     public function getIcon()
     {
-        return $this->icon;
+        return $this->instanceConfigon;
     }
 
     public function setTooltip($tooltip)
