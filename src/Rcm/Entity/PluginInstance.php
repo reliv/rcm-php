@@ -44,7 +44,7 @@ class PluginInstance
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
-    protected $instanceId;
+    protected $pluginInstanceId;
 
     /**
      * @ORM\Column(type="string")
@@ -80,14 +80,6 @@ class PluginInstance
     protected $previousEntity;
 
     /**
-     * @var array Array plugin assets which include images and links in use by
-     *                  this plugin instance
-     *
-     * @ORM\ManyToMany(targetEntity="PluginAsset", mappedBy="pluginInstances")
-     */
-    protected $assets;
-
-    /**
      * @var \Zend\View\Model\ViewModel Returned ViewModel from the
      *                                 Plugins Controller
      */
@@ -107,20 +99,9 @@ class PluginInstance
 
     protected $tooltip;
 
-    protected $icon;
+    protected $instanceConfigon;
 
     protected $onPage = false;
-
-
-    public function __construct()
-    {
-        $this->assets = new ArrayCollection();
-    }
-
-    public function clearAssets()
-    {
-        $this->assets = new ArrayCollection();
-    }
 
     /**
      * Function to return an array representation of the object.
@@ -134,7 +115,7 @@ class PluginInstance
 
     public function __clone()
     {
-        $this->instanceId = null;
+        $this->pluginInstanceId = null;
     }
 
     /**
@@ -144,7 +125,7 @@ class PluginInstance
      */
     public function getInstanceId()
     {
-        return $this->instanceId;
+        return $this->pluginInstanceId;
     }
 
     /**
@@ -152,13 +133,13 @@ class PluginInstance
      * should not be used by calling scripts.  Instead please persist the object
      * with Doctrine and allow Doctrine to set this on it's own,
      *
-     * @param int $instanceId Unique Plugin Instance ID
+     * @param int $pluginInstanceId Unique Plugin Instance ID
      *
      * @return null
      */
-    public function setInstanceId($instanceId)
+    public function setInstanceId($pluginInstanceId)
     {
-        $this->instanceId = $instanceId;
+        $this->pluginInstanceId = $pluginInstanceId;
     }
 
     /**
@@ -333,43 +314,19 @@ class PluginInstance
         $this->previousEntity = $instance->getInstanceId();
     }
 
-    /**
-     * Sets the Assets property
-     *
-     * @param array $assets
-     *
-     * @return null
-     *
-     */
-    public function setAssets($assets)
-    {
-        $this->assets = $assets;
-    }
-
-    /**
-     * Gets the Assets property
-     *
-     * @return array Assets
-     *
-     */
-    public function getAssets()
-    {
-        return $this->assets;
-    }
-
     public function getName()
     {
         return $this->plugin;
     }
 
-    public function setIcon($icon)
+    public function setIcon($instanceConfigon)
     {
-        $this->icon = $icon;
+        $this->instanceConfigon = $instanceConfigon;
     }
 
     public function getIcon()
     {
-        return $this->icon;
+        return $this->instanceConfigon;
     }
 
     public function setTooltip($tooltip)

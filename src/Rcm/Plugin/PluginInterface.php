@@ -16,7 +16,7 @@
  */
 namespace Rcm\Plugin;
 
-use \Zend\Http\PhpEnvironment\Request;
+use Zend\Stdlib\RequestInterface;
 
 /**
  * Plugin Controller Interface
@@ -43,7 +43,7 @@ interface PluginInterface
      *
      * @return \Zend\View\Model\ViewModel
      */
-    function renderInstance($instanceId);
+    public function renderInstance($instanceId);
 
 
     /**
@@ -55,7 +55,7 @@ interface PluginInterface
      *
      * @return mixed
      */
-    function renderDefaultInstance($instanceId);
+     public function renderDefaultInstance($instanceId);
 
     /**
      * Saves a plugin instance to persistent storage
@@ -65,7 +65,7 @@ interface PluginInterface
      *
      * @return null
      */
-    function saveInstance($instanceId, $data);
+    public function saveInstance($instanceId, $data);
 
     /**
      * Deletes a plugin instance from persistent storage
@@ -74,10 +74,10 @@ interface PluginInterface
      *
      * @return null
      */
-    function deleteInstance($instanceId);
+    public function deleteInstance($instanceId);
 
     /**
      * Set Request
      */
-    function setRequest(Request $request);
+    public function setRequest(RequestInterface $request);
 }
