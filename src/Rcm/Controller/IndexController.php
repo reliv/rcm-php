@@ -32,7 +32,7 @@ use Zend\View\Model\ViewModel;
  *
  * @category  Reliv
  * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
+ * @copyright 2012 Rel  iv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
  *

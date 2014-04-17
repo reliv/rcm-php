@@ -2,7 +2,7 @@
     "name": "reliv/Rcm",
     "description": "Reliv Content Management System",
     "type": "library",
-    "license": "MIT",
+    "license": "BSD-3-Clause",
     "keywords": [
         "reliv",
         "content",
