@@ -13,28 +13,7 @@ class DoctrineTestCase extends BaseTestCase
     /** @var \Doctrine\Orm\EntityManager */
     public $entityManager;
 
-    protected $expectedTables = array(
-        'rcm_admin_allowed_sites',
-        'rcm_admin_disallowed_pages',
-        'rcm_admin_permissions',
-        'rcm_admin_plugin_restrictions',
-        'rcm_containers',
-        'rcm_containers_revisions',
-        'rcm_countries',
-        'rcm_domains',
-        'rcm_languages',
-        'rcm_pages',
-        'rcm_pages_revisions',
-        'rcm_plugin_instances',
-        'rcm_plugin_wrappers',
-        'rcm_revisions',
-        'rcm_revisions_plugin_wrappers',
-        'rcm_setting',
-        'rcm_simple_instance_configs',
-        'rcm_site_plugin_instances',
-        'rcm_sites',
-        'rcm_sites_extra_info',
-    );
+    protected $expectedTables = array();
 
     public function setUp()
     {
