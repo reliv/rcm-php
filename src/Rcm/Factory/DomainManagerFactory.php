@@ -11,7 +11,10 @@ class DomainManagerFactory implements FactoryInterface
 {
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * Create Service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Zend Service Manager
+     *
      * @return DomainManager
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -20,7 +23,7 @@ class DomainManagerFactory implements FactoryInterface
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
-        $cache         = $serviceLocator->get('Rcm\\Service\\Cache');
+        $cache         = $serviceLocator->get('Rcm\Service\Cache');
 
         return new DomainManager(
             $entityManager,

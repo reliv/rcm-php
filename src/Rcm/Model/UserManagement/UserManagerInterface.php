@@ -29,6 +29,6 @@ interface UserManagerInterface
 
     public function logout();
 
-    public function saveUser(User $user);
+    public function saveUser($user);
 
 }

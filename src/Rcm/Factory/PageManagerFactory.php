@@ -11,7 +11,10 @@ class PageManagerFactory implements FactoryInterface
 {
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * Create Service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Zend Service Manager
+     *
      * @return PageManager
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -20,13 +23,13 @@ class PageManagerFactory implements FactoryInterface
         $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
 
         /** @var \Rcm\Service\PluginManager $pluginManager */
-        $pluginManager = $serviceLocator->get('Rcm\\Service\\PluginManager');
+        $pluginManager = $serviceLocator->get('Rcm\Service\PluginManager');
 
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
-        $cache         = $serviceLocator->get('Rcm\\Service\\Cache');
+        $cache         = $serviceLocator->get('Rcm\Service\Cache');
 
         return new PageManager(
             $siteManager,

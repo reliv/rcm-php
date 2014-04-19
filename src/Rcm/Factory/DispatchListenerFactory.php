@@ -11,13 +11,16 @@ class DispatchListenerFactory implements FactoryInterface
 {
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * Create Service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Zend Service Manager
+     *
      * @return DispatchListener
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Service\LayoutManager $layoutManager */
-        $layoutManager     = $serviceLocator->get('Rcm\\Service\\LayoutManager');
+        $layoutManager     = $serviceLocator->get('Rcm\Service\LayoutManager');
 
         /** @var \Rcm\Service\SiteManager $siteManager */
         $siteManager       = $serviceLocator->get('Rcm\Service\SiteManager');
@@ -25,6 +28,10 @@ class DispatchListenerFactory implements FactoryInterface
         /** @var \Zend\View\HelperPluginManager $viewHelperManager */
         $viewHelperManager = $serviceLocator->get('viewHelperManager');
 
-        return new DispatchListener($layoutManager, $siteManager, $viewHelperManager);
+        return new DispatchListener(
+            $layoutManager,
+            $siteManager,
+            $viewHelperManager
+        );
     }
 }

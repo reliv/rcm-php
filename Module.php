@@ -37,8 +37,8 @@ class Module
         $sm = $e->getApplication()->getServiceManager();
 
         //Add Domain Checker
-        $onRouteListener = $sm->get('Rcm\\EventListener\\RouteListener');
-        $onDispatchListener = $sm->get('Rcm\\EventListener\\DispatchListener');
+        $onRouteListener = $sm->get('Rcm\EventListener\RouteListener');
+        $onDispatchListener = $sm->get('Rcm\EventListener\DispatchListener');
 
         /** @var \Zend\EventManager\EventManager $eventManager */
         $eventManager = $e->getApplication()->getEventManager();

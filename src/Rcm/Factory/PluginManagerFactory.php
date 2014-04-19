@@ -11,7 +11,10 @@ class PluginManagerFactory implements FactoryInterface
 {
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * Create Service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Zend Service Manager
+     *
      * @return PluginManager
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -29,7 +32,7 @@ class PluginManagerFactory implements FactoryInterface
         $request       = $serviceLocator->get('request');
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
-        $cache         = $serviceLocator->get('Rcm\\Service\\Cache');
+        $cache         = $serviceLocator->get('Rcm\Service\Cache');
 
         $config        = $serviceLocator->get('config');
 

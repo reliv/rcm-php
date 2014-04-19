@@ -34,7 +34,8 @@ class PluginManagerTest extends BaseTestCase
         $render = $this->getRenderer();
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
-        $cache = $sm->get('Rcm\\Service\\Cache');
+        $cache = $sm->get('Rcm\Service\Cache');
+
         $cache->clearByNamespace('RcmCache');
 
         $moduleManager = $sm->get('ModuleManager');
@@ -58,7 +59,8 @@ class PluginManagerTest extends BaseTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $repoMock = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectRepository')
+        $repoMock = $this
+            ->getMockBuilder('\Doctrine\Common\Persistence\ObjectRepository')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -123,7 +125,7 @@ class PluginManagerTest extends BaseTestCase
         case 1:
             return $this->setupMockEntity(false, 1);
         default:
-            if (!empty($this->newPlugins[$pluginInstanceId])){
+            if (!empty($this->newPlugins[$pluginInstanceId])) {
                 return $this->newPlugins[$pluginInstanceId];
             }
             return null;

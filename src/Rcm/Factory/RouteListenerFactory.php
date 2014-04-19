@@ -11,13 +11,16 @@ class RouteListenerFactory implements FactoryInterface
 {
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * Create Service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Zend Service Manager
+     *
      * @return RouteListener
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Service\DomainManager $domainManager */
-        $domainManager = $serviceLocator->get('Rcm\\Service\\DomainManager');
+        $domainManager = $serviceLocator->get('Rcm\Service\DomainManager');
 
         return new RouteListener($domainManager);
     }

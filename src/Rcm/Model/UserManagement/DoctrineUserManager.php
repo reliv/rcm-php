@@ -27,7 +27,7 @@ class DoctrineUserManager
         $this->session->getManager()->destroy();
     }
 
-    public function saveUser(User $user)
+    public function saveUser($user)
     {
 
     }
