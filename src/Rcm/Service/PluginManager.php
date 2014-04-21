@@ -124,11 +124,7 @@ class PluginManager
         $headScriptContainer = new Container();
         $headScript->setContainer($headScriptContainer);
 
-        if ($pluginInstanceId < 0) {
-            $viewModel = $controller->renderDefaultInstance($pluginInstanceId);
-        } else {
-            $viewModel = $controller->renderInstance($pluginInstanceId);
-        }
+        $viewModel = $controller->renderInstance($pluginInstanceId);
 
         $html = $this->renderer->render($viewModel);
         $css = $headlink->getContainer()->getArrayCopy();

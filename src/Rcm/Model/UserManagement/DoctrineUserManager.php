@@ -48,7 +48,7 @@ class DoctrineUserManager
     /**
      * @return \Rcm\Entity\User | null
      */
-    public function getLoggedInUser()
+    public function getIdentity()
     {
         if (!$this->session->userId) {
             return null;
@@ -70,7 +70,7 @@ class DoctrineUserManager
      */
     public function getLoggedInAdminPermissions()
     {
-        $user = $this->getLoggedInUser();
+        $user = $this->getIdentity();
         if (!$user) {
             return null;
         }
