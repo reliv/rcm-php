@@ -298,9 +298,15 @@ class PluginManager
     {
         $this->ensurePluginIsValid($pluginName);
 
+        if ($this->sm->has($pluginName)) {
+            $sm = $this->sm;
+        } else {
+            $sm = $this->sm->get('ControllerLoader');
+        }
+
         //Load the plugin controller
         try {
-            $pluginController = $this->sm->get($pluginName);
+            $pluginController = $sm->get($pluginName);
         } catch (\Exception $e) {
             throw $e;
             //throw new RuntimeException('Unable to get instance of plugin: '.$pluginName, 1);
