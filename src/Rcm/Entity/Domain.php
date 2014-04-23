@@ -59,7 +59,7 @@ class Domain
      *                                to.
      *
      * @ORM\ManyToOne(targetEntity="Domain", inversedBy="additionalDomains")
-     * @ORM\JoinColumn(name="primary_id", referencedColumnName="domainId")
+     * @ORM\JoinColumn(name="primaryId", referencedColumnName="domainId", onDelete="CASCADE")
      */
     protected $primaryDomain;
 
@@ -76,14 +76,12 @@ class Domain
      * @var \Rcm\Entity\Language this domain's default language
      *
      * @ORM\ManyToOne(targetEntity="Language")
-     * @ORM\JoinColumn(name="defaultLanguageId",referencedColumnName="languageId")
+     * @ORM\JoinColumn(name="defaultLanguageId",referencedColumnName="languageId", onDelete="SET NULL")
      */
     protected $defaultLanguage;
 
     /**
      * Constructor for Domain Entity.
-     *
-     * @returns void
      */
     public function __construct()
     {

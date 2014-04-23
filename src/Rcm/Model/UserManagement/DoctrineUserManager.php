@@ -7,7 +7,7 @@ use Zend\Crypt\BlockCipher;
 use Zend\Session\Container;
 use Rcm\Entity\User;
 
-class DoctrineUserManager extends EntityMgrAware
+class DoctrineUserManager
     implements UserManagerInterface
 {
     protected $session;
@@ -48,7 +48,7 @@ class DoctrineUserManager extends EntityMgrAware
     /**
      * @return \Rcm\Entity\User | null
      */
-    public function getLoggedInUser()
+    public function getIdentity()
     {
         if (!$this->session->userId) {
             return null;
@@ -70,7 +70,7 @@ class DoctrineUserManager extends EntityMgrAware
      */
     public function getLoggedInAdminPermissions()
     {
-        $user = $this->getLoggedInUser();
+        $user = $this->getIdentity();
         if (!$user) {
             return null;
         }

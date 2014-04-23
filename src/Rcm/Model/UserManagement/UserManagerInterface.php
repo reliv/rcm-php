@@ -15,7 +15,7 @@ interface UserManagerInterface
     /**
      * @return \Rcm\Entity\User | null
      */
-    public function getLoggedInUser();
+    public function getIdentity();
 
     /**
      * @param string $username user name
