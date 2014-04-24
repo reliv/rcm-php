@@ -17,9 +17,10 @@ return array(
         ),
         'module_paths' => array(
 
-            -3 => './vendor',
-            -2 => './vendor/reliv',
-            -1 => './vendor/reliv/RcmPlugins',
+            -4 => './vendor',
+            -3 => './vendor/reliv',
+            -2 => './vendor/reliv/RcmPlugins',
+            -1 => './vendor/reliv/RcmUser',
         ),
     ),
 );

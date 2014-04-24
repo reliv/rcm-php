@@ -2,7 +2,7 @@
 /**
  * Language Database Entity
  *
- * This is a Doctorine 2 definition file for Language Objects.  This file is
+ * This is a Doctrine 2 definition file for Language Objects.  This file is
  * used for any module that needs to know language information.
  *
  * PHP version 5.3
@@ -10,15 +10,18 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
  */
 
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Rcm\Exception\InvalidArgumentException;
 
 /**
  * Language Database Entity
@@ -26,10 +29,12 @@ use Doctrine\ORM\Mapping as ORM;
  * This object contains ISO language codes.
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
+ * @link      http://github.com/reliv
  *
  * @ORM\Entity
  * @ORM\Table(name="rcm_languages")
@@ -53,10 +58,10 @@ class Language
     protected $languageName;
 
     /**
-     * @var string Deprecated:  Two digit langage code.  Here mainly for
-     *              backwards compatibility and use with API's that are not able
-     *              to use the three digit code.  Please try use the three digit
-     *              biblical code (iso639-2b) instead.
+     * @var string Two digit language code.  Here mainly for
+     *             backwards compatibility and use with API's that are not able
+     *             to use the three digit code.  Please try use the three digit
+     *             code (iso639-2t) instead.
      *
      * @link http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes ISO Standard
      *
@@ -75,7 +80,7 @@ class Language
 
     /**
      * @var string Three digit ISO "terminological" language code.  This is the
-     *              prefered langage code to use for the websites.  Note:
+     *              preferred language code to use for the websites.  Note:
      *              there are times when this is empty.  In that case use the
      *              $iso639_2b
      *
@@ -91,18 +96,9 @@ class Language
      *             language entity.
      *
      * @ORM\Column(type="string", nullable=true)
+     * @deprecated
      */
     protected $oldWebLanguage;
-
-    /**
-     * Function to return an array representation of the object.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return get_object_vars($this);
-    }
 
     /**
      * Alias of getThreeDigit() - Returns the three digit ISO "terminological"
@@ -138,10 +134,6 @@ class Language
      */
     public function getThreeDigit()
     {
-        if (empty($this->iso639_2t)) {
-            return $this->iso639_2b;
-        }
-
         return $this->iso639_2t;
     }
 
@@ -213,10 +205,17 @@ class Language
      * @link http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes ISO Standard
      *
      * @return void
+     * @throws InvalidArgumentException
      */
     public function setIso6391($iso639_1)
     {
-        $this->iso639_1 = $iso639_1;
+        if (strlen($iso639_1) != 2) {
+            throw new InvalidArgumentException(
+                'Iso 639-1 defines this code to be two digits in length.'
+            );
+        }
+
+        $this->iso639_1 = strtolower($iso639_1);
     }
 
     /**
@@ -239,10 +238,17 @@ class Language
      * @link http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes ISO Standard
      *
      * @return void
+     * @throws InvalidArgumentException
      */
     public function setIso6392b($iso639_2b)
     {
-        $this->iso639_2b = $iso639_2b;
+        if (strlen($iso639_2b) != 3) {
+            throw new InvalidArgumentException(
+                'Iso 639-2b defines this code to be three digits in length.'
+            );
+        }
+
+        $this->iso639_2b = strtolower($iso639_2b);
     }
 
     /**
@@ -265,16 +271,24 @@ class Language
      * @link http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes ISO Standard
      *
      * @return void
+     * @throws InvalidArgumentException
      */
     public function setIso6392t($iso639_2t)
     {
-        $this->iso639_2t = $iso639_2t;
+        if (strlen($iso639_2t) != 3) {
+            throw new InvalidArgumentException(
+                'Iso 639-2t defines this code to be three digits in length.'
+            );
+        }
+
+        $this->iso639_2t = strtolower($iso639_2t);
     }
 
     /**
      * Get the old language code used in legacy code or site.
      *
      * @return string Old Web Language Code
+     * @deprecated
      */
     public function getOldWebLanguage()
     {
@@ -288,6 +302,7 @@ class Language
      * @param string $language Old Web Language Code
      *
      * @return void
+     * @deprecated
      */
     public function setOldWebLanguage($language)
     {

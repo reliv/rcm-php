@@ -24,6 +24,9 @@ return array(
 
     'rcmCache' => array(
         'adapter' => 'Memory',
+        'options' => array(
+            'memory_limit' => 0,
+        ),
     ),
 
 

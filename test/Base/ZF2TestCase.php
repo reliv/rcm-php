@@ -38,7 +38,7 @@ class Zf2TestCase extends \PHPUnit_Framework_TestCase
     public function addModuleSearchPath($path)
     {
         if (!is_dir($path)) {
-            throw new \InvalidArgumentException('Module Search Path not found');
+            throw new \InvalidArgumentException('Module Search Path '.$path.' not found');
         }
 
         if (in_array($path, $this->moduleSerchPath)) {

@@ -1,17 +1,49 @@
 <?php
-
+/**
+ * Service Factory for the Plugin Manager
+ *
+ * This file contains the factory needed to generate a Plugin Manager.
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: BSD
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2014 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://reliv.com
+ */
 namespace Rcm\Factory;
 
 use Rcm\Service\PluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-
+/**
+ * Service Factory for the Plugin Manager
+ *
+ * Factory for the Plugin Manager.
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   Release: 1.0
+ * @link      http://reliv.com
+ *
+ */
 class PluginManagerFactory implements FactoryInterface
 {
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * Create Service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Zend Service Manager
+     *
      * @return PluginManager
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -29,7 +61,7 @@ class PluginManagerFactory implements FactoryInterface
         $request       = $serviceLocator->get('request');
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
-        $cache         = $serviceLocator->get('Rcm\\Service\\Cache');
+        $cache         = $serviceLocator->get('Rcm\Service\Cache');
 
         $config        = $serviceLocator->get('config');
 

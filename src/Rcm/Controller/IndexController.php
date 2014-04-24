@@ -10,11 +10,14 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
- * @author    Unkown <unknown@relivinc.com>
- * @copyright 2012 Reliv International
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2014 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
  */
+
 namespace Rcm\Controller;
 
 use Rcm\Exception\PageNotFoundException;
@@ -31,19 +34,30 @@ use Zend\View\Model\ViewModel;
  * modification.
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- *
+ * @link      http://github.com/reliv
  */
 class IndexController extends AbstractActionController
 {
+    public $pageName;
+    public $pageType;
+    public $pageRevisionId;
+
     protected $pageManager;
     protected $layoutManager;
     protected $pageInfo;
     protected $notFound = false;
 
+    /**
+     * Constructor
+     *
+     * @param PageManager   $pageManager   Page Manager needed to get current page.
+     * @param LayoutManager $layoutManager Layout Manager to handle themes
+     */
     public function __construct(
         PageManager $pageManager,
         LayoutManager $layoutManager
@@ -52,51 +66,87 @@ class IndexController extends AbstractActionController
         $this->layoutManager = $layoutManager;
     }
 
+    /**
+     * Look for page titled not-found.  If can't find a CMS page by that name
+     * throw a generic 404 and let Zend take care of the error handling.
+     *
+     * @return mixed|null
+     */
     protected function pageNotFound()
     {
         $this->notFound = true;
 
         try {
+            $this->pageName = 'not-found';
+            $this->pageType = 'n';
+            $this->pageRevisionId = null;
+
             $pageInfo = $this->pageManager->getPageRevisionInfo('n', 'not-found');
-            $this->getResponse()->setStatusCode(404);
+
+            /** @var \Zend\Http\Response $response */
+            $response =$this->getResponse();
+            $response->setStatusCode(404);
+
             return $pageInfo;
         } catch(PageNotFoundException $e) {
-            $this->notFoundAction();
+            return $this->notFoundAction();
         }
-
-        return null;
     }
 
+    /**
+     * Index Action.  Main action for page in the CMS.
+     *
+     * @return ViewModel
+     */
     public function indexAction()
     {
-        $pageName = $this->getEvent()->getRouteMatch()->getParam('page');
-        $pageType = $this->getEvent()->getRouteMatch()->getParam('pageType');
-        $pageRevisionId = $this->getEvent()->getRouteMatch()->getParam('revision', null);
+        $this->pageName = $this->getEvent()
+            ->getRouteMatch()
+            ->getParam('page', 'index');
 
-        if (empty($pageName)) {
-            $pageName = 'index';
-        }
+        $this->pageType = $this->getEvent()
+            ->getRouteMatch()
+            ->getParam('pageType', 'n');
 
-        if (empty($pageType)) {
-            $pageType = 'n';
-        }
+        $this->pageRevisionId = $this->getEvent()
+            ->getRouteMatch()
+            ->getParam('revision', null);
 
         try {
-            $pageInfo = $this->pageManager->getPageRevisionInfo($pageType, $pageName, $pageRevisionId);
+
+            $pageInfo = $this->pageManager->getPageRevisionInfo(
+                $this->pageType,
+                $this->pageName,
+                $this->pageRevisionId
+            );
+
         } catch(PageNotFoundException $e) {
             $pageInfo = $this->pageNotFound();
+
+            if ($pageInfo instanceof ViewModel) {
+                return $pageInfo;
+            }
         }
 
         $this->pageInfo = $pageInfo;
 
         if (!empty($pageInfo['siteLayoutOverride'])) {
             $layoutView = $this->layout();
-            $layoutTemplatePath = $this->layoutManager->getLayout($pageInfo['siteLayoutOverride']);
+
+            $layoutTemplatePath = $this->layoutManager->getLayout(
+                $pageInfo['siteLayoutOverride']
+            );
+
             $layoutView->setTemplate('layout/' . $layoutTemplatePath);
         }
 
         $viewModel = new ViewModel(array('pageInfo' => $pageInfo));
-        $viewModel->setTemplate('pages/' . $this->layoutManager->getPageTemplate($pageInfo['pageLayout']));
+
+        $viewModel->setTemplate(
+            'pages/'
+            .$this->layoutManager->getPageTemplate($pageInfo['pageLayout'])
+        );
+
         return $viewModel;
     }
 }

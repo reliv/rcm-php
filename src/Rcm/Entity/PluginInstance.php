@@ -2,7 +2,7 @@
 /**
  * Plugin Instances Entity
  *
- * This is a Doctorine 2 definition file for Plugin Instances  This file
+ * This is a Doctrine 2 definition file for Plugin Instances  This file
  * is used for any module that needs to know about plugin instances.
  *
  * PHP version 5.3
@@ -10,27 +10,30 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
  */
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Plugin Instances Entity
  *
- * This object contains a list of plugin instances.  See documentation for
+ * This object contains all the data for a plugin instance.  See documentation for
  * how our plugins work.
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
+ * @link      http://github.com/reliv
  *
  * @ORM\Entity
  * @ORM\Table(name="rcm_plugin_instances")
@@ -80,45 +83,6 @@ class PluginInstance
     protected $previousEntity;
 
     /**
-     * @var \Zend\View\Model\ViewModel Returned ViewModel from the
-     *                                 Plugins Controller
-     */
-    protected $viewModel;
-
-    /**
-     * @var string Path the JS needed for editing plugin.  Defined in Modules
-     *             config file and stored here for easy reference.
-     */
-    protected $adminEditJs;
-
-    /**
-     * @var sting Path to needed CSS file for editing the plugin.  Defined in
-     *            the modules config file and stored here for easy reference.
-     */
-    protected $adminEditCss;
-
-    protected $tooltip;
-
-    protected $instanceConfigon;
-
-    protected $onPage = false;
-
-    /**
-     * Function to return an array representation of the object.
-     *
-     * @return array Array representation of the object
-     */
-    public function toArray()
-    {
-        return get_object_vars($this);
-    }
-
-    public function __clone()
-    {
-        $this->pluginInstanceId = null;
-    }
-
-    /**
      * Get the unique Instance ID
      *
      * @return int
@@ -131,7 +95,7 @@ class PluginInstance
     /**
      * Set the ID of the Plugin Instance.  This was added for unit testing and
      * should not be used by calling scripts.  Instead please persist the object
-     * with Doctrine and allow Doctrine to set this on it's own,
+     * with Doctrine and allow Doctrine to set this on it's own.
      *
      * @param int $pluginInstanceId Unique Plugin Instance ID
      *
@@ -143,7 +107,8 @@ class PluginInstance
     }
 
     /**
-     * Get list of plugins
+     * Name of the plugin we are wrapping.  This is used to know what class to
+     * call when rendering the instance.
      *
      * @return string
      */
@@ -153,7 +118,8 @@ class PluginInstance
     }
 
     /**
-     * Set the plugin for this instance.
+     * Set the name of the plugin we are wrapping.  This is used to know what class
+     * to call when rendering the instance.
      *
      * @param string $plugin Module Name
      *
@@ -175,16 +141,6 @@ class PluginInstance
     }
 
     /**
-     * Change SiteWide plugin to a normal plugin instance.
-     *
-     * @return null
-     */
-    public function setPageOnlyPlugin()
-    {
-        $this->siteWide = false;
-    }
-
-    /**
      * Is this a site wide plugin
      *
      * @return bool
@@ -201,11 +157,6 @@ class PluginInstance
      */
     public function getDisplayName()
     {
-
-        if (empty($this->displayName)) {
-            return null;
-        }
-
         return $this->displayName;
     }
 
@@ -222,131 +173,48 @@ class PluginInstance
     }
 
     /**
-     * Set the ViewModel returned for this plugin instance.
+     * MD5 of save data.  This is used to figure out if we need to create a new
+     * instance when saving a plugin.
      *
-     * @param \Zend\View\Model\ViewModel $viewModel Zend ViewModel
-     */
-    public function setViewModel(\Zend\View\Model\ViewModel $viewModel)
-    {
-        $this->viewModel = $viewModel;
-    }
-
-    /**
-     * Get the view for the plugin.
+     * @param string $md5 MD5 of save data
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return void
      */
-    public function getView()
-    {
-        return $this->viewModel;
-    }
-
-    /**
-     * Set the JS file to use for editing the plugin
-     *
-     * @param string $jsPath Path to JavaScript
-     */
-    public function setAdminEditJs($jsPath)
-    {
-        $this->adminEditJs = $jsPath;
-    }
-
-    /**
-     * Get the Admin Javascript path needed to edit the plugin.
-     *
-     * @return string JS Path
-     */
-    public function getAdminEditJs()
-    {
-        return $this->adminEditJs;
-    }
-
-    /**
-     * Set the Admin CSS needed to to edit the plugin
-     *
-     * @param string $cssPath
-     */
-    public function setAdminEditCss($cssPath)
-    {
-        $this->adminEditCss = $cssPath;
-    }
-
-    /**
-     * Get the Admin CSS path needed to edit the plugin.
-     *
-     * @return sting CSS Path
-     */
-    public function getAdminEditCss()
-    {
-        return $this->adminEditCss;
-    }
-
-    public function hasAdminJs()
-    {
-        if (!empty($this->adminEditJs)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function hasAdminCss()
-    {
-        if (!empty($this->adminEditCss)) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function setMd5($md5)
     {
         $this->md5 = $md5;
     }
 
+    /**
+     * Current MD5 of save data. This is used to figure out if we need to create a
+     * new instance when saving a plugin.
+     *
+     * @return string
+     */
     public function getMd5()
     {
         return $this->md5;
     }
 
-    public function setPreviousEntity(\Rcm\Entity\PluginInstance $instance)
+    /**
+     * Set Previous Plugin Instance.  This is used to keep a record of changes.
+     *
+     * @param PluginInstance $instance Previous Plugin Instance
+     *
+     * @return void
+     */
+    public function setPreviousInstance(PluginInstance $instance)
     {
         $this->previousEntity = $instance->getInstanceId();
     }
 
-    public function getName()
+    /**
+     * Get Previous Plugin Instance.  This is used to keep a record of changes.
+     *
+     * @return PluginInstance
+     */
+    public function getPreviousInstance()
     {
-        return $this->plugin;
+        return $this->previousEntity;
     }
-
-    public function setIcon($instanceConfigon)
-    {
-        $this->instanceConfigon = $instanceConfigon;
-    }
-
-    public function getIcon()
-    {
-        return $this->instanceConfigon;
-    }
-
-    public function setTooltip($tooltip)
-    {
-        $this->tooltip = $tooltip;
-    }
-
-    public function getTooltip()
-    {
-        return $this->tooltip;
-    }
-
-    public function setOnPage($onPage)
-    {
-        $this->onPage = $onPage;
-    }
-
-    public function getOnPage()
-    {
-        return $this->onPage;
-    }
-
 }
