@@ -45,18 +45,6 @@ interface PluginInterface
      */
     public function renderInstance($instanceId);
 
-
-    /**
-     * Returns a view model filled with content for a brand new instance. This
-     * usually comes out of a config file rather than writable persistent
-     * storage like a database.
-     *
-     * @param integer $instanceId
-     *
-     * @return mixed
-     */
-     public function renderDefaultInstance($instanceId);
-
     /**
      * Saves a plugin instance to persistent storage
      *
