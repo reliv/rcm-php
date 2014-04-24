@@ -121,7 +121,8 @@ class PageManager extends ContainerAbstract
     public function getPageRevisionDbInfo($pageType, $pageName, $revisionId)
     {
         $siteId = $this->siteId;
-        
+
+        //@codingStandardsIgnoreStart
         if (!empty($this->storedPages['data'][$siteId][$pageType][$pageName][$revisionId])) {
             return $this->storedPages['data'][$siteId][$pageType][$pageName][$revisionId];
         }
@@ -129,18 +130,19 @@ class PageManager extends ContainerAbstract
         if ($this->cache->hasItem('rcm_page_data_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revisionId)) {
             return $this->cache->getItem('rcm_page_data_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revisionId);
         }
+        //@codingStandardsIgnoreEnd
 
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('
-                page,
-                site.siteId,
-                currentRevision.revisionId currentRevisionId,
-                stagedRevision.revisionId stagedRevisionId,
-                revision,
-                pluginWrappers,
-                pluginInstances
-            ')->from('\Rcm\Entity\Page','page')
+        $queryBuilder->select(
+            'page,
+            site.siteId,
+            currentRevision.revisionId currentRevisionId,
+            stagedRevision.revisionId stagedRevisionId,
+            revision,
+            pluginWrappers,
+            pluginInstances'
+        )->from('\Rcm\Entity\Page', 'page')
             ->leftJoin('page.site', 'site')
             ->leftJoin('page.revisions', 'revision')
             ->leftJoin('page.currentRevision', 'currentRevision')

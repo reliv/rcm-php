@@ -2,7 +2,7 @@
 /**
  * Domain Name Database Entity
  *
- * This is a Doctorine 2 definition file for Domain Name Objects.  This file
+ * This is a Doctrine 2 definition file for Domain Name Objects.  This file
  * is used for any module that needs to know Domain Name information.
  *
  * PHP version 5.3
@@ -10,16 +10,21 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
  */
 
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Zend\Validator\Hostname;
+use Zend\Validator\ValidatorInterface;
+use Rcm\Exception\InvalidArgumentException;
 
 /**
  * Country Database Entity
@@ -28,10 +33,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  * name is the primary domain.
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
+ * @link      http://github.com/reliv
  *
  * @ORM\Entity
  * @ORM\Table(name="rcm_domains")
@@ -59,26 +66,40 @@ class Domain
      *                                to.
      *
      * @ORM\ManyToOne(targetEntity="Domain", inversedBy="additionalDomains")
-     * @ORM\JoinColumn(name="primaryId", referencedColumnName="domainId", onDelete="CASCADE")
+     * @ORM\JoinColumn(
+     *     name="primaryId",
+     *     referencedColumnName="domainId",
+     *     onDelete="CASCADE"
+     * )
      */
     protected $primaryDomain;
 
     /**
-     * @var \Rcm\Entity\Domain[] Array of Domain Objects that represent
-     *                                   all the additional domains that belong
-     *                                   to this one
+     * @var ArrayCollection Array of Domain Objects that represent
+     *                      all the additional domains that belong
+     *                      to this one
      *
      * @ORM\OneToMany(targetEntity="Domain", mappedBy="primaryDomain")
      */
     protected $additionalDomains;
 
     /**
-     * @var \Rcm\Entity\Language this domain's default language
+     * @var \Rcm\Entity\Language This domain's default language.  Needed for
+     *                           translations by some plugins.
      *
      * @ORM\ManyToOne(targetEntity="Language")
-     * @ORM\JoinColumn(name="defaultLanguageId",referencedColumnName="languageId", onDelete="SET NULL")
+     * @ORM\JoinColumn(
+     *     name="defaultLanguageId",
+     *     referencedColumnName="languageId",
+     *     onDelete="SET NULL"
+     * )
      */
     protected $defaultLanguage;
+
+    /**
+     * @var \Zend\Validator\ValidatorInterface
+     */
+    protected $domainValidator;
 
     /**
      * Constructor for Domain Entity.
@@ -86,62 +107,23 @@ class Domain
     public function __construct()
     {
         $this->additionalDomains = new ArrayCollection();
+        $this->domainValidator = new Hostname(
+            array(
+                'allow' => Hostname::ALLOW_LOCAL | Hostname::ALLOW_IP
+            )
+        );
     }
 
     /**
-     * Function to return an array representation of the object.
+     * Overwrite the default validator
      *
-     * @param bool $skipPrimary    Used to prevent infinite loops.  Should not
-     *                             be used by calling scripts.
-     * @param bool $skipAdditional Used to prevent infinite loops.  Should not
-     *                             be used by calling scripts.
+     * @param ValidatorInterface $domainValidator Domain Validator
      *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD)
+     * @return void
      */
-    public function toArray($skipPrimary = false, $skipAdditional = false)
+    public function setDomainValidator(ValidatorInterface $domainValidator)
     {
-        $array = array(
-            'domainId' => $this->domainId,
-            'domain' => $this->domain
-        );
-
-        if (!empty($this->primaryDomain)
-            && is_a($this->primaryDomain, '\Rcm\Entity\Domain')
-            && $skipPrimary === false
-        ) {
-            $array['primaryDomain']
-                = $this->primaryDomain->toArray(false, true);
-        } elseif ($skipPrimary === false) {
-            $array['primaryDomain'] = null;
-        }
-
-        if (!empty($this->defaultLanguage)
-            && is_a($this->defaultLanguage, '\Rcm\Entity\Language')
-        ) {
-            $array['defaultLanguage'] = $this->defaultLanguage->getLanguage();
-        } else {
-            $array['defaultLanguage'] = null;
-        }
-
-        $additionalDomains = $this->additionalDomains->toArray();
-
-        if (!empty($additionalDomains)
-            && is_array($additionalDomains)
-            && $skipAdditional === false
-        ) {
-            foreach ($additionalDomains as $additionalDomain) {
-                $array['additionalDomains'][]
-                    = $additionalDomain->toArray(true);
-            }
-        } elseif ($skipAdditional === false) {
-            $array['additionalDomains'] = array();
-        }
-
-        $array['isPrimary'] = $this->isPrimary();
-
-        return $array;
+        $this->domainValidator = $domainValidator;
     }
 
     /**
@@ -163,7 +145,7 @@ class Domain
      *
      * @return int Unique Domain ID
      */
-    public function getId()
+    public function getDomainId()
     {
         return $this->domainId;
     }
@@ -177,7 +159,7 @@ class Domain
      *
      * @return void
      */
-    public function setId($domainId)
+    public function setDomainId($domainId)
     {
         $this->domainId = $domainId;
     }
@@ -204,8 +186,8 @@ class Domain
      */
     public function setDomainName($domain)
     {
-        if (!$this->domainIsValid($domain)) {
-            throw new \Rcm\Exception\InvalidArgumentException(
+        if (!$this->domainValidator->isValid($domain)) {
+            throw new InvalidArgumentException(
                 'Domain name is invalid'
             );
         }
@@ -226,11 +208,11 @@ class Domain
     /**
      * Set the Primary Domain.
      *
-     * @param \Rcm\Entity\Domain $primaryDomain Primary Domain Entity
+     * @param Domain $primaryDomain Primary Domain Entity
      *
      * @return void
      */
-    public function setPrimary($primaryDomain)
+    public function setPrimary(Domain $primaryDomain)
     {
         $this->primaryDomain = $primaryDomain;
     }
@@ -238,11 +220,11 @@ class Domain
     /**
      * Get all the additional domains for domain.
      *
-     * @return \Rcm\Entity\Domain[] Return an Array of Domain Entities.
+     * @return ArrayCollection Return an Array of Domain Entities.
      */
     public function getAdditionalDomains()
     {
-        return $this->additionalDomains->toArray();
+        return $this->additionalDomains;
     }
 
     /**
@@ -252,35 +234,9 @@ class Domain
      *
      * @return void
      */
-    public function setAdditionalDomain(
-        \Rcm\Entity\Domain $domain
-    )
+    public function setAdditionalDomain(Domain $domain)
     {
         $this->additionalDomains->add($domain);
-    }
-
-
-    /**
-     * Check Domain Name
-     *
-     * @param string $domain Domain Name to check.
-     *
-     * @return boolean
-     */
-    public function domainIsValid($domain)
-    {
-        /*
-         * @link http://regexlib.com/REDetails.aspx?regexp_id=391 Pattern
-         */
-        $pattern
-            = '/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}'
-            . '[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/';
-
-        if (preg_match($pattern, $domain)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -289,11 +245,8 @@ class Domain
      * @param \Rcm\Entity\Language $defaultLanguage DefaultLanguage
      *
      * @return null
-     *
      */
-    public function setDefaultLanguage(
-        \Rcm\Entity\Language $defaultLanguage
-    )
+    public function setDefaultLanguage(Language $defaultLanguage)
     {
         $this->defaultLanguage = $defaultLanguage;
     }
@@ -307,26 +260,5 @@ class Domain
     public function getDefaultLanguage()
     {
         return $this->defaultLanguage;
-    }
-
-    /**
-     * Get Raw Additional Domains.  Use only for unit tests
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection Doctrine Array
-     *                                                      Collection.
-     */
-    public function getRawAdditionalDomains()
-    {
-        return $this->additionalDomains;
-    }
-
-    /**
-     * Set default language to null.  Used only for Unit Tests
-     *
-     * @return void
-     */
-    public function clearLanguageForUnitTests()
-    {
-        $this->defaultLanguage = null;
     }
 }

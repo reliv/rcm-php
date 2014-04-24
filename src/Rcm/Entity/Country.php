@@ -3,7 +3,7 @@
 /**
  * Country Database Entity
  *
- * This is a Doctorine 2 definition file for Country Objects.  This file is used
+ * This is a Doctrine 2 definition file for Country Objects.  This file is used
  * for any module that needs to know Country information.
  *
  * PHP version 5.3
@@ -11,15 +11,18 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
  */
 
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Rcm\Exception\InvalidArgumentException;
 
 /**
  * Country Database Entity
@@ -29,10 +32,12 @@ use Doctrine\ORM\Mapping as ORM;
  * needed when an API used in the system does not use standard ISO codes
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
+ * @link      http://github.com/reliv
  *
  * @ORM\Entity
  * @ORM\Table(name="rcm_countries")
@@ -68,7 +73,7 @@ class Country
     /**
      * Sets the CountryName property
      *
-     * @param string $countryName
+     * @param string $countryName Name of the Country
      *
      * @return null
      *
@@ -92,13 +97,17 @@ class Country
     /**
      * Sets the Iso2 property
      *
-     * @param string $iso2
+     * @param string $iso2 ISO2 Country Code
      *
      * @return null
-     *
+     * @throws InvalidArgumentException
      */
     public function setIso2($iso2)
     {
+        if (strlen($iso2) != 2) {
+            throw new InvalidArgumentException('ISO2 must be two characters');
+        }
+
         $this->iso2 = $iso2;
     }
 
@@ -116,13 +125,17 @@ class Country
     /**
      * Sets the Iso3 property
      *
-     * @param string $iso3
+     * @param string $iso3 ISO3 Country Code
      *
      * @return null
-     *
+     * @throws InvalidArgumentException
      */
     public function setIso3($iso3)
     {
+        if (strlen($iso3) != 3) {
+            throw new InvalidArgumentException('ISO3 must be three characters');
+        }
+
         $this->iso3 = $iso3;
     }
 

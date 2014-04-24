@@ -1,10 +1,40 @@
 <?php
+/**
+ * Unit Test for the Plugin Manager Service
+ *
+ * This file contains the unit test for the Plugin Manager Service
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: BSD
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2014 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
+ */
+require_once __DIR__ . '/../../../Base/BaseTestCase.php';
 
-require_once __DIR__ . '/../../Base/DoctrineTestCase.php';
+use RcmTest\Base\BaseTestCase;
+use Rcm\Service\PluginManager;
+use Zend\Http\PhpEnvironment\Request;
 
-use \RcmTest\Base\BaseTestCase;
-use \Rcm\Service\PluginManager;
-
+/**
+ * Unit Test for the Plugin Manager Service
+ *
+ * Unit Test for the Plugin Manager Service
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   Release: 1.0
+ * @link      http://github.com/reliv
+ */
 class PluginManagerTest extends BaseTestCase
 {
 
@@ -20,12 +50,18 @@ class PluginManagerTest extends BaseTestCase
     /** @var  \Zend\Cache\Storage\StorageInterface */
     protected $cache;
 
+    /**
+     * Setup for tests
+     *
+     * @return null
+     */
     public function setUp()
     {
         $this->addModule('RcmMockPlugin');
 
         parent::setUp();
 
+        /** @var \Doctrine\ORM\EntityManager $em */
         $em = $this->getEmMock();
 
         /** @var \Zend\ServiceManager\ServiceManager $sm */
@@ -33,11 +69,12 @@ class PluginManagerTest extends BaseTestCase
 
         $render = $this->getRenderer();
 
-        /** @var \Zend\Cache\Storage\StorageInterface $cache */
+        /** @var \Zend\Cache\Storage\Adapter\Memory $cache */
         $cache = $sm->get('Rcm\Service\Cache');
 
-        $cache->clearByNamespace('RcmCache');
+        $cache->flush();
 
+        /** @var \Zend\ModuleManager\ModuleManager $moduleManager */
         $moduleManager = $sm->get('ModuleManager');
 
         $this->pluginManager = new PluginManager(
@@ -46,14 +83,19 @@ class PluginManagerTest extends BaseTestCase
             $sm,
             $moduleManager,
             $render,
-            new \Zend\Http\PhpEnvironment\Request(),
+            new Request(),
             $cache
         );
 
         $this->cache = $cache;
     }
 
-    private function getEmMock()
+    /**
+     * Get a mock EM object
+     *
+     * @return PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getEmMock()
     {
         $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
@@ -83,12 +125,22 @@ class PluginManagerTest extends BaseTestCase
         return $em;
     }
 
+    /**
+     * Call back for remove counter
+     *
+     * @return void
+     */
     public function removeCallback()
     {
         $this->removeCounter++;
         return;
     }
 
+    /**
+     * Counter for persist calls to EM
+     *
+     * @return void
+     */
     public function persistCallback()
     {
         $args = func_get_args();
@@ -99,7 +151,7 @@ class PluginManagerTest extends BaseTestCase
 
             $id = $pluginInstance->getInstanceId();
 
-            if (empty($id)){
+            if (empty($id)) {
                 $pluginInstance->setInstanceId($this->instanceCounter);
                 $this->newPlugins[$this->instanceCounter] = $pluginInstance;
                 $this->instanceCounter++;
@@ -107,6 +159,11 @@ class PluginManagerTest extends BaseTestCase
         }
     }
 
+    /**
+     * Gets a mock plugin for testing
+     *
+     * @return null|\Rcm\Entity\PluginInstance
+     */
     public function emMockEntityCallback()
     {
         $args = func_get_args();
@@ -133,7 +190,15 @@ class PluginManagerTest extends BaseTestCase
 
     }
 
-    private function setupMockEntity($siteWide = false, $instanceId=1)
+    /**
+     * Prep Mock Entity Data
+     *
+     * @param bool $siteWide   set site wide
+     * @param int  $instanceId instance id
+     *
+     * @return \Rcm\Entity\PluginInstance
+     */
+    protected function setupMockEntity($siteWide = false, $instanceId=1)
     {
         $pluginInstance = new \Rcm\Entity\PluginInstance();
         $pluginInstance->setPlugin('RcmMockPlugin');
@@ -149,6 +214,10 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
+     * Test Ensure Valid Plugin Method
+     *
+     * @return void
+     *
      * @covers \Rcm\Service\PluginManager::ensurePluginIsValid
      */
     public function testEnsureValidPlugin()
@@ -159,6 +228,10 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
+     * Test Invalid Plugin Exception
+     *
+     * @return void
+     *
      * @covers \Rcm\Service\PluginManager::ensurePluginIsValid
      * @expectedException \Rcm\Exception\InvalidPluginException
      */
@@ -168,6 +241,10 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
+     * Test Get Plugin Controller Method
+     *
+     * @return void
+     *
      * @covers \Rcm\Service\PluginManager::getPluginController
      */
     public function testGetPluginController()
@@ -181,6 +258,13 @@ class PluginManagerTest extends BaseTestCase
         );
     }
 
+    /**
+     * Test Getting a new Entity
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::getNewEntity
+     */
     public function testGetNewEntity()
     {
         $viewData = $this->pluginManager->getNewEntity('RcmMockPlugin');
@@ -215,6 +299,13 @@ class PluginManagerTest extends BaseTestCase
         $this->assertFalse($viewData['fromCache']);
     }
 
+    /**
+     * Test Getting a Plugin by Instance ID
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::getPluginByInstanceId
+     */
     public function testGetPluginByInstanceId()
     {
         $viewData = $this->pluginManager->getPluginByInstanceId(1);
@@ -247,6 +338,13 @@ class PluginManagerTest extends BaseTestCase
         $this->assertFalse($viewData['fromCache']);
     }
 
+    /**
+     * Test Getting a plugin from Cache
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::getPluginByInstanceId
+     */
     public function testCacheForGetPluginByInstanceId()
     {
         $this->pluginManager->getPluginByInstanceId(1);
@@ -282,6 +380,13 @@ class PluginManagerTest extends BaseTestCase
 
     }
 
+    /**
+     * Test Getting a site wide plugin
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::getPluginByInstanceId
+     */
     public function testGetSiteWide()
     {
         $viewData = $this->pluginManager->getPluginByInstanceId(2);
@@ -307,18 +412,28 @@ class PluginManagerTest extends BaseTestCase
         $this->assertContains(
             '/modules/rcm-mock-plugin/style.css', $viewData['css'][0]
         );
+
         $this->assertContains(
             '/modules/rcm-mock-plugin/test.js', $viewData['js'][0]
         );
+
         $this->assertContains(
-            'Test Site Wide Instance', $viewData['displayName'], 'Failed. value: '.print_r($viewData, true)
+            'Test Site Wide Instance',
+            $viewData['displayName'],
+            'Failed. value: '.print_r($viewData, true)
         );
+
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertTrue($viewData['siteWide']);
         $this->assertFalse($viewData['fromCache']);
     }
 
     /**
+     * Test invalid instance ID
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::getPluginByInstanceId
      * @expectedException Rcm\Exception\PluginInstanceNotFoundException
      */
     public function testGetPluginByInstanceIdException()
@@ -326,6 +441,13 @@ class PluginManagerTest extends BaseTestCase
         $this->pluginManager->getPluginByInstanceId(10000);
     }
 
+    /**
+     * Test Getting a new plugin Entity
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::getNewPluginInstanceEntity
+     */
     public function testGetNewPluginInstanceEntity()
     {
         $instance = $this->pluginManager->getNewPluginInstanceEntity(
@@ -334,7 +456,7 @@ class PluginManagerTest extends BaseTestCase
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $instance);
 
-        $this->assertTrue($instance->getName() == 'RcmMockPlugin');
+        $this->assertTrue($instance->getPlugin() == 'RcmMockPlugin');
         $this->assertTrue(
             $instance->getDisplayName() == 'Mock Object Display Name',
             'Display Name incorrect.  Display name set as '
@@ -344,6 +466,13 @@ class PluginManagerTest extends BaseTestCase
         $this->assertEmpty($instance->getMd5());
     }
 
+    /**
+     * Test Saving a new Instance
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::saveNewInstance
+     */
     public function testSaveNewInstance()
     {
         $instanceConfig = array('html' => 'This is a test');
@@ -354,7 +483,7 @@ class PluginManagerTest extends BaseTestCase
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $newInstance);
 
-        $this->assertTrue($newInstance->getName() == 'RcmMockPlugin');
+        $this->assertTrue($newInstance->getPlugin() == 'RcmMockPlugin');
         $this->assertTrue(
             $newInstance->getDisplayName() == 'Mock Object Display Name',
             'Display Name incorrect.  Display name set as '
@@ -367,6 +496,13 @@ class PluginManagerTest extends BaseTestCase
         $this->assertFalse($newInstance->isSiteWide());
     }
 
+    /**
+     * Test Saving a new Site Wide Instance
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::saveNewInstance
+     */
     public function testSaveNewSiteWideInstance()
     {
         $instanceConfig = array('html' => 'This is a test');
@@ -377,7 +513,7 @@ class PluginManagerTest extends BaseTestCase
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $newInstance);
 
-        $this->assertTrue($newInstance->getName() == 'RcmMockPlugin');
+        $this->assertTrue($newInstance->getPlugin() == 'RcmMockPlugin');
         $this->assertTrue(
             $newInstance->getDisplayName() == 'Test Display Name',
             'Display Name incorrect.  Display name set as '
@@ -391,6 +527,11 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
+     * Test Saving a new plugin
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::saveNewInstance
      * @depends testSaveNewInstance
      */
     public function testSavePlugin()
@@ -411,7 +552,7 @@ class PluginManagerTest extends BaseTestCase
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $savedInstance);
 
-        $this->assertTrue($savedInstance->getName() == 'RcmMockPlugin');
+        $this->assertTrue($savedInstance->getPlugin() == 'RcmMockPlugin');
         $this->assertTrue(
             $savedInstance->getDisplayName() == 'Mock Object Display Name',
             'Display Name incorrect.  Display name set as '
@@ -429,6 +570,11 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
+     * Test Saving a plugin with no change should be skipped
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::saveNewInstance
      * @depends testSaveNewInstance
      */
     public function testSavePluginWithSameData()
@@ -447,7 +593,7 @@ class PluginManagerTest extends BaseTestCase
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $savedInstance);
 
-        $this->assertTrue($savedInstance->getName() == 'RcmMockPlugin');
+        $this->assertTrue($savedInstance->getPlugin() == 'RcmMockPlugin');
         $this->assertTrue(
             $savedInstance->getDisplayName() == 'Mock Object Display Name',
             'Display Name incorrect.  Display name set as '
@@ -462,6 +608,13 @@ class PluginManagerTest extends BaseTestCase
         $this->assertEquals($testInstanceId, $savedInstance->getInstanceId());
     }
 
+    /**
+     * Test Deleting a Plugin
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::deletePluginInstance
+     */
     public function testDeleteInstanceId()
     {
         $this->pluginManager->deletePluginInstance(1);
@@ -469,6 +622,11 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
+     * Test Deleting a Non-existing Plugin
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::deletePluginInstance
      * @expectedException \Rcm\Exception\PluginInstanceNotFoundException
      */
     public function testDeleteInstanceIdNotFound()
@@ -478,6 +636,11 @@ class PluginManagerTest extends BaseTestCase
     }
 
     /**
+     * Test Deleting a Plugin causes exception
+     *
+     * @return void
+     *
+     * @covers \Rcm\Service\PluginManager::deletePluginInstance
      * @expectedException \RcmMockPlugin\Exception\RuntimeException
      */
     public function testDeleteInstanceIdPluginControllerThrowsException()

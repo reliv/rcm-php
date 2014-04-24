@@ -77,7 +77,7 @@ class PluginManager
         }
 
         $return = $this->getPluginViewData(
-            $pluginInstance->getName(), $pluginInstanceId
+            $pluginInstance->getPlugin(), $pluginInstanceId
         );
 
         if ($pluginInstance->isSiteWide()) {
@@ -197,7 +197,7 @@ class PluginManager
         }
 
         $newPluginInstance = $this->saveNewInstance(
-            $pluginInstance->getName(),
+            $pluginInstance->getPlugin(),
             $saveData,
             $pluginInstance->isSiteWide(),
             $pluginInstance->getDisplayName()
@@ -218,7 +218,7 @@ class PluginManager
         }
 
         /** @var \Rcm\Plugin\PluginInterface $controller */
-        $controller = $this->getPluginController($pluginInstanceEntity->getName());
+        $controller = $this->getPluginController($pluginInstanceEntity->getPlugin());
         $controller->deleteInstance($pluginInstanceEntity->getInstanceId());
 
         $this->entityManager->remove($pluginInstanceEntity);
