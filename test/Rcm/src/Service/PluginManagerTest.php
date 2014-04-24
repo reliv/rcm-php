@@ -285,7 +285,7 @@ class PluginManagerTest extends BaseTestCase
 
 
         $this->assertContains(
-            '{"html":"<p>This is a test<\/p>"}',
+            '{"instanceData":"<p>This is a instance id -1<\/p>"}',
             $viewData['html']
         );
         $this->assertContains(
