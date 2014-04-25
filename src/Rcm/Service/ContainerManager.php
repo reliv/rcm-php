@@ -95,7 +95,6 @@ class ContainerManager extends ContainerAbstract
             ->leftJoin('container.revisions', 'revision')
             ->leftJoin('revision.pluginInstances', 'pluginWrappers')
             ->leftJoin('pluginWrappers.instance', 'pluginInstances')
-
             ->where('site.siteId = :siteId')
             ->andWhere('container.name = :containerName')
             ->andWhere('revision.revisionId = :revisionId')
