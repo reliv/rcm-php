@@ -153,6 +153,8 @@ class PageManager extends ContainerAbstract
             ->andWhere('page.pageType = :pageType')
             ->andWhere('page.name = :pageName')
             ->andWhere('revision.revisionId = :revisionId')
+            ->orderBy('pluginWrappers.layoutContainer')
+            ->orderBy('pluginWrappers.renderOrder')
             ->setParameter('siteId', $siteId)
             ->setParameter('pageType', $pageType)
             ->setParameter('pageName', $pageName)
