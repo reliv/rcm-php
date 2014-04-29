@@ -4,6 +4,12 @@
     <php>
         <ini name="memory_limit" value="2G"/>
     </php>
+    <filter>
+        <blacklist>
+            <directory>vendor</directory>
+            <directory>test</directory>
+        </blacklist>
+    </filter>
     <testsuites>
         <testsuite name="rcm">
             <directory>test</directory>
