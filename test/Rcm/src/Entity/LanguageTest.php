@@ -19,10 +19,9 @@
 
 namespace RcmTest\Entity;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Entity\Language;
-use RcmTest\Base\BaseTestCase;
 
 /**
  * Unit Test for the Language Entity
@@ -37,7 +36,7 @@ use RcmTest\Base\BaseTestCase;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class LanguageTest extends BaseTestCase
+class LanguageTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Rcm\Entity\Language */
     protected $language;
@@ -49,9 +48,6 @@ class LanguageTest extends BaseTestCase
      */
     public function setup()
     {
-        $this->addModule('Rcm');
-        parent::setUp();
-
         $this->language = new Language();
     }
 

@@ -19,11 +19,10 @@
 
 namespace RcmTest\Factory;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Controller\IndexController;
 use Rcm\Factory\IndexControllerFactory;
-use RcmTest\Base\BaseTestCase;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceManager;
 
@@ -41,19 +40,8 @@ use Zend\ServiceManager\ServiceManager;
  * @link      http://github.com/reliv
  *
  */
-class IndexControllerFactoryTest extends BaseTestCase
+class IndexControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Setup for tests
-     *
-     * @return null
-     */
-    public function setUp()
-    {
-        $this->addModule('Rcm');
-        parent::setUp();
-    }
-
     /**
      * Generic test for the constructor
      *

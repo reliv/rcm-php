@@ -19,7 +19,7 @@
 
 namespace RcmTest\Entity;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Rcm\Entity\Container;
@@ -29,7 +29,6 @@ use Rcm\Entity\Language;
 use Rcm\Entity\Page;
 use Rcm\Entity\PluginInstance;
 use Rcm\Entity\Site;
-use RcmTest\Base\BaseTestCase;
 
 /**
  * Unit Test for the Site Entity
@@ -44,7 +43,7 @@ use RcmTest\Base\BaseTestCase;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class SIteTest extends BaseTestCase
+class SIteTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Rcm\Entity\Site */
     protected $site;
@@ -56,9 +55,6 @@ class SIteTest extends BaseTestCase
      */
     public function setup()
     {
-        $this->addModule('Rcm');
-        parent::setUp();
-
         $this->site = new Site();
     }
 

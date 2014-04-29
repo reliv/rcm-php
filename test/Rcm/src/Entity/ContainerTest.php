@@ -19,10 +19,9 @@
 
 namespace RcmTest\Entity;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Entity\Container;
-use RcmTest\Base\BaseTestCase;
 
 /**
  * Unit Test for Controller Entity
@@ -37,7 +36,7 @@ use RcmTest\Base\BaseTestCase;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class ContainerTest extends BaseTestCase
+class ContainerTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Rcm\Entity\Container */
     protected $container;
@@ -49,9 +48,6 @@ class ContainerTest extends BaseTestCase
      */
     public function setup()
     {
-        $this->addModule('Rcm');
-        parent::setUp();
-
         $this->container = new Container();
     }
 

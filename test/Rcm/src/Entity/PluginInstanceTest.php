@@ -19,11 +19,9 @@
 
 namespace RcmTest\Entity;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Entity\PluginInstance;
-use RcmTest\Base\BaseTestCase;
-use Zend\View\Model\ViewModel;
 
 /**
  * Unit Test for Plugin Instance
@@ -38,7 +36,7 @@ use Zend\View\Model\ViewModel;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class PluginInstanceTest extends BaseTestCase
+class PluginInstanceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Rcm\Entity\PluginInstance */
     protected $pluginInstance;
@@ -50,9 +48,6 @@ class PluginInstanceTest extends BaseTestCase
      */
     public function setup()
     {
-        $this->addModule('Rcm');
-        parent::setUp();
-
         $this->pluginInstance = new PluginInstance();
     }
 

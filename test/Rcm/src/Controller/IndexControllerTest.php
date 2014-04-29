@@ -18,16 +18,15 @@
  */
 namespace RcmTest\Controller;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
-use RcmTest\Base\BaseTestCase;
 use Rcm\Controller\IndexController;
-
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Unit Test for the IndexController
@@ -42,7 +41,7 @@ use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class IndexControllerTest extends BaseTestCase
+class IndexControllerTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Rcm\Controller\IndexController */
     protected $controller;
@@ -72,10 +71,6 @@ class IndexControllerTest extends BaseTestCase
      */
     public function setUp()
     {
-        $this->addModule('Rcm');
-
-        parent::setUp();
-
         $mockPageManager = $this
             ->getMockBuilder('\Rcm\Service\PageManager')
             ->disableOriginalConstructor()
@@ -94,7 +89,33 @@ class IndexControllerTest extends BaseTestCase
             ->method('getLayout')
             ->will($this->returnCallback(array($this, 'layoutManagerMockCallback')));
 
-        $serviceManager = $this->getServiceManager();
+        $config = array(
+            'contentManager' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm[/:page][/:revision]',
+                    'defaults' => array(
+                        'controller' => 'Rcm\Controller\IndexController',
+                        'action' => 'index',
+                    )
+                ),
+            ),
+
+            'contentManagerWithPageType' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm/:pageType/:page[/:revision]',
+                    'constraints' => array(
+                        'pageType' => '[a-z]',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Rcm\Controller\IndexController',
+                        'action' => 'index',
+                    )
+                ),
+            ),
+        );
+
 
         /** @var \Rcm\Service\PageManager $mockPageManager */
         /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
@@ -106,14 +127,12 @@ class IndexControllerTest extends BaseTestCase
         $this->request    = new Request();
         $this->routeMatch = new RouteMatch(array('controller' => 'index'));
         $this->event      = new MvcEvent();
-        $config = $serviceManager->get('Config');
-        $routerConfig = isset($config['router']) ? $config['router'] : array();
+        $routerConfig = $config;
         $router = HttpRouter::factory($routerConfig);
 
         $this->event->setRouter($router);
         $this->event->setRouteMatch($this->routeMatch);
         $this->controller->setEvent($this->event);
-        $this->controller->setServiceLocator($serviceManager);
     }
 
     /**

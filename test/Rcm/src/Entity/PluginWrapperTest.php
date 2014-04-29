@@ -19,11 +19,10 @@
 
 namespace RcmTest\Entity;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
-use RcmTest\Base\BaseTestCase;
 
 /**
  * Unit Test for the Plugin Wrapper
@@ -38,7 +37,7 @@ use RcmTest\Base\BaseTestCase;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class PluginWrapperTest extends BaseTestCase
+class PluginWrapperTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Rcm\Entity\PluginWrapper */
     protected $pluginWrapper;
@@ -50,9 +49,6 @@ class PluginWrapperTest extends BaseTestCase
      */
     public function setup()
     {
-        $this->addModule('Rcm');
-        parent::setUp();
-
         $this->pluginWrapper = new PluginWrapper();
     }
 

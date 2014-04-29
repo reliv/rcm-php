@@ -1,0 +1,10 @@
+<?php
+$this->headLink()->appendStylesheet(
+    $this->basePath() . '/modules/rcm-mock-plugin/style.css'
+);
+
+$this->headScript()->appendFile(
+    $this->basePath() . '/modules/rcm-mock-plugin/test.js'
+);
+
+echo json_encode($data);

@@ -19,12 +19,11 @@
 
 namespace RcmTest\Entity;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
-use RcmTest\Base\BaseTestCase;
 
 /**
  * Unit Test for the Revision Entity
@@ -39,7 +38,7 @@ use RcmTest\Base\BaseTestCase;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class RevisionTest extends BaseTestCase
+class RevisionTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Rcm\Entity\Revision */
     protected $revision;
@@ -51,9 +50,6 @@ class RevisionTest extends BaseTestCase
      */
     public function setup()
     {
-        $this->addModule('Rcm');
-        parent::setUp();
-
         $this->revision = new Revision();
     }
 
