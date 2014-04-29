@@ -16,11 +16,18 @@
  * @version   GIT: <git_id>
  * @link      http://github.com/reliv
  */
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
-use RcmTest\Base\BaseTestCase;
 use Rcm\Service\PluginManager;
 use Zend\Http\PhpEnvironment\Request;
+use Zend\ServiceManager\ServiceManager;
+use Zend\ModuleManager\ModuleManager;
+use Zend\ModuleManager\Listener;
+use Zend\Cache\Storage\Adapter\Memory;
+use Zend\ServiceManager\Config;
+use Zend\View\HelperPluginManager;
+use Zend\View\Renderer\PhpRenderer;
+use Zend\Mvc\Service\ServiceManagerConfig;
 
 /**
  * Unit Test for the Plugin Manager Service
@@ -35,7 +42,7 @@ use Zend\Http\PhpEnvironment\Request;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class PluginManagerTest extends BaseTestCase
+class PluginManagerTest extends \PHPUnit_Framework_TestCase
 {
 
     /** @var  \Rcm\Service\PluginManager */
@@ -57,31 +64,32 @@ class PluginManagerTest extends BaseTestCase
      */
     public function setUp()
     {
-        $this->addModule('RcmMockPlugin');
-
-        parent::setUp();
-
         /** @var \Doctrine\ORM\EntityManager $em */
         $em = $this->getEmMock();
 
         /** @var \Zend\ServiceManager\ServiceManager $sm */
-        $sm = $this->getServiceManager();
+        $sm = $this->startZf2();
 
-        $render = $this->getRenderer();
+        $resolver = $sm->get('ViewResolver');
+
+        $render = new PhpRenderer();
+        $render->setResolver($resolver);
+
+        $basePath = $render->plugin('basepath');
+        $basePath->setBasePath('/');
 
         /** @var \Zend\Cache\Storage\Adapter\Memory $cache */
-        $cache = $sm->get('Rcm\Service\Cache');
+        $cache = new Memory();
+
+        $sm->setService('Rcm\Service\Cache', $cache);
 
         $cache->flush();
-
-        /** @var \Zend\ModuleManager\ModuleManager $moduleManager */
-        $moduleManager = $sm->get('ModuleManager');
 
         $this->pluginManager = new PluginManager(
             $em,
             $sm->get('config'),
             $sm,
-            $moduleManager,
+            $sm->get('ModuleManager'),
             $render,
             new Request(),
             $cache
@@ -89,6 +97,30 @@ class PluginManagerTest extends BaseTestCase
 
         $this->cache = $cache;
     }
+
+    /**
+     * Used during setup to start the ZF2 environment
+     */
+    protected function startZf2()
+    {
+
+        $applicationConfig =  array(
+            'modules' => array(
+                'RcmMockPlugin'
+            ),
+            'module_listener_options' => array(
+                'module_paths' => array(
+                    __DIR__.'/../../../',
+                ),
+            ),
+        );
+        $serviceManager = new ServiceManager(new ServiceManagerConfig());
+        $serviceManager->setService('ApplicationConfig', $applicationConfig);
+        $serviceManager->get('ModuleManager')->loadModules();
+
+        return $serviceManager;
+    }
+
 
     /**
      * Get a mock EM object

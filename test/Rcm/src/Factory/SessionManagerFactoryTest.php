@@ -19,10 +19,9 @@
 
 namespace RcmTest\Factory;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Factory\SessionManagerFactory;
-use RcmTest\Base\BaseTestCase;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Session\Config\SessionConfig;
 use Zend\Session\SaveHandler\SaveHandlerInterface;
@@ -43,19 +42,8 @@ use Zend\Session\Storage\StorageInterface;
  * @link      http://github.com/reliv
  *
  */
-class SessionManagerFactoryTest extends BaseTestCase
+class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Setup for tests
-     *
-     * @return null
-     */
-    public function setUp()
-    {
-        $this->addModule('Rcm');
-        parent::setUp();
-    }
-
     /**
      * Generic test for the constructor
      *

@@ -19,11 +19,10 @@
 
 namespace RcmTest\Factory;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\EventListener\RouteListener;
 use Rcm\Factory\RouteListenerFactory;
-use RcmTest\Base\BaseTestCase;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -40,19 +39,8 @@ use Zend\ServiceManager\ServiceManager;
  * @link      http://github.com/reliv
  *
  */
-class RouteListenerFactoryTest extends BaseTestCase
+class RouteListenerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Setup for tests
-     *
-     * @return null
-     */
-    public function setUp()
-    {
-        $this->addModule('Rcm');
-        parent::setUp();
-    }
-
     /**
      * Generic test for the constructor
      *

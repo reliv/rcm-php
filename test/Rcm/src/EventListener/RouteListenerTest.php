@@ -19,10 +19,9 @@
 
 namespace RcmTest\EventListener;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\EventListener\RouteListener;
-use RcmTest\Base\BaseTestCase;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 
@@ -39,7 +38,7 @@ use Zend\Mvc\MvcEvent;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class RouteListenerTest extends BaseTestCase
+class RouteListenerTest extends \PHPUnit_Framework_TestCase
 {
 
     /** @var \Rcm\EventListener\RouteListener */
@@ -56,9 +55,6 @@ class RouteListenerTest extends BaseTestCase
      */
     public function setup()
     {
-        $this->addModule('Rcm');
-        parent::setUp();
-
         $this->domains = array(
             'reliv.com' => array (
                 'domain' => 'local.reliv.com',

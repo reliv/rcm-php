@@ -19,10 +19,9 @@
 
 namespace RcmTest\Entity;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Entity\Country;
-use RcmTest\Base\BaseTestCase;
 
 /**
  * Unit Test for the Country Entity
@@ -37,7 +36,7 @@ use RcmTest\Base\BaseTestCase;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class CountryTest extends BaseTestCase
+class CountryTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Rcm\Entity\Country */
     protected $country;
@@ -49,9 +48,6 @@ class CountryTest extends BaseTestCase
      */
     public function setup()
     {
-        $this->addModule('Rcm');
-        parent::setUp();
-
         $this->country = new Country();
     }
 

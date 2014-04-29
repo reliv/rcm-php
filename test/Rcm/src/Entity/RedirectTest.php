@@ -19,11 +19,10 @@
 
 namespace RcmTest\Entity;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Entity\Redirect;
 use Rcm\Entity\Site;
-use RcmTest\Base\BaseTestCase;
 
 /**
  * Unit Test for the Redirect Entity
@@ -38,7 +37,7 @@ use RcmTest\Base\BaseTestCase;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class RedirectTest extends BaseTestCase
+class RedirectTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Rcm\Entity\Redirect */
     protected $redirect;
@@ -50,9 +49,6 @@ class RedirectTest extends BaseTestCase
      */
     public function setup()
     {
-        $this->addModule('Rcm');
-        parent::setUp();
-
         $this->redirect = new Redirect();
     }
 

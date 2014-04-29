@@ -19,10 +19,9 @@
 
 namespace RcmTest\EventListener;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\EventListener\DispatchListener;
-use RcmTest\Base\BaseTestCase;
 use Zend\Mvc\MvcEvent;
 use Zend\View\HelperPluginManager;
 
@@ -39,7 +38,7 @@ use Zend\View\HelperPluginManager;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class DispatchListenerTest extends BaseTestCase
+class DispatchListenerTest extends \PHPUnit_Framework_TestCase
 {
 
     /** @var string used for mock */
@@ -47,17 +46,6 @@ class DispatchListenerTest extends BaseTestCase
 
     /** @var \stdClass Used for mock */
     protected $mockHeadTitle;
-
-    /**
-     * Setup for tests
-     *
-     * @return void
-     */
-    public function setup()
-    {
-        $this->addModule('Rcm');
-        parent::setUp();
-    }
 
     /**
      * Test Set Site Layout

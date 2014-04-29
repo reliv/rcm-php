@@ -19,10 +19,9 @@
 
 namespace RcmTest\Entity;
 
-require_once __DIR__ . '/../../../Base/BaseTestCase.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Entity\Setting;
-use RcmTest\Base\BaseTestCase;
 
 /**
  * Unit Test for the Setting Entity
@@ -37,7 +36,7 @@ use RcmTest\Base\BaseTestCase;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class SettingTest extends BaseTestCase
+class SettingTest extends \PHPUnit_Framework_TestCase
 {
     /** @var  \Rcm\Entity\Setting */
     protected $setting;
@@ -49,9 +48,6 @@ class SettingTest extends BaseTestCase
      */
     public function setUp()
     {
-        $this->addModule('Rcm');
-        parent::setUp();
-
         $this->setting = new Setting();
     }
 
