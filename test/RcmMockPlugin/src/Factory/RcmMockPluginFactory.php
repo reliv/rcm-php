@@ -14,7 +14,7 @@
  * @copyright 2014 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://reliv.com
+ * @link      https://github.com/reliv
  */
 namespace RcmMockPlugin\Factory;
 
@@ -33,7 +33,7 @@ use RcmMockPlugin\Controller\PluginController;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://reliv.com
+ * @link      https://github.com/reliv
  *
  */
 class RcmMockPluginFactory implements FactoryInterface

@@ -14,7 +14,7 @@
  * @copyright 2014 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://reliv.com
+ * @link      https://github.com/reliv
  */
 namespace Rcm\Factory;
 
@@ -33,7 +33,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://reliv.com
+ * @link      https://github.com/reliv
  *
  */
 class DispatchListenerFactory implements FactoryInterface

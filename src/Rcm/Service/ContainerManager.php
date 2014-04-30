@@ -1,4 +1,21 @@
 <?php
+/**
+ * Container Manager
+ *
+ * This file contains the class used to manage plugin containers.
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: BSD
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2014 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      https://github.com/reliv
+ */
 
 namespace Rcm\Service;
 
@@ -7,6 +24,25 @@ use Doctrine\ORM\Query;
 use Rcm\Exception\ContainerNotFoundException;
 use Zend\Cache\Storage\StorageInterface;
 
+/**
+ * Plugin Container Manager.
+ *
+ * The Plugin Container Manager is used to manage containers in the CMS.  These
+ * containers can be used by anything that wants to have a container or a set
+ * of CMS plugin instances.
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: BSD
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   Release: 1.0
+ * @link      https://github.com/reliv
+ */
 class ContainerManager extends ContainerAbstract
 {
     protected $siteManager;
@@ -15,6 +51,14 @@ class ContainerManager extends ContainerAbstract
     protected $cache;
     protected $siteId;
 
+    /**
+     * Constructor
+     *
+     * @param SiteManager      $siteManager   Rcm Site Manager
+     * @param PluginManager    $pluginManager Rcm Plugin Manager
+     * @param EntityManager    $entityManager Doctrine Entity Manager
+     * @param StorageInterface $cache         Zend Cache Manager
+     */
     public function __construct(
         SiteManager $siteManager,
         PluginManager $pluginManager,
@@ -29,16 +73,26 @@ class ContainerManager extends ContainerAbstract
         $this->siteId = $this->siteManager->getCurrentSiteId();
     }
 
+    /**
+     * Get a container by name.  Pass in a revision number of the container to get
+     * a specific version of the requested container.
+     *
+     * @param string       $name     Name of the container to lookup
+     * @param null|integer $revision Revision Number of the container to find.
+     *
+     * @return mixed
+     */
     public function getContainerByName($name, $revision=null)
     {
         $siteId = $this->siteId;
+        $cacheKey = 'rcm_container_'.$siteId.'_'.$name.'_'.$revision;
 
         if (empty($revision)) {
             $revision = $this->getPublishedRevisionId($name);
         }
 
-        if ($this->cache->hasItem('rcm_container_'.$siteId.'_'.$name.'_'.$revision)) {
-            return $this->cache->getItem('rcm_container_'.$siteId.'_'.$name.'_'.$revision);
+        if ($this->cache->hasItem($cacheKey)) {
+            return $this->cache->getItem($cacheKey);
         }
 
         $containerData = $this->getContainerDataByName($name, $revision);
@@ -47,18 +101,26 @@ class ContainerManager extends ContainerAbstract
         $canCache = $this->canCacheRevision($containerData['revision']);
 
         if ($canCache) {
-            $this->cache->setItem('rcm_container_'.$siteId.'_'.$name.'_'.$revision, $containerData);
+            $this->cache->setItem($cacheKey, $containerData);
         }
 
         return $containerData;
     }
 
+    /**
+     * Get the latest Published revision for a container.
+     *
+     * @param string $name Name of container to lookup.
+     *
+     * @return mixed
+     */
     protected function getPublishedRevisionId($name)
     {
         $siteId = $this->siteId;
+        $cacheKey = 'rcm_container_'.$siteId.'_'.$name.'_currentRevision';
 
-        if ($this->cache->hasItem('rcm_container_'.$siteId.'_'.$name.'_currentRevision')) {
-            return $this->cache->getItem('rcm_container_'.$siteId.'_'.$name.'_currentRevision');
+        if ($this->cache->hasItem($cacheKey)) {
+            return $this->cache->getItem($cacheKey);
         }
 
         $queryBuilder = $this->entityManager->createQueryBuilder()
@@ -73,22 +135,37 @@ class ContainerManager extends ContainerAbstract
 
         $result = $queryBuilder->getQuery()->getSingleScalarResult();
 
-        $this->cache->setItem('rcm_container_'.$siteId.'_'.$name.'_currentRevision', $result);
+        $this->cache->setItem($cacheKey, $result);
 
         return $result;
     }
 
-
+    /**
+     * Get a containers database data by container name.
+     *
+     * @param string  $name       Name of container
+     * @param integer $revisionId Revision Id
+     *
+     * @return mixed
+     * @throws \Rcm\Exception\ContainerNotFoundException
+     */
     protected function getContainerDataByName($name, $revisionId)
     {
         $siteId = $this->siteId;
+        $cacheKey = 'rcm_container_data_'.$siteId.'_'.$name.'_'.$revisionId;
 
-        if ($this->cache->hasItem('rcm_container_data_'.$siteId.'_'.$name.'_'.$revisionId)) {
-            return $this->cache->getItem('rcm_container_data_'.$siteId.'_'.$name.'_'.$revisionId);
+        if ($this->cache->hasItem($cacheKey)) {
+            return $this->cache->getItem($cacheKey);
         }
 
         $queryBuilder = $this->entityManager->createQueryBuilder()
-            ->select('container, currentRevision.revisionId, revision, pluginWrappers, pluginInstances')
+            ->select(
+                'container,'
+                .'currentRevision.revisionId,'
+                .'revision,'
+                .'pluginWrappers,'
+                .'pluginInstances'
+            )
             ->from('\Rcm\Entity\Container', 'container')
             ->leftJoin('container.currentRevision', 'currentRevision')
             ->leftJoin('container.site', 'site')
@@ -111,13 +188,14 @@ class ContainerManager extends ContainerAbstract
         unset($result['revisions'], $getData);
 
         if (empty($result)) {
-            throw new ContainerNotFoundException('No Container data found by name: '.$name);
+            throw new ContainerNotFoundException(
+                'No Container data found by name: '.$name
+            );
         }
 
-        $this->cache->setItem('rcm_container_data_'.$siteId.'_'.$name.'_'.$revisionId, $result);
+        $this->cache->setItem($cacheKey, $result);
 
         return $result;
     }
-
 
 }

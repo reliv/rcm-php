@@ -37,7 +37,6 @@ use Rcm\Exception\InvalidArgumentException;
  */
 abstract class ContainerAbstract
 {
-
     /**
      * @var string Container name
      */

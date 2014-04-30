@@ -59,7 +59,7 @@ class PluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $mockViewRenderer = $this
-            ->getMockBuilder('\Zend\View\Renderer\RendererInterface')
+            ->getMockBuilder('\Zend\View\Renderer\PhpRenderer')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -72,16 +72,19 @@ class PluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $sm = new ServiceManager();
-        $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
-        $sm->setService('moduleManager', $mockModuleManager);
-        $sm->setService('ViewRenderer', $mockViewRenderer);
-        $sm->setService('request', $mockRequest);
-        $sm->setService('Rcm\Service\Cache', $mockCache);
-        $sm->setService('config', array());
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService(
+            'Doctrine\ORM\EntityManager',
+            $mockEntityManager
+        );
+        $serviceManager->setService('moduleManager', $mockModuleManager);
+        $serviceManager->setService('ViewRenderer', $mockViewRenderer);
+        $serviceManager->setService('request', $mockRequest);
+        $serviceManager->setService('Rcm\Service\Cache', $mockCache);
+        $serviceManager->setService('config', array());
 
         $factory = new PluginManagerFactory();
-        $object = $factory->createService($sm);
+        $object = $factory->createService($serviceManager);
 
         $this->assertTrue($object instanceof PluginManager);
     }

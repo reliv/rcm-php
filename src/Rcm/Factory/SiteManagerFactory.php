@@ -14,7 +14,7 @@
  * @copyright 2014 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://reliv.com
+ * @link      https://github.com/reliv
  */
 namespace Rcm\Factory;
 
@@ -33,7 +33,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://reliv.com
+ * @link      https://github.com/reliv
  *
  */
 class SiteManagerFactory implements FactoryInterface
@@ -57,10 +57,14 @@ class SiteManagerFactory implements FactoryInterface
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
         $cache         = $serviceLocator->get('Rcm\Service\Cache');
 
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request       = $serviceLocator->get('request');
+
         return new SiteManager(
             $domainManager,
             $entityManager,
-            $cache
+            $cache,
+            $request
         );
     }
 }

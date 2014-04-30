@@ -98,7 +98,7 @@
             <arg value="php"/>
             <arg path="${basedir}"/>
             <arg value="text"/>
-            <arg value="codesize,cleancode,controversial,design,naming,unusedcode"/>
+            <arg value="${basedir}/phpmd.xml"/>
         </exec>
     </target>
 
@@ -111,7 +111,7 @@
             <arg value="php"/>
             <arg path="${basedir}"/>
             <arg value="xml"/>
-            <arg value="codesize,cleancode,controversial,design,naming,unusedcode"/>
+            <arg value="${basedir}/phpmd.xml"/>
             <arg value="--reportfile"/>
             <arg value="${basedir}/build/logs/pmd.xml"/>
         </exec>

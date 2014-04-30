@@ -18,7 +18,7 @@
  */
 namespace Rcm\Service;
 
-use Rcm\Exception\InvalidArgumentException;
+use Rcm\Exception\RuntimeException;
 
 /**
  * Rcm Layout Manager
@@ -67,49 +67,27 @@ class LayoutManager
      * @param string $layout Layout to find
      *
      * @return string
-     * @throws \InvalidArgumentException
+     * @throws RuntimeException
      */
     public function getLayout($layout=null)
     {
-        //Get Page Layout
-        $config = $this->config['Rcm']['themes'];
-
-        $theme = $this->siteManager->getCurrentSiteTheme();
+        $themeLayoutConfig = $this->getThemeLayoutConfig();
 
         if (empty($layout)) {
             $layout = $this->siteManager->getCurrentSiteDefaultLayout();
         }
 
-        if (!empty($config[$theme])
-            && !empty($config[$theme]['layouts'])
-            && !empty($config[$theme]['layouts'][$layout])
-            && !empty($config[$theme]['layouts'][$layout]['file'])
+        if (!empty($themeLayoutConfig[$layout])
+            && !empty($themeLayoutConfig[$layout]['file'])
         ) {
-            return $config[$theme]['layouts'][$layout]['file'];
+            return $themeLayoutConfig[$layout]['file'];
 
-        } elseif (!empty($config[$theme])
-            && !empty($config[$theme]['layouts'])
-            && !empty($config[$theme]['layouts']['default'])
-            && !empty($config[$theme]['layouts']['default']['file'])
+        } elseif (!empty($themeLayoutConfig['default'])
+            && !empty($themeLayoutConfig['default']['file'])
         ) {
-            return $config[$theme]['layouts']['default']['file'];
-
-        } elseif (!empty($config['generic'])
-            && !empty($config['generic']['layouts'])
-            && !empty($config['generic']['layouts'][$layout])
-            && !empty($config['generic']['layouts'][$layout]['file'])
-        ) {
-            return $config['generic']['layouts'][$layout]['file'];
-
-        } elseif (!empty($config['generic'])
-            && !empty($config['generic']['layouts'])
-            && !empty($config['generic']['layouts']['default'])
-            && !empty($config['generic']['layouts']['default']['file'])
-        ) {
-            return $config['generic']['layouts']['default']['file'];
-
+            return $themeLayoutConfig['default']['file'];
         } else {
-            throw new InvalidArgumentException('No Layouts Found in config');
+            throw new RuntimeException('No Layouts Found in config');
         }
     }
 
@@ -123,45 +101,98 @@ class LayoutManager
      * @param null $template Template to find
      *
      * @return string
-     * @throws \Rcm\Exception\InvalidArgumentException
+     * @throws RuntimeException
      */
     public function getPageTemplate($template=null)
     {
-        //Get Page Layout
-        $config = $this->config['Rcm']['themes'];
+        $themePageConfig = $this->getThemePageTemplateConfig();
 
+        if (!empty($themePageConfig[$template])
+            && !empty($themePageConfig[$template]['file'])
+        ) {
+            return $themePageConfig[$template]['file'];
+
+        } elseif (!empty($themePageConfig['default'])
+            && !empty($themePageConfig['default']['file'])
+        ) {
+            return $themePageConfig['default']['file'];
+        } else {
+            throw new RuntimeException('No Page Template Found in config');
+        }
+    }
+
+    /**
+     * Get the installed RCM Themes configuration.
+     *
+     * @return array
+     * @throws \Rcm\Exception\RuntimeException
+     */
+    protected function getThemesConfig()
+    {
+        if (empty($this->config['Rcm'])
+            || empty($this->config['Rcm']['themes'])
+        ) {
+            throw new RuntimeException(
+                'No Themes found defined in configuration.  Please report the issue
+                 with the themes author.'
+            );
+        }
+
+        return $this->config['Rcm']['themes'];
+    }
+
+    /**
+     * Find out if selected theme exists and has site layouts defined in config
+     * or fallback to generic theme
+     *
+     * @return array Config Array For Theme
+     * @throws RuntimeException
+     */
+    protected function getThemeLayoutConfig()
+    {
         $theme = $this->siteManager->getCurrentSiteTheme();
 
-        if (!empty($config[$theme])
-            && !empty($config[$theme]['pages'])
-            && !empty($config[$theme]['pages'][$template])
-            && !empty($config[$theme]['pages'][$template]['file'])
-        ) {
-            return $config[$theme]['pages'][$template]['file'];
+        $rcmThemesConfig = $this->getThemesConfig();
 
-        } elseif (!empty($config[$theme])
-            && !empty($config[$theme]['pages'])
-            && !empty($config[$theme]['pages']['default'])
-            && !empty($config[$theme]['pages']['default']['file'])
+        if (!empty($rcmThemesConfig[$theme])
+            && !empty($rcmThemesConfig[$theme]['layouts'])
         ) {
-            return $config[$theme]['pages']['default']['file'];
-
-        } elseif (!empty($config['generic'])
-            && !empty($config['generic']['pages'])
-            && !empty($config['generic']['pages'][$template])
-            && !empty($config['generic']['pages'][$template]['file'])
+            return $rcmThemesConfig[$theme]['layouts'];
+        } elseif (!empty($rcmThemesConfig['generic'])
+            && !empty($rcmThemesConfig['generic']['layouts'])
         ) {
-            return $config['generic']['pages'][$template]['file'];
-
-        } elseif (!empty($config['generic'])
-            && !empty($config['generic']['pages'])
-            && !empty($config['generic']['pages']['default'])
-            && !empty($config['generic']['pages']['default']['file'])
-        ) {
-            return $config['Rcm']['themes']['generic']['pages']['default']['file'];
-
-        } else {
-            throw new InvalidArgumentException('No Page Template Found in config');
+            return $rcmThemesConfig['generic']['layouts'];
         }
+
+        throw new RuntimeException(
+            'No theme config found for site and no default theme found'
+        );
+    }
+
+    /**
+     * Find out if selected theme exists and has site layouts defined in config
+     * or fallback to generic theme
+     *
+     * @return array Config Array For Theme
+     * @throws RuntimeException
+     */
+    protected function getThemePageTemplateConfig()
+    {
+        $theme = $this->siteManager->getCurrentSiteTheme();
+        $rcmThemesConfig = $this->getThemesConfig();
+
+        if (!empty($rcmThemesConfig[$theme])
+            && !empty($rcmThemesConfig[$theme]['pages'])
+        ) {
+            return $rcmThemesConfig[$theme]['pages'];
+        } elseif (!empty($rcmThemesConfig['generic'])
+            && !empty($rcmThemesConfig['generic']['pages'])
+        ) {
+            return $rcmThemesConfig['generic']['pages'];
+        }
+
+        throw new RuntimeException(
+            'No theme config found for site and no default theme found'
+        );
     }
 }
