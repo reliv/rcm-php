@@ -14,7 +14,7 @@
  * @copyright 2014 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://reliv.com
+ * @link      https://github.com/reliv
  */
 namespace Rcm\Factory;
 
@@ -41,8 +41,11 @@ use Zend\Session\Validator\ValidatorInterface;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://reliv.com
+ * @link      https://github.com/reliv
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @todo Refactor and move to model object.  Also look at simplifying the factory
+ *       overall.
  */
 class SessionManagerFactory implements FactoryInterface
 {

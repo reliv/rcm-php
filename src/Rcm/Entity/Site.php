@@ -39,6 +39,8 @@ use Rcm\Exception\InvalidArgumentException;
  *
  * @ORM\Entity
  * @ORM\Table(name="rcm_sites")
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Site
 {
@@ -574,21 +576,21 @@ class Site
     /**
      * Add an ACL role to the allowed list.
      *
-     * @param string|array $permittedAccountTypes Comma separated list or array
+     * @param string|array $permittedRoles Comma separated list or array
      *                                            of allowed ACL Roles
      *
      * @return void
      */
-    public function addAclRoles($permittedAccountTypes)
+    public function addAclRoles($permittedRoles)
     {
 
-        if (!is_array($permittedAccountTypes)) {
-            $permittedAccountTypes = explode(
+        if (!is_array($permittedRoles)) {
+            $permittedRoles = explode(
                 ',',
-                rtrim($permittedAccountTypes, ',')
+                rtrim($permittedRoles, ',')
             );
 
-            $permittedAccountTypes = array_map('trim', $permittedAccountTypes);
+            $permittedRoles = array_map('trim', $permittedRoles);
         }
 
         if (!empty($this->aclRoles)) {
@@ -597,12 +599,12 @@ class Site
                 $this->aclRoles
             );
 
-            $permittedAccountTypes = array_unique(
-                array_merge($types, $permittedAccountTypes)
+            $permittedRoles = array_unique(
+                array_merge($types, $permittedRoles)
             );
         }
 
-        $this->aclRoles = rtrim(implode(',', $permittedAccountTypes), ',');
+        $this->aclRoles = rtrim(implode(',', $permittedRoles), ',');
     }
 
     /**

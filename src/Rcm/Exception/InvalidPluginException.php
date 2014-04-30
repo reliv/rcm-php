@@ -11,12 +11,17 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
  */
+
 namespace Rcm\Exception;
+
+use Rcm\Exception\ExceptionInterface as RcmExceptionInterface;
 
 /**
  * Reliv Common's Invalid Argument Exception
@@ -25,14 +30,17 @@ namespace Rcm\Exception;
  * from with in the Reliv Common Module
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
+ * @link      http://github.com/reliv
  */
+
 class InvalidPluginException
     extends \InvalidArgumentException
-    implements \Rcm\Exception\ExceptionInterface
+    implements RcmExceptionInterface
 {
 
 }

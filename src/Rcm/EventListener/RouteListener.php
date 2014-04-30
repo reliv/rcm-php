@@ -64,7 +64,11 @@ class RouteListener
     {
         $domainList = $this->domainManager->getDomainList();
 
-        $currentDomain = $_SERVER['HTTP_HOST'];
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $event->getRequest();
+
+        $serverParam = $request->getServer();
+        $currentDomain = $serverParam->get('HTTP_HOST');
 
         if (empty($domainList[$currentDomain])) {
             $response = new Response();
@@ -100,9 +104,17 @@ class RouteListener
      */
     public function checkRedirect(MvcEvent $event)
     {
+
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $event->getRequest();
+
+        $serverParam = $request->getServer();
+        $httpHost = $serverParam->get('HTTP_HOST');
+        $requestUri = $serverParam->get('REQUEST_URI');
+
         $redirectList = $this->domainManager->getRedirectList();
 
-        $requestUrl = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        $requestUrl = $httpHost.$requestUri;
 
         if (!empty($redirectList[$requestUrl])) {
             $response = new Response();

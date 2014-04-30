@@ -13,7 +13,7 @@
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
- * @link      http://reliv.com
+ * @link      https://github.com/reliv
  */
 
 namespace Rcm;
@@ -32,7 +32,7 @@ use Zend\Console\Request as ConsoleRequest;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://reliv.com
+ * @link      https://github.com/reliv
  */
 class Module
 {
@@ -40,50 +40,52 @@ class Module
     /**
      * Bootstrap For RCM.
      *
-     * @param MvcEvent $e Zend MVC Event
+     * @param MvcEvent $event Zend MVC Event
      *
      * @return null
      */
-    public function onBootstrap(MvcEvent $e)
+    public function onBootstrap(MvcEvent $event)
     {
-        $sm = $e->getApplication()->getServiceManager();
+        $serviceManager = $event->getApplication()->getServiceManager();
 
-        $request = $sm->get('request');
+        $request = $serviceManager->get('request');
 
         if ($request instanceof ConsoleRequest) {
             return;
         }
 
         //Add Domain Checker
-        $onRouteListener = $sm->get('Rcm\EventListener\RouteListener');
-        $onDispatchListener = $sm->get('Rcm\EventListener\DispatchListener');
+        $routeListener = $serviceManager->get('Rcm\EventListener\RouteListener');
+
+        $dispatchListener
+            = $serviceManager->get('Rcm\EventListener\DispatchListener');
 
         /** @var \Zend\EventManager\EventManager $eventManager */
-        $eventManager = $e->getApplication()->getEventManager();
+        $eventManager = $event->getApplication()->getEventManager();
 
         // Add Domain Check prior to routing
         $eventManager->attach(
             MvcEvent::EVENT_ROUTE,
-            array($onRouteListener, 'checkDomain'),
+            array($routeListener, 'checkDomain'),
             10000
         );
 
         // Check for redirects from the CMS
         $eventManager->attach(
             MvcEvent::EVENT_ROUTE,
-            array($onRouteListener, 'checkRedirect'),
+            array($routeListener, 'checkRedirect'),
             9999
         );
 
         // Set the sites layout.
         $eventManager->attach(
             MvcEvent::EVENT_DISPATCH,
-            array($onDispatchListener, 'setSiteLayout'),
+            array($dispatchListener, 'setSiteLayout'),
             10000
         );
 
         /** @var \Zend\Session\SessionManager $session */
-        $session = $sm->get('Rcm\Service\SessionMgr');
+        $session = $serviceManager->get('Rcm\Service\SessionMgr');
         $session->start();
     }
 

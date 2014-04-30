@@ -1,4 +1,21 @@
 <?php
+/**
+ * Rcm Page Manager
+ *
+ * This file contains the class definition for the Page Manager
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: BSD
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2014 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
+ */
 
 namespace Rcm\Service;
 
@@ -8,16 +25,47 @@ use Rcm\Exception\PageNotFoundException;
 use Zend\Cache\Storage\StorageInterface;
 use Doctrine\ORM\NoResultException;
 
+/**
+ * Rcm Page Manager
+ *
+ * Rcm Page Manager.  This class handles everything about a CMS page.  Pages also
+ * include their own plugin containers and can contain multiple containers depending
+ * on the page template defined by the CMS theme being used.
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   Release: 1.0
+ * @link      http://github.com/reliv
+ *
+ */
 class PageManager extends ContainerAbstract
 {
-
+    /** @var \Rcm\Service\SiteManager  */
     protected $siteManager;
+
+    /** @var \Doctrine\ORM\EntityManagerInterface  */
     protected $entityManager;
+
+    /** @var \Zend\Cache\Storage\StorageInterface  */
     protected $cache;
 
+    /** @var array */
     protected $storedPages;
+
+    /** @var integer */
     protected $siteId;
 
+    /**
+     * Constructor
+     *
+     * @param SiteManager            $siteManager   Rcm Site Manager
+     * @param PluginManager          $pluginManager Rcm Plugin Manager
+     * @param EntityManagerInterface $entityManager Doctrine Entity Manager
+     * @param StorageInterface       $cache         Zend Cache Manager
+     */
     public function __construct(
         SiteManager $siteManager,
         PluginManager $pluginManager,
@@ -32,42 +80,64 @@ class PageManager extends ContainerAbstract
 
         $this->siteId = $this->siteManager->getCurrentSiteId();
     }
-    
-    public function getPageRevisionInfo($pageType, $pageName, $revision=null)
+
+    /**
+     * Get All the Page revision info and cache if possible.
+     *
+     * @param string       $pageName Page Name
+     * @param null|string  $pageType Type of page.  Type "n" is default
+     * @param null|integer $revision Revision Id
+     *
+     * @return null|array
+     * @throws \Exception
+     */
+    public function getPageRevisionInfo($pageName, $pageType='n', $revision=null)
     {
         $siteId = $this->siteId;
+        $cacheKey = 'rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revision;
         
         if (empty($revision)) {
             try {
-                $revision = $this->getPagePublishedRevision($pageType, $pageName);
+                $revision = $this->getPagePublishedRevision($pageName, $pageType);
             } catch (\Exception $e) {
                 throw $e;
             }
         }
 
-        if ($this->cache->hasItem('rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revision)) {
-            return $this->cache->getItem('rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revision);
+        if ($this->cache->hasItem($cacheKey)) {
+            return $this->cache->getItem($cacheKey);
         }
 
-        $pageInfo = $this->getPageRevisionDbInfo($pageType, $pageName, $revision);
+        $pageInfo = $this->getPageRevisionDbInfo($pageName, $pageType, $revision);
 
         $this->getPluginRenderedInstances($pageInfo['revision']);
 
         $canCache = $this->canCacheRevision($pageInfo['revision']);
 
         if ($canCache) {
-            $this->cache->setItem('rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revision, $pageInfo);
+            $this->cache->setItem($cacheKey, $pageInfo);
         }
 
         return $pageInfo;
     }
-    
-    public function getPagePublishedRevision($pageType, $pageName)
+
+    /**
+     * Get Pages Publish Revision ID
+     *
+     * @param string      $pageName Page Name
+     * @param null|string $pageType Page Type. Type "n" is default
+     *
+     * @return null|integer
+     * @throws \Rcm\Exception\PageNotFoundException
+     */
+    public function getPagePublishedRevision($pageName, $pageType='n')
     {
         $siteId = $this->siteId;
+        $cacheKey
+            = 'rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_currentRevision';
 
-        if ($this->cache->hasItem('rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_currentRevision')) {
-            return $this->cache->getItem('rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_currentRevision');
+        if ($this->cache->hasItem($cacheKey)) {
+            return $this->cache->getItem($cacheKey);
         }
 
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
@@ -87,17 +157,27 @@ class PageManager extends ContainerAbstract
             throw new PageNotFoundException('No page revision found.', 1, $e);
         }
 
-        $this->cache->setItem('rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_currentRevision', $result);
+        $this->cache->setItem($cacheKey, $result);
 
         return $result;
     }
 
-    public function getPageStagedRevision($pageType, $pageName)
+    /**
+     * Get the Page Staged Revision Id and cache for later use
+     *
+     * @param string      $pageName Page Name
+     * @param null|string $pageType Page Type.  Type "n" is default
+     *
+     * @return null|integer
+     */
+    public function getPageStagedRevision($pageName, $pageType='n')
     {
         $siteId = $this->siteId;
+        $cacheKey
+            = 'rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_stagedRevision';
 
-        if ($this->cache->hasItem('rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_stagedRevision')) {
-            return $this->cache->getItem('rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_stagedRevision');
+        if ($this->cache->hasItem($cacheKey)) {
+            return $this->cache->getItem($cacheKey);
         }
 
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
@@ -113,24 +193,39 @@ class PageManager extends ContainerAbstract
 
         $result = $queryBuilder->getQuery()->getSingleScalarResult();
 
-        $this->cache->setItem('rcm_page_'.$siteId.'_'.$pageType.'_'.$pageName.'_stagedRevision', $result);
+        $this->cache->setItem($cacheKey, $result);
 
         return $result;
     }
 
-    public function getPageRevisionDbInfo($pageType, $pageName, $revisionId)
+    /**
+     * Get Page Revision DB Info and cache for later
+     *
+     * @param string $pageName   Page Name
+     * @param string $pageType   Page Type
+     * @param string $revisionId Revision Id
+     *
+     * @return null|array Database Result Set
+     * @throws \Rcm\Exception\PageNotFoundException
+     */
+    public function getPageRevisionDbInfo($pageName, $pageType, $revisionId)
     {
         $siteId = $this->siteId;
+        $storedPages = $this->storedPages;
+
+        $cacheKey
+            = 'rcm_page_data_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revisionId;
 
         //@codingStandardsIgnoreStart
-        if (!empty($this->storedPages['data'][$siteId][$pageType][$pageName][$revisionId])) {
-            return $this->storedPages['data'][$siteId][$pageType][$pageName][$revisionId];
-        }
-        
-        if ($this->cache->hasItem('rcm_page_data_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revisionId)) {
-            return $this->cache->getItem('rcm_page_data_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revisionId);
+        if (!empty($storedPages['data'][$siteId][$pageType][$pageName][$revisionId])) {
+            return $storedPages['data'][$siteId][$pageType][$pageName][$revisionId];
         }
         //@codingStandardsIgnoreEnd
+        
+        if ($this->cache->hasItem($cacheKey)) {
+            return $this->cache->getItem($cacheKey);
+        }
+
 
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->entityManager->createQueryBuilder();
@@ -161,7 +256,9 @@ class PageManager extends ContainerAbstract
             ->setParameter('revisionId', $revisionId);
 
         try {
-            $getData = $queryBuilder->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+            $getData = $queryBuilder
+                ->getQuery()
+                ->getSingleResult(Query::HYDRATE_ARRAY);
         } catch (NoResultException $e) {
             throw new PageNotFoundException('No page revision found.', 1, $e);
         }
@@ -173,8 +270,10 @@ class PageManager extends ContainerAbstract
         $result['stagedRevisionId'] = $getData['stagedRevisionId'];
         unset($result['revisions'], $getData);
 
-        //$this->cache->setItem('rcm_page_data_'.$siteId.'_'.$pageType.'_'.$pageName.'_'.$revision, $result);
-        $this->storedPages['data'][$siteId][$pageType][$pageName][$revisionId] = $result;
+        $this->cache->setItem($cacheKey, $result);
+
+        $this->storedPages['data'][$siteId][$pageType][$pageName][$revisionId]
+            = $result;
 
         return $result;
     }

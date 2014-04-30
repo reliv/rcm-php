@@ -1,4 +1,21 @@
 <?php
+/**
+ * Rcm Site Manager
+ *
+ * This file contains the class definition for the Site Manager
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: BSD
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2014 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
+ */
 
 namespace Rcm\Service;
 
@@ -8,27 +25,79 @@ use Rcm\Entity\Country;
 use Rcm\Entity\Language;
 use Rcm\Exception\SiteNotFoundException;
 use Zend\Cache\Storage\StorageInterface;
+use Zend\Http\PhpEnvironment\Request;
+
+/**
+ * Rcm Site Manager
+ *
+ * Rcm Site Manager.  This class manages sites used by the CMS.  In addition it can
+ * also get the current sites information.  We use the site manager instead of
+ * site entities for performance reasons.  We found that due to all the relations
+ * of a site entity and the inability to cache doctrine entities as a site got
+ * bigger the slower the site became.  To fix these issues we are now pulling just
+ * the needed data from the database and caching the results for future request.
+ * This has greatly improved the performance of the CMS when caching is enabled.
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   Release: 1.0
+ * @link      http://github.com/reliv
+ */
 
 class SiteManager
 {
+    /** @var \Rcm\Service\DomainManager  */
     protected $domainManager;
+
+    /** @var \Doctrine\ORM\EntityManagerInterface  */
     protected $entityManager;
+
+    /** @var \Zend\Cache\Storage\StorageInterface  */
     protected $cache;
+
+    /** @var \Zend\Http\PhpEnvironment\Request  */
+    protected $request;
+
+    /** @var integer */
     protected $currentSiteId;
+
+    /** @var array */
     protected $currentSiteInfo;
+
+    /** @var Country|array */
     protected $currentSiteCountry;
+
+    /** @var Language|array */
     protected $currentSiteLanguage;
 
+    /**
+     * Constructor
+     *
+     * @param DomainManager          $domainManager Rcm Domain Manager
+     * @param EntityManagerInterface $entityManager Doctrine Entity Manager
+     * @param StorageInterface       $cache         Zend Cache Manager
+     * @param Request                $request       Zend PhpEnvironment Request
+     */
     public function __construct(
-        DomainManager $domainManager,
+        DomainManager          $domainManager,
         EntityManagerInterface $entityManager,
-        StorageInterface $cache
+        StorageInterface       $cache,
+        Request                $request
     ) {
         $this->domainManager = $domainManager;
         $this->entityManager = $entityManager;
-        $this->cache = $cache;
+        $this->cache         = $cache;
+        $this->request       = $request;
     }
 
+    /**
+     * Get the current sites information
+     *
+     * @return array
+     */
     public function getCurrentSiteInfo()
     {
         if (!empty($this->currentSiteInfo)) {
@@ -36,16 +105,17 @@ class SiteManager
         }
 
         $currentSiteId = $this->getCurrentSiteId();
+        $cacheKey = 'rcm_site_info_'.$currentSiteId;
 
-        if ($this->cache->hasItem('rcm_site_info_'.$currentSiteId)) {
-            $this->currentSiteInfo = $this->cache->getItem('rcm_site_info_'.$currentSiteId);
+        if ($this->cache->hasItem($cacheKey)) {
+            $this->currentSiteInfo = $this->cache->getItem($cacheKey);
             return $this->currentSiteInfo;
         }
 
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('
-            partial site.{
+        $queryBuilder->select(
+            'partial site.{
                 owner,
                 theme,
                 status,
@@ -56,20 +126,26 @@ class SiteManager
                 siteId
             },
             language,
-            country
-        ')->from('\Rcm\Entity\Site', 'site')
+            country'
+        )->from('\Rcm\Entity\Site', 'site')
             ->join('site.country', 'country')
             ->join('site.language', 'language')
             ->where('site.siteId = :siteId')
             ->setParameter('siteId', $currentSiteId);
 
-        $this->currentSiteInfo = $queryBuilder->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+        $this->currentSiteInfo
+            = $queryBuilder->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
 
-        $this->cache->setItem('rcm_site_info_'.$currentSiteId, $this->currentSiteInfo);
+        $this->cache->setItem($cacheKey, $this->currentSiteInfo);
 
         return $this->currentSiteInfo;
     }
 
+    /**
+     * Get Current Sites Login Page
+     *
+     * @return string Path to login page
+     */
     public function getCurrentSiteLoginPage()
     {
         $siteInfo = $this->getCurrentSiteInfo();
@@ -77,6 +153,11 @@ class SiteManager
         return $siteInfo['loginPage'];
     }
 
+    /**
+     * Get the current sites theme
+     *
+     * @return string Theme
+     */
     public function getCurrentSiteTheme()
     {
         $siteInfo = $this->getCurrentSiteInfo();
@@ -84,6 +165,11 @@ class SiteManager
         return $siteInfo['theme'];
     }
 
+    /**
+     * Get the current Sites default Zend Framework Layout template.
+     *
+     * @return string
+     */
     public function getCurrentSiteDefaultLayout()
     {
         $siteInfo = $this->getCurrentSiteInfo();
@@ -91,6 +177,11 @@ class SiteManager
         return $siteInfo['siteLayout'];
     }
 
+    /**
+     * Get the current sites unique id
+     *
+     * @return integer siteId
+     */
     public function getCurrentSiteId()
     {
         if (empty($this->currentSiteId)) {
@@ -100,10 +191,17 @@ class SiteManager
         return $this->currentSiteId;
     }
 
+    /**
+     * Get the current sites related country entity
+     *
+     * @return Country
+     */
     public function getCurrentSiteCountry()
     {
-
-        if (empty($this->currentSiteCountry) || !is_a($this->currentSiteCountry, '\Rcm\Entity\Country')) {
+        // Used when site data is from cache and not the db
+        if (empty($this->currentSiteCountry)
+            || !is_a($this->currentSiteCountry, '\Rcm\Entity\Country')
+        ) {
             $siteInfo = $this->getCurrentSiteInfo();
 
             $country = new Country();
@@ -118,9 +216,17 @@ class SiteManager
 
     }
 
+    /**
+     * Get the currents site Language Entity
+     *
+     * @return Language
+     */
     public function getCurrentSiteLanguage()
     {
-        if (empty($this->currentSiteLanguage) || !is_a($this->currentSiteLanguage, '\Rcm\Entity\Language')) {
+        // Used when site data is from cache and not the db
+        if (empty($this->currentSiteLanguage)
+            || !is_a($this->currentSiteLanguage, '\Rcm\Entity\Language')
+        ) {
             $siteInfo = $this->getCurrentSiteInfo();
 
             $language = new Language();
@@ -136,14 +242,26 @@ class SiteManager
         return $this->currentSiteLanguage;
     }
 
+    /**
+     * Get Current Site Id From Domain
+     *
+     * @return integer SiteId
+     * @throws \Rcm\Exception\SiteNotFoundException
+     */
     protected function getCurrentSiteIdFromDomain()
     {
         $domainList = $this->domainManager->getDomainList();
 
-        $currentDomain = $_SERVER['HTTP_HOST'];
+        $serverParams = $this->request->getServer();
 
-        if (empty($domainList[$currentDomain]) || empty($domainList[$currentDomain]['siteId'])) {
-            throw new SiteNotFoundException('No site found for request domain: '.$_SERVER['HTTP_HOST']);
+        $currentDomain = $serverParams->get('HTTP_HOST');
+
+        if (empty($domainList[$currentDomain])
+            || empty($domainList[$currentDomain]['siteId'])
+        ) {
+            throw new SiteNotFoundException(
+                'No site found for request domain: '.$currentDomain
+            );
         }
 
         return $domainList[$currentDomain]['siteId'];

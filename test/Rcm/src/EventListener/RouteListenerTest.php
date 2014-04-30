@@ -22,8 +22,10 @@ namespace RcmTest\EventListener;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\EventListener\RouteListener;
+use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
+use Zend\Stdlib\Parameters;
 
 /**
  * Unit Test for Route Listener Event
@@ -110,9 +112,16 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckDomain()
     {
-        $event = new MvcEvent();
+        $serverParams = new Parameters(
+            array(
+                'HTTP_HOST' => 'reliv.com'
+            )
+        );
 
-        $_SERVER['HTTP_HOST'] = 'reliv.com';
+        $request = new Request();
+        $request->setServer($serverParams);
+        $event = new MvcEvent();
+        $event->setRequest($request);
 
         $actual = $this->routeListener->checkDomain($event);
 
@@ -129,9 +138,16 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckDomainRedirectsToPrimary()
     {
-        $event = new MvcEvent();
+        $serverParams = new Parameters(
+            array(
+                'HTTP_HOST' => 'www.reliv.com'
+            )
+        );
 
-        $_SERVER['HTTP_HOST'] = 'www.reliv.com';
+        $request = new Request();
+        $request->setServer($serverParams);
+        $event = new MvcEvent();
+        $event->setRequest($request);
 
         $actual = $this->routeListener->checkDomain($event);
 
@@ -147,9 +163,16 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckDomainReturnsNotFound()
     {
-        $event = new MvcEvent();
+        $serverParams = new Parameters(
+            array(
+                'HTTP_HOST' => 'not.found.com'
+            )
+        );
 
-        $_SERVER['HTTP_HOST'] = 'not.found.com';
+        $request = new Request();
+        $request->setServer($serverParams);
+        $event = new MvcEvent();
+        $event->setRequest($request);
 
         $actual = $this->routeListener->checkDomain($event);
 
@@ -169,10 +192,17 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckRedirects()
     {
-        $event = new MvcEvent();
+        $serverParams = new Parameters(
+            array(
+                'HTTP_HOST'   => 'reliv.com',
+                'REQUEST_URI' => '/requestOne'
+            )
+        );
 
-        $_SERVER['HTTP_HOST'] = 'reliv.com';
-        $_SERVER['REQUEST_URI'] = '/requestOne';
+        $request = new Request();
+        $request->setServer($serverParams);
+        $event = new MvcEvent();
+        $event->setRequest($request);
 
         $expectedLocation
             = 'Location: //'.$this->redirects['reliv.com/requestOne']['redirectUrl'];
@@ -185,9 +215,9 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(302, $responseCode);
 
-        $redirectLocationHeader = $actual->getHeaders()->get('Location')->toString();
+        $redirectHeader = $actual->getHeaders()->get('Location')->toString();
 
-        $this->assertEquals($expectedLocation, $redirectLocationHeader);
+        $this->assertEquals($expectedLocation, $redirectHeader);
     }
 
     /**
@@ -199,10 +229,17 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckRedirectsNoRedirectFound()
     {
-        $event = new MvcEvent();
+        $serverParams = new Parameters(
+            array(
+                'HTTP_HOST'   => 'reliv.com',
+                'REQUEST_URI' => '/no-redirect'
+            )
+        );
 
-        $_SERVER['HTTP_HOST'] = 'not.found.com';
-        $_SERVER['REQUEST_URI'] = '/no-redirect';
+        $request = new Request();
+        $request->setServer($serverParams);
+        $event = new MvcEvent();
+        $event->setRequest($request);
 
         $actual = $this->routeListener->checkRedirect($event);
 

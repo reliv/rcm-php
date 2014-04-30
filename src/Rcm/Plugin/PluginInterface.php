@@ -6,14 +6,17 @@
  *
  * PHP version 5.3
  *
- * LICENSE: No License yet
+ * LICENSE: BSD
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Rod McNew <rmcnew@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      https://github.com/reliv
  */
+
 namespace Rcm\Plugin;
 
 use Zend\Stdlib\RequestInterface;
@@ -25,14 +28,17 @@ use Zend\Stdlib\RequestInterface;
  *
  * PHP version 5.3
  *
- * LICENSE: No License yet
+ * LICENSE: BSD
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Rod McNew <rmcnew@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
+ * @link      https://github.com/reliv
  */
+
 interface PluginInterface
 {
     /**
@@ -65,7 +71,11 @@ interface PluginInterface
     public function deleteInstance($instanceId);
 
     /**
-     * Set Request
+     * Sets the Zend Request Object
+     *
+     * @param RequestInterface $request Zend Framework Request Object
+     *
+     * @return void
      */
     public function setRequest(RequestInterface $request);
 }
