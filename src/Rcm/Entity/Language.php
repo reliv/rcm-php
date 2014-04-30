@@ -38,6 +38,8 @@ use Rcm\Exception\InvalidArgumentException;
  *
  * @ORM\Entity
  * @ORM\Table(name="rcm_languages")
+ *
+ * @SuppressWarnings("CamelCase")
  */
 class Language
 {

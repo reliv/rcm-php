@@ -81,7 +81,7 @@ class IndexController extends AbstractActionController
             $this->pageType = 'n';
             $this->pageRevisionId = null;
 
-            $pageInfo = $this->pageManager->getPageRevisionInfo('n', 'not-found');
+            $pageInfo = $this->pageManager->getPageRevisionInfo('not-found', 'n');
 
             /** @var \Zend\Http\Response $response */
             $response =$this->getResponse();
@@ -115,8 +115,8 @@ class IndexController extends AbstractActionController
         try {
 
             $pageInfo = $this->pageManager->getPageRevisionInfo(
-                $this->pageType,
                 $this->pageName,
+                $this->pageType,
                 $this->pageRevisionId
             );
 

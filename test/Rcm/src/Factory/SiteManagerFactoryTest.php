@@ -61,13 +61,18 @@ class SiteManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $sm = new ServiceManager();
-        $sm->setService('Rcm\Service\DomainManager', $mockDomainManager);
-        $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
-        $sm->setService('Rcm\Service\Cache', $mockCache);
+        $mockRequest = $this->getMockBuilder('\Zend\Http\PhpEnvironment\Request')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('Rcm\Service\DomainManager', $mockDomainManager);
+        $serviceManager->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
+        $serviceManager->setService('Rcm\Service\Cache', $mockCache);
+        $serviceManager->setService('request', $mockRequest);
 
         $factory = new SiteManagerFactory();
-        $object = $factory->createService($sm);
+        $object = $factory->createService($serviceManager);
 
         $this->assertTrue($object instanceof SiteManager);
     }

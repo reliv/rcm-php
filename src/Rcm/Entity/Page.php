@@ -39,6 +39,8 @@ use Rcm\Exception\InvalidArgumentException;
  *
  * @ORM\Entity
  * @ORM\Table(name="rcm_pages")
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Page extends ContainerAbstract
 {

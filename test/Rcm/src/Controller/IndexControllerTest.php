@@ -26,7 +26,7 @@ use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Zend\ServiceManager\ServiceManager;
+use Rcm\Exception\PageNotFoundException;
 
 /**
  * Unit Test for the IndexController
@@ -176,6 +176,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->routeMatch->setParam('revision', 443);
 
         $result   = $this->controller->dispatch($this->request);
+
+        /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -198,6 +200,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->routeMatch->setParam('action', 'index');
 
         $result   = $this->controller->dispatch($this->request);
+
+        /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -224,6 +228,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->routeMatch->setParam('revision', 443);
 
         $result   = $this->controller->dispatch($this->request);
+
+        /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
 
         $this->assertEquals(404, $response->getStatusCode());
@@ -250,6 +256,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->routeMatch->setParam('revision', 443);
 
         $result   = $this->controller->dispatch($this->request);
+
+        /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
 
         $this->assertEquals(404, $response->getStatusCode());
@@ -281,6 +289,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->routeMatch->setParam('revision', 443);
 
         $result   = $this->controller->dispatch($this->request);
+
+        /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -305,7 +315,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
     {
         if ($this->skipCounter > 0) {
             $this->skipCounter--;
-            throw new \Rcm\Exception\PageNotFoundException('Page Not Found');
+            throw new PageNotFoundException('Page Not Found');
         }
 
         return $this->pageData;
