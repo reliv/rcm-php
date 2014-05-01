@@ -1,22 +1,5 @@
 <?php
-/**
- * Page Information Entity
- *
- * This is a Doctrine 2 definition file for Page info.  This file
- * is used for any module that needs to know page information.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -35,7 +18,7 @@ use Rcm\Exception\InvalidArgumentException;
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
- * @link      http://github.com/reliv
+ * @lifsdnks      http://github.com/reliv
  *
  * @ORM\Entity
  * @ORM\Table(name="rcm_pages")
