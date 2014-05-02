@@ -50,6 +50,7 @@
             <arg value="curl -sS https://getcomposer.org/installer | php"/>
         </exec>
         <exec executable="${basedir}/composer.phar" failonerror="true">
+            <arg value="--prefer-source" />
             <arg value="install" />
         </exec>
     </target>
