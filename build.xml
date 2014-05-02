@@ -54,7 +54,7 @@
             <arg value="config" />
             <arg value="-g" />
             <arg value="github-oauth.github.com" />
-            <arg value="00489ece210816eaf0e95c54212b4350faee991d" />
+            <arg value="54121d99bb003155e623eacb4f5cfa192e6758c2" />
         </exec>
 
         <exec executable="${basedir}/composer.phar" failonerror="true">
@@ -168,7 +168,6 @@
             <arg value="--ignore" />
             <arg value="test/,vendor/" />
             <arg value="--title=Rcm" />
-            <arg value="--template=responsive-twig" />
         </exec>
     </target>
 
