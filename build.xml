@@ -59,6 +59,7 @@
 
         <exec executable="${basedir}/composer.phar" failonerror="true">
             <arg value="--prefer-source" />
+            <arg value="--quite" />
             <arg value="install" />
         </exec>
     </target>
