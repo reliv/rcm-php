@@ -168,7 +168,7 @@
             <arg value="--ignore" />
             <arg value="test/,vendor/" />
             <arg value="--title=Rcm" />
-            <arg value="--template=zend" />
+            <arg value="--template=responsive-twig" />
         </exec>
     </target>
 
