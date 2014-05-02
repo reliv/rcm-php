@@ -138,6 +138,9 @@ return array(
             'Rcm\Service\Cache'
                 => 'Rcm\Factory\CacheFactory',
 
+            'Rcm\Service\AssetManagerCache'
+                => 'Rcm\Factory\AssetManagerCacheFactory',
+
             'Rcm\Service\SessionMgr'
                 => 'Rcm\Factory\SessionManagerFactory',
         ),
