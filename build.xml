@@ -129,7 +129,7 @@
             description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
         <exec executable="phpcs">
             <arg value="--standard=PEAR"/>
-            <arg value="--ignore=vendor,test"/>
+            <arg value="--ignore=vendor,test,autoload_classmap.php"/>
             <arg value="--extensions=php"/>
             <arg path="${basedir}"/>
         </exec>
