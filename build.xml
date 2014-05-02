@@ -49,6 +49,14 @@
             <arg value="-c"/>
             <arg value="curl -sS https://getcomposer.org/installer | php"/>
         </exec>
+
+        <exec executable="${basedir}/composer.phar" failonerror="true">
+            <arg value="config" />
+            <arg value="-g" />
+            <arg value="github-oauth.github.com" />
+            <arg value="00489ece210816eaf0e95c54212b4350faee991d" />
+        </exec>
+
         <exec executable="${basedir}/composer.phar" failonerror="true">
             <arg value="--prefer-source" />
             <arg value="install" />
