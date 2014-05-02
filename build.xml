@@ -140,7 +140,7 @@
         <exec executable="phpcs" output="/dev/null">
             <arg value="--report=checkstyle"/>
             <arg value="--standard=PEAR"/>
-            <arg value="--ignore=vendor,test"/>
+            <arg value="--ignore=vendor,test,autoload_classmap.php"/>
             <arg value="--extensions=php"/>
             <arg path="${basedir}"/>
             <redirector output="${basedir}/build/logs/checkstyle.xml" />
