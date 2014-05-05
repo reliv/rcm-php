@@ -49,7 +49,16 @@
             <arg value="-c"/>
             <arg value="curl -sS https://getcomposer.org/installer | php"/>
         </exec>
+
         <exec executable="${basedir}/composer.phar" failonerror="true">
+            <arg value="config" />
+            <arg value="-g" />
+            <arg value="github-oauth.github.com" />
+            <arg value="54121d99bb003155e623eacb4f5cfa192e6758c2" />
+        </exec>
+
+        <exec executable="${basedir}/composer.phar" failonerror="true">
+            <arg value="--prefer-source" />
             <arg value="--quiet" />
             <arg value="install" />
         </exec>
@@ -121,7 +130,7 @@
             description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
         <exec executable="phpcs">
             <arg value="--standard=PEAR"/>
-            <arg value="--ignore=vendor,test"/>
+            <arg value="--ignore=vendor,test,autoload_classmap.php"/>
             <arg value="--extensions=php"/>
             <arg path="${basedir}"/>
         </exec>
@@ -132,7 +141,7 @@
         <exec executable="phpcs" output="/dev/null">
             <arg value="--report=checkstyle"/>
             <arg value="--standard=PEAR"/>
-            <arg value="--ignore=vendor,test"/>
+            <arg value="--ignore=vendor,test,autoload_classmap.php"/>
             <arg value="--extensions=php"/>
             <arg path="${basedir}"/>
             <redirector output="${basedir}/build/logs/checkstyle.xml" />
@@ -159,7 +168,6 @@
             <arg value="--ignore" />
             <arg value="test/,vendor/" />
             <arg value="--title=Rcm" />
-            <arg value="--template=zend" />
         </exec>
     </target>
 
