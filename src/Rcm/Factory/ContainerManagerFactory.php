@@ -51,20 +51,26 @@ class ContainerManagerFactory implements FactoryInterface
         /** @var \Rcm\Service\SiteManager $siteManager */
         $siteManager   = $serviceLocator->get('Rcm\Service\SiteManager');
 
+        /** @var integer $currentSiteId */
+        $currentSiteId = $siteManager->getCurrentSiteId();
+
         /** @var \Rcm\Service\PluginManager $pluginManager */
         $pluginManager = $serviceLocator->get('Rcm\Service\PluginManager');
 
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
-        /** @var \Zend\Cache\Storage\StorageInterface $rcmCache */
-        $rcmCache      = $serviceLocator->get('Rcm\Service\Cache');
+        /** @var \Doctrine\ORM\EntityRepository $repository */
+        $repository    = $entityManager->getRepository('\Rcm\Entity\Container');
+
+        /** @var \Zend\Cache\Storage\StorageInterface $cache */
+        $cache         = $serviceLocator->get('Rcm\Service\Cache');
 
         return new ContainerManager(
-            $siteManager,
             $pluginManager,
-            $entityManager,
-            $rcmCache
+            $repository,
+            $cache,
+            $currentSiteId
         );
     }
 }

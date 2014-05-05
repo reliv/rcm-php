@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Page Repository
+ * Container Repository
  *
- * This file contains the page repository
+ * This file contains the container repository
  *
  * PHP version 5.3
  *
@@ -21,12 +21,13 @@
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
-
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 
 /**
- * Page Repository
+ * Container Repository
  *
- * Page Repository.  Used to get custom page results from the DB
+ * Container Repository.  Used to get custom container results from the DB
  *
  * PHP version 5.3
  *
@@ -40,33 +41,93 @@ use Doctrine\ORM\EntityRepository;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-class Page extends EntityRepository implements ContainerInterface
+class Container extends EntityRepository implements ContainerInterface
 {
     /**
      * Gets the DB result of the current Published Revision
      *
      * @param integer $siteId Site Id
      * @param string  $name   Name of the container
-     * @param string  $type   Type of the container.  Currently only used by the page
-     *                        container.
      *
      * @return mixed
      */
-    public function getPublishedRevision($siteId, $name, $type='n')
+    public function getPublishedRevisionId($siteId, $name)
+    {
+        $queryBuilder = $this->_em->createQueryBuilder()
+            ->select('currentRevision.revisionId')
+            ->from('\Rcm\Entity\Container', 'container')
+            ->join('container.currentRevision', 'currentRevision')
+            ->join('container.site', 'site')
+            ->where('site.siteId = :siteId')
+            ->andWhere('container.name = :containerName')
+            ->setParameter('siteId', $siteId)
+            ->setParameter('containerName', $name);
+
+        try {
+            return $queryBuilder->getQuery()->getSingleScalarResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get the Staged Revision Id - Currently not implemented for basic containers
+     *
+     * @param integer $siteId Site Id
+     * @param string  $name   Page Name
+     *
+     * @return null|integer
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function getStagedRevisionId($siteId, $name)
+    {
+        return null;
+    }
+
+    /**
+     * Get Revision DB Info
+     *
+     * @param integer $siteId     Site Id
+     * @param string  $name       Page Name
+     * @param string  $revisionId Revision Id
+     *
+     * @return null|array Database Result Set
+     */
+    public function getRevisionDbInfo($siteId, $name, $revisionId)
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('currentRevision.revisionId')
-            ->from('\Rcm\Entity\Page', 'page')
-            ->join('page.currentRevision', 'currentRevision')
-            ->join('page.site', 'site')
+        $queryBuilder = $this->_em->createQueryBuilder()
+            ->select(
+                'container,'
+                .'currentRevision.revisionId,'
+                .'revision,'
+                .'pluginWrappers,'
+                .'pluginInstances'
+            )
+            ->from('\Rcm\Entity\Container', 'container')
+            ->leftJoin('container.currentRevision', 'currentRevision')
+            ->leftJoin('container.site', 'site')
+            ->leftJoin('container.revisions', 'revision')
+            ->leftJoin('revision.pluginInstances', 'pluginWrappers')
+            ->leftJoin('pluginWrappers.instance', 'pluginInstances')
             ->where('site.siteId = :siteId')
-            ->andWhere('page.name = :pageName')
-            ->andWhere('page.pageType = :pageType')
+            ->andWhere('container.name = :containerName')
+            ->andWhere('revision.revisionId = :revisionId')
+            ->orderBy('pluginWrappers.renderOrder', 'ASC')
             ->setParameter('siteId', $siteId)
-            ->setParameter('pageName', $name)
-            ->setParameter('pageType', $type);
+            ->setParameter('containerName', $name)
+            ->setParameter('revisionId', $revisionId);
 
-        return $queryBuilder->getQuery()->getSingleScalarResult();
+        $getData = $queryBuilder->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+
+        $result = null;
+
+        if (!empty($getData)) {
+            $result = $getData[0];
+            $result['revision'] = $result['revisions'][$revisionId];
+            unset($result['revisions'], $getData);
+        }
+
+        return $result;
     }
 }

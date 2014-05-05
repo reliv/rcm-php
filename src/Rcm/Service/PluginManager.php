@@ -27,7 +27,6 @@ use Rcm\Exception\RuntimeException;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Stdlib\RequestInterface;
-use Zend\ModuleManager\ModuleManager;
 use Rcm\Plugin\PluginInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Renderer\PhpRenderer;
@@ -59,9 +58,6 @@ class PluginManager
     /** @var \Zend\ServiceManager\ServiceLocatorInterface  */
     protected $serviceManager;
 
-    /** @var \Zend\ModuleManager\ModuleManager  */
-    protected $moduleManager;
-
     /** @var \Zend\Stdlib\RequestInterface  */
     protected $request;
 
@@ -83,7 +79,6 @@ class PluginManager
      * @param EntityManagerInterface  $entityManager  Doctrine Entity Manager
      * @param array                   $config         Config Array
      * @param ServiceLocatorInterface $serviceManager Zend Service Manager
-     * @param ModuleManager           $moduleManager  Zend Module Manager
      * @param PhpRenderer             $renderer       Zend Renderer
      * @param RequestInterface        $request        Zend Request Object
      * @param StorageInterface        $cache          Zend Cache Manager
@@ -92,14 +87,12 @@ class PluginManager
         EntityManagerInterface  $entityManager,
         Array                   $config,
         ServiceLocatorInterface $serviceManager,
-        ModuleManager           $moduleManager,
         PhpRenderer             $renderer,
         RequestInterface        $request,
         StorageInterface        $cache
     ) {
         $this->serviceManager = $serviceManager;
         $this->request        = $request;
-        $this->moduleManager  = $moduleManager;
         $this->renderer       = $renderer;
         $this->entityManager  = $entityManager;
         $this->config         = $config;
@@ -426,12 +419,24 @@ class PluginManager
      */
     public function getPluginController($pluginName)
     {
-        $this->ensurePluginIsValid($pluginName);
 
+        /*
+         * Deprecated.  All controllers should come from the controller manager
+         * now and not the service manager.
+         *
+         * @todo Remove if statement once plugins have been converted.
+         */
         if ($this->serviceManager->has($pluginName)) {
             $serviceManager = $this->serviceManager;
         } else {
             $serviceManager = $this->serviceManager->get('ControllerLoader');
+        }
+
+        if (!$serviceManager->has($pluginName)) {
+            throw new InvalidPluginException(
+                "Plugin $pluginName is not loaded or configured. Check
+            config/application.config.php"
+            );
         }
 
         //Load the plugin controller
@@ -455,28 +460,6 @@ class PluginManager
         }
 
         return $pluginController;
-    }
-
-    /**
-     * Is a plugin defined and loaded?
-     *
-     * @param string $pluginName Plugin Name
-     *
-     * @return bool
-     * @throws \Exception
-     */
-    public function ensurePluginIsValid($pluginName)
-    {
-        $loadedModules = $this->moduleManager->getLoadedModules();
-
-        if (!isset($loadedModules[$pluginName])) {
-            throw new InvalidPluginException(
-                "Plugin $pluginName is not loaded or configured. Check
-                config/application.config.php"
-            );
-        }
-
-        return true;
     }
 
     /**

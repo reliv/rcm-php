@@ -62,13 +62,14 @@ class Container extends AbstractHelper
     /**
      * Render a plugin container
      *
-     * @param string $name Container Name
+     * @param string  $name     Container Name
+     * @param integer $revision Revision Id to Render
      *
      * @return string
      */
-    public function renderContainer($name)
+    public function renderContainer($name, $revision=null)
     {
-        $containerData = $this->containerManager->getContainerByName($name);
+        $containerData = $this->containerManager->getRevisionInfo($name, $revision);
 
         $html = '';
         $html .= $this->getContainerHtml($containerData);
