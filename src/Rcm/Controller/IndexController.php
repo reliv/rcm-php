@@ -91,7 +91,7 @@ class IndexController extends AbstractActionController
             $response->setStatusCode(404);
 
             return $pageInfo;
-        } catch(PageNotFoundException $e) {
+        } catch(ContainerNotFoundException $e) {
             return $this->notFoundAction();
         }
     }

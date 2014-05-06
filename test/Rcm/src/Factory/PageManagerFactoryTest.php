@@ -61,6 +61,14 @@ class PageManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $mockRepo = $this->getMockBuilder('\Rcm\Repository\Container')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockEntityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($mockRepo));
+
         $mockCache = $this->getMockBuilder('\Zend\Cache\Storage\Adapter\Memory')
             ->disableOriginalConstructor()
             ->getMock();

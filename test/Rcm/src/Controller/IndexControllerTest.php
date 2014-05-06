@@ -26,7 +26,7 @@ use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Rcm\Exception\PageNotFoundException;
+use Rcm\Exception\ContainerNotFoundException;
 
 /**
  * Unit Test for the IndexController
@@ -77,7 +77,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $mockPageManager->expects($this->any())
-            ->method('getPageRevisionInfo')
+            ->method('getRevisionInfo')
             ->will($this->returnCallback(array($this, 'pageManagerMockCallback')));
 
         $mockLayoutManager = $this
@@ -122,6 +122,20 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->controller = new IndexController(
             $mockPageManager,
             $mockLayoutManager
+        );
+
+        $mockIsAllowed = $this
+            ->getMockBuilder('BjyAuthorize\Controller\Plugin\IsAllowed')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockIsAllowed->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(false));
+
+        $this->controller->getPluginManager()->setService(
+            'isAllowed',
+            $mockIsAllowed
         );
 
         $this->request    = new Request();
@@ -309,13 +323,13 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      * Callback for Page Manager mock
      *
      * @return mixed
-     * @throws \Rcm\Exception\PageNotFoundException
+     * @throws \Rcm\Exception\ContainerNotFoundException
      */
     public function pageManagerMockCallback()
     {
         if ($this->skipCounter > 0) {
             $this->skipCounter--;
-            throw new PageNotFoundException('Page Not Found');
+            throw new ContainerNotFoundException('Page Not Found');
         }
 
         return $this->pageData;
