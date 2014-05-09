@@ -2,7 +2,7 @@
 /**
  * Site Information Entity
  *
- * This is a Doctorine 2 definition file for Site info.  This file
+ * This is a Doctrine 2 definition file for Site info.  This file
  * is used for any module that needs to know site information.
  *
  * PHP version 5.3
@@ -10,15 +10,18 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
  */
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Rcm\Exception\InvalidArgumentException;
 
 /**
  * Site Information Entity
@@ -27,13 +30,17 @@ use Doctrine\Common\Collections\ArrayCollection;
  * system.
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
+ * @link      http://github.com/reliv
  *
  * @ORM\Entity
  * @ORM\Table(name="rcm_sites")
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Site
 {
@@ -58,20 +65,13 @@ class Site
      *                                  site.
      *
      * @ORM\ManyToOne(targetEntity="Domain")
-     * @ORM\JoinColumn(name="domainId", referencedColumnName="domainId", onDelete="SET NULL")
-     */
-    protected $domain;
-
-    /**
-     * @var \Rcm\Entity\ExtraSiteInfo Extra info for docs and logs.  Not needed on all requests
-     *
-     * @ORM\OneToOne(
-     *      targetEntity="ExtraSiteInfo",
-     *      mappedBy="site",
-     *      cascade={"all"}
+     * @ORM\JoinColumn(
+     *     name="domainId",
+     *     referencedColumnName="domainId",
+     *     onDelete="SET NULL"
      * )
      */
-    protected $extraSiteInfo;
+    protected $domain;
 
     /**
      * @var string Theme of site
@@ -110,7 +110,11 @@ class Site
      * @var \Rcm\Entity\Country country
      *
      * @ORM\ManyToOne(targetEntity="Country")
-     * @ORM\JoinColumn(name="country",referencedColumnName="iso3", onDelete="SET NULL")
+     * @ORM\JoinColumn(
+     *     name="country",
+     *     referencedColumnName="iso3",
+     *     onDelete="SET NULL"
+     * )
      */
     protected $country;
 
@@ -187,11 +191,11 @@ class Site
     protected $loginPage;
 
     /**
-     * @var string Comma seperated list of account types permitted
+     * @var string Comma separated list of ACL roles permitted
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $permittedAccountTypes;
+    protected $aclRoles;
 
     /**
      * Constructor for site
@@ -200,53 +204,7 @@ class Site
     {
         $this->pages = new ArrayCollection();
         $this->sitePlugins = new ArrayCollection();
-    }
-
-    public function __clone()
-    {
-        if ($this->siteId) {
-            $this->setSiteId(null);
-            $this->domain = array();
-
-
-            /* Get Cloned Pages */
-            $pages = $this->getPages();
-            $clonedPages = array();
-
-            /** @var \Rcm\Entity\Page $page */
-            foreach ($pages as $page) {
-
-                $pageType = $page->getPageType();
-
-                if ($pageType != 'n' && $pageType != 'z' && $pageType != 't') {
-                    continue;
-                }
-
-                $currentRevision = $page->getCurrentRevision();
-                if (empty($currentRevision)) {
-                    continue;
-                }
-
-                $clonedPage = clone $page;
-                $clonedPage->setSite($this);
-                $clonedPages[] = $clonedPage;
-            }
-
-            $this->pages = new ArrayCollection($clonedPages);
-
-            /* Get Cloned Sitewide Plugins */
-            $sitePluginInstances = $this->getRawPluginInstances();
-            $clonedPluginInstances = array();
-
-            /** @var \Rcm\Entity\PluginInstance $page */
-            foreach ($sitePluginInstances as $sitePluginInstance) {
-                $clonedPluginInstances[] = clone $sitePluginInstance;
-            }
-
-            $this->sitePlugins = new ArrayCollection($clonedPluginInstances);
-            $this->extraSiteInfo = clone $this->extraSiteInfo;
-            $this->extraSiteInfo->setPwsId(null);
-        }
+        $this->containers = new ArrayCollection();
     }
 
     /**
@@ -267,7 +225,7 @@ class Site
      *
      * @param int $siteId Unique Site ID
      *
-     * @return null
+     * @return void
      *
      */
     public function setSiteId($siteId)
@@ -291,7 +249,7 @@ class Site
      *
      * @param string $owner Owner Account Number
      *
-     * @return null
+     * @return void
      */
     public function setOwner($owner)
     {
@@ -311,35 +269,13 @@ class Site
     /**
      * Add a domain to the site
      *
-     * @param \Rcm\Entity\Domain $domain Domain object to add
+     * @param Domain $domain Domain object to add
      *
      * @return void
      */
-    public function setDomain($domain)
+    public function setDomain(Domain $domain)
     {
         $this->domain = $domain;
-    }
-
-    /**
-     * Gets the ExtraSiteInfo property
-     *
-     * @return \Rcm\Entity\ExtraSiteInfo ExtraSiteInfo
-     */
-    public function getExtraSiteInfo()
-    {
-        return $this->extraSiteInfo;
-    }
-
-    /**
-     * Sets the ExtraSiteInfo property
-     *
-     * @param \Rcm\Entity\ExtraSiteInfo $extraSiteInfo PWS Info Entity
-     *
-     * @return null
-     */
-    public function setExtraSiteInfo($extraSiteInfo)
-    {
-        $this->extraSiteInfo = $extraSiteInfo;
     }
 
     /**
@@ -355,11 +291,11 @@ class Site
     /**
      * Sets the Language property
      *
-     * @param \Rcm\Entity\Language $language Language Entity
+     * @param Language $language Language Entity
      *
-     * @return null
+     * @return void
      */
-    public function setLanguage($language)
+    public function setLanguage(Language $language)
     {
         $this->language = $language;
     }
@@ -367,7 +303,7 @@ class Site
     /**
      * Gets the Country property
      *
-     * @return \Rcm\Entity\Country Country
+     * @return Country Country
      */
     public function getCountry()
     {
@@ -381,13 +317,17 @@ class Site
      *
      * @return null
      */
-    public function setCountry($country)
+    public function setCountry(Country $country)
     {
         $this->country = $country;
     }
 
     /**
-     * @param string $theme
+     * Set the theme to be used by the site
+     *
+     * @param string $theme RCM Theme Path
+     *
+     * @return void
      */
     public function setTheme($theme)
     {
@@ -395,6 +335,8 @@ class Site
     }
 
     /**
+     * Get the theme used by the site
+     *
      * @return string
      */
     public function getTheme()
@@ -417,9 +359,7 @@ class Site
      *
      * @param string $status Current status of the site.  See docs for values.
      *
-     * @return null
-     *
-     * @todo - Add link to docs when available.
+     * @return void
      */
     public function setStatus($status)
     {
@@ -429,19 +369,19 @@ class Site
     /**
      * Get all the page entities for the site.
      *
-     * @return array Array of page entities
+     * @return ArrayCollection
      */
     public function getPages()
     {
-        return $this->pages->toArray();
+        return $this->pages;
     }
 
     /**
      * Set up a page
      *
-     * @param \Rcm\Entity\Page $page Page Entity to add.
+     * @param Page $page Page Entity to add.
      *
-     * @return null
+     * @return void
      */
     public function addPage(Page $page)
     {
@@ -449,9 +389,21 @@ class Site
     }
 
     /**
+     * Remove a page from the site
+     *
+     * @param Page $page Page Entity to remove from list
+     *
+     * @return void
+     */
+    public function removePage(Page $page)
+    {
+        $this->pages->removeElement($page);
+    }
+
+    /**
      * Get all the page entities for the site.
      *
-     * @return array Array of page entities
+     * @return ArrayCollection Array of page entities
      */
     public function getContainers()
     {
@@ -461,9 +413,9 @@ class Site
     /**
      * Set up a page
      *
-     * @param \Rcm\Entity\Container $container Page Entity to add.
+     * @param Container $container Page Entity to add.
      *
-     * @return null
+     * @return void
      */
     public function addContainer(Container $container)
     {
@@ -471,66 +423,117 @@ class Site
     }
 
     /**
+     * Remove a page from the site
+     *
+     * @param Container $container Page Entity to remove.
+     *
+     * @return void
+     */
+    public function removeContainer(Container $container)
+    {
+        $this->containers->removeElement($container);
+    }
+
+    /**
      * Get Site wide plugins
      *
-     * @return array Returns an array of PluginInstance Entities
+     * @return ArrayCollection Returns an array collection of PluginInstance Entities
      */
     public function getSiteWidePlugins()
-    {
-        return $this->sitePlugins->toArray();
-    }
-
-    /**
-     * Add a plugin to the site.
-     *
-     * @param \Rcm\Entity\PluginInstance $plugin Site wide plugin.
-     *
-     * @return null
-     */
-    public function addSiteWidePlugin(PluginInstance $plugin)
-    {
-        $this->sitePlugins->add($plugin);
-    }
-
-    /**
-     * Get Raw Plugin Instances.  Use only for unit tests
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection Doctrine Array
-     *                                                      Collection.
-     */
-    public function getRawPluginInstances()
     {
         return $this->sitePlugins;
     }
 
     /**
-     * Get Raw Page Instances.  Use only for unit tests
+     * Add a plugin to the site.
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection Doctrine Array
-     *                                                      Collection.
+     * @param PluginInstance $plugin Site wide plugin.
+     *
+     * @return null
+     * @throws InvalidArgumentException
      */
-    public function getRawPageInstances()
+    public function addSiteWidePlugin(PluginInstance $plugin)
     {
-        return $this->pages;
-    }
-
-    public function getTemplates()
-    {
-        $templates = array();
-
-        /** @var \Rcm\Entity\Page $page */
-        foreach ($this->pages as $page) {
-            $publishedVersion = $page->getPublishedRevision();
-            if ($page->isTemplate() && !empty($publishedVersion)) {
-                $templates[] = $page;
-            }
+        if (!$plugin->isSiteWide()) {
+            throw new InvalidArgumentException(
+                'Plugin Instance Must be set to Site Wide'
+            );
         }
 
-        return $templates;
+        $displayName = $plugin->getDisplayName();
+
+        if (empty($displayName)) {
+            throw new InvalidArgumentException(
+                'Plugin Instance Must be set to Site Wide'
+            );
+        }
+
+        $this->sitePlugins->add($plugin);
     }
 
     /**
-     * @param boolean $loginRequired
+     * Remove a Site Wide Plugin Instance from the entity
+     *
+     * @param PluginInstance $plugin Site wide plugin.
+     *
+     * @return void
+     */
+    public function removeSiteWidePlugin(PluginInstance $plugin)
+    {
+        $this->sitePlugins->removeElement($plugin);
+    }
+
+    /**
+     * Set Fav Icon for site.  This is needed when rendering pages outside the
+     * CMS.
+     *
+     * @param string $favIcon Path to FavIcon
+     *
+     * @return void
+     */
+    public function setFavIcon($favIcon)
+    {
+        $this->favIcon = $favIcon;
+    }
+
+    /**
+     * Get Site Favicon
+     *
+     * @return string
+     */
+    public function getFavIcon()
+    {
+        return $this->favIcon;
+    }
+
+    /**
+     * Set the site title for the site
+     *
+     * @param string $title Title for the site
+     *
+     * @return void
+     */
+    public function setSiteTitle($title)
+    {
+        $this->siteTitle = $title;
+    }
+
+    /**
+     * Get the sites title
+     *
+     * @return string
+     */
+    public function getSiteTitle()
+    {
+        return $this->siteTitle;
+    }
+
+    /**
+     * Set login required for the whole site
+     *
+     * @param boolean $loginRequired Login Required
+     *
+     * @return void
      */
     public function setLoginRequired($loginRequired)
     {
@@ -538,6 +541,8 @@ class Site
     }
 
     /**
+     * Is login required?
+     *
      * @return boolean
      */
     public function isLoginRequired()
@@ -546,7 +551,12 @@ class Site
     }
 
     /**
-     * @param string $loginPage
+     * Path to login page.  Because the login page can be variable the site
+     * needs to keep a reference to the login page.
+     *
+     * @param string $loginPage Login Page
+     *
+     * @return void
      */
     public function setLoginPage($loginPage)
     {
@@ -554,6 +564,8 @@ class Site
     }
 
     /**
+     * Get path to login page
+     *
      * @return string
      */
     public function getLoginPage()
@@ -561,60 +573,67 @@ class Site
         return $this->loginPage;
     }
 
-    public function addPermittedAccountTypesByArray(
-        Array $permittedAccountTypes
-    )
-    {
-        $types = explode(',', $this->permittedAccountTypes);
-        $newTypes = array_unique(array_merge($permittedAccountTypes, $types));
-        $this->permittedAccountTypes = implode(',', $newTypes);
-    }
-
     /**
-     * @param string $permittedAccountType
+     * Add an ACL role to the allowed list.
+     *
+     * @param string|array $permittedRoles Comma separated list or array
+     *                                            of allowed ACL Roles
+     *
+     * @return void
      */
-    public function addPermittedAccountType($permittedAccountType)
+    public function addAclRoles($permittedRoles)
     {
-        $types = explode(',', $this->permittedAccountTypes);
-        $types[] = $permittedAccountType;
-        $this->permittedAccountTypes = implode(',', $types);
+
+        if (!is_array($permittedRoles)) {
+            $permittedRoles = explode(
+                ',',
+                rtrim($permittedRoles, ',')
+            );
+
+            $permittedRoles = array_map('trim', $permittedRoles);
+        }
+
+        if (!empty($this->aclRoles)) {
+            $types = explode(
+                ',',
+                $this->aclRoles
+            );
+
+            $permittedRoles = array_unique(
+                array_merge($types, $permittedRoles)
+            );
+        }
+
+        $this->aclRoles = rtrim(implode(',', $permittedRoles), ',');
     }
 
     /**
+     * Get an array of permitted account types
+     *
      * @return string
      */
-    public function getPermittedAccountTypes()
+    public function getAclRoles()
     {
-        return explode(',', $this->permittedAccountTypes);
+        return explode(',', $this->aclRoles);
     }
 
-    public function isPermitted($accountType)
+    /**
+     * Check to see if ACL role is already allowed.  This should not be used to
+     * check if a user is allowed.  To check if a current user has permissions
+     * please check against ACL directly.
+     *
+     * @param string $aclRole ACL Role to Check
+     *
+     * @return bool
+     */
+    public function hasRole($aclRole)
     {
-        $permitted = $this->getPermittedAccountTypes();
+        $permitted = $this->getAclRoles();
 
-        if (in_array($accountType, $permitted)) {
+        if (in_array($aclRole, $permitted)) {
             return true;
         }
 
         return false;
     }
-
-    /**
-     * @param string $favIcon
-     */
-    public function setFavIcon($favIcon)
-    {
-        $this->favIcon = $favIcon;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFavIcon()
-    {
-        return $this->favIcon;
-    }
-
-
-
 }

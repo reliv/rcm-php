@@ -1,21 +1,42 @@
 <?php
-
+/**
+ * Site redirects
+ *
+ * This object contains a list of urls to redirect. For use with the content
+ * management system.
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: No License yet
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
+ */
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Rcm\Exception\InvalidArgumentException;
 use Zend\Validator\Uri;
+use Zend\Validator\ValidatorInterface;
 
 /**
  * Site redirects
  *
- * This object contains a list of urls to redirect. For use with the content management
- * system.
+ * This object contains a list of urls to redirect. For use with the content
+ * management system.
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
+ * @link      http://github.com/reliv
  *
  * @ORM\Entity
  * @ORM\Table(name="rcm_redirects")
@@ -49,12 +70,45 @@ class Redirect
      * @var \Rcm\Entity\Site
      *
      * @ORM\ManyToOne(targetEntity="Site")
-     * @ORM\JoinColumn(name="siteId", referencedColumnName="siteId", onDelete="CASCADE")
+     * @ORM\JoinColumn(
+     *     name="siteId",
+     *     referencedColumnName="siteId",
+     *     onDelete="CASCADE"
+     * )
      **/
     protected $site;
 
+    /** @var \Zend\Validator\ValidatorInterface */
+    protected $urlValidator;
+
     /**
-     * @param int $redirectId
+     * Constructor for Entity
+     */
+    public function __construct()
+    {
+        $this->urlValidator = new Uri();
+    }
+
+    /**
+     * Overwrite the default validator
+     *
+     * @param ValidatorInterface $urlValidator URL Validator
+     *
+     * @return void
+     */
+    public function setUrlValidator(ValidatorInterface $urlValidator)
+    {
+        $this->urlValidator = $urlValidator;
+    }
+
+    /**
+     * Set the Redirect Id.  This was added for unit testing and
+     * should not be used by calling scripts.  Instead please persist the object
+     * with Doctrine and allow Doctrine to set this on it's own.
+     *
+     * @param int $redirectId Redirect ID
+     *
+     * @return void
      */
     public function setRedirectId($redirectId)
     {
@@ -62,6 +116,8 @@ class Redirect
     }
 
     /**
+     * Get the Redirect Id
+     *
      * @return int
      */
     public function getRedirectId()
@@ -70,22 +126,25 @@ class Redirect
     }
 
     /**
-     * @param $redirectUrl
+     * Set the Redirect URL
      *
-     * @throws \Exception
+     * @param string $redirectUrl Redirect URL
+     *
+     * @return void
+     * @throws InvalidArgumentException
      */
     public function setRedirectUrl($redirectUrl)
     {
-        $validator = new Uri();
-
-        if ($validator->isValid($redirectUrl)) {
-            $this->redirectUrl = $redirectUrl;
-        } else {
-            throw new \Exception('URL provided is invalid');
+        if (!$this->urlValidator->isValid($redirectUrl)) {
+            throw new InvalidArgumentException('URL provided is invalid');
         }
+
+        $this->redirectUrl = $redirectUrl;
     }
 
     /**
+     * Get Redirect URL
+     *
      * @return string
      */
     public function getRedirectUrl()
@@ -94,23 +153,25 @@ class Redirect
     }
 
     /**
-     * @param $requestUrl
+     * Set the Request URL to redirect
      *
+     * @param string $requestUrl Request URL to redirect
+     *
+     * @return void
      * @throws \Exception
      */
     public function setRequestUrl($requestUrl)
     {
-        $validator = new Uri();
-
-        if ($validator->isValid($requestUrl)) {
-            $this->requestUrl = $requestUrl;
-        } else {
-            throw new \Exception('URL provided is invalid');
+        if (!$this->urlValidator->isValid($requestUrl)) {
+            throw new InvalidArgumentException('URL provided is invalid');
         }
 
+        $this->requestUrl = $requestUrl;
     }
 
     /**
+     * Return the Request URL to Redirect
+     *
      * @return string
      */
     public function getRequestUrl()
@@ -119,14 +180,20 @@ class Redirect
     }
 
     /**
-     * @param \Rcm\Entity\Site $site
+     * Set the Site the redirect belongs to
+     *
+     * @param \Rcm\Entity\Site $site Site Entity
+     *
+     * @return void
      */
-    public function setSite($site)
+    public function setSite(Site $site)
     {
         $this->site = $site;
     }
 
     /**
+     * Get the site the redirect belongs to
+     *
      * @return \Rcm\Entity\Site
      */
     public function getSite()

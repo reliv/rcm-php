@@ -2,7 +2,7 @@
 /**
  * Page Information Entity
  *
- * This is a Doctorine 2 definition file for Page info.  This file
+ * This is a Doctrine 2 definition file for Page info.  This file
  * is used for any module that needs to know page information.
  *
  * PHP version 5.3
@@ -10,15 +10,18 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
  */
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Rcm\Exception\InvalidArgumentException;
 
 /**
  * Page Information Entity
@@ -27,15 +30,19 @@ use Doctrine\Common\Collections\ArrayCollection;
  * system.
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
+ * @link      http://github.com/reliv
  *
- * @ORM\Entity
+ * @ORM\Entity (repositoryClass="Rcm\Repository\Page")
  * @ORM\Table(name="rcm_pages")
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class Page
+class Page extends ContainerAbstract
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -110,7 +117,7 @@ class Page
     protected $keywords;
 
     /**
-     * @var \Rcm\Entity\Revision Integer Current Page Revision ID
+     * @var Revision Integer Current Page Revision ID
      *
      * @ORM\OneToOne(targetEntity="Revision")
      * @ORM\JoinColumn(name="publishedRevisionId", referencedColumnName="revisionId")
@@ -118,7 +125,7 @@ class Page
     protected $currentRevision;
 
     /**
-     * @var \Rcm\Entity\Revision Integer Staged Revision ID
+     * @var Revision Integer Staged Revision ID
      *
      * @ORM\OneToOne(targetEntity="Revision")
      * @ORM\JoinColumn(name="stagedRevisionId", referencedColumnName="revisionId")
@@ -126,14 +133,14 @@ class Page
     protected $stagedRevision;
 
     /**
-     * @var string Page Type n=Normal, p=Product, b=Blog, t=Template, z=System (do not use)
+     * @var string Page Type n=Normal, t=Template, z=System
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=1)
      */
     protected $pageType = 'n';
 
     /**
-     * @var \Rcm\Entity\Site
+     * @var Site
      *
      * @ORM\ManyToOne(targetEntity="Site", inversedBy="pages")
      * @ORM\JoinColumn(name="siteId", referencedColumnName="siteId")
@@ -141,6 +148,8 @@ class Page
     protected $site;
 
     /**
+     * @var ArrayCollection
+     *
      * @ORM\ManyToMany(
      *     targetEntity="Revision",
      *     indexBy="revisionId"
@@ -166,54 +175,25 @@ class Page
     protected $revisions;
 
     /**
-     * @var \Rcm\Entity\Page
+     * @var Page
      *
      * @ORM\ManyToOne(targetEntity="Page")
-     * @ORM\JoinColumn(name="parentId", referencedColumnName="pageId", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(
+     *     name="parentId",
+     *     referencedColumnName="pageId",
+     *     onDelete="CASCADE",
+     *     nullable=true
+     * )
      */
     protected $parent;
 
     /**
-     * Constructor for Page Entity.  Adds a hydrator to site reference
+     * Constructor for Page Entity.
      */
     public function __construct()
     {
         $this->revisions = new ArrayCollection();
         $this->createdDate = new \DateTime();
-    }
-
-    public function __clone()
-    {
-        if ($this->pageId) {
-            $this->setPageId(null);
-            $this->stagedRevision = null;
-            $this->currentRevision = clone $this->currentRevision;
-            $this->currentRevision->setPage($this);
-
-            $this->revisions
-                = new ArrayCollection(array($this->currentRevision));
-        }
-    }
-
-    /**
-     * Function to return an array representation of the object.
-     *
-     * @return array Array representation of the object
-     */
-    public function toArray()
-    {
-        $return = array(
-            'pageId' => $this->getPageId(),
-            'name' => $this->getName(),
-            'author' => $this->getAuthor(),
-            'createdDate' => $this->createdDate,
-            'lastPublished' => $this->getLastPublished(),
-            'currentRevision' => $this->getCurrentRevision(),
-            'site' => $this->getSite(),
-            'revisions' => $this->getRevisions(),
-        );
-
-        return $return;
     }
 
     /**
@@ -229,7 +209,7 @@ class Page
     /**
      * Set the ID of the Page.  This was added for unit testing and should
      * not be used by calling scripts.  Instead please persist the object
-     * with Doctrine and allow Doctrine to set this on it's own,
+     * with Doctrine and allow Doctrine to set this on it's own.
      *
      * @param int $pageId Unique Page ID
      *
@@ -241,408 +221,40 @@ class Page
     }
 
     /**
-     * Gets the Name property
+     * Set the type of page
      *
-     * @return string Name
+     * @param string $type Type to set
      *
+     * @return void
+     * @throws InvalidArgumentException
      */
-    public function getName()
+    public function setPageType($type)
     {
-        return $this->name;
-    }
-
-    /**
-     * Sets the Name property
-     *
-     * @param string $name Name of Page.  Should be URL friendly and should not
-     *                     included spaces.
-     *
-     * @return null
-     *
-     * @throws \Rcm\Exception\InvalidArgumentException Exception thrown
-     *                                                         if name contains
-     *                                                         spaces.
-     */
-    public function setName($name)
-    {
-        //Check for spaces.  Throw exception if spaces are found.
-        if (strpos($name, ' ')) {
-            throw new \Rcm\Exception\InvalidArgumentException(
-                'Page Names should not contains spaces.'
+        if (strlen($type) != 1) {
+            throw new InvalidArgumentException(
+                'Page type can not exceed 1 character'
             );
         }
 
-        $this->name = $name;
+        $this->pageType = strtolower($type);
     }
 
     /**
-     * Gets the Author property
+     * Get type of page.
      *
-     * @return string Author
+     * @return string
      */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-
-    /**
-     * Sets the Author property
-     *
-     * @param string $author ID of Author.
-     *
-     * @return null
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-    }
-
-    /**
-     * Gets the CreatedDate property
-     *
-     * @return \DateTime CreatedDate
-     *
-     */
-    public function getCreatedDate()
-    {
-        return $this->createdDate;
-    }
-
-    /**
-     * Sets the CreatedDate property
-     *
-     * @param \DateTime $createdDate Date the page was initially created.
-     *
-     * @return null
-     */
-    public function setCreatedDate(\DateTime $createdDate)
-    {
-        $this->createdDate = $createdDate;
-    }
-
-    /**
-     * Gets the LastPublished property
-     *
-     * @return \DateTime LastPublished
-     */
-    public function getLastPublished()
-    {
-        return $this->lastPublished;
-    }
-
-    /**
-     * Sets the LastPublished property
-     *
-     * @param \DateTime $lastPublished Date the page was last published.
-     *
-     * @return null
-     */
-    public function setLastPublished(\DateTime $lastPublished)
-    {
-        $this->lastPublished = $lastPublished;
-    }
-
-    /**
-     * Get Published Revision
-     *
-     * @return \Rcm\Entity\Revision
-     */
-    public function getPublishedRevision()
-    {
-        return $this->currentRevision;
-    }
-
-    /**
-     * Set the current published revision for the page
-     *
-     * @param \Rcm\Entity\Revision $revision Revision object to add
-     *
-     * @return null
-     */
-    public function setPublishedRevision(
-        Revision $revision
-    )
-    {
-        $revision->publishRevision();
-        $this->currentRevision = $revision;
-    }
-
-    /**
-     * Gets the CurrentRevision property
-     *
-     * @return \Rcm\Entity\Revision CurrentRevision
-     */
-    public function getCurrentRevision()
-    {
-        return $this->getPublishedRevision();
-    }
-
-    /**
-     * Sets the CurrentRevision property
-     *
-     * @param \Rcm\Entity\Revision $currentRevision  Revision object to add
-     *
-     * @return null
-     */
-    public function setCurrentRevision(
-        Revision $currentRevision
-    )
-    {
-        $this->setPublishedRevision($currentRevision);
-    }
-
-    public function removeCurrentRevision()
-    {
-        $this->setStagedRevision($this->currentRevision);
-        $this->currentRevision = null;
-    }
-
-    /**
-     * Gets the Current Staged property
-     *
-     * @return \Rcm\Entity\Revision CurrentRevision
-     */
-    public function getStagedRevision()
-    {
-        return $this->stagedRevision;
-    }
-
-    /**
-     * Sets the current staged property
-     *
-     * @param \Rcm\Entity\Revision $revision                Revision object
-     *                                                          to add
-     *
-     * @return null
-     */
-    public function setStagedRevision(
-        Revision $revision
-    ) {
-        $revision->stageRevision();
-        $this->stagedRevision = $revision;
-    }
-
-    public function removedStagedRevision()
-    {
-        $this->stagedRevision = null;
-    }
-
-    /**
-     * Get the site that uses this page.
-     *
-     * @return \Rcm\Entity\Site
-     */
-    public function getSite()
-    {
-        return $this->site;
-    }
-
-    /**
-     * Set site the page belongs to
-     *
-     * @param \Rcm\Entity\Site $site Site object to add
-     *
-     * @return void
-     */
-    public function setSite(
-        \Rcm\Entity\Site $site
-    )
-    {
-        $this->site = $site;
-    }
-
-    /**
-     * Get a list of all page revisions for the site.
-     *
-     * @return array Array of all page revisions for the page
-     */
-    public function getRevisions()
-    {
-        return $this->revisions->toArray();
-    }
-
-    public function getRevisionById($revId)
-    {
-        return $this->revisions[$revId];
-    }
-
-    /**
-     * Set Page Revision
-     *
-     * @param \Rcm\Entity\Revision $revision Revision object to add
-     *
-     * @return void
-     */
-    public function addRevision(
-        Revision $revision
-    ) {
-        $this->revisions->add($revision);
-    }
-
-    /**
-     * Get the raw sites property.  Used for unit testing and should not
-     * be used by outside scripts
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getRawSites()
-    {
-        return $this->sites;
-    }
-
-    /**
-     * Get the raw revisions property.  Used for unit testing and should not
-     * be used by outside scripts.
-     *
-     * @return array|\Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getRawRevisions()
-    {
-        return $this->revisions;
-    }
-
-
-    public function setTemplate()
-    {
-        $this->setPageType('t');
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isTemplate()
-    {
-        return $this->checkPageType('t');
-    }
-
-    public function setProductPage()
-    {
-        $this->setPageType('p');
-    }
-
-    public function isProductPage()
-    {
-        return $this->checkPageType('p');
-    }
-
-
-    public function checkPageType($pageType)
-    {
-        if ($this->pageType == $pageType) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function setPageType($type)
-    {
-        if ($type != 'n'
-            && $type != 'p'
-            && $type != 'b'
-            && $type != 't'
-            && $type != 'z'
-        ) {
-            throw new \Exception('Invalid Product Type Passed');
-        }
-
-        $this->pageType = $type;
-    }
-
     public function getPageType()
     {
         return $this->pageType;
     }
 
     /**
-     * Return the last draft saved.
+     * Set the Title for the page.
      *
-     * @return \Rcm\Entity\Revision
-     */
-    public function getLastSavedRevision()
-    {
-        $current = $this->currentRevision;
-        $staged = $this->stagedRevision;
-
-        /** @var \Rcm\Entity\Revision $revision */
-        foreach ($this->revisions as $revision) {
-
-            if (!empty($current)
-                && $revision->getRevisionId() == $current->getRevisionId()
-            ) {
-                continue;
-            }
-
-            if (!empty($staged)
-                && $revision->getRevisionId() == $staged->getRevisionId()
-            ) {
-                continue;
-            }
-
-            $sorted[$revision->getRevisionId()] = $revision;
-        }
-
-        if (empty($sorted)) {
-            return null;
-        }
-
-        ksort($sorted, SORT_NUMERIC);
-
-        $return = array_pop($sorted);
-
-        return $return;
-    }
-
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $keywords
-     */
-    public function setKeywords($keywords)
-    {
-        $this->keywords = $keywords;
-    }
-
-    /**
-     * @return string
-     */
-    public function getKeywords()
-    {
-        return $this->keywords;
-    }
-
-    /**
-     * @param string $pageLayout
-     */
-    public function setPageLayout($pageLayout)
-    {
-        $this->pageLayout = $pageLayout;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageLayout()
-    {
-        return $this->pageLayout;
-    }
-
-    /**
-     * @param string $pageTitle
+     * @param string $pageTitle Page title
+     *
+     * @return void
      */
     public function setPageTitle($pageTitle)
     {
@@ -650,6 +262,8 @@ class Page
     }
 
     /**
+     * Get the title for the page
+     *
      * @return string
      */
     public function getPageTitle()
@@ -658,7 +272,99 @@ class Page
     }
 
     /**
-     * @param \Rcm\Entity\Page $parent
+     * Set the Description Meta for the page
+     *
+     * @param string $description Description Meta for the Page
+     *
+     * @return void
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * Get the Description Meta for the page
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set the Keyword Meta for the page
+     *
+     * @param string $keywords Comma Separated List of Keywords
+     *
+     * @return string
+     */
+    public function setKeywords($keywords)
+    {
+        $this->keywords = $keywords;
+    }
+
+    /**
+     * Get the Keyword Meta for the page
+     *
+     * @return string
+     */
+    public function getKeywords()
+    {
+        return $this->keywords;
+    }
+
+    /**
+     * Set the zend page template to use for the page
+     *
+     * @param string $pageLayout page template to use.
+     *
+     * @return void
+     */
+    public function setPageLayout($pageLayout)
+    {
+        $this->pageLayout = $pageLayout;
+    }
+
+    /**
+     * Get the zend page template to use for the page
+     *
+     * @return string
+     */
+    public function getPageLayout()
+    {
+        return $this->pageLayout;
+    }
+
+    /**
+     * Override the sites layout template
+     *
+     * @param string $layout page template to use.
+     *
+     * @return void
+     */
+    public function setSiteLayoutOverride($layout)
+    {
+        $this->siteLayoutOverride = $layout;
+    }
+
+    /**
+     * Get the site layout override for this page
+     *
+     * @return string
+     */
+    public function getSiteLayoutOverride()
+    {
+        return $this->siteLayoutOverride;
+    }
+
+    /**
+     * Set the parent page.  Used to generate breadcrumbs or navigation
+     *
+     * @param Page $parent Parent Page Entity
+     *
+     * @return void
      */
     public function setParent(Page $parent)
     {
@@ -666,12 +372,12 @@ class Page
     }
 
     /**
-     * @return \Rcm\Entity\Page
+     * Get the parent page
+     *
+     * @return Page
      */
     public function getParent()
     {
         return $this->parent;
     }
-
-
 }

@@ -8,14 +8,18 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      https://github.com/reliv
  */
 
 namespace Rcm;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\ResponseSender\SendResponseEvent;
+use Zend\Console\Request as ConsoleRequest;
 
 /**
  * ZF2 Module Config.  Required by ZF2
@@ -24,28 +28,76 @@ use Zend\Mvc\MvcEvent;
  * file has been included as part of the ZF2 standards.
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
+ * @link      https://github.com/reliv
  */
 class Module
 {
 
-    public function onBootstrap(MvcEvent $e)
+    /**
+     * Bootstrap For RCM.
+     *
+     * @param MvcEvent $event Zend MVC Event
+     *
+     * @return null
+     */
+    public function onBootstrap(MvcEvent $event)
     {
-        $sm = $e->getApplication()->getServiceManager();
+        $serviceManager = $event->getApplication()->getServiceManager();
+
+        $request = $serviceManager->get('request');
+
+        if ($request instanceof ConsoleRequest) {
+            return;
+        }
 
         //Add Domain Checker
-        $onRouteListener = $sm->get('Rcm\\EventListener\\RouteListener');
-        $onDispatchListener = $sm->get('Rcm\\EventListener\\DispatchListener');
+        $routeListener = $serviceManager->get('Rcm\EventListener\RouteListener');
+
+        $dispatchListener
+            = $serviceManager->get('Rcm\EventListener\DispatchListener');
+
+        $eventFinishListener
+            = $serviceManager->get('Rcm\EventListener\EventFinishListener');
 
         /** @var \Zend\EventManager\EventManager $eventManager */
-        $eventManager = $e->getApplication()->getEventManager();
-        $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_ROUTE, array($onRouteListener, 'checkDomain'), 10000);
-        $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_ROUTE, array($onRouteListener, 'checkRedirect'), 9999);
-        $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, array($onDispatchListener, 'setSiteLayout'), 10000);
+        $eventManager = $event->getApplication()->getEventManager();
 
+        // Add Domain Check prior to routing
+        $eventManager->attach(
+            MvcEvent::EVENT_ROUTE,
+            array($routeListener, 'checkDomain'),
+            10000
+        );
+
+        // Check for redirects from the CMS
+        $eventManager->attach(
+            MvcEvent::EVENT_ROUTE,
+            array($routeListener, 'checkRedirect'),
+            9999
+        );
+
+        // Set the sites layout.
+        $eventManager->attach(
+            MvcEvent::EVENT_DISPATCH,
+            array($dispatchListener, 'setSiteLayout'),
+            10000
+        );
+
+        // Set the custom http response checker
+        $eventManager->attach(
+            MvcEvent::EVENT_FINISH,
+            array($eventFinishListener, 'checkForNotAuthorized'),
+            10000
+        );
+
+        /** @var \Zend\Session\SessionManager $session */
+        $session = $serviceManager->get('Rcm\Service\SessionMgr');
+        $session->start();
     }
 
     /**

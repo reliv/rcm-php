@@ -1,11 +1,22 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: rmcnew
- * Date: 10/30/12
- * Time: 11:10 AM
- * To change this template use File | Settings | File Templates.
+ * Rcm Plugin Manager
+ *
+ * This file contains the class definition for the Plugin Manager
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: BSD
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2014 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
  */
+
 namespace Rcm\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,49 +27,99 @@ use Rcm\Exception\RuntimeException;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Stdlib\RequestInterface;
-use Zend\ModuleManager\ModuleManager;
 use Rcm\Plugin\PluginInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Renderer\RendererInterface;
+use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Helper\Placeholder\Container;
 
+/**
+ * Rcm Plugin Manager
+ *
+ * Rcm plugin Manager.  This class handles everything about a CMS plugin.  Please
+ * note that this handles the plugins directly and does not do anything in regards
+ * to where the plugin renders on the page or in the container.  Positional
+ * information is stored within a plugin wrapper and not within the plugin itself.
+ * Wrapping the plugin with a positional wrapper helps to make plugins and plugin
+ * instances reusable through out the site.
+ *
+ * @category  Reliv
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   Release: 1.0
+ * @link      http://github.com/reliv
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @todo - See if we can reduce the amount of dependencies.
+ */
 class PluginManager
 {
-    protected $sm;
-    protected $moduleManager;
+    /** @var \Zend\ServiceManager\ServiceLocatorInterface  */
+    protected $serviceManager;
+
+    /** @var \Zend\Stdlib\RequestInterface  */
     protected $request;
+
+    /** @var \Zend\View\Renderer\PhpRenderer  */
     protected $renderer;
+
+    /** @var \Doctrine\ORM\EntityManagerInterface  */
     protected $entityManager;
+
+    /** @var array  */
     protected $config;
+
+    /** @var \Zend\Cache\Storage\StorageInterface  */
     protected $cache;
 
+    /**
+     * Constructor
+     *
+     * @param EntityManagerInterface  $entityManager  Doctrine Entity Manager
+     * @param array                   $config         Config Array
+     * @param ServiceLocatorInterface $serviceManager Zend Service Manager
+     * @param PhpRenderer             $renderer       Zend Renderer
+     * @param RequestInterface        $request        Zend Request Object
+     * @param StorageInterface        $cache          Zend Cache Manager
+     */
     public function __construct(
-        EntityManagerInterface $em,
-        $config,
-        ServiceLocatorInterface $sm,
-        ModuleManager $moduleManager,
-        RendererInterface $renderer,
-        RequestInterface $request,
-        StorageInterface $cache
-    )
-    {
-        $this->sm = $sm;
-        $this->request = $request;
-
-        /** @var \Zend\ModuleManager\ModuleManager moduleManager */
-        $this->moduleManager = $moduleManager;
-        $this->renderer = $renderer;
-        $this->entityManager = $em;
-        $this->config = $config;
-        $this->cache = $cache;
+        EntityManagerInterface  $entityManager,
+        Array                   $config,
+        ServiceLocatorInterface $serviceManager,
+        PhpRenderer             $renderer,
+        RequestInterface        $request,
+        StorageInterface        $cache
+    ) {
+        $this->serviceManager = $serviceManager;
+        $this->request        = $request;
+        $this->renderer       = $renderer;
+        $this->entityManager  = $entityManager;
+        $this->config         = $config;
+        $this->cache          = $cache;
     }
 
+    /**
+     * Get a new plugin instance.
+     *
+     * @param string $pluginName Plugin Name
+     *
+     * @return array
+     */
     public function getNewEntity($pluginName)
     {
         $viewData = $this->getPluginViewData($pluginName, -1, new Request());
         return $viewData;
     }
 
+    /**
+     * Get a plugin by instance Id
+     *
+     * @param integer $pluginInstanceId Plugin Instance Id
+     *
+     * @return array|mixed
+     * @throws \Rcm\Exception\PluginInstanceNotFoundException
+     */
     public function getPluginByInstanceId($pluginInstanceId)
     {
         $cacheId = 'rcmPluginInstance_' . $pluginInstanceId;
@@ -72,12 +133,13 @@ class PluginManager
         $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
 
         if (empty($pluginInstance)) {
-            throw new PluginInstanceNotFoundException('Plugin for instanceid '
-                . $pluginInstanceId . ' not found.');
+            throw new PluginInstanceNotFoundException(
+                'Plugin for instance id '. $pluginInstanceId . ' not found.'
+            );
         }
 
         $return = $this->getPluginViewData(
-            $pluginInstance->getName(), $pluginInstanceId
+            $pluginInstance->getPlugin(), $pluginInstanceId
         );
 
         if ($pluginInstance->isSiteWide()) {
@@ -100,6 +162,15 @@ class PluginManager
         return $return;
     }
 
+    /**
+     * Get a plugin instance rendered view.
+     *
+     * @param string  $pluginName       Plugin name
+     * @param integer $pluginInstanceId Plugin Instance Id
+     *
+     * @return array
+     * @throws \Rcm\Exception\InvalidPluginException
+     */
     public function getPluginViewData($pluginName, $pluginInstanceId)
     {
 
@@ -107,33 +178,38 @@ class PluginManager
         $controller = $this->getPluginController($pluginName);
 
         if (!is_a($controller, '\Rcm\Plugin\PluginInterface')) {
-            throw new InvalidPluginException('Plugin '.$controller.' must implement the PluginInterface');
+            throw new InvalidPluginException(
+                'Plugin '.$controller.' must implement the PluginInterface'
+            );
         }
 
         //If the plugin controller can accept a ZF2 request, pass it
         $controller->setRequest($this->request);
 
+        /** @var \Zend\View\Helper\Headlink $headlink */
         $headlink = $this->renderer->plugin('headlink');
+
+        /** @var \Zend\View\Helper\HeadScript $headScript */
         $headScript = $this->renderer->plugin('headscript');
 
         $oldContainer = $headlink->getContainer();
         $linkContainer = new Container();
         $headlink->setContainer($linkContainer);
 
-        $oldHeadScriptContainer = $headScript->getContainer();
+        $oldScriptContainer = $headScript->getContainer();
         $headScriptContainer = new Container();
         $headScript->setContainer($headScriptContainer);
 
         $viewModel = $controller->renderInstance($pluginInstanceId);
 
-        $html = $this->renderer->render($viewModel);
-        $css = $headlink->getContainer()->getArrayCopy();
-        $js = $headScript->getContainer()->getArrayCopy();
+        $html   = $this->renderer->render($viewModel);
+        $css    = $headlink->getContainer()->getArrayCopy();
+        $script = $headScript->getContainer()->getArrayCopy();
 
         $return = array(
             'html' => $html,
             'css' => $this->getContainerSrc($css),
-            'js' => $this->getContainerSrc($js),
+            'js' => $this->getContainerSrc($script),
             'editJs' => '',
             'editCss' => '',
             'displayName' => '',
@@ -178,12 +254,20 @@ class PluginManager
         }
 
         $headlink->setContainer($oldContainer);
-        $headScript->setContainer($oldHeadScriptContainer);
+        $headScript->setContainer($oldScriptContainer);
 
         return $return;
 
     }
 
+    /**
+     * Save a plugin instance
+     *
+     * @param integer $pluginInstanceId Current Instance Id
+     * @param mixed   $saveData         Plugin Data to Save
+     *
+     * @return PluginInstance New saved plugin instance
+     */
     public function savePlugin($pluginInstanceId, $saveData)
     {
         $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
@@ -193,7 +277,7 @@ class PluginManager
         }
 
         $newPluginInstance = $this->saveNewInstance(
-            $pluginInstance->getName(),
+            $pluginInstance->getPlugin(),
             $saveData,
             $pluginInstance->isSiteWide(),
             $pluginInstance->getDisplayName()
@@ -203,6 +287,17 @@ class PluginManager
         return $newPluginInstance;
     }
 
+    /**
+     * Delete a plugin instance.  This should generally never be used unless the
+     * container, page, or site is being deleted.  And only if the plugin instance
+     * does not belong to a site wide plugin unless you are deleting the entire
+     * site.
+     *
+     * @param integer $pluginInstanceId Instance Id
+     *
+     * @return void
+     * @throws \Rcm\Exception\PluginInstanceNotFoundException
+     */
     public function deletePluginInstance($pluginInstanceId)
     {
         $pluginInstanceEntity = $this->getInstanceEntity($pluginInstanceId);
@@ -214,17 +309,30 @@ class PluginManager
         }
 
         /** @var \Rcm\Plugin\PluginInterface $controller */
-        $controller = $this->getPluginController($pluginInstanceEntity->getName());
+        $controller = $this->getPluginController($pluginInstanceEntity->getPlugin());
         $controller->deleteInstance($pluginInstanceEntity->getInstanceId());
 
         $this->entityManager->remove($pluginInstanceEntity);
         $this->entityManager->flush();
     }
 
+    /**
+     * Save a new plugin instance
+     *
+     * @param string      $pluginName  Plugin name
+     * @param array       $saveData    Save Data
+     * @param bool        $siteWide    Site Wide marker
+     * @param null|string $displayName Display name for site wide plugins.  Required
+     *                                 for site wide plugin instances.
+     *
+     * @return PluginInstance
+     */
     public function saveNewInstance(
-        $pluginName, $saveData, $siteWide = false, $displayName = ''
-    )
-    {
+        $pluginName,
+        $saveData,
+        $siteWide = false,
+        $displayName = null
+    ) {
         $pluginInstance = $this->getNewPluginInstanceEntity($pluginName);
 
         if ($siteWide) {
@@ -249,7 +357,9 @@ class PluginManager
     }
 
     /**
-     * @param string $pluginName
+     * Get a new Plugin Entity
+     *
+     * @param string $pluginName Plugin Name
      *
      * @return PluginInstance
      */
@@ -270,6 +380,14 @@ class PluginManager
         return $pluginInstance;
     }
 
+    /**
+     * Get a plugin containers CSS and Javascript from either the headlink or
+     * head script
+     *
+     * @param array $container Zend Framework View Helper array copy to serialize
+     *
+     * @return array
+     */
     public function getContainerSrc($container)
     {
         if (empty($container) || !is_array($container)) {
@@ -290,24 +408,47 @@ class PluginManager
         return $return;
     }
 
+    /**
+     * Get an instantiated plugin controller
+     *
+     * @param string $pluginName Plugin Name
+     *
+     * @return PluginInterface
+     * @throws \Rcm\Exception\InvalidPluginException
+     * @throws \Rcm\Exception\RuntimeException
+     */
     public function getPluginController($pluginName)
     {
-        $this->ensurePluginIsValid($pluginName);
 
-        if ($this->sm->has($pluginName)) {
-            $sm = $this->sm;
+        /*
+         * Deprecated.  All controllers should come from the controller manager
+         * now and not the service manager.
+         *
+         * @todo Remove if statement once plugins have been converted.
+         */
+        if ($this->serviceManager->has($pluginName)) {
+            $serviceManager = $this->serviceManager;
         } else {
-            $sm = $this->sm->get('ControllerLoader');
+            $serviceManager = $this->serviceManager->get('ControllerLoader');
+        }
+
+        if (!$serviceManager->has($pluginName)) {
+            throw new InvalidPluginException(
+                "Plugin $pluginName is not loaded or configured. Check
+            config/application.config.php"
+            );
         }
 
         //Load the plugin controller
         try {
-            $pluginController = $sm->get($pluginName);
+            $pluginController = $serviceManager->get($pluginName);
         } catch (\Exception $e) {
-            throw $e;
-            //throw new RuntimeException('Unable to get instance of plugin: '.$pluginName, 1);
+            throw new RuntimeException(
+                'Unable to get instance of plugin: '.$pluginName,
+                1,
+                $e
+            );
         }
-
 
         //Plugin controllers must implement this interface
         if (!$pluginController instanceof PluginInterface) {
@@ -322,31 +463,13 @@ class PluginManager
     }
 
     /**
-     * @param $pluginName
+     * Get an Plugin Instance Entity by Instance Id
      *
-     * @return bool
-     * @throws \Exception
-     */
-    public function ensurePluginIsValid($pluginName)
-    {
-        $loadedModules = $this->moduleManager->getLoadedModules();
-
-        if (!isset($loadedModules[$pluginName])) {
-            throw new InvalidPluginException(
-                "Plugin $pluginName is not loaded or configured. Check
-                config/application.config.php"
-            );
-        }
-
-        return true;
-    }
-
-    /**
-     * @param $pluginInstanceId
+     * @param integer $pluginInstanceId Plugin Instance Id
      *
      * @return \Rcm\Entity\PluginInstance
      */
-    private function getInstanceEntity($pluginInstanceId)
+    protected function getInstanceEntity($pluginInstanceId)
     {
         return $this->entityManager
             ->getRepository('\Rcm\Entity\PluginInstance')

@@ -2,7 +2,7 @@
     "name": "reliv/Rcm",
     "description": "Reliv Content Management System",
     "type": "library",
-    "license": "MIT",
+    "license": "BSD-3-Clause",
     "keywords": [
         "reliv",
         "content",
@@ -28,8 +28,18 @@
             "homepage": "http://www.reliv.com/"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:wshafer/AssetManager.git"
+        }
+    ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "doctrine/doctrine-orm-module": "0.*",
+        "zendframework/zendframework": "2.*",
+        "rwoverdijk/assetmanager": "dev-rcmBranch",
+        "bjyoungblood/bjy-authorize": "1.4.*"
     },
     "autoload": {
         "psr-0": {

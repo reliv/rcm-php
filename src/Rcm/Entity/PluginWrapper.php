@@ -1,35 +1,37 @@
 <?php
 /**
- * Plugin Instances Entity
+ * Plugin Wrapper Entity
  *
- * This is a Doctorine 2 definition file for Plugin Instances  This file
- * is used for any module that needs to know about plugin instances.
+ * Plugin Wrapper Entity.  Used for positioning within containers.
  *
  * PHP version 5.3
  *
  * LICENSE: No License yet
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
  */
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Plugin Instances Entity
+ * Plugin Wrapper Entity
  *
- * This object contains a list of plugin instances.  See documentation for
- * how our plugins work.
+ * Plugin Wrapper Entity.  Used for positioning within containers.
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: 1.0
+ * @link      http://github.com/reliv
  *
  * @ORM\Entity
  * @ORM\Table(name="rcm_plugin_wrappers")
@@ -46,7 +48,7 @@ class PluginWrapper
     protected $pluginWrapperId;
 
     /**
-     * @var integer Layout Placement
+     * @var integer Layout Placement.  This is used only for Page Containers.
      *
      * @ORM\Column(type="integer")
      */
@@ -81,7 +83,8 @@ class PluginWrapper
     protected $divFloat = 'left';
 
     /**
-     * fetch="EAGER" here is very important for optimizing the number of queries
+     * @var \Rcm\Entity\PluginInstance
+     *
      * @ORM\ManyToOne(
      *     targetEntity="PluginInstance",
      *     fetch="EAGER",
@@ -96,9 +99,33 @@ class PluginWrapper
     protected $instance;
 
     /**
+     * Set the Plugin Wrapper ID.  This was added for unit testing and
+     * should not be used by calling scripts.  Instead please persist the object
+     * with Doctrine and allow Doctrine to set this on it's own.
+     *
+     * @param int $pluginWrapperId Plugin Wrapper ID
+     *
+     * @return void
+     */
+    public function setPluginWrapperId($pluginWrapperId)
+    {
+        $this->pluginWrapperId = $pluginWrapperId;
+    }
+
+    /**
+     * Get the Plugin Wrapper ID
+     *
+     * @return int
+     */
+    public function getPluginWrapperId()
+    {
+        return $this->pluginWrapperId;
+    }
+
+    /**
      * Get Instance layout container
      *
-     * @return int Layout Container
+     * @return int
      */
     public function getLayoutContainer()
     {
@@ -140,12 +167,21 @@ class PluginWrapper
         $this->renderOrder = $order;
     }
 
-    public function setInstance($instance)
+    /**
+     * Set the plugin instance to be wrapped
+     *
+     * @param PluginInstance $instance Instance to wrap
+     *
+     * @return void
+     */
+    public function setInstance(PluginInstance $instance)
     {
         $this->instance = $instance;
     }
 
     /**
+     * Get the Wrapped Plugin Instance
+     *
      * @return \Rcm\Entity\PluginInstance
      */
     public function getInstance()
@@ -154,40 +190,20 @@ class PluginWrapper
     }
 
     /**
-     * @param int $pluginWrapperId
-     */
-    public function setPluginWrapperId($pluginWrapperId)
-    {
-        $this->pluginWrapperId = $pluginWrapperId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPluginWrapperId()
-    {
-        return $this->pluginWrapperId;
-    }
-
-    public function getInstanceId()
-    {
-        return $this->instance->getInstanceId();
-    }
-
-    /**
-     * @param int $height
+     * Set the height of the plugin html container
+     *
+     * @param int $height Height for HTML Container
+     *
+     * @return void
      */
     public function setHeight($height)
     {
-        //Having floats in here was causing sql errors sometimes when saving
-        if (empty($height)) {
-            $this->height = null;
-        } else {
-            $this->height = round($height);
-        }
+        $this->height = round($height);
     }
 
     /**
+     * Get the height for the HTML plugin container
+     *
      * @return int
      */
     public function getHeight()
@@ -196,19 +212,20 @@ class PluginWrapper
     }
 
     /**
-     * @param int $width
+     * Set the width for the html plugin container.
+     *
+     * @param int $width Width for the Html Plugin Container
+     *
+     * @return void
      */
     public function setWidth($width)
     {
-        //Having floats in here was causing sql errors sometimes when saving
-        if (empty($width)) {
-            $this->width = null;
-        } else {
-            $this->width = round($width);
-        }
+        $this->width = round($width);
     }
 
     /**
+     * Get the width for the html plugin container
+     *
      * @return int
      */
     public function getWidth()
@@ -217,7 +234,11 @@ class PluginWrapper
     }
 
     /**
-     * @param string $divFloat
+     * Set the float of the HTML plugin container
+     *
+     * @param string $divFloat Float left, right, none
+     *
+     * @return void
      */
     public function setDivFloat($divFloat)
     {
@@ -225,12 +246,12 @@ class PluginWrapper
     }
 
     /**
+     * Get the float for the HTML plugin container
+     *
      * @return string
      */
     public function getDivFloat()
     {
         return $this->divFloat;
     }
-
-
 }

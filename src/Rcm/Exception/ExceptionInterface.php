@@ -1,36 +1,34 @@
 <?php
 /**
- * Zend Framework
+ * Reliv Common's Exception Interface
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
+ * This file contains the Interface for all Rcm Exceptions
  *
  * PHP version 5.3
  *
  * @category  Reliv
- * @author    Zend <support@zend.com>
- * @copyright 2012 Zend Technologies USA Inc.
- * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @link      http://zend.com
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ * @link      http://github.com/reliv
  */
 
 namespace Rcm\Exception;
 
 /**
- * Exception Interface for Reliv Common
+ * Reliv Common's Exception Interface
+ *
+ * Reliv Common's Exception Interface
  *
  * @category  Reliv
- * @author    Zend <support@zend.com>
- * @copyright 2012 Zend Technologies USA Inc.
- * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @link      http://zend.com
+ * @package   Rcm
+ * @author    Westin Shafer <wshafer@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   Release: 1.0
+ * @link      http://github.com/reliv
  */
 
 interface ExceptionInterface

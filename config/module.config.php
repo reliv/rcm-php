@@ -11,11 +11,14 @@
  * LICENSE: No License yet
  *
  * @category  Reliv
+ * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
  * @copyright 2012 Reliv International
  * @license   License.txt New BSD License
  * @version   GIT: <git_id>
+ * @link      https://github.com/reliv
  */
+
 return array(
 
     'Rcm' => array(
@@ -108,32 +111,62 @@ return array(
 
     'service_manager' => array(
         'factories' => array (
-            'doctrine.cache.doctrine_cache'        => 'Rcm\\Factory\\DoctrineCacheFactory',
-            'Rcm\\EventListener\\RouteListener'    => 'Rcm\\Factory\\RouteListenerFactory',
-            'Rcm\\EventListener\\DispatchListener' => 'Rcm\\Factory\\DispatchListenerFactory',
-            'Rcm\\Service\\ContainerManager'       => 'Rcm\\Factory\\ContainerManagerFactory',
-            'Rcm\\Service\\PluginManager'          => 'Rcm\\Factory\\PluginManagerFactory',
-            'Rcm\\Service\\LayoutManager'          => 'Rcm\\Factory\\LayoutManagerFactory',
-            'Rcm\\Service\\DomainManager'          => 'Rcm\\Factory\\DomainManagerFactory',
-            'Rcm\Service\SiteManager'            => 'Rcm\\Factory\\SiteManagerFactory',
-            'Rcm\\Service\\PageManager'            => 'Rcm\\Factory\\PageManagerFactory',
-            'Rcm\\Service\\Cache'                  => 'Rcm\\Factory\\CacheFactory',
-            'Rcm\\Service\\SessionMgr'             => 'Rcm\\Factory\\SessionManagerFactory',
+            'doctrine.cache.doctrine_cache'
+                => 'Rcm\Factory\DoctrineCacheFactory',
+
+            'Rcm\EventListener\RouteListener'
+                => 'Rcm\Factory\RouteListenerFactory',
+
+            'Rcm\EventListener\DispatchListener'
+                => 'Rcm\Factory\DispatchListenerFactory',
+
+            'Rcm\EventListener\EventFinishListener'
+                => 'Rcm\Factory\EventFinishListenerFactory',
+
+            'Rcm\Service\ContainerManager'
+                => 'Rcm\Factory\ContainerManagerFactory',
+
+            'Rcm\Service\PluginManager'
+                => 'Rcm\Factory\PluginManagerFactory',
+
+            'Rcm\Service\LayoutManager'
+                => 'Rcm\Factory\LayoutManagerFactory',
+
+            'Rcm\Service\DomainManager'
+                => 'Rcm\Factory\DomainManagerFactory',
+
+            'Rcm\Service\SiteManager'
+                => 'Rcm\Factory\SiteManagerFactory',
+
+            'Rcm\Service\PageManager'
+                => 'Rcm\Factory\PageManagerFactory',
+
+            'Rcm\Service\Cache'
+                => 'Rcm\Factory\CacheFactory',
+
+            'Rcm\Service\AssetManagerCache'
+                => 'Rcm\Factory\AssetManagerCacheFactory',
+
+            'Rcm\Service\SessionMgr'
+                => 'Rcm\Factory\SessionManagerFactory',
         ),
     ),
 
     'controllers' => array(
         'factories' => array (
-            'Rcm\\Controller\\IndexController'       => 'Rcm\Factory\IndexControllerFactory',
+            'Rcm\Controller\IndexController'
+                => 'Rcm\Factory\IndexControllerFactory',
         ),
     ),
 
     'view_helpers' => array(
         'factories' => array(
-            'rcmContainer'                         => 'Rcm\Factory\ContainerViewHelperFactory',
+            'rcmContainer'
+                => 'Rcm\Factory\ContainerViewHelperFactory',
         ),
         'invokables' => array(
-            'rcmOutOfDateBrowserWarning'           => 'Rcm\View\Helper\OutOfDateBrowserWarning',
+            'rcmOutOfDateBrowserWarning'
+                => 'Rcm\View\Helper\OutOfDateBrowserWarning',
         ),
     )
 
