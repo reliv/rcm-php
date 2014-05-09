@@ -120,6 +120,9 @@ return array(
             'Rcm\EventListener\DispatchListener'
                 => 'Rcm\Factory\DispatchListenerFactory',
 
+            'Rcm\EventListener\EventFinishListener'
+                => 'Rcm\Factory\EventFinishListenerFactory',
+
             'Rcm\Service\ContainerManager'
                 => 'Rcm\Factory\ContainerManagerFactory',
 

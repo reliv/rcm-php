@@ -18,6 +18,7 @@
 
 namespace Rcm;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\ResponseSender\SendResponseEvent;
 use Zend\Console\Request as ConsoleRequest;
 
 /**
@@ -60,6 +61,9 @@ class Module
         $dispatchListener
             = $serviceManager->get('Rcm\EventListener\DispatchListener');
 
+        $eventFinishListener
+            = $serviceManager->get('Rcm\EventListener\EventFinishListener');
+
         /** @var \Zend\EventManager\EventManager $eventManager */
         $eventManager = $event->getApplication()->getEventManager();
 
@@ -81,6 +85,13 @@ class Module
         $eventManager->attach(
             MvcEvent::EVENT_DISPATCH,
             array($dispatchListener, 'setSiteLayout'),
+            10000
+        );
+
+        // Set the custom http response checker
+        $eventManager->attach(
+            MvcEvent::EVENT_FINISH,
+            array($eventFinishListener, 'checkForNotAuthorized'),
             10000
         );
 
