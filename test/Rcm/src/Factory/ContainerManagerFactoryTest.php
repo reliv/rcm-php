@@ -61,18 +61,26 @@ class ContainerManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $mockRepo = $this->getMockBuilder('\Rcm\Repository\Container')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockEntityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($mockRepo));
+
         $mockCache = $this->getMockBuilder('\Zend\Cache\Storage\Adapter\Memory')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $sm = new ServiceManager();
-        $sm->setService('Rcm\Service\SiteManager', $mockSiteManager);
-        $sm->setService('Rcm\Service\PluginManager', $mockPluginManager);
-        $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
-        $sm->setService('Rcm\Service\Cache', $mockCache);
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('Rcm\Service\SiteManager', $mockSiteManager);
+        $serviceManager->setService('Rcm\Service\PluginManager', $mockPluginManager);
+        $serviceManager->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
+        $serviceManager->setService('Rcm\Service\Cache', $mockCache);
 
         $factory = new ContainerManagerFactory();
-        $object = $factory->createService($sm);
+        $object = $factory->createService($serviceManager);
 
         $this->assertTrue($object instanceof ContainerManager);
     }

@@ -20,7 +20,7 @@
 
 namespace Rcm\Controller;
 
-use Rcm\Exception\PageNotFoundException;
+use Rcm\Exception\ContainerNotFoundException;
 use Rcm\Service\LayoutManager;
 use Rcm\Service\PageManager;
 use \Zend\Mvc\Controller\AbstractActionController;
@@ -40,6 +40,9 @@ use Zend\View\Model\ViewModel;
  * @license   License.txt New BSD License
  * @version   Release: 1.0
  * @link      http://github.com/reliv
+ *
+ * @method boolean isAllowed($resource, $permission) BjyAuthorize isAllowed
+ *                                                   Controller Helper
  */
 class IndexController extends AbstractActionController
 {
@@ -81,14 +84,14 @@ class IndexController extends AbstractActionController
             $this->pageType = 'n';
             $this->pageRevisionId = null;
 
-            $pageInfo = $this->pageManager->getPageRevisionInfo('not-found', 'n');
+            $pageInfo = $this->pageManager->getRevisionInfo('not-found');
 
             /** @var \Zend\Http\Response $response */
             $response =$this->getResponse();
             $response->setStatusCode(404);
 
             return $pageInfo;
-        } catch(PageNotFoundException $e) {
+        } catch(ContainerNotFoundException $e) {
             return $this->notFoundAction();
         }
     }
@@ -114,13 +117,14 @@ class IndexController extends AbstractActionController
 
         try {
 
-            $pageInfo = $this->pageManager->getPageRevisionInfo(
+            $pageInfo = $this->pageManager->getRevisionInfo(
                 $this->pageName,
+                $this->pageRevisionId,
                 $this->pageType,
-                $this->pageRevisionId
+                $this->isAllowed('staged', 'read')
             );
 
-        } catch(PageNotFoundException $e) {
+        } catch(ContainerNotFoundException $e) {
             $pageInfo = $this->pageNotFound();
 
             if ($pageInfo instanceof ViewModel) {

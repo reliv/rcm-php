@@ -89,7 +89,6 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
             $em,
             $sm->get('config'),
             $sm,
-            $sm->get('ModuleManager'),
             $render,
             new Request(),
             $cache
@@ -243,33 +242,6 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         }
 
         return $pluginInstance;
-    }
-
-    /**
-     * Test Ensure Valid Plugin Method
-     *
-     * @return void
-     *
-     * @covers \Rcm\Service\PluginManager::ensurePluginIsValid
-     */
-    public function testEnsureValidPlugin()
-    {
-        $this->assertTrue(
-            $this->pluginManager->ensurePluginIsValid('RcmMockPlugin')
-        );
-    }
-
-    /**
-     * Test Invalid Plugin Exception
-     *
-     * @return void
-     *
-     * @covers \Rcm\Service\PluginManager::ensurePluginIsValid
-     * @expectedException \Rcm\Exception\InvalidPluginException
-     */
-    public function testEnsurePluginNotValid()
-    {
-        $this->pluginManager->ensurePluginIsValid('ThisShouldAlwaysFail');
     }
 
     /**

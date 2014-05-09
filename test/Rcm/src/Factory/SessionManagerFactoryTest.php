@@ -41,6 +41,7 @@ use Zend\Session\Storage\StorageInterface;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -53,11 +54,11 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $sm = new ServiceManager();
-        $sm->setService('config', array());
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('config', array());
 
         $factory = new SessionManagerFactory();
-        $object = $factory->createService($sm);
+        $object = $factory->createService($serviceManager);
 
         $this->assertTrue($object instanceof SessionManager);
     }
@@ -80,11 +81,11 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $sm = new ServiceManager();
-        $sm->setService('config', $config);
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('config', $config);
 
         $factory = new SessionManagerFactory();
-        $object = $factory->createService($sm);
+        $object = $factory->createService($serviceManager);
 
         $this->assertTrue($object instanceof SessionManager);
     }
@@ -103,7 +104,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             'SomeVar'
         );
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
 
         $factory = new SessionManagerFactory();
 
@@ -111,7 +112,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('getSessionConfig');
         $method->setAccessible(true);
 
-        $object = $method->invoke($factory, $sm, $config);
+        $object = $method->invoke($factory, $serviceManager, $config);
 
         $this->assertTrue($object instanceof SessionConfig);
     }
@@ -132,7 +133,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
 
         $factory = new SessionManagerFactory();
 
@@ -140,7 +141,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('getSessionConfig');
         $method->setAccessible(true);
 
-        $object = $method->invoke($factory, $sm, $config);
+        $object = $method->invoke($factory, $serviceManager, $config);
 
         $this->assertTrue($object instanceof SessionConfig);
     }
@@ -161,13 +162,16 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $mockSessionConfigObject = $this
+        $mockSessionConfig = $this
             ->getMockBuilder('\Zend\Session\Config\SessionConfig')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $sm = new ServiceManager();
-        $sm->setService('mockSessionConfigObject', $mockSessionConfigObject);
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService(
+            'mockSessionConfigObject',
+            $mockSessionConfig
+        );
 
         $factory = new SessionManagerFactory();
 
@@ -175,7 +179,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('getSessionConfig');
         $method->setAccessible(true);
 
-        $object = $method->invoke($factory, $sm, $config);
+        $object = $method->invoke($factory, $serviceManager, $config);
 
         $this->assertTrue($object instanceof SessionConfig);
     }
@@ -199,7 +203,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
 
         $factory = new SessionManagerFactory();
 
@@ -208,7 +212,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         /** @var \Zend\Session\Config\SessionConfig $object */
-        $object = $method->invoke($factory, $sm, $config);
+        $object = $method->invoke($factory, $serviceManager, $config);
 
         $this->assertTrue($object instanceof SessionConfig);
 
@@ -233,7 +237,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
 
         $class = new \ReflectionClass('\Rcm\Factory\SessionManagerFactory');
@@ -241,7 +245,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         /** @var \Zend\Session\Config\SessionConfig $object */
-        $object = $method->invoke($factory, $sm, $config);
+        $object = $method->invoke($factory, $serviceManager, $config);
 
         $this->assertTrue($object instanceof SessionConfig);
 
@@ -265,7 +269,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
 
         $class = new \ReflectionClass('\Rcm\Factory\SessionManagerFactory');
@@ -273,7 +277,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         /** @var \Zend\Session\Config\SessionConfig $object */
-        $method->invoke($factory, $sm, $config);
+        $method->invoke($factory, $serviceManager, $config);
     }
 
     /**
@@ -290,14 +294,14 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             'SomeVar'
         );
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
 
         $class = new \ReflectionClass('\Rcm\Factory\SessionManagerFactory');
         $method = $class->getMethod('getSessionStorage');
         $method->setAccessible(true);
 
-        $object = $method->invoke($factory, $sm, $config);
+        $object = $method->invoke($factory, $serviceManager, $config);
 
         $this->assertEmpty($object);
     }
@@ -315,14 +319,14 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             'storage' => '\Zend\Session\Storage\SessionArrayStorage'
         );
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
 
         $class = new \ReflectionClass('\Rcm\Factory\SessionManagerFactory');
         $method = $class->getMethod('getSessionStorage');
         $method->setAccessible(true);
 
-        $object = $method->invoke($factory, $sm, $config);
+        $object = $method->invoke($factory, $serviceManager, $config);
 
         $this->assertTrue($object instanceof StorageInterface);
     }
@@ -345,8 +349,8 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $sm = new ServiceManager();
-        $sm->setService('MockSessionArrayStorage', $mockStorageHandler);
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('MockSessionArrayStorage', $mockStorageHandler);
 
         $factory = new SessionManagerFactory();
 
@@ -354,7 +358,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('getSessionStorage');
         $method->setAccessible(true);
 
-        $object = $method->invoke($factory, $sm, $config);
+        $object = $method->invoke($factory, $serviceManager, $config);
 
         $this->assertTrue($object instanceof StorageInterface);
     }
@@ -374,7 +378,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             'storage' => '\Rcm\Factory\SessionManagerFactory'
         );
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
 
         $factory = new SessionManagerFactory();
 
@@ -382,7 +386,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('getSessionStorage');
         $method->setAccessible(true);
 
-        $method->invoke($factory, $sm, $config);
+        $method->invoke($factory, $serviceManager, $config);
     }
 
     /**
@@ -399,14 +403,14 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             'SomeVar'
         );
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
 
         $class = new \ReflectionClass('\Rcm\Factory\SessionManagerFactory');
         $method = $class->getMethod('getSessionSaveHandler');
         $method->setAccessible(true);
 
-        $object = $method->invoke($factory, $sm, $config);
+        $object = $method->invoke($factory, $serviceManager, $config);
 
         $this->assertEmpty($object);
     }
@@ -430,8 +434,8 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $sm = new ServiceManager();
-        $sm->setService('MockSaveHandler', $mockSaveHandler);
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('MockSaveHandler', $mockSaveHandler);
 
         $factory = new SessionManagerFactory();
 
@@ -439,7 +443,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('getSessionSaveHandler');
         $method->setAccessible(true);
 
-        $object = $method->invoke($factory, $sm, $config);
+        $object = $method->invoke($factory, $serviceManager, $config);
 
         $this->assertTrue($object instanceof SaveHandlerInterface);
     }
@@ -464,8 +468,8 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $sm = new ServiceManager();
-        $sm->setService('MockSaveHandler', $mockSaveHandler);
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('MockSaveHandler', $mockSaveHandler);
 
         $factory = new SessionManagerFactory();
 
@@ -473,7 +477,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('getSessionSaveHandler');
         $method->setAccessible(true);
 
-        $method->invoke($factory, $sm, $config);
+        $method->invoke($factory, $serviceManager, $config);
     }
 
     /**
@@ -492,20 +496,22 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $sessionManager = new SessionManager();
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
 
         $class = new \ReflectionClass('\Rcm\Factory\SessionManagerFactory');
         $method = $class->getMethod('setValidatorChain');
         $method->setAccessible(true);
 
-        $method->invoke($factory, $sessionManager, $sm, $config);
+        $method->invoke($factory, $sessionManager, $serviceManager, $config);
 
         $validators = $sessionManager
             ->getValidatorChain()
             ->getListeners('session.validate');
 
-        $this->assertEmpty($validators);
+        $list = $validators->getIterator()->toArray();
+
+        $this->assertEmpty($list);
     }
 
     /**
@@ -527,14 +533,14 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $sessionManager = new SessionManager();
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
 
         $class = new \ReflectionClass('\Rcm\Factory\SessionManagerFactory');
         $method = $class->getMethod('setValidatorChain');
         $method->setAccessible(true);
 
-        $method->invoke($factory, $sessionManager, $sm, $config);
+        $method->invoke($factory, $sessionManager, $serviceManager, $config);
 
         /** @var \Zend\Stdlib\PriorityQueue $validators */
         $validators = $sessionManager
@@ -582,14 +588,14 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $expectedUserAgentClass = get_class($mockHttpUserAgent);
+        $expectedUserAgent = get_class($mockHttpUserAgent);
         $expectedRemoteClass = get_class($mockRemoteAddr);
 
         $sessionManager = new SessionManager();
 
-        $sm = new ServiceManager();
-        $sm->setService('HttpUserAgent', $mockHttpUserAgent);
-        $sm->setService('RemoteAddr', $mockRemoteAddr);
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('HttpUserAgent', $mockHttpUserAgent);
+        $serviceManager->setService('RemoteAddr', $mockRemoteAddr);
 
         $factory = new SessionManagerFactory();
 
@@ -597,7 +603,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('setValidatorChain');
         $method->setAccessible(true);
 
-        $method->invoke($factory, $sessionManager, $sm, $config);
+        $method->invoke($factory, $sessionManager, $serviceManager, $config);
 
         /** @var \Zend\Stdlib\PriorityQueue $validators */
         $validators = $sessionManager
@@ -614,7 +620,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
             $hasItems[] = get_class($validator[0]);
         }
 
-        $this->assertContains($expectedUserAgentClass, $hasItems);
+        $this->assertContains($expectedUserAgent, $hasItems);
         $this->assertContains($expectedRemoteClass, $hasItems);
     }
 
@@ -637,13 +643,13 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $sessionManager = new SessionManager();
 
-        $sm = new ServiceManager();
+        $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
 
         $class = new \ReflectionClass('\Rcm\Factory\SessionManagerFactory');
         $method = $class->getMethod('setValidatorChain');
         $method->setAccessible(true);
 
-        $method->invoke($factory, $sessionManager, $sm, $config);
+        $method->invoke($factory, $sessionManager, $serviceManager, $config);
     }
 }

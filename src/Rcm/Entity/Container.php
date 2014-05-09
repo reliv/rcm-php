@@ -37,7 +37,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @ORM\Entity
+ * @ORM\Entity (repositoryClass="Rcm\Repository\Container")
  * @ORM\Table (
  *     name="rcm_containers",
  *     uniqueConstraints={
