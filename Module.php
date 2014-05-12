@@ -99,7 +99,9 @@ class Module
             10000
         );
 
-        $viewEventManager = $serviceManager->get('ViewManager')->getView()->getEventManager();
+        $viewEventManager = $serviceManager->get('ViewManager')
+            ->getView()
+            ->getEventManager();
 
         // Set the plugin response over-ride
         $viewEventManager->attach(
