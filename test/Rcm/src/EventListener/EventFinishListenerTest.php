@@ -25,7 +25,6 @@ use Rcm\EventListener\EventFinishListener;
 use Rcm\Http\Response;
 use Zend\Http\Response as ZendHttpResponse;
 use Zend\Mvc\MvcEvent;
-use Zend\View\Model\ViewModel;
 
 /**
  * Unit Test for Event Finish Listener Event
@@ -44,196 +43,108 @@ class EventFinishListenerTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * Test Check For Not Authorized
+     * Test Constructor
      *
      * @return void
      *
-     * @covers \Rcm\EventListener\EventFinishListener
+     * @covers \Rcm\EventListener\EventFinishListener::__construct
      */
-    public function testCheckForNotAuthorized()
+    public function testConstructor()
     {
-
-        $mockSiteManager = $this->getMockBuilder('Rcm\Service\SiteManager')
+        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\ResponseHandler')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSiteManager->expects($this->any())
-            ->method('getCurrentSiteLoginPage')
-            ->will(
-                $this->returnValue(
-                    '/login'
-                )
-            );
-
-        /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
-        /** @var \Rcm\Service\SiteManager $mockSiteManager */
+        /** @var \Rcm\Service\ResponseHandler $mockResponseHandler */
         $listener = new EventFinishListener(
-            $mockSiteManager
+            $mockResponseHandler
         );
 
-        $event = new MvcEvent();
-
-        $notAuthorizedResponse = new Response();
-        $notAuthorizedResponse->setStatusCode(401);
-
-        $requestMock = $this->getMockBuilder('Zend\Http\PhpEnvironment\Request')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $requestMock->expects($this->any())
-            ->method('getServer')
-            ->will($this->returnValue('/myPage'));
-
-        $event->setRequest($requestMock);
-        $event->setResult($notAuthorizedResponse);
-
-        $listener->checkForNotAuthorized($event);
-
-        /** @var \Zend\Http\Response $newResponse */
-        $newResponse = $event->getResponse();
-
-        //Check not an RCM http response
-        $this->assertNotInstanceOf('\Rcm\Http\Response', $newResponse);
-
-        //Check status code
-        $this->assertEquals('302', $newResponse->getStatusCode());
-
-        //Check Header
-        $expectedHeader = 'Location: /login?redirect=%2FmyPage';
-        $headers = $newResponse->getHeaders()->toString();
-
-        $this->assertContains($expectedHeader, $headers);
+        $this->assertTrue($listener instanceof EventFinishListener);
     }
 
     /**
-     * Test Check For Not Authorized when a normal view model is returned
+     * Test Constructor Only Accepts a EventFinishListener object
      *
      * @return void
      *
-     * @covers \Rcm\EventListener\EventFinishListener
+     * @covers \Rcm\EventListener\EventFinishListener::__construct
+     * @expectedException \PHPUnit_Framework_Error
      */
-    public function testCheckForNotAuthorizedWithNormalViewModelInResult()
+    public function testConstructorOnlyAcceptsAEventFinishListenerObject()
     {
-
-        $mockSiteManager = $this->getMockBuilder('Rcm\Service\SiteManager')
+        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\SiteManager')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSiteManager->expects($this->any())
-            ->method('getCurrentSiteLoginPage')
-            ->will(
-                $this->returnValue(
-                    '/login'
-                )
-            );
-
-        /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
-        /** @var \Rcm\Service\SiteManager $mockSiteManager */
-        $listener = new EventFinishListener(
-            $mockSiteManager
+        /** @var \Rcm\Service\ResponseHandler $mockResponseHandler */
+        new EventFinishListener(
+            $mockResponseHandler
         );
-
-        $event = new MvcEvent();
-
-        $eventResult = new ViewModel();
-
-        $event->setResult($eventResult);
-        $event->setResponse(new Response());
-
-        $listener->checkForNotAuthorized($event);
-
-        /** @var \Zend\Http\Response $newResponse */
-        $newResponse = $event->getResponse();
-
-        //Check status code
-        $this->assertNotEquals('302', $newResponse->getStatusCode());
     }
 
     /**
-     * Test Check For Not Authorized when response object is not a 401
+     * Test Process Rcm Responses
      *
      * @return void
      *
-     * @covers \Rcm\EventListener\EventFinishListener
+     * @covers \Rcm\EventListener\EventFinishListener::processRcmResponses
      */
-    public function testCheckForNotAuthorizedWhenResponseIsNot401()
+    public function testProcessRcmResponses()
     {
 
-        $mockSiteManager = $this->getMockBuilder('Rcm\Service\SiteManager')
+        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\ResponseHandler')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSiteManager->expects($this->any())
-            ->method('getCurrentSiteLoginPage')
-            ->will(
-                $this->returnValue(
-                    '/login'
-                )
-            );
+        $mockResponseHandler->expects($this->once())
+            ->method('processResponse');
 
-        /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
-        /** @var \Rcm\Service\SiteManager $mockSiteManager */
+        /** @var \Rcm\Service\ResponseHandler $mockResponseHandler */
         $listener = new EventFinishListener(
-            $mockSiteManager
+            $mockResponseHandler
         );
 
         $event = new MvcEvent();
 
-        $event->setResult(new Response());
-        $event->setResponse(new Response());
+        $response = new Response();
+        $response->setStatusCode(404);
 
-        $listener->checkForNotAuthorized($event);
+        $event->setResult($response);
 
-        /** @var \Zend\Http\Response $newResponse */
-        $newResponse = $event->getResponse();
-
-        //Check status code
-        $this->assertNotEquals('302', $newResponse->getStatusCode());
+        $listener->processRcmResponses($event);
     }
 
     /**
-     * Test Check For Not Authorized skips 401 zend response objects
+     * Test Process Rcm Responses with a Zend Http Response.  Method should
+     * return early.
      *
      * @return void
      *
-     * @covers \Rcm\EventListener\EventFinishListener
+     * @covers \Rcm\EventListener\EventFinishListener::processRcmResponses
      */
-    public function testCheckForNotAuthorizedWhenResponseSkipsZendResponse()
+    public function testProcessRcmResponsesWithZendResponseObject()
     {
 
-        $mockSiteManager = $this->getMockBuilder('Rcm\Service\SiteManager')
+        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\ResponseHandler')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSiteManager->expects($this->any())
-            ->method('getCurrentSiteLoginPage')
-            ->will(
-                $this->returnValue(
-                    '/login'
-                )
-            );
+        $mockResponseHandler->expects($this->never())
+            ->method('processResponse');
 
-        /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
-        /** @var \Rcm\Service\SiteManager $mockSiteManager */
+        /** @var \Rcm\Service\ResponseHandler $mockResponseHandler */
         $listener = new EventFinishListener(
-            $mockSiteManager
+            $mockResponseHandler
         );
 
         $event = new MvcEvent();
 
-        $notAuthorizedResponse = new ZendHttpResponse();
-        $notAuthorizedResponse->setStatusCode(401);
+        $response = new ZendHttpResponse();
+        $response->setStatusCode(404);
 
+        $event->setResult($response);
 
-        $event->setResult($notAuthorizedResponse);
-        $event->setResponse($notAuthorizedResponse);
-
-        $listener->checkForNotAuthorized($event);
-
-        /** @var \Zend\Http\Response $newResponse */
-        $newResponse = $event->getResponse();
-
-        //Check status code
-        $this->assertNotEquals('302', $newResponse->getStatusCode());
+        $listener->processRcmResponses($event);
     }
 }

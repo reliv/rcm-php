@@ -21,6 +21,7 @@
 namespace Rcm\Controller;
 
 use Rcm\Exception\ContainerNotFoundException;
+use Rcm\Http\Response;
 use Rcm\Service\LayoutManager;
 use Rcm\Service\PageManager;
 use \Zend\Mvc\Controller\AbstractActionController;
@@ -116,7 +117,6 @@ class IndexController extends AbstractActionController
             ->getParam('revision', null);
 
         try {
-
             $pageInfo = $this->pageManager->getRevisionInfo(
                 $this->pageName,
                 $this->pageRevisionId,

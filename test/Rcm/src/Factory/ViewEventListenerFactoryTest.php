@@ -1,8 +1,8 @@
 <?php
 /**
- * Test for Factory EventFinishListenerFactory
+ * Test for Factory ViewEventListenerFactory
  *
- * This file contains the test for the EventFinishListenerFactory.
+ * This file contains the test for the ViewEventListenerFactory.
  *
  * PHP version 5.3
  *
@@ -21,14 +21,14 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\EventListener\EventFinishListener;
-use Rcm\Factory\EventFinishListenerFactory;
+use Rcm\EventListener\ViewEventListener;
+use Rcm\Factory\ViewEventListenerFactory;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Test for Factory EventFinishListenerFactory
+ * Test for Factory ViewEventListenerFactory
  *
- * Test for Factory EventFinishListenerFactory
+ * Test for Factory ViewEventListenerFactory
  *
  * @category  Reliv
  * @package   Rcm
@@ -39,13 +39,13 @@ use Zend\ServiceManager\ServiceManager;
  * @link      http://github.com/reliv
  *
  */
-class EventFinishListenerFactoryTest extends \PHPUnit_Framework_TestCase
+class ViewEventListenerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Generic test for the constructor
      *
      * @return null
-     * @covers \Rcm\Factory\EventFinishListenerFactory
+     * @covers \Rcm\Factory\ViewEventListenerFactory
      */
     public function testCreateService()
     {
@@ -59,9 +59,9 @@ class EventFinishListenerFactoryTest extends \PHPUnit_Framework_TestCase
             $mockResponseHandler
         );
 
-        $factory = new EventFinishListenerFactory();
+        $factory = new ViewEventListenerFactory();
         $object = $factory->createService($serviceManager);
 
-        $this->assertTrue($object instanceof EventFinishListener);
+        $this->assertTrue($object instanceof ViewEventListener);
     }
 }

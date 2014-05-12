@@ -1,8 +1,8 @@
 <?php
 /**
- * Test for Factory EventFinishListenerFactory
+ * Test for Factory ResponseHandlerFactory
  *
- * This file contains the test for the EventFinishListenerFactory.
+ * This file contains the test for the ResponseHandlerFactory.
  *
  * PHP version 5.3
  *
@@ -21,14 +21,15 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\EventListener\EventFinishListener;
-use Rcm\Factory\EventFinishListenerFactory;
+use Rcm\Service\ResponseHandler;
+use Rcm\Factory\ResponseHandlerFactory;
+use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Test for Factory EventFinishListenerFactory
+ * Test for Factory ResponseHandlerFactory
  *
- * Test for Factory EventFinishListenerFactory
+ * Test for Factory ResponseHandlerFactory
  *
  * @category  Reliv
  * @package   Rcm
@@ -39,29 +40,27 @@ use Zend\ServiceManager\ServiceManager;
  * @link      http://github.com/reliv
  *
  */
-class EventFinishListenerFactoryTest extends \PHPUnit_Framework_TestCase
+class ResponseHandlerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Generic test for the constructor
      *
      * @return null
-     * @covers \Rcm\Factory\EventFinishListenerFactory
+     * @covers \Rcm\Factory\ResponseHandlerFactory
      */
     public function testCreateService()
     {
-        $mockResponseHandler = $this->getMockBuilder('\Rcm\Service\ResponseHandler')
+        $mockSiteManager = $this->getMockBuilder('\Rcm\Service\SiteManager')
             ->disableOriginalConstructor()
             ->getMock();
 
         $serviceManager = new ServiceManager();
-        $serviceManager->setService(
-            'Rcm\Service\ResponseHandler',
-            $mockResponseHandler
-        );
+        $serviceManager->setService('Rcm\Service\SiteManager', $mockSiteManager);
+        $serviceManager->setService('request', new Request());
 
-        $factory = new EventFinishListenerFactory();
+        $factory = new ResponseHandlerFactory();
         $object = $factory->createService($serviceManager);
 
-        $this->assertTrue($object instanceof EventFinishListener);
+        $this->assertTrue($object instanceof ResponseHandler);
     }
 }

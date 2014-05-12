@@ -123,6 +123,9 @@ return array(
             'Rcm\EventListener\EventFinishListener'
                 => 'Rcm\Factory\EventFinishListenerFactory',
 
+            'Rcm\EventListener\ViewEventListener'
+                => 'Rcm\Factory\ViewEventListenerFactory',
+
             'Rcm\Service\ContainerManager'
                 => 'Rcm\Factory\ContainerManagerFactory',
 
@@ -140,6 +143,9 @@ return array(
 
             'Rcm\Service\PageManager'
                 => 'Rcm\Factory\PageManagerFactory',
+
+            'Rcm\Service\ResponseHandler'
+                => 'Rcm\Factory\ResponseHandlerFactory',
 
             'Rcm\Service\Cache'
                 => 'Rcm\Factory\CacheFactory',
