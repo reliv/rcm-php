@@ -53,7 +53,7 @@ use Zend\View\Helper\Placeholder\Container;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD)
  * @todo - See if we can reduce the amount of dependencies.
  */
 class PluginManager
@@ -173,6 +173,7 @@ class PluginManager
      *
      * @return array
      * @throws \Rcm\Exception\InvalidPluginException
+     * @throws \Rcm\Exception\PluginReturnedResponseException
      */
     public function getPluginViewData($pluginName, $pluginInstanceId)
     {
