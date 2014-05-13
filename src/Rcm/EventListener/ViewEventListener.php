@@ -19,10 +19,8 @@
 namespace Rcm\EventListener;
 
 use Rcm\Service\ResponseHandler;
-use Rcm\Service\SiteManager;
 use Rcm\Http\Response as RcmResponse;
 use Zend\Http\Response as HttpResponse;
-use Zend\Mvc\MvcEvent;
 use Zend\View\ViewEvent;
 
 /**
@@ -70,6 +68,10 @@ class ViewEventListener
          * @var \Zend\Http\Response $response
          */
         $response = $renderer->plugin('rcmContainer')->getResponse();
+
+        if (!$response instanceof RcmResponse) {
+            return;
+        }
 
         $this->responseHandler->processResponse($response);
     }
