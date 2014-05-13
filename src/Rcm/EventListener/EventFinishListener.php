@@ -62,6 +62,7 @@ class EventFinishListener
     public function processRcmResponses(MvcEvent $event)
     {
         $response = $event->getResult();
+
         if (!$response instanceof RcmResponse) {
             return;
         }
