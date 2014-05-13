@@ -150,7 +150,7 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockResponseHandler->expects($this->once())
+        $mockResponseHandler->expects($this->never())
             ->method('processResponse');
 
         $mockContainerPlugin = $this->getMockBuilder('\Rcm\View\Helper\Container')
