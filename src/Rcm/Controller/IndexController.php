@@ -121,7 +121,7 @@ class IndexController extends AbstractActionController
                 $this->pageName,
                 $this->pageRevisionId,
                 $this->pageType,
-                $this->isAllowed('staged', 'read')
+                false
             );
 
         } catch(ContainerNotFoundException $e) {

@@ -39,5 +39,21 @@ use Doctrine\ORM\Query;
  */
 class PageManager extends ContainerAbstract
 {
+    /** @var \Rcm\Repository\Page  */
+    protected $repository;
 
+    /**
+     * Get a page list by type.  Returns page Id and page name.
+     *
+     * @param string $type Page Type
+     *
+     * @return array
+     */
+    public function getPageListByType($type)
+    {
+        return $this->repository->getAllPageIdsAndNamesBySiteThenType(
+            $this->siteId,
+            $type
+        );
+    }
 }
