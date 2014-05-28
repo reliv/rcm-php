@@ -117,11 +117,19 @@ class IndexController extends AbstractActionController
 
         try {
 
+            /*@todo insert this as the $showStaged param
+                    when implementation complete
+            $this->rcmUserIsAllowed(
+                'staged',
+                'read',
+                'RESOURCE_PROVIDER_ID_HERE'
+            );
+            */
             $pageInfo = $this->pageManager->getRevisionInfo(
                 $this->pageName,
                 $this->pageRevisionId,
                 $this->pageType,
-                true //@todo $this->rcmUserIsAllowed('staged', 'read', 'RESOURCE_PROVIDER_ID_HERE')
+                true
             );
 
         } catch(ContainerNotFoundException $e) {
