@@ -121,7 +121,7 @@ class IndexController extends AbstractActionController
                 $this->pageName,
                 $this->pageRevisionId,
                 $this->pageType,
-                $this->isAllowed('staged', 'read')
+                true //@todo $this->rcmUserIsAllowed('staged', 'read', 'RESOURCE_PROVIDER_ID_HERE')
             );
 
         } catch(ContainerNotFoundException $e) {
