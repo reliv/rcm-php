@@ -24,8 +24,11 @@ use Doctrine\ORM\Query;
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
 use Rcm\Exception\SiteNotFoundException;
+use Rcm\Repository\Site;
+use Doctrine\ORM\EntityRepository;
 use Zend\Cache\Storage\StorageInterface;
-use Zend\Http\PhpEnvironment\Request;
+use Zend\Http\PhpEnvironment\Request as PhpEnvironmentRequest;
+use Zend\Stdlib\RequestInterface;
 
 /**
  * Rcm Site Manager
@@ -52,8 +55,8 @@ class SiteManager
     /** @var \Rcm\Service\DomainManager  */
     protected $domainManager;
 
-    /** @var \Doctrine\ORM\EntityManagerInterface  */
-    protected $entityManager;
+    /** @var \Rcm\Repository\Site  */
+    protected $siteRepo;
 
     /** @var \Zend\Cache\Storage\StorageInterface  */
     protected $cache;
@@ -76,19 +79,19 @@ class SiteManager
     /**
      * Constructor
      *
-     * @param DomainManager          $domainManager Rcm Domain Manager
-     * @param EntityManagerInterface $entityManager Doctrine Entity Manager
-     * @param StorageInterface       $cache         Zend Cache Manager
-     * @param Request                $request       Zend PhpEnvironment Request
+     * @param DomainManager    $domainManager Rcm Domain Manager
+     * @param EntityRepository $siteRepo      Doctrine Entity Manager
+     * @param StorageInterface $cache         Zend Cache Manager
+     * @param RequestInterface $request       Zend Request Object
      */
     public function __construct(
-        DomainManager          $domainManager,
-        EntityManagerInterface $entityManager,
-        StorageInterface       $cache,
-        Request                $request
+        DomainManager    $domainManager,
+        EntityRepository $siteRepo,
+        StorageInterface $cache,
+        RequestInterface $request
     ) {
         $this->domainManager = $domainManager;
-        $this->entityManager = $entityManager;
+        $this->siteRepo      = $siteRepo;
         $this->cache         = $cache;
         $this->request       = $request;
     }
@@ -112,29 +115,7 @@ class SiteManager
             return $this->currentSiteInfo;
         }
 
-        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select(
-            'partial site.{
-                owner,
-                theme,
-                status,
-                favIcon,
-                loginPage,
-                siteLayout,
-                siteTitle,
-                siteId
-            },
-            language,
-            country'
-        )->from('\Rcm\Entity\Site', 'site')
-            ->join('site.country', 'country')
-            ->join('site.language', 'language')
-            ->where('site.siteId = :siteId')
-            ->setParameter('siteId', $currentSiteId);
-
-        $this->currentSiteInfo
-            = $queryBuilder->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+        $this->currentSiteInfo = $this->siteRepo->getSiteInfo($currentSiteId);
 
         $this->cache->setItem($cacheKey, $this->currentSiteInfo);
 
@@ -245,11 +226,16 @@ class SiteManager
     /**
      * Get Current Site Id From Domain
      *
-     * @return integer SiteId
+     * @return integer|null SiteId
      * @throws \Rcm\Exception\SiteNotFoundException
      */
     protected function getCurrentSiteIdFromDomain()
     {
+
+        if (!$this->request instanceof PhpEnvironmentRequest) {
+            return null;
+        }
+
         $domainList = $this->domainManager->getDomainList();
 
         $serverParams = $this->request->getServer();
@@ -265,5 +251,15 @@ class SiteManager
         }
 
         return $domainList[$currentDomain]['siteId'];
+    }
+
+    /**
+     * Get an array of active site objects
+     *
+     * @return array
+     */
+    public function getAllActiveSites()
+    {
+        return $this->siteRepo->getAllActiveSites();
     }
 }

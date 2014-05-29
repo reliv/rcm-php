@@ -20,6 +20,7 @@ namespace Rcm;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\ResponseSender\SendResponseEvent;
 use Zend\Console\Request as ConsoleRequest;
+use Zend\View\ViewEvent;
 
 /**
  * ZF2 Module Config.  Required by ZF2
@@ -64,6 +65,9 @@ class Module
         $eventFinishListener
             = $serviceManager->get('Rcm\EventListener\EventFinishListener');
 
+        $viewEventListener
+            = $serviceManager->get('Rcm\EventListener\ViewEventListener');
+
         /** @var \Zend\EventManager\EventManager $eventManager */
         $eventManager = $event->getApplication()->getEventManager();
 
@@ -91,8 +95,19 @@ class Module
         // Set the custom http response checker
         $eventManager->attach(
             MvcEvent::EVENT_FINISH,
-            array($eventFinishListener, 'checkForNotAuthorized'),
+            array($eventFinishListener, 'processRcmResponses'),
             10000
+        );
+
+        $viewEventManager = $serviceManager->get('ViewManager')
+            ->getView()
+            ->getEventManager();
+
+        // Set the plugin response over-ride
+        $viewEventManager->attach(
+            ViewEvent::EVENT_RESPONSE,
+            array($viewEventListener, 'processRcmResponses'),
+            -10000
         );
 
         /** @var \Zend\Session\SessionManager $session */

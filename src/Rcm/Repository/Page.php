@@ -165,4 +165,37 @@ class Page extends EntityRepository implements ContainerInterface
 
         return $result;
     }
+
+    /**
+     * Get a list of page id's and page names by a given type
+     *
+     * @param integer $siteId SiteId
+     * @param string  $type   Page Type to Search By
+     *
+     * @return array
+     */
+    public function getAllPageIdsAndNamesBySiteThenType($siteId, $type)
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+
+        $queryBuilder->select('page.name, page.pageId')
+            ->from('\Rcm\Entity\Page', 'page')
+            ->join('page.site', 'site')
+            ->where('page.pageType = :pageType')
+            ->andWhere('site.siteId = :siteId')
+            ->setParameter('pageType', $type)
+            ->setParameter('siteId', $siteId);
+
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        if (empty($result)) {
+            return null;
+        }
+
+        foreach ($result as $page) {
+            $return[$page['pageId']] = $page['name'];
+        }
+
+        return $return;
+    }
 }

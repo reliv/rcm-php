@@ -19,6 +19,7 @@
 namespace Rcm\Factory;
 
 use Rcm\EventListener\EventFinishListener;
+use Rcm\EventListener\ViewEventListener;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -36,7 +37,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class EventFinishListenerFactory implements FactoryInterface
+class ViewEventListenerFactory implements FactoryInterface
 {
 
     /**
@@ -51,6 +52,6 @@ class EventFinishListenerFactory implements FactoryInterface
         /** @var \Rcm\Service\ResponseHandler $responseHandler */
         $responseHandler   = $serviceLocator->get('Rcm\Service\ResponseHandler');
 
-        return new EventFinishListener($responseHandler);
+        return new ViewEventListener($responseHandler);
     }
 }
