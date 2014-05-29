@@ -28,17 +28,11 @@
             "homepage": "http://www.reliv.com/"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:wshafer/AssetManager.git"
-        }
-    ],
     "require": {
         "php": ">=5.3.3",
         "doctrine/doctrine-orm-module": "0.*",
         "zendframework/zendframework": "2.*",
-        "rwoverdijk/assetmanager": "dev-rcmBranch",
+        "rwoverdijk/assetmanager": "1.*",
         "bjyoungblood/bjy-authorize": "1.4.*"
     },
     "autoload": {
