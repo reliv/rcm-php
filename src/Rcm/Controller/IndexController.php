@@ -21,7 +21,6 @@
 namespace Rcm\Controller;
 
 use Rcm\Exception\ContainerNotFoundException;
-use Rcm\Http\Response;
 use Rcm\Service\LayoutManager;
 use Rcm\Service\PageManager;
 use \Zend\Mvc\Controller\AbstractActionController;
@@ -117,11 +116,20 @@ class IndexController extends AbstractActionController
             ->getParam('revision', null);
 
         try {
+
+            /*@todo insert this as the $showStaged param
+                    when implementation complete
+            $this->rcmUserIsAllowed(
+                'staged',
+                'read',
+                'RESOURCE_PROVIDER_ID_HERE'
+            );
+            */
             $pageInfo = $this->pageManager->getRevisionInfo(
                 $this->pageName,
                 $this->pageRevisionId,
                 $this->pageType,
-                false
+                true
             );
 
         } catch(ContainerNotFoundException $e) {
