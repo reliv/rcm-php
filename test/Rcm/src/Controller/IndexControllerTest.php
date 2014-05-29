@@ -124,20 +124,6 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             $mockLayoutManager
         );
 
-        $mockIsAllowed = $this
-            ->getMockBuilder('BjyAuthorize\Controller\Plugin\IsAllowed')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockIsAllowed->expects($this->any())
-            ->method('__invoke')
-            ->will($this->returnValue(false));
-
-        $this->controller->getPluginManager()->setService(
-            'isAllowed',
-            $mockIsAllowed
-        );
-
         $this->request    = new Request();
         $this->routeMatch = new RouteMatch(array('controller' => 'index'));
         $this->event      = new MvcEvent();
