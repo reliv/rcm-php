@@ -17,6 +17,7 @@
  */
 
 namespace Rcm;
+
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\ResponseSender\SendResponseEvent;
 use Zend\Console\Request as ConsoleRequest;
@@ -55,6 +56,13 @@ class Module
         if ($request instanceof ConsoleRequest) {
             return;
         }
+
+        $siteInfo = $serviceManager->get('Rcm\Service\SiteManager')
+            ->getCurrentSiteInfo();
+        setlocale(
+            LC_ALL,
+            $siteInfo['language']['iso639_1'] . '_' . $siteInfo['country']['iso2']
+        );
 
         //Add Domain Checker
         $routeListener = $serviceManager->get('Rcm\EventListener\RouteListener');
