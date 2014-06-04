@@ -33,6 +33,7 @@ return array(
                     'create',
                     'delete',
                     'theme',
+                    'admin',
                 ),
                 'name' => 'Sites',
                 'description' => 'Global resource for sites',
@@ -43,12 +44,13 @@ return array(
                 'parentResourceId' => null,
                 'privileges' => array(
                     'read',
-                    'update',
+                    'edit',
                     'create',
                     'delete',
                     'copy',
                     'approve',
                     'layout',
+                    'revisions'
                 ),
                 'name' => 'Pages',
                 'description' => 'Global resource for pages',
@@ -218,7 +220,7 @@ return array(
                 => 'Rcm\Factory\SessionManagerFactory',
 
             'Rcm\Acl\ResourceProvider'
-                => 'Rcm\Factory\ResourceProviderFactory',
+                => 'Rcm\Factory\AclResourceProviderFactory',
         ),
     ),
 

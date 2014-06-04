@@ -61,10 +61,9 @@ class Site
     protected $owner;
 
     /**
-     * @var array Array of domains that belong to the
-     *                                  site.
+     * @var \Rcm\Entity\Domain Primary Domain name for a site.
      *
-     * @ORM\ManyToOne(targetEntity="Domain")
+     * @ORM\OneToOne(targetEntity="Domain")
      * @ORM\JoinColumn(
      *     name="domainId",
      *     referencedColumnName="domainId",
@@ -205,6 +204,7 @@ class Site
         $this->pages = new ArrayCollection();
         $this->sitePlugins = new ArrayCollection();
         $this->containers = new ArrayCollection();
+        $this->domain = new ArrayCollection();
     }
 
     /**

@@ -41,17 +41,31 @@ use Zend\View\Model\ViewModel;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @method boolean isAllowed($resource, $permission) BjyAuthorize isAllowed
- *                                                   Controller Helper
+ * @method boolean rcmUserIsAllowed($resource, $action, $provider) BjyAuthorize
+ *                                                                 isAllowed
+ *                                                                 Controller Helper
  */
 class IndexController extends AbstractActionController
 {
+    /** @var string */
     public $pageName;
+
+    /** @var string */
     public $pageType;
+
+    /** @var integer */
     public $pageRevisionId;
 
+    /** @var integer  */
+    protected $siteId;
+
+    /** @var \Rcm\Service\PageManager  */
     protected $pageManager;
+
+    /** @var \Rcm\Service\LayoutManager  */
     protected $layoutManager;
+
+
     protected $pageInfo;
     protected $notFound = false;
 
@@ -60,13 +74,16 @@ class IndexController extends AbstractActionController
      *
      * @param PageManager   $pageManager   Page Manager needed to get current page.
      * @param LayoutManager $layoutManager Layout Manager to handle themes
+     * @param integer       $siteId        Current Site Id
      */
     public function __construct(
         PageManager $pageManager,
-        LayoutManager $layoutManager
+        LayoutManager $layoutManager,
+        $siteId
     ) {
-        $this->pageManager = $pageManager;
+        $this->pageManager   = $pageManager;
         $this->layoutManager = $layoutManager;
+        $this->siteId        = $siteId;
     }
 
     /**
@@ -115,23 +132,20 @@ class IndexController extends AbstractActionController
             ->getRouteMatch()
             ->getParam('revision', null);
 
-        try {
 
-            /*@todo insert this as the $showStaged param
-                    when implementation complete
-            $this->rcmUserIsAllowed(
-                'staged',
-                'read',
-                'RESOURCE_PROVIDER_ID_HERE'
-            );
-            */
+        $userCanSeeRevisions = $this->shouldShowRevisions();
+
+        if (!$userCanSeeRevisions && $this->pageRevisionId) {
+            return $this->redirectToPage();
+        }
+
+        try {
             $pageInfo = $this->pageManager->getRevisionInfo(
                 $this->pageName,
                 $this->pageRevisionId,
                 $this->pageType,
-                true
+                $userCanSeeRevisions
             );
-
         } catch(ContainerNotFoundException $e) {
             $pageInfo = $this->pageNotFound();
 
@@ -160,5 +174,73 @@ class IndexController extends AbstractActionController
         );
 
         return $viewModel;
+    }
+
+
+    /**
+     * Check to make sure user can see revisions
+     *
+     * @return bool
+     */
+    protected function shouldShowRevisions()
+    {
+        $allowedStaged = $this->rcmUserIsAllowed(
+            'Sites.'.$this->siteId.'.Pages.'.$this->pageName,
+            'edit',
+            '\Rcm\Acl\ResourceProvider'
+        );
+
+        if ($allowedStaged) {
+            return true;
+        }
+
+        $allowedStaged = $this->rcmUserIsAllowed(
+            'Sites.'.$this->siteId.'.Pages.'.$this->pageName,
+            'approve',
+            '\Rcm\Acl\ResourceProvider'
+        );
+
+        if ($allowedStaged) {
+            return true;
+        }
+
+        $allowedStaged = $this->rcmUserIsAllowed(
+            'Sites.'.$this->siteId.'.Pages.'.$this->pageName,
+            'revisions',
+            '\Rcm\Acl\ResourceProvider'
+        );
+
+        if ($allowedStaged) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Redirect to same page with no version numbers
+     *
+     * @return \Zend\Http\Response
+     */
+    protected function redirectToPage()
+    {
+        if ($this->pageType == 'n' && $this->pageName == 'index') {
+            return $this->redirect()->toUrl(
+                '/'
+            );
+        } elseif ($this->pageType == 'n') {
+            return $this->redirect()->toRoute(
+                'contentManager',
+                array('page' => $this->pageName)
+            );
+        } else {
+            return $this->redirect()->toRoute(
+                'contentManagerWithPageType',
+                array(
+                    'pageType' => $this->pageType,
+                    'page' => $this->pageName,
+                )
+            );
+        }
     }
 }
