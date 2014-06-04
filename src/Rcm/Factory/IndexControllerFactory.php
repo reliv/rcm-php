@@ -55,6 +55,11 @@ class IndexControllerFactory implements FactoryInterface
         /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $controllerMgr->getServiceLocator();
 
+        /** @var \Rcm\Service\SiteManager $siteManager */
+        $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
+
+        $siteId = $siteManager->getCurrentSiteId();
+
         /** @var \Rcm\Service\PageManager $pageManager */
         $pageManager = $serviceLocator->get('Rcm\Service\PageManager');
 
@@ -63,7 +68,8 @@ class IndexControllerFactory implements FactoryInterface
 
         return new IndexController(
             $pageManager,
-            $layoutManager
+            $layoutManager,
+            $siteId
         );
     }
 }

@@ -236,7 +236,7 @@ class SiteManager
             return null;
         }
 
-        $domainList = $this->domainManager->getDomainList();
+        $domainList = $this->domainManager->getActiveDomainList();
 
         $serverParams = $this->request->getServer();
 
