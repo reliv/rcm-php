@@ -127,7 +127,7 @@ class LayoutManager
      * @return array
      * @throws \Rcm\Exception\RuntimeException
      */
-    protected function getThemesConfig()
+    public function getThemesConfig()
     {
         if (empty($this->config['Rcm'])
             || empty($this->config['Rcm']['themes'])
@@ -148,7 +148,7 @@ class LayoutManager
      * @return array Config Array For Theme
      * @throws RuntimeException
      */
-    protected function getThemeLayoutConfig()
+    public function getThemeLayoutConfig()
     {
         $theme = $this->siteManager->getCurrentSiteTheme();
 
@@ -176,7 +176,7 @@ class LayoutManager
      * @return array Config Array For Theme
      * @throws RuntimeException
      */
-    protected function getThemePageTemplateConfig()
+    public function getThemePageTemplateConfig()
     {
         $theme = $this->siteManager->getCurrentSiteTheme();
         $rcmThemesConfig = $this->getThemesConfig();
