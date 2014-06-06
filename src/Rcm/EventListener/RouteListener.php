@@ -62,7 +62,7 @@ class RouteListener
      */
     public function checkDomain(MvcEvent $event)
     {
-        $domainList = $this->domainManager->getDomainList();
+        $domainList = $this->domainManager->getActiveDomainList();
 
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request = $event->getRequest();

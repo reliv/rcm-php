@@ -54,6 +54,9 @@ class SiteManagerFactory implements FactoryInterface
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
+        /** @var \Doctrine\ORM\EntityRepository $siteRepo */
+        $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
+
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
         $cache         = $serviceLocator->get('Rcm\Service\Cache');
 
@@ -62,7 +65,7 @@ class SiteManagerFactory implements FactoryInterface
 
         return new SiteManager(
             $domainManager,
-            $entityManager,
+            $siteRepo,
             $cache,
             $request
         );

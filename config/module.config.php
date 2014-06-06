@@ -22,7 +22,70 @@
 return array(
 
     'Rcm' => array(
-        'successfulLoginUrl' => '/'
+        'successfulLoginUrl' => '/',
+        'Acl' => array(
+            'Sites' => array(
+                'resourceId' => 'Sites',
+                'parentResourceId' => null,
+                'privileges' => array(
+                    'read',
+                    'update',
+                    'create',
+                    'delete',
+                    'theme',
+                    'admin',
+                ),
+                'name' => 'Sites',
+                'description' => 'Global resource for sites',
+            ),
+
+            'Pages' => array(
+                'resourceId' => 'Pages',
+                'parentResourceId' => null,
+                'privileges' => array(
+                    'read',
+                    'edit',
+                    'create',
+                    'delete',
+                    'copy',
+                    'approve',
+                    'layout',
+                    'revisions'
+                ),
+                'name' => 'Pages',
+                'description' => 'Global resource for pages',
+            ),
+
+            'Widgets' => array(
+                'resourceId' => 'Widgets',
+                'parentResourceId' => null,
+                'privileges' => array(
+                    'update',
+                ),
+                'name' => 'Widgets',
+                'description' => 'Global resource for Rcm Widgets',
+            ),
+
+            'Widgets.SiteWide' => array(
+                'resourceId' => 'Widgets.SiteWide',
+                'parentResourceId' => 'Widgets',
+                'privileges' => array(
+                    'update',
+                    'create',
+                    'delete',
+                ),
+                'name' => 'Sitewide Widgets',
+                'description' => 'Global resource for Rcm Site Wide Widgets',
+            ),
+        ),
+    ),
+
+    'RcmUser' => array(
+        'Acl\Config' => array(
+            'ResourceProviders' => array(
+                'Rcm\Acl\ResourceProvider' => 'Rcm\Acl\ResourceProvider',
+            ),
+        ),
     ),
 
     'view_manager' => array(
@@ -123,6 +186,9 @@ return array(
             'Rcm\EventListener\EventFinishListener'
                 => 'Rcm\Factory\EventFinishListenerFactory',
 
+            'Rcm\EventListener\ViewEventListener'
+                => 'Rcm\Factory\ViewEventListenerFactory',
+
             'Rcm\Service\ContainerManager'
                 => 'Rcm\Factory\ContainerManagerFactory',
 
@@ -141,6 +207,9 @@ return array(
             'Rcm\Service\PageManager'
                 => 'Rcm\Factory\PageManagerFactory',
 
+            'Rcm\Service\ResponseHandler'
+                => 'Rcm\Factory\ResponseHandlerFactory',
+
             'Rcm\Service\Cache'
                 => 'Rcm\Factory\CacheFactory',
 
@@ -149,6 +218,9 @@ return array(
 
             'Rcm\Service\SessionMgr'
                 => 'Rcm\Factory\SessionManagerFactory',
+
+            'Rcm\Acl\ResourceProvider'
+                => 'Rcm\Factory\AclResourceProviderFactory',
         ),
     ),
 

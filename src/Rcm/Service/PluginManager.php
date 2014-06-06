@@ -23,12 +23,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Rcm\Entity\PluginInstance;
 use Rcm\Exception\InvalidPluginException;
 use Rcm\Exception\PluginInstanceNotFoundException;
+use Rcm\Exception\PluginReturnedResponseException;
 use Rcm\Exception\RuntimeException;
+use Rcm\Http\Response;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Stdlib\RequestInterface;
 use Rcm\Plugin\PluginInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Stdlib\ResponseInterface;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Helper\Placeholder\Container;
 
@@ -50,7 +53,7 @@ use Zend\View\Helper\Placeholder\Container;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD)
  * @todo - See if we can reduce the amount of dependencies.
  */
 class PluginManager
@@ -170,6 +173,7 @@ class PluginManager
      *
      * @return array
      * @throws \Rcm\Exception\InvalidPluginException
+     * @throws \Rcm\Exception\PluginReturnedResponseException
      */
     public function getPluginViewData($pluginName, $pluginInstanceId)
     {
@@ -183,8 +187,25 @@ class PluginManager
             );
         }
 
-        //If the plugin controller can accept a ZF2 request, pass it
-        $controller->setRequest($this->request);
+        $reflectionRequest = new \ReflectionProperty($controller, 'request');
+        $reflectionRequest->setAccessible(true);
+        $reflectionRequest->setValue($controller, $this->request);
+
+        $reflectionResponse = new \ReflectionProperty($controller, 'response');
+        $reflectionResponse->setAccessible(true);
+        $reflectionResponse->setValue($controller, new Response());
+
+        $viewModel = $controller->renderInstance($pluginInstanceId);
+
+        if ($viewModel instanceof ResponseInterface) {
+            $exception =  new PluginReturnedResponseException(
+                'Plugin returned response instead of View Model'
+            );
+
+            $exception->setResponse($viewModel);
+
+            throw $exception;
+        }
 
         /** @var \Zend\View\Helper\Headlink $headlink */
         $headlink = $this->renderer->plugin('headlink');
@@ -199,8 +220,6 @@ class PluginManager
         $oldScriptContainer = $headScript->getContainer();
         $headScriptContainer = new Container();
         $headScript->setContainer($headScriptContainer);
-
-        $viewModel = $controller->renderInstance($pluginInstanceId);
 
         $html   = $this->renderer->render($viewModel);
         $css    = $headlink->getContainer()->getArrayCopy();

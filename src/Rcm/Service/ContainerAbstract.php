@@ -100,7 +100,7 @@ abstract class ContainerAbstract
         $showStaged = false
     ) {
         $siteId = $this->siteId;
-        $cacheKey = __CLASS__.'_'.$siteId.'_'.$type.'_'.$name.'_'.$revision;
+
 
         if (empty($revision) && $showStaged) {
             $revision = $this->getStagedRevisionId($name, $type);
@@ -115,6 +115,8 @@ abstract class ContainerAbstract
                 'No container found for '.$name
             );
         }
+
+        $cacheKey = __CLASS__.'_'.$siteId.'_'.$type.'_'.$name.'_'.$revision;
 
         if ($this->cache->hasItem($cacheKey)) {
             return $this->cache->getItem($cacheKey);

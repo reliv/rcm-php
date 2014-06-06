@@ -63,11 +63,11 @@ class DomainManager
      *
      * @return array
      */
-    public function getDomainList()
+    public function getActiveDomainList()
     {
         //Check Cache for list of domains
-        if ($this->cache->hasItem('rcm_domain_list')) {
-            return $this->cache->getItem('rcm_domain_list');
+        if ($this->cache->hasItem('rcm_active_domain_list')) {
+            return $this->cache->getItem('rcm_active_domain_list');
         }
 
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
@@ -89,11 +89,13 @@ class DomainManager
                 Join::WITH,
                 'site.domain = domain.domainId'
             )
-            ->leftJoin('site.country', 'country');
+            ->leftJoin('site.country', 'country')
+            ->where('site.status = :status')
+            ->setParameter('status', 'A');
 
         $domainList = $queryBuilder->getQuery()->getArrayResult();
 
-        $this->cache->setItem('rcm_domain_list', $domainList);
+        $this->cache->setItem('rcm_active_domain_list', $domainList);
 
         return $domainList;
     }

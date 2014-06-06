@@ -1,8 +1,8 @@
 <?php
 /**
- * RCM Event Finish Listener
+ * RCM View Event Listener
  *
- * Event Finish Listener for Zend Event "dispatch"
+ * View Event Listener
  *
  * PHP version 5.3
  *
@@ -19,14 +19,14 @@
 namespace Rcm\EventListener;
 
 use Rcm\Service\ResponseHandler;
-use Rcm\Service\SiteManager;
 use Rcm\Http\Response as RcmResponse;
 use Zend\Http\Response as HttpResponse;
-use Zend\Mvc\MvcEvent;
+use Zend\View\ViewEvent;
+
 /**
- * RCM Event Finish Listener
+ * RCM View Event Listener
  *
- * This Event Finish listener will handle any custom http responses for the CMS.
+ * This View Event Listener will handle any Rcm http responses for the CMS.
  *
  * @category  Reliv
  * @package   Rcm
@@ -36,7 +36,7 @@ use Zend\Mvc\MvcEvent;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class EventFinishListener
+class ViewEventListener
 {
     /** @var \Rcm\Service\ResponseHandler  */
     protected $responseHandler;
@@ -54,14 +54,20 @@ class EventFinishListener
     /**
      * Check for not authorized and redirect to the login page on 401.
      *
-     * @param MvcEvent $event Zend MVC Event object
+     * @param ViewEvent $event Zend MVC Event object
      *
      * @return void
      */
 
-    public function processRcmResponses(MvcEvent $event)
+    public function processRcmResponses(ViewEvent $event)
     {
-        $response = $event->getResult();
+        /** @var \Zend\View\Renderer\PhpRenderer $renderer */
+        $renderer = $event->getRenderer();
+
+        /**
+         * @var \Zend\Http\Response $response
+         */
+        $response = $renderer->plugin('rcmContainer')->getResponse();
 
         if (!$response instanceof RcmResponse) {
             return;

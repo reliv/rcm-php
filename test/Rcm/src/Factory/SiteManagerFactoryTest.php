@@ -53,9 +53,17 @@ class SiteManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $mockSiteRepo = $this->getMockBuilder('\Rcm\Repository\Site')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $mockEntityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($mockSiteRepo));
 
         $mockCache = $this->getMockBuilder('\Zend\Cache\Storage\Adapter\Memory')
             ->disableOriginalConstructor()
@@ -67,6 +75,7 @@ class SiteManagerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('Rcm\Service\DomainManager', $mockDomainManager);
+        $serviceManager->setService('Rcm\Repository\Site', $mockSiteRepo);
         $serviceManager->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
         $serviceManager->setService('Rcm\Service\Cache', $mockCache);
         $serviceManager->setService('request', $mockRequest);

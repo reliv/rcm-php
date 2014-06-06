@@ -18,6 +18,7 @@
  */
 namespace Rcm\View\Helper;
 
+use Rcm\Exception\PluginReturnedResponseException;
 use Rcm\Service\ContainerManager;
 use Zend\View\Helper\AbstractHelper;
 
@@ -37,7 +38,11 @@ use Zend\View\Helper\AbstractHelper;
  */
 class Container extends AbstractHelper
 {
+    /** @var \Rcm\Service\ContainerManager  */
     protected $containerManager;
+
+    /** @var  \Zend\Stdlib\ResponseInterface */
+    protected $response;
 
     /**
      * Constructor
@@ -65,11 +70,17 @@ class Container extends AbstractHelper
      * @param string  $name     Container Name
      * @param integer $revision Revision Id to Render
      *
-     * @return string
+     * @return null|string
      */
     public function renderContainer($name, $revision=null)
     {
-        $containerData = $this->containerManager->getRevisionInfo($name, $revision);
+        try {
+            $containerData
+                = $this->containerManager->getRevisionInfo($name, $revision);
+        } catch (PluginReturnedResponseException $exception) {
+            $this->handlePluginResponse($exception);
+            return null;
+        }
 
         $html = '';
         $html .= $this->getContainerHtml($containerData);
@@ -288,5 +299,31 @@ class Container extends AbstractHelper
         }
 
         return false;
+    }
+
+    /**
+     * Process plugins that return a response object.
+     *
+     * @param PluginReturnedResponseException $exception This exception is thrown
+     *                                                   when a plugin returns
+     *                                                   a response object instead
+     *                                                   of a ViewModel
+     *
+     * @return void
+     */
+    protected function handlePluginResponse(
+        PluginReturnedResponseException $exception
+    ) {
+        $this->response = $exception->getResponse();
+    }
+
+    /**
+     * Returns a previously stored response object
+     *
+     * @return \Zend\Stdlib\ResponseInterface
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 }
