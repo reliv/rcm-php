@@ -328,6 +328,13 @@ class SiteManager
         return null;
     }
 
+    /**
+     * Is Site valid
+     *
+     * @param integer $siteId Site Id
+     *
+     * @return bool
+     */
     public function isValidSiteId($siteId)
     {
         return $this->siteRepo->isValidSiteId($siteId);

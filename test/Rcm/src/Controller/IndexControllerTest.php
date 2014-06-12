@@ -392,9 +392,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'Sites.'.$siteId.'.Pages.'.$pageName;
+        $resource = 'sites.'.$siteId.'.pages.'.$pageName;
         $permission = 'edit';
-        $provider = '\Rcm\Acl\ResourceProvider';
+        $provider = 'Rcm\Acl\ResourceProvider';
 
         $this->mockUserServicePlugin
             ->expects($this->once())
@@ -435,8 +435,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'Sites.'.$siteId.'.Pages.'.$pageName;
-        $provider = '\Rcm\Acl\ResourceProvider';
+        $resource = 'sites.'.$siteId.'.pages.'.$pageName;
+        $provider = 'Rcm\Acl\ResourceProvider';
 
         $map = array(
             array($resource, 'edit', $provider, false),
@@ -479,8 +479,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'Sites.'.$siteId.'.Pages.'.$pageName;
-        $provider = '\Rcm\Acl\ResourceProvider';
+        $resource = 'sites.'.$siteId.'.pages.'.$pageName;
+        $provider = 'Rcm\Acl\ResourceProvider';
 
         $map = array(
             array($resource, 'edit', $provider, false),
@@ -524,8 +524,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'Sites.'.$siteId.'.Pages.'.$pageName;
-        $provider = '\Rcm\Acl\ResourceProvider';
+        $resource = 'sites.'.$siteId.'.pages.'.$pageName;
+        $provider = 'Rcm\Acl\ResourceProvider';
 
         $map = array(
             array($resource, 'edit', $provider, false),

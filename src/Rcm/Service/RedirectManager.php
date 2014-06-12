@@ -19,11 +19,9 @@
 
 namespace Rcm\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Rcm\Exception\InvalidArgumentException;
 use Zend\Cache\Storage\StorageInterface;
-use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Redirect Manager.

@@ -17,7 +17,6 @@
  * @link      https://github.com/reliv
  */
 namespace Rcm\Factory;
-use Rcm\Validator\MainLayout;
 use Rcm\Validator\Page;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

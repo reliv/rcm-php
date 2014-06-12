@@ -160,6 +160,20 @@ class PageManager extends ContainerAbstract
         );
     }
 
+    /**
+     * Create a new page
+     *
+     * @param string $pageName  Page Name
+     * @param string $pageTitle Page Title
+     * @param string $layout    Site Layout
+     * @param string $author    Author
+     * @param string $pageType  Page Type
+     * @param null   $siteId    Site Id
+     *
+     * @return void
+     *
+     * @throws \RuntimeException
+     */
     public function createNewPage(
         $pageName,
         $pageTitle,

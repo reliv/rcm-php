@@ -45,11 +45,11 @@ class PageCheckController
     /**
      * Check the page is valid and return a json response
      *
-     * @param string $id Page Name to Check
+     * @param string $pageId Page Name to Check
      *
      * @return JsonModel
      */
-    public function get($id)
+    public function get($pageId)
     {
         $pageType = $this->params('pageType', 'n');
 
@@ -61,7 +61,7 @@ class PageCheckController
             'valid' => true
         );
 
-        if (!$validator->isValid($id)) {
+        if (!$validator->isValid($pageId)) {
             $return['valid'] = false;
             $return['error'] = $validator->getMessages();
 

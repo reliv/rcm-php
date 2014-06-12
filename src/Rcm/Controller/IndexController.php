@@ -23,8 +23,9 @@ namespace Rcm\Controller;
 use Rcm\Exception\ContainerNotFoundException;
 use Rcm\Service\LayoutManager;
 use Rcm\Service\PageManager;
-use \Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Http\Response;
 
 /**
  * Index Controller for the entire application
@@ -41,9 +42,10 @@ use Zend\View\Model\ViewModel;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @method boolean rcmUserIsAllowed($resource, $action, $provider) BjyAuthorize
- *                                                                 isAllowed
- *                                                                 Controller Helper
+ * @method Response redirectToPage($pageName, $pageType) Redirect to CMS
+ *                                                                  Page
+ *
+ * @method boolean rcmUserIsAllowed($resource, $action, $providerId) Is User Allowed
  */
 class IndexController extends AbstractActionController
 {
@@ -185,9 +187,9 @@ class IndexController extends AbstractActionController
     protected function shouldShowRevisions()
     {
         $allowedRevisions = $this->rcmUserIsAllowed(
-            'Sites.'.$this->siteId.'.Pages.'.$this->pageName,
+            'sites.'.$this->siteId.'.pages.'.$this->pageName,
             'edit',
-            '\Rcm\Acl\ResourceProvider'
+            'Rcm\Acl\ResourceProvider'
         );
 
         if ($allowedRevisions) {
@@ -195,9 +197,9 @@ class IndexController extends AbstractActionController
         }
 
         $allowedRevisions = $this->rcmUserIsAllowed(
-            'Sites.'.$this->siteId.'.Pages.'.$this->pageName,
+            'sites.'.$this->siteId.'.pages.'.$this->pageName,
             'approve',
-            '\Rcm\Acl\ResourceProvider'
+            'Rcm\Acl\ResourceProvider'
         );
 
         if ($allowedRevisions) {
@@ -205,9 +207,9 @@ class IndexController extends AbstractActionController
         }
 
         $allowedRevisions = $this->rcmUserIsAllowed(
-            'Sites.'.$this->siteId.'.Pages.'.$this->pageName,
+            'sites.'.$this->siteId.'.pages.'.$this->pageName,
             'revisions',
-            '\Rcm\Acl\ResourceProvider'
+            'Rcm\Acl\ResourceProvider'
         );
 
         if ($allowedRevisions) {

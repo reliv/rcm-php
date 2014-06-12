@@ -60,8 +60,8 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     protected function getConfig()
     {
         return array(
-            'Sites' => array(
-                'resourceId' => 'Sites',
+            'sites' => array(
+                'resourceId' => 'sites',
                 'parentResourceId' => null,
                 'privileges' => array(
                     'read',
@@ -71,12 +71,12 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                     'theme',
                     'admin',
                 ),
-                'name' => 'Sites',
+                'name' => 'sites',
                 'description' => 'Global resource for sites',
             ),
 
-            'Pages' => array(
-                'resourceId' => 'Pages',
+            'pages' => array(
+                'resourceId' => 'pages',
                 'parentResourceId' => null,
                 'privileges' => array(
                     'read',
@@ -87,7 +87,7 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                     'approve',
                     'layout',
                 ),
-                'name' => 'Pages',
+                'name' => 'pages',
                 'description' => 'Global resource for pages',
             ),
         );
@@ -109,7 +109,7 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
             $domain->setDomainName('test.reliv.com');
 
             $page = new Page();
-            $page->setName('Test-Page');
+            $page->setName('test-page');
 
             $site = new Site();
             $site->setDomain($domain);
@@ -190,9 +190,9 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetResourcesWithSites()
     {
         $siteExpected = array(
-            'Sites.10.Pages.Test-Page' => array (
-                'resourceId' => 'Sites.10.Pages.Test-Page',
-                'parentResourceId' => 'Sites.10.Pages',
+            'sites.10.pages.test-page' => array (
+                'resourceId' => 'sites.10.pages.test-page',
+                'parentResourceId' => 'sites.10.pages',
                 'privileges' => array (
                     'read',
                     'edit',
@@ -203,13 +203,13 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                     'layout',
                 ),
 
-                'name' => 'test.reliv.com - Pages - Test-Page',
+                'name' => 'test.reliv.com - pages - test-page',
                 'description' => 'Global resource for pages',
             ),
 
-            'Sites.10' => array (
-                'resourceId' => 'Sites.10',
-                'parentResourceId' => 'Sites',
+            'sites.10' => array (
+                'resourceId' => 'sites.10',
+                'parentResourceId' => 'sites',
                 'privileges' => array (
                     'read',
                     'edit',
@@ -223,9 +223,9 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                 'description' => 'Global resource for sites',
             ),
 
-            'Sites.10.Pages' => array (
-                'resourceId' => 'Sites.10.Pages',
-                'parentResourceId' => 'Sites.10',
+            'sites.10.pages' => array (
+                'resourceId' => 'sites.10.pages',
+                'parentResourceId' => 'sites.10',
                 'privileges' => array (
                     'read',
                     'edit',
@@ -236,7 +236,7 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                     'layout',
                 ),
 
-                'name' => 'test.reliv.com - Pages',
+                'name' => 'test.reliv.com - pages',
                 'description' => 'Global resource for pages',
             ),
         );
@@ -260,11 +260,11 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $resourceProvider = $this->getProviderWithMocks(true);
 
-        $sitesResource = $resourceProvider->getResource('Sites');
-        $pagesResource = $resourceProvider->getResource('Pages');
+        $sitesResource = $resourceProvider->getResource('sites');
+        $pagesResource = $resourceProvider->getResource('pages');
 
-        $this->assertEquals($this->config['Sites'], $sitesResource);
-        $this->assertEquals($this->config['Pages'], $pagesResource);
+        $this->assertEquals($this->config['sites'], $sitesResource);
+        $this->assertEquals($this->config['pages'], $pagesResource);
     }
 
     /**
@@ -278,8 +278,8 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetResourceForSite()
     {
         $expected = array (
-            'resourceId' => 'Sites.10',
-            'parentResourceId' => 'Sites',
+            'resourceId' => 'sites.10',
+            'parentResourceId' => 'sites',
             'privileges' => array (
                 'read',
                 'edit',
@@ -289,13 +289,13 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                 'admin',
             ),
 
-            'name' => 'Sites',
+            'name' => 'sites',
             'description' => 'Global resource for sites',
         );
 
         $resourceProvider = $this->getProviderWithMocks();
 
-        $siteResource = $resourceProvider->getResource('Sites.10');
+        $siteResource = $resourceProvider->getResource('sites.10');
 
         $this->assertEquals($expected, $siteResource);
     }
@@ -311,8 +311,8 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetResourceForPage()
     {
         $expected = array (
-            'resourceId' => 'Sites.10.Pages.Test-Page',
-            'parentResourceId' => 'Sites.10.Pages',
+            'resourceId' => 'sites.10.pages.test-page',
+            'parentResourceId' => 'sites.10.pages',
             'privileges' => array (
                 'read',
                 'edit',
@@ -323,13 +323,13 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                 'layout',
             ),
 
-            'name' => 'Pages',
+            'name' => 'pages',
             'description' => 'Global resource for pages',
         );
 
         $resourceProvider = $this->getProviderWithMocks();
 
-        $siteResource = $resourceProvider->getResource('Sites.10.Pages.Test-Page');
+        $siteResource = $resourceProvider->getResource('sites.10.pages.test-page');
 
         $this->assertEquals($expected, $siteResource);
     }

@@ -24,8 +24,8 @@ return array(
     'Rcm' => array(
         'successfulLoginUrl' => '/',
         'Acl' => array(
-            'Sites' => array(
-                'resourceId' => 'Sites',
+            'sites' => array(
+                'resourceId' => 'sites',
                 'parentResourceId' => null,
                 'privileges' => array(
                     'read',
@@ -39,8 +39,8 @@ return array(
                 'description' => 'Global resource for sites',
             ),
 
-            'Pages' => array(
-                'resourceId' => 'Pages',
+            'pages' => array(
+                'resourceId' => 'pages',
                 'parentResourceId' => null,
                 'privileges' => array(
                     'read',
@@ -56,8 +56,8 @@ return array(
                 'description' => 'Global resource for pages',
             ),
 
-            'Widgets' => array(
-                'resourceId' => 'Widgets',
+            'widgets' => array(
+                'resourceId' => 'widgets',
                 'parentResourceId' => null,
                 'privileges' => array(
                     'update',
@@ -66,9 +66,9 @@ return array(
                 'description' => 'Global resource for Rcm Widgets',
             ),
 
-            'Widgets.SiteWide' => array(
-                'resourceId' => 'Widgets.SiteWide',
-                'parentResourceId' => 'Widgets',
+            'widgets.siteWide' => array(
+                'resourceId' => 'widgets.siteWide',
+                'parentResourceId' => 'widgets',
                 'privileges' => array(
                     'update',
                     'create',
@@ -140,7 +140,7 @@ return array(
             'Rcm\Api\Page\Check' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route' => '/rcm/page/check[/:pageType]/:id',
+                    'route' => '/rcm/page/check[/:pageType]/:pageId',
                     'defaults' => array(
                         'controller' => 'Rcm\Controller\PageCheckController',
                     ),
