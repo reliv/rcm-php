@@ -226,7 +226,7 @@ class Container extends AbstractHelper
                 $container = unserialize($css);
 
                 if (!$this->isDuplicateCss($container)) {
-                    $headLinkPlugin = $view->headLink()->append($container);
+                    $view->headLink()->append($container);
                 }
             }
         }
