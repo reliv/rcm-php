@@ -79,7 +79,7 @@ class ResourceProvider extends RcmUserResourceProvider
      * @param string $providerId providerId
      *
      * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD)
      */
     public function setProviderId($providerId)
     {
@@ -97,7 +97,7 @@ class ResourceProvider extends RcmUserResourceProvider
     {
         $return = $this->resources;
 
-        $sites = $this->siteManager->getAllActivesite();
+        $sites = $this->siteManager->getAllActiveSites();
 
         foreach ($sites as &$site) {
             $return = array_merge($this->getSiteResources($site), $return);
@@ -228,7 +228,7 @@ class ResourceProvider extends RcmUserResourceProvider
         $primaryDomainName = $site->getDomain()->getDomainName();
         $siteId = $site->getSiteId();
 
-        $return['site.'.$siteId] = array(
+        $return['sites.'.$siteId] = array(
             'resourceId' => 'sites.'.$siteId,
             'parentResourceId' => 'sites',
             'name' => $primaryDomainName
@@ -276,14 +276,14 @@ class ResourceProvider extends RcmUserResourceProvider
         $pageName = $page->getName();
 
         $return['sites.'.$siteId.'.pages.'.$pageName] = array(
-            'resourceId' => 'site.'.$siteId.'.pages.'.$pageName,
-            'parentResourceId' => 'site.'.$siteId.'.pages',
+            'resourceId' => 'sites.'.$siteId.'.pages.'.$pageName,
+            'parentResourceId' => 'sites.'.$siteId.'.pages',
             'name' => $primaryDomainName.' - pages - '.$pageName,
         );
 
-        $return['site.'.$siteId.'.pages.'.$pageName] = array_merge(
+        $return['sites.'.$siteId.'.pages.'.$pageName] = array_merge(
             $this->resources['pages'],
-            $return['site.'.$siteId.'.pages.'.$pageName]
+            $return['sites.'.$siteId.'.pages.'.$pageName]
         );
 
         return $return;
