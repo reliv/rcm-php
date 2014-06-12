@@ -79,6 +79,7 @@ class ResourceProvider extends RcmUserResourceProvider
      * @param string $providerId providerId
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function setProviderId($providerId)
     {
@@ -96,7 +97,7 @@ class ResourceProvider extends RcmUserResourceProvider
     {
         $return = $this->resources;
 
-        $sites = $this->siteManager->getAllActiveSites();
+        $sites = $this->siteManager->getAllActivesite();
 
         foreach ($sites as &$site) {
             $return = array_merge($this->getSiteResources($site), $return);
@@ -168,22 +169,22 @@ class ResourceProvider extends RcmUserResourceProvider
     protected function pageResourceMapper($resourceId, $resources)
     {
         if (empty($resources[2])
-            || $resources[2] != 'Pages'
+            || $resources[2] != 'pages'
         ) {
             return null;
         }
 
         $return = array(
             'resourceId' => $resourceId,
-            'parentResourceId' => 'Sites.'.$resources[1],
+            'parentResourceId' => 'sites.'.$resources[1],
         );
 
         if (!empty($resources[3])) {
-            $return['parentResourceId'] = 'Sites.'.$resources[1].'.Pages';
+            $return['parentResourceId'] = 'sites.'.$resources[1].'.pages';
         }
 
         return array_merge(
-            $this->resources['Pages'],
+            $this->resources['pages'],
             $return
         );
     }
@@ -199,18 +200,18 @@ class ResourceProvider extends RcmUserResourceProvider
     protected function siteResourceMapper($resourceId, $resources)
     {
         if (empty($resources[0])
-            || $resources[0] != 'Sites'
+            || $resources[0] != 'sites'
         ) {
             return null;
         }
 
         $return = $return = array(
             'resourceId' => $resourceId,
-            'parentResourceId' => 'Sites',
+            'parentResourceId' => 'sites',
         );
 
         return array_merge(
-            $this->resources['Sites'],
+            $this->resources['sites'],
             $return
         );
     }
@@ -227,29 +228,29 @@ class ResourceProvider extends RcmUserResourceProvider
         $primaryDomainName = $site->getDomain()->getDomainName();
         $siteId = $site->getSiteId();
 
-        $return['Sites.'.$siteId] = array(
-            'resourceId' => 'Sites.'.$siteId,
-            'parentResourceId' => 'Sites',
+        $return['site.'.$siteId] = array(
+            'resourceId' => 'sites.'.$siteId,
+            'parentResourceId' => 'sites',
             'name' => $primaryDomainName
         );
 
-        $return['Sites.'.$siteId] = array_merge(
-            $this->resources['Sites'],
-            $return['Sites.'.$siteId]
+        $return['sites.'.$siteId] = array_merge(
+            $this->resources['sites'],
+            $return['sites.'.$siteId]
         );
 
-        $return['Sites.'.$siteId.'.Pages'] = array(
-            'resourceId' => 'Sites.'.$siteId.'.Pages',
-            'parentResourceId' => 'Sites.'.$siteId,
-            'name' => $primaryDomainName.' - Pages',
+        $return['sites.'.$siteId.'.pages'] = array(
+            'resourceId' => 'sites.'.$siteId.'.pages',
+            'parentResourceId' => 'sites.'.$siteId,
+            'name' => $primaryDomainName.' - pages',
         );
 
-        $return['Sites.'.$siteId.'.Pages'] = array_merge(
-            $this->resources['Pages'],
-            $return['Sites.'.$siteId.'.Pages']
+        $return['sites.'.$siteId.'.pages'] = array_merge(
+            $this->resources['pages'],
+            $return['sites.'.$siteId.'.pages']
         );
 
-        $pages = $site->getPages();
+        $pages = $site->getpages();
 
         /** @var \Rcm\Entity\Page $page */
         foreach ($pages as &$page) {
@@ -274,15 +275,15 @@ class ResourceProvider extends RcmUserResourceProvider
         $siteId = $site->getSiteId();
         $pageName = $page->getName();
 
-        $return['Sites.'.$siteId.'.Pages.'.$pageName] = array(
-            'resourceId' => 'Sites.'.$siteId.'.Pages.'.$pageName,
-            'parentResourceId' => 'Sites.'.$siteId.'.Pages',
-            'name' => $primaryDomainName.' - Pages - '.$pageName,
+        $return['sites.'.$siteId.'.pages.'.$pageName] = array(
+            'resourceId' => 'site.'.$siteId.'.pages.'.$pageName,
+            'parentResourceId' => 'site.'.$siteId.'.pages',
+            'name' => $primaryDomainName.' - pages - '.$pageName,
         );
 
-        $return['Sites.'.$siteId.'.Pages.'.$pageName] = array_merge(
-            $this->resources['Pages'],
-            $return['Sites.'.$siteId.'.Pages.'.$pageName]
+        $return['site.'.$siteId.'.pages.'.$pageName] = array_merge(
+            $this->resources['pages'],
+            $return['site.'.$siteId.'.pages.'.$pageName]
         );
 
         return $return;

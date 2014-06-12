@@ -22,7 +22,6 @@ namespace Rcm\Service;
 use Doctrine\ORM\EntityRepository;
 use Rcm\Exception\ContainerNotFoundException;
 use Rcm\Exception\InvalidArgumentException;
-use Rcm\Exception\RuntimeException;
 use Zend\Cache\Storage\StorageInterface;
 
 /**

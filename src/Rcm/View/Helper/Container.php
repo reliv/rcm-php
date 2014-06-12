@@ -97,6 +97,7 @@ class Container extends AbstractHelper
      */
     public function renderPageContainer($name)
     {
+        /** @var \Zend\View\Model\ViewModel $view */
         $view = $this->getView();
 
         $html = '';
@@ -217,6 +218,7 @@ class Container extends AbstractHelper
      */
     protected function getPluginCss(&$pluginData)
     {
+        /** @var \Zend\View\Model\ViewModel $view */
         $view = $this->getView();
 
         if (!empty($pluginData['instance']['renderedData']['css'])) {
@@ -224,7 +226,7 @@ class Container extends AbstractHelper
                 $container = unserialize($css);
 
                 if (!$this->isDuplicateCss($container)) {
-                    $view->headLink()->append($container);
+                    $headLinkPlugin = $view->headLink()->append($container);
                 }
             }
         }

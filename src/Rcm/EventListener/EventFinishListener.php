@@ -19,7 +19,6 @@
 namespace Rcm\EventListener;
 
 use Rcm\Service\ResponseHandler;
-use Rcm\Service\SiteManager;
 use Rcm\Http\Response as RcmResponse;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;

@@ -50,7 +50,7 @@ class RouteListener
     /**
      * Constructor
      *
-     * @param DomainManager $domainManager     Rcm Domain Manager
+     * @param DomainManager   $domainManager   Rcm Domain Manager
      * @param RedirectManager $redirectManager Rcm Redirect Manager
      */
     public function __construct(

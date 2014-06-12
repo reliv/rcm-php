@@ -70,10 +70,10 @@ class ViewEventListener
             return;
         }
 
-        /**
-         * @var \Zend\Http\Response $response
-         */
-        $response = $renderer->plugin('rcmContainer')->getResponse();
+        /** @var \Rcm\View\Helper\Container $rcmContainerPlugin */
+        $rcmContainerPlugin = $renderer->plugin('rcmContainer');
+
+        $response = $rcmContainerPlugin->getResponse();
 
         if (!$response instanceof RcmResponse) {
             return;
