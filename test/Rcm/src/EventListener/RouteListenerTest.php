@@ -95,12 +95,21 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getActiveDomainList')
             ->will($this->returnValue($this->domains));
 
-        $mockDomainManager->expects($this->any())
+        $mockRedirectManager = $this
+            ->getMockBuilder('\Rcm\Service\RedirectManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockRedirectManager->expects($this->any())
             ->method('getRedirectList')
             ->will($this->returnValue($this->redirects));
 
-        /** @var \Rcm\Service\DomainManager $mockDomainManager */
-        $this->routeListener = new RouteListener($mockDomainManager);
+        /** @var \Rcm\Service\DomainManager   $mockDomainManager */
+        /** @var \Rcm\Service\RedirectManager $mockRedirectManager */
+        $this->routeListener = new RouteListener(
+            $mockDomainManager,
+            $mockRedirectManager
+        );
     }
 
     /**
