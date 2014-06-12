@@ -132,6 +132,54 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test Process Rcm Responses
+     *
+     * @return void
+     *
+     * @covers \Rcm\EventListener\ViewEventListener::processRcmResponses
+     */
+    public function testProcessRcmResponsesIgnoresJsonRenderer()
+    {
+        $event = new ViewEvent();
+
+        $response = new Response();
+        $response->setStatusCode(404);
+
+        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\ResponseHandler')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockResponseHandler->expects($this->never())
+            ->method('processResponse');
+
+        $mockContainerPlugin = $this->getMockBuilder('\Rcm\View\Helper\Container')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockContainerPlugin->expects($this->any())
+            ->method('getResponse')
+            ->will($this->returnValue($response));
+
+        $mockRenderer = $this->getMockBuilder('\Zend\View\Renderer\JsonRenderer')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockRenderer->expects($this->any())
+            ->method('plugin')
+            ->will($this->returnValue($mockContainerPlugin));
+
+        /** @var \Zend\View\Renderer\PhpRenderer $mockRenderer */
+        $event->setRenderer($mockRenderer);
+
+        /** @var \Rcm\Service\ResponseHandler $mockResponseHandler */
+        $listener = new ViewEventListener(
+            $mockResponseHandler
+        );
+
+        $listener->processRcmResponses($event);
+    }
+
+    /**
      * Test Process Rcm Responses with a Zend Http Response.  Method should
      * return early.
      *

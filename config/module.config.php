@@ -92,6 +92,10 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
+
+        'strategies' => array(
+            'ViewJsonStrategy',
+        ),
     ),
 
     'router' => array(
@@ -133,6 +137,15 @@ return array(
                 ),
             ),
 
+            'Rcm\Api\Page\Check' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route' => '/rcm/page/check[/:pageType]/:id',
+                    'defaults' => array(
+                        'controller' => 'Rcm\Controller\PageCheckController',
+                    ),
+                ),
+            ),
 
         ),
     ),
@@ -221,10 +234,20 @@ return array(
 
             'Rcm\Acl\ResourceProvider'
                 => 'Rcm\Factory\AclResourceProviderFactory',
+
+            'Rcm\Validator\Page'
+                => 'Rcm\Factory\PageValidatorFactory',
+
+            'Rcm\Validator\MainLayout'
+                => 'Rcm\Factory\MainLayoutValidatorFactory',
         ),
     ),
 
     'controllers' => array(
+        'invokables' => array(
+            'Rcm\Controller\PageCheckController'
+            => 'Rcm\Controller\PageCheckController',
+        ),
         'factories' => array (
             'Rcm\Controller\IndexController'
                 => 'Rcm\Factory\IndexControllerFactory',
@@ -240,6 +263,14 @@ return array(
             'rcmOutOfDateBrowserWarning'
                 => 'Rcm\View\Helper\OutOfDateBrowserWarning',
         ),
-    )
+    ),
 
+    'controller_plugins' => array(
+        'invokables' => array(
+            'redirectToPage' =>
+                'Rcm\Controller\Plugin\RedirectToPage',
+            'urlToPage' =>
+                'Rcm\Controller\Plugin\UrlToPage',
+        ),
+    ),
 );

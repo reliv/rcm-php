@@ -92,7 +92,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $mockDomainManager->expects($this->any())
-            ->method('getDomainList')
+            ->method('getActiveDomainList')
             ->will($this->returnValue($this->domains));
 
         $mockDomainManager->expects($this->any())

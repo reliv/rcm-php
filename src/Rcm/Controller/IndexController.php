@@ -136,7 +136,7 @@ class IndexController extends AbstractActionController
         $userCanSeeRevisions = $this->shouldShowRevisions();
 
         if (!$userCanSeeRevisions && $this->pageRevisionId) {
-            return $this->redirectToPage();
+            return $this->redirectToPage($this->pageName, $this->pageType);
         }
 
         try {
@@ -184,63 +184,36 @@ class IndexController extends AbstractActionController
      */
     protected function shouldShowRevisions()
     {
-        $allowedStaged = $this->rcmUserIsAllowed(
+        $allowedRevisions = $this->rcmUserIsAllowed(
             'Sites.'.$this->siteId.'.Pages.'.$this->pageName,
             'edit',
             '\Rcm\Acl\ResourceProvider'
         );
 
-        if ($allowedStaged) {
+        if ($allowedRevisions) {
             return true;
         }
 
-        $allowedStaged = $this->rcmUserIsAllowed(
+        $allowedRevisions = $this->rcmUserIsAllowed(
             'Sites.'.$this->siteId.'.Pages.'.$this->pageName,
             'approve',
             '\Rcm\Acl\ResourceProvider'
         );
 
-        if ($allowedStaged) {
+        if ($allowedRevisions) {
             return true;
         }
 
-        $allowedStaged = $this->rcmUserIsAllowed(
+        $allowedRevisions = $this->rcmUserIsAllowed(
             'Sites.'.$this->siteId.'.Pages.'.$this->pageName,
             'revisions',
             '\Rcm\Acl\ResourceProvider'
         );
 
-        if ($allowedStaged) {
+        if ($allowedRevisions) {
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Redirect to same page with no version numbers
-     *
-     * @return \Zend\Http\Response
-     */
-    protected function redirectToPage()
-    {
-        if ($this->pageType == 'n' && $this->pageName == 'index') {
-            return $this->redirect()->toUrl(
-                '/'
-            );
-        } elseif ($this->pageType == 'n') {
-            return $this->redirect()->toRoute(
-                'contentManager',
-                array('page' => $this->pageName)
-            );
-        } else {
-            return $this->redirect()->toRoute(
-                'contentManagerWithPageType',
-                array(
-                    'pageType' => $this->pageType,
-                    'page' => $this->pageName,
-                )
-            );
-        }
     }
 }

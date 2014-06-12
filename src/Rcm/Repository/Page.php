@@ -23,6 +23,9 @@ namespace Rcm\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Rcm\Entity\Revision;
+use Rcm\Entity\Page as PageEntity;
+use Rcm\Entity\Site as SiteEntity;
 
 
 /**
@@ -192,10 +195,43 @@ class Page extends EntityRepository implements ContainerInterface
             return null;
         }
 
-        foreach ($result as $page) {
+        foreach ($result as &$page) {
             $return[$page['pageId']] = $page['name'];
         }
 
         return $return;
+    }
+
+    public function createNewPage(
+        $pageName,
+        $pageTitle,
+        $layout,
+        $author,
+        SiteEntity $site,
+        $pageType='n'
+    ) {
+        $revision = new Revision();
+        $revision->setAuthor($author);
+        $revision->setCreatedDate(new \DateTime());
+
+        $page = new PageEntity();
+        $page->setCreatedDate(new \DateTime());
+        $page->setAuthor($author);
+        $page->setName($pageName);
+        $page->setPageType($pageType);
+        $page->setPageTitle($pageTitle);
+        $page->setSite($site);
+        $page->setStagedRevision($revision);
+        $page->addRevision($revision);
+
+        if ($layout != 'default') {
+            $page->setSiteLayoutOverride($layout);
+        }
+
+        $this->_em->persist($revision);
+        $this->_em->persist($page);
+
+        $this->_em->flush(array($revision, $page));
+
     }
 }

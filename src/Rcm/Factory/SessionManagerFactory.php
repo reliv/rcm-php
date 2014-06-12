@@ -241,7 +241,7 @@ class SessionManagerFactory implements FactoryInterface
 
         $chain = $sessionManager->getValidatorChain();
 
-        foreach ($sessionConfig['validators'] as $validator) {
+        foreach ($sessionConfig['validators'] as &$validator) {
             if ($serviceLocator->has($validator)) {
                 $validator = $serviceLocator->get($validator);
             } else {

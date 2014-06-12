@@ -91,4 +91,35 @@ class Site extends EntityRepository
             ->getRepository('\Rcm\Entity\Site')
             ->findBy(array('status' => 'A'));
     }
+
+    /**
+     * Is Valid Site Id
+     *
+     * @param integer $siteId      Site Id To Check
+     * @param boolean $checkActive Should only check active sites.  Default: true
+     *
+     * @return boolean
+     */
+    public function isValidSiteId($siteId, $checkActive=true)
+    {
+        if (empty($siteId) || !is_numeric($siteId)) {
+            return false;
+        }
+
+        $findBy = array(
+            'siteId' => $siteId,
+        );
+
+        if ($checkActive) {
+            $findBy['status'] = 'A';
+        }
+
+        $result = $this->findOneBy($findBy);
+
+        if (!empty($result)) {
+            return true;
+        }
+
+        return false;
+    }
 }

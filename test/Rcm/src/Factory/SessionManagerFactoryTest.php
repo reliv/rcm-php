@@ -552,7 +552,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         /** @var \Zend\Stdlib\CallbackHandler $item */
         $hasItems = array();
 
-        foreach ($list as $item) {
+        foreach ($list as &$item) {
             $validator = $item->getCallback();
             $hasItems[] = get_class($validator[0]);
         }
@@ -615,7 +615,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         /** @var \Zend\Stdlib\CallbackHandler $item */
         $hasItems = array();
 
-        foreach ($list as $item) {
+        foreach ($list as &$item) {
             $validator = $item->getCallback();
             $hasItems[] = get_class($validator[0]);
         }

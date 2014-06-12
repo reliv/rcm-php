@@ -51,9 +51,6 @@ class ContainerManagerFactory implements FactoryInterface
         /** @var \Rcm\Service\SiteManager $siteManager */
         $siteManager   = $serviceLocator->get('Rcm\Service\SiteManager');
 
-        /** @var integer $currentSiteId */
-        $currentSiteId = $siteManager->getCurrentSiteId();
-
         /** @var \Rcm\Service\PluginManager $pluginManager */
         $pluginManager = $serviceLocator->get('Rcm\Service\PluginManager');
 
@@ -70,7 +67,7 @@ class ContainerManagerFactory implements FactoryInterface
             $pluginManager,
             $repository,
             $cache,
-            $currentSiteId
+            $siteManager
         );
     }
 }

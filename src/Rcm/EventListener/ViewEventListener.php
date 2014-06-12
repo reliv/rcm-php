@@ -21,6 +21,7 @@ namespace Rcm\EventListener;
 use Rcm\Service\ResponseHandler;
 use Rcm\Http\Response as RcmResponse;
 use Zend\Http\Response as HttpResponse;
+use Zend\View\Renderer\PhpRenderer;
 use Zend\View\ViewEvent;
 
 /**
@@ -63,6 +64,11 @@ class ViewEventListener
     {
         /** @var \Zend\View\Renderer\PhpRenderer $renderer */
         $renderer = $event->getRenderer();
+
+        /* Make sure this is in fact a PhpRenderer or return null */
+        if (!$renderer instanceof PhpRenderer) {
+            return;
+        }
 
         /**
          * @var \Zend\Http\Response $response

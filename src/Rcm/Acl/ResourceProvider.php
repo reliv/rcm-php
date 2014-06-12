@@ -98,7 +98,7 @@ class ResourceProvider extends RcmUserResourceProvider
 
         $sites = $this->siteManager->getAllActiveSites();
 
-        foreach ($sites as $site) {
+        foreach ($sites as &$site) {
             $return = array_merge($this->getSiteResources($site), $return);
         }
 
@@ -252,7 +252,7 @@ class ResourceProvider extends RcmUserResourceProvider
         $pages = $site->getPages();
 
         /** @var \Rcm\Entity\Page $page */
-        foreach ($pages as $page) {
+        foreach ($pages as &$page) {
             $pageResources = $this->getPageResources($page, $site);
             $return = array_merge($pageResources, $return);
         }
