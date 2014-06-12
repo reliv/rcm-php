@@ -163,6 +163,23 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test Get Resources Method No Config
+     *
+     * @return void
+     * @covers \Rcm\Acl\ResourceProvider::getResources
+     */
+    public function testGetResourcesNoConfig()
+    {
+        $this->config = array();
+
+        $resourceProvider = $this->getProviderWithMocks(true);
+
+        $return = $resourceProvider->getResources();
+
+        $this->assertEquals($this->config, $return);
+    }
+
+    /**
      * Test Get Resources Method With Sites And Pages
      *
      * @return void

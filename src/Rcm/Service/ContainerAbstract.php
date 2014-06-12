@@ -21,6 +21,8 @@ namespace Rcm\Service;
 
 use Doctrine\ORM\EntityRepository;
 use Rcm\Exception\ContainerNotFoundException;
+use Rcm\Exception\InvalidArgumentException;
+use Rcm\Exception\RuntimeException;
 use Zend\Cache\Storage\StorageInterface;
 
 /**
@@ -51,8 +53,8 @@ abstract class ContainerAbstract
     /** @var \Zend\Cache\Storage\StorageInterface  */
     protected $cache;
 
-    /** @var integer */
-    protected $siteId;
+    /** @var \Rcm\Service\SiteManager */
+    protected $siteManager;
 
     /** @var array */
     protected $storedContainers;
@@ -66,18 +68,18 @@ abstract class ContainerAbstract
      * @param PluginManager    $pluginManager Rcm Plugin Manager
      * @param EntityRepository $repository    Doctrine Entity Manager
      * @param StorageInterface $cache         Zend Cache Manager
-     * @param integer          $siteId        Site Id
+     * @param SiteManager      $siteManager   Rcm Site Manager
      */
     public function __construct(
         PluginManager $pluginManager,
         EntityRepository $repository,
         StorageInterface $cache,
-        $siteId
+        SiteManager $siteManager
     ) {
         $this->pluginManager = $pluginManager;
         $this->repository    = $repository;
         $this->cache         = $cache;
-        $this->siteId        = $siteId;
+        $this->siteManager        = $siteManager;
     }
 
     /**
@@ -89,25 +91,33 @@ abstract class ContainerAbstract
      *                                 the page container.
      * @param boolean      $showStaged Show staged version.  Defaults to
      *                                 false.
+     * @param null|integer $siteId     Site Id
      *
      * @return null|array
      * @throws \Exception
+     * @throws \Rcm\Exception\InvalidArgumentException
      */
     public function getRevisionInfo(
         $name,
         $revision=null,
         $type='n',
-        $showStaged = false
+        $showStaged = false,
+        $siteId = null
     ) {
-        $siteId = $this->siteId;
+        if (!$siteId) {
+            $siteId = $this->siteManager->getCurrentSiteId();
+        }
 
+        if (!$this->siteManager->isValidSiteId($siteId)) {
+            throw new InvalidArgumentException('Invalid Site ID');
+        }
 
         if (empty($revision) && $showStaged) {
-            $revision = $this->getStagedRevisionId($name, $type);
+            $revision = $this->getStagedRevisionId($name, $type, $siteId);
         }
 
         if (empty($revision)) {
-            $revision = $this->getPublishedRevisionId($name, $type);
+            $revision = $this->getPublishedRevisionId($name, $type, $siteId);
         }
 
         if (empty($revision)) {
@@ -116,13 +126,13 @@ abstract class ContainerAbstract
             );
         }
 
-        $cacheKey = __CLASS__.'_'.$siteId.'_'.$type.'_'.$name.'_'.$revision;
+        $cacheKey = get_class($this).'_'.$siteId.'_'.$type.'_'.$name.'_'.$revision;
 
         if ($this->cache->hasItem($cacheKey)) {
             return $this->cache->getItem($cacheKey);
         }
 
-        $pageInfo = $this->getRevisionDbInfo($name, $revision, $type);
+        $pageInfo = $this->getRevisionDbInfo($name, $revision, $type, $siteId);
 
         $this->getPluginRenderedInstances($pageInfo['revision']);
 
@@ -138,18 +148,27 @@ abstract class ContainerAbstract
     /**
      * Get Published Container Revision ID
      *
-     * @param string      $name Container Name
-     * @param null|string $type Type of Container.  Currently only used by the page
-     *                          container.
+     * @param string       $name   Container Name
+     * @param null|string  $type   Type of Container.  Currently only used by the
+     *                             page container.
+     * @param null|integer $siteId Site Id
      *
      * @return null|integer
      * @throws \Rcm\Exception\PageNotFoundException
+     * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getPublishedRevisionId($name, $type='n')
+    public function getPublishedRevisionId($name, $type='n', $siteId=null)
     {
-        $siteId = $this->siteId;
+        if (!$siteId) {
+            $siteId = $this->siteManager->getCurrentSiteId();
+        }
+
+        if (!$this->siteManager->isValidSiteId($siteId)) {
+            throw new InvalidArgumentException('Invalid Site ID');
+        }
+
         $cacheKey
-            = __CLASS__.'_'.$siteId.'_'.$type.'_'.$name.'_currentRevision';
+            = get_class($this).'_'.$siteId.'_'.$type.'_'.$name.'_currentRevision';
 
         if ($this->cache->hasItem($cacheKey)) {
             return $this->cache->getItem($cacheKey);
@@ -168,16 +187,25 @@ abstract class ContainerAbstract
     /**
      * Get the Staged Revision Id and cache for later use
      *
-     * @param string      $name Page Name
-     * @param null|string $type Page Type.  Type "n" is default
+     * @param string       $name   Page Name
+     * @param null|string  $type   Page Type.  Type "n" is default
+     * @param null|integer $siteId Site Id
      *
      * @return null|integer
+     * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getStagedRevisionId($name, $type='n')
+    public function getStagedRevisionId($name, $type='n', $siteId=null)
     {
-        $siteId = $this->siteId;
+        if (!$siteId) {
+            $siteId = $this->siteManager->getCurrentSiteId();
+        }
+
+        if (!$this->siteManager->isValidSiteId($siteId)) {
+            throw new InvalidArgumentException('Invalid Site ID');
+        }
+
         $cacheKey
-            =  __CLASS__.'_'.$siteId.'_'.$name.'_'.$type.'_stagedRevision';
+            =  get_class($this).'_'.$siteId.'_'.$type.'_'.$name.'_stagedRevision';
 
         if ($this->cache->hasItem($cacheKey)) {
             return $this->cache->getItem($cacheKey);
@@ -197,21 +225,30 @@ abstract class ContainerAbstract
     /**
      * Get Page Revision DB Info and cache for later
      *
-     * @param string $name       Page Name
-     * @param string $revisionId Revision Id
-     * @param string $type       Type of Container.  Currently only used by the page
-     *                           container.
+     * @param string       $name       Page Name
+     * @param string       $revisionId Revision Id
+     * @param string       $type       Type of Container.  Currently only used by
+     *                                 the page container.
+     * @param null|integer $siteId     Site Id
      *
      * @return null|array Database Result Set
      * @throws \Rcm\Exception\PageNotFoundException
+     * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getRevisionDbInfo($name, $revisionId, $type='n')
+    public function getRevisionDbInfo($name, $revisionId, $type='n', $siteId=null)
     {
-        $siteId = $this->siteId;
+        if (!$siteId) {
+            $siteId = $this->siteManager->getCurrentSiteId();
+        }
+
+        if (!$this->siteManager->isValidSiteId($siteId)) {
+            throw new InvalidArgumentException('Invalid Site ID');
+        }
+
         $storedContainers = $this->storedContainers;
 
         $cacheKey
-            = __CLASS__.'_data_'.$siteId.'_'.$type.'_'.$name.'_'.$revisionId;
+            = get_class($this).'_data_'.$siteId.'_'.$type.'_'.$name.'_'.$revisionId;
 
         if (!empty($storedContainers['data'][$siteId][$type][$name][$revisionId])) {
             return $storedContainers['data'][$siteId][$type][$name][$revisionId];

@@ -73,14 +73,27 @@ class PageManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $sm = new ServiceManager();
-        $sm->setService('Rcm\Service\SiteManager', $mockSiteManager);
-        $sm->setService('Rcm\Service\PluginManager', $mockPluginManager);
-        $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
-        $sm->setService('Rcm\Service\Cache', $mockCache);
+        $mockLayoutValidator = $this
+            ->getMockBuilder('Rcm\Validator\MainLayout')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $serviceLocator = new ServiceManager();
+        $serviceLocator->setService('Rcm\Service\SiteManager', $mockSiteManager);
+        $serviceLocator->setService('Rcm\Service\PluginManager', $mockPluginManager);
+        $serviceLocator->setService(
+            'Doctrine\ORM\EntityManager',
+            $mockEntityManager
+        );
+        $serviceLocator->setService('Rcm\Service\Cache', $mockCache);
+        $serviceLocator->setService(
+            'Rcm\Validator\MainLayout',
+            $mockLayoutValidator
+        );
 
         $factory = new PageManagerFactory();
-        $object = $factory->createService($sm);
+        $object = $factory->createService($serviceLocator);
 
         $this->assertTrue($object instanceof PageManager);
     }

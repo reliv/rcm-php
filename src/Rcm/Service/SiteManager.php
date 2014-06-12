@@ -19,12 +19,10 @@
 
 namespace Rcm\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
 use Rcm\Exception\SiteNotFoundException;
-use Rcm\Repository\Site;
 use Doctrine\ORM\EntityRepository;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Http\PhpEnvironment\Request as PhpEnvironmentRequest;
@@ -68,7 +66,7 @@ class SiteManager
     protected $currentSiteId;
 
     /** @var array */
-    protected $currentSiteInfo;
+    protected $siteInfo = array();
 
     /** @var Country|array */
     protected $currentSiteCountry;
@@ -97,29 +95,53 @@ class SiteManager
     }
 
     /**
+     * Get the sites information
+     *
+     * @param integer $siteId Site Id
+     *
+     * @return string
+     */
+    public function getSiteInfo($siteId)
+    {
+        if (!empty($this->siteInfo[$siteId])) {
+            return $this->siteInfo[$siteId];
+        }
+
+        $cacheKey = 'rcm_site_info_'.$siteId;
+
+        if ($this->cache->hasItem($cacheKey)) {
+            $this->siteInfo[$siteId] = $this->cache->getItem($cacheKey);
+            return $this->siteInfo[$siteId];
+        }
+
+        $this->siteInfo[$siteId] = $this->siteRepo->getSiteInfo($siteId);
+
+        $this->cache->setItem($cacheKey, $this->siteInfo[$siteId]);
+
+        return $this->siteInfo[$siteId];
+    }
+    /**
      * Get the current sites information
      *
      * @return array
      */
     public function getCurrentSiteInfo()
     {
-        if (!empty($this->currentSiteInfo)) {
-            return $this->currentSiteInfo;
-        }
-
         $currentSiteId = $this->getCurrentSiteId();
-        $cacheKey = 'rcm_site_info_'.$currentSiteId;
+        return $this->getSiteInfo($currentSiteId);
+    }
 
-        if ($this->cache->hasItem($cacheKey)) {
-            $this->currentSiteInfo = $this->cache->getItem($cacheKey);
-            return $this->currentSiteInfo;
-        }
-
-        $this->currentSiteInfo = $this->siteRepo->getSiteInfo($currentSiteId);
-
-        $this->cache->setItem($cacheKey, $this->currentSiteInfo);
-
-        return $this->currentSiteInfo;
+    /**
+     * Get the sites Login Page
+     *
+     * @param integer $siteId Site Id
+     *
+     * @return string
+     */
+    public function getSiteLoginPage($siteId)
+    {
+        $siteInfo = $this->getSiteInfo($siteId);
+        return $siteInfo['loginPage'];
     }
 
     /**
@@ -129,9 +151,21 @@ class SiteManager
      */
     public function getCurrentSiteLoginPage()
     {
-        $siteInfo = $this->getCurrentSiteInfo();
+        $currentSiteId = $this->getCurrentSiteId();
+        return $this->getSiteLoginPage($currentSiteId);
+    }
 
-        return $siteInfo['loginPage'];
+    /**
+     * Get the sites theme
+     *
+     * @param integer $siteId Site Id
+     *
+     * @return string
+     */
+    public function getSiteTheme($siteId)
+    {
+        $siteInfo = $this->getSiteInfo($siteId);
+        return $siteInfo['theme'];
     }
 
     /**
@@ -141,9 +175,21 @@ class SiteManager
      */
     public function getCurrentSiteTheme()
     {
-        $siteInfo = $this->getCurrentSiteInfo();
+        $currentSiteId = $this->getCurrentSiteId();
+        return $this->getSiteTheme($currentSiteId);
+    }
 
-        return $siteInfo['theme'];
+    /**
+     * Get the Sites default Zend Framework Layout template.
+     *
+     * @param integer $siteId Site Id
+     *
+     * @return string
+     */
+    public function getSiteDefaultLayout($siteId)
+    {
+        $siteInfo = $this->getSiteInfo($siteId);
+        return $siteInfo['siteLayout'];
     }
 
     /**
@@ -153,9 +199,8 @@ class SiteManager
      */
     public function getCurrentSiteDefaultLayout()
     {
-        $siteInfo = $this->getCurrentSiteInfo();
-
-        return $siteInfo['siteLayout'];
+        $currentSiteId = $this->getCurrentSiteId();
+        return $this->getSiteDefaultLayout($currentSiteId);
     }
 
     /**
@@ -261,5 +306,30 @@ class SiteManager
     public function getAllActiveSites()
     {
         return $this->siteRepo->getAllActiveSites();
+    }
+
+    /**
+     * Get a site entity by id
+     *
+     * @param integer $siteId Site Id
+     *
+     * @return \Rcm\Entity\Site|null
+     */
+    public function getSiteById($siteId)
+    {
+        if ($this->isValidSiteId($siteId)) {
+            return $this->siteRepo->findOneBy(
+                array(
+                    'siteId' => $siteId
+                )
+            );
+        }
+
+        return null;
+    }
+
+    public function isValidSiteId($siteId)
+    {
+        return $this->siteRepo->isValidSiteId($siteId);
     }
 }

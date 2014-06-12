@@ -1,8 +1,8 @@
 <?php
 /**
- * Test for Factory RouteListenerFactory
+ * Test for Factory PageValidatorFactory
  *
- * This file contains the test for the RouteListenerFactory.
+ * This file contains the test for the PageValidatorFactory.
  *
  * PHP version 5.3
  *
@@ -21,14 +21,16 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\EventListener\RouteListener;
-use Rcm\Factory\RouteListenerFactory;
+use Rcm\Acl\ResourceProvider;
+use Rcm\Factory\AclResourceProviderFactory;
+use Rcm\Factory\PageValidatorFactory;
+use Rcm\Validator\Page;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Test for Factory RouteListenerFactory
+ * Test for Factory PageValidatorFactory
  *
- * Test for Factory RouteListenerFactory
+ * Test for Factory PageValidatorFactory
  *
  * @category  Reliv
  * @package   Rcm
@@ -39,34 +41,35 @@ use Zend\ServiceManager\ServiceManager;
  * @link      http://github.com/reliv
  *
  */
-class RouteListenerFactoryTest extends \PHPUnit_Framework_TestCase
+class PageValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Generic test for the constructor
      *
      * @return null
-     * @covers \Rcm\Factory\RouteListenerFactory
+     * @covers \Rcm\Factory\PageValidatorFactory
      */
     public function testCreateService()
     {
-        $mockDomainManager = $this->getMockBuilder('\Rcm\Service\DomainManager')
+
+        $mockPageManager = $this->getMockBuilder('\Rcm\Service\PageManager')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockRedirectManager = $this->getMockBuilder('\Rcm\Service\RedirectManager')
+        $pageValidator = $this->getMockBuilder('\Rcm\Validator\Page')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $mockPageManager->expects($this->any())
+            ->method('getPageValidator')
+            ->will($this->returnValue($pageValidator));
 
         $serviceLocator = new ServiceManager();
-        $serviceLocator->setService('Rcm\Service\DomainManager', $mockDomainManager);
-        $serviceLocator->setService(
-            'Rcm\Service\RedirectManager',
-            $mockRedirectManager
-        );
+        $serviceLocator->setService('Rcm\Service\PageManager', $mockPageManager);
 
-        $factory = new RouteListenerFactory();
+        $factory = new PageValidatorFactory();
         $object = $factory->createService($serviceLocator);
 
-        $this->assertTrue($object instanceof RouteListener);
+        $this->assertTrue($object instanceof Page);
     }
 }

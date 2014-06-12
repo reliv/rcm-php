@@ -28,11 +28,18 @@
             "homepage": "http://www.reliv.com/"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/reliv/RcmUser.git"
+        }
+    ],
     "require": {
         "php": ">=5.3.3",
         "doctrine/doctrine-orm-module": "0.*",
         "zendframework/zendframework": "2.*",
-        "rwoverdijk/assetmanager": "1.*"
+        "rwoverdijk/assetmanager": "1.*",
+        "reliv/RcmUser": "dev-master"
     },
     "autoload": {
         "psr-0": {

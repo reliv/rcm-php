@@ -19,9 +19,8 @@
 
 namespace Rcm\Service;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Rcm\Exception\ContainerNotFoundException;
 use Zend\Cache\Storage\StorageInterface;
 
 /**
@@ -46,4 +45,25 @@ use Zend\Cache\Storage\StorageInterface;
 class ContainerManager extends ContainerAbstract
 {
 
+    /**
+     * Constructor - This is here for quick reference and coverage reports
+     *
+     * @param PluginManager    $pluginManager Rcm Plugin Manager
+     * @param EntityRepository $repository    Doctrine Entity Manager
+     * @param StorageInterface $cache         Zend Cache Manager
+     * @param SiteManager      $siteManager   Rcm Site Manager
+     */
+    public function __construct(
+        PluginManager $pluginManager,
+        EntityRepository $repository,
+        StorageInterface $cache,
+        SiteManager $siteManager
+    ) {
+        parent::__construct(
+            $pluginManager,
+            $repository,
+            $cache,
+            $siteManager
+        );
+    }
 }

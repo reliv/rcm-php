@@ -20,6 +20,7 @@
 namespace Rcm\EventListener;
 
 use Rcm\Service\DomainManager;
+use Rcm\Service\RedirectManager;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 
@@ -40,16 +41,24 @@ use Zend\Mvc\MvcEvent;
  */
 class RouteListener
 {
+    /** @var \Rcm\Service\DomainManager  */
     protected $domainManager;
+
+    /** @var \Rcm\Service\RedirectManager  */
+    protected $redirectManager;
 
     /**
      * Constructor
      *
-     * @param DomainManager $domainManager Rcm Domain Manager
+     * @param DomainManager $domainManager     Rcm Domain Manager
+     * @param RedirectManager $redirectManager Rcm Redirect Manager
      */
-    public function __construct(DomainManager $domainManager)
-    {
-        $this->domainManager = $domainManager;
+    public function __construct(
+        DomainManager   $domainManager,
+        RedirectManager $redirectManager
+    ) {
+        $this->domainManager   = $domainManager;
+        $this->redirectManager = $redirectManager;
     }
 
     /**
@@ -112,7 +121,7 @@ class RouteListener
         $httpHost = $serverParam->get('HTTP_HOST');
         $requestUri = $serverParam->get('REQUEST_URI');
 
-        $redirectList = $this->domainManager->getRedirectList();
+        $redirectList = $this->redirectManager->getRedirectList();
 
         $requestUrl = $httpHost.$requestUri;
 

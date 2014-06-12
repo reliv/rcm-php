@@ -40,7 +40,7 @@ use Rcm\Exception\InvalidArgumentException;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @ORM\Entity
+ * @ORM\Entity (repositoryClass="Rcm\Repository\Domain")
  * @ORM\Table(name="rcm_domains")
  */
 class Domain
