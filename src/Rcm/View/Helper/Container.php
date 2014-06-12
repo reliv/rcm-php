@@ -220,7 +220,7 @@ class Container extends AbstractHelper
         $view = $this->getView();
 
         if (!empty($pluginData['instance']['renderedData']['css'])) {
-            foreach ($pluginData['instance']['renderedData']['css'] as $css) {
+            foreach ($pluginData['instance']['renderedData']['css'] as &$css) {
                 $container = unserialize($css);
 
                 if (!$this->isDuplicateCss($container)) {
@@ -242,7 +242,7 @@ class Container extends AbstractHelper
         $view = $this->getView();
 
         if (!empty($pluginData['instance']['renderedData']['js'])) {
-            foreach ($pluginData['instance']['renderedData']['js'] as $js) {
+            foreach ($pluginData['instance']['renderedData']['js'] as &$js) {
                 $container = unserialize($js);
 
                 if (!$this->isDuplicateScript($container)) {
@@ -266,7 +266,7 @@ class Container extends AbstractHelper
         /** @var \Zend\View\Helper\HeadLink $headLink */
         $headLink = $view->headLink();
 
-        foreach ($headLink->getContainer() as $item) {
+        foreach ($headLink->getContainer() as &$item) {
             if (($item->rel == 'stylesheet') && ($item->href == $container->href)) {
                 return true;
             }
@@ -289,7 +289,7 @@ class Container extends AbstractHelper
         /** @var \Zend\View\Helper\HeadScript $headScript */
         $headScript = $view->headScript();
 
-        foreach ($headScript->getContainer() as $item) {
+        foreach ($headScript->getContainer() as &$item) {
             if (($item->source === null)
                 && array_key_exists('src', $item->attributes)
                 && ($container->attributes['src'] == $item->attributes['src'])

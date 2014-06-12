@@ -19,6 +19,7 @@
 namespace Rcm\Service;
 
 use Rcm\Exception\RuntimeException;
+use Rcm\Validator\MainLayout;
 
 /**
  * Rcm Layout Manager
@@ -46,6 +47,9 @@ class LayoutManager
     /** @var Array  */
     protected $config;
 
+    /** @var \Rcm\Validator\MainLayout  */
+    protected $mainLayoutValidator;
+
     /**
      * Constructor
      *
@@ -56,6 +60,8 @@ class LayoutManager
     {
         $this->siteManager = $siteManager;
         $this->config = $config;
+
+        $this->mainLayoutValidator = new MainLayout($this);
     }
 
     /**
@@ -145,12 +151,20 @@ class LayoutManager
      * Find out if selected theme exists and has site layouts defined in config
      * or fallback to generic theme
      *
+     * @param integer $siteId Site Id to lookup.  If none passed will get the
+     *                        currents theme.
+     *
      * @return array Config Array For Theme
      * @throws RuntimeException
      */
-    public function getThemeLayoutConfig()
+    public function getThemeLayoutConfig($siteId=null)
     {
-        $theme = $this->siteManager->getCurrentSiteTheme();
+        if (!$siteId) {
+            $theme = $this->siteManager->getCurrentSiteTheme();
+        } else {
+            $theme = $this->siteManager->getSiteTheme($siteId);
+        }
+
 
         $rcmThemesConfig = $this->getThemesConfig();
 
@@ -194,5 +208,35 @@ class LayoutManager
         throw new RuntimeException(
             'No theme config found for site and no default theme found'
         );
+    }
+
+    /**
+     * Check to see if a layout is valid and available for a theme
+     *
+     * @param string  $layoutKey Layout name to search
+     * @param integer $siteId    Site Id to use.  If none provided will use current
+     *                           sites ID
+     *
+     * @return boolean
+     */
+    public function isLayoutValid($layoutKey, $siteId=null)
+    {
+        $themesConfig = $this->getThemeLayoutConfig($siteId);
+
+        if (!empty($themesConfig[$layoutKey])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the main layout validator
+     *
+     * @return MainLayout
+     */
+    public function getMainLayoutValidator()
+    {
+        return $this->mainLayoutValidator;
     }
 }

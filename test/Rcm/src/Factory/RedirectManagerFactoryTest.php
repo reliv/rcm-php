@@ -1,8 +1,8 @@
 <?php
 /**
- * Test for Factory DomainManagerFactory
+ * Test for Factory RedirectManagerFactory
  *
- * This file contains the test for the DomainManagerFactory.
+ * This file contains the test for the RedirectManagerFactory.
  *
  * PHP version 5.3
  *
@@ -21,14 +21,14 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\Service\DomainManager;
-use Rcm\Factory\DomainManagerFactory;
+use Rcm\Service\RedirectManager;
+use Rcm\Factory\RedirectManagerFactory;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Test for Factory DomainManagerFactory
+ * Test for Factory RedirectManagerFactory
  *
- * Test for Factory DomainManagerFactory
+ * Test for Factory RedirectManagerFactory
  *
  * @category  Reliv
  * @package   Rcm
@@ -39,17 +39,17 @@ use Zend\ServiceManager\ServiceManager;
  * @link      http://github.com/reliv
  *
  */
-class DomainManagerFactoryTest extends \PHPUnit_Framework_TestCase
+class RedirectManagerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Generic test for the constructor
      *
      * @return null
-     * @covers \Rcm\Factory\DomainManagerFactory
+     * @covers \Rcm\Factory\RedirectManagerFactory
      */
     public function testCreateService()
     {
-        $mockDomainRepo = $this->getMockBuilder('\Rcm\Repository\Domain')
+        $mockRedirectRepo = $this->getMockBuilder('\Rcm\Repository\Redirect')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -59,9 +59,13 @@ class DomainManagerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $mockEntityManager->expects($this->any())
             ->method('getRepository')
-            ->will($this->returnValue($mockDomainRepo));
+            ->will($this->returnValue($mockRedirectRepo));
 
         $mockCache = $this->getMockBuilder('\Zend\Cache\Storage\Adapter\Memory')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockSiteManager = $this->getMockBuilder('\Rcm\Service\SiteManager')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -70,11 +74,17 @@ class DomainManagerFactoryTest extends \PHPUnit_Framework_TestCase
             'Doctrine\ORM\EntityManager',
             $mockEntityManager
         );
+
+        $serviceLocator->setService(
+            'Rcm\Service\SiteManager',
+            $mockSiteManager
+        );
+
         $serviceLocator->setService('Rcm\Service\Cache', $mockCache);
 
-        $factory = new DomainManagerFactory();
+        $factory = new RedirectManagerFactory();
         $object = $factory->createService($serviceLocator);
 
-        $this->assertTrue($object instanceof DomainManager);
+        $this->assertTrue($object instanceof RedirectManager);
     }
 }

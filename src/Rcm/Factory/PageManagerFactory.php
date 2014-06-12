@@ -51,9 +51,6 @@ class PageManagerFactory implements FactoryInterface
         /** @var \Rcm\Service\SiteManager $siteManager */
         $siteManager   = $serviceLocator->get('Rcm\Service\SiteManager');
 
-        /** @var integer $currentSiteId */
-        $currentSiteId = $siteManager->getCurrentSiteId();
-
         /** @var \Rcm\Service\PluginManager $pluginManager */
         $pluginManager = $serviceLocator->get('Rcm\Service\PluginManager');
 
@@ -66,11 +63,16 @@ class PageManagerFactory implements FactoryInterface
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
         $cache         = $serviceLocator->get('Rcm\Service\Cache');
 
+        /** @var \Rcm\Validator\MainLayout $layoutValidator */
+        $layoutValidator = $serviceLocator->get('Rcm\Validator\MainLayout');
+
+
         return new PageManager(
             $pluginManager,
             $repository,
             $cache,
-            $currentSiteId
+            $siteManager,
+            $layoutValidator
         );
 
     }

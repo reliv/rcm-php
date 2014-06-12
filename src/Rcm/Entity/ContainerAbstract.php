@@ -332,7 +332,7 @@ abstract class ContainerAbstract
         $staged = $this->stagedRevision;
 
         /** @var \Rcm\Entity\Revision $revision */
-        foreach ($this->revisions as $revision) {
+        foreach ($this->revisions as &$revision) {
 
             if (!empty($current)
                 && $revision->getRevisionId() == $current->getRevisionId()

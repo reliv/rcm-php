@@ -19,9 +19,8 @@
 
 namespace Rcm\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Zend\Cache\Storage\StorageInterface;
-use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Domain Manager.
@@ -44,17 +43,23 @@ use Doctrine\ORM\Query\Expr\Join;
  */
 class DomainManager
 {
+    /** @var \Rcm\Repository\Domain  */
+    protected $repository;
+
+    /** @var \Zend\Cache\Storage\StorageInterface  */
+    protected $cache;
+
     /**
      * Constructor
      *
-     * @param EntityManagerInterface $entityManager Doctrine Entity Manager
-     * @param StorageInterface       $cache         Zend Cache Manager
+     * @param EntityRepository $repository Doctrine Domain Repo
+     * @param StorageInterface $cache      Zend Cache Manager
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
+        EntityRepository $repository,
         StorageInterface $cache
     ) {
-        $this->entityManager = $entityManager;
+        $this->repository = $repository;
         $this->cache = $cache;
     }
 
@@ -70,61 +75,10 @@ class DomainManager
             return $this->cache->getItem('rcm_active_domain_list');
         }
 
-        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-
-        $queryBuilder->select(
-            'domain.domain,
-            primary.domain primaryDomain,
-            language.iso639_2b languageId,
-            site.siteId,
-            country.iso3 countryId'
-        )
-            ->from('\Rcm\Entity\Domain', 'domain', 'domain.domain')
-            ->leftJoin('domain.primaryDomain', 'primary')
-            ->leftJoin('domain.defaultLanguage', 'language')
-            ->leftJoin(
-                '\Rcm\Entity\Site',
-                'site',
-                Join::WITH,
-                'site.domain = domain.domainId'
-            )
-            ->leftJoin('site.country', 'country')
-            ->where('site.status = :status')
-            ->setParameter('status', 'A');
-
-        $domainList = $queryBuilder->getQuery()->getArrayResult();
+        $domainList = $this->repository->getActiveDomainList();
 
         $this->cache->setItem('rcm_active_domain_list', $domainList);
 
         return $domainList;
-    }
-
-    /**
-     * Get a list of redirects for the CMS.
-     *
-     * @return array|mixed
-     * @todo Move out of the Domain Manager.  Redirects have nothing to do with
-     *       domains.
-     */
-    public function getRedirectList()
-    {
-        //Check Cache for list of domains
-        if ($this->cache->hasItem('rcm_redirect_list')) {
-            return $this->cache->getItem('rcm_redirect_list');
-        }
-
-        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-
-        $queryBuilder
-            ->select('r.requestUrl, r.redirectUrl')
-            ->from('\Rcm\Entity\Redirect', 'r', 'r.requestUrl');
-
-        $redirectList = $queryBuilder->getQuery()->getArrayResult();
-
-        $this->cache->setItem('rcm_redirect_list', $redirectList);
-
-        return $redirectList;
     }
 }

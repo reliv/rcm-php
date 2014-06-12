@@ -415,7 +415,7 @@ class PluginManager
 
         $return = array();
 
-        foreach ($container as $item) {
+        foreach ($container as &$item) {
 
             if ($item->type == 'text/css') {
                 $return[] = serialize($item);

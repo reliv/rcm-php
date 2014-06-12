@@ -21,11 +21,8 @@ require_once __DIR__ . '/../../../autoload.php';
 use Rcm\Service\PluginManager;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceManager;
-use Zend\ModuleManager\ModuleManager;
 use Zend\ModuleManager\Listener;
 use Zend\Cache\Storage\Adapter\Memory;
-use Zend\ServiceManager\Config;
-use Zend\View\HelperPluginManager;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\Mvc\Service\ServiceManagerConfig;
 
@@ -70,11 +67,13 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         /** @var \Zend\ServiceManager\ServiceManager $sm */
         $sm = $this->startZf2();
 
+        /** @var \Zend\View\Resolver\ResolverInterface $resolver */
         $resolver = $sm->get('ViewResolver');
 
         $render = new PhpRenderer();
         $render->setResolver($resolver);
 
+        /** @var \Zend\View\Helper\BasePath $basePath */
         $basePath = $render->plugin('basepath');
         $basePath->setBasePath('/');
 
@@ -99,6 +98,8 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Used during setup to start the ZF2 environment
+     *
+     * @return ServiceManager
      */
     protected function startZf2()
     {
