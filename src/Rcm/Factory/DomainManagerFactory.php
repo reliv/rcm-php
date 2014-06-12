@@ -51,11 +51,14 @@ class DomainManagerFactory implements FactoryInterface
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
+        /** @var \Rcm\Repository\Domain $domainRepo */
+        $domainRepo = $entityManager->getRepository('\Rcm\Entity\Domain');
+
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
         $cache         = $serviceLocator->get('Rcm\Service\Cache');
 
         return new DomainManager(
-            $entityManager,
+            $domainRepo,
             $cache
         );
 

@@ -195,6 +195,8 @@ class Page extends EntityRepository implements ContainerInterface
             return null;
         }
 
+        $return = array();
+
         foreach ($result as &$page) {
             $return[$page['pageId']] = $page['name'];
         }
@@ -202,6 +204,18 @@ class Page extends EntityRepository implements ContainerInterface
         return $return;
     }
 
+    /**
+     * Add a new page to the DB
+     *
+     * @param string     $pageName  Page Name
+     * @param string     $pageTitle Page Title
+     * @param string     $layout    Site Layout
+     * @param string     $author    Author
+     * @param SiteEntity $site      Site Entity
+     * @param string     $pageType  Page Type
+     *
+     * @return void
+     */
     public function createNewPage(
         $pageName,
         $pageTitle,

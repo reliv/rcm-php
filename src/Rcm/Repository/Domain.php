@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Redirect Repository
+ * Domain Repository
  *
- * This file contains the redirect repository
+ * This file contains the domain repository
  *
  * PHP version 5.3
  *
@@ -21,18 +21,14 @@
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
-use Rcm\Entity\Revision;
-use Rcm\Entity\Page as PageEntity;
-use Rcm\Entity\Site as SiteEntity;
-use Rcm\Exception\InvalidArgumentException;
+use Doctrine\ORM\Query\Expr\Join;
 
 
 /**
- * Redirect Repository
+ * Domain Repository
  *
- * Redirect Repository.  Used to get redirects for the CMS
+ * Domain Repository.  Used to get domains for the CMS
  *
  * PHP version 5.3
  *
@@ -46,30 +42,37 @@ use Rcm\Exception\InvalidArgumentException;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-class Redirect extends EntityRepository
+class Domain extends EntityRepository
 {
     /**
-     * Get Redirect List From DB
-     *
-     * @param integer $siteId Site Id
+     * Get the current list of domains and store these in cache for future look ups.
      *
      * @return array
-     * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getRedirectList($siteId)
+    public function getActiveDomainList()
     {
-        if (empty($siteId) || !is_numeric($siteId)) {
-            throw new InvalidArgumentException('Invalid Site Id To Search By');
-        }
-
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
 
-        $queryBuilder
-            ->select('r.requestUrl, r.redirectUrl')
-            ->from('\Rcm\Entity\Redirect', 'r', 'r.requestUrl')
-            ->where('r.site = :siteId')
-            ->setParameter('siteId', $siteId);
+        $queryBuilder->select(
+            'domain.domain,
+            primary.domain primaryDomain,
+            language.iso639_2b languageId,
+            site.siteId,
+            country.iso3 countryId'
+        )
+            ->from('\Rcm\Entity\Domain', 'domain', 'domain.domain')
+            ->leftJoin('domain.primaryDomain', 'primary')
+            ->leftJoin('domain.defaultLanguage', 'language')
+            ->leftJoin(
+                '\Rcm\Entity\Site',
+                'site',
+                Join::WITH,
+                'site.domain = domain.domainId'
+            )
+            ->leftJoin('site.country', 'country')
+            ->where('site.status = :status')
+            ->setParameter('status', 'A');
 
         return $queryBuilder->getQuery()->getArrayResult();
     }

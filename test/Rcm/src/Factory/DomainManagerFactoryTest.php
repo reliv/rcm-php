@@ -49,20 +49,31 @@ class DomainManagerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
+        $mockDomainRepo = $this->getMockBuilder('\Rcm\Repository\Domain')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $mockEntityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($mockDomainRepo));
 
         $mockCache = $this->getMockBuilder('\Zend\Cache\Storage\Adapter\Memory')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $sm = new ServiceManager();
-        $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
-        $sm->setService('Rcm\Service\Cache', $mockCache);
+        $serviceLocator = new ServiceManager();
+        $serviceLocator->setService(
+            'Doctrine\ORM\EntityManager',
+            $mockEntityManager
+        );
+        $serviceLocator->setService('Rcm\Service\Cache', $mockCache);
 
         $factory = new DomainManagerFactory();
-        $object = $factory->createService($sm);
+        $object = $factory->createService($serviceLocator);
 
         $this->assertTrue($object instanceof DomainManager);
     }

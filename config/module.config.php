@@ -214,6 +214,9 @@ return array(
             'Rcm\Service\DomainManager'
                 => 'Rcm\Factory\DomainManagerFactory',
 
+            'Rcm\Service\RedirectManager'
+                => 'Rcm\Factory\RedirectManagerFactory',
+
             'Rcm\Service\SiteManager'
                 => 'Rcm\Factory\SiteManagerFactory',
 

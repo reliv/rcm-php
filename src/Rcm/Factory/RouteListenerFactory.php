@@ -50,6 +50,12 @@ class RouteListenerFactory implements FactoryInterface
         /** @var \Rcm\Service\DomainManager $domainManager */
         $domainManager = $serviceLocator->get('Rcm\Service\DomainManager');
 
-        return new RouteListener($domainManager);
+        /** @var \Rcm\Service\RedirectManager $redirectManager */
+        $redirectManager = $serviceLocator->get('Rcm\Service\RedirectManager');
+
+        return new RouteListener(
+            $domainManager,
+            $redirectManager
+        );
     }
 }

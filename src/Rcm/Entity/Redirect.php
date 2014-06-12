@@ -38,7 +38,7 @@ use Zend\Validator\ValidatorInterface;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @ORM\Entity
+ * @ORM\Entity (repositoryClass="Rcm\Repository\Redirect")
  * @ORM\Table(name="rcm_redirects")
  */
 class Redirect

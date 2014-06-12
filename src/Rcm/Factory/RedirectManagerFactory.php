@@ -1,8 +1,8 @@
 <?php
 /**
- * Service Factory for the Domain Manager
+ * Service Factory for the Redirect Manager
  *
- * This file contains the factory needed to generate a Domain Manager.
+ * This file contains the factory needed to generate a Redirect Manager.
  *
  * PHP version 5.3
  *
@@ -19,13 +19,14 @@
 namespace Rcm\Factory;
 
 use Rcm\Service\DomainManager;
+use Rcm\Service\RedirectManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Service Factory for the Domain Manager
+ * Service Factory for the Redirect Manager
  *
- * Factory for the Domain Manager.
+ * Factory for the Redirect Manager.
  *
  * @category  Reliv
  * @package   Rcm
@@ -36,7 +37,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class DomainManagerFactory implements FactoryInterface
+class RedirectManagerFactory implements FactoryInterface
 {
 
     /**
@@ -51,15 +52,19 @@ class DomainManagerFactory implements FactoryInterface
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
-        /** @var \Rcm\Repository\Domain $domainRepo */
-        $domainRepo = $entityManager->getRepository('\Rcm\Entity\Domain');
+        /** @var \Rcm\Repository\Redirect $redirectRepo */
+        $redirectRepo = $entityManager->getRepository('\Rcm\Entity\Redirect');
+
+        /** @var \Rcm\Service\SiteManager  $siteManager */
+        $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
         $cache         = $serviceLocator->get('Rcm\Service\Cache');
 
-        return new DomainManager(
-            $domainRepo,
-            $cache
+        return new RedirectManager(
+            $redirectRepo,
+            $cache,
+            $siteManager
         );
 
     }
