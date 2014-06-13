@@ -1,8 +1,8 @@
 <?php
 /**
- * Test for Factory PageValidatorFactory
+ * Test for Factory MainLayoutValidatorFactory
  *
- * This file contains the test for the PageValidatorFactory.
+ * This file contains the test for the MainLayoutValidatorFactory.
  *
  * PHP version 5.3
  *
@@ -21,14 +21,15 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\Factory\PageValidatorFactory;
+use Rcm\Factory\MainLayoutValidatorFactory;
+use Rcm\Validator\MainLayout;
 use Rcm\Validator\Page;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Test for Factory PageValidatorFactory
+ * Test for Factory MainLayoutValidatorFactory
  *
- * Test for Factory PageValidatorFactory
+ * Test for Factory MainLayoutValidatorFactory
  *
  * @category  Reliv
  * @package   Rcm
@@ -39,35 +40,35 @@ use Zend\ServiceManager\ServiceManager;
  * @link      http://github.com/reliv
  *
  */
-class PageValidatorFactoryTest extends \PHPUnit_Framework_TestCase
+class MainLayoutValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Generic test for the constructor
      *
      * @return null
-     * @covers \Rcm\Factory\PageValidatorFactory
+     * @covers \Rcm\Factory\MainLayoutValidatorFactory
      */
     public function testCreateService()
     {
 
-        $mockPageManager = $this->getMockBuilder('\Rcm\Service\PageManager')
+        $mockLayoutValidator = $this->getMockBuilder('\Rcm\Validator\MainLayout')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $pageValidator = $this->getMockBuilder('\Rcm\Validator\Page')
+        $mockLayoutManager = $this->getMockBuilder('\Rcm\Service\LayoutManager')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockPageManager->expects($this->any())
-            ->method('getPageValidator')
-            ->will($this->returnValue($pageValidator));
+        $mockLayoutManager->expects($this->once())
+            ->method('getMainLayoutValidator')
+            ->will($this->returnValue($mockLayoutValidator));
 
         $serviceLocator = new ServiceManager();
-        $serviceLocator->setService('Rcm\Service\PageManager', $mockPageManager);
+        $serviceLocator->setService('Rcm\Service\LayoutManager', $mockLayoutManager);
 
-        $factory = new PageValidatorFactory();
+        $factory = new MainLayoutValidatorFactory();
         $object = $factory->createService($serviceLocator);
 
-        $this->assertTrue($object instanceof Page);
+        $this->assertTrue($object instanceof MainLayout);
     }
 }

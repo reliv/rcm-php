@@ -1,8 +1,8 @@
 <?php
 /**
- * Unit Test for the Plugin Manager Service
+ * Unit Test for the PageName Validator
  *
- * This file contains the unit test for the Plugin Manager Service
+ * This file contains the unit test for the PageName Validator
  *
  * PHP version 5.3
  *
@@ -24,9 +24,9 @@ use Rcm\Validator\PageName;
 require_once __DIR__ . '/../../../autoload.php';
 
 /**
- * Unit Test for the Plugin Manager Service
+ * Unit Test for the PageName Validator
  *
- * Unit Test for the Plugin Manager Service
+ * Unit Test for the PageName Validator
  *
  * @category  Reliv
  * @package   Rcm
