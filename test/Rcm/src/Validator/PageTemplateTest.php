@@ -1,8 +1,8 @@
 <?php
 /**
- * Unit Test for the Page Validator
+ * Unit Test for the PageTemplate Validator
  *
- * This file contains the unit test for the Page Validator
+ * This file contains the unit test for the PageTemplate Validator
  *
  * PHP version 5.3
  *
@@ -19,14 +19,14 @@
 
 namespace RcmTest\Validator;
 
-use Rcm\Validator\Page;
+use Rcm\Validator\PageTemplate;
 
 require_once __DIR__ . '/../../../autoload.php';
 
 /**
- * Unit Test for the Page Validator
+ * Unit Test for the PageTemplate Validator
  *
- * Unit Test for the Page Validator
+ * Unit Test for the PageTemplate Validator
  *
  * @category  Reliv
  * @package   Rcm
@@ -36,12 +36,12 @@ require_once __DIR__ . '/../../../autoload.php';
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class PageTest extends \PHPUnit_Framework_TestCase
+class PageTemplateTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $pageManager;
 
-    /** @var \Rcm\Validator\Page */
+    /** @var \Rcm\Validator\PageTemplate */
     protected $validator;
 
     /**
@@ -58,7 +58,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->pageManager = $pageManager;
 
         /** @var \Rcm\Service\PageManager $pageManager */
-        $this->validator = new Page($pageManager);
+        $this->validator = new PageTemplate($pageManager);
     }
 
     /**
@@ -66,11 +66,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \Rcm\Validator\Page::__construct
+     * @covers \Rcm\Validator\PageTemplate::__construct
      */
     public function testConstructor()
     {
-        $this->assertInstanceOf('Rcm\Validator\Page', $this->validator);
+        $this->assertInstanceOf('Rcm\Validator\PageTemplate', $this->validator);
     }
 
     /**
@@ -78,7 +78,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \Rcm\Validator\Page::setPageType
+     * @covers \Rcm\Validator\PageTemplate::setPageType
      */
     public function testSetPageType()
     {
@@ -87,7 +87,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $reflectedProp->setAccessible(true);
         $defaultValue = $reflectedProp->getValue($this->validator);
 
-        $this->assertEquals('n', $defaultValue);
+        $this->assertEquals('t', $defaultValue);
 
         $this->validator->setPageType('z');
 
@@ -101,7 +101,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \Rcm\Validator\Page::setSiteId
+     * @covers \Rcm\Validator\PageTemplate::setSiteId
      */
     public function testSetSiteId()
     {
@@ -124,21 +124,24 @@ class PageTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \Rcm\Validator\Page::isValid
+     * @covers \Rcm\Validator\PageTemplate::isValid
      */
     public function testIsValid()
     {
-        $pageName = 'test-page';
+        $templateId = 44;
         $pageType = 'z';
 
         $this->pageManager->expects($this->once())
-            ->method('getPageByName')
-            ->with($this->equalTo($pageName), $this->equalTo($pageType))
-            ->will($this->returnValue(false));
+            ->method('getPageById')
+            ->with(
+                $this->equalTo($templateId),
+                $this->equalTo($pageType),
+                $this->equalTo(null)
+            )->will($this->returnValue(true));
 
         $this->validator->setPageType($pageType);
 
-        $result = $this->validator->isValid($pageName);
+        $result = $this->validator->isValid($templateId);
 
         $this->assertTrue($result);
 
@@ -150,21 +153,24 @@ class PageTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \Rcm\Validator\Page::isValid
+     * @covers \Rcm\Validator\PageTemplate::isValid
      */
-    public function testIsValidWhenPageExists()
+    public function testIsValidWhenPageTemplateIdInvalid()
     {
-        $pageName = 'test-page';
+        $templateId = 44;
         $pageType = 'z';
 
         $this->pageManager->expects($this->once())
-            ->method('getPageByName')
-            ->with($this->equalTo($pageName), $this->equalTo($pageType))
-            ->will($this->returnValue(true));
+            ->method('getPageById')
+            ->with(
+                $this->equalTo($templateId),
+                $this->equalTo($pageType),
+                $this->equalTo(null)
+            )->will($this->returnValue(false));
 
         $this->validator->setPageType($pageType);
 
-        $result = $this->validator->isValid($pageName);
+        $result = $this->validator->isValid($templateId);
 
         $this->assertFalse($result);
 
@@ -174,36 +180,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $errors = array_keys($messages);
 
-        $this->assertEquals('pageExists', $errors[0]);
-    }
-
-    /**
-     * Test Is Valid when page exists
-     *
-     * @return void
-     *
-     * @covers \Rcm\Validator\Page::isValid
-     */
-    public function testIsValidWhenPageNameInvalid()
-    {
-        $pageName = 'test page';
-        $pageType = 'z';
-
-        $this->pageManager->expects($this->never())
-            ->method('getPageByName');
-
-        $this->validator->setPageType($pageType);
-
-        $result = $this->validator->isValid($pageName);
-
-        $this->assertFalse($result);
-
-        $messages = $this->validator->getMessages();
-
-        $this->assertNotEmpty($messages);
-
-        $errors = array_keys($messages);
-
-        $this->assertEquals('pageName', $errors[0]);
+        $this->assertEquals('pageTemplate', $errors[0]);
     }
 }

@@ -50,6 +50,8 @@ class PageTemplate extends AbstractValidator
 
     protected $pageType = 't';
 
+    protected $siteId = null;
+
     /**
      * Constructor
      *
@@ -75,6 +77,19 @@ class PageTemplate extends AbstractValidator
     }
 
     /**
+     * Set the site id to use for validation.  If none is passed then we will
+     * validate against the current site id.
+     *
+     * @param integer $siteId Site Id
+     *
+     * @return void
+     */
+    public function setSiteId($siteId)
+    {
+        $this->siteId = $siteId;
+    }
+
+    /**
      * Is the page valid?
      *
      * @param string $value Page to validate
@@ -85,7 +100,11 @@ class PageTemplate extends AbstractValidator
     {
         $this->setValue($value);
 
-        if (!$this->pageManager->getPageById($value, $this->pageType)) {
+        if (!$this->pageManager->getPageById(
+            $value,
+            $this->pageType,
+            $this->siteId
+        )) {
             $this->error(self::PAGE_TEMPLATE);
             return false;
         }

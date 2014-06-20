@@ -49,6 +49,8 @@ class Page extends PageName
 
     protected $pageType = 'n';
 
+    protected $siteId = null;
+
     /**
      * Constructor
      *
@@ -75,6 +77,19 @@ class Page extends PageName
     }
 
     /**
+     * Set the site id to use for validation.  If none is passed then we will
+     * validate against the current site id.
+     *
+     * @param integer $siteId Site Id
+     *
+     * @return void
+     */
+    public function setSiteId($siteId)
+    {
+        $this->siteId = $siteId;
+    }
+
+    /**
      * Is the page valid?
      *
      * @param string $value Page to validate
@@ -89,7 +104,11 @@ class Page extends PageName
             return false;
         }
 
-        if ($this->pageManager->getPageByName($value, $this->pageType)) {
+        if ($this->pageManager->getPageByName(
+            $value,
+            $this->pageType,
+            $this->siteId
+        )) {
             $this->error(self::PAGE_EXISTS);
             return false;
         }
