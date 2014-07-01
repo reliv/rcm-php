@@ -65,7 +65,7 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $mockLayoutManager->expects($this->any())
-            ->method('getLayout')
+            ->method('getSiteLayout')
             ->will($this->returnValue($layout));
 
         $mockSiteManager = $this->getMockBuilder('Rcm\Service\SiteManager')

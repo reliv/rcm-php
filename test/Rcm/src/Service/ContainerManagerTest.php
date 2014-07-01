@@ -113,6 +113,9 @@ class ContainerManagerTest extends \PHPUnit_Framework_TestCase
      * Test the constructor
      *
      * @return void
+     *
+     * @covers \Rcm\Service\ContainerManager::__construct
+     * @covers \Rcm\Service\ContainerAbstract::__construct
      */
     public function testConstructor()
     {

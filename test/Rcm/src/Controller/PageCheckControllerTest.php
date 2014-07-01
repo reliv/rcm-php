@@ -76,7 +76,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
             'Rcm\Api\Page\Check' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route' => '/rcm/page/check[/:pageType]/:id',
+                    'route' => '/rcm/page/check[/:pageType]/:pageId',
                     'defaults' => array(
                         'controller' => 'Rcm\Controller\PageCheckController',
                     ),
@@ -98,6 +98,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
         $this->controller->setServiceLocator($serviceManager);
 
         $this->request    = new Request();
+        $this->request->setMethod('GET');
         $this->routeMatch = new RouteMatch(
             array('controller' => 'Rcm\Controller\PageCheckController')
         );
@@ -123,7 +124,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
             ->method('isValid')
             ->will($this->returnValue(true));
 
-        $this->routeMatch->setParam('id', 'my-test-page');
+        $this->routeMatch->setParam('pageId', 'my-test-page');
         $this->routeMatch->setParam('pageType', 'z');
 
         $result = $this->controller->dispatch($this->request);
@@ -160,7 +161,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
             ->method('getMessages')
             ->will($this->returnValue(array("pageName" => 'Page Name Invalid')));
 
-        $this->routeMatch->setParam('id', 'my invalid test page');
+        $this->routeMatch->setParam('pageId', 'my invalid test page');
 
         /** @var \Zend\View\Model\JsonModel $result */
         $result = $this->controller->dispatch($this->request);
@@ -200,7 +201,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
             ->method('getMessages')
             ->will($this->returnValue(array("pageExists" => 'Page Exists')));
 
-        $this->routeMatch->setParam('id', 'page-exists');
+        $this->routeMatch->setParam('pageId', 'page-exists');
 
         /** @var \Zend\View\Model\JsonModel $result */
         $result = $this->controller->dispatch($this->request);

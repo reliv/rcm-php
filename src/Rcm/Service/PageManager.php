@@ -23,6 +23,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Validator\Page;
+use Rcm\Validator\PageTemplate;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Validator\AbstractValidator;
 
@@ -283,6 +284,30 @@ class PageManager extends ContainerAbstract
 
         $validator = new Page($this);
         $validator->setPageType($pageType);
+
+        return $validator;
+    }
+
+    /**
+     * Returns the Zend Template Validator
+     *
+     * @param integer $siteId Site Id.  Will use current set siteId in not passed in.
+     *
+     * @return PageTemplate
+     * @throws \RuntimeException
+     */
+    public function getTemplateValidator($siteId=null)
+    {
+        if (!$siteId) {
+            $siteId = $this->siteManager->getCurrentSiteId();
+        }
+
+        if (!$this->siteManager->isValidSiteId($siteId)) {
+            throw new \RuntimeException('Invalid Site ID');
+        }
+
+        $validator = new PageTemplate($this);
+        $validator->setSiteId($siteId);
 
         return $validator;
     }

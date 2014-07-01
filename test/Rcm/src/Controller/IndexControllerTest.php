@@ -99,7 +99,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $mockLayoutManager->expects($this->any())
-            ->method('getLayout')
+            ->method('getSiteLayout')
             ->will($this->returnCallback(array($this, 'layoutManagerMockCallback')));
 
         $config = array(
@@ -530,11 +530,12 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $map = array(
             array($resource, 'edit', $provider, false),
             array($resource, 'approve', $provider, false),
-            array($resource, 'revisions', $provider, false)
+            array($resource, 'revisions', $provider, false),
+            array('sites.'.$siteId.'.pages', 'revisions', $provider, false)
         );
 
         $this->mockUserServicePlugin
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('__invoke')
             ->will(
                 $this->returnValueMap($map)
