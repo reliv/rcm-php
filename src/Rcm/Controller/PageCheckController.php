@@ -45,13 +45,12 @@ class PageCheckController
     /**
      * Check the page is valid and return a json response
      *
-     * @param string $pageId Page Name to Check
-     *
      * @return JsonModel
      */
-    public function get($pageId)
+    public function getList()
     {
         $pageType = $this->params('pageType', 'n');
+        $pageId = $this->params('pageId', null);
 
         /** @var \Rcm\Validator\Page $validator */
         $validator = $this->getServiceLocator()->get('Rcm\Validator\Page');

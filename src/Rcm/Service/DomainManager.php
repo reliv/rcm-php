@@ -70,14 +70,16 @@ class DomainManager
      */
     public function getActiveDomainList()
     {
+        $cacheKey = 'rcm_active_domain_list';
+
         //Check Cache for list of domains
-        if ($this->cache->hasItem('rcm_active_domain_list')) {
-            return $this->cache->getItem('rcm_active_domain_list');
+        if ($this->cache->hasItem($cacheKey)) {
+            return $this->cache->getItem($cacheKey);
         }
 
         $domainList = $this->repository->getActiveDomainList();
 
-        $this->cache->setItem('rcm_active_domain_list', $domainList);
+        $this->cache->setItem($cacheKey, $domainList);
 
         return $domainList;
     }

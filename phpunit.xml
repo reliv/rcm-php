@@ -10,6 +10,9 @@
             <exclude>
                 <directory>vendor/</directory>
                 <directory>test/</directory>
+                <directory>src/Rcm/Exception/</directory>
+                <directory>src/Rcm/Http/</directory>
+                <file>src/Rcm/Plugin/PluginInterface.php</file>
             </exclude>
         </whitelist>
     </filter>

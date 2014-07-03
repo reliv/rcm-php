@@ -99,7 +99,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $mockLayoutManager->expects($this->any())
-            ->method('getLayout')
+            ->method('getSiteLayout')
             ->will($this->returnCallback(array($this, 'layoutManagerMockCallback')));
 
         $config = array(
@@ -514,6 +514,52 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the index controllers Should Show Revisions method when
+     * user is allowed to create a page.
+     *
+     * @return null
+     * @covers Rcm\Controller\IndexController::shouldShowRevisions
+     */
+    public function testShouldShowRevisionsWithPageCreation()
+    {
+        $siteId = 1;
+        $pageName = 'my-test';
+
+        $resource = 'sites.'.$siteId.'.pages';
+        $provider = 'Rcm\Acl\ResourceProvider';
+
+        $map = array(
+            array($resource, 'edit', $provider, false),
+            array($resource, 'approve', $provider, false),
+            array($resource, 'revisions', $provider, false),
+            array($resource, 'create', $provider, true),
+        );
+
+        $this->mockUserServicePlugin
+            ->expects($this->exactly(4))
+            ->method('__invoke')
+            ->will(
+                $this->returnValueMap($map)
+            );
+
+        $reflectedController = new \ReflectionClass($this->controller);
+        $reflectedShowRev = $reflectedController->getMethod('shouldShowRevisions');
+        $reflectedShowRev->setAccessible(true);
+
+        $reflectedSiteId = $reflectedController->getProperty('siteId');
+        $reflectedSiteId->setAccessible(true);
+        $reflectedSiteId->setValue($this->controller, $siteId);
+
+        $reflectedPageName = $reflectedController->getProperty('pageName');
+        $reflectedPageName->setAccessible(true);
+        $reflectedPageName->setValue($this->controller, $pageName);
+
+        $result = $reflectedShowRev->invoke($this->controller);
+
+        $this->assertTrue($result);
+    }
+
+    /**
+     * Test the index controllers Should Show Revisions method when
      * user is allowed to edit page.
      *
      * @return null
@@ -530,11 +576,12 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $map = array(
             array($resource, 'edit', $provider, false),
             array($resource, 'approve', $provider, false),
-            array($resource, 'revisions', $provider, false)
+            array($resource, 'revisions', $provider, false),
+            array('sites.'.$siteId.'.pages', 'revisions', $provider, false)
         );
 
         $this->mockUserServicePlugin
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('__invoke')
             ->will(
                 $this->returnValueMap($map)

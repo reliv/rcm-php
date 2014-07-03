@@ -82,7 +82,7 @@ class DispatchListener
         /** @var \Zend\View\Model\ViewModel $viewModel */
         $viewModel = $event->getViewModel();
 
-        $template = $this->layoutManager->getLayout();
+        $template = $this->layoutManager->getSiteLayout();
         $viewModel->setTemplate('layout/' . $template);
 
         $siteInfo = $this->siteManager->getCurrentSiteInfo();

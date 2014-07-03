@@ -161,7 +161,7 @@ class IndexController extends AbstractActionController
         if (!empty($pageInfo['siteLayoutOverride'])) {
             $layoutView = $this->layout();
 
-            $layoutTemplatePath = $this->layoutManager->getLayout(
+            $layoutTemplatePath = $this->layoutManager->getSiteLayout(
                 $pageInfo['siteLayoutOverride']
             );
 
@@ -172,7 +172,7 @@ class IndexController extends AbstractActionController
 
         $viewModel->setTemplate(
             'pages/'
-            .$this->layoutManager->getPageTemplate($pageInfo['pageLayout'])
+            .$this->layoutManager->getSitePageTemplate($pageInfo['pageLayout'])
         );
 
         return $viewModel;
@@ -209,6 +209,16 @@ class IndexController extends AbstractActionController
         $allowedRevisions = $this->rcmUserIsAllowed(
             'sites.'.$this->siteId.'.pages.'.$this->pageName,
             'revisions',
+            'Rcm\Acl\ResourceProvider'
+        );
+
+        if ($allowedRevisions) {
+            return true;
+        }
+
+        $allowedRevisions = $this->rcmUserIsAllowed(
+            'sites.'.$this->siteId.'.pages',
+            'create',
             'Rcm\Acl\ResourceProvider'
         );
 

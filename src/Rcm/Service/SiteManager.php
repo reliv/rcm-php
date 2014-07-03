@@ -22,6 +22,7 @@ namespace Rcm\Service;
 use Doctrine\ORM\Query;
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
+use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\SiteNotFoundException;
 use Doctrine\ORM\EntityRepository;
 use Zend\Cache\Storage\StorageInterface;
@@ -100,9 +101,18 @@ class SiteManager
      * @param integer $siteId Site Id
      *
      * @return string
+     * @throws InvalidArgumentException
      */
-    public function getSiteInfo($siteId)
+    public function getSiteInfo($siteId=null)
     {
+        if (!$siteId) {
+            $siteId = $this->getCurrentSiteId();
+        }
+
+        if (!$this->isValidSiteId($siteId)) {
+            throw new InvalidArgumentException('Invalid Site ID');
+        }
+
         if (!empty($this->siteInfo[$siteId])) {
             return $this->siteInfo[$siteId];
         }
@@ -127,8 +137,7 @@ class SiteManager
      */
     public function getCurrentSiteInfo()
     {
-        $currentSiteId = $this->getCurrentSiteId();
-        return $this->getSiteInfo($currentSiteId);
+        return $this->getSiteInfo();
     }
 
     /**
@@ -138,7 +147,7 @@ class SiteManager
      *
      * @return string
      */
-    public function getSiteLoginPage($siteId)
+    public function getSiteLoginPage($siteId=null)
     {
         $siteInfo = $this->getSiteInfo($siteId);
         return $siteInfo['loginPage'];
@@ -151,8 +160,7 @@ class SiteManager
      */
     public function getCurrentSiteLoginPage()
     {
-        $currentSiteId = $this->getCurrentSiteId();
-        return $this->getSiteLoginPage($currentSiteId);
+        return $this->getSiteLoginPage();
     }
 
     /**
@@ -161,8 +169,10 @@ class SiteManager
      * @param integer $siteId Site Id
      *
      * @return string
+     *
+     * @throws InvalidArgumentException
      */
-    public function getSiteTheme($siteId)
+    public function getSiteTheme($siteId=null)
     {
         $siteInfo = $this->getSiteInfo($siteId);
         return $siteInfo['theme'];
@@ -175,8 +185,7 @@ class SiteManager
      */
     public function getCurrentSiteTheme()
     {
-        $currentSiteId = $this->getCurrentSiteId();
-        return $this->getSiteTheme($currentSiteId);
+        return $this->getSiteTheme();
     }
 
     /**
@@ -186,7 +195,7 @@ class SiteManager
      *
      * @return string
      */
-    public function getSiteDefaultLayout($siteId)
+    public function getSiteDefaultLayout($siteId=null)
     {
         $siteInfo = $this->getSiteInfo($siteId);
         return $siteInfo['siteLayout'];
@@ -199,8 +208,7 @@ class SiteManager
      */
     public function getCurrentSiteDefaultLayout()
     {
-        $currentSiteId = $this->getCurrentSiteId();
-        return $this->getSiteDefaultLayout($currentSiteId);
+        return $this->getSiteDefaultLayout();
     }
 
     /**
