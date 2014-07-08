@@ -50,7 +50,9 @@ class RedirectToPageTest extends \PHPUnit_Framework_TestCase
         $pageName = 'my-test';
         $pageType = 'z';
 
-        $mockPlugin = $this->getMockBuilder('\Rcm\Controller\Plugin\RedirectToPage')
+        $mockPlugin = $this->getMockBuilder(
+            '\Rcm\Controller\Plugin\RedirectToPage'
+        )
             ->disableOriginalConstructor()
             ->setMethods(array('redirect'))
             ->getMock();
@@ -75,7 +77,9 @@ class RedirectToPageTest extends \PHPUnit_Framework_TestCase
         $pageName = 'index';
         $pageType = 'n';
 
-        $mockRedirect = $this->getMockBuilder('\Zend\Mvc\Controller\Plugin\Redirect')
+        $mockRedirect = $this->getMockBuilder(
+            '\Zend\Mvc\Controller\Plugin\Redirect'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -108,7 +112,9 @@ class RedirectToPageTest extends \PHPUnit_Framework_TestCase
         $pageName = 'my-test';
         $pageType = 'n';
 
-        $mockRedirect = $this->getMockBuilder('\Zend\Mvc\Controller\Plugin\Redirect')
+        $mockRedirect = $this->getMockBuilder(
+            '\Zend\Mvc\Controller\Plugin\Redirect'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -144,7 +150,9 @@ class RedirectToPageTest extends \PHPUnit_Framework_TestCase
         $pageName = 'my-test';
         $pageType = 'z';
 
-        $mockRedirect = $this->getMockBuilder('\Zend\Mvc\Controller\Plugin\Redirect')
+        $mockRedirect = $this->getMockBuilder(
+            '\Zend\Mvc\Controller\Plugin\Redirect'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 

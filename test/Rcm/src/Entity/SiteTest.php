@@ -473,7 +473,8 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      * @covers \Rcm\Entity\Site
      * @expectedException \Rcm\Exception\InvalidArgumentException
      */
-    public function testAddSiteWideWithNonSiteWideMarkedInstanceThrowsException()
+    public function testAddSiteWideWithNonSiteWideMarkedInstanceThrowsException(
+    )
     {
         $pluginOne = new PluginInstance();
         $pluginOne->setInstanceId(3);

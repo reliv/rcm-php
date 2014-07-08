@@ -49,7 +49,9 @@ class AssetManagerCacheFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mockZendCache = $this->getMockBuilder('\Zend\Cache\Storage\Adapter\Memory')
+        $mockZendCache = $this->getMockBuilder(
+            '\Zend\Cache\Storage\Adapter\Memory'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 

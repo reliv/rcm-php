@@ -22,7 +22,7 @@ namespace RcmTest\Service;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Service\DomainManager;
-use \Zend\Cache\StorageFactory;
+use Zend\Cache\StorageFactory;
 
 /**
  * Unit Test for the Domain Manager Service
@@ -76,7 +76,7 @@ class DomainManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->cache->flush();
 
-        /** @var \Rcm\Repository\Domain  $mockEntityRepo */
+        /** @var \Rcm\Repository\Domain $mockEntityRepo */
         $this->domainManager = new DomainManager(
             $mockEntityRepo,
             $this->cache

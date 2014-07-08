@@ -21,8 +21,8 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\Service\SiteManager;
 use Rcm\Factory\SiteManagerFactory;
+use Rcm\Service\SiteManager;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -57,7 +57,9 @@ class SiteManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+        $mockEntityManager = $this->getMockBuilder(
+            '\Doctrine\ORM\EntityManager'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -69,14 +71,22 @@ class SiteManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockRequest = $this->getMockBuilder('\Zend\Http\PhpEnvironment\Request')
+        $mockRequest = $this->getMockBuilder(
+            '\Zend\Http\PhpEnvironment\Request'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Rcm\Service\DomainManager', $mockDomainManager);
+        $serviceManager->setService(
+            'Rcm\Service\DomainManager',
+            $mockDomainManager
+        );
         $serviceManager->setService('Rcm\Repository\Site', $mockSiteRepo);
-        $serviceManager->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
+        $serviceManager->setService(
+            'Doctrine\ORM\EntityManager',
+            $mockEntityManager
+        );
         $serviceManager->setService('Rcm\Service\Cache', $mockCache);
         $serviceManager->setService('request', $mockRequest);
 

@@ -49,7 +49,7 @@ class IndexControllerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $controllerManager)
     {
-        /** @var \Zend\Mvc\Controller\ControllerManager $controllerMgr  For IDE */
+        /** @var \Zend\Mvc\Controller\ControllerManager $controllerMgr For IDE */
         $controllerMgr = $controllerManager;
 
         /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */

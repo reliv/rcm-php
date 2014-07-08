@@ -44,7 +44,7 @@ class RedirectToPage extends AbstractPlugin
      *
      * @return \Zend\Http\Response
      */
-    public function __invoke($pageName, $pageType='n')
+    public function __invoke($pageName, $pageType = 'n')
     {
         return $this->redirect($pageName, $pageType);
     }
@@ -57,9 +57,9 @@ class RedirectToPage extends AbstractPlugin
      *
      * @return \Zend\Http\Response
      */
-    public  function redirect($pageName, $pageType)
+    public function redirect($pageName, $pageType)
     {
-        /** @var \Zend\Mvc\Controller\AbstractActionController $controller **/
+        /** @var \Zend\Mvc\Controller\AbstractActionController $controller * */
         $controller = $this->getController();
 
         if ($pageType == 'n' && $pageName == 'index') {

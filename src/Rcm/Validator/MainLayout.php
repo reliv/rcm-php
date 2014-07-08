@@ -41,11 +41,12 @@ class MainLayout extends AbstractValidator
 {
     const MAIN_LAYOUT = 'pageTemplate';
 
-    protected $messageTemplates = array(
-        self::MAIN_LAYOUT => "'%value%' is not a valid layout."
-    );
+    protected $messageTemplates
+        = array(
+            self::MAIN_LAYOUT => "'%value%' is not a valid layout."
+        );
 
-    /** @var \Rcm\Service\LayoutManager  */
+    /** @var \Rcm\Service\LayoutManager */
     protected $layoutManager;
 
     protected $siteId = null;

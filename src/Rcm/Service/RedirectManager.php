@@ -44,10 +44,10 @@ use Zend\Cache\Storage\StorageInterface;
  */
 class RedirectManager
 {
-    /** @var \Rcm\Repository\Redirect  */
+    /** @var \Rcm\Repository\Redirect */
     protected $repository;
 
-    /** @var \Zend\Cache\Storage\StorageInterface  */
+    /** @var \Zend\Cache\Storage\StorageInterface */
     protected $cache;
 
     protected $siteManager;
@@ -62,10 +62,10 @@ class RedirectManager
     public function __construct(
         EntityRepository $repository,
         StorageInterface $cache,
-        SiteManager      $siteManager
+        SiteManager $siteManager
     ) {
-        $this->repository  = $repository;
-        $this->cache       = $cache;
+        $this->repository = $repository;
+        $this->cache = $cache;
         $this->siteManager = $siteManager;
     }
 
@@ -77,7 +77,7 @@ class RedirectManager
      * @return array|null
      * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getRedirectList($siteId=null)
+    public function getRedirectList($siteId = null)
     {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();
@@ -87,7 +87,7 @@ class RedirectManager
             throw new InvalidArgumentException('Invalid Site ID');
         }
 
-        $cacheKey = 'rcm_redirect_list_'.$siteId;
+        $cacheKey = 'rcm_redirect_list_' . $siteId;
 
         //Check Cache for list of domains
         if ($this->cache->hasItem($cacheKey)) {

@@ -19,9 +19,9 @@
 namespace Rcm\Factory;
 
 use AssetManager\Cache\ZendCacheAdapter;
+use Zend\Cache\Storage\StorageInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Cache\Storage\StorageInterface;
 
 /**
  * Service Factory for the Asset Manager Zend Cache Adapter

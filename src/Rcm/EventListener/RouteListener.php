@@ -41,10 +41,10 @@ use Zend\Mvc\MvcEvent;
  */
 class RouteListener
 {
-    /** @var \Rcm\Service\DomainManager  */
+    /** @var \Rcm\Service\DomainManager */
     protected $domainManager;
 
-    /** @var \Rcm\Service\RedirectManager  */
+    /** @var \Rcm\Service\RedirectManager */
     protected $redirectManager;
 
     /**
@@ -54,10 +54,10 @@ class RouteListener
      * @param RedirectManager $redirectManager Rcm Redirect Manager
      */
     public function __construct(
-        DomainManager   $domainManager,
+        DomainManager $domainManager,
         RedirectManager $redirectManager
     ) {
-        $this->domainManager   = $domainManager;
+        $this->domainManager = $domainManager;
         $this->redirectManager = $redirectManager;
     }
 
@@ -92,7 +92,7 @@ class RouteListener
             $response->getHeaders()
                 ->addHeaderLine(
                     'Location',
-                    '//'.$domainList[$currentDomain]['primaryDomain']
+                    '//' . $domainList[$currentDomain]['primaryDomain']
                 );
 
             $event->stopPropagation(true);
@@ -123,14 +123,15 @@ class RouteListener
 
         $redirectList = $this->redirectManager->getRedirectList();
 
-        $requestUrl = $httpHost.$requestUri;
+        $requestUrl = $httpHost . $requestUri;
 
         if (!empty($redirectList[$requestUrl])) {
             $response = new Response();
             $response->setStatusCode(302);
             $response->getHeaders()
                 ->addHeaderLine(
-                    'Location', '//'.$redirectList[$requestUrl]['redirectUrl']
+                    'Location',
+                    '//' . $redirectList[$requestUrl]['redirectUrl']
                 );
             $event->stopPropagation(true);
             return $response;

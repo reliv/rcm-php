@@ -22,7 +22,7 @@ namespace RcmTest\Service;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Service\ContainerManager;
-use \Zend\Cache\StorageFactory;
+use Zend\Cache\StorageFactory;
 
 /**
  * Unit Test for the Plugin Manager Service
@@ -54,7 +54,7 @@ class ContainerManagerTest extends \PHPUnit_Framework_TestCase
     /** @var \Zend\Cache\Storage\Adapter\Memory */
     protected $cache;
 
-    protected $siteId=1;
+    protected $siteId = 1;
 
     /**
      * Setup for tests
@@ -98,8 +98,8 @@ class ContainerManagerTest extends \PHPUnit_Framework_TestCase
         $this->cache->flush();
 
         /** @var \Rcm\Service\PluginManager $mockPluginManager */
-        /** @var \Rcm\Repository\Container  $mockEntityRepo */
-        /** @var \Rcm\Service\SiteManager   $mockSiteManager */
+        /** @var \Rcm\Repository\Container $mockEntityRepo */
+        /** @var \Rcm\Service\SiteManager $mockSiteManager */
         $this->containerManager = new ContainerManager(
             $mockPluginManager,
             $mockEntityRepo,
@@ -155,13 +155,13 @@ class ContainerManagerTest extends \PHPUnit_Framework_TestCase
 
         $pageInfo['revision']['pluginInstances'] = array(
             1 => array(
-                'instance' => array (
+                'instance' => array(
                     'pluginInstanceId' => 1,
                     'canCache' => true,
                 ),
             ),
             2 => array(
-                'instance' => array (
+                'instance' => array(
                     'pluginInstanceId' => 2,
                     'canCache' => true,
                 ),
@@ -217,10 +217,10 @@ class ContainerManagerTest extends \PHPUnit_Framework_TestCase
         $type = 'z';
         $revisionId = 100;
         $cacheKey = 'Rcm\Service\ContainerManager_'
-            .$this->siteId.'_'
-            .$type.'_'
-            .$pageName.'_'
-            .$revisionId;
+            . $this->siteId . '_'
+            . $type . '_'
+            . $pageName . '_'
+            . $revisionId;
 
         $this->mockSiteManager->expects($this->any())
             ->method('getCurrentSiteId')
@@ -238,13 +238,13 @@ class ContainerManagerTest extends \PHPUnit_Framework_TestCase
 
         $pageInfo['revision']['pluginInstances'] = array(
             1 => array(
-                'instance' => array (
+                'instance' => array(
                     'pluginInstanceId' => 1,
                     'canCache' => true,
                 ),
             ),
             2 => array(
-                'instance' => array (
+                'instance' => array(
                     'pluginInstanceId' => 2,
                     'canCache' => true,
                 ),
@@ -334,13 +334,13 @@ class ContainerManagerTest extends \PHPUnit_Framework_TestCase
 
         $pageInfo['revision']['pluginInstances'] = array(
             1 => array(
-                'instance' => array (
+                'instance' => array(
                     'pluginInstanceId' => 1,
                     'canCache' => true,
                 ),
             ),
             2 => array(
-                'instance' => array (
+                'instance' => array(
                     'pluginInstanceId' => 2,
                     'canCache' => true,
                 ),
@@ -413,13 +413,13 @@ class ContainerManagerTest extends \PHPUnit_Framework_TestCase
 
         $pageInfo['revision']['pluginInstances'] = array(
             1 => array(
-                'instance' => array (
+                'instance' => array(
                     'pluginInstanceId' => 1,
                     'canCache' => true,
                 ),
             ),
             2 => array(
-                'instance' => array (
+                'instance' => array(
                     'pluginInstanceId' => 2,
                     'canCache' => true,
                 ),
@@ -569,10 +569,10 @@ class ContainerManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $cacheKey = 'Rcm\Service\ContainerManager_'
-            .$this->siteId.'_'
-            .$type.'_'
-            .$pageName
-            .'_currentRevision';
+            . $this->siteId . '_'
+            . $type . '_'
+            . $pageName
+            . '_currentRevision';
 
         $this->cache->setItem($cacheKey, $expected);
 
@@ -676,10 +676,10 @@ class ContainerManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $cacheKey = 'Rcm\Service\ContainerManager_'
-            .$this->siteId.'_'
-            .$type.'_'
-            .$pageName
-            .'_stagedRevision';
+            . $this->siteId . '_'
+            . $type . '_'
+            . $pageName
+            . '_stagedRevision';
 
         $this->cache->setItem($cacheKey, $expected);
 
@@ -831,10 +831,10 @@ class ContainerManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $cacheKey = 'Rcm\Service\ContainerManager_data_'
-            .$this->siteId.'_'
-            .$type.'_'
-            .$pageName.'_'
-            .$revisionId;
+            . $this->siteId . '_'
+            . $type . '_'
+            . $pageName . '_'
+            . $revisionId;
 
         $this->cache->setItem($cacheKey, $expected);
 

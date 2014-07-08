@@ -154,7 +154,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
 
         $actual = $this->pluginWrapper->getHeight();
 
-        $this->assertEquals($height. 'px', $actual);
+        $this->assertEquals($height . 'px', $actual);
     }
 
     /**
@@ -172,7 +172,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
 
         $actual = $this->pluginWrapper->getWidth();
 
-        $this->assertEquals($width. 'px', $actual);
+        $this->assertEquals($width . 'px', $actual);
     }
 
     /**

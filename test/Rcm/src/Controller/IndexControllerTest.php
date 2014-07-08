@@ -21,14 +21,12 @@ namespace RcmTest\Controller;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Controller\IndexController;
+use Rcm\Exception\ContainerNotFoundException;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Rcm\Exception\ContainerNotFoundException;
-use Zend\Server\Reflection\ReflectionClass;
-use Zend\Server\Reflection\ReflectionMethod;
+use Zend\Mvc\Router\RouteMatch;
 
 /**
  * Unit Test for the IndexController
@@ -91,7 +89,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->mockPageManager->expects($this->any())
             ->method('getRevisionInfo')
-            ->will($this->returnCallback(array($this, 'pageManagerMockCallback')));
+            ->will(
+                $this->returnCallback(array($this, 'pageManagerMockCallback'))
+            );
 
         $mockLayoutManager = $this
             ->getMockBuilder('\Rcm\Service\LayoutManager')
@@ -100,7 +100,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
 
         $mockLayoutManager->expects($this->any())
             ->method('getSiteLayout')
-            ->will($this->returnCallback(array($this, 'layoutManagerMockCallback')));
+            ->will(
+                $this->returnCallback(array($this, 'layoutManagerMockCallback'))
+            );
 
         $config = array(
             'contentManager' => array(
@@ -113,7 +115,6 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
                     )
                 ),
             ),
-
             'contentManagerWithPageType' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -141,9 +142,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->controller->getPluginManager()
             ->setService('rcmUserIsAllowed', $this->mockUserServicePlugin);
 
-        $this->request    = new Request();
+        $this->request = new Request();
         $this->routeMatch = new RouteMatch(array('controller' => 'index'));
-        $this->event      = new MvcEvent();
+        $this->event = new MvcEvent();
         $routerConfig = $config;
         $router = HttpRouter::factory($routerConfig);
 
@@ -172,7 +173,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = new IndexController($mockPageManager, $mockLayoutManager, 1);
+        $controller
+            = new IndexController($mockPageManager, $mockLayoutManager, 1);
 
         $this->assertTrue($controller instanceof IndexController);
     }
@@ -196,7 +198,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
@@ -220,7 +222,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->routeMatch->setParam('action', 'index');
 
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
@@ -239,7 +241,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      * @return null
      * @covers Rcm\Controller\IndexController
      */
-    public function testIndexActionHomePageRedirectWhenUserNotAllowedForRevisions()
+    public function testIndexActionHomePageRedirectWhenUserNotAllowedForRevisions(
+    )
     {
         $this->pageData = $this->getPageData(42, 'my-test', 443, 'n');
 
@@ -268,7 +271,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->controller->getPluginManager()
             ->setService('redirectToPage', $mockRedirectToPage);
 
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
 
         $this->assertInstanceOf('\Zend\Http\Response', $result);
         $this->assertEquals(302, $result->getStatusCode());
@@ -295,7 +298,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
@@ -327,7 +330,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
@@ -364,7 +367,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
@@ -375,7 +378,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $this->controller->pageType);
         $this->assertEquals(443, $this->controller->pageRevisionId);
         $this->assertEquals(
-            'layout/'.$this->layoutOverride,
+            'layout/' . $this->layoutOverride,
             $this->controller->layout()->getTemplate()
         );
     }
@@ -392,7 +395,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'sites.'.$siteId.'.pages.'.$pageName;
+        $resource = 'sites.' . $siteId . '.pages.' . $pageName;
         $permission = 'edit';
         $provider = 'Rcm\Acl\ResourceProvider';
 
@@ -407,7 +410,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $reflectedController = new \ReflectionClass($this->controller);
-        $reflectedShowRev = $reflectedController->getMethod('shouldShowRevisions');
+        $reflectedShowRev = $reflectedController->getMethod(
+            'shouldShowRevisions'
+        );
         $reflectedShowRev->setAccessible(true);
 
         $reflectedSiteId = $reflectedController->getProperty('siteId');
@@ -435,7 +440,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'sites.'.$siteId.'.pages.'.$pageName;
+        $resource = 'sites.' . $siteId . '.pages.' . $pageName;
         $provider = 'Rcm\Acl\ResourceProvider';
 
         $map = array(
@@ -451,7 +456,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             );
 
         $reflectedController = new \ReflectionClass($this->controller);
-        $reflectedShowRev = $reflectedController->getMethod('shouldShowRevisions');
+        $reflectedShowRev = $reflectedController->getMethod(
+            'shouldShowRevisions'
+        );
         $reflectedShowRev->setAccessible(true);
 
         $reflectedSiteId = $reflectedController->getProperty('siteId');
@@ -479,7 +486,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'sites.'.$siteId.'.pages.'.$pageName;
+        $resource = 'sites.' . $siteId . '.pages.' . $pageName;
         $provider = 'Rcm\Acl\ResourceProvider';
 
         $map = array(
@@ -496,7 +503,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             );
 
         $reflectedController = new \ReflectionClass($this->controller);
-        $reflectedShowRev = $reflectedController->getMethod('shouldShowRevisions');
+        $reflectedShowRev = $reflectedController->getMethod(
+            'shouldShowRevisions'
+        );
         $reflectedShowRev->setAccessible(true);
 
         $reflectedSiteId = $reflectedController->getProperty('siteId');
@@ -524,7 +533,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'sites.'.$siteId.'.pages';
+        $resource = 'sites.' . $siteId . '.pages';
         $provider = 'Rcm\Acl\ResourceProvider';
 
         $map = array(
@@ -542,7 +551,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             );
 
         $reflectedController = new \ReflectionClass($this->controller);
-        $reflectedShowRev = $reflectedController->getMethod('shouldShowRevisions');
+        $reflectedShowRev = $reflectedController->getMethod(
+            'shouldShowRevisions'
+        );
         $reflectedShowRev->setAccessible(true);
 
         $reflectedSiteId = $reflectedController->getProperty('siteId');
@@ -570,14 +581,14 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'sites.'.$siteId.'.pages.'.$pageName;
+        $resource = 'sites.' . $siteId . '.pages.' . $pageName;
         $provider = 'Rcm\Acl\ResourceProvider';
 
         $map = array(
             array($resource, 'edit', $provider, false),
             array($resource, 'approve', $provider, false),
             array($resource, 'revisions', $provider, false),
-            array('sites.'.$siteId.'.pages', 'revisions', $provider, false)
+            array('sites.' . $siteId . '.pages', 'revisions', $provider, false)
         );
 
         $this->mockUserServicePlugin
@@ -588,7 +599,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             );
 
         $reflectedController = new \ReflectionClass($this->controller);
-        $reflectedShowRev = $reflectedController->getMethod('shouldShowRevisions');
+        $reflectedShowRev = $reflectedController->getMethod(
+            'shouldShowRevisions'
+        );
         $reflectedShowRev->setAccessible(true);
 
         $reflectedSiteId = $reflectedController->getProperty('siteId');
@@ -646,10 +659,10 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $pageId,
         $pageName,
         $revisionId,
-        $pageType='n',
+        $pageType = 'n',
         $siteLayoutOverride = null
     ) {
-        return array (
+        return array(
             'pageId' => $pageId,
             'name' => $pageName,
             'author' => 'Test Script',
@@ -662,7 +675,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             'keywords' => 'My Test Page',
             'pageType' => $pageType,
             'revision' =>
-                array (
+                array(
                     'revisionId' => $revisionId,
                     'author' => 'Test Script',
                     'createdDate' => new \DateTime(),
@@ -670,25 +683,25 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
                     'md5' => '664af24be398368b59bbf3c6d2b3459a',
                     'staged' => false,
                     'pluginInstances' =>
-                        array (
-                            0 => array (
+                        array(
+                            0 => array(
                                 'pluginWrapperId' => 227075,
                                 'layoutContainer' => 4,
                                 'renderOrder' => 0,
                                 'height' => 391,
                                 'width' => 287,
                                 'divFloat' => 'left',
-                                'instance' => array (
+                                'instance' => array(
                                     'pluginInstanceId' => 19889,
                                     'plugin' => 'RcmHtmlArea',
                                     'siteWide' => false,
                                     'displayName' => 'Rich Content Area',
                                     'md5' => 'f5672a3279ac62664a3d3920aff7936a',
                                     'previousEntity' => 11817,
-                                    'renderedData' => array (
+                                    'renderedData' => array(
                                         'html' => '<a></a>',
-                                        'css' => array (),
-                                        'js' => array (),
+                                        'css' => array(),
+                                        'js' => array(),
                                         'editJs' => '',
                                         'editCss' => '',
                                         'displayName' => 'Rich Content Area',

@@ -65,7 +65,7 @@ class LayoutManagerTest extends \PHPUnit_Framework_TestCase
      *
      * @return LayoutManager
      */
-    public function getLayoutManager($config=array())
+    public function getLayoutManager($config = array())
     {
         $mockSiteManager = $this->mockSiteManager;
 
@@ -419,7 +419,8 @@ class LayoutManagerTest extends \PHPUnit_Framework_TestCase
 
         $layoutManager = $this->getLayoutManager($config);
 
-        $themeLayoutConfig = $config['Rcm']['themes']['RelivTestTheme']['layouts'];
+        $themeLayoutConfig
+            = $config['Rcm']['themes']['RelivTestTheme']['layouts'];
 
         $expected = $themeLayoutConfig['TestHomePage']['file'];
 
@@ -449,7 +450,8 @@ class LayoutManagerTest extends \PHPUnit_Framework_TestCase
 
         $layoutManager = $this->getLayoutManager($config);
 
-        $themeLayoutConfig = $config['Rcm']['themes']['RelivTestTheme']['layouts'];
+        $themeLayoutConfig
+            = $config['Rcm']['themes']['RelivTestTheme']['layouts'];
 
         $expected = $themeLayoutConfig['default']['file'];
 
@@ -512,7 +514,8 @@ class LayoutManagerTest extends \PHPUnit_Framework_TestCase
 
         $layoutManager = $this->getLayoutManager($config);
 
-        $themeLayoutConfig = $config['Rcm']['themes']['RelivTestTheme']['layouts'];
+        $themeLayoutConfig
+            = $config['Rcm']['themes']['RelivTestTheme']['layouts'];
 
         $expected = $themeLayoutConfig['TestHomePage']['file'];
 
@@ -662,7 +665,9 @@ class LayoutManagerTest extends \PHPUnit_Framework_TestCase
 
         $expected = $themeConfig['pages']['SomeOtherPageTemplate'];
 
-        $result = $layoutManager->getSitePageTemplateConfig('SomeOtherPageTemplate');
+        $result = $layoutManager->getSitePageTemplateConfig(
+            'SomeOtherPageTemplate'
+        );
 
         $this->assertEquals($expected, $result);
     }
@@ -714,7 +719,7 @@ class LayoutManagerTest extends \PHPUnit_Framework_TestCase
     {
         $config = $this->getBaseConfig(false, false, false, false, true);
 
-        $themeConfig = &$config['Rcm']['themes']['RelivTestTheme'];
+        $themeConfig = & $config['Rcm']['themes']['RelivTestTheme'];
         $themeConfig['pages']['SomeOtherPageTemplate'] = null;
 
         $this->mockSiteManager->expects($this->any())
@@ -777,7 +782,7 @@ class LayoutManagerTest extends \PHPUnit_Framework_TestCase
     {
         $config = $this->getBaseConfig(false, false, false, false, true);
 
-        $themeConfig = &$config['Rcm']['themes']['RelivTestTheme'];
+        $themeConfig = & $config['Rcm']['themes']['RelivTestTheme'];
         $themeConfig['pages']['SomeOtherPageTemplate']['file'] = null;
 
         $this->mockSiteManager->expects($this->any())

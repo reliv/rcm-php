@@ -48,7 +48,7 @@ class OutOfDateBrowserWarning extends AbstractHelper
     {
         /* @codingStandardsIgnoreStart */
         return '
-        <!--[if lt IE '.$this->lowestIeVersion.']>
+        <!--[if lt IE ' . $this->lowestIeVersion . ']>
             <div style="text-align:center;width:100%;padding:5px 10px;z-index:9999;background-color:#FDF2AB;position:absolute;border-bottom:1px solid #A29330">
                 ' . $this->getMessage() . '
             </div>
@@ -66,7 +66,7 @@ class OutOfDateBrowserWarning extends AbstractHelper
     {
         return
             'This website does not work with Internet Explorer versions below '
-            . $this->lowestIeVersion. '. Please update your browser
+            . $this->lowestIeVersion . '. Please update your browser
             or install the latest Chrome or Firefox web browser.';
     }
 } 

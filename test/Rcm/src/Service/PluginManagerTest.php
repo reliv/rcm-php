@@ -19,12 +19,12 @@
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Service\PluginManager;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ModuleManager\Listener;
 use Zend\Cache\Storage\Adapter\Memory;
-use Zend\View\Renderer\PhpRenderer;
+use Zend\Http\PhpEnvironment\Request;
+use Zend\ModuleManager\Listener;
 use Zend\Mvc\Service\ServiceManagerConfig;
+use Zend\ServiceManager\ServiceManager;
+use Zend\View\Renderer\PhpRenderer;
 
 /**
  * Unit Test for the Plugin Manager Service
@@ -104,13 +104,13 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
     protected function startZf2()
     {
 
-        $applicationConfig =  array(
+        $applicationConfig = array(
             'modules' => array(
                 'RcmMockPlugin'
             ),
             'module_listener_options' => array(
                 'module_paths' => array(
-                    __DIR__.'/../../../',
+                    __DIR__ . '/../../../',
                 ),
             ),
         );
@@ -207,17 +207,17 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         }
 
         switch ($pluginInstanceId) {
-        case 5000000:
-            return $this->setupMockEntity(false, 5000000);
-        case 2:
-            return $this->setupMockEntity(true, 2);
-        case 1:
-            return $this->setupMockEntity(false, 1);
-        default:
-            if (!empty($this->newPlugins[$pluginInstanceId])) {
-                return $this->newPlugins[$pluginInstanceId];
-            }
-            return null;
+            case 5000000:
+                return $this->setupMockEntity(false, 5000000);
+            case 2:
+                return $this->setupMockEntity(true, 2);
+            case 1:
+                return $this->setupMockEntity(false, 1);
+            default:
+                if (!empty($this->newPlugins[$pluginInstanceId])) {
+                    return $this->newPlugins[$pluginInstanceId];
+                }
+                return null;
         }
 
     }
@@ -230,7 +230,7 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
      *
      * @return \Rcm\Entity\PluginInstance
      */
-    protected function setupMockEntity($siteWide = false, $instanceId=1)
+    protected function setupMockEntity($siteWide = false, $instanceId = 1)
     {
         $pluginInstance = new \Rcm\Entity\PluginInstance();
         $pluginInstance->setPlugin('RcmMockPlugin');
@@ -294,10 +294,12 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
             $viewData['html']
         );
         $this->assertContains(
-            '/modules/rcm-mock-plugin/style.css', $viewData['css'][0]
+            '/modules/rcm-mock-plugin/style.css',
+            $viewData['css'][0]
         );
         $this->assertContains(
-            '/modules/rcm-mock-plugin/test.js', $viewData['js'][0]
+            '/modules/rcm-mock-plugin/test.js',
+            $viewData['js'][0]
         );
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertFalse($viewData['siteWide']);
@@ -330,13 +332,16 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('canCache', $viewData);
 
         $this->assertContains(
-            '{"instanceData":"<p>This is a instance id 1<\/p>"}', $viewData['html']
+            '{"instanceData":"<p>This is a instance id 1<\/p>"}',
+            $viewData['html']
         );
         $this->assertContains(
-            '/modules/rcm-mock-plugin/style.css', $viewData['css'][0]
+            '/modules/rcm-mock-plugin/style.css',
+            $viewData['css'][0]
         );
         $this->assertContains(
-            '/modules/rcm-mock-plugin/test.js', $viewData['js'][0]
+            '/modules/rcm-mock-plugin/test.js',
+            $viewData['js'][0]
         );
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertFalse($viewData['siteWide']);
@@ -371,13 +376,16 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('canCache', $viewData);
 
         $this->assertContains(
-            '{"instanceData":"<p>This is a instance id 1<\/p>"}', $viewData['html']
+            '{"instanceData":"<p>This is a instance id 1<\/p>"}',
+            $viewData['html']
         );
         $this->assertContains(
-            '/modules/rcm-mock-plugin/style.css', $viewData['css'][0]
+            '/modules/rcm-mock-plugin/style.css',
+            $viewData['css'][0]
         );
         $this->assertContains(
-            '/modules/rcm-mock-plugin/test.js', $viewData['js'][0]
+            '/modules/rcm-mock-plugin/test.js',
+            $viewData['js'][0]
         );
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
         $this->assertFalse($viewData['siteWide']);
@@ -411,21 +419,24 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('canCache', $viewData);
 
         $this->assertContains(
-            '{"instanceData":"<p>This is a instance id 2<\/p>"}', $viewData['html']
+            '{"instanceData":"<p>This is a instance id 2<\/p>"}',
+            $viewData['html']
         );
 
         $this->assertContains(
-            '/modules/rcm-mock-plugin/style.css', $viewData['css'][0]
+            '/modules/rcm-mock-plugin/style.css',
+            $viewData['css'][0]
         );
 
         $this->assertContains(
-            '/modules/rcm-mock-plugin/test.js', $viewData['js'][0]
+            '/modules/rcm-mock-plugin/test.js',
+            $viewData['js'][0]
         );
 
         $this->assertContains(
             'Test Site Wide Instance',
             $viewData['displayName'],
-            'Failed. value: '.print_r($viewData, true)
+            'Failed. value: ' . print_r($viewData, true)
         );
 
         $this->assertContains('91f65ba866e687ed8f482192cce57bd1', $viewData);
@@ -483,7 +494,8 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         $instanceConfig = array('html' => 'This is a test');
 
         $newInstance = $this->pluginManager->saveNewInstance(
-            'RcmMockPlugin', $instanceConfig
+            'RcmMockPlugin',
+            $instanceConfig
         );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $newInstance);
@@ -496,7 +508,8 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertGreaterThan(0, $newInstance->getInstanceId());
         $this->assertContains(
-            md5(serialize($instanceConfig)), $newInstance->getMd5()
+            md5(serialize($instanceConfig)),
+            $newInstance->getMd5()
         );
         $this->assertFalse($newInstance->isSiteWide());
     }
@@ -513,7 +526,10 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         $instanceConfig = array('html' => 'This is a test');
 
         $newInstance = $this->pluginManager->saveNewInstance(
-            'RcmMockPlugin', $instanceConfig, true, 'Test Display Name'
+            'RcmMockPlugin',
+            $instanceConfig,
+            true,
+            'Test Display Name'
         );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $newInstance);
@@ -526,7 +542,8 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertGreaterThan(0, $newInstance->getInstanceId());
         $this->assertContains(
-            md5(serialize($instanceConfig)), $newInstance->getMd5()
+            md5(serialize($instanceConfig)),
+            $newInstance->getMd5()
         );
         $this->assertTrue($newInstance->isSiteWide());
     }
@@ -536,7 +553,7 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \Rcm\Service\PluginManager::saveNewInstance
+     * @covers  \Rcm\Service\PluginManager::saveNewInstance
      * @depends testSaveNewInstance
      */
     public function testSavePlugin()
@@ -544,7 +561,8 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         $instanceConfig = array('html' => 'This is a test');
 
         $testInstance = $this->pluginManager->saveNewInstance(
-            'RcmMockPlugin', $instanceConfig
+            'RcmMockPlugin',
+            $instanceConfig
         );
 
         $testInstanceId = $testInstance->getInstanceId();
@@ -552,7 +570,8 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         $newInstanceConfig = array('html' => 'This is a test too');
 
         $savedInstance = $this->pluginManager->savePlugin(
-            $testInstanceId, $newInstanceConfig
+            $testInstanceId,
+            $newInstanceConfig
         );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $savedInstance);
@@ -565,12 +584,14 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertGreaterThan(0, $savedInstance->getInstanceId());
         $this->assertContains(
-            md5(serialize($newInstanceConfig)), $savedInstance->getMd5()
+            md5(serialize($newInstanceConfig)),
+            $savedInstance->getMd5()
         );
         $this->assertFalse($savedInstance->isSiteWide());
 
         $this->assertNotEquals(
-            $testInstanceId, $savedInstance->getInstanceId()
+            $testInstanceId,
+            $savedInstance->getInstanceId()
         );
     }
 
@@ -579,7 +600,7 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \Rcm\Service\PluginManager::saveNewInstance
+     * @covers  \Rcm\Service\PluginManager::saveNewInstance
      * @depends testSaveNewInstance
      */
     public function testSavePluginWithSameData()
@@ -587,13 +608,15 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         $instanceConfig = array('html' => 'This is a test');
 
         $testInstance = $this->pluginManager->saveNewInstance(
-            'RcmMockPlugin', $instanceConfig
+            'RcmMockPlugin',
+            $instanceConfig
         );
 
         $testInstanceId = $testInstance->getInstanceId();
 
         $savedInstance = $this->pluginManager->savePlugin(
-            $testInstanceId, $instanceConfig
+            $testInstanceId,
+            $instanceConfig
         );
 
         $this->assertInstanceOf('\Rcm\Entity\PluginInstance', $savedInstance);
@@ -606,7 +629,8 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertGreaterThan(0, $savedInstance->getInstanceId());
         $this->assertContains(
-            md5(serialize($instanceConfig)), $savedInstance->getMd5()
+            md5(serialize($instanceConfig)),
+            $savedInstance->getMd5()
         );
         $this->assertFalse($savedInstance->isSiteWide());
 

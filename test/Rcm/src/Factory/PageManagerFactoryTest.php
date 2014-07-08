@@ -21,8 +21,8 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\Service\PageManager;
 use Rcm\Factory\PageManagerFactory;
+use Rcm\Service\PageManager;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -57,7 +57,9 @@ class PageManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+        $mockEntityManager = $this->getMockBuilder(
+            '\Doctrine\ORM\EntityManager'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -80,8 +82,14 @@ class PageManagerFactoryTest extends \PHPUnit_Framework_TestCase
 
 
         $serviceLocator = new ServiceManager();
-        $serviceLocator->setService('Rcm\Service\SiteManager', $mockSiteManager);
-        $serviceLocator->setService('Rcm\Service\PluginManager', $mockPluginManager);
+        $serviceLocator->setService(
+            'Rcm\Service\SiteManager',
+            $mockSiteManager
+        );
+        $serviceLocator->setService(
+            'Rcm\Service\PluginManager',
+            $mockPluginManager
+        );
         $serviceLocator->setService(
             'Doctrine\ORM\EntityManager',
             $mockEntityManager

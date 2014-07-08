@@ -18,8 +18,8 @@
  */
 namespace Rcm\EventListener;
 
-use Rcm\Service\ResponseHandler;
 use Rcm\Http\Response as RcmResponse;
+use Rcm\Service\ResponseHandler;
 use Zend\Http\Response as HttpResponse;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\ViewEvent;
@@ -39,7 +39,7 @@ use Zend\View\ViewEvent;
  */
 class ViewEventListener
 {
-    /** @var \Rcm\Service\ResponseHandler  */
+    /** @var \Rcm\Service\ResponseHandler */
     protected $responseHandler;
 
     /**

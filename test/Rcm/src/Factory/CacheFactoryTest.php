@@ -21,8 +21,8 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Zend\Cache\Storage\StorageInterface;
 use Rcm\Factory\CacheFactory;
+use Zend\Cache\Storage\StorageInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**

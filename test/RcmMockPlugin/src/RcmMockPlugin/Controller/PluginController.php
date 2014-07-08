@@ -9,7 +9,8 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\RequestInterface;
 use Zend\View\Model\ViewModel;
 
-class PluginController extends AbstractActionController implements PluginInterface
+class PluginController extends AbstractActionController implements
+    PluginInterface
 {
     protected $request;
     protected $cache;

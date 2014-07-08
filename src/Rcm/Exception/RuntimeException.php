@@ -36,7 +36,6 @@ use Rcm\Exception\ExceptionInterface as RcmExceptionInterface;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-
 class RuntimeException
     extends \RuntimeException
     implements RcmExceptionInterface

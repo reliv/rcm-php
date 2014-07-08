@@ -49,7 +49,9 @@ class ViewEventListenerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mockResponseHandler = $this->getMockBuilder('\Rcm\Service\ResponseHandler')
+        $mockResponseHandler = $this->getMockBuilder(
+            '\Rcm\Service\ResponseHandler'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 

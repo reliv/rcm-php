@@ -20,11 +20,11 @@
 
 namespace Rcm\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Rcm\Exception\InvalidArgumentException;
 use Zend\Validator\Hostname;
 use Zend\Validator\ValidatorInterface;
-use Rcm\Exception\InvalidArgumentException;
 
 /**
  * Country Database Entity

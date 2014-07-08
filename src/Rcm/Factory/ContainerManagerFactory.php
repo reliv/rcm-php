@@ -49,7 +49,7 @@ class ContainerManagerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Service\SiteManager $siteManager */
-        $siteManager   = $serviceLocator->get('Rcm\Service\SiteManager');
+        $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
 
         /** @var \Rcm\Service\PluginManager $pluginManager */
         $pluginManager = $serviceLocator->get('Rcm\Service\PluginManager');
@@ -58,10 +58,10 @@ class ContainerManagerFactory implements FactoryInterface
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
         /** @var \Doctrine\ORM\EntityRepository $repository */
-        $repository    = $entityManager->getRepository('\Rcm\Entity\Container');
+        $repository = $entityManager->getRepository('\Rcm\Entity\Container');
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
-        $cache         = $serviceLocator->get('Rcm\Service\Cache');
+        $cache = $serviceLocator->get('Rcm\Service\Cache');
 
         return new ContainerManager(
             $pluginManager,

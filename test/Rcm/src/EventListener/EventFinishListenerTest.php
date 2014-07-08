@@ -51,7 +51,9 @@ class EventFinishListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\ResponseHandler')
+        $mockResponseHandler = $this->getMockBuilder(
+            'Rcm\Service\ResponseHandler'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -93,7 +95,9 @@ class EventFinishListenerTest extends \PHPUnit_Framework_TestCase
     public function testProcessRcmResponses()
     {
 
-        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\ResponseHandler')
+        $mockResponseHandler = $this->getMockBuilder(
+            'Rcm\Service\ResponseHandler'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -126,7 +130,9 @@ class EventFinishListenerTest extends \PHPUnit_Framework_TestCase
     public function testProcessRcmResponsesWithZendResponseObject()
     {
 
-        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\ResponseHandler')
+        $mockResponseHandler = $this->getMockBuilder(
+            'Rcm\Service\ResponseHandler'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 

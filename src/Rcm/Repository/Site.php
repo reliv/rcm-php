@@ -74,7 +74,9 @@ class Site extends EntityRepository
             ->setParameter('siteId', $siteId);
 
         try {
-            return $queryBuilder->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+            return $queryBuilder->getQuery()->getSingleResult(
+                Query::HYDRATE_ARRAY
+            );
         } catch (NoResultException $e) {
             return null;
         }
@@ -100,7 +102,7 @@ class Site extends EntityRepository
      *
      * @return boolean
      */
-    public function isValidSiteId($siteId, $checkActive=true)
+    public function isValidSiteId($siteId, $checkActive = true)
     {
         if (empty($siteId) || !is_numeric($siteId)) {
             return false;

@@ -44,7 +44,7 @@ class Page extends PageName
 
     protected $pageNameOk = false;
 
-    /** @var \Rcm\Service\PageManager  */
+    /** @var \Rcm\Service\PageManager */
     protected $pageManager;
 
     protected $pageType = 'n';
@@ -58,7 +58,8 @@ class Page extends PageName
      */
     public function __construct(PageManager $pageManager)
     {
-        $this->messageTemplates[self::PAGE_EXISTS] = "Page '%value%' already exists";
+        $this->messageTemplates[self::PAGE_EXISTS]
+            = "Page '%value%' already exists";
         $this->pageManager = $pageManager;
 
         parent::__construct();
@@ -108,7 +109,8 @@ class Page extends PageName
             $value,
             $this->pageType,
             $this->siteId
-        )) {
+        )
+        ) {
             $this->error(self::PAGE_EXISTS);
             return false;
         }

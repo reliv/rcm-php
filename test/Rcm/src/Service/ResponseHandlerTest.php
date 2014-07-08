@@ -20,9 +20,9 @@
 namespace RcmTest\Service;
 
 use Rcm\Http\Response;
+use Rcm\Service\ResponseHandler;
 use Zend\Console\Request;
 use Zend\Http\Response as HttpResponse;
-use Rcm\Service\ResponseHandler;
 use Zend\Mvc\ResponseSender\SendResponseEvent;
 
 require_once __DIR__ . '/../../../autoload.php';
@@ -78,7 +78,10 @@ class ResponseHandlerTest extends \PHPUnit_Framework_TestCase
     public function testConstructor()
     {
         $responseHandler = $this->getResponseHandler();
-        $this->assertInstanceOf('\Rcm\Service\ResponseHandler', $responseHandler);
+        $this->assertInstanceOf(
+            '\Rcm\Service\ResponseHandler',
+            $responseHandler
+        );
     }
 
     /**
@@ -316,7 +319,9 @@ class ResponseHandlerTest extends \PHPUnit_Framework_TestCase
     protected function getResponseHandler($request = null, $siteManager = null)
     {
         if (!$request) {
-            $request = $this->getMockBuilder('\Zend\Http\PhpEnvironment\Request')
+            $request = $this->getMockBuilder(
+                '\Zend\Http\PhpEnvironment\Request'
+            )
                 ->disableOriginalConstructor()
                 ->getMock();
 
@@ -366,7 +371,9 @@ class ResponseHandlerTest extends \PHPUnit_Framework_TestCase
 
         $this->mockSender->expects($this->any())
             ->method('sendHeaders')
-            ->will($this->returnCallback(array($this, 'responseSenderCallback')));
+            ->will(
+                $this->returnCallback(array($this, 'responseSenderCallback'))
+            );
 
         return $this->mockSender;
     }
