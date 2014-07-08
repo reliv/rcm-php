@@ -49,7 +49,7 @@ class PageManagerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Service\SiteManager $siteManager */
-        $siteManager   = $serviceLocator->get('Rcm\Service\SiteManager');
+        $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
 
         /** @var \Rcm\Service\PluginManager $pluginManager */
         $pluginManager = $serviceLocator->get('Rcm\Service\PluginManager');
@@ -58,10 +58,10 @@ class PageManagerFactory implements FactoryInterface
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
         /** @var \Doctrine\ORM\EntityRepository $repository */
-        $repository    = $entityManager->getRepository('\Rcm\Entity\Page');
+        $repository = $entityManager->getRepository('\Rcm\Entity\Page');
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
-        $cache         = $serviceLocator->get('Rcm\Service\Cache');
+        $cache = $serviceLocator->get('Rcm\Service\Cache');
 
         /** @var \Rcm\Validator\MainLayout $layoutValidator */
         $layoutValidator = $serviceLocator->get('Rcm\Validator\MainLayout');

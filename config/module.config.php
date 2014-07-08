@@ -38,7 +38,6 @@ return array(
                 'name' => 'Sites',
                 'description' => 'Global resource for sites',
             ),
-
             'pages' => array(
                 'resourceId' => 'pages',
                 'parentResourceId' => null,
@@ -55,7 +54,6 @@ return array(
                 'name' => 'Pages',
                 'description' => 'Global resource for pages',
             ),
-
             'widgets' => array(
                 'resourceId' => 'widgets',
                 'parentResourceId' => null,
@@ -65,7 +63,6 @@ return array(
                 'name' => 'Widgets',
                 'description' => 'Global resource for Rcm Widgets',
             ),
-
             'widgets.siteWide' => array(
                 'resourceId' => 'widgets.siteWide',
                 'parentResourceId' => 'widgets',
@@ -79,7 +76,6 @@ return array(
             ),
         ),
     ),
-
     'RcmUser' => array(
         'Acl\Config' => array(
             'ResourceProviders' => array(
@@ -87,17 +83,14 @@ return array(
             ),
         ),
     ),
-
     'view_manager' => array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
-
         'strategies' => array(
             'ViewJsonStrategy',
         ),
     ),
-
     'router' => array(
         'routes' => array(
 
@@ -111,7 +104,6 @@ return array(
                     )
                 ),
             ),
-
             'contentManagerWithPageType' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -125,7 +117,6 @@ return array(
                     )
                 ),
             ),
-
             'blog' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -136,9 +127,8 @@ return array(
                     )
                 ),
             ),
-
             'Rcm\Api\Page\Check' => array(
-                'type'    => 'Segment',
+                'type' => 'Segment',
                 'options' => array(
                     'route' => '/rcm/page/check[/:pageType]/:pageId',
                     'defaults' => array(
@@ -149,7 +139,6 @@ return array(
 
         ),
     ),
-
     'doctrine' => array(
         'driver' => array(
 
@@ -160,14 +149,12 @@ return array(
                     __DIR__ . '/../src/Rcm/Entity'
                 )
             ),
-
             'orm_default' => array(
                 'drivers' => array(
                     'Rcm' => 'relivContentManager'
                 )
             )
         ),
-
         'configuration' => array(
             'orm_default' => array(
                 'metadata_cache' => 'doctrine_cache',
@@ -176,98 +163,74 @@ return array(
             )
         ),
     ),
-
     'rcmCache' => array(
         'adapter' => 'Memory',
         'plugins' => array(),
-        'options' => array(
-            //'namespace' => 'RcmCache'
+        'options' => array( //'namespace' => 'RcmCache'
         )
     ),
-
     'service_manager' => array(
-        'factories' => array (
+        'factories' => array(
             'doctrine.cache.doctrine_cache'
-                => 'Rcm\Factory\DoctrineCacheFactory',
-
+            => 'Rcm\Factory\DoctrineCacheFactory',
             'Rcm\EventListener\RouteListener'
-                => 'Rcm\Factory\RouteListenerFactory',
-
+            => 'Rcm\Factory\RouteListenerFactory',
             'Rcm\EventListener\DispatchListener'
-                => 'Rcm\Factory\DispatchListenerFactory',
-
+            => 'Rcm\Factory\DispatchListenerFactory',
             'Rcm\EventListener\EventFinishListener'
-                => 'Rcm\Factory\EventFinishListenerFactory',
-
+            => 'Rcm\Factory\EventFinishListenerFactory',
             'Rcm\EventListener\ViewEventListener'
-                => 'Rcm\Factory\ViewEventListenerFactory',
-
+            => 'Rcm\Factory\ViewEventListenerFactory',
             'Rcm\Service\ContainerManager'
-                => 'Rcm\Factory\ContainerManagerFactory',
-
+            => 'Rcm\Factory\ContainerManagerFactory',
             'Rcm\Service\PluginManager'
-                => 'Rcm\Factory\PluginManagerFactory',
-
+            => 'Rcm\Factory\PluginManagerFactory',
             'Rcm\Service\LayoutManager'
-                => 'Rcm\Factory\LayoutManagerFactory',
-
+            => 'Rcm\Factory\LayoutManagerFactory',
             'Rcm\Service\DomainManager'
-                => 'Rcm\Factory\DomainManagerFactory',
-
+            => 'Rcm\Factory\DomainManagerFactory',
             'Rcm\Service\RedirectManager'
-                => 'Rcm\Factory\RedirectManagerFactory',
-
+            => 'Rcm\Factory\RedirectManagerFactory',
             'Rcm\Service\SiteManager'
-                => 'Rcm\Factory\SiteManagerFactory',
-
+            => 'Rcm\Factory\SiteManagerFactory',
             'Rcm\Service\PageManager'
-                => 'Rcm\Factory\PageManagerFactory',
-
+            => 'Rcm\Factory\PageManagerFactory',
             'Rcm\Service\ResponseHandler'
-                => 'Rcm\Factory\ResponseHandlerFactory',
-
+            => 'Rcm\Factory\ResponseHandlerFactory',
             'Rcm\Service\Cache'
-                => 'Rcm\Factory\CacheFactory',
-
+            => 'Rcm\Factory\CacheFactory',
             'Rcm\Service\AssetManagerCache'
-                => 'Rcm\Factory\AssetManagerCacheFactory',
-
+            => 'Rcm\Factory\AssetManagerCacheFactory',
             'Rcm\Service\SessionMgr'
-                => 'Rcm\Factory\SessionManagerFactory',
-
+            => 'Rcm\Factory\SessionManagerFactory',
             'Rcm\Acl\ResourceProvider'
-                => 'Rcm\Factory\AclResourceProviderFactory',
-
+            => 'Rcm\Factory\AclResourceProviderFactory',
             'Rcm\Validator\Page'
-                => 'Rcm\Factory\PageValidatorFactory',
-
+            => 'Rcm\Factory\PageValidatorFactory',
             'Rcm\Validator\MainLayout'
-                => 'Rcm\Factory\MainLayoutValidatorFactory',
+            => 'Rcm\Factory\MainLayoutValidatorFactory',
         ),
     ),
-
     'controllers' => array(
         'invokables' => array(
             'Rcm\Controller\PageCheckController'
             => 'Rcm\Controller\PageCheckController',
         ),
-        'factories' => array (
+        'factories' => array(
             'Rcm\Controller\IndexController'
-                => 'Rcm\Factory\IndexControllerFactory',
+            => 'Rcm\Factory\IndexControllerFactory',
         ),
     ),
-
     'view_helpers' => array(
         'factories' => array(
             'rcmContainer'
-                => 'Rcm\Factory\ContainerViewHelperFactory',
+            => 'Rcm\Factory\ContainerViewHelperFactory',
         ),
         'invokables' => array(
             'rcmOutOfDateBrowserWarning'
-                => 'Rcm\View\Helper\OutOfDateBrowserWarning',
+            => 'Rcm\View\Helper\OutOfDateBrowserWarning',
         ),
     ),
-
     'controller_plugins' => array(
         'invokables' => array(
             'redirectToPage' =>

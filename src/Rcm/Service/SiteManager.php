@@ -19,12 +19,12 @@
 
 namespace Rcm\Service;
 
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\SiteNotFoundException;
-use Doctrine\ORM\EntityRepository;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Http\PhpEnvironment\Request as PhpEnvironmentRequest;
 use Zend\Stdlib\RequestInterface;
@@ -48,19 +48,18 @@ use Zend\Stdlib\RequestInterface;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-
 class SiteManager
 {
-    /** @var \Rcm\Service\DomainManager  */
+    /** @var \Rcm\Service\DomainManager */
     protected $domainManager;
 
-    /** @var \Rcm\Repository\Site  */
+    /** @var \Rcm\Repository\Site */
     protected $siteRepo;
 
-    /** @var \Zend\Cache\Storage\StorageInterface  */
+    /** @var \Zend\Cache\Storage\StorageInterface */
     protected $cache;
 
-    /** @var \Zend\Http\PhpEnvironment\Request  */
+    /** @var \Zend\Http\PhpEnvironment\Request */
     protected $request;
 
     /** @var integer */
@@ -84,15 +83,15 @@ class SiteManager
      * @param RequestInterface $request       Zend Request Object
      */
     public function __construct(
-        DomainManager    $domainManager,
+        DomainManager $domainManager,
         EntityRepository $siteRepo,
         StorageInterface $cache,
         RequestInterface $request
     ) {
         $this->domainManager = $domainManager;
-        $this->siteRepo      = $siteRepo;
-        $this->cache         = $cache;
-        $this->request       = $request;
+        $this->siteRepo = $siteRepo;
+        $this->cache = $cache;
+        $this->request = $request;
     }
 
     /**
@@ -103,7 +102,7 @@ class SiteManager
      * @return string
      * @throws InvalidArgumentException
      */
-    public function getSiteInfo($siteId=null)
+    public function getSiteInfo($siteId = null)
     {
         if (!$siteId) {
             $siteId = $this->getCurrentSiteId();
@@ -117,7 +116,7 @@ class SiteManager
             return $this->siteInfo[$siteId];
         }
 
-        $cacheKey = 'rcm_site_info_'.$siteId;
+        $cacheKey = 'rcm_site_info_' . $siteId;
 
         if ($this->cache->hasItem($cacheKey)) {
             $this->siteInfo[$siteId] = $this->cache->getItem($cacheKey);
@@ -130,6 +129,7 @@ class SiteManager
 
         return $this->siteInfo[$siteId];
     }
+
     /**
      * Get the current sites information
      *
@@ -147,7 +147,7 @@ class SiteManager
      *
      * @return string
      */
-    public function getSiteLoginPage($siteId=null)
+    public function getSiteLoginPage($siteId = null)
     {
         $siteInfo = $this->getSiteInfo($siteId);
         return $siteInfo['loginPage'];
@@ -172,7 +172,7 @@ class SiteManager
      *
      * @throws InvalidArgumentException
      */
-    public function getSiteTheme($siteId=null)
+    public function getSiteTheme($siteId = null)
     {
         $siteInfo = $this->getSiteInfo($siteId);
         return $siteInfo['theme'];
@@ -195,7 +195,7 @@ class SiteManager
      *
      * @return string
      */
-    public function getSiteDefaultLayout($siteId=null)
+    public function getSiteDefaultLayout($siteId = null)
     {
         $siteInfo = $this->getSiteInfo($siteId);
         return $siteInfo['siteLayout'];
@@ -299,7 +299,7 @@ class SiteManager
             || empty($domainList[$currentDomain]['siteId'])
         ) {
             throw new SiteNotFoundException(
-                'No site found for request domain: '.$currentDomain
+                'No site found for request domain: ' . $currentDomain
             );
         }
 

@@ -34,7 +34,6 @@ use Rcm\Exception\ExceptionInterface as RcmExceptionInterface;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-
 class SiteNotFoundException
     extends \InvalidArgumentException
     implements RcmExceptionInterface

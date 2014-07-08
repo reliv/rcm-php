@@ -21,8 +21,8 @@ namespace Rcm\Service;
 
 use Rcm\Http\Response;
 use Zend\Http\PhpEnvironment\Request;
-use Zend\Mvc\ResponseSender\SendResponseEvent;
 use Zend\Mvc\ResponseSender\HttpResponseSender;
+use Zend\Mvc\ResponseSender\SendResponseEvent;
 use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
 
@@ -44,15 +44,15 @@ use Zend\Stdlib\ResponseInterface;
 class ResponseHandler
 {
     /** @var \Zend\Http\PhpEnvironment\Request */
-    protected  $request;
+    protected $request;
 
-    /** @var \Rcm\Service\SiteManager  */
+    /** @var \Rcm\Service\SiteManager */
     protected $siteManager;
 
-    /** @var \Zend\Mvc\ResponseSender\HttpResponseSender  */
+    /** @var \Zend\Mvc\ResponseSender\HttpResponseSender */
     protected $responseSender;
 
-    /** @var bool  */
+    /** @var bool */
     protected $terminate = true;
 
     /**
@@ -65,10 +65,10 @@ class ResponseHandler
     public function __construct(
         RequestInterface $request,
         SiteManager $siteManager,
-        HttpResponseSender  $responseSender
+        HttpResponseSender $responseSender
     ) {
-        $this->request        = $request;
-        $this->siteManager    = $siteManager;
+        $this->request = $request;
+        $this->siteManager = $siteManager;
         $this->responseSender = $responseSender;
     }
 
@@ -105,9 +105,9 @@ class ResponseHandler
         $statusCode = $response->getStatusCode();
 
         switch ($statusCode) {
-        case 401:
-            $response = $this->processNotAuthorized();
-            break;
+            case 401:
+                $response = $this->processNotAuthorized();
+                break;
         }
 
         return $response;
@@ -127,7 +127,9 @@ class ResponseHandler
         $newResponse = new Response();
         $newResponse->setStatusCode('302');
         $newResponse->getHeaders()
-            ->addHeaderLine('Location: '.$loginPage.'?redirect='.$returnToUrl);
+            ->addHeaderLine(
+                'Location: ' . $loginPage . '?redirect=' . $returnToUrl
+            );
 
         return $newResponse;
     }

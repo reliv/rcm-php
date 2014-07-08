@@ -45,7 +45,7 @@ class UrlToPage extends AbstractPlugin
      *
      * @return \Zend\Http\Response
      */
-    public function __invoke($pageName, $pageType='n')
+    public function __invoke($pageName, $pageType = 'n')
     {
         return $this->url($pageName, $pageType);
     }
@@ -58,7 +58,7 @@ class UrlToPage extends AbstractPlugin
      *
      * @return \Zend\Http\Response
      */
-    public  function url($pageName, $pageType)
+    public function url($pageName, $pageType)
     {
         /** @var \Zend\Mvc\Controller\AbstractActionController $controller */
         $controller = $this->getController();

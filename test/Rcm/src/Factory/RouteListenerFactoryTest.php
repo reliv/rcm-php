@@ -53,12 +53,17 @@ class RouteListenerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockRedirectManager = $this->getMockBuilder('\Rcm\Service\RedirectManager')
+        $mockRedirectManager = $this->getMockBuilder(
+            '\Rcm\Service\RedirectManager'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
         $serviceLocator = new ServiceManager();
-        $serviceLocator->setService('Rcm\Service\DomainManager', $mockDomainManager);
+        $serviceLocator->setService(
+            'Rcm\Service\DomainManager',
+            $mockDomainManager
+        );
         $serviceLocator->setService(
             'Rcm\Service\RedirectManager',
             $mockRedirectManager

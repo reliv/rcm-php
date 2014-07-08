@@ -103,7 +103,9 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->mockHeadTitle = $this->getMockBuilder('\Zend\View\Helper\HeadTitle')
+        $this->mockHeadTitle = $this->getMockBuilder(
+            '\Zend\View\Helper\HeadTitle'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -113,7 +115,6 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->mockHeadTitle->expects($this->any())
             ->method('setSeparator');
-
 
 
         $mockPluginHelper = new HelperPluginManager();
@@ -150,7 +151,7 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
      *
      * @return null|string
      */
-    public function callBackForHeadTitle($title=null)
+    public function callBackForHeadTitle($title = null)
     {
         if (!empty($title)) {
             $this->title = $title;

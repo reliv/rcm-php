@@ -43,10 +43,10 @@ use Zend\Cache\Storage\StorageInterface;
  */
 class DomainManager
 {
-    /** @var \Rcm\Repository\Domain  */
+    /** @var \Rcm\Repository\Domain */
     protected $repository;
 
-    /** @var \Zend\Cache\Storage\StorageInterface  */
+    /** @var \Zend\Cache\Storage\StorageInterface */
     protected $cache;
 
     /**

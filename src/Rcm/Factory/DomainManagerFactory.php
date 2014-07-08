@@ -55,7 +55,7 @@ class DomainManagerFactory implements FactoryInterface
         $domainRepo = $entityManager->getRepository('\Rcm\Entity\Domain');
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
-        $cache         = $serviceLocator->get('Rcm\Service\Cache');
+        $cache = $serviceLocator->get('Rcm\Service\Cache');
 
         return new DomainManager(
             $domainRepo,

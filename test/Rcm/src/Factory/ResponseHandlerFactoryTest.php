@@ -21,8 +21,8 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\Service\ResponseHandler;
 use Rcm\Factory\ResponseHandlerFactory;
+use Rcm\Service\ResponseHandler;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceManager;
 
@@ -55,7 +55,10 @@ class ResponseHandlerFactoryTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Rcm\Service\SiteManager', $mockSiteManager);
+        $serviceManager->setService(
+            'Rcm\Service\SiteManager',
+            $mockSiteManager
+        );
         $serviceManager->setService('request', new Request());
 
         $factory = new ResponseHandlerFactory();

@@ -2,11 +2,11 @@
 
 <project name="name-of-project" default="build">
     <target name="build"
-    depends="prepare,composer,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdox,phpunit,phpcb"/>
+            depends="prepare,composer,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdox,phpunit,phpcb"/>
     <target name="build-parallel"
             depends="prepare,composer,lint,tools-parallel,phpunit,phpcb"/>
 
-    <target name="build-dev" depends="prepare,lint,phpcpd,phpunit" />
+    <target name="build-dev" depends="prepare,lint,phpcpd,phpunit"/>
 
     <target name="tools-parallel" description="Run tools in parallel">
         <parallel threadCount="5">
@@ -51,16 +51,16 @@
         </exec>
 
         <exec executable="${basedir}/composer.phar" failonerror="true">
-            <arg value="config" />
-            <arg value="-g" />
-            <arg value="github-oauth.github.com" />
-            <arg value="54121d99bb003155e623eacb4f5cfa192e6758c2" />
+            <arg value="config"/>
+            <arg value="-g"/>
+            <arg value="github-oauth.github.com"/>
+            <arg value="54121d99bb003155e623eacb4f5cfa192e6758c2"/>
         </exec>
 
         <exec executable="${basedir}/composer.phar" failonerror="true">
-            <arg value="--prefer-source" />
-            <arg value="--quiet" />
-            <arg value="install" />
+            <arg value="--prefer-source"/>
+            <arg value="--quiet"/>
+            <arg value="install"/>
         </exec>
     </target>
 
@@ -90,7 +90,8 @@
         </exec>
     </target>
 
-    <target name="pdepend" description="Calculate software metrics using PHP_Depend">
+    <target name="pdepend"
+            description="Calculate software metrics using PHP_Depend">
         <exec executable="pdepend">
             <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml"/>
             <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg"/>
@@ -146,7 +147,7 @@
             <arg value="--ignore=vendor,test,autoload_classmap.php"/>
             <arg value="--extensions=php"/>
             <arg path="${basedir}"/>
-            <redirector output="${basedir}/build/logs/checkstyle.xml" />
+            <redirector output="${basedir}/build/logs/checkstyle.xml"/>
         </exec>
     </target>
 
@@ -163,13 +164,13 @@
     <target name="phpdox" description="Generate API documentation using phpDoc">
         <exec executable="phpdoc">
             <arg value="-t"/>
-            <arg path="${basedir}/build/phpdoc" />
-            <arg value="-d" />
-            <arg path="${basedir}" />
-            <arg value="--extensions=php" />
-            <arg value="--ignore" />
-            <arg value="test/,vendor/" />
-            <arg value="--title=Rcm" />
+            <arg path="${basedir}/build/phpdoc"/>
+            <arg value="-d"/>
+            <arg path="${basedir}"/>
+            <arg value="--extensions=php"/>
+            <arg value="--ignore"/>
+            <arg value="test/,vendor/"/>
+            <arg value="--title=Rcm"/>
         </exec>
     </target>
 
@@ -195,14 +196,15 @@
 
     </target>
 
-    <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
+    <target name="phpcb"
+            description="Aggregate tool output with PHP_CodeBrowser">
         <exec executable="phpcb">
             <arg value="--log"/>
             <arg path="${basedir}/build/logs"/>
             <arg value="--source"/>
             <arg path="${basedir}"/>
-            <arg value="--ignore" />
-            <arg value="build,vendor/,test/" />
+            <arg value="--ignore"/>
+            <arg value="build,vendor/,test/"/>
             <arg value="--output"/>
             <arg path="${basedir}/build/code-browser"/>
         </exec>

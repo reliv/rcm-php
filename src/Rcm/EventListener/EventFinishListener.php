@@ -18,10 +18,11 @@
  */
 namespace Rcm\EventListener;
 
-use Rcm\Service\ResponseHandler;
 use Rcm\Http\Response as RcmResponse;
+use Rcm\Service\ResponseHandler;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
+
 /**
  * RCM Event Finish Listener
  *
@@ -37,7 +38,7 @@ use Zend\Mvc\MvcEvent;
  */
 class EventFinishListener
 {
-    /** @var \Rcm\Service\ResponseHandler  */
+    /** @var \Rcm\Service\ResponseHandler */
     protected $responseHandler;
 
     /**

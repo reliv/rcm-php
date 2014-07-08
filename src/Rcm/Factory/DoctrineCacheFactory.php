@@ -18,9 +18,9 @@
  */
 namespace Rcm\Factory;
 
+use DoctrineModule\Cache\ZendStorageCache;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use DoctrineModule\Cache\ZendStorageCache;
 
 /**
  * Service Factory for Doctrine Cache used by the CMS

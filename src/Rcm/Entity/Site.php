@@ -19,8 +19,8 @@
  */
 namespace Rcm\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
 
 /**
@@ -576,7 +576,7 @@ class Site
     /**
      * Add an ACL role to the allowed list.
      *
-     * @param string|array $permittedRoles Comma separated list or array
+     * @param string|array $permittedRoles        Comma separated list or array
      *                                            of allowed ACL Roles
      *
      * @return void

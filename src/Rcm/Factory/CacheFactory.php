@@ -18,10 +18,10 @@
  */
 namespace Rcm\Factory;
 
+use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Cache\Storage\StorageInterface;
 
 /**
  * Service Factory for Rcm Cache

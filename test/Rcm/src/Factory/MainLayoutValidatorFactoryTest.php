@@ -23,7 +23,6 @@ require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Factory\MainLayoutValidatorFactory;
 use Rcm\Validator\MainLayout;
-use Rcm\Validator\Page;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -51,7 +50,9 @@ class MainLayoutValidatorFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateService()
     {
 
-        $mockLayoutValidator = $this->getMockBuilder('\Rcm\Validator\MainLayout')
+        $mockLayoutValidator = $this->getMockBuilder(
+            '\Rcm\Validator\MainLayout'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -64,7 +65,10 @@ class MainLayoutValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($mockLayoutValidator));
 
         $serviceLocator = new ServiceManager();
-        $serviceLocator->setService('Rcm\Service\LayoutManager', $mockLayoutManager);
+        $serviceLocator->setService(
+            'Rcm\Service\LayoutManager',
+            $mockLayoutManager
+        );
 
         $factory = new MainLayoutValidatorFactory();
         $object = $factory->createService($serviceLocator);

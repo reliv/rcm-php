@@ -99,10 +99,10 @@ class Container extends EntityRepository implements ContainerInterface
         $queryBuilder = $this->_em->createQueryBuilder()
             ->select(
                 'container,'
-                .'currentRevision.revisionId,'
-                .'revision,'
-                .'pluginWrappers,'
-                .'pluginInstances'
+                . 'currentRevision.revisionId,'
+                . 'revision,'
+                . 'pluginWrappers,'
+                . 'pluginInstances'
             )
             ->from('\Rcm\Entity\Container', 'container')
             ->leftJoin('container.currentRevision', 'currentRevision')
@@ -118,7 +118,9 @@ class Container extends EntityRepository implements ContainerInterface
             ->setParameter('containerName', $name)
             ->setParameter('revisionId', $revisionId);
 
-        $getData = $queryBuilder->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+        $getData = $queryBuilder->getQuery()->getSingleResult(
+            Query::HYDRATE_ARRAY
+        );
 
         $result = null;
 

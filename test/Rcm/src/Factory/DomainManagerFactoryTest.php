@@ -21,8 +21,8 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\Service\DomainManager;
 use Rcm\Factory\DomainManagerFactory;
+use Rcm\Service\DomainManager;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -53,7 +53,9 @@ class DomainManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+        $mockEntityManager = $this->getMockBuilder(
+            '\Doctrine\ORM\EntityManager'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 

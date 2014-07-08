@@ -46,10 +46,10 @@ class DispatchListener
     /** @var \Rcm\Service\LayoutManager */
     protected $layoutManager;
 
-    /** @var \Rcm\Service\SiteManager  */
+    /** @var \Rcm\Service\SiteManager */
     protected $siteManager;
 
-    /** @var \Zend\View\HelperPluginManager  */
+    /** @var \Zend\View\HelperPluginManager */
     protected $viewHelperManager;
 
     /**

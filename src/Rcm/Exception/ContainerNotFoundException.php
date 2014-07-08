@@ -36,7 +36,6 @@ use Rcm\Exception\ExceptionInterface as RcmExceptionInterface;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-
 class ContainerNotFoundException
     extends \InvalidArgumentException
     implements RcmExceptionInterface

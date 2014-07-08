@@ -21,8 +21,8 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\Service\ContainerManager;
 use Rcm\Factory\ContainerManagerFactory;
+use Rcm\Service\ContainerManager;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -57,7 +57,9 @@ class ContainerManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+        $mockEntityManager = $this->getMockBuilder(
+            '\Doctrine\ORM\EntityManager'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -74,9 +76,18 @@ class ContainerManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Rcm\Service\SiteManager', $mockSiteManager);
-        $serviceManager->setService('Rcm\Service\PluginManager', $mockPluginManager);
-        $serviceManager->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
+        $serviceManager->setService(
+            'Rcm\Service\SiteManager',
+            $mockSiteManager
+        );
+        $serviceManager->setService(
+            'Rcm\Service\PluginManager',
+            $mockPluginManager
+        );
+        $serviceManager->setService(
+            'Doctrine\ORM\EntityManager',
+            $mockEntityManager
+        );
         $serviceManager->setService('Rcm\Service\Cache', $mockCache);
 
         $factory = new ContainerManagerFactory();

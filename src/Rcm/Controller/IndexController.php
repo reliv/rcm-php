@@ -23,9 +23,9 @@ namespace Rcm\Controller;
 use Rcm\Exception\ContainerNotFoundException;
 use Rcm\Service\LayoutManager;
 use Rcm\Service\PageManager;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\Http\Response;
 
 /**
  * Index Controller for the entire application
@@ -58,13 +58,13 @@ class IndexController extends AbstractActionController
     /** @var integer */
     public $pageRevisionId;
 
-    /** @var integer  */
+    /** @var integer */
     protected $siteId;
 
-    /** @var \Rcm\Service\PageManager  */
+    /** @var \Rcm\Service\PageManager */
     protected $pageManager;
 
-    /** @var \Rcm\Service\LayoutManager  */
+    /** @var \Rcm\Service\LayoutManager */
     protected $layoutManager;
 
 
@@ -83,9 +83,9 @@ class IndexController extends AbstractActionController
         LayoutManager $layoutManager,
         $siteId
     ) {
-        $this->pageManager   = $pageManager;
+        $this->pageManager = $pageManager;
         $this->layoutManager = $layoutManager;
-        $this->siteId        = $siteId;
+        $this->siteId = $siteId;
     }
 
     /**
@@ -106,11 +106,11 @@ class IndexController extends AbstractActionController
             $pageInfo = $this->pageManager->getRevisionInfo('not-found');
 
             /** @var \Zend\Http\Response $response */
-            $response =$this->getResponse();
+            $response = $this->getResponse();
             $response->setStatusCode(404);
 
             return $pageInfo;
-        } catch(ContainerNotFoundException $e) {
+        } catch (ContainerNotFoundException $e) {
             return $this->notFoundAction();
         }
     }
@@ -148,7 +148,7 @@ class IndexController extends AbstractActionController
                 $this->pageType,
                 $userCanSeeRevisions
             );
-        } catch(ContainerNotFoundException $e) {
+        } catch (ContainerNotFoundException $e) {
             $pageInfo = $this->pageNotFound();
 
             if ($pageInfo instanceof ViewModel) {
@@ -172,7 +172,7 @@ class IndexController extends AbstractActionController
 
         $viewModel->setTemplate(
             'pages/'
-            .$this->layoutManager->getSitePageTemplate($pageInfo['pageLayout'])
+            . $this->layoutManager->getSitePageTemplate($pageInfo['pageLayout'])
         );
 
         return $viewModel;
@@ -187,7 +187,7 @@ class IndexController extends AbstractActionController
     protected function shouldShowRevisions()
     {
         $allowedRevisions = $this->rcmUserIsAllowed(
-            'sites.'.$this->siteId.'.pages.'.$this->pageName,
+            'sites.' . $this->siteId . '.pages.' . $this->pageName,
             'edit',
             'Rcm\Acl\ResourceProvider'
         );
@@ -197,7 +197,7 @@ class IndexController extends AbstractActionController
         }
 
         $allowedRevisions = $this->rcmUserIsAllowed(
-            'sites.'.$this->siteId.'.pages.'.$this->pageName,
+            'sites.' . $this->siteId . '.pages.' . $this->pageName,
             'approve',
             'Rcm\Acl\ResourceProvider'
         );
@@ -207,7 +207,7 @@ class IndexController extends AbstractActionController
         }
 
         $allowedRevisions = $this->rcmUserIsAllowed(
-            'sites.'.$this->siteId.'.pages.'.$this->pageName,
+            'sites.' . $this->siteId . '.pages.' . $this->pageName,
             'revisions',
             'Rcm\Acl\ResourceProvider'
         );
@@ -217,7 +217,7 @@ class IndexController extends AbstractActionController
         }
 
         $allowedRevisions = $this->rcmUserIsAllowed(
-            'sites.'.$this->siteId.'.pages',
+            'sites.' . $this->siteId . '.pages',
             'create',
             'Rcm\Acl\ResourceProvider'
         );
