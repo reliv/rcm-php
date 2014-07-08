@@ -111,7 +111,7 @@ class LayoutManager
      * @param integer $siteId Site Id to lookup.  If none passed will get the
      *                        currents theme.
      *
-     * @return array Config Array For Theme
+     * @return array                                   Config Array For Theme
      * @throws \Rcm\Exception\RuntimeException
      * @throws \Rcm\Exception\InvalidArgumentException
      */

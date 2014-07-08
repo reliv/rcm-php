@@ -112,6 +112,7 @@ class Page extends PageName
         )
         ) {
             $this->error(self::PAGE_EXISTS);
+
             return false;
         }
 

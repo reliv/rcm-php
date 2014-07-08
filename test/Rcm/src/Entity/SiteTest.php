@@ -787,6 +787,5 @@ class SIteTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($this->site->hasRole('myRoleFour'));
     }
-
 }
  

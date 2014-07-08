@@ -89,6 +89,7 @@ class MainLayout extends AbstractValidator
 
         if (!$this->layoutManager->isLayoutValid($value, $this->siteId)) {
             $this->error(self::MAIN_LAYOUT);
+
             return false;
         }
 

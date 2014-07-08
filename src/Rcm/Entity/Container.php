@@ -22,7 +22,6 @@ namespace Rcm\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Page Information Entity
  *
@@ -169,6 +168,4 @@ class Container extends ContainerAbstract
     {
         $this->containerId = $containerId;
     }
-
-
 }

@@ -35,9 +35,7 @@ use Rcm\Exception\ExceptionInterface as RcmExceptionInterface;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class PageNotFoundException
-    extends \InvalidArgumentException
-    implements RcmExceptionInterface
+class PageNotFoundException extends \InvalidArgumentException implements RcmExceptionInterface
 {
 
 }

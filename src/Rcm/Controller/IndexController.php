@@ -67,7 +67,6 @@ class IndexController extends AbstractActionController
     /** @var \Rcm\Service\LayoutManager */
     protected $layoutManager;
 
-
     protected $pageInfo;
     protected $notFound = false;
 

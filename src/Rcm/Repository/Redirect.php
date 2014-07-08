@@ -21,9 +21,7 @@
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Rcm\Exception\InvalidArgumentException;
-
 
 /**
  * Redirect Repository

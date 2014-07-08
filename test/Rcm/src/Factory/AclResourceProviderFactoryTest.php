@@ -142,5 +142,4 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($object instanceof ResourceProvider);
     }
-
 }

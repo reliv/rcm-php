@@ -27,7 +27,6 @@ use Rcm\Entity\Page as PageEntity;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site as SiteEntity;
 
-
 /**
  * Page Repository
  *
@@ -153,7 +152,6 @@ class Page extends EntityRepository implements ContainerInterface
         $getData = $queryBuilder
             ->getQuery()
             ->getSingleResult(Query::HYDRATE_ARRAY);
-
 
         $result = null;
 

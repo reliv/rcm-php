@@ -277,6 +277,5 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($md5, $actual);
     }
-
 }
  

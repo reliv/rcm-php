@@ -66,9 +66,8 @@ interface ContainerInterface
      * @param string  $name       Page Name
      * @param string  $revisionId Revision Id
      *
-     * @return null|array Database Result Set
+     * @return null|array                           Database Result Set
      * @throws \Rcm\Exception\PageNotFoundException
      */
     public function getRevisionDbInfo($siteId, $name, $revisionId);
-
 }

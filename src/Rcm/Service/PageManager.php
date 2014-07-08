@@ -20,7 +20,6 @@
 namespace Rcm\Service;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Validator\Page;
 use Rcm\Validator\PageTemplate;

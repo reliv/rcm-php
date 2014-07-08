@@ -234,7 +234,7 @@ abstract class ContainerAbstract
      *                                 the page container.
      * @param null|integer $siteId     Site Id
      *
-     * @return null|array Database Result Set
+     * @return null|array                              Database Result Set
      * @throws \Rcm\Exception\PageNotFoundException
      * @throws \Rcm\Exception\InvalidArgumentException
      */

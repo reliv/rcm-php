@@ -20,7 +20,6 @@ namespace Rcm\EventListener;
 
 use Rcm\Http\Response as RcmResponse;
 use Rcm\Service\ResponseHandler;
-use Zend\Http\Response as HttpResponse;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\ViewEvent;
 

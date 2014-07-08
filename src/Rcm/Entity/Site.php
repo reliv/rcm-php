@@ -576,8 +576,8 @@ class Site
     /**
      * Add an ACL role to the allowed list.
      *
-     * @param string|array $permittedRoles        Comma separated list or array
-     *                                            of allowed ACL Roles
+     * @param string|array $permittedRoles Comma separated list or array
+     *                                     of allowed ACL Roles
      *
      * @return void
      */

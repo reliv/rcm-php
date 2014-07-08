@@ -83,6 +83,7 @@ class RouteListener
             $response = new Response();
             $response->setStatusCode(404);
             $event->stopPropagation(true);
+
             return $response;
         }
 
@@ -96,6 +97,7 @@ class RouteListener
                 );
 
             $event->stopPropagation(true);
+
             return $response;
         }
 
@@ -134,6 +136,7 @@ class RouteListener
                     '//' . $redirectList[$requestUrl]['redirectUrl']
                 );
             $event->stopPropagation(true);
+
             return $response;
         }
 
