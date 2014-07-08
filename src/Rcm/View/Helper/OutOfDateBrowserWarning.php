@@ -19,7 +19,6 @@
 
 namespace Rcm\View\Helper;
 
-
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -47,6 +46,7 @@ class OutOfDateBrowserWarning extends AbstractHelper
     public function __invoke()
     {
         /* @codingStandardsIgnoreStart */
+
         return '
         <!--[if lt IE ' . $this->lowestIeVersion . ']>
             <div style="text-align:center;width:100%;padding:5px 10px;z-index:9999;background-color:#FDF2AB;position:absolute;border-bottom:1px solid #A29330">
@@ -69,4 +69,4 @@ class OutOfDateBrowserWarning extends AbstractHelper
             . $this->lowestIeVersion . '. Please update your browser
             or install the latest Chrome or Firefox web browser.';
     }
-} 
+}

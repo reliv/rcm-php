@@ -26,7 +26,6 @@ use Zend\Mvc\ResponseSender\SendResponseEvent;
 use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
 
-
 /**
  * Rcm Response Handler
  *
@@ -191,5 +190,4 @@ class ResponseHandler
 
         return $this->request;
     }
-
 }

@@ -20,7 +20,6 @@
 namespace Rcm\Service;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
 use Rcm\Exception\InvalidArgumentException;
@@ -120,6 +119,7 @@ class SiteManager
 
         if ($this->cache->hasItem($cacheKey)) {
             $this->siteInfo[$siteId] = $this->cache->getItem($cacheKey);
+
             return $this->siteInfo[$siteId];
         }
 
@@ -150,6 +150,7 @@ class SiteManager
     public function getSiteLoginPage($siteId = null)
     {
         $siteInfo = $this->getSiteInfo($siteId);
+
         return $siteInfo['loginPage'];
     }
 
@@ -175,6 +176,7 @@ class SiteManager
     public function getSiteTheme($siteId = null)
     {
         $siteInfo = $this->getSiteInfo($siteId);
+
         return $siteInfo['theme'];
     }
 
@@ -198,6 +200,7 @@ class SiteManager
     public function getSiteDefaultLayout($siteId = null)
     {
         $siteInfo = $this->getSiteInfo($siteId);
+
         return $siteInfo['siteLayout'];
     }
 
@@ -279,7 +282,7 @@ class SiteManager
     /**
      * Get Current Site Id From Domain
      *
-     * @return integer|null SiteId
+     * @return integer|null                         SiteId
      * @throws \Rcm\Exception\SiteNotFoundException
      */
     protected function getCurrentSiteIdFromDomain()

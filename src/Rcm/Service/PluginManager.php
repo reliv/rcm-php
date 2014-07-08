@@ -112,6 +112,7 @@ class PluginManager
     public function getNewEntity($pluginName)
     {
         $viewData = $this->getPluginViewData($pluginName, -1, new Request());
+
         return $viewData;
     }
 
@@ -130,6 +131,7 @@ class PluginManager
         if ($this->cache->hasItem($cacheId)) {
             $return = $this->cache->getItem($cacheId);
             $return['fromCache'] = true;
+
             return $return;
         }
 
@@ -243,7 +245,6 @@ class PluginManager
             'pluginInstanceId' => $pluginInstanceId,
         );
 
-
         if (isset($this->config['rcmPlugin'][$pluginName]['editJs'])) {
             $return['editJs']
                 = $this->config['rcmPlugin'][$pluginName]['editJs'];
@@ -302,7 +303,6 @@ class PluginManager
             $pluginInstance->isSiteWide(),
             $pluginInstance->getDisplayName()
         );
-
 
         return $newPluginInstance;
     }

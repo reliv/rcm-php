@@ -168,6 +168,5 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
     {
         $this->pluginInstance->setPreviousInstance(time());
     }
-
 }
  

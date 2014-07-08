@@ -66,7 +66,6 @@ class PageManagerFactory implements FactoryInterface
         /** @var \Rcm\Validator\MainLayout $layoutValidator */
         $layoutValidator = $serviceLocator->get('Rcm\Validator\MainLayout');
 
-
         return new PageManager(
             $pluginManager,
             $repository,

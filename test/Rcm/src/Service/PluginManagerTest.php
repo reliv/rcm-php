@@ -677,5 +677,4 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         $this->pluginManager->deletePluginInstance(5000000);
         $this->assertEquals(3, $this->removeCounter);
     }
-
 }

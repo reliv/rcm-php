@@ -310,5 +310,4 @@ class Language
     {
         $this->oldWebLanguage = $language;
     }
-
 }

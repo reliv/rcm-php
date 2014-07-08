@@ -79,6 +79,7 @@ class Container extends AbstractHelper
                 = $this->containerManager->getRevisionInfo($name, $revision);
         } catch (PluginReturnedResponseException $exception) {
             $this->handlePluginResponse($exception);
+
             return null;
         }
 
@@ -139,9 +140,7 @@ class Container extends AbstractHelper
 
         $html .= ' id="' . $containerData['name'] . '">';
 
-        foreach (
-            $containerData['revision']['pluginInstances'] as &$pluginInstance
-        ) {
+        foreach ($containerData['revision']['pluginInstances'] as &$pluginInstance) {
 
             if ($isPageContainer
                 && $pluginInstance['layoutContainer'] != $pageContainerName

@@ -200,5 +200,4 @@ class Redirect
     {
         return $this->site;
     }
-
 }

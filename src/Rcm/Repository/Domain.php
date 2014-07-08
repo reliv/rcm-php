@@ -21,9 +21,8 @@
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query;
-
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Domain Repository

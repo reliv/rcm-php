@@ -180,7 +180,7 @@ class Domain
      * @param string $domain Domain name of object
      *
      * @throws \Rcm\Exception\InvalidArgumentException If domain name
-     *                                                         is invalid
+     *                                                 is invalid
      *
      * @return void
      */

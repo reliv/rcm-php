@@ -108,6 +108,7 @@ class PageTemplate extends AbstractValidator
         )
         ) {
             $this->error(self::PAGE_TEMPLATE);
+
             return false;
         }
 

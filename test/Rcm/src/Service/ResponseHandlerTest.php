@@ -392,5 +392,4 @@ class ResponseHandlerTest extends \PHPUnit_Framework_TestCase
         $this->sendHeadersCounter++;
         return $this->mockSender;
     }
-
 }
