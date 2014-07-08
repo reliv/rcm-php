@@ -132,7 +132,7 @@
     <target name="phpcs"
             description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
         <exec executable="phpcs">
-            <arg value="--standard=PEAR"/>
+            <arg value="--standard=PSR2"/>
             <arg value="--ignore=vendor,test,autoload_classmap.php"/>
             <arg value="--extensions=php"/>
             <arg path="${basedir}"/>
@@ -143,7 +143,7 @@
             description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server">
         <exec executable="phpcs" output="/dev/null">
             <arg value="--report=checkstyle"/>
-            <arg value="--standard=PEAR"/>
+            <arg value="--standard=PSR2"/>
             <arg value="--ignore=vendor,test,autoload_classmap.php"/>
             <arg value="--extensions=php"/>
             <arg path="${basedir}"/>
