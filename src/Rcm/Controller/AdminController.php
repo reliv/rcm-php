@@ -22,6 +22,7 @@ use \Rcm\Controller\BaseController,
     \Rcm\Entity\PluginInstance,
     \Rcm\Entity\PluginAsset;
 use Rcm\Entity\Domain;
+use RcmDoctrineJsonPluginStorage\Entity\DoctrineJsonInstanceConfig;
 
 /**
  * Index Controller for the entire application
@@ -410,6 +411,7 @@ class AdminController extends BaseController
 
     public function createSiteAction()
     {
+        $this->entityMgr->getConnection()->getConfiguration()->setSQLLogger(null);
         $config = $this->config;
         $errors = $config['reliv']['createSiteErrors'];
 
@@ -491,6 +493,59 @@ class AdminController extends BaseController
 
         $this->entityMgr->persist($newSite);
         $this->entityMgr->flush();
+
+        $newSiteId = $newSite->getSiteId();
+
+        $this->entityMgr->clear();
+
+        $query = $this->entityMgr->createQueryBuilder()
+            ->select('i.instanceId, i.previousEntity')
+            ->from('\Rcm\Entity\Site', 'site')
+            ->join('site.pages', 'page')
+            ->join('page.currentRevision', 'revision')
+            ->join('revision.pluginInstances', 'pluginWrapper')
+            ->join('pluginWrapper.instance', 'i')
+            ->where('site.siteId = :siteId')
+            ->setParameter('siteId', $newSiteId);
+
+        $instances = $query->getQuery()->getArrayResult();
+
+        $done = array();
+
+        foreach ($instances as $instance) {
+
+            if (in_array($instance['instanceId'], $done)) {
+                continue;
+            }
+
+            /** @var DoctrineJsonInstanceConfig $config */
+            $check = $this->entityMgr
+                ->getRepository('RcmDoctrineJsonPluginStorage\Entity\DoctrineJsonInstanceConfig')
+                ->findOneBy(array('instanceId' => $instance['instanceId']));
+
+            if (!empty($check)) {
+                continue;
+            }
+
+            /** @var DoctrineJsonInstanceConfig $config */
+            $config = $this->entityMgr
+                ->getRepository('RcmDoctrineJsonPluginStorage\Entity\DoctrineJsonInstanceConfig')
+                ->findOneBy(array('instanceId' => $instance['previousEntity']));
+
+            if (empty($config)) {
+                continue;
+            }
+
+            $newConfig = new DoctrineJsonInstanceConfig();
+            $newConfig->setInstanceId($instance['instanceId']);
+            $newConfig->setConfig($config->getConfig());
+
+            $this->entityMgr->persist($newConfig);
+            $this->entityMgr->flush();
+            $this->entityMgr->clear();
+
+            $done[] = $instance['instanceId'];
+        }
 
         $return['dataOk'] = 'Y';
         $return['redirect'] = '//' . $domainEntity->getDomainName();

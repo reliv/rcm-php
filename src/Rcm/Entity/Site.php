@@ -214,9 +214,34 @@ class Site
             $sitePluginInstances = $this->getRawPluginInstances();
             $clonedPluginInstances = array();
 
-            /** @var \Rcm\Entity\PluginInstance $page */
+            /** @var \Rcm\Entity\PluginInstance $sitePluginInstance */
             foreach ($sitePluginInstances as $sitePluginInstance) {
-                $clonedPluginInstances[] = clone $sitePluginInstance;
+                $instanceId = $sitePluginInstance->getInstanceId();
+                $clonedInstance = clone $sitePluginInstance;
+
+                $clonedPluginInstances[] = $clonedInstance;
+
+                /** @var \Rcm\Entity\Page $page */
+                foreach ($this->pages as $page) {
+                    $currentRevision = $page->getCurrentRevision();
+
+                    if (empty($currentRevision)) {
+                        continue;
+                    }
+
+                    $pluginWrappers = $currentRevision->getRawPluginInstances();
+
+                    /** @var \Rcm\Entity\PagePluginInstance $pluginWrapper */
+                    foreach ($pluginWrappers as $pluginWrapper) {
+                        if (!$pluginWrapper->getInstance()->isSiteWide()) {
+                            continue;
+                        }
+
+                        if ($pluginWrapper->getInstance()->getInstanceId() == $instanceId) {
+                            $pluginWrapper->setInstance($clonedInstance);
+                        }
+                    }
+                }
             }
 
             $this->sitePlugins = new ArrayCollection($clonedPluginInstances);
