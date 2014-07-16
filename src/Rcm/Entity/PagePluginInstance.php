@@ -84,6 +84,9 @@ class PagePluginInstance
 
     /**
      * fetch="EAGER" here is very important for optimizing the number of queries
+     *
+     * @var \Rcm\Entity\PluginInstance
+     *
      * @ORM\ManyToOne(
      *     targetEntity="PluginInstance",
      *     fetch="EAGER",
@@ -96,6 +99,22 @@ class PagePluginInstance
      * )
      **/
     protected $instance;
+
+    public function __clone()
+    {
+        if (empty($this->instance)) {
+            return;
+        }
+
+        if ($this->pageInstanceId) {
+            $this->pageInstanceId = null;
+        }
+
+        if (!$this->instance->isSiteWide()) {
+            $clonedInstance = clone $this->instance;
+            $this->instance = $clonedInstance;
+        }
+    }
 
     /**
      * Get Instance layout container

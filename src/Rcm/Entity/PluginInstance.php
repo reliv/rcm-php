@@ -117,6 +117,14 @@ class PluginInstance
         $this->assets = new ArrayCollection();
     }
 
+    public function __clone()
+    {
+        if ($this->instanceId) {
+            $this->previousEntity = $this->instanceId;
+            $this->instanceId = null;
+        }
+    }
+
     public function clearAssets()
     {
         $this->assets = new ArrayCollection();
@@ -130,11 +138,6 @@ class PluginInstance
     public function toArray()
     {
         return get_object_vars($this);
-    }
-
-    public function __clone()
-    {
-        $this->instanceId = null;
     }
 
     /**
@@ -331,6 +334,11 @@ class PluginInstance
     public function setPreviousEntity(\Rcm\Entity\PluginInstance $instance)
     {
         $this->previousEntity = $instance->getInstanceId();
+    }
+
+    public function getPreviousEntityId()
+    {
+        return $this->previousEntity;
     }
 
     /**
