@@ -300,6 +300,7 @@ class Container extends AbstractHelper
         foreach ($headScript->getContainer() as &$item) {
             if (($item->source === null)
                 && array_key_exists('src', $item->attributes)
+                && array_key_exists('src', $container->attributes)
                 && ($container->attributes['src'] == $item->attributes['src'])
             ) {
                 return true;
