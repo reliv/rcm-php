@@ -58,14 +58,14 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
     public function setup()
     {
         $this->domains = array(
-            'reliv.com' => array (
+            'reliv.com' => array(
                 'domain' => 'local.reliv.com',
                 'primaryDomain' => null,
                 'languageId' => 'eng',
                 'siteId' => 1,
                 'countryId' => 'USA',
             ),
-            'www.reliv.com' => array (
+            'www.reliv.com' => array(
                 'domain' => 'local.reliv.com',
                 'primaryDomain' => 'reliv.com',
                 'languageId' => 'eng',
@@ -75,12 +75,11 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->redirects = array(
-            'reliv.com/requestOne' => array (
-                    'requestUrl' => 'reliv.com/requestOne',
-                    'redirectUrl' => 'reliv.com/redirectOne',
+            'reliv.com/requestOne' => array(
+                'requestUrl' => 'reliv.com/requestOne',
+                'redirectUrl' => 'reliv.com/redirectOne',
             ),
-
-            'reliv.com/requestTwo' => array (
+            'reliv.com/requestTwo' => array(
                 'requestUrl' => 'reliv.com/requestTwo',
                 'redirectUrl' => 'reliv.com/redirectTwo',
             ),
@@ -104,7 +103,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRedirectList')
             ->will($this->returnValue($this->redirects));
 
-        /** @var \Rcm\Service\DomainManager   $mockDomainManager */
+        /** @var \Rcm\Service\DomainManager $mockDomainManager */
         /** @var \Rcm\Service\RedirectManager $mockRedirectManager */
         $this->routeListener = new RouteListener(
             $mockDomainManager,
@@ -203,7 +202,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
     {
         $serverParams = new Parameters(
             array(
-                'HTTP_HOST'   => 'reliv.com',
+                'HTTP_HOST' => 'reliv.com',
                 'REQUEST_URI' => '/requestOne'
             )
         );
@@ -214,7 +213,8 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         $event->setRequest($request);
 
         $expectedLocation
-            = 'Location: //'.$this->redirects['reliv.com/requestOne']['redirectUrl'];
+            = 'Location: //'
+            . $this->redirects['reliv.com/requestOne']['redirectUrl'];
 
         $actual = $this->routeListener->checkRedirect($event);
 
@@ -240,7 +240,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
     {
         $serverParams = new Parameters(
             array(
-                'HTTP_HOST'   => 'reliv.com',
+                'HTTP_HOST' => 'reliv.com',
                 'REQUEST_URI' => '/no-redirect'
             )
         );

@@ -18,7 +18,6 @@
  */
 namespace Rcm\EventListener;
 
-
 use Rcm\Service\LayoutManager;
 use Rcm\Service\SiteManager;
 use Zend\Mvc\MvcEvent;
@@ -46,10 +45,10 @@ class DispatchListener
     /** @var \Rcm\Service\LayoutManager */
     protected $layoutManager;
 
-    /** @var \Rcm\Service\SiteManager  */
+    /** @var \Rcm\Service\SiteManager */
     protected $siteManager;
 
-    /** @var \Zend\View\HelperPluginManager  */
+    /** @var \Zend\View\HelperPluginManager */
     protected $viewHelperManager;
 
     /**
@@ -114,5 +113,4 @@ class DispatchListener
 
         $headTitle()->setSeparator(' - ');
     }
-
 }

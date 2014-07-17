@@ -20,7 +20,6 @@
 namespace Rcm\Service;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Zend\Cache\Storage\StorageInterface;
 
 /**

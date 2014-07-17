@@ -20,7 +20,6 @@
 namespace Rcm\Service;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Validator\Page;
 use Rcm\Validator\PageTemplate;
@@ -45,7 +44,7 @@ use Zend\Validator\AbstractValidator;
  */
 class PageManager extends ContainerAbstract
 {
-    /** @var \Rcm\Repository\Page  */
+    /** @var \Rcm\Repository\Page */
     protected $repository;
 
     protected $layoutValidator;
@@ -85,7 +84,7 @@ class PageManager extends ContainerAbstract
      * @return array
      * @throws \RuntimeException
      **/
-    public function getPageListByType($type, $siteId=null)
+    public function getPageListByType($type, $siteId = null)
     {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();
@@ -112,7 +111,7 @@ class PageManager extends ContainerAbstract
      * @return null|object
      * @throws \RuntimeException
      */
-    public function getPageByName($name, $pageType='n', $siteId=null)
+    public function getPageByName($name, $pageType = 'n', $siteId = null)
     {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();
@@ -142,7 +141,7 @@ class PageManager extends ContainerAbstract
      * @return null|object
      * @throws \RuntimeException
      */
-    public function getPageById($pageId, $pageType='t', $siteId=null)
+    public function getPageById($pageId, $pageType = 't', $siteId = null)
     {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();
@@ -180,8 +179,8 @@ class PageManager extends ContainerAbstract
         $pageTitle,
         $layout,
         $author,
-        $pageType='n',
-        $siteId=null
+        $pageType = 'n',
+        $siteId = null
     ) {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();
@@ -219,7 +218,7 @@ class PageManager extends ContainerAbstract
         $pageName,
         $pageTitle,
         $layout,
-        $pageType='n'
+        $pageType = 'n'
     ) {
         if (empty($pageName)) {
             throw new InvalidArgumentException(
@@ -272,7 +271,7 @@ class PageManager extends ContainerAbstract
      * @return Page
      * @throws \RuntimeException
      */
-    public function getPageValidator($pageType='n', $siteId=null)
+    public function getPageValidator($pageType = 'n', $siteId = null)
     {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();
@@ -296,7 +295,7 @@ class PageManager extends ContainerAbstract
      * @return PageTemplate
      * @throws \RuntimeException
      */
-    public function getTemplateValidator($siteId=null)
+    public function getTemplateValidator($siteId = null)
     {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();

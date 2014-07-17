@@ -51,7 +51,9 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\ResponseHandler')
+        $mockResponseHandler = $this->getMockBuilder(
+            'Rcm\Service\ResponseHandler'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -97,14 +99,18 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
         $response = new Response();
         $response->setStatusCode(404);
 
-        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\ResponseHandler')
+        $mockResponseHandler = $this->getMockBuilder(
+            'Rcm\Service\ResponseHandler'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
         $mockResponseHandler->expects($this->once())
             ->method('processResponse');
 
-        $mockContainerPlugin = $this->getMockBuilder('\Rcm\View\Helper\Container')
+        $mockContainerPlugin = $this->getMockBuilder(
+            '\Rcm\View\Helper\Container'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -145,14 +151,18 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
         $response = new Response();
         $response->setStatusCode(404);
 
-        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\ResponseHandler')
+        $mockResponseHandler = $this->getMockBuilder(
+            'Rcm\Service\ResponseHandler'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
         $mockResponseHandler->expects($this->never())
             ->method('processResponse');
 
-        $mockContainerPlugin = $this->getMockBuilder('\Rcm\View\Helper\Container')
+        $mockContainerPlugin = $this->getMockBuilder(
+            '\Rcm\View\Helper\Container'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -160,7 +170,9 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getResponse')
             ->will($this->returnValue($response));
 
-        $mockRenderer = $this->getMockBuilder('\Zend\View\Renderer\JsonRenderer')
+        $mockRenderer = $this->getMockBuilder(
+            '\Zend\View\Renderer\JsonRenderer'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -194,14 +206,18 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
         $response = new ZendHttpResponse();
         $response->setStatusCode(404);
 
-        $mockResponseHandler = $this->getMockBuilder('Rcm\Service\ResponseHandler')
+        $mockResponseHandler = $this->getMockBuilder(
+            'Rcm\Service\ResponseHandler'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 
         $mockResponseHandler->expects($this->never())
             ->method('processResponse');
 
-        $mockContainerPlugin = $this->getMockBuilder('\Rcm\View\Helper\Container')
+        $mockContainerPlugin = $this->getMockBuilder(
+            '\Rcm\View\Helper\Container'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 

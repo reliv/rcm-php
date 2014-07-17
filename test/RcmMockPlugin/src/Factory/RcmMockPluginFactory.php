@@ -18,9 +18,9 @@
  */
 namespace RcmMockPlugin\Factory;
 
+use RcmMockPlugin\Controller\PluginController;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use RcmMockPlugin\Controller\PluginController;
 
 /**
  * Service Factory for Rcm Cache
@@ -48,7 +48,7 @@ class RcmMockPluginFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $controllerManager)
     {
-        /** @var \Zend\Mvc\Controller\ControllerManager $controllerMgr  For IDE */
+        /** @var \Zend\Mvc\Controller\ControllerManager $controllerMgr For IDE */
         $controllerMgr = $controllerManager;
 
         /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */

@@ -23,10 +23,9 @@ namespace Rcm\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
-use Rcm\Entity\Revision;
 use Rcm\Entity\Page as PageEntity;
+use Rcm\Entity\Revision;
 use Rcm\Entity\Site as SiteEntity;
-
 
 /**
  * Page Repository
@@ -57,7 +56,7 @@ class Page extends EntityRepository implements ContainerInterface
      *
      * @return mixed
      */
-    public function getPublishedRevisionId($siteId, $name, $type='n')
+    public function getPublishedRevisionId($siteId, $name, $type = 'n')
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -88,7 +87,7 @@ class Page extends EntityRepository implements ContainerInterface
      *
      * @return null|integer
      */
-    public function getStagedRevisionId($siteId, $name, $type='n')
+    public function getStagedRevisionId($siteId, $name, $type = 'n')
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -120,7 +119,7 @@ class Page extends EntityRepository implements ContainerInterface
      *
      * @return null|array Database Result Set
      */
-    public function getRevisionDbInfo($siteId, $name, $revisionId, $type='n')
+    public function getRevisionDbInfo($siteId, $name, $revisionId, $type = 'n')
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -153,7 +152,6 @@ class Page extends EntityRepository implements ContainerInterface
         $getData = $queryBuilder
             ->getQuery()
             ->getSingleResult(Query::HYDRATE_ARRAY);
-
 
         $result = null;
 
@@ -222,7 +220,7 @@ class Page extends EntityRepository implements ContainerInterface
         $layout,
         $author,
         SiteEntity $site,
-        $pageType='n'
+        $pageType = 'n'
     ) {
         $revision = new Revision();
         $revision->setAuthor($author);

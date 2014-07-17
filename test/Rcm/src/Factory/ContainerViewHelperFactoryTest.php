@@ -21,8 +21,8 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\View\Helper\Container;
 use Rcm\Factory\ContainerViewHelperFactory;
+use Rcm\View\Helper\Container;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\HelperPluginManager;
 

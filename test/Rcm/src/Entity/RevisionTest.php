@@ -251,7 +251,10 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
         //Expected Published Date
         $expectedPublishDate = date("M-d-Y G");
 
-        $this->assertEquals($expectedPublishDate, $publishDate->format("M-d-Y G"));
+        $this->assertEquals(
+            $expectedPublishDate,
+            $publishDate->format("M-d-Y G")
+        );
 
         $this->assertTrue($isPublished);
     }
@@ -274,6 +277,5 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($md5, $actual);
     }
-
 }
  

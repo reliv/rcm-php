@@ -56,7 +56,9 @@ class ContainerViewHelperFactory implements FactoryInterface
         $serviceLocator = $viewManager->getServiceLocator();
 
         /** @var \Rcm\Service\ContainerManager $containerManager */
-        $containerManager = $serviceLocator->get('Rcm\Service\ContainerManager');
+        $containerManager = $serviceLocator->get(
+            'Rcm\Service\ContainerManager'
+        );
 
         return new Container($containerManager);
     }

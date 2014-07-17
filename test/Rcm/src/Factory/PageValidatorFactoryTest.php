@@ -63,7 +63,10 @@ class PageValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($pageValidator));
 
         $serviceLocator = new ServiceManager();
-        $serviceLocator->setService('Rcm\Service\PageManager', $mockPageManager);
+        $serviceLocator->setService(
+            'Rcm\Service\PageManager',
+            $mockPageManager
+        );
 
         $factory = new PageValidatorFactory();
         $object = $factory->createService($serviceLocator);

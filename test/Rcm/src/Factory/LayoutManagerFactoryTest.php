@@ -21,8 +21,8 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\Service\LayoutManager;
 use Rcm\Factory\LayoutManagerFactory;
+use Rcm\Service\LayoutManager;
 use Zend\ServiceManager\ServiceManager;
 
 /**

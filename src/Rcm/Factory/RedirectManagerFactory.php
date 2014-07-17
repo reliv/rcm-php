@@ -55,11 +55,11 @@ class RedirectManagerFactory implements FactoryInterface
         /** @var \Rcm\Repository\Redirect $redirectRepo */
         $redirectRepo = $entityManager->getRepository('\Rcm\Entity\Redirect');
 
-        /** @var \Rcm\Service\SiteManager  $siteManager */
+        /** @var \Rcm\Service\SiteManager $siteManager */
         $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
-        $cache         = $serviceLocator->get('Rcm\Service\Cache');
+        $cache = $serviceLocator->get('Rcm\Service\Cache');
 
         return new RedirectManager(
             $redirectRepo,

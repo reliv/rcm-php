@@ -20,16 +20,12 @@ namespace RcmTest\Controller;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\Controller\IndexController;
 use Rcm\Controller\PageCheckController;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Rcm\Exception\ContainerNotFoundException;
-use Zend\Server\Reflection\ReflectionClass;
-use Zend\Server\Reflection\ReflectionMethod;
+use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -74,7 +70,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
     {
         $config = array(
             'Rcm\Api\Page\Check' => array(
-                'type'    => 'Segment',
+                'type' => 'Segment',
                 'options' => array(
                     'route' => '/rcm/page/check[/:pageType]/:pageId',
                     'defaults' => array(
@@ -90,19 +86,22 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Rcm\Validator\Page', $this->mockPageValidator);
+        $serviceManager->setService(
+            'Rcm\Validator\Page',
+            $this->mockPageValidator
+        );
 
         /** @var \Rcm\Service\PageManager $mockPageManager */
         /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
         $this->controller = new PageCheckController();
         $this->controller->setServiceLocator($serviceManager);
 
-        $this->request    = new Request();
+        $this->request = new Request();
         $this->request->setMethod('GET');
         $this->routeMatch = new RouteMatch(
             array('controller' => 'Rcm\Controller\PageCheckController')
         );
-        $this->event      = new MvcEvent();
+        $this->event = new MvcEvent();
         $routerConfig = $config;
         $router = HttpRouter::factory($routerConfig);
 
@@ -159,7 +158,9 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->mockPageValidator->expects($this->any())
             ->method('getMessages')
-            ->will($this->returnValue(array("pageName" => 'Page Name Invalid')));
+            ->will(
+                $this->returnValue(array("pageName" => 'Page Name Invalid'))
+            );
 
         $this->routeMatch->setParam('pageId', 'my invalid test page');
 

@@ -42,10 +42,10 @@ use Rcm\Validator\MainLayout;
  */
 class LayoutManager
 {
-    /** @var \Rcm\Service\SiteManager  */
+    /** @var \Rcm\Service\SiteManager */
     protected $siteManager;
 
-    /** @var Array  */
+    /** @var Array */
     protected $config;
 
     /**
@@ -99,7 +99,8 @@ class LayoutManager
         }
 
         throw new RuntimeException(
-            'No theme config found for '.$theme.' and no default theme found'
+            'No theme config found for ' . $theme
+            . ' and no default theme found'
         );
     }
 
@@ -110,11 +111,11 @@ class LayoutManager
      * @param integer $siteId Site Id to lookup.  If none passed will get the
      *                        currents theme.
      *
-     * @return array Config Array For Theme
+     * @return array                                   Config Array For Theme
      * @throws \Rcm\Exception\RuntimeException
      * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getSiteThemeLayoutsConfig($siteId=null)
+    public function getSiteThemeLayoutsConfig($siteId = null)
     {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();
@@ -150,7 +151,7 @@ class LayoutManager
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function getSiteLayout($layout=null, $siteId=null)
+    public function getSiteLayout($layout = null, $siteId = null)
     {
         $themeLayoutConfig = $this->getSiteThemeLayoutsConfig($siteId);
 
@@ -183,7 +184,7 @@ class LayoutManager
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function getSiteThemePagesTemplateConfig($siteId=null)
+    public function getSiteThemePagesTemplateConfig($siteId = null)
     {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();
@@ -218,7 +219,7 @@ class LayoutManager
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function getSitePageTemplateConfig($template=null, $siteId=null)
+    public function getSitePageTemplateConfig($template = null, $siteId = null)
     {
         $themePageConfig = $this->getSiteThemePagesTemplateConfig($siteId);
 
@@ -246,7 +247,7 @@ class LayoutManager
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function getSitePageTemplate($template=null, $siteId=null)
+    public function getSitePageTemplate($template = null, $siteId = null)
     {
         $themePageConfig = $this->getSitePageTemplateConfig($template, $siteId);
 
@@ -267,7 +268,7 @@ class LayoutManager
      * @return boolean
      * @throws InvalidArgumentException
      */
-    public function isLayoutValid($layoutKey, $siteId=null)
+    public function isLayoutValid($layoutKey, $siteId = null)
     {
         $themesConfig = $this->getSiteThemeLayoutsConfig($siteId);
 

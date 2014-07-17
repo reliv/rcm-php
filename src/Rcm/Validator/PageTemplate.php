@@ -41,11 +41,12 @@ class PageTemplate extends AbstractValidator
 {
     const PAGE_TEMPLATE = 'pageTemplate';
 
-    protected $messageTemplates = array(
-        self::PAGE_TEMPLATE => "'%value%' is not a valid page template."
-    );
+    protected $messageTemplates
+        = array(
+            self::PAGE_TEMPLATE => "'%value%' is not a valid page template."
+        );
 
-    /** @var \Rcm\Service\PageManager  */
+    /** @var \Rcm\Service\PageManager */
     protected $pageManager;
 
     protected $pageType = 't';
@@ -104,8 +105,10 @@ class PageTemplate extends AbstractValidator
             $value,
             $this->pageType,
             $this->siteId
-        )) {
+        )
+        ) {
             $this->error(self::PAGE_TEMPLATE);
+
             return false;
         }
 

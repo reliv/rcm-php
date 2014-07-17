@@ -57,7 +57,9 @@ class DispatchListenerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockHelperManager = $this->getMockBuilder('\Zend\View\HelperPluginManager')
+        $mockHelperManager = $this->getMockBuilder(
+            '\Zend\View\HelperPluginManager'
+        )
             ->disableOriginalConstructor()
             ->getMock();
 

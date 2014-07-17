@@ -38,9 +38,7 @@ use Zend\View\Model\JsonModel;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class PageCheckController
-    extends AbstractRestfulController
-    implements ServiceLocatorAwareInterface
+class PageCheckController extends AbstractRestfulController implements ServiceLocatorAwareInterface
 {
     /**
      * Check the page is valid and return a json response

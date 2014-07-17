@@ -38,7 +38,6 @@ use Zend\Stdlib\RequestInterface;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-
 interface PluginInterface
 {
     /**

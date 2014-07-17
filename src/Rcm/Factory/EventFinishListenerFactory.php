@@ -49,7 +49,7 @@ class EventFinishListenerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Service\ResponseHandler $responseHandler */
-        $responseHandler   = $serviceLocator->get('Rcm\Service\ResponseHandler');
+        $responseHandler = $serviceLocator->get('Rcm\Service\ResponseHandler');
 
         return new EventFinishListener($responseHandler);
     }

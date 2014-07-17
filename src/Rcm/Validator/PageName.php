@@ -41,9 +41,10 @@ class PageName extends AbstractValidator
 {
     const PAGE_NAME = 'pageName';
 
-    protected $messageTemplates = array(
-        self::PAGE_NAME => "'%value%' is not a valid page name."
-    );
+    protected $messageTemplates
+        = array(
+            self::PAGE_NAME => "'%value%' is not a valid page name."
+        );
 
     protected $pageNameOk = false;
 

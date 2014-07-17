@@ -38,7 +38,7 @@ use Zend\View\Helper\AbstractHelper;
  */
 class Container extends AbstractHelper
 {
-    /** @var \Rcm\Service\ContainerManager  */
+    /** @var \Rcm\Service\ContainerManager */
     protected $containerManager;
 
     /** @var  \Zend\Stdlib\ResponseInterface */
@@ -72,13 +72,14 @@ class Container extends AbstractHelper
      *
      * @return null|string
      */
-    public function renderContainer($name, $revision=null)
+    public function renderContainer($name, $revision = null)
     {
         try {
             $containerData
                 = $this->containerManager->getRevisionInfo($name, $revision);
         } catch (PluginReturnedResponseException $exception) {
             $this->handlePluginResponse($exception);
+
             return null;
         }
 
@@ -115,8 +116,10 @@ class Container extends AbstractHelper
      *
      * @return string
      */
-    protected function getContainerHtml($containerData, $pageContainerName=null)
-    {
+    protected function getContainerHtml(
+        $containerData,
+        $pageContainerName = null
+    ) {
         $containerName = $containerData['name'];
         $isPageContainer = false;
 
@@ -126,16 +129,16 @@ class Container extends AbstractHelper
         }
 
         $html = '<div class="rcmContainer"'
-                .' data-containerId="'.$containerName.'"'
-                .' data-containerRevision="'
-                    .$containerData['revision']['revisionId']
-                .'"';
+            . ' data-containerId="' . $containerName . '"'
+            . ' data-containerRevision="'
+            . $containerData['revision']['revisionId']
+            . '"';
 
         if ($isPageContainer) {
             $html .= ' data-isPageContainer="Y"';
         }
 
-        $html .= ' id="'.$containerData['name'].'">';
+        $html .= ' id="' . $containerData['name'] . '">';
 
         foreach ($containerData['revision']['pluginInstances'] as &$pluginInstance) {
 
@@ -168,36 +171,37 @@ class Container extends AbstractHelper
         $resized = 'N';
 
         if (!empty($pluginData['height'])) {
-            $extraStyle .= 'height: '.$pluginData['height'].'px; ';
-            $resized='Y';
+            $extraStyle .= 'height: ' . $pluginData['height'] . 'px; ';
+            $resized = 'Y';
         }
 
         if (!empty($pluginData['width'])) {
-            $extraStyle .= 'width: '.$pluginData['width'].'px; ';
-            $resized='Y';
+            $extraStyle .= 'width: ' . $pluginData['width'] . 'px; ';
+            $resized = 'Y';
         }
 
         $extraStyle .= 'float: left; ';
 
         if (!empty($pluginData['divFloat'])) {
-            $extraStyle .= 'float: '.$pluginData['divFloat'].'; ';
+            $extraStyle .= 'float: ' . $pluginData['divFloat'] . '; ';
         }
 
         $html = '<div class="rcmPlugin '
-                    .$pluginData['instance']['plugin'].' '
-                    .str_replace(' ', '', $pluginData['instance']['displayName'])
-                .' "'
-                .' data-rcmPluginName="'.$pluginData['instance']['plugin'].'"'
-                .' data-rcmPluginInstanceId="'
-                    .$pluginData['instance']['pluginInstanceId']
-                .'"'
-                .' data-rcmSiteWidePlugin="'.$pluginData['instance']['siteWide'].'"'
-                .' data-rcmPluginResized="'.$resized.'"'
-                .' data-rcmPluginDisplayName="'
-                    .$pluginData['instance']['displayName']
-                .'"'
-                .' style=" '.$extraStyle
-                .'">';
+            . $pluginData['instance']['plugin'] . ' '
+            . str_replace(' ', '', $pluginData['instance']['displayName'])
+            . ' "'
+            . ' data-rcmPluginName="' . $pluginData['instance']['plugin'] . '"'
+            . ' data-rcmPluginInstanceId="'
+            . $pluginData['instance']['pluginInstanceId']
+            . '"'
+            . ' data-rcmSiteWidePlugin="' . $pluginData['instance']['siteWide']
+            . '"'
+            . ' data-rcmPluginResized="' . $resized . '"'
+            . ' data-rcmPluginDisplayName="'
+            . $pluginData['instance']['displayName']
+            . '"'
+            . ' style=" ' . $extraStyle
+            . '">';
 
         $html .= '<div class="rcmPluginContainer">';
 
@@ -269,7 +273,9 @@ class Container extends AbstractHelper
         $headLink = $view->headLink();
 
         foreach ($headLink->getContainer() as &$item) {
-            if (($item->rel == 'stylesheet') && ($item->href == $container->href)) {
+            if (($item->rel == 'stylesheet')
+                && ($item->href == $container->href)
+            ) {
                 return true;
             }
         }

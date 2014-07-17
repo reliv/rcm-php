@@ -36,10 +36,7 @@ use Zend\Stdlib\ResponseInterface;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-
-class PluginReturnedResponseException
-    extends \RuntimeException
-    implements RcmExceptionInterface
+class PluginReturnedResponseException extends \RuntimeException implements RcmExceptionInterface
 {
 
     /** @var ResponseInterface */

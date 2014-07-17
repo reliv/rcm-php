@@ -52,15 +52,15 @@ class PluginManagerFactory implements FactoryInterface
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
         /** @var \Zend\View\Renderer\PhpRenderer $viewRenderer */
-        $viewRenderer  = $serviceLocator->get('ViewRenderer');
+        $viewRenderer = $serviceLocator->get('ViewRenderer');
 
         /** @var \Zend\Stdlib\RequestInterface $request */
-        $request       = $serviceLocator->get('request');
+        $request = $serviceLocator->get('request');
 
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
-        $cache         = $serviceLocator->get('Rcm\Service\Cache');
+        $cache = $serviceLocator->get('Rcm\Service\Cache');
 
-        $config        = $serviceLocator->get('config');
+        $config = $serviceLocator->get('config');
 
         return new PluginManager(
             $entityManager,

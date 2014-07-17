@@ -18,15 +18,15 @@
  */
 namespace Rcm\Factory;
 
+use DoctrineModule\Cache\ZendStorageCache;
 use Rcm\Exception\InvalidArgumentException;
-use Zend\Session\Config\ConfigInterface;
-use \Zend\Session\Container;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use DoctrineModule\Cache\ZendStorageCache;
-use Zend\Session\SessionManager;
-use Zend\Session\SaveHandler\SaveHandlerInterface;
+use Zend\Session\Config\ConfigInterface;
 use Zend\Session\Config\SessionConfig;
+use Zend\Session\Container;
+use Zend\Session\SaveHandler\SaveHandlerInterface;
+use Zend\Session\SessionManager;
 use Zend\Session\Storage\StorageInterface;
 use Zend\Session\Validator\ValidatorInterface;
 
@@ -44,7 +44,7 @@ use Zend\Session\Validator\ValidatorInterface;
  * @link      https://github.com/reliv
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @todo Refactor and move to model object.  Also look at simplifying the factory
+ * @todo      Refactor and move to model object.  Also look at simplifying the factory
  *       overall.
  */
 class SessionManagerFactory implements FactoryInterface
@@ -64,6 +64,7 @@ class SessionManagerFactory implements FactoryInterface
         if (!isset($config['session'])) {
             $sessionManager = new SessionManager();
             Container::setDefaultManager($sessionManager);
+
             return $sessionManager;
         }
 
@@ -97,6 +98,7 @@ class SessionManagerFactory implements FactoryInterface
         );
 
         Container::setDefaultManager($sessionManager);
+
         return $sessionManager;
     }
 
@@ -142,7 +144,7 @@ class SessionManagerFactory implements FactoryInterface
         if (!$sessionConfigObject instanceof ConfigInterface) {
             throw new InvalidArgumentException(
                 'Session Config class must implement '
-                .'\Zend\Session\Config\ConfigInterface'
+                . '\Zend\Session\Config\ConfigInterface'
             );
         }
 
@@ -177,7 +179,7 @@ class SessionManagerFactory implements FactoryInterface
         if (!$storage instanceof StorageInterface) {
             throw new InvalidArgumentException(
                 'Session Storage class must implement '
-                .'Zend\Session\SaveHandler\SaveHandlerInterface'
+                . 'Zend\Session\SaveHandler\SaveHandlerInterface'
             );
         }
 
@@ -211,7 +213,7 @@ class SessionManagerFactory implements FactoryInterface
         if (!$saveHandler instanceof SaveHandlerInterface) {
             throw new InvalidArgumentException(
                 'Session Save Handler class must implement '
-                .'Zend\Session\Storage\StorageInterface'
+                . 'Zend\Session\Storage\StorageInterface'
             );
         }
 
@@ -251,7 +253,7 @@ class SessionManagerFactory implements FactoryInterface
             if (!$validator instanceof ValidatorInterface) {
                 throw new InvalidArgumentException(
                     'Session Save Handler class must implement '
-                    .'Zend\Session\Validator\ValidatorInterface'
+                    . 'Zend\Session\Validator\ValidatorInterface'
                 );
             }
 

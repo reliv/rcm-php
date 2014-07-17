@@ -50,7 +50,7 @@ class ResponseHandlerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Service\SiteManager $siteManager */
-        $siteManager   = $serviceLocator->get('Rcm\Service\SiteManager');
+        $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
 
         /** @var \Zend\Stdlib\Request $request */
         $request = $serviceLocator->get('request');

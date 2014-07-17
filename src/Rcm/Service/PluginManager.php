@@ -26,14 +26,14 @@ use Rcm\Exception\PluginInstanceNotFoundException;
 use Rcm\Exception\PluginReturnedResponseException;
 use Rcm\Exception\RuntimeException;
 use Rcm\Http\Response;
+use Rcm\Plugin\PluginInterface;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Http\PhpEnvironment\Request;
-use Zend\Stdlib\RequestInterface;
-use Rcm\Plugin\PluginInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
-use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Helper\Placeholder\Container;
+use Zend\View\Renderer\PhpRenderer;
 
 /**
  * Rcm Plugin Manager
@@ -54,26 +54,26 @@ use Zend\View\Helper\Placeholder\Container;
  * @link      http://github.com/reliv
  *
  * @SuppressWarnings(PHPMD)
- * @todo - See if we can reduce the amount of dependencies.
+ * @todo      - See if we can reduce the amount of dependencies.
  */
 class PluginManager
 {
-    /** @var \Zend\ServiceManager\ServiceLocatorInterface  */
+    /** @var \Zend\ServiceManager\ServiceLocatorInterface */
     protected $serviceManager;
 
-    /** @var \Zend\Stdlib\RequestInterface  */
+    /** @var \Zend\Stdlib\RequestInterface */
     protected $request;
 
-    /** @var \Zend\View\Renderer\PhpRenderer  */
+    /** @var \Zend\View\Renderer\PhpRenderer */
     protected $renderer;
 
-    /** @var \Doctrine\ORM\EntityManagerInterface  */
+    /** @var \Doctrine\ORM\EntityManagerInterface */
     protected $entityManager;
 
-    /** @var array  */
+    /** @var array */
     protected $config;
 
-    /** @var \Zend\Cache\Storage\StorageInterface  */
+    /** @var \Zend\Cache\Storage\StorageInterface */
     protected $cache;
 
     /**
@@ -87,19 +87,19 @@ class PluginManager
      * @param StorageInterface        $cache          Zend Cache Manager
      */
     public function __construct(
-        EntityManagerInterface  $entityManager,
+        EntityManagerInterface $entityManager,
         Array                   $config,
         ServiceLocatorInterface $serviceManager,
-        PhpRenderer             $renderer,
-        RequestInterface        $request,
-        StorageInterface        $cache
+        PhpRenderer $renderer,
+        RequestInterface $request,
+        StorageInterface $cache
     ) {
         $this->serviceManager = $serviceManager;
-        $this->request        = $request;
-        $this->renderer       = $renderer;
-        $this->entityManager  = $entityManager;
-        $this->config         = $config;
-        $this->cache          = $cache;
+        $this->request = $request;
+        $this->renderer = $renderer;
+        $this->entityManager = $entityManager;
+        $this->config = $config;
+        $this->cache = $cache;
     }
 
     /**
@@ -112,6 +112,7 @@ class PluginManager
     public function getNewEntity($pluginName)
     {
         $viewData = $this->getPluginViewData($pluginName, -1, new Request());
+
         return $viewData;
     }
 
@@ -130,6 +131,7 @@ class PluginManager
         if ($this->cache->hasItem($cacheId)) {
             $return = $this->cache->getItem($cacheId);
             $return['fromCache'] = true;
+
             return $return;
         }
 
@@ -137,12 +139,13 @@ class PluginManager
 
         if (empty($pluginInstance)) {
             throw new PluginInstanceNotFoundException(
-                'Plugin for instance id '. $pluginInstanceId . ' not found.'
+                'Plugin for instance id ' . $pluginInstanceId . ' not found.'
             );
         }
 
         $return = $this->getPluginViewData(
-            $pluginInstance->getPlugin(), $pluginInstanceId
+            $pluginInstance->getPlugin(),
+            $pluginInstanceId
         );
 
         if ($pluginInstance->isSiteWide()) {
@@ -183,7 +186,7 @@ class PluginManager
 
         if (!is_a($controller, '\Rcm\Plugin\PluginInterface')) {
             throw new InvalidPluginException(
-                'Plugin '.$controller.' must implement the PluginInterface'
+                'Plugin ' . $controller . ' must implement the PluginInterface'
             );
         }
 
@@ -198,7 +201,7 @@ class PluginManager
         $viewModel = $controller->renderInstance($pluginInstanceId);
 
         if ($viewModel instanceof ResponseInterface) {
-            $exception =  new PluginReturnedResponseException(
+            $exception = new PluginReturnedResponseException(
                 'Plugin returned response instead of View Model'
             );
 
@@ -221,8 +224,8 @@ class PluginManager
         $headScriptContainer = new Container();
         $headScript->setContainer($headScriptContainer);
 
-        $html   = $this->renderer->render($viewModel);
-        $css    = $headlink->getContainer()->getArrayCopy();
+        $html = $this->renderer->render($viewModel);
+        $css = $headlink->getContainer()->getArrayCopy();
         $script = $headScript->getContainer()->getArrayCopy();
 
         $return = array(
@@ -241,7 +244,6 @@ class PluginManager
             'pluginName' => $pluginName,
             'pluginInstanceId' => $pluginInstanceId,
         );
-
 
         if (isset($this->config['rcmPlugin'][$pluginName]['editJs'])) {
             $return['editJs']
@@ -302,7 +304,6 @@ class PluginManager
             $pluginInstance->getDisplayName()
         );
 
-
         return $newPluginInstance;
     }
 
@@ -328,7 +329,9 @@ class PluginManager
         }
 
         /** @var \Rcm\Plugin\PluginInterface $controller */
-        $controller = $this->getPluginController($pluginInstanceEntity->getPlugin());
+        $controller = $this->getPluginController(
+            $pluginInstanceEntity->getPlugin()
+        );
         $controller->deleteInstance($pluginInstanceEntity->getInstanceId());
 
         $this->entityManager->remove($pluginInstanceEntity);
@@ -463,7 +466,7 @@ class PluginManager
             $pluginController = $serviceManager->get($pluginName);
         } catch (\Exception $e) {
             throw new RuntimeException(
-                'Unable to get instance of plugin: '.$pluginName,
+                'Unable to get instance of plugin: ' . $pluginName,
                 1,
                 $e
             );

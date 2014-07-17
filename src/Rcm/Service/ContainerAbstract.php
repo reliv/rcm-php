@@ -46,10 +46,10 @@ abstract class ContainerAbstract
     /** @var \Rcm\Service\PluginManager */
     protected $pluginManager;
 
-    /** @var \Rcm\Repository\ContainerInterface  */
+    /** @var \Rcm\Repository\ContainerInterface */
     protected $repository;
 
-    /** @var \Zend\Cache\Storage\StorageInterface  */
+    /** @var \Zend\Cache\Storage\StorageInterface */
     protected $cache;
 
     /** @var \Rcm\Service\SiteManager */
@@ -76,9 +76,9 @@ abstract class ContainerAbstract
         SiteManager $siteManager
     ) {
         $this->pluginManager = $pluginManager;
-        $this->repository    = $repository;
-        $this->cache         = $cache;
-        $this->siteManager        = $siteManager;
+        $this->repository = $repository;
+        $this->cache = $cache;
+        $this->siteManager = $siteManager;
     }
 
     /**
@@ -98,8 +98,8 @@ abstract class ContainerAbstract
      */
     public function getRevisionInfo(
         $name,
-        $revision=null,
-        $type='n',
+        $revision = null,
+        $type = 'n',
         $showStaged = false,
         $siteId = null
     ) {
@@ -121,11 +121,13 @@ abstract class ContainerAbstract
 
         if (empty($revision)) {
             throw new ContainerNotFoundException(
-                'No container found for '.$name
+                'No container found for ' . $name
             );
         }
 
-        $cacheKey = get_class($this).'_'.$siteId.'_'.$type.'_'.$name.'_'.$revision;
+        $cacheKey
+            = get_class($this) . '_' . $siteId . '_' . $type . '_' . $name . '_'
+            . $revision;
 
         if ($this->cache->hasItem($cacheKey)) {
             return $this->cache->getItem($cacheKey);
@@ -156,7 +158,7 @@ abstract class ContainerAbstract
      * @throws \Rcm\Exception\PageNotFoundException
      * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getPublishedRevisionId($name, $type='n', $siteId=null)
+    public function getPublishedRevisionId($name, $type = 'n', $siteId = null)
     {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();
@@ -167,7 +169,8 @@ abstract class ContainerAbstract
         }
 
         $cacheKey
-            = get_class($this).'_'.$siteId.'_'.$type.'_'.$name.'_currentRevision';
+            = get_class($this) . '_' . $siteId . '_' . $type . '_' . $name
+            . '_currentRevision';
 
         if ($this->cache->hasItem($cacheKey)) {
             return $this->cache->getItem($cacheKey);
@@ -193,7 +196,7 @@ abstract class ContainerAbstract
      * @return null|integer
      * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getStagedRevisionId($name, $type='n', $siteId=null)
+    public function getStagedRevisionId($name, $type = 'n', $siteId = null)
     {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();
@@ -204,7 +207,8 @@ abstract class ContainerAbstract
         }
 
         $cacheKey
-            =  get_class($this).'_'.$siteId.'_'.$type.'_'.$name.'_stagedRevision';
+            = get_class($this) . '_' . $siteId . '_' . $type . '_' . $name
+            . '_stagedRevision';
 
         if ($this->cache->hasItem($cacheKey)) {
             return $this->cache->getItem($cacheKey);
@@ -230,12 +234,16 @@ abstract class ContainerAbstract
      *                                 the page container.
      * @param null|integer $siteId     Site Id
      *
-     * @return null|array Database Result Set
+     * @return null|array                              Database Result Set
      * @throws \Rcm\Exception\PageNotFoundException
      * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getRevisionDbInfo($name, $revisionId, $type='n', $siteId=null)
-    {
+    public function getRevisionDbInfo(
+        $name,
+        $revisionId,
+        $type = 'n',
+        $siteId = null
+    ) {
         if (!$siteId) {
             $siteId = $this->siteManager->getCurrentSiteId();
         }
@@ -247,7 +255,8 @@ abstract class ContainerAbstract
         $storedContainers = $this->storedContainers;
 
         $cacheKey
-            = get_class($this).'_data_'.$siteId.'_'.$type.'_'.$name.'_'.$revisionId;
+            = get_class($this) . '_data_' . $siteId . '_' . $type . '_' . $name
+            . '_' . $revisionId;
 
         if (!empty($storedContainers['data'][$siteId][$type][$name][$revisionId])) {
             return $storedContainers['data'][$siteId][$type][$name][$revisionId];

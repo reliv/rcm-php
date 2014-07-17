@@ -66,7 +66,6 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
                         'name' => 'Sites',
                         'description' => 'Global resource for sites',
                     ),
-
                     'Pages' => array(
                         'resourceId' => 'Pages',
                         'parentResourceId' => null,
@@ -143,5 +142,4 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($object instanceof ResourceProvider);
     }
-
 }

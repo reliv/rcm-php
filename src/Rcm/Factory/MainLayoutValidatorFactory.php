@@ -17,6 +17,7 @@
  * @link      https://github.com/reliv
  */
 namespace Rcm\Factory;
+
 use Rcm\Validator\Page;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -35,7 +36,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-
 class MainLayoutValidatorFactory implements FactoryInterface
 {
     /**

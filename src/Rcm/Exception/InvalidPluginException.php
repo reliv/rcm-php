@@ -37,10 +37,7 @@ use Rcm\Exception\ExceptionInterface as RcmExceptionInterface;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-
-class InvalidPluginException
-    extends \InvalidArgumentException
-    implements RcmExceptionInterface
+class InvalidPluginException extends \InvalidArgumentException implements RcmExceptionInterface
 {
 
 }
