@@ -221,6 +221,7 @@ return array(
             => 'Rcm\Factory\IndexControllerFactory',
         ),
     ),
+
     'view_helpers' => array(
         'factories' => array(
             'rcmContainer'
@@ -231,6 +232,7 @@ return array(
             => 'Rcm\View\Helper\OutOfDateBrowserWarning',
         ),
     ),
+
     'controller_plugins' => array(
         'invokables' => array(
             'redirectToPage' =>
