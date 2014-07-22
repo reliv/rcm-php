@@ -96,7 +96,7 @@ class DoctrineJsonInstanceConfig
     /**
      * Sets the config that will be stored in the DB as JSON
      *
-     * @param array $config new value
+     * @param array $config new value test
      *
      * @return null
      *
