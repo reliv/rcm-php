@@ -39,7 +39,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity
- * @ORM\Table(name="rcm_simple_instance_configs")
+ * @ORM\Table(name="rcm_plugin_instance_configs")
  */
 class DoctrineJsonInstanceConfig
 {
