@@ -235,6 +235,8 @@ return array(
         'factories' => array(
             'rcmContainer'
                 => 'Rcm\Factory\ContainerViewHelperFactory',
+            'rcmTextEdit' => 'Rcm\Factory\TextEditFactory',
+            'rcmRichEdit' => 'Rcm\Factory\RichEditFactory',
         ),
         'invokables' => array(
             'rcmOutOfDateBrowserWarning'
