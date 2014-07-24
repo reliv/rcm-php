@@ -56,7 +56,7 @@ class InstanceConfigTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \RcmInstanceConfig\Entity\InstanceConfig
+     * @covers \Rcm\Entity\InstanceConfig
      */
     public function testSetGetInstanceId()
     {
@@ -72,7 +72,7 @@ class InstanceConfigTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \RcmInstanceConfig\Entity\InstanceConfig
+     * @covers \Rcm\Entity\InstanceConfig
      */
     public function testSetGetInstanceConfig()
     {
