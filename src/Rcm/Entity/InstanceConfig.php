@@ -38,10 +38,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @ORM\Entity
+ * @ORM\Entity (repositoryClass="Rcm\Repository\InstanceConfig")
  * @ORM\Table(name="rcm_plugin_instance_configs")
  */
-class DoctrineJsonInstanceConfig
+class InstanceConfig
 {
     /**
      * @var integer Plugin instanceId for this content
