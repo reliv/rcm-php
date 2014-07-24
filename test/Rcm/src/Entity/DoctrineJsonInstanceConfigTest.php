@@ -21,7 +21,7 @@ namespace RcmTest\Entity;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Rcm\Entity\DoctrineJsonInstanceConfig;
+use Rcm\Entity\InstanceConfig;
 
 /**
  * Unit Test for the Country Entity
@@ -38,7 +38,7 @@ use Rcm\Entity\DoctrineJsonInstanceConfig;
  */
 class InstanceConfigTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  \Rcm\Entity\DoctrineJsonInstanceConfig */
+    /** @var  \Rcm\Entity\InstanceConfig */
     protected $instanceConfig;
 
     /**
@@ -48,7 +48,7 @@ class InstanceConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->instanceConfig = new DoctrineJsonInstanceConfig();
+        $this->instanceConfig = new InstanceConfig();
     }
 
     /**
@@ -56,7 +56,7 @@ class InstanceConfigTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \Rcm\Entity\DoctrineJsonInstanceConfig
+     * @covers \RcmInstanceConfig\Entity\InstanceConfig
      */
     public function testSetGetInstanceId()
     {
@@ -72,7 +72,7 @@ class InstanceConfigTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \Rcm\Entity\DoctrineJsonInstanceConfig
+     * @covers \RcmInstanceConfig\Entity\InstanceConfig
      */
     public function testSetGetInstanceConfig()
     {
