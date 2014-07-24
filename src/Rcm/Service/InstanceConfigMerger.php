@@ -46,4 +46,4 @@ class InstanceConfigMerger
         }
         return $default;
     }
-} 
+}

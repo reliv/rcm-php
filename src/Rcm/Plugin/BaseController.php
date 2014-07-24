@@ -38,8 +38,7 @@ use Zend\View\Model\ViewModel;
  * @version   Release: 1.0
  *
  */
-class BaseController extends AbstractActionController
-    implements PluginInterface
+class BaseController extends AbstractActionController implements PluginInterface
 {
     /**
      * @var string Tells public function renderInstance() which template to use.
@@ -135,9 +134,7 @@ class BaseController extends AbstractActionController
             array_merge(
                 array(
                     'instanceId' => $instanceId,
-                    'instanceConfig' => $this->getDefaultInstanceConfig(
-                            $instanceId
-                        ),
+                    'instanceConfig' => $this->getDefaultInstanceConfig($instanceId),
                     'config' => $this->config
                 ),
                 $extraViewVariables
@@ -178,7 +175,7 @@ class BaseController extends AbstractActionController
         );
     }
 
-    function getInstanceConfig($instanceId)
+    public function getInstanceConfig($instanceId)
     {
         return $this->pluginStorageMgr->getInstanceConfig(
             $instanceId,
@@ -251,6 +248,4 @@ class BaseController extends AbstractActionController
     {
         return $this->pluginName;
     }
-
-
 }

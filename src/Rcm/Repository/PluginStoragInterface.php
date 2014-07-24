@@ -15,4 +15,4 @@ interface PluginStorageRepoInterface
     public function insert($instanceId, $configData);
 
     public function delete($instanceId);
-} 
+}

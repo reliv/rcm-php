@@ -53,4 +53,4 @@ class TextEditFactory implements FactoryInterface
             false
         );
     }
-} 
+}

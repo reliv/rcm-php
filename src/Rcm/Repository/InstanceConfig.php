@@ -58,4 +58,4 @@ class InstanceConfig extends EntityRepository implements PluginStorageRepoInterf
             ->findOneBy(array('instanceId' => $instanceId));
         return $instanceConfig;
     }
-} 
+}
