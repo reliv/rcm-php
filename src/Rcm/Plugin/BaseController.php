@@ -47,7 +47,7 @@ class BaseController extends AbstractActionController implements PluginInterface
 
     protected $pluginName;
 
-    protected $pluginNameLowerCaseDash;
+    protected $nameLowerDashed;
 
     protected $config;
 
@@ -82,10 +82,10 @@ class BaseController extends AbstractActionController implements PluginInterface
             $this->pluginName = $pluginName;
         }
 
-        $this->pluginNameLowerCaseDash = $this->camelToHyphens(
+        $this->nameLowerDashed = $this->camelToHyphens(
             $this->pluginName
         );
-        $this->template = $this->pluginNameLowerCaseDash . '/plugin';
+        $this->template = $this->nameLowerDashed . '/plugin';
 
         $this->config = $config;
 
