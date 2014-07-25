@@ -280,6 +280,18 @@ class SiteManager
     }
 
     /**
+     * Returns php compatible locale string
+     *
+     * @return string
+     */
+    public function getCurrentSiteLocale()
+    {
+        $siteInfo = $this->getCurrentSiteInfo();
+        return $siteInfo['language']['iso639_1']
+        . '_' . $siteInfo['country']['iso2'];
+    }
+
+    /**
      * Get Current Site Id From Domain
      *
      * @return integer|null                         SiteId
