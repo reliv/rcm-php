@@ -83,6 +83,11 @@ class PluginInstance
     protected $previousEntity;
 
     /**
+     * @ORM\OneToOne(targetEntity="InstanceConfig", mappedBy="instanceId")
+     */
+    private $instanceId;
+
+    /**
      * Get the unique Instance ID
      *
      * @return int

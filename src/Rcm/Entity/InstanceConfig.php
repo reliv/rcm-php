@@ -46,7 +46,9 @@ class InstanceConfig
     /**
      * @var integer Plugin instanceId for this content
      *
-     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity="PluginInstance", inversedBy="instanceConfig")
+     * @ORM\JoinColumn(name="instanceId", referencedColumnName="pluginInstanceId")
+     * @ORM\Id
      */
     protected $instanceId;
 
