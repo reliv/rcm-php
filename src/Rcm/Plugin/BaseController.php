@@ -54,38 +54,36 @@ class BaseController extends AbstractActionController implements PluginInterface
     protected $pluginStorageMgr;
 
     public function __construct(
-        PluginStorageMgrInterface $pluginStorageMgr,
         $config,
         $pluginName = null
     ) {
-        $this->pluginStorageMgr = $pluginStorageMgr;
-
         if ($pluginName === null) {
             /**
              * Automatically detect the plugin name for controllers that extend
              * this class by looking at the first part of the child's namespace
              */
             $classParts = explode('\\', get_class($this));
-            $this->pluginName = $classParts[0];
+            $pluginName = $classParts[0];
         } elseif (substr($pluginName, 0, 1) == '/') {
             /**
              * @TODO REMOVE THIS AFTER REMOVING ALL USES OF IT
              * Support the deprecated method of passing the plugin path rather
              * than its name as the third argument
              */
-            $this->pluginName = basename(realpath($pluginName));
+            $pluginName = basename(realpath($pluginName));
         } else {
             /**
              * When this class is instantiated directly instead of being
              * extended, the plugin name must be passed in as the third argument
              */
-            $this->pluginName = $pluginName;
+            $pluginName = $pluginName;
         }
 
-        $this->nameLowerDashed = $this->camelToHyphens(
-            $this->pluginName
+        $nameLowerDashed = $this->camelToHyphens(
+            $pluginName
         );
-        $this->template = $this->nameLowerDashed . '/plugin';
+
+        $this->template = $nameLowerDashed . '/plugin';
 
         $this->config = $config;
 
@@ -96,63 +94,22 @@ class BaseController extends AbstractActionController implements PluginInterface
      * it
      *
      * @param int   $instanceId
-     * @param array $extraViewVariables
+     * @param array $instanceConfig
      *
      * @return ViewModel
      */
-    public function renderInstance($instanceId, $extraViewVariables = array())
+    public function renderInstance($instanceId, $instanceConfig)
     {
         $view = new ViewModel(
-            array_merge(
-                array(
-                    'instanceId' => $instanceId,
-                    'instanceConfig' => $this->getInstanceConfig($instanceId),
-                    'config' => $this->config,
-                ),
-                $extraViewVariables
+            array(
+                'instanceId' => $instanceId,
+                'instanceConfig' => $instanceConfig,
+                'config' => $this->config,
             )
         );
+
         $view->setTemplate($this->template);
         return $view;
-    }
-
-    /**
-     * Returns a view model filled with content for a brand new instance. This
-     * usually comes out of a config file rather than writable persistent
-     * storage like a database.
-     *
-     * @param int   $instanceId
-     * @param array $extraViewVariables
-     *
-     * @return mixed|ViewModel
-     */
-    public function renderDefaultInstance(
-        $instanceId,
-        $extraViewVariables = array()
-    ) {
-        $view = new ViewModel(
-            array_merge(
-                array(
-                    'instanceId' => $instanceId,
-                    'instanceConfig' => $this->getDefaultInstanceConfig($instanceId),
-                    'config' => $this->config
-                ),
-                $extraViewVariables
-            )
-        );
-        $view->setTemplate($this->template);
-        return $view;
-    }
-
-
-    /**
-     * Allows core to properly pass the request to this plugin controller
-     *
-     * @param $request
-     */
-    public function setRequest(RequestInterface $request)
-    {
-        $this->request = $request;
     }
 
     /**
@@ -167,51 +124,12 @@ class BaseController extends AbstractActionController implements PluginInterface
      */
     public function instanceConfigAdminAjaxAction($instanceId)
     {
-        return new JsonModel(
-            array(
-                'instanceConfig' => $this->getInstanceConfig($instanceId),
-                'defaultInstanceConfig' => $this->getDefaultInstanceConfig()
-            )
-        );
-    }
-
-    public function getInstanceConfig($instanceId)
-    {
-        return $this->pluginStorageMgr->getInstanceConfig(
-            $instanceId,
-            $this->pluginName
-        );
-    }
-
-    public function getDefaultInstanceConfig()
-    {
-        return $this->pluginStorageMgr
-            ->getDefaultInstanceConfig($this->pluginName);
-    }
-
-    /**
-     * Saves a plugin instance to persistent storage
-     *
-     * @param string $instanceId plugin instance id
-     * @param array  $configData posted data to be saved
-     *
-     * @return null
-     */
-    public function saveInstance($instanceId, $configData)
-    {
-        $this->pluginStorageMgr->saveInstance($instanceId, $configData);
-    }
-
-    /**
-     * Deletes a plugin instance from persistent storage
-     *
-     * @param string $instanceId plugin instance id
-     *
-     * @return null
-     */
-    public function deleteInstance($instanceId)
-    {
-        $this->pluginStorageMgr->deleteInstance($instanceId);
+//        return new JsonModel(
+//            array(
+//                'instanceConfig' => $this->getInstanceConfig($instanceId),
+//                'defaultInstanceConfig' => $this->getDefaultInstanceConfig()
+//            )
+//        );
     }
 
     public function postIsForThisPlugin()

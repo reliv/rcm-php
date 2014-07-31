@@ -44,37 +44,10 @@ interface PluginInterface
      * Reads a plugin instance from persistent storage returns a view model for
      * it
      *
-     * @param int $instanceId plugin instance id
+     * @param int   $instanceId     plugin instance id
+     * @param array $instanceConfig Instance Config
      *
      * @return \Zend\View\Model\ViewModel
      */
-    public function renderInstance($instanceId);
-
-    /**
-     * Saves a plugin instance to persistent storage
-     *
-     * @param string $instanceId plugin instance id
-     * @param array  $data       posted data to be saved
-     *
-     * @return null
-     */
-    public function saveInstance($instanceId, $data);
-
-    /**
-     * Deletes a plugin instance from persistent storage
-     *
-     * @param string $instanceId plugin instance id
-     *
-     * @return null
-     */
-    public function deleteInstance($instanceId);
-
-    /**
-     * Sets the Zend Request Object
-     *
-     * @param RequestInterface $request Zend Framework Request Object
-     *
-     * @return void
-     */
-    public function setRequest(RequestInterface $request);
+    public function renderInstance($instanceId, $instanceConfig);
 }

@@ -83,9 +83,11 @@ class PluginInstance
     protected $previousEntity;
 
     /**
-     * @ORM\OneToOne(targetEntity="InstanceConfig", mappedBy="instanceId")
+     * @var string config that will be stored in the DB as JSON
+     *
+     * @ORM\Column(type="text")
      */
-    private $instanceId;
+    protected $instanceConfig;
 
     /**
      * Get the unique Instance ID
@@ -221,5 +223,30 @@ class PluginInstance
     public function getPreviousInstance()
     {
         return $this->previousEntity;
+    }
+
+    /**
+     * Gets the config that will be stored in the DB as JSON
+     *
+     * @return array
+     *
+     */
+
+    public function getInstanceConfig()
+    {
+        return json_decode($this->instanceConfig, true);
+    }
+
+    /**
+     * Sets the config that will be stored in the DB as JSON
+     *
+     * @param array $instanceConfig new value test
+     *
+     * @return null
+     *
+     */
+    public function setConfig($instanceConfig)
+    {
+        $this->instanceConfig = json_encode($instanceConfig);
     }
 }
