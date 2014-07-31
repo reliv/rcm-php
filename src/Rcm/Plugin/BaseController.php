@@ -63,27 +63,27 @@ class BaseController extends AbstractActionController implements PluginInterface
              * this class by looking at the first part of the child's namespace
              */
             $classParts = explode('\\', get_class($this));
-            $pluginName = $classParts[0];
+            $this->pluginName = $classParts[0];
         } elseif (substr($pluginName, 0, 1) == '/') {
             /**
              * @TODO REMOVE THIS AFTER REMOVING ALL USES OF IT
              * Support the deprecated method of passing the plugin path rather
              * than its name as the third argument
              */
-            $pluginName = basename(realpath($pluginName));
+            $this->pluginName = basename(realpath($pluginName));
         } else {
             /**
              * When this class is instantiated directly instead of being
              * extended, the plugin name must be passed in as the third argument
              */
-            $pluginName = $pluginName;
+            $this->pluginName = $pluginName;
         }
 
-        $nameLowerDashed = $this->camelToHyphens(
-            $pluginName
+        $this->nameLowerDashed = $this->camelToHyphens(
+            $this->pluginName
         );
 
-        $this->template = $nameLowerDashed . '/plugin';
+        $this->template = $this->nameLowerDashed . '/plugin';
 
         $this->config = $config;
 
@@ -134,6 +134,10 @@ class BaseController extends AbstractActionController implements PluginInterface
 
     public function postIsForThisPlugin()
     {
+        if (!$this->getRequest()->isPost()){
+            return false;
+        }
+
         return
             $this->getRequest()->getPost('rcmPluginName') == $this->pluginName;
     }
