@@ -20,10 +20,7 @@
  */
 namespace Rcm\Plugin;
 
-use RcmInstanceConfig\Service\PluginStorageMgrInterface;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Stdlib\RequestInterface;
-use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -54,12 +51,9 @@ class BaseController extends AbstractActionController implements PluginInterface
     protected $pluginStorageMgr;
 
     public function __construct(
-        PluginStorageMgrInterface $pluginStorageMgr,
         $config,
         $pluginName = null
     ) {
-        $this->pluginStorageMgr = $pluginStorageMgr;
-
         if ($pluginName === null) {
             /**
              * Automatically detect the plugin name for controllers that extend
@@ -85,6 +79,7 @@ class BaseController extends AbstractActionController implements PluginInterface
         $this->nameLowerDashed = $this->camelToHyphens(
             $this->pluginName
         );
+
         $this->template = $this->nameLowerDashed . '/plugin';
 
         $this->config = $config;
@@ -96,126 +91,35 @@ class BaseController extends AbstractActionController implements PluginInterface
      * it
      *
      * @param int   $instanceId
-     * @param array $extraViewVariables
+     * @param array $instanceConfig
      *
      * @return ViewModel
      */
-    public function renderInstance($instanceId, $extraViewVariables = array())
+    public function renderInstance($instanceId, $instanceConfig)
     {
         $view = new ViewModel(
-            array_merge(
-                array(
-                    'instanceId' => $instanceId,
-                    'instanceConfig' => $this->getInstanceConfig($instanceId),
-                    'config' => $this->config,
-                ),
-                $extraViewVariables
-            )
-        );
-        $view->setTemplate($this->template);
-        return $view;
-    }
-
-    /**
-     * Returns a view model filled with content for a brand new instance. This
-     * usually comes out of a config file rather than writable persistent
-     * storage like a database.
-     *
-     * @param int   $instanceId
-     * @param array $extraViewVariables
-     *
-     * @return mixed|ViewModel
-     */
-    public function renderDefaultInstance(
-        $instanceId,
-        $extraViewVariables = array()
-    ) {
-        $view = new ViewModel(
-            array_merge(
-                array(
-                    'instanceId' => $instanceId,
-                    'instanceConfig' => $this->getDefaultInstanceConfig($instanceId),
-                    'config' => $this->config
-                ),
-                $extraViewVariables
-            )
-        );
-        $view->setTemplate($this->template);
-        return $view;
-    }
-
-
-    /**
-     * Allows core to properly pass the request to this plugin controller
-     *
-     * @param $request
-     */
-    public function setRequest(RequestInterface $request)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * Get entity content as JSON. This is called by the editor javascript of
-     * some plugins. Urls look like
-     * '/rcm-plugin-admin-proxy/rcm-plugin-name/11824/instance-config'
-     *
-     *
-     * @param integer $instanceId instance id
-     *
-     * @return null
-     */
-    public function instanceConfigAdminAjaxAction($instanceId)
-    {
-        return new JsonModel(
             array(
-                'instanceConfig' => $this->getInstanceConfig($instanceId),
-                'defaultInstanceConfig' => $this->getDefaultInstanceConfig()
+                'instanceId' => $instanceId,
+                'instanceConfig' => $instanceConfig,
+                'config' => $this->config,
             )
         );
-    }
 
-    public function getInstanceConfig($instanceId)
-    {
-        return $this->pluginStorageMgr->getInstanceConfig(
-            $instanceId,
-            $this->pluginName
-        );
-    }
-
-    public function getDefaultInstanceConfig()
-    {
-        return $this->pluginStorageMgr
-            ->getDefaultInstanceConfig($this->pluginName);
+        $view->setTemplate($this->template);
+        return $view;
     }
 
     /**
-     * Saves a plugin instance to persistent storage
+     * Is the post for this plugin
      *
-     * @param string $instanceId plugin instance id
-     * @param array  $configData posted data to be saved
-     *
-     * @return null
+     * @return bool
      */
-    public function saveInstance($instanceId, $configData)
-    {
-        $this->pluginStorageMgr->saveInstance($instanceId, $configData);
-    }
-
-    /**
-     * Deletes a plugin instance from persistent storage
-     *
-     * @param string $instanceId plugin instance id
-     *
-     * @return null
-     */
-    public function deleteInstance($instanceId)
-    {
-        $this->pluginStorageMgr->deleteInstance($instanceId);
-    }
-
     public function postIsForThisPlugin()
     {
+        if (!$this->getRequest()->isPost()) {
+            return false;
+        }
+
         return
             $this->getRequest()->getPost('rcmPluginName') == $this->pluginName;
     }

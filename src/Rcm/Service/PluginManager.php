@@ -28,7 +28,6 @@ use Rcm\Exception\RuntimeException;
 use Rcm\Http\Response;
 use Rcm\Plugin\PluginInterface;
 use Zend\Cache\Storage\StorageInterface;
-use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
@@ -111,7 +110,9 @@ class PluginManager
      */
     public function getNewEntity($pluginName)
     {
-        $viewData = $this->getPluginViewData($pluginName, -1, new Request());
+        $instanceConfig = $this->getDefaultInstanceConfig($pluginName);
+
+        $viewData = $this->getPluginViewData($pluginName, -1, $instanceConfig);
 
         return $viewData;
     }
@@ -143,9 +144,12 @@ class PluginManager
             );
         }
 
+        $instanceConfig = $this->getInstanceConfigFromEntity($pluginInstance);
+
         $return = $this->getPluginViewData(
             $pluginInstance->getPlugin(),
-            $pluginInstanceId
+            $pluginInstanceId,
+            $instanceConfig
         );
 
         if ($pluginInstance->isSiteWide()) {
@@ -171,15 +175,19 @@ class PluginManager
     /**
      * Get a plugin instance rendered view.
      *
-     * @param string  $pluginName       Plugin name
-     * @param integer $pluginInstanceId Plugin Instance Id
+     * @param string  $pluginName           Plugin name
+     * @param integer $pluginInstanceId     Plugin Instance Id
+     * @param array   $pluginInstanceConfig Plugin Instance Config
      *
      * @return array
      * @throws \Rcm\Exception\InvalidPluginException
      * @throws \Rcm\Exception\PluginReturnedResponseException
      */
-    public function getPluginViewData($pluginName, $pluginInstanceId)
-    {
+    public function getPluginViewData(
+        $pluginName,
+        $pluginInstanceId,
+        $pluginInstanceConfig
+    ) {
 
         /** @var \Rcm\Plugin\PluginInterface $controller */
         $controller = $this->getPluginController($pluginName);
@@ -198,7 +206,10 @@ class PluginManager
         $reflectionResponse->setAccessible(true);
         $reflectionResponse->setValue($controller, new Response());
 
-        $viewModel = $controller->renderInstance($pluginInstanceId);
+        $viewModel = $controller->renderInstance(
+            $pluginInstanceId,
+            $pluginInstanceConfig
+        );
 
         if ($viewModel instanceof ResponseInterface) {
             $exception = new PluginReturnedResponseException(
@@ -496,5 +507,111 @@ class PluginManager
         return $this->entityManager
             ->getRepository('\Rcm\Entity\PluginInstance')
             ->findOneBy(array('pluginInstanceId' => $pluginInstanceId));
+    }
+
+    public function getInstanceConfig($pluginInstanceId)
+    {
+        $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
+
+        if (empty($pluginInstance)) {
+            throw new PluginInstanceNotFoundException(
+                'Plugin for instance id ' . $pluginInstanceId . ' not found.'
+            );
+        }
+
+        return $this->getInstanceConfigFromEntity($pluginInstance);
+    }
+
+    /**
+     * Get Instance Config From Entity
+     *
+     * @param PluginInstance $pluginInstance
+     *
+     * @return array
+     */
+    protected function getInstanceConfigFromEntity(PluginInstance $pluginInstance)
+    {
+        //Instance configs less than 0 are default instanc configs
+        if ($pluginInstance->getInstanceId() < 0) {
+            return $this->getDefaultInstanceConfig($pluginInstance->getPlugin());
+        } else {
+            $instanceConfig = $pluginInstance->getInstanceConfig();
+
+            if (!is_array($instanceConfig)) {
+                $instanceConfig = array();
+            }
+
+            //Merge the default and db instance configs. Db overwrites.
+            $instanceConfig = $this->mergeConfigArrays(
+                $this->getDefaultInstanceConfig($pluginInstance->getPlugin()),
+                $instanceConfig
+            );
+        }
+
+        return $instanceConfig;
+    }
+
+    /**
+     * Default instance configs are NOT required anymore
+     *
+     * @param string $pluginName the plugins module name
+     *
+     * @return array
+     */
+    protected function getDefaultInstanceConfig($pluginName)
+    {
+        $pluginConfigs = $this->config['rcmPlugin'];
+
+        $defaultInstanceConfig = array();
+
+        if (array_key_exists('defaultInstanceConfig', $pluginConfigs[$pluginName])) {
+            $defaultInstanceConfig =  $pluginConfigs[$pluginName]['defaultInstanceConfig'];
+        }
+
+        return $defaultInstanceConfig;
+    }
+
+    /**
+     * Merge Config Arrays
+     *
+     * @param $default
+     * @param $changes
+     *
+     * @return mixed
+     */
+    protected function mergeConfigArrays($default, $changes)
+    {
+
+        if (empty($default)) {
+            return $changes;
+        }
+
+        if (empty($changes)) {
+            return $default;
+        }
+
+        foreach ($changes as $key => &$value) {
+            if (is_array($value)) {
+                if (isset($value['0'])) {
+                    /*
+                     * Numeric arrays ignore default values because of the
+                     * "more in default that on production" issue
+                     */
+                    $default[$key] = $changes[$key];
+                } else {
+                    if (isset($default[$key])) {
+                        $default[$key] = self::mergeConfigArrays(
+                            $default[$key],
+                            $changes[$key]
+                        );
+                    } else {
+                        $default[$key] = $changes[$key];
+                    }
+                }
+            } else {
+                $default[$key] = $changes[$key];
+            }
+        }
+        return $default;
     }
 }
