@@ -35,7 +35,7 @@ class PluginController extends AbstractActionController implements
         $this->cache->setItem('mockPluginData', $this->activeCache);
     }
 
-    public function renderInstance($instanceId)
+    public function renderInstance($instanceId, $instanceConfig)
     {
         $data = array();
 

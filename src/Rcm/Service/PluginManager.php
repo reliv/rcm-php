@@ -28,7 +28,6 @@ use Rcm\Exception\RuntimeException;
 use Rcm\Http\Response;
 use Rcm\Plugin\PluginInterface;
 use Zend\Cache\Storage\StorageInterface;
-use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
@@ -523,6 +522,13 @@ class PluginManager
         return $this->getInstanceConfigFromEntity($pluginInstance);
     }
 
+    /**
+     * Get Instance Config From Entity
+     *
+     * @param PluginInstance $pluginInstance
+     *
+     * @return array
+     */
     protected function getInstanceConfigFromEntity(PluginInstance $pluginInstance)
     {
         //Instance configs less than 0 are default instanc configs
@@ -565,6 +571,14 @@ class PluginManager
         return $defaultInstanceConfig;
     }
 
+    /**
+     * Merge Config Arrays
+     *
+     * @param $default
+     * @param $changes
+     *
+     * @return mixed
+     */
     protected function mergeConfigArrays($default, $changes)
     {
 
