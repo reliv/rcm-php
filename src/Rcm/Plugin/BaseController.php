@@ -20,7 +20,6 @@
  */
 namespace Rcm\Plugin;
 
-use RcmInstanceConfig\Service\PluginStorageMgrInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\RequestInterface;
 use Zend\View\Model\JsonModel;
@@ -112,6 +111,11 @@ class BaseController extends AbstractActionController implements PluginInterface
         return $view;
     }
 
+    /**
+     * Is the post for this plugin
+     *
+     * @return bool
+     */
     public function postIsForThisPlugin()
     {
         if (!$this->getRequest()->isPost()) {
