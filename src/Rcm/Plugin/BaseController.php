@@ -134,7 +134,7 @@ class BaseController extends AbstractActionController implements PluginInterface
 
     public function postIsForThisPlugin()
     {
-        if (!$this->getRequest()->isPost()){
+        if (!$this->getRequest()->isPost()) {
             return false;
         }
 
