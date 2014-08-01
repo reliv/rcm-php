@@ -21,8 +21,6 @@
 namespace Rcm\Plugin;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Stdlib\RequestInterface;
-use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**
