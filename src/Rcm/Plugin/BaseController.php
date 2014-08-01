@@ -112,26 +112,6 @@ class BaseController extends AbstractActionController implements PluginInterface
         return $view;
     }
 
-    /**
-     * Get entity content as JSON. This is called by the editor javascript of
-     * some plugins. Urls look like
-     * '/rcm-plugin-admin-proxy/rcm-plugin-name/11824/instance-config'
-     *
-     *
-     * @param integer $instanceId instance id
-     *
-     * @return null
-     */
-    public function instanceConfigAdminAjaxAction($instanceId)
-    {
-//        return new JsonModel(
-//            array(
-//                'instanceConfig' => $this->getInstanceConfig($instanceId),
-//                'defaultInstanceConfig' => $this->getDefaultInstanceConfig()
-//            )
-//        );
-    }
-
     public function postIsForThisPlugin()
     {
         if (!$this->getRequest()->isPost()) {
