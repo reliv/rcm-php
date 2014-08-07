@@ -40,8 +40,7 @@ use Rcm\Exception\InvalidArgumentException;
  * @ORM\Entity (repositoryClass="Rcm\Repository\Site")
  * @ORM\Table(name="rcm_sites")
  *
- * @SuppressWarnings(PHPMD.TooManyFields)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD)
  */
 class Site
 {
