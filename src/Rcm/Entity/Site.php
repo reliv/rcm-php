@@ -212,68 +212,76 @@ class Site
         $this->siteId = null;
         $this->domain = null;
 
-        /* Get Cloned Pages */
-        $pages = $this->getPages();
-        $clonedPages = array();
-
         /* Clone Site Wide Plugins */
         $siteWidePlugins = $this->sitePlugins;
         $clonedSiteWides = array();
         $siteWideIdsToChange = array();
 
-        /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
-        foreach ($siteWidePlugins as $siteWidePlugin)
-        {
-            $clonedSiteWide = clone $siteWidePlugin;
-            $siteWideIdsToChange[$siteWidePlugin->getInstanceId()] = $clonedSiteWide;
-            $clonedSiteWides[] = $clonedSiteWide;
+        if (!empty($siteWidePlugins)) {
+            /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
+            foreach ($siteWidePlugins as $siteWidePlugin)
+            {
+                $clonedSiteWide = clone $siteWidePlugin;
+                $siteWideIdsToChange[$siteWidePlugin->getInstanceId()] = $clonedSiteWide;
+                $clonedSiteWides[] = $clonedSiteWide;
+            }
         }
 
-        /** @var \Rcm\Entity\Page $page */
-        foreach ($pages as $page) {
+        /* Get Cloned Pages */
+        $pages = $this->getPages();
+        $clonedPages = array();
 
-            $pageType = $page->getPageType();
+        if (!empty($pages)) {
+            /** @var \Rcm\Entity\Page $page */
+            foreach ($pages as $page) {
 
-            if ($pageType != 'n' && $pageType != 'z' && $pageType != 't') {
-                continue;
+                $pageType = $page->getPageType();
+
+                if ($pageType != 'n' && $pageType != 'z' && $pageType != 't') {
+                    continue;
+                }
+
+                $clonedPage = clone $page;
+                $clonedPage->setSite($this);
+                $clonedPages[] = $clonedPage;
+
+                $revision = $clonedPage->getCurrentRevision();
+
+                if (empty($revision)) {
+                    continue;
+                }
+
+                $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
             }
 
-            $clonedPage = clone $page;
-            $clonedPage->setSite($this);
-            $clonedPages[] = $clonedPage;
-
-            $revision = $clonedPage->getCurrentRevision();
-
-            if (empty($revision)) {
-                continue;
-            }
-
-            $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
+            $this->pages = new ArrayCollection($clonedPages);
         }
-
-        $this->pages = new ArrayCollection($clonedPages);
 
         /* Get Cloned Containers */
         $containers = $this->getContainers();
         $clonedContainers = array();
 
-        /** @var \Rcm\Entity\Container $container */
-        foreach ($containers as $container) {
+        if (!empty($containers)) {
+            /** @var \Rcm\Entity\Container $container */
+            foreach ($containers as $container) {
 
-            $clonedContainer = clone $container;
-            $clonedContainer->setSite($this);
-            $clonedContainers[] = $clonedContainer;
+                $clonedContainer = clone $container;
+                $clonedContainer->setSite($this);
+                $clonedContainers[] = $clonedContainer;
 
-            $revision = $clonedContainer->getCurrentRevision();
+                $revision = $clonedContainer->getCurrentRevision();
 
-            if (empty($revision)) {
-                continue;
+                if (empty($revision)) {
+                    continue;
+                }
+
+                $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
             }
 
-            $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
+            $this->containers = new ArrayCollection($clonedContainers);
         }
 
-        $this->containers = new ArrayCollection($clonedContainers);
+
     }
 
     protected function fixRevisionSiteWides(Revision $revision, $siteWideIdsToChange)
