@@ -129,8 +129,7 @@ class Revision
         $clonedPluginWrappers = array();
 
         /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
-        foreach ($pluginWrappers as $pluginWrapper)
-        {
+        foreach ($pluginWrappers as $pluginWrapper) {
             $clonedPluginWrapper = clone $pluginWrapper;
             $clonedPluginWrappers[] = $clonedPluginWrapper;
         }

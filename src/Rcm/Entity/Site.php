@@ -41,6 +41,7 @@ use Rcm\Exception\InvalidArgumentException;
  * @ORM\Table(name="rcm_sites")
  *
  * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Site
 {
@@ -219,8 +220,7 @@ class Site
 
         if (!empty($siteWidePlugins)) {
             /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
-            foreach ($siteWidePlugins as $siteWidePlugin)
-            {
+            foreach ($siteWidePlugins as $siteWidePlugin) {
                 $clonedSiteWide = clone $siteWidePlugin;
                 $siteWideIdsToChange[$siteWidePlugin->getInstanceId()] = $clonedSiteWide;
                 $clonedSiteWides[] = $clonedSiteWide;
@@ -289,7 +289,7 @@ class Site
         $pluginWrappers = $revision->getPluginWrappers();
 
         /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
-        foreach($pluginWrappers as $pluginWrapper) {
+        foreach ($pluginWrappers as $pluginWrapper) {
             $instanceId = $pluginWrapper->getInstance()->getInstanceId();
 
             if (isset($siteWideIdsToChange[$instanceId])
