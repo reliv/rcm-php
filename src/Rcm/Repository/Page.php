@@ -212,7 +212,7 @@ class Page extends EntityRepository implements ContainerInterface
      * @param SiteEntity $site      Site Entity
      * @param string     $pageType  Page Type
      *
-     * @return void
+     * @return Page
      */
     public function createNewPage(
         $pageName,
@@ -245,5 +245,6 @@ class Page extends EntityRepository implements ContainerInterface
 
         $this->_em->flush(array($revision, $page));
 
+        return $page;
     }
 }

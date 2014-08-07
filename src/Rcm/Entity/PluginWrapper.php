@@ -98,6 +98,16 @@ class PluginWrapper
      **/
     protected $instance;
 
+    public function __clone()
+    {
+        $this->pluginWrapperId = null;
+
+        if (!$this->instance->isSiteWide()) {
+            $pluginInstance = clone $this->instance;
+            $this->instance = $pluginInstance;
+        }
+    }
+
     /**
      * Set the Plugin Wrapper ID.  This was added for unit testing and
      * should not be used by calling scripts.  Instead please persist the object

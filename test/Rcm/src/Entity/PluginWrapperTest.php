@@ -193,6 +193,155 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($float, $actual);
     }
 
+    /**
+     * Test Clone
+     *
+     * @return void
+     *
+     * @covers \Rcm\Entity\PluginWrapper
+     */
+    public function testClone()
+    {
+        $instances = array(
+            0 => array(
+                'pluginWrapperId' => 43,
+                'layoutContainer' => 'layoutOne',
+                'renderOrder' => 0,
+                'height' => 32,
+                'width' => 100,
+                'divFloat' => 'right',
+                'instance' => array(
+                    'pluginInstanceId' => 44,
+                    'plugin' => 'MockPlugin',
+                    'siteWide' => false,
+                    'displayName' => null,
+                    'instanceConfig' => array(
+                        'var1' => 1,
+                        'var2' => 2
+                    ),
+                    'md5' => 'firstMd5'
+                ),
+            ),
 
+            1 => array(
+                'pluginWrapperId' => 45,
+                'layoutContainer' => 'layoutTwo',
+                'renderOrder' => 1,
+                'height' => 33,
+                'width' => 101,
+                'divFloat' => 'none',
+                'instance' => array(
+                    'pluginInstanceId' => 46,
+                    'plugin' => 'MockPlugin2',
+                    'siteWide' => true,
+                    'displayName' => 'TestSiteWide',
+                    'instanceConfig' => array(
+                        'var3' => 3,
+                        'var4' => 4
+                    ),
+                    'md5' => 'secondMd5'
+                ),
+            ),
+        );
+
+        foreach ($instances as $instance) {
+            $plugin = new PluginInstance();
+            $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
+            $plugin->setPlugin($instance['instance']['plugin']);
+
+            if ($instance['instance']['siteWide']) {
+                $plugin->setSiteWide();
+            }
+
+            $plugin->setDisplayName($instance['instance']['displayName']);
+            $plugin->setInstanceConfig($instance['instance']['instanceConfig']);
+            $plugin->setMd5($instance['instance']['md5']);
+
+            $wrapper = new PluginWrapper();
+            $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
+            $wrapper->setLayoutContainer($instance['layoutContainer']);
+            $wrapper->setRenderOrderNumber($instance['renderOrder']);
+            $wrapper->setHeight($instance['height']);
+            $wrapper->setWidth($instance['width']);
+            $wrapper->setDivFloat($instance['divFloat']);
+            $wrapper->setInstance($plugin);
+
+            $clonedWrapper = clone $wrapper;
+
+            $this->assertNotEquals(
+                $wrapper->getPluginWrapperId(),
+                $clonedWrapper->getPluginWrapperId()
+            );
+
+            $this->assertNull($clonedWrapper->getPluginWrapperId());
+
+            $this->assertEquals(
+                $wrapper->getLayoutContainer(),
+                $clonedWrapper->getLayoutContainer()
+            );
+
+            $this->assertEquals(
+                $wrapper->getRenderOrderNumber(),
+                $clonedWrapper->getRenderOrderNumber()
+            );
+
+            $this->assertEquals(
+                $wrapper->getHeight(),
+                $clonedWrapper->getHeight()
+            );
+
+            $this->assertEquals(
+                $wrapper->getWidth(),
+                $clonedWrapper->getWidth()
+            );
+
+            $this->assertEquals(
+                $wrapper->getDivFloat(),
+                $clonedWrapper->getDivFloat()
+            );
+
+            $preInstance = $wrapper->getInstance();
+            $clonedInstance = $clonedWrapper->getInstance();
+
+            if (!$instance['instance']['siteWide']) {
+                $this->assertNotEquals(
+                    $preInstance->getInstanceId(),
+                    $clonedInstance->getInstanceId()
+                );
+
+                $this->assertNull($clonedInstance->getInstanceId());
+            } else {
+                $this->assertEquals(
+                    $preInstance->getInstanceId(),
+                    $clonedInstance->getInstanceId()
+                );
+            }
+
+            $this->assertEquals(
+                $preInstance->getPlugin(),
+                $clonedInstance->getPlugin()
+            );
+
+            $this->assertEquals(
+                $preInstance->isSiteWide(),
+                $clonedInstance->isSiteWide()
+            );
+
+            $this->assertEquals(
+                $preInstance->getDisplayName(),
+                $clonedInstance->getDisplayName()
+            );
+
+            $this->assertEquals(
+                $preInstance->getInstanceConfig(),
+                $clonedInstance->getInstanceConfig()
+            );
+
+            $this->assertEquals(
+                $preInstance->getMd5(),
+                $clonedInstance->getMd5()
+            );
+        }
+    }
 }
  

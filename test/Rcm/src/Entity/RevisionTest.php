@@ -22,6 +22,7 @@ namespace RcmTest\Entity;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
 
@@ -276,6 +277,144 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
         $actual = $this->revision->getMd5();
 
         $this->assertEquals($md5, $actual);
+    }
+
+    /**
+     * Test Clone
+     *
+     * @return void
+     *
+     * @covers \Rcm\Entity\Revision
+     */
+    public function testClone()
+    {
+        $revision = array(
+            'revisionId' => 100,
+            'author' => 'Westin Shafer',
+            'createdDate' => new \DateTime('yesterday'),
+            'publishedDate' => new \DateTime('yesterday'),
+            'published' => true,
+            'md5' => 'revisionMD5',
+            'instances' => array(
+                0 => array(
+                    'pluginWrapperId' => 43,
+                    'layoutContainer' => 'layoutOne',
+                    'renderOrder' => 0,
+                    'height' => 32,
+                    'width' => 100,
+                    'divFloat' => 'right',
+                    'instance' => array(
+                        'pluginInstanceId' => 44,
+                        'plugin' => 'MockPlugin',
+                        'siteWide' => false,
+                        'displayName' => null,
+                        'instanceConfig' => array(
+                            'var1' => 1,
+                            'var2' => 2
+                        ),
+                        'md5' => 'firstMd5'
+                    ),
+                ),
+
+                1 => array(
+                    'pluginWrapperId' => 45,
+                    'layoutContainer' => 'layoutTwo',
+                    'renderOrder' => 1,
+                    'height' => 33,
+                    'width' => 101,
+                    'divFloat' => 'none',
+                    'instance' => array(
+                        'pluginInstanceId' => 46,
+                        'plugin' => 'MockPlugin2',
+                        'siteWide' => true,
+                        'displayName' => 'TestSiteWide',
+                        'instanceConfig' => array(
+                            'var3' => 3,
+                            'var4' => 4
+                        ),
+                        'md5' => 'secondMd5'
+                    ),
+                ),
+            )
+        );
+
+        $this->revision->setRevisionId($revision['revisionId']);
+        $this->revision->setAuthor($revision['author']);
+        $this->revision->setCreatedDate($revision['createdDate']);
+        $this->revision->publishRevision();
+        $this->revision->setPublishedDate($revision['publishedDate']);
+        $this->revision->setMd5($revision['md5']);
+
+        foreach ($revision['instances'] as $instance) {
+            $plugin = new PluginInstance();
+            $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
+            $plugin->setPlugin($instance['instance']['plugin']);
+
+            if ($instance['instance']['siteWide']) {
+                $plugin->setSiteWide();
+            }
+
+            $plugin->setDisplayName($instance['instance']['displayName']);
+            $plugin->setInstanceConfig($instance['instance']['instanceConfig']);
+            $plugin->setMd5($instance['instance']['md5']);
+
+            $wrapper = new PluginWrapper();
+            $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
+            $wrapper->setLayoutContainer($instance['layoutContainer']);
+            $wrapper->setRenderOrderNumber($instance['renderOrder']);
+            $wrapper->setHeight($instance['height']);
+            $wrapper->setWidth($instance['width']);
+            $wrapper->setDivFloat($instance['divFloat']);
+            $wrapper->setInstance($plugin);
+
+            $this->revision->addPluginWrapper($wrapper);
+        }
+
+        $clonedRevision = clone $this->revision;
+
+        /* Test Revision */
+        $this->assertNotEquals(
+            $this->revision->getRevisionId(),
+            $clonedRevision->getRevisionId()
+        );
+
+        $this->assertNull($clonedRevision->getRevisionId());
+
+        $this->assertEquals(
+            $this->revision->getAuthor(),
+            $clonedRevision->getAuthor()
+        );
+
+        $this->assertNotEquals(
+            $this->revision->getCreatedDate(),
+            $clonedRevision->getCreatedDate()
+        );
+
+        $this->assertNotEquals(
+            $this->revision->getPublishedDate(),
+            $clonedRevision->getPublishedDate()
+        );
+
+        $this->assertTrue($this->revision->wasPublished());
+
+        $this->assertEquals(
+            $this->revision->getMd5(),
+            $clonedRevision->getMd5()
+        );
+
+        $clonedWrappers = $clonedRevision->getPluginWrappers();
+        $revisionWrappers = $this->revision->getPluginWrappers();
+
+        $this->assertNotEquals($revisionWrappers, $clonedWrappers);
+
+        /** @var \Rcm\Entity\PluginWrapper $clonedWrapper */
+        foreach ($clonedWrappers as $clonedWrapper) {
+            if(!$clonedWrapper->getInstance()->isSiteWide()) {
+                $this->assertNull($clonedWrapper->getInstance()->getInstanceId());
+            } else {
+                $this->assertNotNull($clonedWrapper->getInstance()->getInstanceId());
+            }
+        }
     }
 }
  

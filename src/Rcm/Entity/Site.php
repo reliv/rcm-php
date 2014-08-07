@@ -207,6 +207,91 @@ class Site
         $this->domain = new ArrayCollection();
     }
 
+    public function __clone()
+    {
+        $this->siteId = null;
+        $this->domain = array();
+
+        /* Get Cloned Pages */
+        $pages = $this->getPages();
+        $clonedPages = array();
+
+        /* Clone Site Wide Plugins */
+        $siteWidePlugins = $this->sitePlugins;
+        $clonedSiteWides = array();
+        $siteWideIdsToChange = array();
+
+        /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
+        foreach ($siteWidePlugins as $siteWidePlugin)
+        {
+            $clonedSiteWide = clone $siteWidePlugin;
+            $siteWideIdsToChange[$siteWidePlugin->getInstanceId()] = $clonedSiteWide;
+            $clonedSiteWides[] = $clonedSiteWide;
+        }
+
+        /** @var \Rcm\Entity\Page $page */
+        foreach ($pages as $page) {
+
+            $pageType = $page->getPageType();
+
+            if ($pageType != 'n' && $pageType != 'z' && $pageType != 't') {
+                continue;
+            }
+
+            $revision = $page->getCurrentRevision();
+
+            if (empty($revision)) {
+                continue;
+            }
+
+            $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
+
+            $clonedPage = clone $page;
+            $clonedPage->setSite($this);
+            $clonedPages[] = $clonedPage;
+        }
+
+        $this->pages = new ArrayCollection($clonedPages);
+
+        /* Get Cloned Containers */
+        $containers = $this->getContainers();
+        $clonedContainers = array();
+
+        /** @var \Rcm\Entity\Container $container */
+        foreach ($containers as $container) {
+
+            $revision = $page->getCurrentRevision();
+
+            if (empty($revision)) {
+                continue;
+            }
+
+            $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
+
+            $clonedContainer = clone $container;
+            $clonedContainer->setSite($this);
+            $clonedContainers[] = $clonedContainer;
+        }
+
+        $this->containers = new ArrayCollection($clonedContainers);
+    }
+
+    protected function fixRevisionSiteWides(Revision $revision, $siteWideIdsToChange)
+    {
+        $pluginWrappers = $revision->getPluginWrappers();
+
+        /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
+        foreach($pluginWrappers as $pluginWrapper) {
+            $instanceId = $pluginWrapper->getInstance()->getInstanceId();
+
+            if (isset($siteWideIdsToChange[$instanceId])
+                && $siteWideIdsToChange[$instanceId] instanceof PluginInstance
+            ) {
+                $pluginWrapper->setInstance($siteWideIdsToChange[$instanceId]);
+            }
+        }
+    }
+
     /**
      * Gets the SiteId property
      *

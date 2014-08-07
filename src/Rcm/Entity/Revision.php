@@ -118,6 +118,26 @@ class Revision
         $this->pluginInstances = new ArrayCollection();
     }
 
+    public function __clone()
+    {
+        $this->revisionId = null;
+        $this->createdDate = new \DateTime();
+        $this->publishedDate = new \DateTime();
+
+        /* Clone Plugins */
+        $pluginWrappers = $this->pluginInstances;
+        $clonedPluginWrappers = array();
+
+        /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
+        foreach ($pluginWrappers as $pluginWrapper)
+        {
+            $clonedPluginWrapper = clone $pluginWrapper;
+            $clonedPluginWrappers[] = $clonedPluginWrapper;
+        }
+
+        $this->pluginInstances = $clonedPluginWrappers;
+    }
+
     /*   Start Getters and Setters    */
 
     /**

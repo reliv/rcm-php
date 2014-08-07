@@ -89,6 +89,12 @@ class PluginInstance
      */
     protected $instanceConfig;
 
+    public function __clone()
+    {
+        $this->pluginInstanceId = null;
+        $this->previousEntity = null;
+    }
+
     /**
      * Get the unique Instance ID
      *
@@ -245,7 +251,7 @@ class PluginInstance
      * @return null
      *
      */
-    public function setConfig($instanceConfig)
+    public function setInstanceConfig($instanceConfig)
     {
         $this->instanceConfig = json_encode($instanceConfig);
     }
