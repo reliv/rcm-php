@@ -168,5 +168,65 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
     {
         $this->pluginInstance->setPreviousInstance(time());
     }
+
+    /**
+     * Test Get and Set Instance Config
+     *
+     * @return void
+     *
+     * @covers \Rcm\Entity\PluginInstance
+     */
+    public function testGetAndSetInstanceConfig()
+    {
+        $expected = array(
+            'var1' => 1,
+            'var2' => 2
+        );
+
+        $this->pluginInstance->setInstanceConfig($expected);
+
+        $actual = $this->pluginInstance->getInstanceConfig();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Test Cloning of object
+     *
+     * @return void
+     *
+     * @covers \Rcm\Entity\PluginInstance
+     */
+    public function testClone()
+    {
+        $instanceId = 42;
+        $instanceConfig = array(
+            'var1' => 1,
+            'var2' => 2
+        );
+        $displayName = 'Display Name One';
+
+        $md5 = md5(serialize($instanceConfig));
+        $plugin = 'MockPlugin';
+
+        $this->pluginInstance->setInstanceId($instanceId);
+        $this->pluginInstance->setInstanceConfig($instanceConfig);
+        $this->pluginInstance->setDisplayName($displayName);
+        $this->pluginInstance->setMd5($md5);
+        $this->pluginInstance->setPlugin($plugin);
+        $this->pluginInstance->setSiteWide(true);
+
+        $cloned = clone $this->pluginInstance;
+
+        $this->assertEquals($instanceConfig, $cloned->getInstanceConfig());
+        $this->assertEquals($displayName, $cloned->getDisplayName());
+        $this->assertEquals($md5, $cloned->getMd5());
+        $this->assertEquals($plugin, $cloned->getPlugin());
+        $this->assertTrue($cloned->isSiteWide());
+        $this->assertNotEquals($instanceId, $cloned->getInstanceId());
+        $this->assertNull($cloned->getInstanceId());
+    }
+
+
 }
  

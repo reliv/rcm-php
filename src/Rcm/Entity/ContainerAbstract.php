@@ -18,6 +18,7 @@
  */
 namespace Rcm\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Rcm\Exception\InvalidArgumentException;
 
 /**
@@ -76,6 +77,26 @@ abstract class ContainerAbstract
      * @var array|\Doctrine\Common\Collections\ArrayCollection
      */
     protected $revisions;
+
+    /**
+     * Clone the container
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->createdDate = new \DateTime();
+        $this->lastPublished = new \DateTime();
+
+        $this->revisions = new ArrayCollection();
+
+        if (!empty($this->currentRevision)) {
+            $revision = clone $this->currentRevision;
+            $this->currentRevision = $revision;
+            $this->revisions[] = $revision;
+            $this->stagedRevision = null;
+        }
+    }
 
     /**
      * Gets the Name property

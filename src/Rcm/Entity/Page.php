@@ -197,6 +197,17 @@ class Page extends ContainerAbstract
     }
 
     /**
+     * Clone the page
+     */
+    public function __clone()
+    {
+        $this->pageId = null;
+        $this->name = null;
+        $this->parent = null;
+        parent::__clone();
+    }
+
+    /**
      * Get the current Page ID
      *
      * @return int Unique page ID number
