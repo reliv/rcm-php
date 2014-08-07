@@ -210,7 +210,7 @@ class Site
     public function __clone()
     {
         $this->siteId = null;
-        $this->domain = array();
+        $this->domain = null;
 
         /* Get Cloned Pages */
         $pages = $this->getPages();
@@ -238,17 +238,17 @@ class Site
                 continue;
             }
 
-            $revision = $page->getCurrentRevision();
+            $clonedPage = clone $page;
+            $clonedPage->setSite($this);
+            $clonedPages[] = $clonedPage;
+
+            $revision = $clonedPage->getCurrentRevision();
 
             if (empty($revision)) {
                 continue;
             }
 
             $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
-
-            $clonedPage = clone $page;
-            $clonedPage->setSite($this);
-            $clonedPages[] = $clonedPage;
         }
 
         $this->pages = new ArrayCollection($clonedPages);
@@ -260,17 +260,17 @@ class Site
         /** @var \Rcm\Entity\Container $container */
         foreach ($containers as $container) {
 
-            $revision = $page->getCurrentRevision();
+            $clonedContainer = clone $container;
+            $clonedContainer->setSite($this);
+            $clonedContainers[] = $clonedContainer;
+
+            $revision = $clonedContainer->getCurrentRevision();
 
             if (empty($revision)) {
                 continue;
             }
 
             $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
-
-            $clonedContainer = clone $container;
-            $clonedContainer->setSite($this);
-            $clonedContainers[] = $clonedContainer;
         }
 
         $this->containers = new ArrayCollection($clonedContainers);
@@ -721,4 +721,22 @@ class Site
 
         return false;
     }
+
+    /**
+     * @param string $siteLayout
+     */
+    public function setSiteLayout($siteLayout)
+    {
+        $this->siteLayout = $siteLayout;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiteLayout()
+    {
+        return $this->siteLayout;
+    }
+
+
 }
