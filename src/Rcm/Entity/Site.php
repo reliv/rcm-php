@@ -745,6 +745,4 @@ class Site
     {
         return $this->siteLayout;
     }
-
-
 }
