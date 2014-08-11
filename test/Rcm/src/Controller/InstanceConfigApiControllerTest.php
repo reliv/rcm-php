@@ -43,10 +43,6 @@ class InstanceConfigApiControllerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $siteMgr->expects($this->any())
-            ->method('isAllowed')
-            ->will($this->returnValue(false));
-
         $userSvc = $this
             ->getMockBuilder('RcmUser\Service\RcmUserService')
             ->disableOriginalConstructor()
