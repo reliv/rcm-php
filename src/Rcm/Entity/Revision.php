@@ -88,6 +88,7 @@ class Revision
     /**
      * @ORM\ManyToMany(
      *     targetEntity="PluginWrapper",
+     *     fetch="EAGER",
      *     cascade={"persist"}
      * )
      * @ORM\JoinTable(
@@ -120,6 +121,10 @@ class Revision
 
     public function __clone()
     {
+        if (!$this->revisionId) {
+            return;
+        }
+
         $this->revisionId = null;
         $this->createdDate = new \DateTime();
         $this->publishedDate = new \DateTime();
