@@ -93,7 +93,15 @@ return array(
     ),
     'router' => array(
         'routes' => array(
-
+            'api-admin-instance-configs' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/api/admin/instance-configs[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Rcm\Controller\InstanceConfigApiController',
+                    )
+                ),
+            ),
             'contentManager' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -172,49 +180,49 @@ return array(
     'service_manager' => array(
         'factories' => array(
             'doctrine.cache.doctrine_cache'
-                => 'Rcm\Factory\DoctrineCacheFactory',
+            => 'Rcm\Factory\DoctrineCacheFactory',
             'Rcm\EventListener\RouteListener'
-                => 'Rcm\Factory\RouteListenerFactory',
+            => 'Rcm\Factory\RouteListenerFactory',
             'Rcm\EventListener\DispatchListener'
-                => 'Rcm\Factory\DispatchListenerFactory',
+            => 'Rcm\Factory\DispatchListenerFactory',
             'Rcm\EventListener\EventFinishListener'
-                => 'Rcm\Factory\EventFinishListenerFactory',
+            => 'Rcm\Factory\EventFinishListenerFactory',
             'Rcm\EventListener\ViewEventListener'
-                => 'Rcm\Factory\ViewEventListenerFactory',
+            => 'Rcm\Factory\ViewEventListenerFactory',
             'Rcm\Service\ContainerManager'
-                => 'Rcm\Factory\ContainerManagerFactory',
+            => 'Rcm\Factory\ContainerManagerFactory',
             'Rcm\Service\PluginManager'
-                => 'Rcm\Factory\PluginManagerFactory',
+            => 'Rcm\Factory\PluginManagerFactory',
             'Rcm\Service\LayoutManager'
-                => 'Rcm\Factory\LayoutManagerFactory',
+            => 'Rcm\Factory\LayoutManagerFactory',
             'Rcm\Service\DomainManager'
-                => 'Rcm\Factory\DomainManagerFactory',
+            => 'Rcm\Factory\DomainManagerFactory',
             'Rcm\Service\RedirectManager'
-                => 'Rcm\Factory\RedirectManagerFactory',
+            => 'Rcm\Factory\RedirectManagerFactory',
             'Rcm\Service\SiteManager'
-                => 'Rcm\Factory\SiteManagerFactory',
+            => 'Rcm\Factory\SiteManagerFactory',
             'Rcm\Service\PageManager'
-                => 'Rcm\Factory\PageManagerFactory',
+            => 'Rcm\Factory\PageManagerFactory',
             'Rcm\Service\ResponseHandler'
-                => 'Rcm\Factory\ResponseHandlerFactory',
+            => 'Rcm\Factory\ResponseHandlerFactory',
             'Rcm\Service\Cache'
-                => 'Rcm\Factory\CacheFactory',
+            => 'Rcm\Factory\CacheFactory',
             'Rcm\Service\AssetManagerCache'
-                => 'Rcm\Factory\AssetManagerCacheFactory',
+            => 'Rcm\Factory\AssetManagerCacheFactory',
             'Rcm\Service\SessionMgr'
-                => 'Rcm\Factory\SessionManagerFactory',
+            => 'Rcm\Factory\SessionManagerFactory',
             'Rcm\Acl\ResourceProvider'
-                => 'Rcm\Factory\AclResourceProviderFactory',
+            => 'Rcm\Factory\AclResourceProviderFactory',
             'Rcm\Validator\Page'
-                => 'Rcm\Factory\PageValidatorFactory',
+            => 'Rcm\Factory\PageValidatorFactory',
             'Rcm\Validator\MainLayout'
-                => 'Rcm\Factory\MainLayoutValidatorFactory',
+            => 'Rcm\Factory\MainLayoutValidatorFactory',
             'Rcm\Service\Logger'
-                => 'Rcm\Factory\LoggerFactory',
+            => 'Rcm\Factory\LoggerFactory',
             'Rcm\Service\ZendLogger'
-                => '\Rcm\Factory\ZendLogFactory',
+            => '\Rcm\Factory\ZendLogFactory',
             'Rcm\Service\ZendLogWriter'
-                => '\Rcm\Factory\ZendLogWriterFactory',
+            => '\Rcm\Factory\ZendLogWriterFactory',
         ),
         'aliases' => array(
             'rcmLogger' => 'Rcm\Service\Logger',
@@ -223,33 +231,33 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Rcm\Controller\PageCheckController'
-                => 'Rcm\Controller\PageCheckController',
+            => 'Rcm\Controller\PageCheckController',
+            'Rcm\Controller\InstanceConfigApiController'
+            => 'Rcm\Controller\InstanceConfigApiController',
         ),
         'factories' => array(
             'Rcm\Controller\IndexController'
-                => 'Rcm\Factory\IndexControllerFactory',
+            => 'Rcm\Factory\IndexControllerFactory',
         ),
     ),
-
     'view_helpers' => array(
         'factories' => array(
             'rcmContainer'
-                => 'Rcm\Factory\ContainerViewHelperFactory',
+            => 'Rcm\Factory\ContainerViewHelperFactory',
             'rcmTextEdit' => 'Rcm\Factory\TextEditFactory',
             'rcmRichEdit' => 'Rcm\Factory\RichEditFactory',
         ),
         'invokables' => array(
             'rcmOutOfDateBrowserWarning'
-                => 'Rcm\View\Helper\OutOfDateBrowserWarning',
+            => 'Rcm\View\Helper\OutOfDateBrowserWarning',
         ),
     ),
-
     'controller_plugins' => array(
         'invokables' => array(
             'redirectToPage'
-                => 'Rcm\Controller\Plugin\RedirectToPage',
+            => 'Rcm\Controller\Plugin\RedirectToPage',
             'urlToPage'
-                => 'Rcm\Controller\Plugin\UrlToPage',
+            => 'Rcm\Controller\Plugin\UrlToPage',
         ),
     ),
 );
