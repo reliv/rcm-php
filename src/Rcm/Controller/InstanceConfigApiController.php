@@ -39,7 +39,9 @@ class InstanceConfigApiController extends AbstractRestfulController
     {
         $siteId = $this->getServiceLocator()->get('Rcm\Service\SiteManager')
             ->getCurrentSiteId();
-        $allowed = $this->getServiceLocator()->get('RcmUser\Service\RcmUserService')->isAllowed(
+        $allowed = $this->getServiceLocator()->get(
+            'RcmUser\Service\RcmUserService'
+        )->isAllowed(
             'sites.' . $siteId,
             'admin',
             'Rcm\Acl\ResourceProvider'
