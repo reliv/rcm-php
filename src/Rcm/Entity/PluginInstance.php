@@ -91,6 +91,10 @@ class PluginInstance
 
     public function __clone()
     {
+        if (!$this->pluginInstanceId) {
+            return;
+        }
+
         $this->pluginInstanceId = null;
         $this->previousEntity = null;
     }

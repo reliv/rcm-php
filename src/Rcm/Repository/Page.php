@@ -26,6 +26,8 @@ use Doctrine\ORM\Query;
 use Rcm\Entity\Page as PageEntity;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site as SiteEntity;
+use Rcm\Exception\InvalidArgumentException;
+use Rcm\Exception\PageNotFoundException;
 
 /**
  * Page Repository
@@ -246,5 +248,60 @@ class Page extends EntityRepository implements ContainerInterface
         $this->_em->flush(array($revision, $page));
 
         return $page;
+    }
+
+    /**
+     * Copy a page
+     *
+     * @param integer    $pageIdToCopy    Id of page to copy
+     * @param string     $newPageName     Page Name or URL.
+     * @param string     $newPageTitle    Title of page
+     * @param string     $author          Author of copied page
+     * @param SiteEntity $siteDestination Site Entity to copy page to
+     * @param string     $newPageType     Page type of page.  Defaults to "n"
+     *
+     * @throws \Rcm\Exception\InvalidArgumentException
+     * @throws \Rcm\Exception\PageNotFoundException
+     */
+    public function copyPage(
+        $pageIdToCopy,
+        $newPageName,
+        $newPageTitle,
+        $author,
+        SiteEntity $siteDestination,
+        $newPageType = 'n'
+    ) {
+        if (empty($pageIdToCopy) || !is_numeric($pageIdToCopy)) {
+            throw new InvalidArgumentException(
+                'Invalid Page ID Number to copy'
+            );
+        }
+
+        if (empty($newPageName) || empty($newPageTitle) || empty($author)) {
+            throw new InvalidArgumentException(
+                'Missing needed information to create page copy.'
+            );
+        }
+
+        /** @var \Rcm\Entity\Page $pageToCopy */
+        $pageToCopy = $this->findOneBy(array('pageId' => $pageIdToCopy));
+
+        if (empty($pageToCopy)) {
+            throw new PageNotFoundException(
+                'Unable to locate page to copy.'
+            );
+        }
+
+        $clonedPage = clone $pageToCopy;
+        $clonedPage->setName($newPageName);
+        $clonedPage->setPageTitle($newPageTitle);
+        $clonedPage->setAuthor($author);
+        $clonedPage->setPageType($newPageType);
+        $clonedPage->setSite($siteDestination);
+
+        $siteDestination->addPage($clonedPage);
+
+        $this->_em->persist($clonedPage);
+        $this->_em->flush($clonedPage);
     }
 }
