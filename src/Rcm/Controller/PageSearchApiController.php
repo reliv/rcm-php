@@ -10,9 +10,11 @@ use Zend\View\Model\JsonModel;
 
 class PageSearchApiController extends BaseController
 {
+
     function siteTitleSearchAction()
     {
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
+        $this->siteInfo = $this->getServiceLocator()->get('Rcm\Entity\Site');
         $siteId = $this->siteInfo->getSiteId();
 
         $results = $this->entityMgr->createQuery(
