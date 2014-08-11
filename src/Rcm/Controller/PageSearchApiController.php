@@ -4,11 +4,14 @@
  */
 namespace Rcm\Controller;
 
-class PageSearchApiController extends \Rcm\Controller\BaseController
+use Rcm\Plugin\BaseController;
+use Zend\Mvc\Controller;
+use Zend\View\Model\JsonModel;
+
+class PageSearchApiController extends BaseController
 {
     function siteTitleSearchAction()
     {
-
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
         $siteId = $this->siteInfo->getSiteId();
 
@@ -32,7 +35,7 @@ class PageSearchApiController extends \Rcm\Controller\BaseController
             );
         }
 
-        return new \Zend\View\Model\JsonModel($pageNames);
+        return new JsonModel($pageNames);
     }
 
     function allSitePagesAction()
