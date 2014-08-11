@@ -45,7 +45,6 @@ class InstanceConfigApiController extends AbstractRestfulController
                 'admin',
                 'Rcm\Acl\ResourceProvider'
             );
-
         if (!$allowed) {
             $this->getResponse()->setStatusCode(401);
             return $this->getResponse();
