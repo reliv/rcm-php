@@ -91,6 +91,7 @@ return array(
             'ViewJsonStrategy',
         ),
     ),
+
     'router' => array(
         'routes' => array(
             'api-admin-instance-configs' => array(
@@ -122,6 +123,16 @@ return array(
                     'defaults' => array(
                         'controller' => 'Rcm\Controller\IndexController',
                         'action' => 'index',
+                    )
+                ),
+            ),
+            'rcm-page-search' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-page-search[/:language]',
+                    'defaults' => array(
+                        'controller' => 'rcmPageSearchApiController',
+                        'action' => 'siteTitleSearchAction',
                     )
                 ),
             ),
