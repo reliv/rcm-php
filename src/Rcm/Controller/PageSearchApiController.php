@@ -3,22 +3,16 @@
 namespace Rcm\Controller;
 
 use Rcm\Plugin\BaseController;
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 use Zend\Http\Response;
-use Rcm\Entity\Site;
-use Rcm\Service\PageManager;
-use Rcm\Controller\PageCheckController;
 
-class PageSearchApiController extends PageManager
+class PageSearchApiController extends BaseController
 {
     function siteTitleSearchAction()
     {
-
-
-
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
         $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+
         $sm = $this->getServiceLocator()->get(
             'Rcm\Service\SiteManager'
         );
@@ -35,7 +29,7 @@ class PageSearchApiController extends PageManager
 
         $results = $em->createQuery(
             '
-                        select page.name, pageRevision.pageTitle, page.pageType from Rcm\\Entity\\PageRevision pageRevision
+                        select page.name, pageRevision.pageTitle, page.pageType from Rcm\\Entity\\Revision pageRevision
                         join pageRevision.page page
                         join page.site site
                         where (page.name like :query or pageRevision.pageTitle like :query) and site.siteId like :siteId
@@ -49,7 +43,7 @@ class PageSearchApiController extends PageManager
 
             $pageNames[$result['name']] = array(
                 'title' => $result['pageTitle'],
-                'url' => $this->getPageUrl($result['name'], $result['pageType'])
+                'url' => $pm->urlToPage($result['name'], $result['pageType'])
             );
         }
 
@@ -58,7 +52,15 @@ class PageSearchApiController extends PageManager
 
     function allSitePagesAction()
     {
-        $pages = $this->siteInfo->getPages();
+        $sm = $this->getServiceLocator()->get(
+            'Rcm\Entity\Site'
+        );
+        /**
+         * @var \Rcm\Entity\Site $pages
+         */
+        $pages = $sm->getPages();
+
+//        $pages = $this->siteInfo->getPages();
 
         /**@var \Rcm\Entity\Page $page */
         foreach ($pages as $page) {
@@ -69,7 +71,7 @@ class PageSearchApiController extends PageManager
 
             $pageName = $page->getName();
 
-            $pageUrl = $this->getPageUrl($pageName, $page->getPageType());
+            $pageUrl = $this->urlToPage($pageName, $page->getPageType());
 
             $return[$pageUrl] = $pageName;
 
