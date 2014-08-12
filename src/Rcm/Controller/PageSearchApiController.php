@@ -2,16 +2,21 @@
 
 namespace Rcm\Controller;
 
+use Rcm\Plugin\BaseController;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 use Zend\Http\Response;
 use Rcm\Entity\Site;
 use Rcm\Service\PageManager;
+use Rcm\Controller\PageCheckController;
 
-class PageSearchApiController extends AbstractRestfulController
+class PageSearchApiController extends PageManager
 {
     function siteTitleSearchAction()
     {
+
+
+
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
         $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $sm = $this->getServiceLocator()->get(
