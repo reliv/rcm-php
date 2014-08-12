@@ -4,6 +4,7 @@ namespace Rcm\Controller;
 
 use Rcm\Plugin\BaseController;
 use Zend\View\Model\JsonModel;
+use Zend\Http\Response;
 
 class PageSearchApiController extends BaseController
 {
@@ -12,11 +13,14 @@ class PageSearchApiController extends BaseController
 
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
 
-        $this->entityMgr = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $this->entityMgr = $this->getServiceLocator()->get(
+            'Doctrine\ORM\EntityManager'
+        );
         $this->siteInfo = $this->getServiceLocator()->get(
             'Rcm\Service\SiteManager'
         );
-        $siteId = $this->siteInfo->getSiteId();
+        $siteId = $this->siteInfo->getCurrentSiteId();
+//        $siteId = $this->siteInfo->getSiteId();
 
         $results = $this->entityMgr->createQuery(
             '
