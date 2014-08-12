@@ -131,7 +131,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-page-search[/:language]',
                     'defaults' => array(
-                        'controller' => 'rcmPageSearchApiController',
+                        'controller' => 'Rcm\Controller\PageSearchApiController',
                         'action' => 'siteTitleSearchAction',
                     )
                 ),
@@ -141,7 +141,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-page-search/title/[:query]',
                     'defaults' => array(
-                        'controller' => 'rcmPageSearchApiController',
+                        'controller' => 'Rcm\Controller\PageSearchApiController',
                         'action' => 'siteTitleSearch',
                     )
                 ),

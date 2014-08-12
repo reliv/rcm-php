@@ -1,20 +1,16 @@
 <?php
-/**
- * test
- */
+
 namespace Rcm\Controller;
 
 use Rcm\Plugin\BaseController;
-use Zend\Mvc\Controller;
 use Zend\View\Model\JsonModel;
 
 class PageSearchApiController extends BaseController
 {
-
     function siteTitleSearchAction()
     {
+
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
-        $this->siteInfo = $this->getServiceLocator()->get('Rcm\Entity\Site');
         $siteId = $this->siteInfo->getSiteId();
 
         $results = $this->entityMgr->createQuery(
@@ -37,7 +33,7 @@ class PageSearchApiController extends BaseController
             );
         }
 
-        return new JsonModel($pageNames);
+        return new \Zend\View\Model\JsonModel($pageNames);
     }
 
     function allSitePagesAction()
@@ -61,7 +57,7 @@ class PageSearchApiController extends BaseController
 
         asort($return);
 
-        return new \Zend\View\Model\JsonModel($return);
+        return new JsonModel($return);
     }
 
 
