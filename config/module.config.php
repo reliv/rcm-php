@@ -126,23 +126,24 @@ return array(
                     )
                 ),
             ),
-            'rcm-page-search' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/rcm-page-search[/:language]',
-                    'defaults' => array(
-                        'controller' => 'Rcm\Controller\PageSearchApiController',
-                        'action' => 'siteTitleSearchAction',
-                    )
-                ),
-            ),
             'rcm-page-title-search' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route' => '/rcm-page-search/title/[:query]',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\PageSearchApiController',
+                        'controller' => 'rcmPageSearchApiController',
                         'action' => 'siteTitleSearch',
+                    )
+                ),
+            ),
+
+            'rcm-page-search' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-page-search[/:language]',
+                    'defaults' => array(
+                        'controller' => 'rcmPageSearchApiController',
+                        'action' => 'allSitePages',
                     )
                 ),
             ),

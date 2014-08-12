@@ -11,6 +11,11 @@ class PageSearchApiController extends BaseController
     {
 
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
+
+        $this->entityMgr = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $this->siteInfo = $this->getServiceLocator()->get(
+            'Rcm\Service\SiteManager'
+        );
         $siteId = $this->siteInfo->getSiteId();
 
         $results = $this->entityMgr->createQuery(
