@@ -2,17 +2,22 @@
 
 namespace Rcm\Controller;
 
-use Rcm\Plugin\BaseController;
+use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 use Zend\Http\Response;
 use Rcm\Entity\Site;
+use Rcm\Service\PageManager;
 
-class PageSearchApiController extends BaseController
+class PageSearchApiController extends AbstractRestfulController
 {
     function siteTitleSearchAction()
     {
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
-        $siteId = $this->siteInfo->getSiteId();
+        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $sm = $this->getServiceLocator()->get(
+            'Rcm\Service\SiteManager'
+        );
+        $siteId = $sm->getCurrentSiteId();
 //
 //        $this->entityMgr = $this->getServiceLocator()->get(
 //            'Doctrine\ORM\EntityManager'
@@ -23,7 +28,7 @@ class PageSearchApiController extends BaseController
 //        $siteId = $this->siteInfo->getCurrentSiteId();
 ////        $siteId = $this->siteInfo->getSiteId();
 
-        $results = $this->entityMgr->createQuery(
+        $results = $em->createQuery(
             '
                         select page.name, pageRevision.pageTitle, page.pageType from Rcm\\Entity\\PageRevision pageRevision
                         join pageRevision.page page
