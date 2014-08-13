@@ -45,14 +45,14 @@ class PageSearchApiController extends AbstractRestfulController
     public function siteTitleSearchAction()
     {
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
-        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $entityMgr = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        $sm = $this->getServiceLocator()->get(
+        $siteMgr = $this->getServiceLocator()->get(
             'Rcm\Service\SiteManager'
         );
-        $siteId = $sm->getCurrentSiteId();
+        $siteId = $siteMgr->getCurrentSiteId();
 
-        $results = $em->createQuery(
+        $results = $entityMgr->createQuery(
             '
                         select page.name, page.pageTitle, page.pageType from Rcm\\Entity\\Page page
                         join page.site site
@@ -80,13 +80,13 @@ class PageSearchApiController extends AbstractRestfulController
      */
     public function allSitePagesAction()
     {
-        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $sm = $this->getServiceLocator()->get(
+        $entityMgr = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $siteMgr = $this->getServiceLocator()->get(
             'Rcm\Service\SiteManager'
         );
-        $siteId = $sm->getCurrentSiteId();
+        $siteId = $siteMgr->getCurrentSiteId();
 
-        $site = $em->getRepository(
+        $site = $entityMgr->getRepository(
             '\Rcm\Entity\Site'
         )->findOneBy(
             array(
