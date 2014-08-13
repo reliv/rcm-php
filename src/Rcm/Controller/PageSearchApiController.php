@@ -2,12 +2,32 @@
 
 namespace Rcm\Controller;
 
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
-use Zend\Http\Response;
 
+/**
+ * PageSearchApiController
+ *
+ * Search through pages and return URL
+ *
+ * PHP version 5
+ *
+ * @category  Reliv
+ * @package   Rcm\Controller
+ * @author    author Brian Janish <bjanish@relivinc.com>
+ * @copyright 2014 Reliv International
+ * @license   License.txt New BSD License
+ * @version   Release: 2.0
+ * @link      https://github.com/reliv
+ */
 class PageSearchApiController extends AbstractRestfulController
 {
+    /**
+     * siteTitleSearchAction
+     *
+     * @return JsonModel
+     */
     function siteTitleSearchAction()
     {
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
@@ -39,6 +59,11 @@ class PageSearchApiController extends AbstractRestfulController
         return new JsonModel($pageNames);
     }
 
+    /**
+     * allSitePagesAction
+     *
+     * @return JsonModel
+     */
     function allSitePagesAction()
     {
         $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -58,8 +83,6 @@ class PageSearchApiController extends AbstractRestfulController
          * @var \Rcm\Entity\Page $pages
          */
         $pages = $site->getPages();
-        // print_r($pages); exit;
-        // $pages = $this->siteInfo->getPages();
 
         /**@var \Rcm\Entity\Page $page */
         foreach ($pages as $page) {
