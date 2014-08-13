@@ -129,9 +129,9 @@ return array(
             'rcm-page-title-search' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm-page-search/title/[:query]',
+                    'route' => '/rcm-page-search/title[/:query]',
                     'defaults' => array(
-                        'controller' => 'PageSearchApiController',
+                        'controller' => 'Rcm\Controller\PageSearchApiController',
                         'action' => 'siteTitleSearch',
                     )
                 ),
@@ -142,7 +142,7 @@ return array(
                 'options' => array(
                     'route' => '/rcm-page-search[/:language]',
                     'defaults' => array(
-                        'controller' => 'PageSearchApiController',
+                        'controller' => 'Rcm\Controller\PageSearchApiController',
                         'action' => 'allSitePages',
                     )
                 ),
@@ -256,6 +256,8 @@ return array(
             => 'Rcm\Controller\PageCheckController',
             'Rcm\Controller\InstanceConfigApiController'
             => 'Rcm\Controller\InstanceConfigApiController',
+            'Rcm\Controller\PageSearchApiController'
+            => 'Rcm\Controller\PageSearchApiController'
         ),
         'factories' => array(
             'Rcm\Controller\IndexController'
