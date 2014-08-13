@@ -19,7 +19,6 @@ use Rcm\Exception\PluginInstanceNotFoundException;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
-
 /**
  * InstanceConfigApiController
  *
