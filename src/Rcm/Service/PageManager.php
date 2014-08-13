@@ -182,17 +182,9 @@ class PageManager extends ContainerAbstract
         $pageType = 'n',
         $siteId = null
     ) {
-        if (!$siteId) {
-            $siteId = $this->siteManager->getCurrentSiteId();
-        }
-
         $this->validateNewPageData($pageName, $pageTitle, $layout, $pageType);
 
-        $site = $this->siteManager->getSiteById($siteId);
-
-        if (!$site) {
-            throw new \RuntimeException('Invalid Site ID');
-        }
+        $site = $this->getValidateSite($siteId);
 
         $this->repository->createNewPage(
             $pageName,
@@ -201,6 +193,72 @@ class PageManager extends ContainerAbstract
             $author,
             $site
         );
+    }
+
+    /**
+     * @param integer      $pageIdToCopy Id of page to copy
+     * @param string       $newPageName  New Page name or URL.  Must not contain spaces.
+     * @param string       $newPageTitle New Page Title
+     * @param string       $author       New Page Author
+     * @param string       $newPageType  New Page type.  Defaults to "n"
+     * @param integer|null $siteId       Site Id to copy page to
+     *
+     * @throws \Rcm\Exception\InvalidArgumentException
+     */
+    public function copyPage(
+        $pageIdToCopy,
+        $newPageName,
+        $newPageTitle,
+        $author,
+        $newPageType = 'n',
+        $siteId = null
+    ) {
+
+        $site = $this->getValidateSite($siteId);
+
+        $pageValidator = $this->getPageValidator($newPageType);
+
+        if (!$pageValidator->isValid($newPageName)) {
+            $messages = $pageValidator->getMessages();
+
+            $error = implode("\n", $messages);
+
+            throw new InvalidArgumentException(
+                $error
+            );
+        }
+
+        $this->repository->copyPage(
+            $pageIdToCopy,
+            $newPageName,
+            $newPageTitle,
+            $author,
+            $site,
+            $newPageType
+        );
+    }
+
+    /**
+     * Get and Validate a Site Id
+     *
+     * @param integer $siteId Site Id to get and or validate
+     *
+     * @return null|\Rcm\Entity\Site
+     * @throws \RuntimeException
+     */
+    private function getValidateSite($siteId)
+    {
+        if (!$siteId) {
+            $siteId = $this->siteManager->getCurrentSiteId();
+        }
+
+        $site = $this->siteManager->getSiteById($siteId);
+
+        if (!$site) {
+            throw new \RuntimeException('Invalid Site ID');
+        }
+
+        return $site;
     }
 
     /**

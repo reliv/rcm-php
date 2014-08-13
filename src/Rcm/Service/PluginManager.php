@@ -558,7 +558,7 @@ class PluginManager
      *
      * @return array
      */
-    protected function getDefaultInstanceConfig($pluginName)
+    public function getDefaultInstanceConfig($pluginName)
     {
         $pluginConfigs = $this->config['rcmPlugin'];
 

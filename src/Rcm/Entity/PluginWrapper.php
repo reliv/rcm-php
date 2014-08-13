@@ -100,6 +100,10 @@ class PluginWrapper
 
     public function __clone()
     {
+        if (!$this->pluginWrapperId) {
+            return;
+        }
+
         $this->pluginWrapperId = null;
 
         if (!$this->instance->isSiteWide()) {

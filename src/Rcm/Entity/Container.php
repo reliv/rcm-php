@@ -114,7 +114,8 @@ class Container extends ContainerAbstract
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Revision",
-     *     indexBy="revisionId"
+     *     indexBy="revisionId",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(
      *     name="rcm_containers_revisions",
@@ -152,6 +153,10 @@ class Container extends ContainerAbstract
      */
     public function __clone()
     {
+        if (!$this->containerId) {
+            return;
+        }
+
         $this->containerId = null;
         parent::__clone();
     }

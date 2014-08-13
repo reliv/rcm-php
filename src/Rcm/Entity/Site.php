@@ -136,7 +136,8 @@ class Site
      *
      * @ORM\OneToMany(
      *     targetEntity="Page",
-     *     mappedBy="site"
+     *     mappedBy="site",
+     *     cascade={"persist"}
      * )
      */
     protected $pages;
@@ -209,6 +210,11 @@ class Site
 
     public function __clone()
     {
+
+        if (!$this->siteId) {
+            return;
+        }
+
         $this->siteId = null;
         $this->domain = null;
 

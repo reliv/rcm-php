@@ -152,7 +152,8 @@ class Page extends ContainerAbstract
      *
      * @ORM\ManyToMany(
      *     targetEntity="Revision",
-     *     indexBy="revisionId"
+     *     indexBy="revisionId",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(
      *     name="rcm_pages_revisions",
@@ -201,6 +202,10 @@ class Page extends ContainerAbstract
      */
     public function __clone()
     {
+        if (!$this->pageId) {
+            return;
+        }
+
         $this->pageId = null;
         $this->name = null;
         $this->parent = null;
