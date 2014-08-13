@@ -1,5 +1,19 @@
 <?php
-
+/**
+ * PageSearchApiController
+ *
+ * Search through pages and return URL
+ *
+ * PHP version 5
+ *
+ * @category  Reliv
+ * @package   Rcm\Controller
+ * @author    author Brian Janish <bjanish@relivinc.com>
+ * @copyright 2014 Reliv International
+ * @license   License.txt New BSD License
+ * @version   Release: GIT:
+ * @link      https://github.com/reliv
+ */
 namespace Rcm\Controller;
 
 use Zend\Http\Response;
@@ -18,7 +32,7 @@ use Zend\View\Model\JsonModel;
  * @author    author Brian Janish <bjanish@relivinc.com>
  * @copyright 2014 Reliv International
  * @license   License.txt New BSD License
- * @version   Release: 2.0
+ * @version   Release: GIT:
  * @link      https://github.com/reliv
  */
 class PageSearchApiController extends AbstractRestfulController
@@ -75,10 +89,10 @@ class PageSearchApiController extends AbstractRestfulController
         $site = $em->getRepository(
             '\Rcm\Entity\Site'
         )->findOneBy(
-                array(
-                    'siteId' => $siteId
+            array(
+                'siteId' => $siteId
                 )
-            );
+        );
         /**
          * @var \Rcm\Entity\Page $pages
          */
