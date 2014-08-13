@@ -91,6 +91,7 @@ return array(
             'ViewJsonStrategy',
         ),
     ),
+
     'router' => array(
         'routes' => array(
             'api-admin-instance-configs' => array(
@@ -122,6 +123,27 @@ return array(
                     'defaults' => array(
                         'controller' => 'Rcm\Controller\IndexController',
                         'action' => 'index',
+                    )
+                ),
+            ),
+            'rcm-page-title-search' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-page-search/title[/:query]',
+                    'defaults' => array(
+                        'controller' => 'Rcm\Controller\PageSearchApiController',
+                        'action' => 'siteTitleSearch',
+                    )
+                ),
+            ),
+
+            'rcm-page-search' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-page-search[/:language]',
+                    'defaults' => array(
+                        'controller' => 'Rcm\Controller\PageSearchApiController',
+                        'action' => 'allSitePages',
                     )
                 ),
             ),
@@ -234,6 +256,8 @@ return array(
             => 'Rcm\Controller\PageCheckController',
             'Rcm\Controller\InstanceConfigApiController'
             => 'Rcm\Controller\InstanceConfigApiController',
+            'Rcm\Controller\PageSearchApiController'
+            => 'Rcm\Controller\PageSearchApiController'
         ),
         'factories' => array(
             'Rcm\Controller\IndexController'
