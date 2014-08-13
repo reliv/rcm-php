@@ -19,7 +19,6 @@ use Rcm\Exception\PluginInstanceNotFoundException;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
-
 /**
  * InstanceConfigApiController
  *
@@ -35,7 +34,7 @@ use Zend\View\Model\JsonModel;
  */
 class InstanceConfigApiController extends AbstractRestfulController
 {
-    public function get($id)
+    public function get($instanceId)
     {
         $siteId = $this->getServiceLocator()->get('Rcm\Service\SiteManager')
             ->getCurrentSiteId();
@@ -52,9 +51,9 @@ class InstanceConfigApiController extends AbstractRestfulController
         try {
             $pluginMgr = $this->getServiceLocator()
                 ->get('Rcm\Service\PluginManager');
-            $plugin = $pluginMgr->getPluginByInstanceId($id);
-            $instanceConfig = $pluginMgr->getInstanceConfig($id);
-            $defaultInstanceConfig = $pluginMgr->getDefaultInstanceConfig(
+            $plugin = $pluginMgr->getPluginByInstanceId($instanceId);
+            $instanceConfig = $pluginMgr->getInstanceConfig($instanceId);
+            $defaultInstanceCfg = $pluginMgr->getDefaultInstanceConfig(
                 $plugin['pluginName']
             );
         } catch (PluginInstanceNotFoundException $e) {
@@ -63,7 +62,7 @@ class InstanceConfigApiController extends AbstractRestfulController
         return new JsonModel(
             [
                 'instanceConfig' => $instanceConfig,
-                'defaultInstanceConfig' => $defaultInstanceConfig
+                'defaultInstanceConfig' => $defaultInstanceCfg
             ]
         );
     }
