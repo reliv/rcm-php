@@ -34,7 +34,7 @@ use Zend\View\Model\JsonModel;
  */
 class InstanceConfigApiController extends AbstractRestfulController
 {
-    public function get($id)
+    public function get($instanceId)
     {
         $siteId = $this->getServiceLocator()->get('Rcm\Service\SiteManager')
             ->getCurrentSiteId();
@@ -51,8 +51,8 @@ class InstanceConfigApiController extends AbstractRestfulController
         try {
             $pluginMgr = $this->getServiceLocator()
                 ->get('Rcm\Service\PluginManager');
-            $plugin = $pluginMgr->getPluginByInstanceId($id);
-            $instanceConfig = $pluginMgr->getInstanceConfig($id);
+            $plugin = $pluginMgr->getPluginByInstanceId($instanceId);
+            $instanceConfig = $pluginMgr->getInstanceConfig($instanceId);
             $defaultInstanceConfig = $pluginMgr->getDefaultInstanceConfig(
                 $plugin['pluginName']
             );
