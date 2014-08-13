@@ -53,7 +53,7 @@ class InstanceConfigApiController extends AbstractRestfulController
                 ->get('Rcm\Service\PluginManager');
             $plugin = $pluginMgr->getPluginByInstanceId($instanceId);
             $instanceConfig = $pluginMgr->getInstanceConfig($instanceId);
-            $defaultInstanceConfig = $pluginMgr->getDefaultInstanceConfig(
+            $defaultInstanceCfg = $pluginMgr->getDefaultInstanceConfig(
                 $plugin['pluginName']
             );
         } catch (PluginInstanceNotFoundException $e) {
@@ -62,7 +62,7 @@ class InstanceConfigApiController extends AbstractRestfulController
         return new JsonModel(
             [
                 'instanceConfig' => $instanceConfig,
-                'defaultInstanceConfig' => $defaultInstanceConfig
+                'defaultInstanceConfig' => $defaultInstanceCfg
             ]
         );
     }
