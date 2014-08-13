@@ -42,7 +42,7 @@ class PageSearchApiController extends AbstractRestfulController
      *
      * @return JsonModel
      */
-    function siteTitleSearchAction()
+    public function siteTitleSearchAction()
     {
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
         $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -78,7 +78,7 @@ class PageSearchApiController extends AbstractRestfulController
      *
      * @return JsonModel
      */
-    function allSitePagesAction()
+    public function allSitePagesAction()
     {
         $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $sm = $this->getServiceLocator()->get(
@@ -107,6 +107,4 @@ class PageSearchApiController extends AbstractRestfulController
         asort($return);
         return new JsonModel($return);
     }
-
-
 }
