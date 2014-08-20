@@ -399,15 +399,15 @@ abstract class ContainerAbstract
     /**
      * Get a page revision by ID
      *
-     * @param int $id
+     * @param int $revisionId
      *
      * @return null|Revision
      */
-    public function getRevisionById($id)
+    public function getRevisionById($revisionId)
     {
         /** @var \Rcm\Entity\Revision $revision */
         foreach ($this->revisions as $revision) {
-            if ($revision->getRevisionId() == $id) {
+            if ($revision->getRevisionId() == $revisionId) {
                 return $revision;
             }
         }
