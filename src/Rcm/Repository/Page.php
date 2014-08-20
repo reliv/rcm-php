@@ -263,6 +263,8 @@ class Page extends EntityRepository implements ContainerInterface
      *
      * @throws \Rcm\Exception\InvalidArgumentException
      * @throws \Rcm\Exception\PageNotFoundException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function copyPage(
         $pageIdToCopy,
@@ -272,7 +274,6 @@ class Page extends EntityRepository implements ContainerInterface
         $newPageTitle = null,
         $pageRevisionId = null,
         $newPageType = 'n'
-
     ) {
         if (empty($pageIdToCopy) || !is_numeric($pageIdToCopy)) {
             throw new InvalidArgumentException(

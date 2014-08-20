@@ -406,7 +406,7 @@ abstract class ContainerAbstract
     public function getRevisionById($id)
     {
         /** @var \Rcm\Entity\Revision $revision */
-        foreach($this->revisions as $revision) {
+        foreach ($this->revisions as $revision) {
             if ($revision->getRevisionId() == $id) {
                 return $revision;
             }
@@ -422,7 +422,7 @@ abstract class ContainerAbstract
      *
      * @return array
      */
-    public function getDraftRevisionList($limit=0)
+    public function getDraftRevisionList($limit = 0)
     {
         $count = 0;
 
@@ -451,7 +451,7 @@ abstract class ContainerAbstract
      *
      * @return array
      */
-    public function getPublishedRevisionList($limit=0)
+    public function getPublishedRevisionList($limit = 0)
     {
         $count = 0;
 
