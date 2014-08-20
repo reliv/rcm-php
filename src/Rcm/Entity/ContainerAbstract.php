@@ -321,18 +321,6 @@ abstract class ContainerAbstract
     }
 
     /**
-     * Get a revision by ID
-     *
-     * @param integer $revId Revision ID to search for
-     *
-     * @return Revision
-     */
-    public function getRevisionById($revId)
-    {
-        return $this->revisions[$revId];
-    }
-
-    /**
      * Get the entire revision list
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
@@ -340,6 +328,29 @@ abstract class ContainerAbstract
     public function getRevisions()
     {
         return $this->revisions;
+    }
+
+    /**
+     * Overwrite current revisions and Set a group of revisions
+     *
+     * @param array $revisions Array of Revisions to be added
+     *
+     * @throws InvalidArgumentException
+     */
+    public function setRevisions(array $revisions)
+    {
+        $this->revisions = new ArrayCollection();
+
+        /** @var \Rcm\Entity\Revision $revision */
+        foreach ($revisions as $revision) {
+            if (!$revision instanceof Revision) {
+                throw new InvalidArgumentException(
+                    "Invalid Revision passed in.  Unable to set array"
+                );
+            }
+
+            $this->revisions->set($revision->getRevisionId(), $revision);
+        }
     }
 
     /**
@@ -381,6 +392,86 @@ abstract class ContainerAbstract
         ksort($sorted, SORT_NUMERIC);
 
         $return = array_pop($sorted);
+
+        return $return;
+    }
+
+    /**
+     * Get a page revision by ID
+     *
+     * @param int $revisionId
+     *
+     * @return null|Revision
+     */
+    public function getRevisionById($revisionId)
+    {
+        /** @var \Rcm\Entity\Revision $revision */
+        foreach ($this->revisions as $revision) {
+            if ($revision->getRevisionId() == $revisionId) {
+                return $revision;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get array of draft revisions that have not been published
+     *
+     * @param integer $limit Number of drafts to get
+     *
+     * @return array
+     */
+    public function getDraftRevisionList($limit = 0)
+    {
+        $count = 0;
+
+        $return = array();
+
+        /** @var \Rcm\Entity\Revision $revision */
+        foreach ($this->revisions as $revision) {
+
+            if ($limit > 0 && $count >= $limit) {
+                break;
+            }
+
+            if (!$revision->wasPublished()) {
+                $return[] = $revision;
+                $count++;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Get array of published revisions that have not been published
+     *
+     * @param integer $limit Number of drafts to get
+     *
+     * @return array
+     */
+    public function getPublishedRevisionList($limit = 0)
+    {
+        $count = 0;
+
+        $return = array();
+
+        /** @var \Rcm\Entity\Revision $revision */
+        foreach ($this->revisions as $revision) {
+
+            if ($limit > 0 && $count >= $limit) {
+                break;
+            }
+
+            if ($revision->wasPublished()
+                && $revision != $this->currentRevision
+                && $revision != $this->stagedRevision
+            ) {
+                $return[] = $revision;
+                $count++;
+            }
+        }
 
         return $return;
     }
