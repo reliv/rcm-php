@@ -529,11 +529,14 @@ class PluginManager
      *
      * @return array
      */
-    protected function getInstanceConfigFromEntity(PluginInstance $pluginInstance)
-    {
+    protected function getInstanceConfigFromEntity(
+        PluginInstance $pluginInstance
+    ) {
         //Instance configs less than 0 are default instanc configs
         if ($pluginInstance->getInstanceId() < 0) {
-            return $this->getDefaultInstanceConfig($pluginInstance->getPlugin());
+            return $this->getDefaultInstanceConfig(
+                $pluginInstance->getPlugin()
+            );
         } else {
             $instanceConfig = $pluginInstance->getInstanceConfig();
 
@@ -564,8 +567,13 @@ class PluginManager
 
         $defaultInstanceConfig = array();
 
-        if (array_key_exists('defaultInstanceConfig', $pluginConfigs[$pluginName])) {
-            $defaultInstanceConfig =  $pluginConfigs[$pluginName]['defaultInstanceConfig'];
+        if (array_key_exists(
+            'defaultInstanceConfig',
+            $pluginConfigs[$pluginName]
+        )
+        ) {
+            $defaultInstanceConfig
+                = $pluginConfigs[$pluginName]['defaultInstanceConfig'];
         }
 
         return $defaultInstanceConfig;
@@ -613,5 +621,29 @@ class PluginManager
             }
         }
         return $default;
+    }
+
+    public function listAvailablePluginsByType()
+    {
+        $list = [];
+        foreach ($this->config['rcmPlugin'] as $name => $data) {
+            $displayName = $name;
+            $type = 'Misc';
+            $icon = '/images/GenericIcon.png';
+            if (isset($data['type'])) {
+                $type = $data['type'];
+            }
+            if (isset($data['display'])) {
+                $displayName = $data['display'];
+            }
+            if (isset($data['icon']) && !empty($data['icon'])) {
+                $icon = $data['icon'];
+            }
+            $list[$type][$name] = [
+                'displayName' => $displayName,
+                'icon' => $icon
+            ];
+        }
+        return $list;
     }
 }
