@@ -342,12 +342,9 @@ class SiteManager
     {
         if ($this->isValidSiteId($siteId)) {
             return $this->siteRepo->findOneBy(
-                array(
-                    'siteId' => $siteId
-                )
+                array('siteId' => $siteId)
             );
         }
-
         return null;
     }
 
@@ -362,4 +359,35 @@ class SiteManager
     {
         return $this->siteRepo->isValidSiteId($siteId);
     }
+
+    /**
+     * Gets list of siteWide plugins as an array
+     */
+    public function listAvailableSiteWidePlugins()
+    {
+        $list = [];
+        $site = $this->getSiteById($this->getCurrentSiteId());
+        foreach ($site->getSiteWidePlugins() as $plugin) {
+            $list[$plugin->getDisplayName()] = [
+                'displayName' => $plugin->getDisplayName(),
+                'icon' => '/images/GenericIcon.png',
+                'siteWide' => true
+            ];
+        }
+        return $list;
+    }
+
+    /**
+     * Getter for CurrentSiteId
+     *
+     * @param int $currentSiteId CurrentSiteId
+     *
+     * @return null
+     */
+    public function setCurrentSiteId($currentSiteId)
+    {
+        $this->currentSiteId = $currentSiteId;
+    }
+
+
 }

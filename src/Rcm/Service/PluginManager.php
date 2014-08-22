@@ -641,7 +641,8 @@ class PluginManager
             }
             $list[$type][$name] = [
                 'displayName' => $displayName,
-                'icon' => $icon
+                'icon' => $icon,
+                'siteWide' => false
             ];
         }
         return $list;
