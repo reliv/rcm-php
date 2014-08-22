@@ -73,11 +73,10 @@ class SiteManagerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $unit = new SiteManager($domainManager, $siteRepo, $cache, $request);
         $unit->setCurrentSiteId(1);
-        var_dump($unit->listAvailableSiteWidePlugins());
         $plugins = $unit->listAvailableSiteWidePlugins();
         $this->assertEquals(
             'bloomberg',
-            array_pop($plugins)['display']
+            array_pop($plugins)['displayName']
         );
     }
 } 
