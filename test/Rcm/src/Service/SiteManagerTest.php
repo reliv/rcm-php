@@ -35,6 +35,7 @@ use Zend\Http\PhpEnvironment\Request;
  * @license   License.txt New BSD License
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
+ * @covers    Rcm\Service\SiteManager
  */
 class SiteManagerTest extends \PHPUnit_Framework_TestCase
 {

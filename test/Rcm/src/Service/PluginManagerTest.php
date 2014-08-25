@@ -225,7 +225,7 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * Prep Mock Entity Data
      *
-     * @param bool $siteWide   set site wide
+     * @param bool $siteWide set site wide
      * @param int  $instanceId instance id
      *
      * @return \Rcm\Entity\PluginInstance
@@ -676,5 +676,17 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->pluginManager->deletePluginInstance(5000000);
         $this->assertEquals(3, $this->removeCounter);
+    }
+
+    /**
+     * @covers \Rcm\Service\PluginManager::listAvailablePluginsByType
+     */
+    public function testListAvailablePluginsByType()
+    {
+        $result = $this->pluginManager->listAvailablePluginsByType();
+        $this->assertEquals(
+            'Mock Object Display Name',
+            $result['Common']['RcmMockPlugin']['displayName']
+        );
     }
 }
