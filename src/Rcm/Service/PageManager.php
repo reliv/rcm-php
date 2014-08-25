@@ -108,7 +108,7 @@ class PageManager extends ContainerAbstract
      * @param integer $siteId   Site Id.  Will use current set siteId in not passed
      *                          in.
      *
-     * @return null|object
+     * @return null|\Rcm\Entity\Page
      * @throws \RuntimeException
      */
     public function getPageByName($name, $pageType = 'n', $siteId = null)
@@ -198,8 +198,9 @@ class PageManager extends ContainerAbstract
     /**
      * @param integer      $pageIdToCopy Id of page to copy
      * @param string       $newPageName  New Page name or URL.  Must not contain spaces.
-     * @param string       $newPageTitle New Page Title
      * @param string       $author       New Page Author
+     * @param string       $newPageTitle New Page Title
+     * @param integer|null $pageRevision Revision Id to use for copy.  Default is current revision
      * @param string       $newPageType  New Page type.  Defaults to "n"
      * @param integer|null $siteId       Site Id to copy page to
      *
@@ -208,8 +209,9 @@ class PageManager extends ContainerAbstract
     public function copyPage(
         $pageIdToCopy,
         $newPageName,
-        $newPageTitle,
         $author,
+        $newPageTitle = null,
+        $pageRevision = null,
         $newPageType = 'n',
         $siteId = null
     ) {
@@ -231,9 +233,10 @@ class PageManager extends ContainerAbstract
         $this->repository->copyPage(
             $pageIdToCopy,
             $newPageName,
-            $newPageTitle,
             $author,
             $site,
+            $newPageTitle,
+            $pageRevision,
             $newPageType
         );
     }

@@ -255,20 +255,24 @@ class Page extends EntityRepository implements ContainerInterface
      *
      * @param integer    $pageIdToCopy    Id of page to copy
      * @param string     $newPageName     Page Name or URL.
-     * @param string     $newPageTitle    Title of page
      * @param string     $author          Author of copied page
      * @param SiteEntity $siteDestination Site Entity to copy page to
+     * @param string     $newPageTitle    Title of page
+     * @param integer    $pageRevisionId  Page Revision ID to use for copy.  Defaults to currently published
      * @param string     $newPageType     Page type of page.  Defaults to "n"
      *
      * @throws \Rcm\Exception\InvalidArgumentException
      * @throws \Rcm\Exception\PageNotFoundException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function copyPage(
         $pageIdToCopy,
         $newPageName,
-        $newPageTitle,
         $author,
         SiteEntity $siteDestination,
+        $newPageTitle = null,
+        $pageRevisionId = null,
         $newPageType = 'n'
     ) {
         if (empty($pageIdToCopy) || !is_numeric($pageIdToCopy)) {
@@ -277,7 +281,7 @@ class Page extends EntityRepository implements ContainerInterface
             );
         }
 
-        if (empty($newPageName) || empty($newPageTitle) || empty($author)) {
+        if (empty($newPageName) || empty($author)) {
             throw new InvalidArgumentException(
                 'Missing needed information to create page copy.'
             );
@@ -292,12 +296,31 @@ class Page extends EntityRepository implements ContainerInterface
             );
         }
 
+        if (empty($newPageTitle)) {
+            $newPageTitle = $pageToCopy->getPageTitle();
+        }
+
         $clonedPage = clone $pageToCopy;
         $clonedPage->setName($newPageName);
         $clonedPage->setPageTitle($newPageTitle);
         $clonedPage->setAuthor($author);
         $clonedPage->setPageType($newPageType);
         $clonedPage->setSite($siteDestination);
+
+        if (!empty($pageRevisionId) && is_numeric($pageRevisionId)) {
+            $revisionToUse = $pageToCopy->getRevisionById($pageRevisionId);
+
+            if (empty($revisionToUse)) {
+                throw new PageNotFoundException(
+                    'Page revision not found.'
+                );
+            }
+
+            $clonedPage->setRevisions(array());
+            $clonedRevision = clone $revisionToUse;
+            $clonedPage->addRevision($clonedRevision);
+            $clonedPage->setPublishedRevision($clonedRevision);
+        }
 
         $siteDestination->addPage($clonedPage);
 
