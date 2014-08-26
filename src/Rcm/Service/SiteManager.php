@@ -362,6 +362,7 @@ class SiteManager
 
     /**
      * Gets list of siteWide plugins as an array
+     * @return array
      */
     public function listAvailableSiteWidePlugins()
     {

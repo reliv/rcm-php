@@ -623,6 +623,10 @@ class PluginManager
         return $default;
     }
 
+    /**
+     * Returns an array the represents the available plugins
+     * @return array
+     */
     public function listAvailablePluginsByType()
     {
         $list = [];
