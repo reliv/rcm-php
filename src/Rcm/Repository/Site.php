@@ -43,6 +43,8 @@ use Doctrine\ORM\Query;
  */
 class Site extends EntityRepository
 {
+    protected $activeSiteIdCache = [];
+
     /**
      * Get Site Info
      *
@@ -116,9 +118,16 @@ class Site extends EntityRepository
             $findBy['status'] = 'A';
         }
 
+        if ($checkActive && in_array($siteId, $this->activeSiteIdCache)) {
+            return true;
+        }
+
         $result = $this->findOneBy($findBy);
 
         if (!empty($result)) {
+            if ($checkActive) {
+                $this->activeSiteIdCache[] = $siteId;
+            }
             return true;
         }
 
