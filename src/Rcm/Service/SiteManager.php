@@ -389,6 +389,4 @@ class SiteManager
     {
         $this->currentSiteId = $currentSiteId;
     }
-
-
 }
