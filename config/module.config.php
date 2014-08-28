@@ -284,4 +284,11 @@ return array(
             => 'Rcm\Controller\Plugin\UrlToPage',
         ),
     ),
+    'asset_manager' => [
+        'resolver_configs' => [
+            'aliases' => [
+                'modules/rcm/' => __DIR__ . '/../public/',
+            ],
+        ],
+    ],
 );

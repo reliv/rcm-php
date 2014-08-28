@@ -371,7 +371,7 @@ class SiteManager
         foreach ($site->getSiteWidePlugins() as $plugin) {
             $list[$plugin->getDisplayName()] = [
                 'displayName' => $plugin->getDisplayName(),
-                'icon' => '/images/GenericIcon.png',
+                'icon' => '/modules/rcm/images/GenericIcon.png',
                 'siteWide' => true
             ];
         }
