@@ -140,7 +140,9 @@ class Container extends AbstractHelper
 
         $html .= ' id="' . $containerData['name'] . '">';
 
-        foreach ($containerData['revision']['pluginInstances'] as &$pluginInstance) {
+        foreach (
+            $containerData['revision']['pluginInstances'] as &$pluginInstance
+        ) {
 
             if ($isPageContainer
                 && $pluginInstance['layoutContainer'] != $pageContainerName
@@ -153,7 +155,7 @@ class Container extends AbstractHelper
             $this->getPluginHeadScript($pluginInstance);
         }
 
-        $html .= '</div>';
+        $html .= '<div style="clear:both;"></div></div>';
 
         return $html;
     }
