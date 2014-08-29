@@ -58,11 +58,13 @@ class Module
 
         $siteInfo = $serviceManager->get('Rcm\Service\SiteManager')
             ->getCurrentSiteInfo();
+        $locale = $siteInfo['language']['iso639_1'] . '_'
+            . $siteInfo['country']['iso2'];
         setlocale(
             LC_ALL,
-            $siteInfo['language']['iso639_1'] . '_'
-            . $siteInfo['country']['iso2']
+            $locale
         );
+        \Locale::setDefault($locale);
 
         //Add Domain Checker
         $routeListener = $serviceManager->get(
