@@ -127,7 +127,10 @@ class Revision
 
         $this->revisionId = null;
         $this->createdDate = new \DateTime();
-        $this->publishedDate = new \DateTime();
+
+        if (!empty($this->publishedDate)) {
+            $this->publishedDate = new \DateTime();
+        }
 
         /* Clone Plugins */
         $pluginWrappers = $this->pluginInstances;
@@ -278,7 +281,10 @@ class Revision
      */
     public function publishRevision()
     {
-        $this->setPublishedDate(new \DateTime());
+        if (empty($this->publishedDate)) {
+            $this->publishedDate = new \DateTime();
+        }
+
         $this->published = true;
     }
 

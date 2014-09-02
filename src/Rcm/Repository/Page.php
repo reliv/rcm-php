@@ -28,6 +28,7 @@ use Rcm\Entity\Revision;
 use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\PageNotFoundException;
+use Rcm\Exception\RuntimeException;
 
 /**
  * Page Repository
@@ -326,5 +327,54 @@ class Page extends EntityRepository implements ContainerInterface
 
         $this->_em->persist($clonedPage);
         $this->_em->flush($clonedPage);
+    }
+
+    /**
+     * Get a page entity containing a Revision Id.
+     *
+     * @param integer $revisionId Revistion Id to search for
+     *
+     * @return \Rcm\Entity\Page|null
+     */
+    public function getPageByRevisionId($revisionId)
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+
+        $queryBuilder->select('page')
+            ->from('\Rcm\Entity\Page', 'page')
+            ->where(':revisionId MEMBER OF page.revisions')
+            ->setParameter('revisionId', $revisionId);
+
+        return $queryBuilder->getQuery()->getSingleResult();
+    }
+
+    /**
+     * Get a page entity containing a Revision Id.
+     *
+     * @param integer $revisionId Revistion Id to search for
+     *
+     * @return Page
+     * @throws PageNotFoundException
+     * @throws RuntimeException
+     */
+    public function publishPageRevision($revisionId)
+    {
+        $page = $this->getPageByRevisionId($revisionId);
+
+        if (empty($page)) {
+            throw new PageNotFoundException('Unable to locate page by revision '.$revisionId);
+        }
+
+        $revision = $page->getRevisionById($revisionId);
+
+        if (empty($revision)) {
+            throw new RuntimeException('Revision not found.');
+        }
+
+        $page->setPublishedRevision($revision);
+
+        $this->_em->flush(array($revision, $page));
+
+        return $page;
     }
 }
