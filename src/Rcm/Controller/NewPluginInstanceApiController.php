@@ -56,8 +56,8 @@ class NewPluginInstanceApiController extends AbstractActionController
         $jsonModel->setVariables(
             array(
                 'display' => $viewData['html'],
-                'js' => $viewData['js'],
-                'css' => $viewData['css']
+                'js' => '', //$viewData['js'],
+                'css' => '', //$viewData['css']
             )
         );
         return $jsonModel;
