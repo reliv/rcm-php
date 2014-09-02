@@ -625,6 +625,7 @@ class PluginManager
 
     /**
      * Returns an array the represents the available plugins
+     *
      * @return array
      */
     public function listAvailablePluginsByType()
@@ -644,6 +645,7 @@ class PluginManager
                 $icon = $data['icon'];
             }
             $list[$type][$name] = [
+                'name' => $name,
                 'displayName' => $displayName,
                 'icon' => $icon,
                 'siteWide' => false

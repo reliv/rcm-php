@@ -18,7 +18,6 @@ namespace Rcm\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 
-
 /**
  * PluginRenderApiController
  *
@@ -56,10 +55,11 @@ class NewPluginInstanceApiController extends AbstractActionController
         $jsonModel->setVariables(
             array(
                 'display' => $viewData['html'],
+                //These were for edit js and edit css but that was removed
                 'js' => '', //$viewData['js'],
                 'css' => '', //$viewData['css']
             )
         );
         return $jsonModel;
     }
-} 
+}
