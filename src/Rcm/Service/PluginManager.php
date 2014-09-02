@@ -633,7 +633,7 @@ class PluginManager
         foreach ($this->config['rcmPlugin'] as $name => $data) {
             $displayName = $name;
             $type = 'Misc';
-            $icon = '/images/GenericIcon.png';
+            $icon = '/modules/rcm/images/GenericIcon.png';
             if (isset($data['type'])) {
                 $type = $data['type'];
             }
