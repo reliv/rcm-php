@@ -58,8 +58,9 @@ class UrlToPage extends AbstractPlugin
      * @param integer|null $pageRevision  Revision for link
      *
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function url($pageName, $pageType='n', $pageRevision=null)
+    public function url($pageName, $pageType = 'n', $pageRevision = null)
     {
         /** @var \Zend\Mvc\Controller\AbstractActionController $controller */
         $controller = $this->getController();

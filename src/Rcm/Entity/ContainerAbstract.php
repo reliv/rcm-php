@@ -35,6 +35,7 @@ use Rcm\Exception\InvalidArgumentException;
  * @license   License.txt New BSD License
  * @version   Release: 1.0
  * @link      http://github.com/reliv
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 abstract class ContainerAbstract
 {
