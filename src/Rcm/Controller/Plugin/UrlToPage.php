@@ -53,22 +53,41 @@ class UrlToPage extends AbstractPlugin
     /**
      * Redirect to same page with no version numbers
      *
-     * @param string $pageName Page Name
-     * @param string $pageType Page Type
+     * @param string       $pageName Page Name
+     * @param string       $pageType Page Type
+     * @param integer|null $pageRevision  Revision for link
      *
-     * @return \Zend\Http\Response
+     * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function url($pageName, $pageType)
+    public function url($pageName, $pageType = 'n', $pageRevision = null)
     {
         /** @var \Zend\Mvc\Controller\AbstractActionController $controller */
         $controller = $this->getController();
 
-        if ($pageType == 'n' && $pageName == 'index') {
+        if ($pageType == 'n' && $pageName == 'index' && empty($pageRevision)) {
             return '/';
-        } elseif ($pageType == 'n') {
+        } elseif ($pageType == 'n' && empty($pageRevision)) {
             return $controller->url()->fromRoute(
                 'contentManager',
                 array('page' => $pageName)
+            );
+        } elseif ($pageType == 'n' && !empty($pageRevision)) {
+            return $controller->url()->fromRoute(
+                'contentManager',
+                array(
+                    'revision' => $pageRevision,
+                    'page' => $pageName,
+                )
+            );
+        } elseif ($pageType != 'n' && !empty($pageRevision)) {
+            return $controller->url()->fromRoute(
+                'contentManagerWithPageType',
+                array(
+                    'revision' => $pageRevision,
+                    'pageType' => $pageType,
+                    'page' => $pageName,
+                )
             );
         } else {
             return $controller->url()->fromRoute(

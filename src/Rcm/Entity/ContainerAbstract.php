@@ -35,6 +35,7 @@ use Rcm\Exception\InvalidArgumentException;
  * @license   License.txt New BSD License
  * @version   Release: 1.0
  * @link      http://github.com/reliv
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 abstract class ContainerAbstract
 {
@@ -217,6 +218,12 @@ abstract class ContainerAbstract
      */
     public function setPublishedRevision(Revision $revision)
     {
+        if (!empty($this->stagedRevision)
+            && $this->stagedRevision->getRevisionId() == $revision->getRevisionId()
+        ) {
+            $this->stagedRevision = null;
+        }
+
         $revision->publishRevision();
         $this->currentRevision = $revision;
     }
@@ -251,7 +258,6 @@ abstract class ContainerAbstract
     public function removeCurrentRevision()
     {
         $this->setStagedRevision($this->currentRevision);
-        $this->currentRevision = null;
     }
 
     /**
@@ -273,6 +279,12 @@ abstract class ContainerAbstract
      */
     public function setStagedRevision(Revision $revision)
     {
+        if (!empty($this->currentRevision)
+            && $this->currentRevision->getRevisionId() == $revision->getRevisionId()
+        ) {
+            $this->currentRevision = null;
+        }
+
         $this->stagedRevision = $revision;
     }
 
@@ -429,7 +441,7 @@ abstract class ContainerAbstract
         $return = array();
 
         /** @var \Rcm\Entity\Revision $revision */
-        foreach ($this->revisions as $revision) {
+        foreach (array_reverse($this->revisions->toArray()) as $revision) {
 
             if ($limit > 0 && $count >= $limit) {
                 break;
@@ -458,7 +470,7 @@ abstract class ContainerAbstract
         $return = array();
 
         /** @var \Rcm\Entity\Revision $revision */
-        foreach ($this->revisions as $revision) {
+        foreach (array_reverse($this->revisions->toArray()) as $revision) {
 
             if ($limit > 0 && $count >= $limit) {
                 break;

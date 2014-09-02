@@ -140,10 +140,7 @@ class Container extends AbstractHelper
 
         $html .= ' id="' . $containerData['name'] . '">';
 
-        foreach (
-            $containerData['revision']['pluginInstances'] as &$pluginInstance
-        ) {
-
+        foreach ($containerData['revision']['pluginInstances'] as &$pluginInstance) {
             if ($isPageContainer
                 && $pluginInstance['layoutContainer'] != $pageContainerName
             ) {
