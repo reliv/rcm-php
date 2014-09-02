@@ -18,7 +18,6 @@ namespace Rcm\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 
-
 /**
  * PluginRenderApiController
  *
@@ -63,4 +62,4 @@ class NewPluginInstanceApiController extends AbstractActionController
         );
         return $jsonModel;
     }
-} 
+}
