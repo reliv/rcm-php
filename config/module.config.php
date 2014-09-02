@@ -91,13 +91,12 @@ return array(
             'ViewJsonStrategy',
         ),
     ),
-
     'router' => array(
         'routes' => array(
             'api-admin-instance-configs' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/api/admin/instance-configs[/:id]',
+                    'route' => '/api/admin/instance-configs/:pluginName/:id',
                     'defaults' => array(
                         'controller' => 'Rcm\Controller\InstanceConfigApiController',
                     )
@@ -111,6 +110,16 @@ return array(
                         'controller' => 'Rcm\Controller\IndexController',
                         'action' => 'index',
                     )
+                ),
+            ),
+            'contentManagerNewInstanceAjax' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/rcm-admin-get-instance[/:type[/:instanceId]]',
+                    'defaults' => array(
+                        'controller' => 'Rcm\Controller\NewPluginInstanceApiController',
+                        'action' => 'getNewInstance',
+                    ),
                 ),
             ),
             'contentManagerWithPageType' => array(
@@ -136,7 +145,6 @@ return array(
                     )
                 ),
             ),
-
             'rcm-page-search' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -257,7 +265,9 @@ return array(
             'Rcm\Controller\InstanceConfigApiController'
             => 'Rcm\Controller\InstanceConfigApiController',
             'Rcm\Controller\PageSearchApiController'
-            => 'Rcm\Controller\PageSearchApiController'
+            => 'Rcm\Controller\PageSearchApiController',
+            'Rcm\Controller\NewPluginInstanceApiController'
+            => 'Rcm\Controller\NewPluginInstanceApiController'
         ),
         'factories' => array(
             'Rcm\Controller\IndexController'

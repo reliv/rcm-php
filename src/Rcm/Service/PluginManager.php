@@ -256,15 +256,15 @@ class PluginManager
             'pluginInstanceId' => $pluginInstanceId,
         );
 
-        if (isset($this->config['rcmPlugin'][$pluginName]['editJs'])) {
-            $return['editJs']
-                = $this->config['rcmPlugin'][$pluginName]['editJs'];
-        }
-
-        if (isset($this->config['rcmPlugin'][$pluginName]['editCss'])) {
-            $return['editCss']
-                = $this->config['rcmPlugin'][$pluginName]['editCss'];
-        }
+//        if (isset($this->config['rcmPlugin'][$pluginName]['editJs'])) {
+//            $return['editJs']
+//                = $this->config['rcmPlugin'][$pluginName]['editJs'];
+//        }
+//
+//        if (isset($this->config['rcmPlugin'][$pluginName]['editCss'])) {
+//            $return['editCss']
+//                = $this->config['rcmPlugin'][$pluginName]['editCss'];
+//        }
 
         if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
             $return['displayName']
