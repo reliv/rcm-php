@@ -370,9 +370,11 @@ class SiteManager
         $site = $this->getSiteById($this->getCurrentSiteId());
         foreach ($site->getSiteWidePlugins() as $plugin) {
             $list[$plugin->getDisplayName()] = [
-                'displayName' => $plugin->getDisplayName(),
+                'name' => $plugin->getPlugin(),
                 'icon' => '/modules/rcm/images/GenericIcon.png',
-                'siteWide' => true
+                'siteWide' => true,
+                'displayName' => $plugin->getDisplayName(),
+                'instanceId' => $plugin->getInstanceId()
             ];
         }
         return $list;
