@@ -56,6 +56,7 @@ class NewPluginInstanceApiController extends AbstractActionController
         $jsonModel->setVariables(
             array(
                 'display' => $viewData['html'],
+                //These were for edit js and edit css but that was removed
                 'js' => '', //$viewData['js'],
                 'css' => '', //$viewData['css']
             )
