@@ -96,7 +96,7 @@ return array(
             'api-admin-instance-configs' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/api/admin/instance-configs/:pluginName/:id',
+                    'route' => '/api/admin/instance-configs/:pluginType/:id',
                     'defaults' => array(
                         'controller' => 'Rcm\Controller\InstanceConfigApiController',
                     )
@@ -115,7 +115,7 @@ return array(
             'contentManagerNewInstanceAjax' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/rcm-admin-get-instance[/:type[/:instanceId]]',
+                    'route' => '/rcm-admin-get-instance/:pluginType/:instanceId',
                     'defaults' => array(
                         'controller' => 'Rcm\Controller\NewPluginInstanceApiController',
                         'action' => 'getNewInstance',

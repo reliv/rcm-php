@@ -48,16 +48,23 @@ class InstanceConfigApiController extends AbstractRestfulController
             $this->getResponse()->setStatusCode(401);
             return $this->getResponse();
         }
-        try {
-            $pluginMgr = $this->getServiceLocator()
-                ->get('Rcm\Service\PluginManager');
-            $plugin = $pluginMgr->getPluginByInstanceId($instanceId);
-            $instanceConfig = $pluginMgr->getInstanceConfig($instanceId);
-            $defaultInstanceCfg = $pluginMgr->getDefaultInstanceConfig(
-                $plugin['pluginName']
-            );
-        } catch (PluginInstanceNotFoundException $e) {
+
+        $routeMatch = $this->getEvent()->getRouteMatch();
+        $pluginType = $routeMatch->getParam('pluginType');
+        $pluginMgr = $this->getServiceLocator()
+            ->get('Rcm\Service\PluginManager');
+        $defaultInstanceCfg = $pluginMgr->getDefaultInstanceConfig($pluginType);
+        if (empty($defaultInstanceCfg)) {
             return $this->notFoundAction();
+        }
+        if ($instanceId > 0) {
+            try {
+                $instanceConfig = $pluginMgr->getInstanceConfig($instanceId);
+            } catch (PluginInstanceNotFoundException $e) {
+                return $this->notFoundAction();
+            }
+        } else {
+            $instanceConfig = $defaultInstanceCfg;
         }
         return new JsonModel(
             [
