@@ -15,8 +15,10 @@
 
 namespace Rcm\Controller;
 
+use Rcm\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
+use Zend\View\Helper\HeadLink;
+use Zend\View\Helper\HeadScript;
 
 /**
  * PluginRenderApiController
@@ -51,15 +53,20 @@ class NewPluginInstanceApiController extends AbstractActionController
             $instanceId,
             $instanceConfig
         );
-        $jsonModel = new JsonModel();
-        $jsonModel->setVariables(
-            array(
-                'display' => $viewData['html'],
-                //These were for edit js and edit css but that was removed
-                'js' => '', //$viewData['js'],
-                'css' => '', //$viewData['css']
-            )
-        );
-        return $jsonModel;
+        $html = $viewData['html'];
+        $headLink = new HeadLink();
+        foreach ($viewData['css'] as $css) {
+            $cssInfo = unserialize($css);
+            $headLink->append($cssInfo);
+        }
+        $headScript = new HeadScript();
+        foreach ($viewData['js'] as $js) {
+            $jsInfo = unserialize($js);
+            $headScript->append($jsInfo);
+        }
+        $html = $headLink->toString() . $headScript->toString() . $html;
+        $response = new Response();
+        $response->setContent($html);
+        return $response;
     }
 }
