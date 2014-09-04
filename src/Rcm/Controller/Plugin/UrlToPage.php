@@ -40,14 +40,15 @@ class UrlToPage extends AbstractPlugin
     /**
      * Redirect to a page
      *
-     * @param string $pageName Page Name
-     * @param string $pageType Page Type
+     * @param string $pageName     Page Name
+     * @param string $pageType     Page Type
+     * @param string $pageRevision Page Revision
      *
      * @return \Zend\Http\Response
      */
-    public function __invoke($pageName, $pageType = 'n')
+    public function __invoke($pageName, $pageType = 'n', $pageRevision = null)
     {
-        return $this->url($pageName, $pageType);
+        return $this->url($pageName, $pageType, $pageRevision);
     }
 
     /**
