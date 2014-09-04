@@ -157,14 +157,20 @@ class IndexController extends AbstractActionController
 
         $this->pageInfo = $pageInfo;
 
-        if (!empty($pageInfo['siteLayoutOverride'])) {
-            $layoutView = $this->layout();
+        /** @var ViewModel $layoutView */
+        $layoutView = $this->layout();
 
+        if (!empty($pageInfo['siteLayoutOverride'])) {
             $layoutTemplatePath = $this->layoutManager->getSiteLayout(
                 $pageInfo['siteLayoutOverride']
             );
 
             $layoutView->setTemplate('layout/' . $layoutTemplatePath);
+        }
+
+        if ($pageInfo['currentRevisionId'] != $pageInfo['revision']['revisionId']) {
+            $layoutView->setVariable('rcmDraft', true);
+            $layoutView->setVariable('pageInfo', $pageInfo);
         }
 
         $viewModel = new ViewModel(array('pageInfo' => $pageInfo));
