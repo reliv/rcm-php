@@ -36,7 +36,7 @@ class NewPluginInstanceApiController extends AbstractActionController
     public function getNewInstanceAction()
     {
         $routeMatch = $this->getEvent()->getRouteMatch();
-        $pluginType = $routeMatch->getParam('type');
+        $pluginType = $routeMatch->getParam('pluginType');
         $instanceId = $routeMatch->getParam('instanceId');
         $pluginManager = $this->getServiceLocator()
             ->get('Rcm\Service\PluginManager');
