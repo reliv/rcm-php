@@ -250,6 +250,10 @@ class IndexController extends AbstractActionController
 
         $page = $this->pageManager->getPageByName($this->pageName, $this->pageType);
 
+        if (empty($page)) {
+            return array();
+        }
+
         $revisions = array(
             'Live' => $page->getCurrentRevision(),
             'Staged' => $page->getStagedRevision(),
