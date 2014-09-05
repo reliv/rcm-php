@@ -49,6 +49,8 @@ class PageManager extends ContainerAbstract
 
     protected $layoutValidator;
 
+    protected $pages;
+
     /**
      * Constructor
      *
@@ -121,13 +123,20 @@ class PageManager extends ContainerAbstract
             throw new \RuntimeException('Invalid Site ID');
         }
 
-        return $this->repository->findOneBy(
+        if (!empty($this->pages[$name])) {
+            return $this->pages[$name];
+        }
+
+        $page = $this->repository->findOneBy(
             array(
                 'name' => $name,
                 'pageType' => $pageType,
                 'site' => $siteId
             )
         );
+
+        $this->pages[$name] = $page;
+        return $page;
     }
 
     /**
