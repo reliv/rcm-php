@@ -248,7 +248,7 @@ class IndexController extends AbstractActionController
             return array();
         }
 
-        $page = $this->pageManager->getPageByName($this->pageName, $this->pageType);
+        $page = $this->pageManager->getPageRevisionList($this->pageName, $this->pageType);
 
         if (empty($page)) {
             return array();

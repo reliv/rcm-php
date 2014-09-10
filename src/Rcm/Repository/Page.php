@@ -377,4 +377,60 @@ class Page extends EntityRepository implements ContainerInterface
 
         return $page;
     }
+
+    public function getPageRevisionList($siteId, $pageName, $pageType)
+    {
+        $publishedQueryBuilder = $this->_em->createQueryBuilder();
+
+        $publishedQueryBuilder->select('publishedRevision, page.pageId')
+            ->from('\Rcm\Entity\Revision', 'publishedRevision')
+            ->join('\Rcm\Entity\Page', 'page', 'WITH', 'page.currentRevision = publishedRevision')
+            ->where('page.currentRevision = publishedRevision')
+            ->andWhere('page.site = :siteId')
+            ->andWhere('page.name = :pageName')
+            ->andWhere('page.pageType = :pageType')
+            ->setParameter('siteId', $siteId)
+            ->setParameter('pageName', $pageName)
+            ->setParameter('pageType', $pageType);
+
+        $stagedQueryBuilder = $this->_em->createQueryBuilder();
+        $stagedQueryBuilder->select('stagedRevision, page.pageId')
+            ->from('\Rcm\Entity\Revision', 'stagedRevision')
+            ->join('\Rcm\Entity\Page', 'page', 'WITH', 'page.stagedRevision = stagedRevision')
+            ->where('page.currentRevision = stagedRevision')
+            ->andWhere('page.site = :siteId')
+            ->andWhere('page.name = :pageName')
+            ->andWhere('page.pageType = :pageType')
+            ->setParameter('siteId', $siteId)
+            ->setParameter('pageName', $pageName)
+            ->setParameter('pageType', $pageType);
+
+        $lastDraft = $this->_em->createQueryBuilder();
+        $lastDraft->select('partial page.{pageId}, revisions')
+            ->from('\Rcm\Entity\Page', 'page')
+            ->join('page.revisions', 'revisions')
+            ->where('page.site = :siteId')
+            ->andWhere('page.name = :pageName')
+            ->andWhere('page.pageType = :pageType')
+            ->andWhere('revisions.published != true')
+            ->orderBy('revisions.revisionId', 'DESC')
+            ->setParameter('siteId', $siteId)
+            ->setParameter('pageName', $pageName)
+            ->setParameter('pageType', $pageType);
+
+        $result = $lastDraft->getQuery()->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        print_r($result);
+        exit;
+
+
+//        $queryBuilder->select('
+//            currentRevision
+//            stagedRevision,
+//            lastDraft
+//        ')
+//            ->from('\Rcm\Entity\Page', 'page')
+//            ->join('page.revisions', 'revisions')
+//            ->where($queryBuilder->expr()->'revisions.revisionId')
+    }
 }

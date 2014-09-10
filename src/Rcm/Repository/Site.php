@@ -110,19 +110,22 @@ class Site extends EntityRepository
             return false;
         }
 
-        $findBy = array(
-            'siteId' => $siteId,
-        );
-
-        if ($checkActive) {
-            $findBy['status'] = 'A';
-        }
-
         if ($checkActive && in_array($siteId, $this->activeSiteIdCache)) {
             return true;
         }
 
-        $result = $this->findOneBy($findBy);
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('site.siteId')
+            ->from('\Rcm\Entity\Site', 'site')
+            ->where('site.siteId = :siteId')
+            ->setParameter('siteId', $siteId);
+
+        if ($checkActive) {
+            $queryBuilder->andWhere('site.status = :status');
+            $queryBuilder->setParameter('status', 'A');
+        }
+
+        $result = $queryBuilder->getQuery()->getScalarResult();
 
         if (!empty($result)) {
             if ($checkActive) {
@@ -132,5 +135,22 @@ class Site extends EntityRepository
         }
 
         return false;
+    }
+
+    public function getSiteWidePluginsList($siteId) {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('partial site.{siteId}, plugins')
+            ->from('\Rcm\Entity\Site', 'site')
+            ->join('site.sitePlugins', 'plugins')
+            ->where('site.siteId = :siteId')
+            ->setParameter('siteId', $siteId);
+
+        $result = $queryBuilder->getQuery()->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        if (empty($result) || empty($result['sitePlugins'])) {
+            return array();
+        }
+
+        return $result['sitePlugins'];
     }
 }

@@ -44,11 +44,35 @@ use Doctrine\ORM\Query\Expr\Join;
 class Domain extends EntityRepository
 {
     /**
-     * Get the current list of domains and store these in cache for future look ups.
+     * Get the current list of domains.
      *
      * @return array
      */
     public function getActiveDomainList()
+    {
+        return $this->getDomainLookupQuery()->getArrayResult();
+    }
+
+    /**
+     * Get the info for a single domain
+     *
+     * @param string $domain Domain name to search by
+     *
+     * @return array
+     */
+    public function getDomainInfo($domain)
+    {
+        return $this->getDomainLookupQuery($domain)->getSingleResult();
+    }
+
+    /**
+     * Get Doctrine Query Object for Domain Lookups
+     *
+     * @param null $domain
+     *
+     * @return Query
+     */
+    private function getDomainLookupQuery($domain=null)
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -73,6 +97,11 @@ class Domain extends EntityRepository
             ->where('site.status = :status')
             ->setParameter('status', 'A');
 
-        return $queryBuilder->getQuery()->getArrayResult();
+        if (!empty($domain)) {
+            $queryBuilder->andWhere('domain.domain = :domain')
+                ->setParameter('domain', $domain);
+        }
+
+        return $queryBuilder->getQuery();
     }
 }

@@ -39,6 +39,8 @@ use Zend\Http\PhpEnvironment\Request;
  */
 class SiteManagerTest extends \PHPUnit_Framework_TestCase
 {
+
+
     public function testListAvailableSiteWidePlugins()
     {
         $domainManager = $this->getMockBuilder('Rcm\Service\DomainManager')
