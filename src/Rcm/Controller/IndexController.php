@@ -255,9 +255,9 @@ class IndexController extends AbstractActionController
         }
 
         $revisions = array(
-            'Live' => $page->getCurrentRevision(),
-            'Staged' => $page->getStagedRevision(),
-            'Draft' => $page->getLastSavedDraftRevision(),
+            'Live' => $page['currentRevision'],
+            'Staged' => $page['stagedRevision'],
+            'Draft' => $page['lastDraft'],
         );
 
         $return = array();
@@ -273,15 +273,17 @@ class IndexController extends AbstractActionController
                 'href' => $this->urlToPage(
                     $this->pageName,
                     $this->pageType,
-                    $revision->getRevisionId()
+                    $revision['revisionId']
                 ),
 
-                'author' => $revision->getAuthor(),
-                'date' => $revision->getCreatedDate(),
+                'author' => $revision['author'],
+                'date' => $revision['createdDate'],
                 'selected' => false,
             );
 
-            if ($this->pageRevisionId == $revision->getRevisionId()) {
+            if (($this->pageRevisionId == $revision['revisionId'])
+                || (empty($this->pageRevisionId) && $key == 'Live')
+            ) {
                 $return[$key]['selected'] = true;
                 $selected = $key;
             }
