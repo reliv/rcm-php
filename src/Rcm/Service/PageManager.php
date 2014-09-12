@@ -241,8 +241,6 @@ class PageManager extends ContainerAbstract
         );
     }
 
-
-
     /**
      * @param integer      $pageRevision    Id of page to copy
      *
