@@ -395,18 +395,14 @@ class SiteManager
         $pageName,
         $pageRevision,
         $pageType='n',
-        $saveData,
-        $siteId = null
+        $saveData
     ) {
-        if (!$siteId) {
-            $siteId = $this->getCurrentSiteId();
-        }
-
-        if (!$this->isValidSiteId($siteId)) {
-            throw new \RuntimeException('Invalid Site ID');
-        }
+        $siteId = $this->getCurrentSiteId();
 
         $this->prepSaveData($saveData);
+
+        print_r($saveData);
+        exit;
 
         return $saveData;
 
