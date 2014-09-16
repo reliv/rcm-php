@@ -153,4 +153,9 @@ class Site extends EntityRepository
 
         return $result['sitePlugins'];
     }
+
+    public function getDoctrine()
+    {
+        return $this->_em;
+    }
 }

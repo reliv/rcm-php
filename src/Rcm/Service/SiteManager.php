@@ -20,9 +20,15 @@
 namespace Rcm\Service;
 
 use Doctrine\ORM\EntityRepository;
+use Rcm\Entity\ContainerAbstract;
+use Rcm\Entity\ContainerInterface;
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
+use Rcm\Entity\PluginWrapper;
+use Rcm\Entity\Revision;
+use Rcm\Entity\Site;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Exception\RuntimeException;
 use Rcm\Exception\SiteNotFoundException;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -238,7 +244,7 @@ class SiteManager
         return $siteInfo['theme'];
     }
 
-   /**
+    /**
      * Get the Sites default Zend Framework Layout template.
      *
      * @return string
@@ -395,21 +401,149 @@ class SiteManager
         $pageName,
         $pageRevision,
         $pageType='n',
-        $saveData
+        $saveData,
+        $author
     ) {
-        $siteId = $this->getCurrentSiteId();
+        /** @var \Rcm\Entity\Site $siteEntity */
+        $siteEntity = $this->siteRepo->findOneBy(array('siteId' => $this->currentSiteId));
+
+        if (empty($siteEntity)) {
+            throw new SiteNotFoundException('Unable to locate site.');
+        }
 
         $this->prepSaveData($saveData);
 
-        print_r($saveData);
-        exit;
+        foreach($saveData['containers'] as $containerName => $containerData) {
+            /** @var \Rcm\Entity\Container $container */
+            $container = $siteEntity->getContainer($containerName);
 
-        return $saveData;
+            $this->saveContainer($container, $containerData, $author);
+        }
 
+        $page = $siteEntity->getPage($pageName, $pageType);
+        return $this->saveContainer($page, $saveData['pageContainer'], $author, $pageRevision);
+    }
+
+    protected function saveContainer(
+        ContainerInterface $container,
+        $containerData,
+        $author,
+        $revisionNumber=null
+    ) {
+
+        $revision = null;
+        $publishRevision = false;
+
+        if (empty($container)) {
+            throw new RuntimeException('Invalid container');
+        }
+
+        if (empty($revisionNumber)) {
+            $revision = $container->getCurrentRevision();
+            $publishRevision = true;
+        } else {
+            $revision = $container->getRevisionById($revisionNumber);
+        }
+
+        if (empty($revision)) {
+            throw new RuntimeException('Unable to locate revision.');
+        }
+
+        $md5 = md5(serialize($containerData));
+
+        if (empty($revision) || $revision->getMd5() == $md5) {
+            return null;
+        }
+
+        $newRevision = new Revision();
+        $newRevision->setAuthor($author);
+        $newRevision->setMd5($md5);
+
+        $isDirty = false;
+
+        foreach($containerData as $pluginData) {
+            /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
+            $pluginWrapper = $revision->getPluginWrapper($pluginData['instanceId']);
+            $newPluginWrapper = $this->savePluginWrapper($pluginData, $pluginWrapper);
+            $newRevision->addPluginWrapper($newPluginWrapper);
+
+            if (!empty($pluginWrapper)
+                && $pluginWrapper->getPluginWrapperId() == $newPluginWrapper->getPluginWrapperId()
+                && ($pluginWrapper->getInstance()->getInstanceId() == $newPluginWrapper->getInstance()->getInstanceId()
+                    || $pluginWrapper->getInstance()->isSiteWide())
+            ) {
+                continue;
+            }
+
+            $isDirty = true;
+        }
+
+        if ($isDirty) {
+            $this->siteRepo->getDoctrine()->persist($newRevision);
+            $container->addRevision($newRevision);
+
+            if ($publishRevision) {
+                $newRevision->publishRevision();
+                $container->setCurrentRevision($newRevision);
+            }
+
+            $this->siteRepo->getDoctrine()->flush();
+            return $newRevision->getRevisionId();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param                    $pluginData
+     * @param null|PluginWrapper $oldWrapper
+     *
+     * @returns PluginWrapper
+     *
+     * @throws \Rcm\Exception\RuntimeException
+     */
+
+    protected function savePluginWrapper($pluginData, $oldWrapper=null)
+    {
+        if (!empty($oldWrapper) && !is_a($oldWrapper, '\Rcm\Entity\PluginWrapper')) {
+            throw new RuntimeException('Wrapper passed in is not a valid plugin wrapper.');
+        }
+
+        $pluginInstance = $this->pluginManager->savePlugin(
+            $pluginData['instanceId'],
+            $pluginData['name'],
+            $pluginData['saveData'],
+            $pluginData['isSitewide'],
+            $pluginData['sitewideName']
+        );
+
+        if (!empty($oldWrapper)
+            && $oldWrapper->getRenderOrderNumber() == $pluginData['rank']
+            && $oldWrapper->getDivFloat() == $pluginData['float']
+            && $oldWrapper->getHeight() == $pluginData['height']
+            && $oldWrapper->getWidth() == $pluginData['width']
+            && $oldWrapper->getLayoutContainer() == $pluginData['containerName']
+            && ($oldWrapper->getInstance()->getInstanceId() == $pluginInstance->getInstanceId()
+                || $pluginInstance->isSiteWide())
+        ) {
+            return $oldWrapper;
+        }
+
+        $pluginWrapper = new PluginWrapper();
+        $pluginWrapper->setDivFloat($pluginData['float']);
+        $pluginWrapper->setHeight($pluginData['height']);
+        $pluginWrapper->setWidth($pluginData['width']);
+        $pluginWrapper->setLayoutContainer($pluginData['containerName']);
+        $pluginWrapper->setInstance($pluginInstance);
+        $pluginWrapper->setRenderOrderNumber($pluginData['rank']);
+
+        $this->siteRepo->getDoctrine()->persist($pluginWrapper);
+        return $pluginWrapper;
     }
 
     protected function prepSaveData(&$data)
     {
+        ksort($data);
         $data['containers'] = array();
         $data['pageContainer'] = array();
 
@@ -417,11 +551,34 @@ class SiteManager
         {
             $this->cleanSaveData($plugin['saveData']);
 
+            /*
+             * Set some default data to keep notices from being thrown.
+             */
+            if (empty($plugin['height'])) {
+                $plugin['height'] = 0;
+            }
+
+            if (empty($plugin['width'])) {
+                $plugin['width'] = 0;
+            }
+
+            if (empty($plugin['float'])) {
+                $plugin['float'] = 'left';
+            }
+
+            $plugin['rank'] = (int) $plugin['rank'];
+            $plugin['height'] = (int) $plugin['height'];
+            $plugin['width'] = (int) $plugin['width'];
+
+            $plugin['containerName'] = $plugin['containerId'];
+
             if ($plugin['containerType'] == 'layout') {
                 $data['containers'][$plugin['containerId']][] = &$plugin;
             } else {
-                $data['pageContainer'][$plugin['containerId']][] = &$plugin;
+                $data['pageContainer'][] = &$plugin;
             }
+
+            ksort($plugin['saveData']);
         }
     }
 

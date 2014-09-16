@@ -37,7 +37,7 @@ use Rcm\Exception\InvalidArgumentException;
  * @link      http://github.com/reliv
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-abstract class ContainerAbstract
+abstract class ContainerAbstract implements ContainerInterface
 {
     /**
      * @var string Container name

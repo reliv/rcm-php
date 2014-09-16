@@ -111,12 +111,15 @@ class Revision
      **/
     protected $pluginInstances;
 
+    public $isDirty = false;
+
     /**
      * Constructor for Page Revision Entity.
      */
     public function __construct()
     {
         $this->pluginInstances = new ArrayCollection();
+        $this->createdDate = new \DateTime();
     }
 
     public function __clone()
@@ -248,6 +251,29 @@ class Revision
     public function getPluginWrappers()
     {
         return $this->pluginInstances;
+    }
+
+    /**
+     * Get Plugin Instance Wrapper by Instance Id
+     *
+     * @param integer $instanceId
+     *
+     * @return ArrayCollection
+     */
+    public function getPluginWrapper($instanceId)
+    {
+        if (empty($this->pluginInstances)) {
+            return null;
+        }
+
+        /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
+        foreach ($this->pluginInstances as $pluginWrapper) {
+            if ($pluginWrapper->getInstance()->getInstanceId() == $instanceId) {
+                return $pluginWrapper;
+            }
+        }
+
+        return null;
     }
 
     /**
