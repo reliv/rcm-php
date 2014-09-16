@@ -20,12 +20,18 @@
 namespace Rcm\Service;
 
 use Doctrine\ORM\EntityRepository;
+use Rcm\Entity\ContainerAbstract;
+use Rcm\Entity\ContainerInterface;
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
+use Rcm\Entity\PluginWrapper;
+use Rcm\Entity\Revision;
+use Rcm\Entity\Site;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Exception\RuntimeException;
 use Rcm\Exception\SiteNotFoundException;
 use Zend\Cache\Storage\StorageInterface;
-use Zend\Http\PhpEnvironment\Request as PhpEnvironmentRequest;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\RequestInterface;
 
 /**
@@ -49,17 +55,9 @@ use Zend\Stdlib\RequestInterface;
  */
 class SiteManager
 {
-    /** @var \Rcm\Service\DomainManager */
-    protected $domainManager;
-
-    /** @var \Rcm\Repository\Site */
-    protected $siteRepo;
-
-    /** @var \Zend\Cache\Storage\StorageInterface */
-    protected $cache;
-
-    /** @var \Zend\Http\PhpEnvironment\Request */
-    protected $request;
+    /*
+     * Properties
+     */
 
     /** @var integer */
     protected $currentSiteId;
@@ -73,145 +71,47 @@ class SiteManager
     /** @var Language|array */
     protected $currentSiteLanguage;
 
+    protected $domain;
+
+    /*
+     * Required Services
+     */
+
+    /** @var \Rcm\Repository\Site */
+    protected $siteRepo;
+
+    /*
+     * Additional Services
+     */
+
+    /** @var \Rcm\Service\PageManager */
+    protected $pageManager;
+
+    /** @var \Rcm\Service\ContainerManager */
+    protected $containerManager;
+
+    /** @var \Rcm\Service\DomainManager */
+    protected $domainManager;
+
+    /** @var \Rcm\Service\LayoutManager */
+    protected $layoutManager;
+
+    /** @var \Rcm\Service\PluginManager */
+    protected $pluginManager;
+
+    /** @var \Zend\Cache\Storage\StorageInterface */
+    protected $cache;
+
+
     /**
      * Constructor
      *
-     * @param DomainManager    $domainManager Rcm Domain Manager
-     * @param EntityRepository $siteRepo      Doctrine Entity Manager
-     * @param StorageInterface $cache         Zend Cache Manager
-     * @param RequestInterface $request       Zend Request Object
+     * @param EntityRepository $repository Site Repository
      */
     public function __construct(
-        DomainManager $domainManager,
-        EntityRepository $siteRepo,
-        StorageInterface $cache,
-        RequestInterface $request
+        EntityRepository $repository
     ) {
-        $this->domainManager = $domainManager;
-        $this->siteRepo = $siteRepo;
-        $this->cache = $cache;
-        $this->request = $request;
-    }
-
-    /**
-     * Get the sites information
-     *
-     * @param integer $siteId Site Id
-     *
-     * @return string
-     * @throws InvalidArgumentException
-     */
-    public function getSiteInfo($siteId = null)
-    {
-        if (!$siteId) {
-            $siteId = $this->getCurrentSiteId();
-        }
-
-        if (!$this->isValidSiteId($siteId)) {
-            throw new InvalidArgumentException('Invalid Site ID');
-        }
-
-        if (!empty($this->siteInfo[$siteId])) {
-            return $this->siteInfo[$siteId];
-        }
-
-        $cacheKey = 'rcm_site_info_' . $siteId;
-
-        if ($this->cache->hasItem($cacheKey)) {
-            $this->siteInfo[$siteId] = $this->cache->getItem($cacheKey);
-
-            return $this->siteInfo[$siteId];
-        }
-
-        $this->siteInfo[$siteId] = $this->siteRepo->getSiteInfo($siteId);
-
-        $this->cache->setItem($cacheKey, $this->siteInfo[$siteId]);
-
-        return $this->siteInfo[$siteId];
-    }
-
-    /**
-     * Get the current sites information
-     *
-     * @return array
-     */
-    public function getCurrentSiteInfo()
-    {
-        return $this->getSiteInfo();
-    }
-
-    /**
-     * Get the sites Login Page
-     *
-     * @param integer $siteId Site Id
-     *
-     * @return string
-     */
-    public function getSiteLoginPage($siteId = null)
-    {
-        $siteInfo = $this->getSiteInfo($siteId);
-
-        return $siteInfo['loginPage'];
-    }
-
-    /**
-     * Get Current Sites Login Page
-     *
-     * @return string Path to login page
-     */
-    public function getCurrentSiteLoginPage()
-    {
-        return $this->getSiteLoginPage();
-    }
-
-    /**
-     * Get the sites theme
-     *
-     * @param integer $siteId Site Id
-     *
-     * @return string
-     *
-     * @throws InvalidArgumentException
-     */
-    public function getSiteTheme($siteId = null)
-    {
-        $siteInfo = $this->getSiteInfo($siteId);
-
-        return $siteInfo['theme'];
-    }
-
-    /**
-     * Get the current sites theme
-     *
-     * @return string Theme
-     */
-    public function getCurrentSiteTheme()
-    {
-        return $this->getSiteTheme();
-    }
-
-    /**
-     * Get the Sites default Zend Framework Layout template.
-     *
-     * @param integer $siteId Site Id
-     *
-     * @return string
-     */
-    public function getSiteDefaultLayout($siteId = null)
-    {
-        $siteInfo = $this->getSiteInfo($siteId);
-
-        return $siteInfo['siteLayout'];
-    }
-
-    /**
-     * Get the current Sites default Zend Framework Layout template.
-     *
-     * @return string
-     */
-    public function getCurrentSiteDefaultLayout()
-    {
-        return $this->getSiteDefaultLayout();
+        $this->siteRepo = $repository;
     }
 
     /**
@@ -221,12 +121,140 @@ class SiteManager
      */
     public function getCurrentSiteId()
     {
-        if (empty($this->currentSiteId)) {
-            $this->currentSiteId = $this->getCurrentSiteIdFromDomain();
-        }
-
         return $this->currentSiteId;
     }
+
+    /**
+     * Alias of Get Site Info
+     *
+     * @return array
+     */
+    public function getCurrentSiteInfo()
+    {
+        return $this->getSiteInfo();
+    }
+
+    /**
+     * Alias of Get Site Login Page
+     *
+     * @return string Path to login page
+     */
+    public function getCurrentSiteLoginPage()
+    {
+        return $this->getSiteLoginPage();
+    }
+
+    /**
+     * Alias of getSiteTheme()
+     *
+     * @return string Theme
+     */
+    public function getCurrentSiteTheme()
+    {
+        return $this->getSiteTheme();
+    }
+
+    /**
+     * Alias of getSiteDefaultLayout()
+     *
+     * @return string
+     */
+    public function getCurrentSiteDefaultLayout()
+    {
+        return $this->getSiteDefaultLayout();
+    }
+
+    /**
+     * Get Current Site Id From Domain
+     *
+     * @param string $domain Domain to search by
+     *
+     * @return integer|null                         SiteId
+     * @throws \Rcm\Exception\SiteNotFoundException
+     */
+    public function setSiteIdFromDomain($domain)
+    {
+        $domainInfo = $this->domainManager->getDomainInfo($domain);
+
+        if (empty($domainInfo)) {
+            throw new SiteNotFoundException(
+                'No site found for request domain: ' . $domain
+            );
+        }
+
+        $this->currentSiteId = $domainInfo['siteId'];
+        $this->domain = $domain;
+        return;
+    }
+
+    /**
+     * Get the sites information
+     *
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    public function getSiteInfo()
+    {
+        $siteId = $this->getCurrentSiteId();
+
+        if (!empty($this->siteInfo)) {
+            return $this->siteInfo;
+        }
+
+        $cacheKey = 'rcm_site_info_' . $siteId;
+
+        if ($this->cache->hasItem($cacheKey)) {
+            $this->siteInfo = $this->cache->getItem($cacheKey);
+            return $this->siteInfo;
+        }
+
+        $siteInfo = $this->siteRepo->getSiteInfo($siteId);
+
+        if (empty($siteInfo)) {
+            throw new InvalidArgumentException('Invalid Site ID');
+        }
+
+        $this->siteInfo = $siteInfo;
+
+        $this->cache->setItem($cacheKey, $siteInfo);
+
+        return $siteInfo;
+    }
+
+    /**
+     * Get the sites Login Page
+     *
+     * @return string
+     */
+    public function getSiteLoginPage()
+    {
+        $siteInfo = $this->getSiteInfo();
+        return $siteInfo['loginPage'];
+    }
+
+    /**
+     * Get the sites theme
+     *
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    public function getSiteTheme()
+    {
+        $siteInfo = $this->getSiteInfo();
+        return $siteInfo['theme'];
+    }
+
+    /**
+     * Get the Sites default Zend Framework Layout template.
+     *
+     * @return string
+     */
+    public function getSiteDefaultLayout()
+    {
+        $siteInfo = $this->getSiteInfo();
+        return $siteInfo['siteLayout'];
+    }
+
 
     /**
      * Get the current sites related country entity
@@ -292,36 +320,6 @@ class SiteManager
     }
 
     /**
-     * Get Current Site Id From Domain
-     *
-     * @return integer|null                         SiteId
-     * @throws \Rcm\Exception\SiteNotFoundException
-     */
-    protected function getCurrentSiteIdFromDomain()
-    {
-
-        if (!$this->request instanceof PhpEnvironmentRequest) {
-            return null;
-        }
-
-        $domainList = $this->domainManager->getActiveDomainList();
-
-        $serverParams = $this->request->getServer();
-
-        $currentDomain = $serverParams->get('HTTP_HOST');
-
-        if (empty($domainList[$currentDomain])
-            || empty($domainList[$currentDomain]['siteId'])
-        ) {
-            throw new SiteNotFoundException(
-                'No site found for request domain: ' . $currentDomain
-            );
-        }
-
-        return $domainList[$currentDomain]['siteId'];
-    }
-
-    /**
      * Get an array of active site objects
      *
      * @return array
@@ -366,17 +364,24 @@ class SiteManager
      */
     public function listAvailableSiteWidePlugins()
     {
-        $list = [];
-        $site = $this->getSiteById($this->getCurrentSiteId());
-        foreach ($site->getSiteWidePlugins() as $plugin) {
-            $list[$plugin->getDisplayName()] = [
-                'name' => $plugin->getPlugin(),
+        $result = $this->siteRepo->getSiteWidePluginsList($this->getCurrentSiteId());
+
+        $list = array();
+
+        if (empty($result)) {
+            return $list;
+        }
+
+        foreach ($result as $plugin) {
+            $list[$plugin['displayName']] = [
+                'name' => $plugin['displayName'],
                 'icon' => '/modules/rcm/images/GenericIcon.png',
                 'siteWide' => true,
-                'displayName' => $plugin->getDisplayName(),
-                'instanceId' => $plugin->getInstanceId()
+                'displayName' => $plugin['plugin'],
+                'instanceId' => $plugin['pluginInstanceId']
             ];
         }
+
         return $list;
     }
 
@@ -391,4 +396,339 @@ class SiteManager
     {
         $this->currentSiteId = $currentSiteId;
     }
+
+    public function savePage(
+        $pageName,
+        $pageRevision,
+        $pageType='n',
+        $saveData,
+        $author
+    ) {
+        /** @var \Rcm\Entity\Site $siteEntity */
+        $siteEntity = $this->siteRepo->findOneBy(array('siteId' => $this->currentSiteId));
+
+        if (empty($siteEntity)) {
+            throw new SiteNotFoundException('Unable to locate site.');
+        }
+
+        $this->prepSaveData($saveData);
+
+        foreach($saveData['containers'] as $containerName => $containerData) {
+            /** @var \Rcm\Entity\Container $container */
+            $container = $siteEntity->getContainer($containerName);
+
+            $this->saveContainer($container, $containerData, $author);
+        }
+
+        $page = $siteEntity->getPage($pageName, $pageType);
+        return $this->saveContainer($page, $saveData['pageContainer'], $author, $pageRevision);
+    }
+
+    protected function saveContainer(
+        ContainerInterface $container,
+        $containerData,
+        $author,
+        $revisionNumber=null
+    ) {
+
+        $revision = null;
+        $publishRevision = false;
+
+        if (empty($container)) {
+            throw new RuntimeException('Invalid container');
+        }
+
+        if (empty($revisionNumber)) {
+            $revision = $container->getCurrentRevision();
+            $publishRevision = true;
+        } else {
+            $revision = $container->getRevisionById($revisionNumber);
+        }
+
+        if (empty($revision)) {
+            throw new RuntimeException('Unable to locate revision.');
+        }
+
+        $md5 = md5(serialize($containerData));
+
+        if (empty($revision) || $revision->getMd5() == $md5) {
+            return null;
+        }
+
+        $newRevision = new Revision();
+        $newRevision->setAuthor($author);
+        $newRevision->setMd5($md5);
+
+        $isDirty = false;
+
+        foreach($containerData as $pluginData) {
+            /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
+            $pluginWrapper = $revision->getPluginWrapper($pluginData['instanceId']);
+            $newPluginWrapper = $this->savePluginWrapper($pluginData, $pluginWrapper);
+            $newRevision->addPluginWrapper($newPluginWrapper);
+
+            if (!empty($pluginWrapper)
+                && $pluginWrapper->getPluginWrapperId() == $newPluginWrapper->getPluginWrapperId()
+                && ($pluginWrapper->getInstance()->getInstanceId() == $newPluginWrapper->getInstance()->getInstanceId()
+                    || $pluginWrapper->getInstance()->isSiteWide())
+            ) {
+                continue;
+            }
+
+            $isDirty = true;
+        }
+
+        if ($isDirty) {
+            $this->siteRepo->getDoctrine()->persist($newRevision);
+            $container->addRevision($newRevision);
+
+            if ($publishRevision) {
+                $newRevision->publishRevision();
+                $container->setCurrentRevision($newRevision);
+            }
+
+            $this->siteRepo->getDoctrine()->flush();
+            return $newRevision->getRevisionId();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param                    $pluginData
+     * @param null|PluginWrapper $oldWrapper
+     *
+     * @returns PluginWrapper
+     *
+     * @throws \Rcm\Exception\RuntimeException
+     */
+
+    protected function savePluginWrapper($pluginData, $oldWrapper=null)
+    {
+        if (!empty($oldWrapper) && !is_a($oldWrapper, '\Rcm\Entity\PluginWrapper')) {
+            throw new RuntimeException('Wrapper passed in is not a valid plugin wrapper.');
+        }
+
+        $pluginInstance = $this->pluginManager->savePlugin(
+            $pluginData['instanceId'],
+            $pluginData['name'],
+            $pluginData['saveData'],
+            $pluginData['isSitewide'],
+            $pluginData['sitewideName']
+        );
+
+        if (!empty($oldWrapper)
+            && $oldWrapper->getRenderOrderNumber() == $pluginData['rank']
+            && $oldWrapper->getDivFloat() == $pluginData['float']
+            && $oldWrapper->getHeight() == $pluginData['height']
+            && $oldWrapper->getWidth() == $pluginData['width']
+            && $oldWrapper->getLayoutContainer() == $pluginData['containerName']
+            && ($oldWrapper->getInstance()->getInstanceId() == $pluginInstance->getInstanceId()
+                || $pluginInstance->isSiteWide())
+        ) {
+            return $oldWrapper;
+        }
+
+        $pluginWrapper = new PluginWrapper();
+        $pluginWrapper->setDivFloat($pluginData['float']);
+        $pluginWrapper->setHeight($pluginData['height']);
+        $pluginWrapper->setWidth($pluginData['width']);
+        $pluginWrapper->setLayoutContainer($pluginData['containerName']);
+        $pluginWrapper->setInstance($pluginInstance);
+        $pluginWrapper->setRenderOrderNumber($pluginData['rank']);
+
+        $this->siteRepo->getDoctrine()->persist($pluginWrapper);
+        return $pluginWrapper;
+    }
+
+    protected function prepSaveData(&$data)
+    {
+        ksort($data);
+        $data['containers'] = array();
+        $data['pageContainer'] = array();
+
+        foreach ($data['plugins'] as &$plugin)
+        {
+            $this->cleanSaveData($plugin['saveData']);
+
+            /*
+             * Set some default data to keep notices from being thrown.
+             */
+            if (empty($plugin['height'])) {
+                $plugin['height'] = 0;
+            }
+
+            if (empty($plugin['width'])) {
+                $plugin['width'] = 0;
+            }
+
+            if (empty($plugin['float'])) {
+                $plugin['float'] = 'left';
+            }
+
+            $plugin['rank'] = (int) $plugin['rank'];
+            $plugin['height'] = (int) $plugin['height'];
+            $plugin['width'] = (int) $plugin['width'];
+
+            $plugin['containerName'] = $plugin['containerId'];
+
+            if ($plugin['containerType'] == 'layout') {
+                $data['containers'][$plugin['containerId']][] = &$plugin;
+            } else {
+                $data['pageContainer'][] = &$plugin;
+            }
+
+            ksort($plugin['saveData']);
+        }
+    }
+
+    protected function cleanSaveData(&$data)
+    {
+        if (empty($data)) {
+            return;
+        }
+
+        if (is_array($data)) {
+            foreach ($data as &$arrayData) {
+                $this->cleanSaveData($arrayData);
+            }
+
+            return;
+        }
+
+        if(is_string($data)) {
+            $data = trim(str_replace(array("\n", "\t", "\r"), "", $data));
+        }
+
+        return;
+    }
+
+    /**
+     * @param \Zend\Cache\Storage\StorageInterface $cache
+     */
+    public function setCache($cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * @return \Zend\Cache\Storage\StorageInterface
+     */
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
+    /**
+     * @param \Rcm\Service\ContainerManager $containerManager
+     */
+    public function setContainerManager($containerManager)
+    {
+        $this->containerManager = $containerManager;
+    }
+
+    /**
+     * @return \Rcm\Service\ContainerManager
+     */
+    public function getContainerManager()
+    {
+        return $this->containerManager;
+    }
+
+    /**
+     * @param \Rcm\Service\DomainManager $domainManager
+     */
+    public function setDomainManager($domainManager)
+    {
+        $this->domainManager = $domainManager;
+    }
+
+    /**
+     * @return \Rcm\Service\DomainManager
+     */
+    public function getDomainManager()
+    {
+        return $this->domainManager;
+    }
+
+    /**
+     * @param \Rcm\Service\LayoutManager $layoutManager
+     */
+    public function setLayoutManager($layoutManager)
+    {
+        $this->layoutManager = $layoutManager;
+    }
+
+    /**
+     * @return \Rcm\Service\LayoutManager
+     */
+    public function getLayoutManager()
+    {
+        return $this->layoutManager;
+    }
+
+    /**
+     * @param \Rcm\Repository\Site $siteRepo
+     */
+    public function setSiteRepo($siteRepo)
+    {
+        $this->siteRepo = $siteRepo;
+    }
+
+    /**
+     * @return \Rcm\Repository\Site
+     */
+    public function getSiteRepo()
+    {
+        return $this->siteRepo;
+    }
+
+    /**
+     * @param mixed $domain
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @param \Rcm\Service\PageManager $pageManager
+     */
+    public function setPageManager($pageManager)
+    {
+        $this->pageManager = $pageManager;
+    }
+
+    /**
+     * @return \Rcm\Service\PageManager
+     */
+    public function getPageManager()
+    {
+        return $this->pageManager;
+    }
+
+    /**
+     * @param \Rcm\Service\PluginManager $pluginManager
+     */
+    public function setPluginManager($pluginManager)
+    {
+        $this->pluginManager = $pluginManager;
+    }
+
+    /**
+     * @return \Rcm\Service\PluginManager
+     */
+    public function getPluginManager()
+    {
+        return $this->pluginManager;
+    }
+
 }

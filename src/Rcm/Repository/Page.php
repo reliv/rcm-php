@@ -377,4 +377,46 @@ class Page extends EntityRepository implements ContainerInterface
 
         return $page;
     }
+
+    public function getPageRevisionList($siteId, $pageName, $pageType)
+    {
+        $publishedQueryBuilder = $this->_em->createQueryBuilder();
+
+        $publishedQueryBuilder->select('PARTIAL page.{pageId}, current, staged ')
+            ->from('\Rcm\Entity\Page', 'page')
+            ->leftjoin('page.currentRevision', 'current')
+            ->leftjoin('page.stagedRevision', 'staged')
+            ->where('page.site = :siteId')
+            ->andWhere('page.name = :pageName')
+            ->andWhere('page.pageType = :pageType')
+            ->setParameter('siteId', $siteId)
+            ->setParameter('pageName', $pageName)
+            ->setParameter('pageType', $pageType);
+
+        $lastDraftQueryBuilder = $this->_em->createQueryBuilder();
+        $lastDraftQueryBuilder->select('PARTIAL page.{pageId}, revisions ')
+            ->from('\Rcm\Entity\Page', 'page')
+            ->join('page.revisions', 'revisions')
+            ->where('page.site = :siteId')
+            ->andWhere('page.name = :pageName')
+            ->andWhere('page.pageType = :pageType')
+            ->andWhere('revisions.published = 0')
+            ->setParameter('siteId', $siteId)
+            ->setParameter('pageName', $pageName)
+            ->setParameter('pageType', $pageType)
+            ->orderBy('revisions.revisionId', 'DESC');
+
+        $result = $publishedQueryBuilder->getQuery()->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        try {
+            $lastDraft = $lastDraftQueryBuilder->getQuery()->setMaxResults(1)->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+            $lastDraft = array_values($lastDraft['revisions']);
+        } catch (NoResultException $e) {
+            $lastDraft = array(0=> null);
+        }
+
+        $result['lastDraft'] = $lastDraft[0];
+
+        return $result;
+    }
 }

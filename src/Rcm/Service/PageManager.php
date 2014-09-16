@@ -81,20 +81,13 @@ class PageManager extends ContainerAbstract
      * Get a page list by type.  Returns page Id and page name.
      *
      * @param string  $type   Page Type
-     * @param integer $siteId Site Id
      *
      * @return array
      * @throws \RuntimeException
      **/
-    public function getPageListByType($type, $siteId = null)
+    public function getPageListByType($type)
     {
-        if (!$siteId) {
-            $siteId = $this->siteManager->getCurrentSiteId();
-        }
-
-        if (!$this->siteManager->isValidSiteId($siteId)) {
-            throw new \RuntimeException('Invalid Site ID');
-        }
+        $siteId = $this->siteManager->getCurrentSiteId();
 
         return $this->repository->getAllPageIdsAndNamesBySiteThenType(
             $siteId,
@@ -107,21 +100,13 @@ class PageManager extends ContainerAbstract
      *
      * @param string  $name     Page Name to Search
      * @param string  $pageType Page Type
-     * @param integer $siteId   Site Id.  Will use current set siteId in not passed
-     *                          in.
      *
      * @return null|\Rcm\Entity\Page
      * @throws \RuntimeException
      */
-    public function getPageByName($name, $pageType = 'n', $siteId = null)
+    public function getPageByName($name, $pageType = 'n')
     {
-        if (!$siteId) {
-            $siteId = $this->siteManager->getCurrentSiteId();
-        }
-
-        if (!$this->siteManager->isValidSiteId($siteId)) {
-            throw new \RuntimeException('Invalid Site ID');
-        }
+        $siteId = $this->siteManager->getCurrentSiteId();
 
         if (!empty($this->pages[$name])) {
             return $this->pages[$name];
@@ -140,25 +125,33 @@ class PageManager extends ContainerAbstract
     }
 
     /**
+     * Get a page revision info
+     *
+     * @param string  $name     Page Name to Search
+     * @param string  $pageType Page Type
+     *
+     * @return null|\Rcm\Entity\Page
+     * @throws \RuntimeException
+     */
+    public function getPageRevisionList($name, $pageType = 'n')
+    {
+        $siteId = $this->siteManager->getCurrentSiteId();
+
+        return $this->repository->getPageRevisionList($siteId, $name, $pageType);
+    }
+
+    /**
      * Get a page by Id
      *
      * @param string  $pageId   Page Name to Search
      * @param string  $pageType Page Type
-     * @param integer $siteId   Site Id.  Will use current set siteId in not passed
-     *                          in.
      *
      * @return null|object
      * @throws \RuntimeException
      */
-    public function getPageById($pageId, $pageType = 't', $siteId = null)
+    public function getPageById($pageId, $pageType = 't')
     {
-        if (!$siteId) {
-            $siteId = $this->siteManager->getCurrentSiteId();
-        }
-
-        if (!$this->siteManager->isValidSiteId($siteId)) {
-            throw new \RuntimeException('Invalid Site ID');
-        }
+        $siteId = $this->siteManager->getCurrentSiteId();
 
         return $this->repository->findOneBy(
             array(
@@ -177,7 +170,6 @@ class PageManager extends ContainerAbstract
      * @param string $layout    Site Layout
      * @param string $author    Author
      * @param string $pageType  Page Type
-     * @param null   $siteId    Site Id
      *
      * @return void
      *
@@ -188,12 +180,11 @@ class PageManager extends ContainerAbstract
         $pageTitle,
         $layout,
         $author,
-        $pageType = 'n',
-        $siteId = null
+        $pageType = 'n'
     ) {
         $this->validateNewPageData($pageName, $pageTitle, $layout, $pageType);
 
-        $site = $this->getValidateSite($siteId);
+        $site = $this->getValidateSite();
 
         $this->repository->createNewPage(
             $pageName,
@@ -211,7 +202,6 @@ class PageManager extends ContainerAbstract
  * @param string       $newPageTitle New Page Title
  * @param integer|null $pageRevision Revision Id to use for copy.  Default is current revision
  * @param string       $newPageType  New Page type.  Defaults to "n"
- * @param integer|null $siteId       Site Id to copy page to
  *
  * @throws \Rcm\Exception\InvalidArgumentException
  */
@@ -221,11 +211,12 @@ class PageManager extends ContainerAbstract
         $author,
         $newPageTitle = null,
         $pageRevision = null,
-        $newPageType = 'n',
-        $siteId = null
+        $newPageType = 'n'
     ) {
 
-        $site = $this->getValidateSite($siteId);
+        $siteId = $this->siteManager->getCurrentSiteId();
+
+        $site = $this->getValidateSite();
 
         $pageValidator = $this->getPageValidator($newPageType);
 
@@ -272,16 +263,12 @@ class PageManager extends ContainerAbstract
     /**
      * Get and Validate a Site Id
      *
-     * @param integer $siteId Site Id to get and or validate
-     *
      * @return null|\Rcm\Entity\Site
      * @throws \RuntimeException
      */
-    private function getValidateSite($siteId)
+    private function getValidateSite()
     {
-        if (!$siteId) {
-            $siteId = $this->siteManager->getCurrentSiteId();
-        }
+        $siteId = $this->siteManager->getCurrentSiteId();
 
         $site = $this->siteManager->getSiteById($siteId);
 
@@ -354,21 +341,13 @@ class PageManager extends ContainerAbstract
      * Returns the Zend Page Validator
      *
      * @param string  $pageType Page type for validator
-     * @param integer $siteId   Site Id.  Will use current set siteId in not passed
-     *                          in.
      *
      * @return Page
      * @throws \RuntimeException
      */
-    public function getPageValidator($pageType = 'n', $siteId = null)
+    public function getPageValidator($pageType = 'n')
     {
-        if (!$siteId) {
-            $siteId = $this->siteManager->getCurrentSiteId();
-        }
-
-        if (!$this->siteManager->isValidSiteId($siteId)) {
-            throw new \RuntimeException('Invalid Site ID');
-        }
+        $siteId = $this->siteManager->getCurrentSiteId();
 
         $validator = new Page($this);
         $validator->setPageType($pageType);
@@ -379,20 +358,12 @@ class PageManager extends ContainerAbstract
     /**
      * Returns the Zend Template Validator
      *
-     * @param integer $siteId Site Id.  Will use current set siteId in not passed in.
-     *
      * @return PageTemplate
      * @throws \RuntimeException
      */
-    public function getTemplateValidator($siteId = null)
+    public function getTemplateValidator()
     {
-        if (!$siteId) {
-            $siteId = $this->siteManager->getCurrentSiteId();
-        }
-
-        if (!$this->siteManager->isValidSiteId($siteId)) {
-            throw new \RuntimeException('Invalid Site ID');
-        }
+        $siteId = $this->siteManager->getCurrentSiteId();
 
         $validator = new PageTemplate($this);
         $validator->setSiteId($siteId);

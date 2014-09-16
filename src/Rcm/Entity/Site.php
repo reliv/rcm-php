@@ -474,6 +474,24 @@ class Site
         return $this->pages;
     }
 
+    public function getPage($pageName, $pageType='n')
+    {
+        if (empty($this->pages)) {
+            return null;
+        }
+
+        /** @var \Rcm\Entity\Page $page */
+        foreach ($this->pages as $page) {
+            if ($page->getName() == $pageName
+                && $page->getPageType() == $pageType
+            ) {
+                return $page;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Set up a page
      *
@@ -506,6 +524,29 @@ class Site
     public function getContainers()
     {
         return $this->containers;
+    }
+
+    /**
+     * Get all the page entities for the site.
+     *
+     * @param string $name Name of container
+     *
+     * @return ArrayCollection Array of page entities
+     */
+    public function getContainer($name)
+    {
+        if (empty($this->containers)) {
+            return null;
+        }
+
+        /** @var \Rcm\Entity\Container $container */
+        foreach ($this->containers as $container) {
+            if ($container->getName() == $name) {
+                return $container;
+            }
+        }
+
+        return null;
     }
 
     /**

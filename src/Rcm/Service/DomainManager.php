@@ -20,6 +20,7 @@
 namespace Rcm\Service;
 
 use Doctrine\ORM\EntityRepository;
+use Rcm\Exception\InvalidArgumentException;
 use Zend\Cache\Storage\StorageInterface;
 
 /**
@@ -49,6 +50,10 @@ class DomainManager
     /** @var \Zend\Cache\Storage\StorageInterface */
     protected $cache;
 
+    protected $domains = array();
+
+    protected $domainPreviousSearch = array();
+
     /**
      * Constructor
      *
@@ -72,15 +77,62 @@ class DomainManager
     {
         $cacheKey = 'rcm_active_domain_list';
 
+        if (!empty($this->domains)) {
+            return $this->domains;
+        }
+
         //Check Cache for list of domains
         if ($this->cache->hasItem($cacheKey)) {
-            return $this->cache->getItem($cacheKey);
+            $this->domains = $this->cache->getItem($cacheKey);
+            return $this->domains;
         }
 
         $domainList = $this->repository->getActiveDomainList();
 
         $this->cache->setItem($cacheKey, $domainList);
+        $this->domains = $domainList;
 
         return $domainList;
+    }
+
+    /**
+     * Get Domain Info array
+     *
+     * @param string $domain Domain to search by
+     *
+     * @return array
+     * @throws \Rcm\Exception\InvalidArgumentException
+     */
+    public function getDomainInfo($domain)
+    {
+        $cacheKey = 'rcm_domain_'.$domain;
+
+        if (empty($domain)) {
+            throw new InvalidArgumentException (
+                'A domain name must be specified.'
+            );
+        }
+
+        if (!empty($this->domainPreviousSearch[$domain])) {
+            return $this->domainPreviousSearch[$domain];
+        }
+
+        if (!empty($this->domains[$domain])) {
+            $this->domainPreviousSearch[$domain] = $this->domains[$domain];
+            return $this->domainPreviousSearch[$domain];
+        }
+
+        //Check Cache for list of domains
+        if ($this->cache->hasItem($cacheKey)) {
+            $this->domainPreviousSearch[$domain] = $this->cache->getItem($cacheKey);
+            return $this->domainPreviousSearch[$domain];
+        }
+
+        $domainInfo = $this->repository->getDomainInfo($domain);
+
+        $this->cache->setItem($cacheKey, $domainInfo);
+        $this->domainPreviousSearch[$domain] = $domainInfo;
+
+        return $domainInfo;
     }
 }

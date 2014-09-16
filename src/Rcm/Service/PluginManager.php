@@ -296,11 +296,28 @@ class PluginManager
      * Save a plugin instance
      *
      * @param integer $pluginInstanceId Current Instance Id
+     * @param string  $pluginName       Plugin Name
      * @param mixed   $saveData         Plugin Data to Save
+     * @param boolean $siteWide         Is this a site wide
+     * @param string  $displayName      Plugin name for site wide
      *
      * @return PluginInstance New saved plugin instance
      */
-    public function savePlugin($pluginInstanceId, $saveData)
+    public function savePlugin(
+        $pluginInstanceId,
+        $pluginName,
+        $saveData,
+        $siteWide=false,
+        $displayName=''
+    ) {
+        if ($pluginInstanceId > 0) {
+            return $this->saveExistingPlugin($pluginInstanceId, $pluginName, $saveData);
+        }
+
+        return $this->saveNewInstance($pluginName, $saveData, $siteWide, $displayName);
+    }
+
+    public function saveExistingPlugin($pluginInstanceId, $pluginName, $saveData)
     {
         $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
 
@@ -366,7 +383,14 @@ class PluginManager
         $siteWide = false,
         $displayName = null
     ) {
-        $pluginInstance = $this->getNewPluginInstanceEntity($pluginName);
+        $pluginInstance = new PluginInstance();
+        $pluginInstance->setPlugin($pluginName);
+
+        if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
+            $pluginInstance->setDisplayName(
+                $this->config['rcmPlugin'][$pluginName]['display']
+            );
+        }
 
         if ($siteWide) {
             $pluginInstance->setSiteWide();
@@ -377,41 +401,14 @@ class PluginManager
         }
 
         $pluginInstance->setMd5(md5(serialize($saveData)));
-
-        $this->entityManager->persist($pluginInstance);
-        $this->entityManager->flush();
-
-        /** @var \Rcm\Plugin\PluginInterface $controller */
-        $controller = $this->getPluginController($pluginName);
-
-        $controller->saveInstance($pluginInstance->getInstanceId(), $saveData);
-
-        return $pluginInstance;
-    }
-
-    /**
-     * Get a new Plugin Entity
-     *
-     * @param string $pluginName Plugin Name
-     *
-     * @return PluginInstance
-     */
-    public function getNewPluginInstanceEntity($pluginName)
-    {
-        $pluginInstance = new PluginInstance();
-        $pluginInstance->setPlugin($pluginName);
-
-        if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
-            $pluginInstance->setDisplayName(
-                $this->config['rcmPlugin'][$pluginName]['display']
-            );
-        }
+        $pluginInstance->setInstanceConfig($saveData);
 
         $this->entityManager->persist($pluginInstance);
         $this->entityManager->flush();
 
         return $pluginInstance;
     }
+
 
     /**
      * Get a plugin containers CSS and Javascript from either the headlink or

@@ -50,11 +50,6 @@ class LayoutManagerFactory implements FactoryInterface
     {
         /** @var \Rcm\Service\SiteManager $siteManager */
         $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
-        $config = $serviceLocator->get('config');
-
-        return new LayoutManager(
-            $siteManager,
-            $config
-        );
+        return $siteManager->getLayoutManager();
     }
 }
