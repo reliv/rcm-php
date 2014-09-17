@@ -541,11 +541,24 @@ class SiteManager
         return $pluginWrapper;
     }
 
+    /**
+     * Prep and validate data array to save
+     *
+     * @param $data
+     *
+     * @throws InvalidArgumentException
+     */
     protected function prepSaveData(&$data)
     {
         ksort($data);
         $data['containers'] = array();
         $data['pageContainer'] = array();
+
+        if (empty($data['plugins'])) {
+            throw new InvalidArgumentException('Save Data missing plugins.
+                Please make sure the data you\'re attempting to save is correctly formatted.
+            ');
+        }
 
         foreach ($data['plugins'] as &$plugin)
         {
@@ -582,6 +595,11 @@ class SiteManager
         }
     }
 
+    /**
+     * Save data clean up.
+     *
+     * @param $data
+     */
     protected function cleanSaveData(&$data)
     {
         if (empty($data)) {
