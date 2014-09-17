@@ -73,7 +73,7 @@ class DispatchListener
      *
      * @param MvcEvent $event Zend MVC Event object
      *
-     * @return void
+     * @return null
      */
     public function setSiteLayout(MvcEvent $event)
     {
@@ -112,5 +112,7 @@ class DispatchListener
         }
 
         $headTitle()->setSeparator(' - ');
+
+        return null;
     }
 }

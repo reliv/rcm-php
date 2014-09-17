@@ -55,7 +55,7 @@ class EventFinishListener
      *
      * @param MvcEvent $event Zend MVC Event object
      *
-     * @return void
+     * @return null
      */
 
     public function processRcmResponses(MvcEvent $event)
@@ -63,9 +63,11 @@ class EventFinishListener
         $response = $event->getResult();
 
         if (!$response instanceof RcmResponse) {
-            return;
+            return null;
         }
 
         $this->responseHandler->processResponse($response);
+
+        return null;
     }
 }

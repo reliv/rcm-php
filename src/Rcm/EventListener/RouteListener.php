@@ -142,4 +142,22 @@ class RouteListener
 
         return null;
     }
+
+    public function addLocale(MvcEvent $event)
+    {
+        $serviceManager = $event->getApplication()->getServiceManager();
+
+        $siteInfo = $serviceManager->get('Rcm\Service\SiteManager')
+            ->getCurrentSiteInfo();
+        $locale = $siteInfo['language']['iso639_1'] . '_'
+            . $siteInfo['country']['iso2'];
+
+        setlocale(
+            LC_ALL,
+            $locale
+        );
+        \Locale::setDefault($locale);
+
+        return null;
+    }
 }
