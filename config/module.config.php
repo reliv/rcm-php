@@ -211,6 +211,8 @@ return array(
         'factories' => array(
             'doctrine.cache.doctrine_cache'
             => 'Rcm\Factory\DoctrineCacheFactory',
+            'Rcm\EventListener\EventWrapper'
+            => 'Rcm\Factory\EventWrapperFactory',
             'Rcm\EventListener\RouteListener'
             => 'Rcm\Factory\RouteListenerFactory',
             'Rcm\EventListener\DispatchListener'

@@ -56,28 +56,17 @@ class ViewEventListener
      *
      * @param ViewEvent $event Zend MVC Event object
      *
-     * @return void
+     * @return null
      */
 
     public function processRcmResponses(ViewEvent $event)
     {
-        /** @var \Zend\View\Renderer\PhpRenderer $renderer */
-        $renderer = $event->getRenderer();
-
-        /* Make sure this is in fact a PhpRenderer or return null */
-        if (!$renderer instanceof PhpRenderer) {
-            return;
-        }
-
-        /** @var \Rcm\View\Helper\Container $rcmContainerPlugin */
-        $rcmContainerPlugin = $renderer->plugin('rcmContainer');
-
-        $response = $rcmContainerPlugin->getResponse();
-
+        $response = $event->getResponse();
         if (!$response instanceof RcmResponse) {
-            return;
+            return null;
         }
 
         $this->responseHandler->processResponse($response);
+        return null;
     }
 }

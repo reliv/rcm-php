@@ -50,7 +50,7 @@ class PluginWrapper
     /**
      * @var integer Layout Placement.  This is used only for Page Containers.
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     protected $layoutContainer;
 

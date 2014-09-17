@@ -56,58 +56,32 @@ class Module
             return;
         }
 
-        $siteInfo = $serviceManager->get('Rcm\Service\SiteManager')
-            ->getCurrentSiteInfo();
-        $locale = $siteInfo['language']['iso639_1'] . '_'
-            . $siteInfo['country']['iso2'];
-        setlocale(
-            LC_ALL,
-            $locale
-        );
-        \Locale::setDefault($locale);
-
         //Add Domain Checker
-        $routeListener = $serviceManager->get(
-            'Rcm\EventListener\RouteListener'
+        $eventWrapper = $serviceManager->get(
+            'Rcm\EventListener\EventWrapper'
         );
-
-        $dispatchListener
-            = $serviceManager->get('Rcm\EventListener\DispatchListener');
-
-        $eventFinishListener
-            = $serviceManager->get('Rcm\EventListener\EventFinishListener');
-
-        $viewEventListener
-            = $serviceManager->get('Rcm\EventListener\ViewEventListener');
 
         /** @var \Zend\EventManager\EventManager $eventManager */
         $eventManager = $event->getApplication()->getEventManager();
 
-        // Add Domain Check prior to routing
-        $eventManager->attach(
-            MvcEvent::EVENT_ROUTE,
-            array($routeListener, 'checkDomain'),
-            10000
-        );
-
         // Check for redirects from the CMS
         $eventManager->attach(
             MvcEvent::EVENT_ROUTE,
-            array($routeListener, 'checkRedirect'),
-            9999
+            array($eventWrapper, 'routeEvent'),
+            -10000
         );
 
         // Set the sites layout.
         $eventManager->attach(
             MvcEvent::EVENT_DISPATCH,
-            array($dispatchListener, 'setSiteLayout'),
+            array($eventWrapper, 'dispatchEvent'),
             10000
         );
 
         // Set the custom http response checker
         $eventManager->attach(
             MvcEvent::EVENT_FINISH,
-            array($eventFinishListener, 'processRcmResponses'),
+            array($eventWrapper, 'finishEvent'),
             10000
         );
 
@@ -118,7 +92,7 @@ class Module
         // Set the plugin response over-ride
         $viewEventManager->attach(
             ViewEvent::EVENT_RESPONSE,
-            array($viewEventListener, 'processRcmResponses'),
+            array($eventWrapper, 'viewResponseEvent'),
             -10000
         );
 
