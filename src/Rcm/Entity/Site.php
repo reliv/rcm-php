@@ -177,13 +177,6 @@ class Site
     protected $sitePlugins;
 
     /**
-     * @var boolean Status of site.
-     *
-     * @ORM\Column(type="boolean")
-     **/
-    protected $loginRequired = false;
-
-    /**
      * @var string URL to login page.
      *
      * @ORM\Column(type="string", nullable=true)
@@ -191,11 +184,11 @@ class Site
     protected $loginPage;
 
     /**
-     * @var string Comma separated list of ACL roles permitted
+     * @var string URL to not authorized page.
      *
      * @ORM\Column(type="string", nullable=true)
-     */
-    protected $aclRoles;
+     **/
+    protected $notAuthorizedPage;
 
     /**
      * Constructor for site
@@ -668,28 +661,6 @@ class Site
     }
 
     /**
-     * Set login required for the whole site
-     *
-     * @param boolean $loginRequired Login Required
-     *
-     * @return void
-     */
-    public function setLoginRequired($loginRequired)
-    {
-        $this->loginRequired = $loginRequired;
-    }
-
-    /**
-     * Is login required?
-     *
-     * @return boolean
-     */
-    public function isLoginRequired()
-    {
-        return $this->loginRequired;
-    }
-
-    /**
      * Path to login page.  Because the login page can be variable the site
      * needs to keep a reference to the login page.
      *
@@ -713,70 +684,6 @@ class Site
     }
 
     /**
-     * Add an ACL role to the allowed list.
-     *
-     * @param string|array $permittedRoles Comma separated list or array
-     *                                     of allowed ACL Roles
-     *
-     * @return void
-     */
-    public function addAclRoles($permittedRoles)
-    {
-
-        if (!is_array($permittedRoles)) {
-            $permittedRoles = explode(
-                ',',
-                rtrim($permittedRoles, ',')
-            );
-
-            $permittedRoles = array_map('trim', $permittedRoles);
-        }
-
-        if (!empty($this->aclRoles)) {
-            $types = explode(
-                ',',
-                $this->aclRoles
-            );
-
-            $permittedRoles = array_unique(
-                array_merge($types, $permittedRoles)
-            );
-        }
-
-        $this->aclRoles = rtrim(implode(',', $permittedRoles), ',');
-    }
-
-    /**
-     * Get an array of permitted account types
-     *
-     * @return string
-     */
-    public function getAclRoles()
-    {
-        return explode(',', $this->aclRoles);
-    }
-
-    /**
-     * Check to see if ACL role is already allowed.  This should not be used to
-     * check if a user is allowed.  To check if a current user has permissions
-     * please check against ACL directly.
-     *
-     * @param string $aclRole ACL Role to Check
-     *
-     * @return bool
-     */
-    public function hasRole($aclRole)
-    {
-        $permitted = $this->getAclRoles();
-
-        if (in_array($aclRole, $permitted)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @param string $siteLayout
      */
     public function setSiteLayout($siteLayout)
@@ -791,4 +698,22 @@ class Site
     {
         return $this->siteLayout;
     }
+
+    /**
+     * @return string
+     */
+    public function getNotAuthorizedPage()
+    {
+        return $this->notAuthorizedPage;
+    }
+
+    /**
+     * @param string $notAuthorizedPage
+     */
+    public function setNotAuthorizedPage($notAuthorizedPage)
+    {
+        $this->notAuthorizedPage = $notAuthorizedPage;
+    }
+
+
 }

@@ -609,32 +609,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Get and Set Login Required
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Site
-     */
-    public function testGetAndSetLoginRequired()
-    {
-        $this->site->setLoginRequired(true);
-
-        $this->assertTrue($this->site->isLoginRequired());
-    }
-
-    /**
-     * Test Get Login Required Default
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Site
-     */
-    public function testGetLoginRequiredDefault()
-    {
-        $this->assertFalse($this->site->isLoginRequired());
-    }
-
-    /**
      * Test Get and Set Login Page
      *
      * @return void
@@ -651,145 +625,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($path, $actual);
     }
-
-    /**
-     * Test Get and Set ACL Roles with Array
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Site
-     */
-    public function testGetAndSetAclRolesWithArray()
-    {
-        $roles = array(
-            'myRoleOne',
-            'myRoleTwo',
-            'myRoleThree'
-        );
-
-        $this->site->addAclRoles($roles);
-
-        $actual = $this->site->getAclRoles();
-
-        $this->assertEquals($roles, $actual);
-    }
-
-    /**
-     * Test Get and Set ACL Roles with CSV
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Site
-     */
-    public function testGetAndSetAclRolesWithCsv()
-    {
-        $roles = array(
-            'myRoleOne',
-            'myRoleTwo',
-            'myRoleThree'
-        );
-
-        $csv = implode(',', $roles);
-
-        $this->site->addAclRoles($csv);
-
-        $actual = $this->site->getAclRoles();
-
-        $this->assertEquals($roles, $actual);
-    }
-
-    /**
-     * Test Get and Set ACL Roles with current Roles
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Site
-     */
-    public function testGetAndSetAclRolesWithCurrentRoles()
-    {
-        $roles = array(
-            'myRoleOne',
-            'myRoleTwo',
-            'myRoleThree'
-        );
-
-        $this->site->addAclRoles($roles);
-
-        $roles[] = 'myRoleFour';
-
-        $this->site->addAclRoles('myRoleFour');
-
-        $actual = $this->site->getAclRoles();
-
-        $this->assertEquals($roles, $actual);
-    }
-
-    /**
-     * Test Get and Set ACL Roles with current Roles and One dup
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Site
-     */
-    public function testGetAndSetAclRolesWithCurrentRolesAndOneDup()
-    {
-        $roles = array(
-            'myRoleOne',
-            'myRoleTwo',
-            'myRoleThree'
-        );
-
-        $this->site->addAclRoles($roles);
-
-        $roles[] = 'myRoleFour';
-
-        $this->site->addAclRoles('myRoleFour, myRoleOne');
-
-        $actual = $this->site->getAclRoles();
-
-        $this->assertEquals($roles, $actual);
-    }
-
-    /**
-     * Test Has Role
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Site
-     */
-    public function testHasRole()
-    {
-        $roles = array(
-            'myRoleOne',
-            'myRoleTwo',
-            'myRoleThree'
-        );
-
-        $this->site->addAclRoles($roles);
-
-        $this->assertTrue($this->site->hasRole('myRoleOne'));
-    }
-
-    /**
-     * Test Does Not Have Role
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Site
-     */
-    public function testDoesNotHaveRole()
-    {
-        $roles = array(
-            'myRoleOne',
-            'myRoleTwo',
-            'myRoleThree'
-        );
-
-        $this->site->addAclRoles($roles);
-
-        $this->assertFalse($this->site->hasRole('myRoleFour'));
-    }
-
 
     /**
      * Test Clone
@@ -1272,9 +1107,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $this->site->setLanguage($site['language']);
         $this->site->setStatus($site['status']);
         $this->site->setFavIcon($site['favicon']);
-        $this->site->setLoginRequired($site['loginRequired']);
         $this->site->setLoginPage($site['loginPage']);
-        $this->site->addAclRoles($site['aclRoles']);
 
         foreach ($site['pages'] as $page) {
             $pageEntity = new Page();
@@ -1346,9 +1179,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($original->getLanguage(), $cloned->getLanguage());
         $this->assertEquals($original->getStatus(), $cloned->getStatus());
         $this->assertEquals($original->getFavIcon(), $cloned->getFavIcon());
-        $this->assertEquals($original->isLoginRequired(), $cloned->isLoginRequired());
         $this->assertEquals($original->getLoginPage(), $cloned->getLoginPage());
-        $this->assertEquals($original->getAclRoles(), $cloned->getAclRoles());
 
         $clonedPages = $cloned->getPages();
 

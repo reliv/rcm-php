@@ -196,8 +196,13 @@ class IndexController extends AbstractActionController
         $url = $this->request->getUriString();
         $parsedLogin = parse_url($url);
         $siteLoginPage = $this->siteManager->getSiteLoginPage();
+        $notAuthorizedPage = $this->siteManager->getSiteNotAuthorizedPage();
 
-        if ($siteLoginPage == $url || $siteLoginPage == $parsedLogin['path']) {
+        if ($siteLoginPage == $url
+            || $siteLoginPage == $parsedLogin['path']
+            || $notAuthorizedPage == $url
+            || $notAuthorizedPage == $parsedLogin['path']
+        ) {
             $allowed = true;
         }
 

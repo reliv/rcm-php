@@ -52,6 +52,9 @@ class ResponseHandlerFactory implements FactoryInterface
         /** @var \Rcm\Service\SiteManager $siteManager */
         $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
 
+        /** @var \RcmUser\Service\RcmUserService $rcmUserService */
+        $rcmUserService = $serviceLocator->get('RcmUser\Service\RcmUserService');
+
         /** @var \Zend\Stdlib\Request $request */
         $request = $serviceLocator->get('request');
 
@@ -60,7 +63,8 @@ class ResponseHandlerFactory implements FactoryInterface
         return new ResponseHandler(
             $request,
             $siteManager,
-            $responseSender
+            $responseSender,
+            $rcmUserService
         );
     }
 }

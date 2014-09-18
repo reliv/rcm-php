@@ -145,6 +145,16 @@ class SiteManager
     }
 
     /**
+     * Alias of Get Not Authorized Page
+     *
+     * @return string Path to login page
+     */
+    public function getCurrentSiteNotAuthorizedPage()
+    {
+        return $this->getSiteNotAuthorizedPage();
+    }
+
+    /**
      * Alias of getSiteTheme()
      *
      * @return string Theme
@@ -230,6 +240,17 @@ class SiteManager
     {
         $siteInfo = $this->getSiteInfo();
         return $siteInfo['loginPage'];
+    }
+
+    /**
+     * Get the sites Not Authorized Page
+     *
+     * @return string
+     */
+    public function getSiteNotAuthorizedPage()
+    {
+        $siteInfo = $this->getSiteInfo();
+        return $siteInfo['notAuthorizedPage'];
     }
 
     /**
