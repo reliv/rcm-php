@@ -23,6 +23,7 @@ namespace Rcm\Controller;
 use Rcm\Exception\ContainerNotFoundException;
 use Rcm\Service\LayoutManager;
 use Rcm\Service\PageManager;
+use Rcm\Service\SiteManager;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -58,6 +59,9 @@ class IndexController extends AbstractActionController
     /** @var integer */
     public $pageRevisionId;
 
+    /** @var \Rcm\Service\SiteManager */
+    protected $siteManager;
+
     /** @var integer */
     protected $siteId;
 
@@ -78,13 +82,12 @@ class IndexController extends AbstractActionController
      * @param integer       $siteId        Current Site Id
      */
     public function __construct(
-        PageManager $pageManager,
-        LayoutManager $layoutManager,
-        $siteId
+        SiteManager $siteManager
     ) {
-        $this->pageManager = $pageManager;
-        $this->layoutManager = $layoutManager;
-        $this->siteId = $siteId;
+        $this->siteManager = $siteManager;
+        $this->pageManager = $siteManager->getPageManager();
+        $this->layoutManager = $siteManager->getLayoutManager();
+        $this->siteId = $siteManager->getCurrentSiteId();
     }
 
     /**
@@ -157,23 +160,13 @@ class IndexController extends AbstractActionController
 
         $this->pageInfo = $pageInfo;
 
-        /** @var ViewModel $layoutView */
-        $layoutView = $this->layout();
+        $allowed = $this->checkPermissions();
 
-        if (!empty($pageInfo['siteLayoutOverride'])) {
-            $layoutTemplatePath = $this->layoutManager->getSiteLayout(
-                $pageInfo['siteLayoutOverride']
-            );
-
-            $layoutView->setTemplate('layout/' . $layoutTemplatePath);
+        if (!$allowed) {
+            return $this->getUnauthorizedResponse();
         }
 
-        if ($pageInfo['currentRevisionId'] != $pageInfo['revision']['revisionId']) {
-            $layoutView->setVariable('rcmDraft', true);
-        }
-
-        $layoutView->setVariable('pageInfo', $pageInfo);
-        $layoutView->setVariable('shortRevList', $this->getShortRevisionList());
+        $this->prepLayoutView();
 
         $viewModel = new ViewModel(array('pageInfo' => $pageInfo));
 
@@ -183,6 +176,53 @@ class IndexController extends AbstractActionController
         );
 
         return $viewModel;
+    }
+
+    protected function getUnauthorizedResponse()
+    {
+        $response = new \Rcm\Http\Response();
+        $response->setStatusCode(401);
+        return $response;
+    }
+
+    protected function checkPermissions()
+    {
+        $allowed = $this->rcmUserIsAllowed(
+            'sites.' . $this->siteId . '.pages.' . $this->pageInfo['name'],
+            'read',
+            'Rcm\Acl\ResourceProvider'
+        );
+
+        $url = $this->request->getUriString();
+        $parsedLogin = parse_url($url);
+        $siteLoginPage = $this->siteManager->getSiteLoginPage();
+
+        if ($siteLoginPage == $url || $siteLoginPage == $parsedLogin['path']) {
+            $allowed = true;
+        }
+
+        return $allowed;
+    }
+
+    protected function prepLayoutView()
+    {
+        /** @var ViewModel $layoutView */
+        $layoutView = $this->layout();
+
+        if (!empty($this->pageInfo['siteLayoutOverride'])) {
+            $layoutTemplatePath = $this->layoutManager->getSiteLayout(
+                $this->pageInfo['siteLayoutOverride']
+            );
+
+            $layoutView->setTemplate('layout/' . $layoutTemplatePath);
+        }
+
+        if ($this->pageInfo['currentRevisionId'] != $this->pageInfo['revision']['revisionId']) {
+            $layoutView->setVariable('rcmDraft', true);
+        }
+
+        $layoutView->setVariable('pageInfo', $this->pageInfo);
+        $layoutView->setVariable('shortRevList', $this->getShortRevisionList());
     }
 
 
