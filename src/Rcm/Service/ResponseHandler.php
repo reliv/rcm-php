@@ -20,6 +20,7 @@
 namespace Rcm\Service;
 
 use Rcm\Http\Response;
+use RcmUser\Service\RcmUserService;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\ResponseSender\HttpResponseSender;
 use Zend\Mvc\ResponseSender\SendResponseEvent;
@@ -54,21 +55,27 @@ class ResponseHandler
     /** @var bool */
     protected $terminate = true;
 
+    /** @var RcmUserService  */
+    protected $userService;
+
     /**
      * Constructor
      *
      * @param RequestInterface   $request        Zend Request Object
      * @param SiteManager        $siteManager    Rcm Site Manager
      * @param HttpResponseSender $responseSender Zend Http Response Sender.
+     * @param RcmUserService     $rcmUserService Rcm User Service
      */
     public function __construct(
         RequestInterface $request,
         SiteManager $siteManager,
-        HttpResponseSender $responseSender
+        HttpResponseSender $responseSender,
+        RcmUserService $rcmUserService
     ) {
         $this->request = $request;
         $this->siteManager = $siteManager;
         $this->responseSender = $responseSender;
+        $this->userService = $rcmUserService;
     }
 
     /**
@@ -121,14 +128,22 @@ class ResponseHandler
     protected function processNotAuthorized()
     {
         $loginPage = $this->siteManager->getCurrentSiteLoginPage();
+        $notAuthorized = $this->siteManager->getCurrentSiteNotAuthorizedPage();
         $returnToUrl = urlencode($this->request->getServer('REQUEST_URI'));
-
         $newResponse = new Response();
         $newResponse->setStatusCode('302');
-        $newResponse->getHeaders()
-            ->addHeaderLine(
-                'Location: ' . $loginPage . '?redirect=' . $returnToUrl
-            );
+
+        if (!$this->userService->hasIdentity()) {
+            $newResponse->getHeaders()
+                ->addHeaderLine(
+                    'Location: ' . $loginPage . '?redirect=' . $returnToUrl
+                );
+        } else {
+            $newResponse->getHeaders()
+                ->addHeaderLine(
+                    'Location: ' . $notAuthorized
+                );
+        }
 
         return $newResponse;
     }

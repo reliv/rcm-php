@@ -42,13 +42,27 @@ class EventWrapper
     /** @var ServiceLocatorInterface  */
     protected $serviceLocator;
 
+    /**
+     * Construct
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     */
     public function __construct(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
     }
 
+    /**
+     * Route event
+     *
+     * @param MvcEvent $event
+     *
+     * @return null|\Zend\Http\Response
+     */
     public function routeEvent(MvcEvent $event)
     {
+        $this->doLogout($event);
+
         /** @var \Rcm\EventListener\RouteListener $routeListener */
         $routeListener = $this->serviceLocator->get(
             'Rcm\EventListener\RouteListener'
@@ -75,6 +89,13 @@ class EventWrapper
         return null;
     }
 
+    /**
+     * Dispatch Event
+     *
+     * @param MvcEvent $event
+     *
+     * @return null
+     */
     public function dispatchEvent(MvcEvent $event)
     {
         $matchRoute = $event->getRouteMatch();
@@ -96,6 +117,13 @@ class EventWrapper
         return null;
     }
 
+    /**
+     * Finish Event
+     *
+     * @param MvcEvent $event
+     *
+     * @return null
+     */
     public function finishEvent(MvcEvent $event) {
         $matchRoute = $event->getRouteMatch();
 
@@ -116,6 +144,13 @@ class EventWrapper
         return null;
     }
 
+    /**
+     * View Response Event
+     *
+     * @param ViewEvent $event
+     *
+     * @return null
+     */
     public function viewResponseEvent(ViewEvent $event)
     {
         /** @var \Rcm\EventListener\ViewEventListener $viewEventListener */
@@ -130,5 +165,28 @@ class EventWrapper
 
         return null;
 
+    }
+
+    /**
+     * doLogout
+     *
+     * @param MvcEvent $event event
+     *
+     * @return void
+     */
+    public function doLogout(MvcEvent $event)
+    {
+        $application = $event->getApplication();
+        $sm = $application->getServiceManager();
+
+        /** @var $request \Zend\Http\Request */
+        $request = $sm->get('request');
+        $logout = (bool)$request->getQuery('logout', 0);
+
+        if ($logout) {
+            /** @var $rcmUserService \RcmUser\Service\RcmUserService */
+            $rcmUserService = $sm->get('RcmUser\Service\RcmUserService');
+            $rcmUserService->clearIdentity();
+        }
     }
 }

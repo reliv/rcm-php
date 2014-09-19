@@ -63,6 +63,7 @@ class Site extends EntityRepository
                 status,
                 favIcon,
                 loginPage,
+                notAuthorizedPage,
                 siteLayout,
                 siteTitle,
                 siteId
