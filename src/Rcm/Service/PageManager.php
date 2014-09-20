@@ -257,9 +257,10 @@ class PageManager extends ContainerAbstract
 
         $siteId = $siteId = $this->siteManager->getCurrentSiteId();
 
-        $cacheKey
-            = get_class($this) . '_' . $siteId . '_' . $pageType . '_' . $pageName
-            . '_currentRevision';
+        $cacheKeys = array(
+            get_class($this) . '_' . $siteId . '_' . $pageType . '_' . $pageName . '_currentRevision',
+            get_class($this) . '_' . $siteId . '_' . $pageType . '_' . $pageName . '_' . $pageRevision
+        );
 
         if (!is_numeric($pageRevision)) {
             throw new InvalidArgumentException(
@@ -267,7 +268,7 @@ class PageManager extends ContainerAbstract
             );
         }
 
-        $this->cache->removeItem($cacheKey);
+        $this->cache->removeItems($cacheKeys);
 
         return $this->repository->publishPageRevision($pageRevision);
     }
