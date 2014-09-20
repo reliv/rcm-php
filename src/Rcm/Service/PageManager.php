@@ -258,8 +258,8 @@ class PageManager extends ContainerAbstract
         $siteId = $siteId = $this->siteManager->getCurrentSiteId();
 
         $cacheKey
-            = get_class($this) . '_' . $siteId . '_' . $pageType . '_' . $pageName . '_'
-            . $pageRevision;
+            = get_class($this) . '_' . $siteId . '_' . $pageType . '_' . $pageName
+            . '_currentRevision';
 
         if (!is_numeric($pageRevision)) {
             throw new InvalidArgumentException(
