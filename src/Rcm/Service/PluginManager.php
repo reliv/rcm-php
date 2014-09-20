@@ -206,6 +206,8 @@ class PluginManager
         $reflectionResponse->setAccessible(true);
         $reflectionResponse->setValue($controller, new Response());
 
+        $controller->setServiceLocator($this->serviceManager);
+
         $viewModel = $controller->renderInstance(
             $pluginInstanceId,
             $pluginInstanceConfig
