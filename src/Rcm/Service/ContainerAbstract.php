@@ -61,6 +61,8 @@ abstract class ContainerAbstract
     /** @var boolean */
     protected $showStaged;
 
+    protected $publishedRevId;
+
     /**
      * Constructor
      *
@@ -153,6 +155,10 @@ abstract class ContainerAbstract
     {
         $siteId = $this->siteManager->getCurrentSiteId();
 
+        if (!empty($this->publishedRevId) && is_numeric($this->publishedRevId)) {
+            return $this->publishedRevId;
+        }
+
         $cacheKey
             = get_class($this) . '_' . $siteId . '_' . $type . '_' . $name
             . '_currentRevision';
@@ -165,8 +171,10 @@ abstract class ContainerAbstract
             ->getPublishedRevisionId($siteId, $name, $type);
 
         if (!empty($result)) {
-            $this->cache->setItem($cacheKey, $result);
+            //$this->cache->setItem($cacheKey, $result);
         }
+
+        $this->publishedRevId = $result;
 
         return $result;
     }
