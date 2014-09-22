@@ -243,34 +243,24 @@ class PageManager extends ContainerAbstract
 
     /**
      * @param string       $pageName        Name of page
-     * @param string       $pageType        Page type
      * @param integer      $pageRevision    Id of page to copy
+     * @param string       $pageType        Page type
      *
      * @return \Rcm\Entity\Page|null
      * @throws \Rcm\Exception\InvalidArgumentException
      */
     public function publishPageRevision(
         $pageName,
-        $pageType,
-        $pageRevision
+        $pageRevision,
+        $pageType='n'
     ) {
-
-        $siteId = $siteId = $this->siteManager->getCurrentSiteId();
-
-//        $cacheKeys = array(
-//            get_class($this) . '_' . $siteId . '_' . $pageType . '_' . $pageName . '_currentRevision',
-//            //get_class($this) . '_' . $siteId . '_' . $pageType . '_' . $pageName . '_' . $pageRevision
-//        );
-
         if (!is_numeric($pageRevision)) {
             throw new InvalidArgumentException(
                 'Invalid Page Revision Id.'
             );
         }
 
-//        $this->cache->removeItems($cacheKeys);
-
-        return $this->repository->publishPageRevision($pageRevision);
+        return $this->repository->publishPageRevision($pageName, $pageType, $pageRevision);
     }
 
     /**
