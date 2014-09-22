@@ -61,7 +61,9 @@ abstract class ContainerAbstract
     /** @var boolean */
     protected $showStaged;
 
-    protected $publishedRevId;
+    protected $publishedRevId=array();
+
+    protected $stagedRevId=array();
 
     /**
      * Constructor
@@ -155,26 +157,16 @@ abstract class ContainerAbstract
     {
         $siteId = $this->siteManager->getCurrentSiteId();
 
-        if (!empty($this->publishedRevId) && is_numeric($this->publishedRevId)) {
-            return $this->publishedRevId;
-        }
-
-        $cacheKey
-            = get_class($this) . '_' . $siteId . '_' . $type . '_' . $name
-            . '_currentRevision';
-
-        if ($this->cache->hasItem($cacheKey)) {
-            return $this->cache->getItem($cacheKey);
+        if (!empty($this->publishedRevId[$type][$name])
+            && is_numeric($this->publishedRevId[$type][$name])
+        ) {
+            return $this->publishedRevId[$type][$name];
         }
 
         $result = $this->repository
             ->getPublishedRevisionId($siteId, $name, $type);
 
-        if (!empty($result)) {
-            //$this->cache->setItem($cacheKey, $result);
-        }
-
-        $this->publishedRevId = $result;
+        $this->publishedRevId[$type][$name] = $result;
 
         return $result;
     }
@@ -192,12 +184,10 @@ abstract class ContainerAbstract
     {
         $siteId = $this->siteManager->getCurrentSiteId();
 
-        $cacheKey
-            = get_class($this) . '_' . $siteId . '_' . $type . '_' . $name
-            . '_stagedRevision';
-
-        if ($this->cache->hasItem($cacheKey)) {
-            return $this->cache->getItem($cacheKey);
+        if (!empty($this->stagedRevId[$type][$name])
+            && is_numeric($this->stagedRevId[$type][$name])
+        ) {
+            return $this->stagedRevId[$type][$name];
         }
 
         $result = $this->repository->getStagedRevisionId(
@@ -206,7 +196,7 @@ abstract class ContainerAbstract
             $type
         );
 
-        $this->cache->setItem($cacheKey, $result);
+        $this->stagedRevId[$type][$name] = $result;
 
         return $result;
     }
