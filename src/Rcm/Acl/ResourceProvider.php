@@ -181,7 +181,6 @@ class ResourceProvider extends RcmUserResourceProvider
 
         if (!empty($resources[3])
             && !empty($resources[4])
-            && $this->pageManager->isPageValid($resources[4], $resources[3])
         ) {
             $return['parentResourceId'] = 'sites.' . $resources[1] . '.pages';
         }
