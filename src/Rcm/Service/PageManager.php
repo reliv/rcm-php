@@ -243,34 +243,24 @@ class PageManager extends ContainerAbstract
 
     /**
      * @param string       $pageName        Name of page
-     * @param string       $pageType        Page type
      * @param integer      $pageRevision    Id of page to copy
+     * @param string       $pageType        Page type
      *
      * @return \Rcm\Entity\Page|null
      * @throws \Rcm\Exception\InvalidArgumentException
      */
     public function publishPageRevision(
         $pageName,
-        $pageType,
-        $pageRevision
+        $pageRevision,
+        $pageType='n'
     ) {
-
-        $siteId = $siteId = $this->siteManager->getCurrentSiteId();
-
-        $cacheKeys = array(
-            get_class($this) . '_' . $siteId . '_' . $pageType . '_' . $pageName . '_currentRevision',
-            get_class($this) . '_' . $siteId . '_' . $pageType . '_' . $pageName . '_' . $pageRevision
-        );
-
         if (!is_numeric($pageRevision)) {
             throw new InvalidArgumentException(
                 'Invalid Page Revision Id.'
             );
         }
 
-        $this->cache->removeItems($cacheKeys);
-
-        return $this->repository->publishPageRevision($pageRevision);
+        return $this->repository->publishPageRevision($pageName, $pageType, $pageRevision);
     }
 
     /**
@@ -355,7 +345,7 @@ class PageManager extends ContainerAbstract
      *
      * @param string  $pageType Page type for validator
      *
-     * @return Page
+     * @return \Rcm\Validator\Page
      * @throws \RuntimeException
      */
     public function getPageValidator($pageType = 'n')
@@ -366,6 +356,19 @@ class PageManager extends ContainerAbstract
         $validator->setPageType($pageType);
 
         return $validator;
+    }
+
+    /**
+     * Is a page valid?
+     *
+     * @param string $pageName Page Name
+     * @param string $pageType Page Type
+     *
+     * @return array
+     */
+    public function isPageValid($pageName, $pageType = 'n')
+    {
+        return $this->repository->isValid($this->siteManager->getCurrentSiteId(), $pageName, $pageType);
     }
 
     /**

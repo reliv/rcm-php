@@ -179,7 +179,9 @@ class ResourceProvider extends RcmUserResourceProvider
             'parentResourceId' => 'sites.' . $resources[1],
         );
 
-        if (!empty($resources[3])) {
+        if (!empty($resources[3])
+            && !empty($resources[4])
+        ) {
             $return['parentResourceId'] = 'sites.' . $resources[1] . '.pages';
         }
 
@@ -274,16 +276,17 @@ class ResourceProvider extends RcmUserResourceProvider
         $primaryDomainName = $site->getDomain()->getDomainName();
         $siteId = $site->getSiteId();
         $pageName = $page->getName();
+        $pageType = $page->getPageType();
 
-        $return['sites.' . $siteId . '.pages.' . $pageName] = array(
-            'resourceId' => 'sites.' . $siteId . '.pages.' . $pageName,
+        $return['sites.' . $siteId . '.pages.' . $pageType. '.' . $pageName] = array(
+            'resourceId' => 'sites.' . $siteId . '.pages.' . $pageType. '.' . $pageName,
             'parentResourceId' => 'sites.' . $siteId . '.pages',
             'name' => $primaryDomainName . ' - pages - ' . $pageName,
         );
 
-        $return['sites.' . $siteId . '.pages.' . $pageName] = array_merge(
+        $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName] = array_merge(
             $this->resources['pages'],
-            $return['sites.' . $siteId . '.pages.' . $pageName]
+            $return['sites.' . $siteId . '.pages.' . $pageType. '.' . $pageName]
         );
 
         return $return;

@@ -61,6 +61,10 @@ abstract class ContainerAbstract
     /** @var boolean */
     protected $showStaged;
 
+    protected $publishedRevId=array();
+
+    protected $stagedRevId=array();
+
     /**
      * Constructor
      *
@@ -103,12 +107,23 @@ abstract class ContainerAbstract
     ) {
         $siteId = $this->siteManager->getCurrentSiteId();
 
+        $cacheKey
+            = get_class($this) . '_' . $siteId . '_' . $type . '_' . $name . '_'
+            . $revision;
+
+        $publishedRev = $this->getPublishedRevisionId($name, $type, $siteId);
+        $stagedRevision = null;
+
+        if ($showStaged) {
+            $stagedRevision = $this->getStagedRevisionId($name, $type, $siteId);
+        }
+
         if (empty($revision) && $showStaged) {
-            $revision = $this->getStagedRevisionId($name, $type, $siteId);
+            $revision = $stagedRevision;
         }
 
         if (empty($revision)) {
-            $revision = $this->getPublishedRevisionId($name, $type, $siteId);
+            $revision = $publishedRev;
         }
 
         if (empty($revision)) {
@@ -117,23 +132,22 @@ abstract class ContainerAbstract
             );
         }
 
-        $cacheKey
-            = get_class($this) . '_' . $siteId . '_' . $type . '_' . $name . '_'
-            . $revision;
-
         if ($this->cache->hasItem($cacheKey)) {
-            return $this->cache->getItem($cacheKey);
+            $pageInfo = $this->cache->getItem($cacheKey);
+        } else {
+            $pageInfo = $this->getRevisionDbInfo($name, $revision, $type, $siteId);
+
+            $this->getPluginRenderedInstances($pageInfo['revision']);
+
+            $canCache = $this->canCacheRevision($pageInfo['revision']);
+
+            if ($canCache) {
+                $this->cache->setItem($cacheKey, $pageInfo);
+            }
         }
 
-        $pageInfo = $this->getRevisionDbInfo($name, $revision, $type, $siteId);
-
-        $this->getPluginRenderedInstances($pageInfo['revision']);
-
-        $canCache = $this->canCacheRevision($pageInfo['revision']);
-
-        if ($canCache) {
-            $this->cache->setItem($cacheKey, $pageInfo);
-        }
+        $pageInfo['currentRevisionId'] = $publishedRev;
+        $pageInfo['stagedRevisionId'] = $stagedRevision;
 
         return $pageInfo;
     }
@@ -153,20 +167,16 @@ abstract class ContainerAbstract
     {
         $siteId = $this->siteManager->getCurrentSiteId();
 
-        $cacheKey
-            = get_class($this) . '_' . $siteId . '_' . $type . '_' . $name
-            . '_currentRevision';
-
-        if ($this->cache->hasItem($cacheKey)) {
-            return $this->cache->getItem($cacheKey);
+        if (!empty($this->publishedRevId[$type][$name])
+            && is_numeric($this->publishedRevId[$type][$name])
+        ) {
+            return $this->publishedRevId[$type][$name];
         }
 
         $result = $this->repository
             ->getPublishedRevisionId($siteId, $name, $type);
 
-        if (!empty($result)) {
-            $this->cache->setItem($cacheKey, $result);
-        }
+        $this->publishedRevId[$type][$name] = $result;
 
         return $result;
     }
@@ -184,12 +194,10 @@ abstract class ContainerAbstract
     {
         $siteId = $this->siteManager->getCurrentSiteId();
 
-        $cacheKey
-            = get_class($this) . '_' . $siteId . '_' . $type . '_' . $name
-            . '_stagedRevision';
-
-        if ($this->cache->hasItem($cacheKey)) {
-            return $this->cache->getItem($cacheKey);
+        if (!empty($this->stagedRevId[$type][$name])
+            && is_numeric($this->stagedRevId[$type][$name])
+        ) {
+            return $this->stagedRevId[$type][$name];
         }
 
         $result = $this->repository->getStagedRevisionId(
@@ -198,7 +206,7 @@ abstract class ContainerAbstract
             $type
         );
 
-        $this->cache->setItem($cacheKey, $result);
+        $this->stagedRevId[$type][$name] = $result;
 
         return $result;
     }
