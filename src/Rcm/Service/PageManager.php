@@ -345,7 +345,7 @@ class PageManager extends ContainerAbstract
      *
      * @param string  $pageType Page type for validator
      *
-     * @return Page
+     * @return \Rcm\Validator\Page
      * @throws \RuntimeException
      */
     public function getPageValidator($pageType = 'n')
@@ -356,6 +356,19 @@ class PageManager extends ContainerAbstract
         $validator->setPageType($pageType);
 
         return $validator;
+    }
+
+    /**
+     * Is a page valid?
+     *
+     * @param string $pageName Page Name
+     * @param string $pageType Page Type
+     *
+     * @return array
+     */
+    public function isPageValid($pageName, $pageType = 'n')
+    {
+        return $this->repository->isValid($this->siteManager->getCurrentSiteId(), $pageName, $pageType);
     }
 
     /**

@@ -188,7 +188,7 @@ class IndexController extends AbstractActionController
     protected function checkPermissions()
     {
         $allowed = $this->rcmUserIsAllowed(
-            'sites.' . $this->siteId . '.pages.' . $this->pageInfo['name'],
+            'sites.' . $this->siteId . '.pages.' . $this->pageInfo['pageType'] . '.' . $this->pageInfo['name'],
             'read',
             'Rcm\Acl\ResourceProvider'
         );
@@ -239,7 +239,7 @@ class IndexController extends AbstractActionController
     protected function shouldShowRevisions()
     {
         $allowedRevisions = $this->rcmUserIsAllowed(
-            'sites.' . $this->siteId . '.pages.' . $this->pageName,
+            'sites.' . $this->siteId . '.pages.' . $this->pageType . '.' . $this->pageName,
             'edit',
             'Rcm\Acl\ResourceProvider'
         );
@@ -249,7 +249,7 @@ class IndexController extends AbstractActionController
         }
 
         $allowedRevisions = $this->rcmUserIsAllowed(
-            'sites.' . $this->siteId . '.pages.' . $this->pageName,
+            'sites.' . $this->siteId . '.pages.' . $this->pageType . '.' . $this->pageName,
             'approve',
             'Rcm\Acl\ResourceProvider'
         );
@@ -259,7 +259,7 @@ class IndexController extends AbstractActionController
         }
 
         $allowedRevisions = $this->rcmUserIsAllowed(
-            'sites.' . $this->siteId . '.pages.' . $this->pageName,
+            'sites.' . $this->siteId . '.pages.' . $this->pageType . '.' . $this->pageName,
             'revisions',
             'Rcm\Acl\ResourceProvider'
         );

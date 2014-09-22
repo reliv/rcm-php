@@ -401,4 +401,26 @@ class Page extends EntityRepository implements ContainerInterface
 
         return $result;
     }
+
+    public function isValid($siteId, $pageName, $pageType='n')
+    {
+        $isValidQueryBuilder = $this->_em->createQueryBuilder();
+        $isValidQueryBuilder->select('page.pageId')
+            ->from('\Rcm\Entity\Page', 'page')
+            ->where('page.name = :pageName')
+            ->andWhere('page.pageType = :pageType')
+            ->andWhere('page.site = :siteId')
+            ->setParameter('pageName', $pageName)
+            ->setParameter('pageType', $pageType)
+            ->setParameter('siteId', $siteId);
+
+
+        $result = $isValidQueryBuilder->getQuery()->getScalarResult();
+
+        if (!empty($result)) {
+            return true;
+        }
+
+        return false;
+    }
 }
