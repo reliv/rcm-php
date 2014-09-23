@@ -54,10 +54,18 @@ class ResponseHandlerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $mockUserService = $this->getMockBuilder('RcmUser\Service\RcmUserService')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
             'Rcm\Service\SiteManager',
             $mockSiteManager
+        );
+        $serviceManager->setService(
+            'RcmUser\Service\RcmUserService',
+            $mockUserService
         );
         $serviceManager->setService('request', new Request());
 

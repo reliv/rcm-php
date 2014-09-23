@@ -70,6 +70,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
     /** @var  \PHPUnit_Framework_MockObject_MockObject */
     protected $mockPageManager;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    protected $mockSiteManager;
+
     /**
      * Setup for tests
      *
@@ -77,8 +80,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->mockUserServicePlugin = $this
-            ->getMockBuilder('\RcmUser\Controller\Plugin\RcmUserIsAllowed')
+        $this->mockSiteManager = $this
+            ->getMockBuilder('\Rcm\Service\SiteManager')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -103,6 +106,20 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->will(
                 $this->returnCallback(array($this, 'layoutManagerMockCallback'))
             );
+
+        $this->mockSiteManager->expects($this->any())
+            ->method('getPageManager')
+            ->will($this->returnValue($this->mockPageManager));
+
+        $this->mockSiteManager->expects($this->any())
+            ->method('getLayoutManager')
+            ->will($this->returnValue($mockLayoutManager));
+
+        $this->mockUserServicePlugin = $this
+            ->getMockBuilder('\RcmUser\Controller\Plugin\RcmUserIsAllowed')
+            ->disableOriginalConstructor()
+            ->getMock();
+
 
         $config = array(
             'contentManager' => array(
@@ -134,9 +151,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         /** @var \Rcm\Service\PageManager $mockPageManager */
         /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
         $this->controller = new IndexController(
-            $this->mockPageManager,
-            $mockLayoutManager,
-            1
+            $this->mockSiteManager
         );
 
         $this->controller->getPluginManager()
@@ -161,6 +176,12 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
+        /** @var \Rcm\Service\SiteManager $mockSiteManager */
+        $mockSiteManager = $this
+            ->getMockBuilder('\Rcm\Service\SiteManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         /** @var \Rcm\Service\PageManager $mockPageManager */
         $mockPageManager = $this
             ->getMockBuilder('\Rcm\Service\PageManager')
@@ -173,8 +194,20 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $mockSiteManager->expects($this->any())
+            ->method('getSiteManager')
+            ->will($this->returnValue($mockPageManager));
+
+        $mockSiteManager->expects($this->any())
+            ->method('getLayouManager')
+            ->will($this->returnValue($mockLayoutManager));
+
+        $mockSiteManager->expects($this->any())
+            ->method('getCurrentSiteId')
+            ->will($this->returnValue(1));
+
         $controller
-            = new IndexController($mockPageManager, $mockLayoutManager, 1);
+            = new IndexController($mockSiteManager);
 
         $this->assertTrue($controller instanceof IndexController);
     }
@@ -395,7 +428,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'sites.' . $siteId . '.pages.' . $pageName;
+        $resource = 'sites.' . $siteId . '.pages.n.'. $pageName;
         $permission = 'edit';
         $provider = 'Rcm\Acl\ResourceProvider';
 
@@ -423,6 +456,10 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $reflectedPageName->setAccessible(true);
         $reflectedPageName->setValue($this->controller, $pageName);
 
+        $reflectedPageName = $reflectedController->getProperty('pageType');
+        $reflectedPageName->setAccessible(true);
+        $reflectedPageName->setValue($this->controller, 'n');
+
         $result = $reflectedShowRev->invoke($this->controller);
 
         $this->assertTrue($result);
@@ -440,7 +477,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'sites.' . $siteId . '.pages.' . $pageName;
+        $resource = 'sites.' . $siteId . '.pages.n.' . $pageName;
         $provider = 'Rcm\Acl\ResourceProvider';
 
         $map = array(
@@ -469,6 +506,10 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $reflectedPageName->setAccessible(true);
         $reflectedPageName->setValue($this->controller, $pageName);
 
+        $reflectedPageName = $reflectedController->getProperty('pageType');
+        $reflectedPageName->setAccessible(true);
+        $reflectedPageName->setValue($this->controller, 'n');
+
         $result = $reflectedShowRev->invoke($this->controller);
 
         $this->assertTrue($result);
@@ -486,7 +527,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $siteId = 1;
         $pageName = 'my-test';
 
-        $resource = 'sites.' . $siteId . '.pages.' . $pageName;
+        $resource = 'sites.' . $siteId . '.pages.n.' . $pageName;
         $provider = 'Rcm\Acl\ResourceProvider';
 
         $map = array(
@@ -515,6 +556,10 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $reflectedPageName = $reflectedController->getProperty('pageName');
         $reflectedPageName->setAccessible(true);
         $reflectedPageName->setValue($this->controller, $pageName);
+
+        $reflectedPageName = $reflectedController->getProperty('pageType');
+        $reflectedPageName->setAccessible(true);
+        $reflectedPageName->setValue($this->controller, 'n');
 
         $result = $reflectedShowRev->invoke($this->controller);
 

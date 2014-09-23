@@ -108,26 +108,7 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
         $mockResponseHandler->expects($this->once())
             ->method('processResponse');
 
-        $mockContainerPlugin = $this->getMockBuilder(
-            '\Rcm\View\Helper\Container'
-        )
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockContainerPlugin->expects($this->any())
-            ->method('getResponse')
-            ->will($this->returnValue($response));
-
-        $mockRenderer = $this->getMockBuilder('\Zend\View\Renderer\PhpRenderer')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockRenderer->expects($this->any())
-            ->method('plugin')
-            ->will($this->returnValue($mockContainerPlugin));
-
-        /** @var \Zend\View\Renderer\PhpRenderer $mockRenderer */
-        $event->setRenderer($mockRenderer);
+        $event->setResponse($response);
 
         /** @var \Rcm\Service\ResponseHandler $mockResponseHandler */
         $listener = new ViewEventListener(

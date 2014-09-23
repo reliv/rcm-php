@@ -57,6 +57,14 @@ class PageManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $mockPageManager = $this->getMockBuilder('\Rcm\Service\PageManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockSiteManager->expects($this->once())
+            ->method('getPageManager')
+            ->will($this->returnValue($mockPageManager));
+
         $mockEntityManager = $this->getMockBuilder(
             '\Doctrine\ORM\EntityManager'
         )
