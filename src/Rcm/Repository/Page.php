@@ -274,7 +274,8 @@ class Page extends EntityRepository implements ContainerInterface
         SiteEntity $siteDestination,
         $newPageTitle = null,
         $pageRevisionId = null,
-        $newPageType = 'n'
+        $newPageType = 'n',
+        $publishNewPage = false
     ) {
         if (empty($pageIdToCopy) || !is_numeric($pageIdToCopy)) {
             throw new InvalidArgumentException(
@@ -320,7 +321,13 @@ class Page extends EntityRepository implements ContainerInterface
             $clonedPage->setRevisions(array());
             $clonedRevision = clone $revisionToUse;
             $clonedPage->addRevision($clonedRevision);
-            $clonedPage->setPublishedRevision($clonedRevision);
+
+            if ($publishNewPage) {
+                $clonedPage->setPublishedRevision($clonedRevision);
+            } else {
+                $clonedPage->setStagedRevision($clonedRevision);
+            }
+
         }
 
         $siteDestination->addPage($clonedPage);
