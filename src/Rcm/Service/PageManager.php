@@ -386,4 +386,10 @@ class PageManager extends ContainerAbstract
 
         return $validator;
     }
+
+    public function getRevisionList($pageName, $pageType='n', $published=false, $limit=10)
+    {
+        $siteId = $this->siteManager->getCurrentSiteId();
+        return $this->repository->getRevisionList($siteId, $pageName, $pageType, $published, $limit);
+    }
 }

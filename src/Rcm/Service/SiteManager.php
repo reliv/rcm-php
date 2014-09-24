@@ -604,6 +604,13 @@ class SiteManager
                 $plugin['float'] = 'left';
             }
 
+            if (!empty($plugin['isSitewide'])) {
+                $plugin['isSitewide'] = (integer) $plugin['isSitewide'];
+            } else {
+                $plugin['isSitewide'] = 0;
+            }
+
+
             if (empty($plugin['sitewideName'])) {
                 $plugin['sitewideName'] = null;
             }

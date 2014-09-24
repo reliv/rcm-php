@@ -53,6 +53,10 @@ class SiteManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $mockPluginManager = $this->getMockBuilder('\Rcm\Service\PluginManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $mockSiteRepo = $this->getMockBuilder('\Rcm\Repository\Site')
             ->disableOriginalConstructor()
             ->getMock();
@@ -71,24 +75,35 @@ class SiteManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockRequest = $this->getMockBuilder(
-            '\Zend\Http\PhpEnvironment\Request'
-        )
+        $mockRequest = $this->getMockBuilder('\Zend\Http\PhpEnvironment\Request')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $mockRequest->expects($this->any())
+            ->method('getServer')
+            ->will($this->returnValue(new \Zend\Stdlib\Parameters()));
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
             'Rcm\Service\DomainManager',
             $mockDomainManager
         );
-        $serviceManager->setService('Rcm\Repository\Site', $mockSiteRepo);
+
         $serviceManager->setService(
-            'Doctrine\ORM\EntityManager',
-            $mockEntityManager
+            'Rcm\Service\PluginManager',
+            $mockPluginManager
         );
-        $serviceManager->setService('Rcm\Service\Cache', $mockCache);
+
+        $serviceManager->setService(
+            'Rcm\Service\Cache',
+            $mockCache
+        );
+
+        $serviceManager->setService('Rcm\Repository\Site', $mockSiteRepo);
+        $serviceManager->setService('Doctrine\ORM\EntityManager',$mockEntityManager);
+        $serviceManager->setService('config', array());
         $serviceManager->setService('request', $mockRequest);
+
 
         $factory = new SiteManagerFactory();
         $object = $factory->createService($serviceManager);

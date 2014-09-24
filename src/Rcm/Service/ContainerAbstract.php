@@ -65,6 +65,10 @@ abstract class ContainerAbstract
 
     protected $stagedRevId=array();
 
+    protected $storedRevisionData=array();
+
+    protected $storedCurrentRevId;
+
     /**
      * Constructor
      *
@@ -107,32 +111,18 @@ abstract class ContainerAbstract
     ) {
         $siteId = $this->siteManager->getCurrentSiteId();
 
+        if ($revision == null || !is_numeric($revision))
+        {
+            $revision = $this->getCurrentRevisionId($name, $type, $showStaged);
+        }
+
         $cacheKey
             = get_class($this) . '_' . $siteId . '_' . $type . '_' . $name . '_'
             . $revision;
 
-        $publishedRev = $this->getPublishedRevisionId($name, $type, $siteId);
-        $stagedRevision = null;
-
-        if ($showStaged) {
-            $stagedRevision = $this->getStagedRevisionId($name, $type, $siteId);
-        }
-
-        if (empty($revision) && $showStaged) {
-            $revision = $stagedRevision;
-        }
-
-        if (empty($revision)) {
-            $revision = $publishedRev;
-        }
-
-        if (empty($revision)) {
-            throw new ContainerNotFoundException(
-                'No container found for ' . $name
-            );
-        }
-
-        if ($this->cache->hasItem($cacheKey)) {
+        if (!empty($this->storedRevisionData[$siteId][$type][$name][$revision])) {
+            $pageInfo = $this->storedRevisionData[$siteId][$type][$name][$revision];
+        } elseif ($this->cache->hasItem($cacheKey)) {
             $pageInfo = $this->cache->getItem($cacheKey);
         } else {
             $pageInfo = $this->getRevisionDbInfo($name, $revision, $type, $siteId);
@@ -144,12 +134,47 @@ abstract class ContainerAbstract
             if ($canCache) {
                 $this->cache->setItem($cacheKey, $pageInfo);
             }
+
+            $this->storedRevisionData[$siteId][$type][$name][$revision] = $pageInfo;
         }
 
-        $pageInfo['currentRevisionId'] = $publishedRev;
-        $pageInfo['stagedRevisionId'] = $stagedRevision;
+        $pageInfo['currentRevisionId'] = $this->getPublishedRevisionId($name, $type, $siteId);
+        $pageInfo['stagedRevisionId'] = $this->getStagedRevisionId($name, $type, $siteId);;
 
         return $pageInfo;
+    }
+
+    public function getCurrentRevisionId(
+        $name,
+        $type = 'n',
+        $showStaged = false
+    ) {
+        if (!empty($this->storedCurrentRevId[$type][$name])) {
+            return $this->storedCurrentRevId[$type][$name];
+        }
+
+        $siteId = $this->siteManager->getCurrentSiteId();
+
+        $revision = null;
+
+        $stagedRevision = null;
+
+        if ($showStaged) {
+            $revision = $this->getStagedRevisionId($name, $type, $siteId);
+        }
+
+        if (empty($revision)) {
+            $revision = $this->getPublishedRevisionId($name, $type, $siteId);
+        }
+
+        if (empty($revision)) {
+            throw new ContainerNotFoundException(
+                'No container found for ' . $name
+            );
+        }
+
+        $this->storedCurrentRevId[$type][$name] = $revision;
+        return $revision;
     }
 
     /**

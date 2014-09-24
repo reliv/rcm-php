@@ -232,22 +232,4 @@ interface ContainerInterface
      * @return null|Revision
      */
     public function getRevisionById($revisionId);
-
-    /**
-     * Get array of draft revisions that have not been published
-     *
-     * @param integer $limit Number of drafts to get
-     *
-     * @return array
-     */
-    public function getDraftRevisionList($limit = 0);
-
-    /**
-     * Get array of published revisions that have not been published
-     *
-     * @param integer $limit Number of drafts to get
-     *
-     * @return array
-     */
-    public function getPublishedRevisionList($limit = 0);
 }

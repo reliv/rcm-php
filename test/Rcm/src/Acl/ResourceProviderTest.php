@@ -189,8 +189,8 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetResourcesWithSites()
     {
         $siteExpected = array(
-            'sites.10.pages.test-page' => array(
-                'resourceId' => 'sites.10.pages.test-page',
+            'sites.10.pages.n.test-page' => array(
+                'resourceId' => 'sites.10.pages.n.test-page',
                 'parentResourceId' => 'sites.10.pages',
                 'privileges' => array(
                     'read',
@@ -304,7 +304,7 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetResourceForPage()
     {
         $expected = array(
-            'resourceId' => 'sites.10.pages.test-page',
+            'resourceId' => 'sites.10.pages.n.test-page',
             'parentResourceId' => 'sites.10.pages',
             'privileges' => array(
                 'read',
@@ -322,7 +322,7 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
         $resourceProvider = $this->getProviderWithMocks();
 
         $siteResource = $resourceProvider->getResource(
-            'sites.10.pages.test-page'
+            'sites.10.pages.n.test-page'
         );
 
         $this->assertEquals($expected, $siteResource);

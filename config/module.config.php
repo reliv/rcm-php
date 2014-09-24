@@ -75,6 +75,11 @@ return array(
                 'description' => 'Global resource for Rcm Site Wide Widgets',
             ),
         ),
+        'RcmCmsPageRouteNames' => array(
+            'contentManager' => 'contentManager',
+            'contentManagerWithPageType' => 'contentManagerWithPageType',
+            'blog' => 'blog',
+        )
     ),
     'RcmUser' => array(
         'Acl\Config' => array(
@@ -255,6 +260,8 @@ return array(
             => '\Rcm\Factory\ZendLogFactory',
             'Rcm\Service\ZendLogWriter'
             => '\Rcm\Factory\ZendLogWriterFactory',
+            'Rcm\Acl\CmsPermissionsChecks'
+            => '\Rcm\Factory\CmsPermissionsChecksFactory'
         ),
         'aliases' => array(
             'rcmLogger' => 'Rcm\Service\Logger',
@@ -289,11 +296,15 @@ return array(
         ),
     ),
     'controller_plugins' => array(
+        'factories' => array(
+            'shouldShowRevisions'
+                => 'Rcm\Factory\ShouldShowRevisionsPluginFactory'
+        ),
         'invokables' => array(
             'redirectToPage'
-            => 'Rcm\Controller\Plugin\RedirectToPage',
+                => 'Rcm\Controller\Plugin\RedirectToPage',
             'urlToPage'
-            => 'Rcm\Controller\Plugin\UrlToPage',
+                => 'Rcm\Controller\Plugin\UrlToPage',
         ),
     ),
     'asset_manager' => [

@@ -70,6 +70,15 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
     /** @var  \PHPUnit_Framework_MockObject_MockObject */
     protected $mockPageManager;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    protected $mockSiteManager;
+
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    protected $mockShouldShowRevisions;
+
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    protected $mockRedirectToPage;
+
     /**
      * Setup for tests
      *
@@ -77,8 +86,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->mockUserServicePlugin = $this
-            ->getMockBuilder('\RcmUser\Controller\Plugin\RcmUserIsAllowed')
+        $this->mockSiteManager = $this
+            ->getMockBuilder('\Rcm\Service\SiteManager')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -103,6 +112,30 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->will(
                 $this->returnCallback(array($this, 'layoutManagerMockCallback'))
             );
+
+        $this->mockSiteManager->expects($this->any())
+            ->method('getPageManager')
+            ->will($this->returnValue($this->mockPageManager));
+
+        $this->mockSiteManager->expects($this->any())
+            ->method('getLayoutManager')
+            ->will($this->returnValue($mockLayoutManager));
+
+        $this->mockUserServicePlugin = $this
+            ->getMockBuilder('\RcmUser\Controller\Plugin\RcmUserIsAllowed')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->mockShouldShowRevisions = $this
+            ->getMockBuilder('\Rcm\Controller\Plugin\ShouldShowRevisions')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->mockRedirectToPage = $this
+            ->getMockBuilder('\Rcm\Controller\Plugin\RedirectToPage')
+            ->disableOriginalConstructor()
+            ->getMock();
+
 
         $config = array(
             'contentManager' => array(
@@ -134,13 +167,13 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         /** @var \Rcm\Service\PageManager $mockPageManager */
         /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
         $this->controller = new IndexController(
-            $this->mockPageManager,
-            $mockLayoutManager,
-            1
+            $this->mockSiteManager
         );
 
         $this->controller->getPluginManager()
-            ->setService('rcmUserIsAllowed', $this->mockUserServicePlugin);
+            ->setService('rcmUserIsAllowed', $this->mockUserServicePlugin)
+            ->setService('shouldShowRevisions', $this->mockShouldShowRevisions)
+            ->setService('redirectToPage', $this->mockRedirectToPage);
 
         $this->request = new Request();
         $this->routeMatch = new RouteMatch(array('controller' => 'index'));
@@ -161,6 +194,12 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
+        /** @var \Rcm\Service\SiteManager $mockSiteManager */
+        $mockSiteManager = $this
+            ->getMockBuilder('\Rcm\Service\SiteManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         /** @var \Rcm\Service\PageManager $mockPageManager */
         $mockPageManager = $this
             ->getMockBuilder('\Rcm\Service\PageManager')
@@ -173,8 +212,20 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $mockSiteManager->expects($this->any())
+            ->method('getSiteManager')
+            ->will($this->returnValue($mockPageManager));
+
+        $mockSiteManager->expects($this->any())
+            ->method('getLayouManager')
+            ->will($this->returnValue($mockLayoutManager));
+
+        $mockSiteManager->expects($this->any())
+            ->method('getCurrentSiteId')
+            ->will($this->returnValue(1));
+
         $controller
-            = new IndexController($mockPageManager, $mockLayoutManager, 1);
+            = new IndexController($mockSiteManager);
 
         $this->assertTrue($controller instanceof IndexController);
     }
@@ -195,6 +246,10 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->routeMatch->setParam('revision', 443);
 
         $this->mockUserServicePlugin->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
+        $this->mockShouldShowRevisions->expects($this->any())
             ->method('__invoke')
             ->will($this->returnValue(true));
 
@@ -298,6 +353,10 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
+        $this->mockShouldShowRevisions->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
         $result = $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
@@ -327,6 +386,10 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->routeMatch->setParam('revision', 443);
 
         $this->mockUserServicePlugin->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
+        $this->mockShouldShowRevisions->expects($this->any())
             ->method('__invoke')
             ->will($this->returnValue(true));
 
@@ -367,6 +430,10 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
+        $this->mockShouldShowRevisions->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
         $result = $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
@@ -381,240 +448,6 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             'layout/' . $this->layoutOverride,
             $this->controller->layout()->getTemplate()
         );
-    }
-
-    /**
-     * Test the index controllers Should Show Revisions method when
-     * user is allowed to edit page.
-     *
-     * @return null
-     * @covers Rcm\Controller\IndexController::shouldShowRevisions
-     */
-    public function testShouldShowRevisionsWithPageEdit()
-    {
-        $siteId = 1;
-        $pageName = 'my-test';
-
-        $resource = 'sites.' . $siteId . '.pages.' . $pageName;
-        $permission = 'edit';
-        $provider = 'Rcm\Acl\ResourceProvider';
-
-        $this->mockUserServicePlugin
-            ->expects($this->once())
-            ->method('__invoke')
-            ->with(
-                $this->equalTo($resource),
-                $this->equalTo($permission),
-                $this->equalTo($provider)
-            )
-            ->will($this->returnValue(true));
-
-        $reflectedController = new \ReflectionClass($this->controller);
-        $reflectedShowRev = $reflectedController->getMethod(
-            'shouldShowRevisions'
-        );
-        $reflectedShowRev->setAccessible(true);
-
-        $reflectedSiteId = $reflectedController->getProperty('siteId');
-        $reflectedSiteId->setAccessible(true);
-        $reflectedSiteId->setValue($this->controller, $siteId);
-
-        $reflectedPageName = $reflectedController->getProperty('pageName');
-        $reflectedPageName->setAccessible(true);
-        $reflectedPageName->setValue($this->controller, $pageName);
-
-        $result = $reflectedShowRev->invoke($this->controller);
-
-        $this->assertTrue($result);
-    }
-
-    /**
-     * Test the index controllers Should Show Revisions method when
-     * user is allowed to edit page.
-     *
-     * @return null
-     * @covers Rcm\Controller\IndexController::shouldShowRevisions
-     */
-    public function testShouldShowRevisionsWithPageApproval()
-    {
-        $siteId = 1;
-        $pageName = 'my-test';
-
-        $resource = 'sites.' . $siteId . '.pages.' . $pageName;
-        $provider = 'Rcm\Acl\ResourceProvider';
-
-        $map = array(
-            array($resource, 'edit', $provider, false),
-            array($resource, 'approve', $provider, true)
-        );
-
-        $this->mockUserServicePlugin
-            ->expects($this->exactly(2))
-            ->method('__invoke')
-            ->will(
-                $this->returnValueMap($map)
-            );
-
-        $reflectedController = new \ReflectionClass($this->controller);
-        $reflectedShowRev = $reflectedController->getMethod(
-            'shouldShowRevisions'
-        );
-        $reflectedShowRev->setAccessible(true);
-
-        $reflectedSiteId = $reflectedController->getProperty('siteId');
-        $reflectedSiteId->setAccessible(true);
-        $reflectedSiteId->setValue($this->controller, $siteId);
-
-        $reflectedPageName = $reflectedController->getProperty('pageName');
-        $reflectedPageName->setAccessible(true);
-        $reflectedPageName->setValue($this->controller, $pageName);
-
-        $result = $reflectedShowRev->invoke($this->controller);
-
-        $this->assertTrue($result);
-    }
-
-    /**
-     * Test the index controllers Should Show Revisions method when
-     * user is allowed to edit page.
-     *
-     * @return null
-     * @covers Rcm\Controller\IndexController::shouldShowRevisions
-     */
-    public function testShouldShowRevisionsWithPageRevisions()
-    {
-        $siteId = 1;
-        $pageName = 'my-test';
-
-        $resource = 'sites.' . $siteId . '.pages.' . $pageName;
-        $provider = 'Rcm\Acl\ResourceProvider';
-
-        $map = array(
-            array($resource, 'edit', $provider, false),
-            array($resource, 'approve', $provider, false),
-            array($resource, 'revisions', $provider, true)
-        );
-
-        $this->mockUserServicePlugin
-            ->expects($this->exactly(3))
-            ->method('__invoke')
-            ->will(
-                $this->returnValueMap($map)
-            );
-
-        $reflectedController = new \ReflectionClass($this->controller);
-        $reflectedShowRev = $reflectedController->getMethod(
-            'shouldShowRevisions'
-        );
-        $reflectedShowRev->setAccessible(true);
-
-        $reflectedSiteId = $reflectedController->getProperty('siteId');
-        $reflectedSiteId->setAccessible(true);
-        $reflectedSiteId->setValue($this->controller, $siteId);
-
-        $reflectedPageName = $reflectedController->getProperty('pageName');
-        $reflectedPageName->setAccessible(true);
-        $reflectedPageName->setValue($this->controller, $pageName);
-
-        $result = $reflectedShowRev->invoke($this->controller);
-
-        $this->assertTrue($result);
-    }
-
-    /**
-     * Test the index controllers Should Show Revisions method when
-     * user is allowed to create a page.
-     *
-     * @return null
-     * @covers Rcm\Controller\IndexController::shouldShowRevisions
-     */
-    public function testShouldShowRevisionsWithPageCreation()
-    {
-        $siteId = 1;
-        $pageName = 'my-test';
-
-        $resource = 'sites.' . $siteId . '.pages';
-        $provider = 'Rcm\Acl\ResourceProvider';
-
-        $map = array(
-            array($resource, 'edit', $provider, false),
-            array($resource, 'approve', $provider, false),
-            array($resource, 'revisions', $provider, false),
-            array($resource, 'create', $provider, true),
-        );
-
-        $this->mockUserServicePlugin
-            ->expects($this->exactly(4))
-            ->method('__invoke')
-            ->will(
-                $this->returnValueMap($map)
-            );
-
-        $reflectedController = new \ReflectionClass($this->controller);
-        $reflectedShowRev = $reflectedController->getMethod(
-            'shouldShowRevisions'
-        );
-        $reflectedShowRev->setAccessible(true);
-
-        $reflectedSiteId = $reflectedController->getProperty('siteId');
-        $reflectedSiteId->setAccessible(true);
-        $reflectedSiteId->setValue($this->controller, $siteId);
-
-        $reflectedPageName = $reflectedController->getProperty('pageName');
-        $reflectedPageName->setAccessible(true);
-        $reflectedPageName->setValue($this->controller, $pageName);
-
-        $result = $reflectedShowRev->invoke($this->controller);
-
-        $this->assertTrue($result);
-    }
-
-    /**
-     * Test the index controllers Should Show Revisions method when
-     * user is allowed to edit page.
-     *
-     * @return null
-     * @covers Rcm\Controller\IndexController::shouldShowRevisions
-     */
-    public function testShouldShowRevisionsWithNoPermissions()
-    {
-        $siteId = 1;
-        $pageName = 'my-test';
-
-        $resource = 'sites.' . $siteId . '.pages.' . $pageName;
-        $provider = 'Rcm\Acl\ResourceProvider';
-
-        $map = array(
-            array($resource, 'edit', $provider, false),
-            array($resource, 'approve', $provider, false),
-            array($resource, 'revisions', $provider, false),
-            array('sites.' . $siteId . '.pages', 'revisions', $provider, false)
-        );
-
-        $this->mockUserServicePlugin
-            ->expects($this->exactly(4))
-            ->method('__invoke')
-            ->will(
-                $this->returnValueMap($map)
-            );
-
-        $reflectedController = new \ReflectionClass($this->controller);
-        $reflectedShowRev = $reflectedController->getMethod(
-            'shouldShowRevisions'
-        );
-        $reflectedShowRev->setAccessible(true);
-
-        $reflectedSiteId = $reflectedController->getProperty('siteId');
-        $reflectedSiteId->setAccessible(true);
-        $reflectedSiteId->setValue($this->controller, $siteId);
-
-        $reflectedPageName = $reflectedController->getProperty('pageName');
-        $reflectedPageName->setAccessible(true);
-        $reflectedPageName->setValue($this->controller, $pageName);
-
-        $result = $reflectedShowRev->invoke($this->controller);
-
-        $this->assertFalse($result);
     }
 
     /**
