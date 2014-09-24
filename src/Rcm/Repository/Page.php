@@ -388,6 +388,10 @@ class Page extends EntityRepository implements ContainerInterface
 
         $result['lastDraft'] = $lastDraft[0];
 
+        if ($result['lastDraft']['revisionId'] == $result['stagedRevision']['revisionId']) {
+            $result['lastDraft'] = null;
+        }
+
         return $result;
     }
 

@@ -279,7 +279,7 @@ class IndexController extends AbstractActionController
                 'selected' => false,
             );
 
-            if (($this->pageRevisionId == $revision['revisionId'])
+            if (($this->pageInfo['revision']['revisionId'] == $revision['revisionId'])
                 || (empty($this->pageRevisionId) && $key == 'Live')
             ) {
                 $return[$key]['selected'] = true;
