@@ -96,6 +96,10 @@ abstract class ContainerAbstract implements ContainerInterface
             $this->currentRevision = $revision;
             $this->revisions[] = $revision;
             $this->stagedRevision = null;
+        } elseif (!empty($this->stagedRevision)) {
+            $revision = clone $this->stagedRevision;
+            $this->stagedRevision = $revision;
+            $this->revisions[] = $revision;
         }
     }
 
