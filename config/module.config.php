@@ -75,6 +75,11 @@ return array(
                 'description' => 'Global resource for Rcm Site Wide Widgets',
             ),
         ),
+        'RcmCmsPageRouteNames' => array(
+            'contentManager' => 'contentManager',
+            'contentManagerWithPageType' => 'contentManagerWithPageType',
+            'blog' => 'blog',
+        )
     ),
     'RcmUser' => array(
         'Acl\Config' => array(
