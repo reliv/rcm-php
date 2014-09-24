@@ -375,23 +375,12 @@ class Page extends EntityRepository implements ContainerInterface
             ->setParameter('pageName', $pageName)
             ->setParameter('pageType', $pageType);
 
-        $lastDraftQueryBuilder = $this->_em->createQueryBuilder();
-        $lastDraftQueryBuilder->select('PARTIAL page.{pageId}, revisions ')
-            ->from('\Rcm\Entity\Page', 'page')
-            ->join('page.revisions', 'revisions')
-            ->where('page.site = :siteId')
-            ->andWhere('page.name = :pageName')
-            ->andWhere('page.pageType = :pageType')
-            ->andWhere('revisions.published = 0')
-            ->setParameter('siteId', $siteId)
-            ->setParameter('pageName', $pageName)
-            ->setParameter('pageType', $pageType)
-            ->orderBy('revisions.revisionId', 'DESC');
+        $lastDraftQueryBuilder = $this->getRevisionQuery($siteId, $pageName, $pageType);
 
         $result = $publishedQueryBuilder->getQuery()->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
 
         try {
-            $lastDraft = $lastDraftQueryBuilder->getQuery()->setMaxResults(1)->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+            $lastDraft = $lastDraftQueryBuilder->setMaxResults(1)->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
             $lastDraft = array_values($lastDraft['revisions']);
         } catch (NoResultException $e) {
             $lastDraft = array(0=> null);
@@ -422,5 +411,47 @@ class Page extends EntityRepository implements ContainerInterface
         }
 
         return false;
+    }
+
+    public function getRevisionList(
+        $siteId,
+        $pageName,
+        $pageType='n',
+        $published=false,
+        $limit=10
+    ) {
+        $draftRevisionQuery = $this->getRevisionQuery($siteId, $pageName, $pageType, $published);
+
+        if ($limit > 0) {
+            $draftRevisionQuery->setMaxResults($limit);
+        }
+
+        try {
+            $result = $draftRevisionQuery->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        } catch (NoResultException $e) {
+            return array();
+        }
+
+        return $result;
+    }
+
+    protected function getRevisionQuery($siteId, $pageName, $pageType, $published=false)
+    {
+        $revisionQueryBuilder = $this->_em->createQueryBuilder();
+        $revisionQueryBuilder->select('page.pageId, revisions')
+            ->select('PARTIAL page.{pageId}, revisions ')
+            ->from('\Rcm\Entity\Page', 'page')
+            ->join('page.revisions', 'revisions')
+            ->where('page.site = :siteId')
+            ->andWhere('page.name = :pageName')
+            ->andWhere('page.pageType = :pageType')
+            ->andWhere('revisions.published = :published')
+            ->setParameter('siteId', $siteId)
+            ->setParameter('pageName', $pageName)
+            ->setParameter('pageType', $pageType)
+            ->setParameter('published', $published)
+            ->orderBy('revisions.revisionId', 'DESC');
+
+        return $revisionQueryBuilder->getQuery();
     }
 }

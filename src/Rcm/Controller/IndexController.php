@@ -137,7 +137,11 @@ class IndexController extends AbstractActionController
             ->getParam('revision', null);
 
 
-        $userCanSeeRevisions = $this->shouldShowRevisions();
+        $userCanSeeRevisions = $this->shouldShowRevisions(
+            $this->siteManager->getCurrentSiteId(),
+            $this->pageName,
+            $this->pageType
+        );
 
         if (!$userCanSeeRevisions && $this->pageRevisionId) {
             return $this->redirectToPage($this->pageName, $this->pageType);
@@ -228,57 +232,6 @@ class IndexController extends AbstractActionController
 
         $layoutView->setVariable('pageInfo', $this->pageInfo);
         $layoutView->setVariable('shortRevList', $this->getShortRevisionList());
-    }
-
-
-    /**
-     * Check to make sure user can see revisions
-     *
-     * @return bool
-     */
-    protected function shouldShowRevisions()
-    {
-        $allowedRevisions = $this->rcmUserIsAllowed(
-            'sites.' . $this->siteId . '.pages.' . $this->pageType . '.' . $this->pageName,
-            'edit',
-            'Rcm\Acl\ResourceProvider'
-        );
-
-        if ($allowedRevisions) {
-            return true;
-        }
-
-        $allowedRevisions = $this->rcmUserIsAllowed(
-            'sites.' . $this->siteId . '.pages.' . $this->pageType . '.' . $this->pageName,
-            'approve',
-            'Rcm\Acl\ResourceProvider'
-        );
-
-        if ($allowedRevisions) {
-            return true;
-        }
-
-        $allowedRevisions = $this->rcmUserIsAllowed(
-            'sites.' . $this->siteId . '.pages.' . $this->pageType . '.' . $this->pageName,
-            'revisions',
-            'Rcm\Acl\ResourceProvider'
-        );
-
-        if ($allowedRevisions) {
-            return true;
-        }
-
-        $allowedRevisions = $this->rcmUserIsAllowed(
-            'sites.' . $this->siteId . '.pages',
-            'create',
-            'Rcm\Acl\ResourceProvider'
-        );
-
-        if ($allowedRevisions) {
-            return true;
-        }
-
-        return false;
     }
 
     public function getShortRevisionList()
