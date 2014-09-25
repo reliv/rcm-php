@@ -222,9 +222,7 @@ abstract class ContainerAbstract implements ContainerInterface
      */
     public function setPublishedRevision(Revision $revision)
     {
-        if (!empty($this->stagedRevision)
-            && $this->stagedRevision->getRevisionId() == $revision->getRevisionId()
-        ) {
+        if (!empty($this->stagedRevision)) {
             $this->stagedRevision = null;
         }
 

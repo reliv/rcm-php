@@ -508,6 +508,10 @@ class SiteManager
                 $container->setCurrentRevision($newRevision);
             }
 
+            if ($revision->getRevisionId() == $container->getStagedRevision()->getRevisionId()) {
+                $container->setStagedRevision($newRevision);
+            }
+
             $this->siteRepo->getDoctrine()->flush();
             return $newRevision->getRevisionId();
         }
