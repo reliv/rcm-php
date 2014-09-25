@@ -508,7 +508,9 @@ class SiteManager
                 $container->setCurrentRevision($newRevision);
             }
 
-            if ($revision->getRevisionId() == $container->getStagedRevision()->getRevisionId()) {
+            $stagedRevision = $container->getStagedRevision();
+
+            if (!empty($stagedRevision) && $revision->getRevisionId() == $stagedRevision->getRevisionId()) {
                 $container->setStagedRevision($newRevision);
             }
 
