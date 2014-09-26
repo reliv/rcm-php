@@ -482,21 +482,32 @@ class SiteManager
 
         $isDirty = false;
 
-        foreach($containerData as $pluginData) {
-            /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
-            $pluginWrapper = $revision->getPluginWrapper($pluginData['instanceId']);
-            $newPluginWrapper = $this->savePluginWrapper($pluginData, $pluginWrapper);
-            $newRevision->addPluginWrapper($newPluginWrapper);
-
-            if (!empty($pluginWrapper)
-                && $pluginWrapper->getPluginWrapperId() == $newPluginWrapper->getPluginWrapperId()
-                && ($pluginWrapper->getInstance()->getInstanceId() == $newPluginWrapper->getInstance()->getInstanceId()
-                    || $pluginWrapper->getInstance()->isSiteWide())
-            ) {
-                continue;
-            }
-
+        if (empty($containerData)) {
             $isDirty = true;
+        } else {
+            foreach ($containerData as $pluginData) {
+                /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
+                $pluginWrapper = $revision->getPluginWrapper(
+                    $pluginData['instanceId']
+                );
+                $newPluginWrapper = $this->savePluginWrapper(
+                    $pluginData,
+                    $pluginWrapper
+                );
+                $newRevision->addPluginWrapper($newPluginWrapper);
+
+                if (!empty($pluginWrapper)
+                    && $pluginWrapper->getPluginWrapperId()
+                    == $newPluginWrapper->getPluginWrapperId()
+                    && ($pluginWrapper->getInstance()->getInstanceId()
+                        == $newPluginWrapper->getInstance()->getInstanceId()
+                        || $pluginWrapper->getInstance()->isSiteWide())
+                ) {
+                    continue;
+                }
+
+                $isDirty = true;
+            }
         }
 
         if ($isDirty) {
