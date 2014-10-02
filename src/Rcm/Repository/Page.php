@@ -351,7 +351,7 @@ class Page extends EntityRepository implements ContainerInterface
     {
         //Query is needed to ensure revision belongs to the page in question
         $pageQueryBuilder = $this->_em->createQueryBuilder();
-        $pageQueryBuilder->select('page')
+        $pageQueryBuilder->select('page, revision')
             ->from('\Rcm\Entity\Page', 'page')
             ->join('page.revisions', 'revision')
             ->where('page.name = :pageName')
@@ -363,16 +363,14 @@ class Page extends EntityRepository implements ContainerInterface
             ->setParameter('siteId', $siteId)
             ->setParameter('revisionId', $revisionId);
 
+        /** @var \Rcm\Entity\Page $page */
         $page = $pageQueryBuilder->getQuery()->getSingleResult();
 
         if (empty($page)) {
             throw new PageNotFoundException('Unable to locate page by revision '.$revisionId);
         }
 
-        $revision = $this->_em->getRepository('\Rcm\Entity\Revision')->findOneBy(
-            array('revisionId' => $revisionId)
-        );
-
+        $revision = $page->getRevisionById($revisionId);
 
         if (empty($revision)) {
             throw new RuntimeException('Revision not found.');

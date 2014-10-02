@@ -419,13 +419,6 @@ abstract class ContainerAbstract implements ContainerInterface
      */
     public function getRevisionById($revisionId)
     {
-        /** @var \Rcm\Entity\Revision $revision */
-        foreach ($this->revisions as $revision) {
-            if ($revision->getRevisionId() == $revisionId) {
-                return $revision;
-            }
-        }
-
-        return null;
+        return $this->revisions->get($revisionId);
     }
 }
