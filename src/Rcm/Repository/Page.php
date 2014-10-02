@@ -338,23 +338,41 @@ class Page extends EntityRepository implements ContainerInterface
 
     /**
      * Get a page entity containing a Revision Id.
+     * @param integer $siteId     Site Id
      * @param string  $pageName   Name of page
      * @param string  $pageType   Page Type
-     * @param integer $revisionId Revistion Id to search for
+     * @param integer $revisionId Revision Id to search for
      *
      * @return Page
      * @throws PageNotFoundException
      * @throws RuntimeException
      */
-    public function publishPageRevision($pageName, $pageType, $revisionId)
+    public function publishPageRevision($siteId, $pageName, $pageType, $revisionId)
     {
-        $page = $this->findOneBy(array('name' => $pageName, 'pageType' =>$pageType));
+        //Query is needed to ensure revision belongs to the page in question
+        $pageQueryBuilder = $this->_em->createQueryBuilder();
+        $pageQueryBuilder->select('page')
+            ->from('\Rcm\Entity\Page', 'page')
+            ->join('page.revisions', 'revision')
+            ->where('page.name = :pageName')
+            ->andWhere('page.pageType = :pageType')
+            ->andWhere('page.site = :siteId')
+            ->andWhere('revision.revisionId = :revisionId')
+            ->setParameter('pageName', $pageName)
+            ->setParameter('pageType', $pageType)
+            ->setParameter('siteId', $siteId)
+            ->setParameter('revisionId', $revisionId);
+
+        $page = $pageQueryBuilder->getQuery()->getSingleResult();
 
         if (empty($page)) {
             throw new PageNotFoundException('Unable to locate page by revision '.$revisionId);
         }
 
-        $revision = $page->getRevisionById($revisionId);
+        $revision = $this->_em->getRepository('\Rcm\Entity\Revision')->findOneBy(
+            array('revisionId' => $revisionId)
+        );
+
 
         if (empty($revision)) {
             throw new RuntimeException('Revision not found.');

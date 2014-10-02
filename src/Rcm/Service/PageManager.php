@@ -260,7 +260,7 @@ class PageManager extends ContainerAbstract
             );
         }
 
-        return $this->repository->publishPageRevision($pageName, $pageType, $pageRevision);
+        return $this->repository->publishPageRevision($this->siteManager->getCurrentSiteId(), $pageName, $pageType, $pageRevision);
     }
 
     /**
