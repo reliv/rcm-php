@@ -88,13 +88,19 @@ class Site extends EntityRepository
     /**
      * Get All Active Site Objects
      *
-     * @return array Array of Site Objects
+     * @param bool $mustBeActive
+     *
+     * @return array array of site objects
      */
-    public function getAllActiveSites()
+    public function getSites($mustBeActive = false)
     {
-        return $this->_em
-            ->getRepository('\Rcm\Entity\Site')
-            ->findBy(array('status' => 'A'));
+        $repo = $this->_em
+            ->getRepository('\Rcm\Entity\Site');
+        if($mustBeActive){
+            return $repo ->findBy(array('status' => 'A'));
+        }else{
+            return $repo->findAll();
+        }
     }
 
     /**

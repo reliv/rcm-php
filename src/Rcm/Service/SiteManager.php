@@ -347,7 +347,17 @@ class SiteManager
      */
     public function getAllActiveSites()
     {
-        return $this->siteRepo->getAllActiveSites();
+        return $this->siteRepo->getSites(true);
+    }
+
+    /**
+     * Get an array of active site objects
+     *
+     * @return array
+     */
+    public function getAllSites()
+    {
+        return $this->siteRepo->getSites(false);
     }
 
     /**
