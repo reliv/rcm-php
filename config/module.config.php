@@ -107,6 +107,15 @@ return array(
                     )
                 ),
             ),
+            'ManageSitesApiController' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/api/admin/sites[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Rcm\Controller\ManageSitesApiController',
+                    )
+                ),
+            ),
             'contentManager' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -273,6 +282,8 @@ return array(
             => 'Rcm\Controller\PageCheckController',
             'Rcm\Controller\InstanceConfigApiController'
             => 'Rcm\Controller\InstanceConfigApiController',
+            'Rcm\Controller\ManageSitesApiController'
+            => 'Rcm\Controller\ManageSitesApiController',
             'Rcm\Controller\PageSearchApiController'
             => 'Rcm\Controller\PageSearchApiController',
             'Rcm\Controller\NewPluginInstanceApiController'
