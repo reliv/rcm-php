@@ -211,13 +211,6 @@ class SiteManager
             return $this->siteInfo;
         }
 
-//        $cacheKey = 'rcm_site_info_' . $siteId;
-//
-//        if ($this->cache->hasItem($cacheKey)) {
-//            $this->siteInfo = $this->cache->getItem($cacheKey);
-//            return $this->siteInfo;
-//        }
-
         $siteInfo = $this->siteRepo->getSiteInfo($siteId);
 
         if (empty($siteInfo)) {
@@ -225,8 +218,6 @@ class SiteManager
         }
 
         $this->siteInfo = $siteInfo;
-
-//        $this->cache->setItem($cacheKey, $siteInfo);
 
         return $siteInfo;
     }
