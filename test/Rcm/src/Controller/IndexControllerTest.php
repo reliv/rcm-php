@@ -122,7 +122,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($mockLayoutManager));
 
         $this->mockUserServicePlugin = $this
-            ->getMockBuilder('\RcmUser\Controller\Plugin\RcmUserIsAllowed')
+            ->getMockBuilder('\RcmUser\Controller\Plugin\RcmIsAllowed')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -171,7 +171,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->controller->getPluginManager()
-            ->setService('rcmUserIsAllowed', $this->mockUserServicePlugin)
+            ->setService('rcmIsAllowed', $this->mockUserServicePlugin)
             ->setService('shouldShowRevisions', $this->mockShouldShowRevisions)
             ->setService('redirectToPage', $this->mockRedirectToPage);
 

@@ -21,8 +21,6 @@
 namespace Rcm\Controller;
 
 use Rcm\Exception\ContainerNotFoundException;
-use Rcm\Service\LayoutManager;
-use Rcm\Service\PageManager;
 use Rcm\Service\SiteManager;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -46,7 +44,7 @@ use Zend\View\Model\ViewModel;
  * @method Response redirectToPage($pageName, $pageType) Redirect to CMS
  *                                                                  Page
  *
- * @method boolean rcmUserIsAllowed($resource, $action, $providerId) Is User Allowed
+ * @method boolean rcmIsAllowed($resource, $action) Is User Allowed
  */
 class IndexController extends AbstractActionController
 {
@@ -77,9 +75,7 @@ class IndexController extends AbstractActionController
     /**
      * Constructor
      *
-     * @param PageManager   $pageManager   Page Manager needed to get current page.
-     * @param LayoutManager $layoutManager Layout Manager to handle themes
-     * @param integer       $siteId        Current Site Id
+     * @param SiteManager   $siteManager   Site Manager needed to get current page.
      */
     public function __construct(
         SiteManager $siteManager
@@ -191,10 +187,9 @@ class IndexController extends AbstractActionController
 
     protected function checkPermissions()
     {
-        $allowed = $this->rcmUserIsAllowed(
+        $allowed = $this->rcmIsAllowed(
             'sites.' . $this->siteId . '.pages.' . $this->pageInfo['pageType'] . '.' . $this->pageInfo['name'],
-            'read',
-            'Rcm\Acl\ResourceProvider'
+            'read'
         );
 
         $url = $this->request->getUriString();
@@ -236,11 +231,7 @@ class IndexController extends AbstractActionController
 
     public function getShortRevisionList()
     {
-        $allowed = $this->rcmUserIsAllowed(
-            'sites.' . $this->siteId,
-            'admin',
-            'Rcm\Acl\ResourceProvider'
-        );
+        $allowed = $this->rcmIsAllowed('sites.' . $this->siteId, 'admin');
 
         if (!$allowed) {
             return array();
