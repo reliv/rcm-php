@@ -631,8 +631,12 @@ class SiteManager
                 $plugin['float'] = 'left';
             }
 
-            if (!empty($plugin['isSitewide'])) {
-                $plugin['isSitewide'] = (integer) $plugin['isSitewide'];
+            /* Patch for a Json Bug */
+            if (!empty($plugin['isSitewide'])
+                && $plugin['isSitewide'] != 'false'
+                && $plugin['isSitewide'] != '0'
+            ) {
+                $plugin['isSitewide'] = 1;
             } else {
                 $plugin['isSitewide'] = 0;
             }
