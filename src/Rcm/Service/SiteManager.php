@@ -211,13 +211,6 @@ class SiteManager
             return $this->siteInfo;
         }
 
-        $cacheKey = 'rcm_site_info_' . $siteId;
-
-        if ($this->cache->hasItem($cacheKey)) {
-            $this->siteInfo = $this->cache->getItem($cacheKey);
-            return $this->siteInfo;
-        }
-
         $siteInfo = $this->siteRepo->getSiteInfo($siteId);
 
         if (empty($siteInfo)) {
@@ -225,8 +218,6 @@ class SiteManager
         }
 
         $this->siteInfo = $siteInfo;
-
-        $this->cache->setItem($cacheKey, $siteInfo);
 
         return $siteInfo;
     }
@@ -631,8 +622,12 @@ class SiteManager
                 $plugin['float'] = 'left';
             }
 
-            if (!empty($plugin['isSitewide'])) {
-                $plugin['isSitewide'] = (integer) $plugin['isSitewide'];
+            /* Patch for a Json Bug */
+            if (!empty($plugin['isSitewide'])
+                && $plugin['isSitewide'] != 'false'
+                && $plugin['isSitewide'] != '0'
+            ) {
+                $plugin['isSitewide'] = 1;
             } else {
                 $plugin['isSitewide'] = 0;
             }
