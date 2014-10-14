@@ -127,10 +127,10 @@ class Site extends EntityRepository
             ->where('site.siteId = :siteId')
             ->setParameter('siteId', $siteId);
 
-//        if ($checkActive) {
-//            $queryBuilder->andWhere('site.status = :status');
-//            $queryBuilder->setParameter('status', 'A');
-//        }
+        if ($checkActive) {
+            $queryBuilder->andWhere('site.status = :status');
+            $queryBuilder->setParameter('status', 'A');
+        }
 
         $result = $queryBuilder->getQuery()->getScalarResult();
 
