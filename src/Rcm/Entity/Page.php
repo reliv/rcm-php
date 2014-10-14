@@ -207,7 +207,7 @@ class Page extends ContainerAbstract
         }
 
         $this->pageId = null;
-        $this->name = null;
+        //$this->name = null; // causes issues when cloning site
         $this->parent = null;
         parent::__clone();
     }
