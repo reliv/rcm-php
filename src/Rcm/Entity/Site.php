@@ -147,7 +147,8 @@ class Site
      *
      * @ORM\OneToMany(
      *     targetEntity="Container",
-     *     mappedBy="site"
+     *     mappedBy="site",
+     *     cascade={"persist"}
      * )
      */
     protected $containers;
@@ -235,9 +236,10 @@ class Site
 
                 $pageType = $page->getPageType();
 
-                if ($pageType != 'n' && $pageType != 'z' && $pageType != 't') {
-                    continue;
-                }
+                // This should not be needed and causes incomplete cloning
+                //if ($pageType != 'n' && $pageType != 'z' && $pageType != 't') {
+                //    continue;
+                //}
 
                 $clonedPage = clone $page;
                 $clonedPage->setSite($this);
