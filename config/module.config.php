@@ -110,7 +110,7 @@ return array(
             'ManageSitesApiController' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/api/admin/sites[/:id]',
+                    'route' => '/api/admin/sites[/:id][/:active]',
                     'defaults' => array(
                         'controller' => 'Rcm\Controller\ManageSitesApiController',
                     )
@@ -309,7 +309,9 @@ return array(
     'controller_plugins' => array(
         'factories' => array(
             'shouldShowRevisions'
-                => 'Rcm\Factory\ShouldShowRevisionsPluginFactory'
+                => 'Rcm\Factory\ShouldShowRevisionsPluginFactory',
+            'rcmIsAllowed' =>
+                'Rcm\Factory\RcmIsAllowedFactory',
         ),
         'invokables' => array(
             'redirectToPage'
