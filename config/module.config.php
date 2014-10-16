@@ -110,7 +110,7 @@ return array(
             'ManageSitesApiController' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/api/admin/sites[/:id][/:active]',
+                    'route' => '/api/admin/sites[/:id]',
                     'defaults' => array(
                         'controller' => 'Rcm\Controller\ManageSitesApiController',
                     )
