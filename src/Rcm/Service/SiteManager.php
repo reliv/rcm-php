@@ -327,6 +327,18 @@ class SiteManager
     public function getCurrentSiteLocale()
     {
         $siteInfo = $this->getCurrentSiteInfo();
+        return $this->getSiteLocale($siteInfo);
+    }
+
+    /**
+     * getSiteLocale - Returns php compatible locale string
+     *
+     * @param $siteInfo
+     *
+     * @return string
+     */
+    public function getSiteLocale($siteInfo)
+    {
         return $siteInfo['language']['iso639_1']
         . '_' . $siteInfo['country']['iso2'];
     }

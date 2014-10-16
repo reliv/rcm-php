@@ -309,7 +309,9 @@ return array(
     'controller_plugins' => array(
         'factories' => array(
             'shouldShowRevisions'
-                => 'Rcm\Factory\ShouldShowRevisionsPluginFactory'
+                => 'Rcm\Factory\ShouldShowRevisionsPluginFactory',
+            'rcmIsAllowed' =>
+                'Rcm\Factory\RcmIsAllowedFactory',
         ),
         'invokables' => array(
             'redirectToPage'
