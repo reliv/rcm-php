@@ -38,9 +38,23 @@ use Zend\View\Model\JsonModel;
  */
 class ManageSitesApiController extends AbstractRestfulController
 {
+    /**
+     * getList
+     *
+     * @return mixed|JsonModel
+     */
     public function getList()
     {
-
+        //ACCESS CHECK
+        if (!$this->rcmUserIsAllowed(
+            'sites',
+            'admin',
+            'Rcm\Acl\ResourceProvider'
+        )
+        ) {
+            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+            return $this->getResponse();
+        }
         /**
          * @var $siteManager \Rcm\Service\SiteManager
          */
@@ -58,11 +72,7 @@ class ManageSitesApiController extends AbstractRestfulController
             if (is_object($site->getDomain())) {
                 $domain = $site->getDomain()->getDomainName();
             }
-//            if ($site === reset($site))
-//                echo 'FIRST ELEMENT!'.$site;
 
-//            $temp = $site->getStatus();
-//            echo $temp;
             $sites[] = [
                 'siteId' => $site->getSiteId(),
                 'domain' => $domain,
@@ -79,21 +89,24 @@ class ManageSitesApiController extends AbstractRestfulController
      * @param mixed $data
      *
      * @return mixed|JsonModel
+     * @throws Exception
      */
     public function update($siteId, $data)
     {
-//        var_dump($data);
-        // Check if siteId is valid
-        // Store value to make site disabled
-
-
-        //CREATE RESOURCE ID
-
         //ACCESS CHECK
-//        if (!$this->rcmUserIsAllowed('sites', 'admin', 'RcmAdmin')) {
-//            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
-//            return $this->getResponse();
-//        }
+        if (!$this->rcmUserIsAllowed(
+            'sites',
+            'admin',
+            'Rcm\Acl\ResourceProvider'
+        )
+        ) {
+            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+            return $this->getResponse();
+        }
+
+        if (!is_array($data)) {
+            throw new Exception('Invalid data format');
+        }
         /**
          * @var $siteManager \Rcm\Service\SiteManager
          */
@@ -106,16 +119,12 @@ class ManageSitesApiController extends AbstractRestfulController
             return $this->getResponse();
         }
 
-        $routeMatch = $this->getEvent()->getRouteMatch();
-        $status = $routeMatch->getParam('active');
-
-        echo 'status = ' . $status;
         $site = $siteManager->getSiteById($siteId);
 
-        if ($status == 'D') {
+        if ($data['active'] == 'D') {
             $site->setStatus('D');
         }
-        if ($status == 'A') {
+        if ($data['active'] == 'A') {
             $site->setStatus('A');
         }
 
@@ -124,24 +133,15 @@ class ManageSitesApiController extends AbstractRestfulController
         $em->persist($site);
         $em->flush();
 
-        return new JsonModel(
-            array(
-                $site->getSiteId(),
-                $site->getStatus()
-            )
-        );
+        $data = $this->getSiteArray($site);
+
+        return new JsonModel($data);
     }
 
     /**
      * create - Create or Clone a site
      *
-     * @param array $data
-     *   $data = array(
-     *   'siteId' => {int Id | null for new site},
-     *   'domainName' => {'string},
-     *   'countryIso3' => {'str' | null},
-     *   'languageIso6391' => {'st' | null},
-     *   );
+     * @param array $data - see getSiteArray()
      *
      * @return mixed|JsonModel
      */

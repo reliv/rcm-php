@@ -372,12 +372,9 @@ class SiteManager
      */
     public function getSiteById($siteId)
     {
-        if ($this->isValidSiteId($siteId)) {
             return $this->siteRepo->findOneBy(
                 array('siteId' => $siteId)
             );
-        }
-        return null;
     }
 
     /**
