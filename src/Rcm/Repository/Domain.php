@@ -57,22 +57,26 @@ class Domain extends EntityRepository
      * Get the info for a single domain
      *
      * @param string $domain Domain name to search by
+     * @param string $siteStatus
      *
-     * @return array
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getDomainInfo($domain)
+    public function getDomainInfo($domain, $siteStatus = 'A')
     {
-        return $this->getDomainLookupQuery($domain)->getSingleResult();
+        return $this->getDomainLookupQuery($domain, $siteStatus)->getSingleResult();
     }
 
     /**
      * Get Doctrine Query Object for Domain Lookups
      *
-     * @param null $domain
+     * @param null   $domain
+     * @param string $siteStatus
      *
      * @return Query
      */
-    private function getDomainLookupQuery($domain=null)
+    private function getDomainLookupQuery($domain=null, $siteStatus = 'A')
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -95,7 +99,7 @@ class Domain extends EntityRepository
             )
             ->leftJoin('site.country', 'country')
             ->where('site.status = :status')
-            ->setParameter('status', 'A');
+            ->setParameter('status', $siteStatus);
 
         if (!empty($domain)) {
             $queryBuilder->andWhere('domain.domain = :domain')
