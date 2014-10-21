@@ -130,7 +130,7 @@ class RedirectManager
     /**
      * checkActive
      *
-     * @return string|null
+     * @return boolean
      */
     public function isCurrentSiteActive()
     {
