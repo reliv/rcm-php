@@ -41,7 +41,7 @@ use RcmUser\Acl\Provider\ResourceProvider as RcmUserResourceProvider;
 class ResourceProvider extends RcmUserResourceProvider
 {
     /** @var string */
-    protected $providerId = '\Rcm\Acl\ResourceProvider';
+    protected $providerId = 'Rcm\Acl\ResourceProvider';
 
     /** @var \Rcm\Service\SiteManager */
     protected $siteManager;
