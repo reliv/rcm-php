@@ -112,7 +112,7 @@ class Site extends EntityRepository
      *
      * @return boolean
      */
-    public function isValidSiteId($siteId, $checkActive = true)
+    public function isValidSiteId($siteId, $checkActive = false)
     {
         if (empty($siteId) || !is_numeric($siteId)) {
             return false;

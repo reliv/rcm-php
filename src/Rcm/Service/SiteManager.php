@@ -211,13 +211,6 @@ class SiteManager
             return $this->siteInfo;
         }
 
-        $cacheKey = 'rcm_site_info_' . $siteId;
-
-        if ($this->cache->hasItem($cacheKey)) {
-            $this->siteInfo = $this->cache->getItem($cacheKey);
-            return $this->siteInfo;
-        }
-
         $siteInfo = $this->siteRepo->getSiteInfo($siteId);
 
         if (empty($siteInfo)) {
@@ -225,8 +218,6 @@ class SiteManager
         }
 
         $this->siteInfo = $siteInfo;
-
-        $this->cache->setItem($cacheKey, $siteInfo);
 
         return $siteInfo;
     }
@@ -336,6 +327,18 @@ class SiteManager
     public function getCurrentSiteLocale()
     {
         $siteInfo = $this->getCurrentSiteInfo();
+        return $this->getSiteLocale($siteInfo);
+    }
+
+    /**
+     * getSiteLocale - Returns php compatible locale string
+     *
+     * @param $siteInfo
+     *
+     * @return string
+     */
+    public function getSiteLocale($siteInfo)
+    {
         return $siteInfo['language']['iso639_1']
         . '_' . $siteInfo['country']['iso2'];
     }
@@ -369,12 +372,9 @@ class SiteManager
      */
     public function getSiteById($siteId)
     {
-        if ($this->isValidSiteId($siteId)) {
             return $this->siteRepo->findOneBy(
                 array('siteId' => $siteId)
             );
-        }
-        return null;
     }
 
     /**
