@@ -2,7 +2,7 @@
 /**
  * Service Helper for the current site
  *
- * This file contains the factory needed to generate an Rcm Cache.
+ * This file contains the Service Helper for the current site
  *
  * PHP version 5.3
  *
@@ -25,9 +25,9 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Service Factory for Rcm Cache
+ * Service Helper for the current site
  *
- * Factory for Rcm Cache.
+ * Service Helper for the current site
  *
  * @category  Reliv
  * @package   Rcm
