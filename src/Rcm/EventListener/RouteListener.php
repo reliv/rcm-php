@@ -46,6 +46,8 @@ class RouteListener
 
     protected $currentSite;
 
+    protected $config;
+
     /**
      * Constructor
      *
@@ -54,10 +56,12 @@ class RouteListener
      */
     public function __construct(
         Site $currentSite,
-        RedirectRepo $redirectRepo
+        RedirectRepo $redirectRepo,
+        $config
     ) {
         $this->currentSite = $currentSite;
         $this->redirectRepo = $redirectRepo;
+        $this->config = $config;
     }
 
     /**
@@ -70,12 +74,29 @@ class RouteListener
      */
     public function checkDomain(MvcEvent $event)
     {
-        if (empty($this->currentSite->getSiteId())) {
-            $response = new Response();
-            $response->setStatusCode(404);
-            $event->stopPropagation(true);
+        if (empty($this->currentSite->getSiteId()) || $this->currentSite->getStatus() != 'A') {
 
+            if (empty($this->config['Rcm']['defaultDomain'])
+                || $this->config['Rcm']['defaultDomain'] == $this->currentSite->getDomain()->getDomainName()
+            ) {
+                $response = new Response();
+                $response->setStatusCode(404);
+                $event->stopPropagation(true);
+
+                return $response;
+            }
+
+            $response = new Response();
+            $response->setStatusCode(302);
+            $response->getHeaders()
+                ->addHeaderLine(
+                    'Location',
+                    '//' . $this->config['Rcm']['defaultDomain']
+                );
+
+            $event->stopPropagation(true);
             return $response;
+
         }
 
         $primary = $this->currentSite->getDomain()->getPrimary();

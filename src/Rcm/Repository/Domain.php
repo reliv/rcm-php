@@ -100,9 +100,7 @@ class Domain extends EntityRepository
                 Join::WITH,
                 'site.domain = domain.domainId'
             )
-            ->leftJoin('site.country', 'country')
-            ->where('site.status = :status')
-            ->setParameter('status', 'A');
+            ->leftJoin('site.country', 'country');
 
         if (!empty($domain)) {
             $queryBuilder->andWhere('domain.domain = :domain')

@@ -56,9 +56,12 @@ class RouteListenerFactory implements FactoryInterface
         /** @var \Rcm\Repository\Redirect $redirectRepo */
         $redirectRepo = $entityManager->getRepository('\Rcm\Entity\Redirect');
 
+        $config = $serviceLocator->get('config');
+
         return new RouteListener(
             $currentSite,
-            $redirectRepo
+            $redirectRepo,
+            $config
         );
     }
 }

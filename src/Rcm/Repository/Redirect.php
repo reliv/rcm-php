@@ -103,7 +103,7 @@ class Redirect extends EntityRepository
         $queryBuilder = $this->_em->createQueryBuilder();
 
         $queryBuilder
-            ->select('r.requestUrl, r.redirectUrl')
+            ->select('r')
             ->from('\Rcm\Entity\Redirect', 'r', 'r.requestUrl')
             ->where('r.site = :siteId')
             ->setParameter('siteId', $siteId);
