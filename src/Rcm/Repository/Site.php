@@ -171,9 +171,11 @@ class Site extends EntityRepository
      */
     public function getSiteByDomain($domain) {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('site')
+        $queryBuilder->select('site, country, language, domain')
             ->from('\Rcm\Entity\Site', 'site')
             ->join('site.domain', 'domain')
+            ->join('site.country', 'country')
+            ->join('site.language', 'language')
             ->where('domain.domain = :domainName')
             ->setParameter('domainName', $domain);
 

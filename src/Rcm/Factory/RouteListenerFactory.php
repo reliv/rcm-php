@@ -47,15 +47,18 @@ class RouteListenerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \Rcm\Service\DomainManager $domainManager */
-        $domainManager = $serviceLocator->get('Rcm\Service\DomainManager');
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceLocator->get('RcmCurrentSite');
 
-        /** @var \Rcm\Service\RedirectManager $redirectManager */
-        $redirectManager = $serviceLocator->get('Rcm\Service\RedirectManager');
+        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
+        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
+
+        /** @var \Rcm\Repository\Redirect $redirectRepo */
+        $redirectRepo = $entityManager->getRepository('\Rcm\Entity\Redirect');
 
         return new RouteListener(
-            $domainManager,
-            $redirectManager
+            $currentSite,
+            $redirectRepo
         );
     }
 }

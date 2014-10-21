@@ -19,8 +19,8 @@
 
 namespace Rcm\EventListener;
 
-use Rcm\Service\DomainManager;
-use Rcm\Service\RedirectManager;
+use Rcm\Entity\Site;
+use Rcm\Repository\Redirect as RedirectRepo;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 
@@ -41,24 +41,23 @@ use Zend\Mvc\MvcEvent;
  */
 class RouteListener
 {
-    /** @var \Rcm\Service\DomainManager */
-    protected $domainManager;
+    /** @var \Rcm\Repository\Redirect */
+    protected $redirectRepo;
 
-    /** @var \Rcm\Service\RedirectManager */
-    protected $redirectManager;
+    protected $currentSite;
 
     /**
      * Constructor
      *
-     * @param DomainManager   $domainManager   Rcm Domain Manager
-     * @param RedirectManager $redirectManager Rcm Redirect Manager
+     * @param Site         $currentSite  Current Site Entity
+     * @param RedirectRepo $redirectRepo Rcm Redirect Manager
      */
     public function __construct(
-        DomainManager $domainManager,
-        RedirectManager $redirectManager
+        Site $currentSite,
+        RedirectRepo $redirectRepo
     ) {
-        $this->domainManager = $domainManager;
-        $this->redirectManager = $redirectManager;
+        $this->currentSite = $currentSite;
+        $this->redirectRepo = $redirectRepo;
     }
 
     /**
@@ -71,13 +70,7 @@ class RouteListener
      */
     public function checkDomain(MvcEvent $event)
     {
-
-        $serviceManager = $event->getApplication()->getServiceManager();
-
-        /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceManager->get('RcmCurrentSite');
-
-        if (empty($currentSite->getSiteId())) {
+        if (empty($this->currentSite->getSiteId())) {
             $response = new Response();
             $response->setStatusCode(404);
             $event->stopPropagation(true);
@@ -85,7 +78,7 @@ class RouteListener
             return $response;
         }
 
-        $primary = $currentSite->getDomain()->getPrimary();
+        $primary = $this->currentSite->getDomain()->getPrimary();
 
         if (!empty($primary)) {
             $response = new Response();
@@ -93,7 +86,7 @@ class RouteListener
             $response->getHeaders()
                 ->addHeaderLine(
                     'Location',
-                    '//' . $primary
+                    '//' . $primary->getDomainName()
                 );
 
             $event->stopPropagation(true);
@@ -115,25 +108,29 @@ class RouteListener
      */
     public function checkRedirect(MvcEvent $event)
     {
+        $siteId = $this->currentSite->getSiteId();
+
+        if (empty($siteId)) {
+            return null;
+        }
 
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request = $event->getRequest();
 
         $serverParam = $request->getServer();
-        $httpHost = $serverParam->get('HTTP_HOST');
         $requestUri = $serverParam->get('REQUEST_URI');
 
-        $redirectList = $this->redirectManager->getRedirectList();
+        $requestUrl = $requestUri;
 
-        $requestUrl = $httpHost . $requestUri;
+        $redirect = $this->redirectRepo->getRedirect($requestUrl, $siteId);
 
-        if (!empty($redirectList[$requestUrl])) {
+        if (!empty($redirect)){
             $response = new Response();
             $response->setStatusCode(302);
             $response->getHeaders()
                 ->addHeaderLine(
                     'Location',
-                    '//' . $redirectList[$requestUrl]['redirectUrl']
+                    $redirect->getRedirectUrl()
                 );
             $event->stopPropagation(true);
 
@@ -143,15 +140,14 @@ class RouteListener
         return null;
     }
 
-    public function addLocale(MvcEvent $event)
+    /**
+     * Set the system locale to Site Requirements
+     *
+     * @return null
+     */
+    public function addLocale()
     {
-        $serviceManager = $event->getApplication()->getServiceManager();
-
-        $siteInfo = $serviceManager->get('Rcm\Service\SiteManager')
-            ->getCurrentSiteInfo();
-        $locale = $siteInfo['language']['iso639_1'] . '_'
-            . $siteInfo['country']['iso2'];
-
+        $locale = $this->currentSite->getLocale();
         setlocale(
             LC_ALL,
             $locale

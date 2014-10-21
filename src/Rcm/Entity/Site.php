@@ -200,6 +200,8 @@ class Site
         $this->sitePlugins = new ArrayCollection();
         $this->containers = new ArrayCollection();
         $this->domain = new ArrayCollection();
+        $this->country = new Country();
+        $this->language = new Language();
     }
 
     public function __clone()
@@ -717,5 +719,12 @@ class Site
         $this->notAuthorizedPage = $notAuthorizedPage;
     }
 
+    public function getLocale()
+    {
+        return
+            strtolower($this->getLanguage()->getIso6391())
+            .'_'.
+            strtoupper($this->getCountry()->getIso2());
+    }
 
 }
