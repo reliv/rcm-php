@@ -62,7 +62,13 @@ class Domain extends EntityRepository
      */
     public function getDomainInfo($domain)
     {
-        return $this->getDomainLookupQuery($domain)->getSingleResult();
+        try {
+            $result = $this->getDomainLookupQuery($domain)->getSingleResult();
+        } catch (NoResultException $e) {
+            $result = null;
+        }
+
+        return $result;
     }
 
     /**

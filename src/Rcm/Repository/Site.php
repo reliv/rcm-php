@@ -23,6 +23,7 @@ namespace Rcm\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Rcm\Entity\Site as SiteEntity;
 
 /**
  * Site Repository
@@ -159,6 +160,30 @@ class Site extends EntityRepository
         }
 
         return $result['sitePlugins'];
+    }
+
+    /**
+     * Get Site By Domain Name
+     *
+     * @param string $domain Domain Name to search by
+     *
+     * @return SiteEntity
+     */
+    public function getSiteByDomain($domain) {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('site')
+            ->from('\Rcm\Entity\Site', 'site')
+            ->join('site.domain', 'domain')
+            ->where('domain.domain = :domainName')
+            ->setParameter('domainName', $domain);
+
+        try {
+            $result =  $queryBuilder->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            $result = null;
+        }
+
+        return $result;
     }
 
     public function getDoctrine()

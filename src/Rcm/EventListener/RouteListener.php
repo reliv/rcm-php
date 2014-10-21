@@ -71,15 +71,13 @@ class RouteListener
      */
     public function checkDomain(MvcEvent $event)
     {
-        $domainList = $this->domainManager->getActiveDomainList();
 
-        /** @var \Zend\Http\PhpEnvironment\Request $request */
-        $request = $event->getRequest();
+        $serviceManager = $event->getApplication()->getServiceManager();
 
-        $serverParam = $request->getServer();
-        $currentDomain = $serverParam->get('HTTP_HOST');
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceManager->get('RcmCurrentSite');
 
-        if (empty($domainList[$currentDomain])) {
+        if (empty($currentSite->getSiteId())) {
             $response = new Response();
             $response->setStatusCode(404);
             $event->stopPropagation(true);
@@ -87,13 +85,15 @@ class RouteListener
             return $response;
         }
 
-        if (!empty($domainList[$currentDomain]['primaryDomain'])) {
+        $primary = $currentSite->getDomain()->getPrimary();
+
+        if (!empty($primary)) {
             $response = new Response();
             $response->setStatusCode(302);
             $response->getHeaders()
                 ->addHeaderLine(
                     'Location',
-                    '//' . $domainList[$currentDomain]['primaryDomain']
+                    '//' . $primary
                 );
 
             $event->stopPropagation(true);
