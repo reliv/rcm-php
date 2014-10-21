@@ -22,6 +22,7 @@
 return array(
 
     'Rcm' => array(
+        'defaultDomain' => null,
         'successfulLoginUrl' => '/',
         'Acl' => array(
             'sites' => array(
