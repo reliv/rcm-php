@@ -128,7 +128,7 @@ class RedirectManager
     }
 
     /**
-     * checkActive
+     * isCurrentSiteActive
      *
      * @return boolean
      */
