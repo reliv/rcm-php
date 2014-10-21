@@ -57,7 +57,7 @@ class Language
      *
      * @ORM\Column(type="string", unique = true)
      */
-    protected $languageName;
+    protected $languageName = 'English';
 
     /**
      * @var string Two digit language code.  Here mainly for
@@ -69,7 +69,7 @@ class Language
      *
      * @ORM\Column(type="string", length=2)
      */
-    protected $iso639_1;
+    protected $iso639_1 = 'en';
 
     /**
      * @var string Three digit ISO "bibliographic" language code.
@@ -78,7 +78,7 @@ class Language
      *
      * @ORM\Column(type="string", length=3)
      */
-    protected $iso639_2b;
+    protected $iso639_2b = 'eng';
 
     /**
      * @var string Three digit ISO "terminological" language code.  This is the
@@ -90,7 +90,7 @@ class Language
      *
      * @ORM\Column(type="string", length=3)
      */
-    protected $iso639_2t;
+    protected $iso639_2t = 'eng';
 
 
     /**

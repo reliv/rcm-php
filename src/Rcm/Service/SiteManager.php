@@ -186,13 +186,10 @@ class SiteManager
     {
         $domainInfo = $this->domainManager->getDomainInfo($domain);
 
-        if (empty($domainInfo)) {
-            throw new SiteNotFoundException(
-                'No site found for request domain: ' . $domain
-            );
+        if (!empty($domainInfo)) {
+            $this->currentSiteId = $domainInfo['siteId'];
         }
 
-        $this->currentSiteId = $domainInfo['siteId'];
         $this->domain = $domain;
         return;
     }
@@ -214,7 +211,7 @@ class SiteManager
         $siteInfo = $this->siteRepo->getSiteInfo($siteId);
 
         if (empty($siteInfo)) {
-            throw new InvalidArgumentException('Invalid Site ID');
+            return array();
         }
 
         $this->siteInfo = $siteInfo;
@@ -281,12 +278,14 @@ class SiteManager
         ) {
             $siteInfo = $this->getCurrentSiteInfo();
 
-            $country = new Country();
-            $country->setCountryName($siteInfo['country']['countryName']);
-            $country->setIso2($siteInfo['country']['iso2']);
-            $country->setIso3($siteInfo['country']['iso3']);
+            if (!empty($siteInfo)) {
+                $country = new Country();
+                $country->setCountryName($siteInfo['country']['countryName']);
+                $country->setIso2($siteInfo['country']['iso2']);
+                $country->setIso3($siteInfo['country']['iso3']);
 
-            $this->currentSiteCountry = $country;
+                $this->currentSiteCountry = $country;
+            }
         }
 
         return $this->currentSiteCountry;
