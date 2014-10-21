@@ -21,6 +21,7 @@
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 
@@ -57,26 +58,28 @@ class Domain extends EntityRepository
      * Get the info for a single domain
      *
      * @param string $domain Domain name to search by
-     * @param string $siteStatus
      *
-     * @return mixed
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @return array
      */
-    public function getDomainInfo($domain, $siteStatus = 'A')
+    public function getDomainInfo($domain)
     {
-        return $this->getDomainLookupQuery($domain, $siteStatus)->getSingleResult();
+        try {
+            $result = $this->getDomainLookupQuery($domain)->getSingleResult();
+        } catch (NoResultException $e) {
+            $result = null;
+        }
+
+        return $result;
     }
 
     /**
      * Get Doctrine Query Object for Domain Lookups
      *
-     * @param null   $domain
-     * @param string $siteStatus
+     * @param null $domain
      *
      * @return Query
      */
-    private function getDomainLookupQuery($domain=null, $siteStatus = 'A')
+    private function getDomainLookupQuery($domain=null)
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();

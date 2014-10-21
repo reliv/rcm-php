@@ -270,7 +270,9 @@ return array(
             'Rcm\Service\ZendLogWriter'
             => '\Rcm\Factory\ZendLogWriterFactory',
             'Rcm\Acl\CmsPermissionsChecks'
-            => '\Rcm\Factory\CmsPermissionsChecksFactory'
+            => '\Rcm\Factory\CmsPermissionsChecksFactory',
+            'RcmCurrentSite'
+            => '\Rcm\Factory\CurrentSiteFactory',
         ),
         'aliases' => array(
             'rcmLogger' => 'Rcm\Service\Logger',

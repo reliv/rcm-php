@@ -52,7 +52,7 @@ class Country
      * @ORM\Column(type="string", length=3, unique = true)
      * @ORM\Id
      */
-    protected $iso3;
+    protected $iso3 = 'USA';
 
     /**
      * @var string ISO Two Digit Country Code
@@ -61,14 +61,14 @@ class Country
      *
      * @ORM\Column(type="string", length=2, unique = true)
      */
-    protected $iso2;
+    protected $iso2 = 'US';
 
     /**
      * @var string Name of Country in English
      *
      * @ORM\Column(type="string", unique = true)
      */
-    protected $countryName;
+    protected $countryName = 'United States';
 
     /**
      * Sets the CountryName property

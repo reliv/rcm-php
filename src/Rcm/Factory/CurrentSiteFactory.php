@@ -1,8 +1,8 @@
 <?php
 /**
- * Service Factory for the Route Listener
+ * Service Helper for the current site
  *
- * This file contains the factory needed to generate a Route Listener.
+ * This file contains the Service Helper for the current site
  *
  * PHP version 5.3
  *
@@ -18,14 +18,16 @@
  */
 namespace Rcm\Factory;
 
-use Rcm\EventListener\RouteListener;
+use Rcm\Entity\Site;
+use Zend\Cache\Storage\StorageInterface;
+use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Service Factory for the Route Listener
+ * Service Helper for the current site
  *
- * Factory for the Route Listener.
+ * Service Helper for the current site
  *
  * @category  Reliv
  * @package   Rcm
@@ -36,29 +38,35 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class RouteListenerFactory implements FactoryInterface
+class CurrentSiteFactory implements FactoryInterface
 {
     /**
      * Create Service
      *
-     * @param ServiceLocatorInterface $serviceLocator Zend Service Manager
+     * @param ServiceLocatorInterface $viewServiceManager Zend View Helper Mgr
      *
-     * @return RouteListener
+     * @return Site
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('RcmCurrentSite');
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $serviceLocator->get('request');
+
+        $serverParam = $request->getServer();
+        $currentDomain = $serverParam->get('HTTP_HOST');
 
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
-        /** @var \Rcm\Repository\Redirect $redirectRepo */
-        $redirectRepo = $entityManager->getRepository('\Rcm\Entity\Redirect');
+        /** @var \Rcm\Repository\Site $siteRepo */
+        $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
 
-        return new RouteListener(
-            $currentSite,
-            $redirectRepo
-        );
+        $currentSite = $siteRepo->getSiteByDomain($currentDomain);
+
+        if (empty($currentSite)) {
+            $currentSite = new Site();
+        }
+
+        return $currentSite;
     }
 }

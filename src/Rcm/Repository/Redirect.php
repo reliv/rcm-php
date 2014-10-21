@@ -21,7 +21,9 @@
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Entity\Redirect as RedirectEntity;
 
 /**
  * Redirect Repository
@@ -52,6 +54,47 @@ class Redirect extends EntityRepository
      */
     public function getRedirectList($siteId)
     {
+        try {
+            $result = $this->getQuery($siteId)->getResult();
+        } catch (NoResultException $e) {
+            $result = array();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $url
+     * @param $siteId
+     *
+     * @return null|RedirectEntity
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getRedirect($url, $siteId)
+    {
+        if (empty($url)) {
+            throw new InvalidArgumentException('No URL found to search by');
+        }
+
+        try {
+            $result = $this->getQuery($siteId, $url)->getSingleResult();
+        } catch (NoResultException $e) {
+            $result = null;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get Doctrine Query
+     *
+     * @param      $siteId Site Id For Search
+     * @param null $url    Url for search
+     *
+     * @return \Doctrine\ORM\Query
+     */
+    private function getQuery($siteId, $url=null)
+    {
         if (empty($siteId) || !is_numeric($siteId)) {
             throw new InvalidArgumentException('Invalid Site Id To Search By');
         }
@@ -65,6 +108,11 @@ class Redirect extends EntityRepository
             ->where('r.site = :siteId')
             ->setParameter('siteId', $siteId);
 
-        return $queryBuilder->getQuery()->getArrayResult();
+        if (!empty($url)) {
+            $queryBuilder->andWhere('r.requestUrl = :requestUrl');
+            $queryBuilder->setParameter('requestUrl', $url);
+        }
+
+        return $queryBuilder->getQuery();
     }
 }
