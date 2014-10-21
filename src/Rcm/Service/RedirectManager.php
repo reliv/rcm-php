@@ -77,11 +77,9 @@ class RedirectManager
      * @return array|null
      * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getRedirectList($siteId = null)
+    public function getRedirectList()
     {
-        if (!$siteId) {
-            $siteId = $this->siteManager->getCurrentSiteId();
-        }
+        $siteId = $this->siteManager->getCurrentSiteId();
 
         if (!$this->siteManager->isValidSiteId($siteId)) {
             throw new InvalidArgumentException('Invalid Site ID');
@@ -99,5 +97,53 @@ class RedirectManager
         $this->cache->setItem($cacheKey, $redirectList);
 
         return $redirectList;
+    }
+
+    /**
+     * getRedirectUrl
+     *
+     * @return string|null
+     */
+
+    public function getRedirectUrl($httpHost, $requestUri)
+    {
+        $active = $this->isCurrentSiteActive();
+
+        if(!$active){
+            $siteOne = $this->siteManager->getSiteById(1);
+            $redirectUrl = $siteOne->getDomain()->getDomainName();
+
+            return $redirectUrl;
+        }
+
+        $redirectList = $this->getRedirectList();
+
+        if(isset($redirectList[$requestUri])){
+            $redirectUrl = $httpHost.$redirectList[$requestUri]['redirectUrl'];
+
+            return $redirectUrl;
+        }
+
+        return null;
+    }
+
+    /**
+     * checkActive
+     *
+     * @return string|null
+     */
+    public function isCurrentSiteActive()
+    {
+        /**
+         * @var $siteManager \Rcm\Service\SiteManager
+         */
+        $siteId = $this->siteManager->getCurrentSiteId();
+        $currentSite = $this->siteManager->getSiteById($siteId);
+        $status = $currentSite->getStatus();
+
+        if ($status != 'A' &&  $siteId != 1) {
+            return false;
+        }
+        return true;
     }
 }

@@ -123,17 +123,15 @@ class RouteListener
         $httpHost = $serverParam->get('HTTP_HOST');
         $requestUri = $serverParam->get('REQUEST_URI');
 
-        $redirectList = $this->redirectManager->getRedirectList();
+        $redirectUrl = $this->redirectManager->getRedirectUrl($httpHost, $requestUri); // returns null if not redirecting or returns url if we are
 
-        $requestUrl = $httpHost . $requestUri;
-
-        if (!empty($redirectList[$requestUrl])) {
+        if (!empty($redirectUrl)) {
             $response = new Response();
             $response->setStatusCode(302);
             $response->getHeaders()
                 ->addHeaderLine(
                     'Location',
-                    '//' . $redirectList[$requestUrl]['redirectUrl']
+                    '//' . $redirectUrl
                 );
             $event->stopPropagation(true);
 
