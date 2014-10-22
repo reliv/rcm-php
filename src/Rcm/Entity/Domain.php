@@ -107,11 +107,6 @@ class Domain
     public function __construct()
     {
         $this->additionalDomains = new ArrayCollection();
-        $this->domainValidator = new Hostname(
-            array(
-                'allow' => Hostname::ALLOW_LOCAL | Hostname::ALLOW_IP
-            )
-        );
     }
 
     /**
@@ -124,6 +119,25 @@ class Domain
     public function setDomainValidator(ValidatorInterface $domainValidator)
     {
         $this->domainValidator = $domainValidator;
+    }
+
+    /**
+     * getDomainValidator - Get validator
+     *
+     * @return Hostname|ValidatorInterface
+     */
+    public function getDomainValidator()
+    {
+
+        if(empty($this->domainValidator)){
+            $this->domainValidator = new Hostname(
+                array(
+                    'allow' => Hostname::ALLOW_LOCAL | Hostname::ALLOW_IP
+                )
+            );
+        }
+
+        return $this->domainValidator;
     }
 
     /**
@@ -186,7 +200,7 @@ class Domain
      */
     public function setDomainName($domain)
     {
-        if (!$this->domainValidator->isValid($domain)) {
+        if (!$this->getDomainValidator()->isValid($domain)) {
             throw new InvalidArgumentException(
                 'Domain name is invalid'
             );
@@ -224,6 +238,9 @@ class Domain
      */
     public function getAdditionalDomains()
     {
+        if(!isset($this->additionalDomains)){
+            $this->additionalDomains = new ArrayCollection();
+        }
         return $this->additionalDomains;
     }
 
