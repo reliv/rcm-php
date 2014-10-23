@@ -109,7 +109,7 @@ class Revision
      *     }
      * )
      **/
-    protected $pluginInstances;
+    protected $pluginWrappers;
 
     public $isDirty = false;
 
@@ -118,7 +118,7 @@ class Revision
      */
     public function __construct()
     {
-        $this->pluginInstances = new ArrayCollection();
+        $this->pluginWrappers = new ArrayCollection();
         $this->createdDate = new \DateTime();
     }
 
@@ -136,7 +136,7 @@ class Revision
         }
 
         /* Clone Plugins */
-        $pluginWrappers = $this->pluginInstances;
+        $pluginWrappers = $this->pluginWrappers;
         $clonedPluginWrappers = array();
 
         /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
@@ -145,7 +145,7 @@ class Revision
             $clonedPluginWrappers[] = $clonedPluginWrapper;
         }
 
-        $this->pluginInstances = $clonedPluginWrappers;
+        $this->pluginWrappers = $clonedPluginWrappers;
     }
 
     /*   Start Getters and Setters    */
@@ -250,7 +250,7 @@ class Revision
      */
     public function getPluginWrappers()
     {
-        return $this->pluginInstances;
+        return $this->pluginWrappers;
     }
 
     /**
@@ -262,12 +262,12 @@ class Revision
      */
     public function getPluginWrapper($instanceId)
     {
-        if (empty($this->pluginInstances)) {
+        if (empty($this->pluginWrappers)) {
             return null;
         }
 
         /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
-        foreach ($this->pluginInstances as $pluginWrapper) {
+        foreach ($this->pluginWrappers as $pluginWrapper) {
             if ($pluginWrapper->getInstance()->getInstanceId() == $instanceId) {
                 return $pluginWrapper;
             }
@@ -285,7 +285,7 @@ class Revision
      */
     public function addPluginWrapper(PluginWrapper $instanceWrapper)
     {
-        $this->pluginInstances[] = $instanceWrapper;
+        $this->pluginWrappers[] = $instanceWrapper;
     }
 
     /**
@@ -297,7 +297,7 @@ class Revision
      */
     public function removeInstance(PluginWrapper $instance)
     {
-        $this->pluginInstances->removeElement($instance);
+        $this->pluginWrappers->removeElement($instance);
     }
 
     /**

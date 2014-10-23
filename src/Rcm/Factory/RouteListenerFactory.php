@@ -48,7 +48,7 @@ class RouteListenerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('RcmCurrentSite');
+        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
 
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');

@@ -263,7 +263,7 @@ return array(
             => '\Rcm\Factory\ZendLogWriterFactory',
             'Rcm\Acl\CmsPermissionsChecks'
             => '\Rcm\Factory\CmsPermissionsChecksFactory',
-            'RcmCurrentSite'
+            'Rcm\Service\CurrentSite'
             => '\Rcm\Factory\CurrentSiteFactory',
         ),
         'aliases' => array(

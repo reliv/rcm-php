@@ -296,7 +296,7 @@ abstract class ContainerAbstract
      */
     protected function getPluginRenderedInstances(&$revisionData)
     {
-        foreach ($revisionData['pluginInstances'] as &$pluginWrapper) {
+        foreach ($revisionData['pluginWrappers'] as &$pluginWrapper) {
             $renderedData = $this->pluginManager->getPluginByInstanceId(
                 $pluginWrapper['instance']['pluginInstanceId']
             );
@@ -317,7 +317,7 @@ abstract class ContainerAbstract
     {
         $canCache = true;
 
-        foreach ($revisionData['pluginInstances'] as &$pluginWrapper) {
+        foreach ($revisionData['pluginWrappers'] as &$pluginWrapper) {
             if (empty($pluginWrapper['instance']['canCache'])) {
                 $canCache = false;
             }

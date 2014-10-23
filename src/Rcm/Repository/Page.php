@@ -139,7 +139,7 @@ class Page extends EntityRepository implements ContainerInterface
             ->leftJoin('page.revisions', 'revision')
             ->leftJoin('page.currentRevision', 'currentRevision')
             ->leftJoin('page.stagedRevision', 'stagedRevision')
-            ->leftJoin('revision.pluginInstances', 'pluginWrappers')
+            ->leftJoin('revision.pluginWrappers', 'pluginWrappers')
             ->leftJoin('pluginWrappers.instance', 'pluginInstances')
             ->where('site.siteId = :siteId')
             ->andWhere('page.pageType = :pageType')
@@ -334,6 +334,52 @@ class Page extends EntityRepository implements ContainerInterface
 
         $this->_em->persist($clonedPage);
         $this->_em->flush($clonedPage);
+
+        return true;
+    }
+
+    public function copyPageByName(
+        $pageToCopyName,
+        $pageToCopyType,
+        $newPageName,
+        $author,
+        SiteEntity $siteDestination,
+        $newPageTitle = null,
+        $pageRevisionId = null,
+        $newPageType = 'n',
+        $publishNewPage = false
+    ) {
+        $pageIdToCopy = $this->getOnlyPageIdByName(
+            $siteDestination->getSiteId(),
+            $pageToCopyName,
+            $pageToCopyType
+        );
+
+        return $this->copyPage(
+            $pageIdToCopy,
+            $newPageName,
+            $author,
+            $siteDestination,
+            $newPageTitle,
+            $pageRevisionId,
+            $newPageType,
+            $publishNewPage
+        );
+    }
+
+    public function getOnlyPageIdByName($siteId, $name, $pageType='n')
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('page.pageId')
+            ->from('\Rcm\Entity\Page', 'page')
+            ->where('page.name = :pageName')
+            ->andWhere('page.pageType = :pageType')
+            ->andWhere('page.site = :siteId')
+            ->setParameter('pageName', $name)
+            ->setParameter('pageType', $pageType)
+            ->setParameter('siteId', $siteId);
+
+        return $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
     /**

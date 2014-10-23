@@ -108,7 +108,7 @@ class Container extends EntityRepository implements ContainerInterface
             ->leftJoin('container.currentRevision', 'currentRevision')
             ->leftJoin('container.site', 'site')
             ->leftJoin('container.revisions', 'revision')
-            ->leftJoin('revision.pluginInstances', 'pluginWrappers')
+            ->leftJoin('revision.pluginWrappers', 'pluginWrappers')
             ->leftJoin('pluginWrappers.instance', 'pluginInstances')
             ->where('site.siteId = :siteId')
             ->andWhere('container.name = :containerName')
