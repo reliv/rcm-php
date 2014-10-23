@@ -334,6 +334,8 @@ class Page extends EntityRepository implements ContainerInterface
 
         $this->_em->persist($clonedPage);
         $this->_em->flush($clonedPage);
+
+        return true;
     }
 
     public function copyPageByName(
@@ -347,7 +349,11 @@ class Page extends EntityRepository implements ContainerInterface
         $newPageType = 'n',
         $publishNewPage = false
     ) {
-        $pageIdToCopy = $this->getOnlyPageIdByName($pageToCopyName, $pageToCopyType);
+        $pageIdToCopy = $this->getOnlyPageIdByName(
+            $siteDestination->getSiteId(),
+            $pageToCopyName,
+            $pageToCopyType
+        );
 
         return $this->copyPage(
             $pageIdToCopy,
@@ -361,15 +367,17 @@ class Page extends EntityRepository implements ContainerInterface
         );
     }
 
-    public function getOnlyPageIdByName($name, $pageType='n')
+    public function getOnlyPageIdByName($siteId, $name, $pageType='n')
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('page.pageId')
             ->from('\Rcm\Entity\Page', 'page')
             ->where('page.name = :pageName')
             ->andWhere('page.pageType = :pageType')
-            ->setParameter('name', $name)
-            ->setParameter('pageType', $pageType);
+            ->andWhere('page.site = :siteId')
+            ->setParameter('pageName', $name)
+            ->setParameter('pageType', $pageType)
+            ->setParameter('siteId', $siteId);
 
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
