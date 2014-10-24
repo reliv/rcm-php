@@ -87,7 +87,7 @@ class IndexController extends AbstractActionController
      * @param Site          $currentSite     Current Site Entity
      */
     public function __construct(
-        SiteManager $siteManager,
+        SiteManager   $siteManager,
         LayoutManager $layoutManager,
         Site          $currentSite
     ) {
