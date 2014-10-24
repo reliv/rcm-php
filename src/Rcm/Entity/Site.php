@@ -199,7 +199,7 @@ class Site
         $this->pages = new ArrayCollection();
         $this->sitePlugins = new ArrayCollection();
         $this->containers = new ArrayCollection();
-        $this->domain = new ArrayCollection();
+        $this->domain = new Domain();
         $this->country = new Country();
         $this->language = new Language();
     }
@@ -238,13 +238,14 @@ class Site
 
                 $pageType = $page->getPageType();
 
-                // This should not be needed and causes incomplete cloning
-                //if ($pageType != 'n' && $pageType != 'z' && $pageType != 't') {
-                //    continue;
-                //}
+                // THIS MUST STAY HERE! Non CMS pages can not be cloned!
+//                if ($pageType != 'n' && $pageType != 'z' && $pageType != 't') {
+//                    continue;
+//                }
 
                 $clonedPage = clone $page;
                 $clonedPage->setSite($this);
+                $clonedPage->setName($page->getName());
                 $clonedPages[] = $clonedPage;
 
                 $revision = $clonedPage->getCurrentRevision();

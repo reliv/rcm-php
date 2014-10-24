@@ -53,6 +53,7 @@ class RouteListener
      *
      * @param Site         $currentSite  Current Site Entity
      * @param RedirectRepo $redirectRepo Rcm Redirect Manager
+     * @param Array        $config       Zf2 Config
      */
     public function __construct(
         Site $currentSite,
@@ -99,15 +100,24 @@ class RouteListener
 
         }
 
-        $primary = $this->currentSite->getDomain()->getPrimary();
+        $primaryCheck = $this->currentSite->getDomain()->getDomainName();
 
-        if (!empty($primary)) {
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $event->getRequest();
+        $serverParam = $request->getServer();
+        $currentDomain = $serverParam->get('HTTP_HOST');
+
+        if (empty($currentDomain)) {
+            return null;
+        }
+
+        if (!empty($primaryCheck) && $primaryCheck != $currentDomain) {
             $response = new Response();
             $response->setStatusCode(302);
             $response->getHeaders()
                 ->addHeaderLine(
                     'Location',
-                    '//' . $primary->getDomainName()
+                    '//' . $primaryCheck
                 );
 
             $event->stopPropagation(true);
@@ -151,7 +161,7 @@ class RouteListener
             $response->getHeaders()
                 ->addHeaderLine(
                     'Location',
-                    $redirect->getRedirectUrl()
+                    '//'.$redirect->getRedirectUrl()
                 );
             $event->stopPropagation(true);
 

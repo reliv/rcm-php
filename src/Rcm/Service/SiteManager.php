@@ -93,9 +93,6 @@ class SiteManager
     /** @var \Rcm\Service\DomainManager */
     protected $domainManager;
 
-    /** @var \Rcm\Service\LayoutManager */
-    protected $layoutManager;
-
     /** @var \Rcm\Service\PluginManager */
     protected $pluginManager;
 
@@ -733,22 +730,6 @@ class SiteManager
     public function getDomainManager()
     {
         return $this->domainManager;
-    }
-
-    /**
-     * @param \Rcm\Service\LayoutManager $layoutManager
-     */
-    public function setLayoutManager($layoutManager)
-    {
-        $this->layoutManager = $layoutManager;
-    }
-
-    /**
-     * @return \Rcm\Service\LayoutManager
-     */
-    public function getLayoutManager()
-    {
-        return $this->layoutManager;
     }
 
     /**

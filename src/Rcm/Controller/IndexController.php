@@ -21,6 +21,8 @@
 namespace Rcm\Controller;
 
 use Rcm\Exception\ContainerNotFoundException;
+use Rcm\Entity\Site;
+use Rcm\Service\LayoutManager;
 use Rcm\Service\SiteManager;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -60,6 +62,9 @@ class IndexController extends AbstractActionController
     /** @var \Rcm\Service\SiteManager */
     protected $siteManager;
 
+    /** @var \Rcm\Entity\Site  */
+    protected $currentSite;
+
     /** @var integer */
     protected $siteId;
 
@@ -75,15 +80,20 @@ class IndexController extends AbstractActionController
     /**
      * Constructor
      *
-     * @param SiteManager   $siteManager   Site Manager needed to get current page.
+     * @param SiteManager   $siteManager     Site Manager needed to get current page.
+     * @param LayoutManager $layoutManager   Layout Manager to get layouts.
+     * @param Site          $currentSite     Current Site Entity
      */
     public function __construct(
-        SiteManager $siteManager
+        SiteManager $siteManager,
+        LayoutManager $layoutManager,
+        Site          $currentSite
     ) {
         $this->siteManager = $siteManager;
         $this->pageManager = $siteManager->getPageManager();
-        $this->layoutManager = $siteManager->getLayoutManager();
+        $this->layoutManager = $layoutManager;
         $this->siteId = $siteManager->getCurrentSiteId();
+        $this->currentSite = $currentSite;
     }
 
     /**
@@ -172,7 +182,7 @@ class IndexController extends AbstractActionController
 
         $viewModel->setTemplate(
             'pages/'
-            . $this->layoutManager->getSitePageTemplate($pageInfo['pageLayout'])
+            . $this->layoutManager->getSitePageTemplate($this->currentSite, $pageInfo['pageLayout'])
         );
 
         return $viewModel;
@@ -215,6 +225,7 @@ class IndexController extends AbstractActionController
 
         if (!empty($this->pageInfo['siteLayoutOverride'])) {
             $layoutTemplatePath = $this->layoutManager->getSiteLayout(
+                $this->currentSite,
                 $this->pageInfo['siteLayoutOverride']
             );
 

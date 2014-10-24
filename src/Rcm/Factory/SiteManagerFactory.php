@@ -19,7 +19,6 @@
 namespace Rcm\Factory;
 
 use Rcm\Service\ContainerManager;
-use Rcm\Service\LayoutManager;
 use Rcm\Service\PageManager;
 use Rcm\Service\SiteManager;
 use Zend\ServiceManager\FactoryInterface;
@@ -48,9 +47,6 @@ class SiteManagerFactory implements FactoryInterface
 
     /** @var  \Rcm\Service\SiteManager */
     protected $siteManager;
-
-    /** @var  \Rcm\Service\LayoutManager */
-    protected $layoutManager;
 
     /** @var \Rcm\Service\PluginManager */
     protected $pluginManager;
@@ -95,8 +91,6 @@ class SiteManagerFactory implements FactoryInterface
         $this->cache = $serviceLocator->get('Rcm\Service\Cache');
         $this->siteManager->setCache($this->cache);
 
-        $this->layoutManager = $this->constructLayoutManager();
-        $this->siteManager->setLayoutManager($this->layoutManager );
         $this->siteManager->setPageManager($this->constructPageManager());
         $this->siteManager->setContainerManager($this->constructContainerManager());
 
@@ -116,12 +110,15 @@ class SiteManagerFactory implements FactoryInterface
         /** @var \Doctrine\ORM\EntityRepository $repository */
         $repository = $this->entityManager->getRepository('\Rcm\Entity\Page');
 
+        /** @var \Rcm\Validator\MainLayout $layoutValidator */
+        $layoutValidator = $this->serviceLocator->get('Rcm\Validator\MainLayout');
+
         return new PageManager(
             $this->pluginManager,
             $repository,
             $this->cache,
             $this->siteManager,
-            $this->layoutManager->getMainLayoutValidator()
+            $layoutValidator
         );
     }
 
@@ -135,14 +132,6 @@ class SiteManagerFactory implements FactoryInterface
             $repository,
             $this->cache,
             $this->siteManager
-        );
-    }
-
-    private function constructLayoutManager()
-    {
-        return new LayoutManager(
-            $this->siteManager,
-            $this->config
         );
     }
 

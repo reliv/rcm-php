@@ -21,6 +21,7 @@ namespace RcmTest\Controller;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Controller\IndexController;
+use Rcm\Entity\Site;
 use Rcm\Exception\ContainerNotFoundException;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -63,6 +64,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
     protected $skipCounter = 0;
 
     protected $layoutOverride;
+
+    /** @var \Rcm\Entity\Site */
+    protected $currentSite;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $mockUserServicePlugin;
@@ -117,12 +121,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('getPageManager')
             ->will($this->returnValue($this->mockPageManager));
 
-        $this->mockSiteManager->expects($this->any())
-            ->method('getLayoutManager')
-            ->will($this->returnValue($mockLayoutManager));
 
         $this->mockUserServicePlugin = $this
-            ->getMockBuilder('\RcmUser\Controller\Plugin\RcmIsAllowed')
+            ->getMockBuilder('\Rcm\Controller\Plugin\RcmIsAllowed')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -135,6 +136,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder('\Rcm\Controller\Plugin\RedirectToPage')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->currentSite = new Site();
+        $this->currentSite->setSiteId(1);
 
 
         $config = array(
@@ -167,7 +171,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         /** @var \Rcm\Service\PageManager $mockPageManager */
         /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
         $this->controller = new IndexController(
-            $this->mockSiteManager
+            $this->mockSiteManager,
+            $mockLayoutManager,
+            $this->currentSite
         );
 
         $this->controller->getPluginManager()
@@ -216,16 +222,19 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('getSiteManager')
             ->will($this->returnValue($mockPageManager));
 
-        $mockSiteManager->expects($this->any())
-            ->method('getLayouManager')
-            ->will($this->returnValue($mockLayoutManager));
 
         $mockSiteManager->expects($this->any())
             ->method('getCurrentSiteId')
             ->will($this->returnValue(1));
 
-        $controller
-            = new IndexController($mockSiteManager);
+        $currentSite = new Site();
+        $currentSite->setSiteId(1);
+
+        $controller = new IndexController(
+                $mockSiteManager,
+                $mockLayoutManager,
+                $currentSite
+        );
 
         $this->assertTrue($controller instanceof IndexController);
     }

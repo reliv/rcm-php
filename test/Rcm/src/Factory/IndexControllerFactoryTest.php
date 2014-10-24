@@ -54,10 +54,26 @@ class IndexControllerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $mockLayoutManager = $this->getMockBuilder('\Rcm\Service\LayoutManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
             'Rcm\Service\SiteManager',
             $mockSiteManager
+        );
+        $serviceManager->setService(
+            'Rcm\Service\LayoutManager',
+            $mockLayoutManager
+        );
+        $serviceManager->setService(
+            'Rcm\Service\CurrentSite',
+            $mockCurrentSite
         );
 
         $cm = new ControllerManager();

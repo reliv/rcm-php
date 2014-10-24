@@ -21,6 +21,7 @@ namespace RcmTest\EventListener;
 
 require_once __DIR__ . '/../../../autoload.php';
 
+use Rcm\Entity\Site;
 use Rcm\EventListener\DispatchListener;
 use Zend\Mvc\MvcEvent;
 use Zend\View\HelperPluginManager;
@@ -68,20 +69,11 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getSiteLayout')
             ->will($this->returnValue($layout));
 
-        $mockSiteManager = $this->getMockBuilder('Rcm\Service\SiteManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockSiteManager->expects($this->any())
-            ->method('getCurrentSiteInfo')
-            ->will(
-                $this->returnValue(
-                    array(
-                        'favIcon' => $favicon,
-                        'siteTitle' => $title
-                    )
-                )
-            );
+        $currentSite = new Site();
+        $currentSite->setSiteId(1);
+        $currentSite->setFavIcon($favicon);
+        $currentSite->setSiteTitle($title);
+        $currentSite->setSiteLayout($layout);
 
         $mockHeadLink = $this->getMockBuilder('\Zend\View\Helper\HeadLink')
             ->disableOriginalConstructor()
@@ -127,7 +119,7 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
         /** @var \Rcm\Service\SiteManager $mockSiteManager */
         $listener = new DispatchListener(
             $mockLayoutManager,
-            $mockSiteManager,
+            $currentSite,
             $mockPluginHelper
         );
 

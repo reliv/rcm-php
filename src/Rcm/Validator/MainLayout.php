@@ -19,6 +19,7 @@
 
 namespace Rcm\Validator;
 
+use Rcm\Entity\Site;
 use Rcm\Service\LayoutManager;
 use Zend\Validator\AbstractValidator;
 
@@ -46,34 +47,26 @@ class MainLayout extends AbstractValidator
             self::MAIN_LAYOUT => "'%value%' is not a valid layout."
         );
 
+    /** @var \Rcm\Entity\Site */
+    protected $currentSite;
+
     /** @var \Rcm\Service\LayoutManager */
     protected $layoutManager;
-
-    protected $siteId = null;
 
     /**
      * Constructor
      *
+     * @param Site          $currentSite   Rcm Current Site
      * @param LayoutManager $layoutManager Rcm Layout Manager
      */
-    public function __construct(LayoutManager $layoutManager)
-    {
+    public function __construct(
+        Site $currentSite,
+        LayoutManager $layoutManager
+    ) {
+        $this->currentSite = $currentSite;
         $this->layoutManager = $layoutManager;
 
         parent::__construct();
-    }
-
-    /**
-     * Set the site id to use for validation.  If none is passed then we will
-     * validate against the current site id.
-     *
-     * @param integer $siteId Site Id
-     *
-     * @return void
-     */
-    public function setSiteId($siteId)
-    {
-        $this->siteId = $siteId;
     }
 
     /**
@@ -87,7 +80,7 @@ class MainLayout extends AbstractValidator
     {
         $this->setValue($value);
 
-        if (!$this->layoutManager->isLayoutValid($value, $this->siteId)) {
+        if (!$this->layoutManager->isLayoutValid($this->currentSite, $value)) {
             $this->error(self::MAIN_LAYOUT);
 
             return false;

@@ -58,8 +58,16 @@ class IndexControllerFactory implements FactoryInterface
         /** @var \Rcm\Service\SiteManager $siteManager */
         $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
 
+        /** @var \Rcm\Service\LayoutManager $layoutManager */
+        $layoutManager = $serviceLocator->get('Rcm\Service\LayoutManager');
+
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+
         return new IndexController(
-            $siteManager
+            $siteManager,
+            $layoutManager,
+            $currentSite
         );
     }
 }

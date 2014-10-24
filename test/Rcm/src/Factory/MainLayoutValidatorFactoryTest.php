@@ -50,9 +50,7 @@ class MainLayoutValidatorFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateService()
     {
 
-        $mockLayoutValidator = $this->getMockBuilder(
-            '\Rcm\Validator\MainLayout'
-        )
+        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -60,14 +58,16 @@ class MainLayoutValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockLayoutManager->expects($this->once())
-            ->method('getMainLayoutValidator')
-            ->will($this->returnValue($mockLayoutValidator));
-
         $serviceLocator = new ServiceManager();
+
         $serviceLocator->setService(
             'Rcm\Service\LayoutManager',
             $mockLayoutManager
+        );
+
+        $serviceLocator->setService(
+            'Rcm\Service\CurrentSite',
+            $mockCurrentSite
         );
 
         $factory = new MainLayoutValidatorFactory();

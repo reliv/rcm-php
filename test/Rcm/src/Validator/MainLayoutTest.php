@@ -19,6 +19,7 @@
 
 namespace RcmTest\Validator;
 
+use Rcm\Entity\Site;
 use Rcm\Validator\MainLayout;
 
 require_once __DIR__ . '/../../../autoload.php';
@@ -44,6 +45,8 @@ class MainLayoutTest extends \PHPUnit_Framework_TestCase
     /** @var \Rcm\Validator\MainLayout */
     protected $validator;
 
+    protected $currentSite;
+
     /**
      * Setup for tests
      *
@@ -55,10 +58,13 @@ class MainLayoutTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->currentSite = new Site();
+        $this->currentSite->setSiteId(1);
+
         $this->layoutManager = $layoutManager;
 
         /** @var \Rcm\Service\LayoutManager $layoutManager */
-        $this->validator = new MainLayout($layoutManager);
+        $this->validator = new MainLayout($this->currentSite, $layoutManager);
     }
 
     /**
@@ -74,29 +80,6 @@ class MainLayoutTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Set Site Id
-     *
-     * @return void
-     *
-     * @covers \Rcm\Validator\MainLayout::setSiteId
-     */
-    public function testSetPageType()
-    {
-        $reflectedClass = new \ReflectionClass($this->validator);
-        $reflectedProp = $reflectedClass->getProperty('siteId');
-        $reflectedProp->setAccessible(true);
-        $defaultValue = $reflectedProp->getValue($this->validator);
-
-        $this->assertEquals(null, $defaultValue);
-
-        $this->validator->setSiteId(22);
-
-        $result = $reflectedProp->getValue($this->validator);
-
-        $this->assertEquals(22, $result);
-    }
-
-    /**
      * Test Is Valid
      *
      * @return void
@@ -106,14 +89,11 @@ class MainLayoutTest extends \PHPUnit_Framework_TestCase
     public function testIsValid()
     {
         $layout = 'some-layout';
-        $siteId = 22;
 
         $this->layoutManager->expects($this->once())
             ->method('isLayoutValid')
-            ->with($this->equalTo($layout), $this->equalTo($siteId))
+            ->with($this->equalTo($this->currentSite), $this->equalTo($layout))
             ->will($this->returnValue(true));
-
-        $this->validator->setSiteId($siteId);
 
         $result = $this->validator->isValid($layout);
 
@@ -132,14 +112,11 @@ class MainLayoutTest extends \PHPUnit_Framework_TestCase
     public function testIsValidWhenLayoutIsInvalid()
     {
         $layout = 'some-layout';
-        $siteId = 22;
 
         $this->layoutManager->expects($this->once())
             ->method('isLayoutValid')
-            ->with($this->equalTo($layout), $this->equalTo($siteId))
+            ->with($this->equalTo($this->currentSite), $this->equalTo($layout))
             ->will($this->returnValue(false));
-
-        $this->validator->setSiteId($siteId);
 
         $result = $this->validator->isValid($layout);
 
