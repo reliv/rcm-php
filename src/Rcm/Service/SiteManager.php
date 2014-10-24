@@ -90,9 +90,6 @@ class SiteManager
     /** @var \Rcm\Service\ContainerManager */
     protected $containerManager;
 
-    /** @var \Rcm\Service\DomainManager */
-    protected $domainManager;
-
     /** @var \Rcm\Service\PluginManager */
     protected $pluginManager;
 
@@ -171,25 +168,6 @@ class SiteManager
         return $this->getSiteDefaultLayout();
     }
 
-    /**
-     * Get Current Site Id From Domain
-     *
-     * @param string $domain Domain to search by
-     *
-     * @return integer|null                         SiteId
-     * @throws \Rcm\Exception\SiteNotFoundException
-     */
-    public function setSiteIdFromDomain($domain)
-    {
-        $domainInfo = $this->domainManager->getDomainInfo($domain);
-
-        if (!empty($domainInfo)) {
-            $this->currentSiteId = $domainInfo['siteId'];
-        }
-
-        $this->domain = $domain;
-        return;
-    }
 
     /**
      * Get the sites information
@@ -716,21 +694,6 @@ class SiteManager
         return $this->containerManager;
     }
 
-    /**
-     * @param \Rcm\Service\DomainManager $domainManager
-     */
-    public function setDomainManager($domainManager)
-    {
-        $this->domainManager = $domainManager;
-    }
-
-    /**
-     * @return \Rcm\Service\DomainManager
-     */
-    public function getDomainManager()
-    {
-        return $this->domainManager;
-    }
 
     /**
      * @param \Rcm\Repository\Site $siteRepo

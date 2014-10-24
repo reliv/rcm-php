@@ -74,6 +74,10 @@ class SiteManagerFactory implements FactoryInterface
 
         $this->siteManager = new SiteManager($siteRepo);
 
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+        $this->siteManager->setCurrentSiteId($currentSite->getSiteId());
+
         /*
          * Get Needed Dependencies
          */
@@ -82,8 +86,6 @@ class SiteManagerFactory implements FactoryInterface
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $this->request = $serviceLocator->get('request');
 
-        $domainManager = $serviceLocator->get('Rcm\Service\DomainManager');
-        $this->siteManager->setDomainManager($domainManager);
 
         $this->pluginManager = $this->serviceLocator->get('Rcm\Service\PluginManager');
         $this->siteManager->setPluginManager($this->pluginManager);
@@ -93,14 +95,6 @@ class SiteManagerFactory implements FactoryInterface
 
         $this->siteManager->setPageManager($this->constructPageManager());
         $this->siteManager->setContainerManager($this->constructContainerManager());
-
-        $domain = $this->getCurrentDomain();
-
-        if (empty($domain)) {
-            return $this->siteManager;
-        }
-
-        $this->siteManager->setSiteIdFromDomain($domain);
 
         return $this->siteManager;
     }
