@@ -105,15 +105,6 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->currentSite->setDomain($domain);
 
-        $mockDomainManager = $this
-            ->getMockBuilder('\Rcm\Service\DomainManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockDomainManager->expects($this->any())
-            ->method('getActiveDomainList')
-            ->will($this->returnValue($this->domains));
-
         $this->redirectRepo = $this
             ->getMockBuilder('\Rcm\Repository\Redirect')
             ->disableOriginalConstructor()
@@ -133,10 +124,6 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRedirect')
             ->will($this->returnValueMap($map));
 
-
-
-        /** @var \Rcm\Service\DomainManager $mockDomainManager */
-        /** @var \Rcm\Service\RedirectManager $mockRedirectManager */
         $this->routeListener = new RouteListener(
             $this->currentSite,
             $this->redirectRepo,

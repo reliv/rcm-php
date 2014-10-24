@@ -21,6 +21,7 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
+use Rcm\Entity\Site;
 use Rcm\Factory\SiteManagerFactory;
 use Rcm\Service\SiteManager;
 use Zend\ServiceManager\ServiceManager;
@@ -49,9 +50,6 @@ class SiteManagerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mockDomainManager = $this->getMockBuilder('\Rcm\Service\DomainManager')
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $mockPluginManager = $this->getMockBuilder('\Rcm\Service\PluginManager')
             ->disableOriginalConstructor()
@@ -87,10 +85,14 @@ class SiteManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $currentSite = new Site();
+        $currentSite->setSiteId(1);
+
         $serviceManager = new ServiceManager();
+
         $serviceManager->setService(
-            'Rcm\Service\DomainManager',
-            $mockDomainManager
+            'Rcm\Service\CurrentSite',
+            $currentSite
         );
 
         $serviceManager->setService(

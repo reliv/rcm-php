@@ -60,12 +60,12 @@ abstract class ContainerAbstract implements ContainerInterface
     protected $lastPublished;
 
     /**
-     * @var \Rcm\Entity\Revision Integer Current Page Revision ID
+     * @var \Rcm\Entity\Revision Integer published Page Revision
      */
-    protected $currentRevision;
+    protected $publishedRevision;
 
     /**
-     * @var \Rcm\Entity\Revision Integer Staged Revision ID
+     * @var \Rcm\Entity\Revision Integer Staged Revision
      */
     protected $stagedRevision;
 
@@ -91,9 +91,9 @@ abstract class ContainerAbstract implements ContainerInterface
 
         $this->revisions = new ArrayCollection();
 
-        if (!empty($this->currentRevision)) {
-            $revision = clone $this->currentRevision;
-            $this->currentRevision = $revision;
+        if (!empty($this->publishedRevision)) {
+            $revision = clone $this->publishedRevision;
+            $this->publishedRevision = $revision;
             $this->revisions[] = $revision;
             $this->stagedRevision = null;
         } elseif (!empty($this->stagedRevision)) {
@@ -210,11 +210,11 @@ abstract class ContainerAbstract implements ContainerInterface
      */
     public function getPublishedRevision()
     {
-        return $this->currentRevision;
+        return $this->publishedRevision;
     }
 
     /**
-     * Set the current published revision for the page
+     * Set the published published revision for the page
      *
      * @param Revision $revision Revision object to add
      *
@@ -227,45 +227,13 @@ abstract class ContainerAbstract implements ContainerInterface
         }
 
         $revision->publishRevision();
-        $this->currentRevision = $revision;
+        $this->publishedRevision = $revision;
     }
 
     /**
-     * Gets the CurrentRevision property
+     * Gets the Staged revision
      *
-     * @return Revision CurrentRevision
-     */
-    public function getCurrentRevision()
-    {
-        return $this->getPublishedRevision();
-    }
-
-    /**
-     * Sets the CurrentRevision property
-     *
-     * @param Revision $currentRevision Revision object to add
-     *
-     * @return null
-     */
-    public function setCurrentRevision(Revision $currentRevision)
-    {
-        $this->setPublishedRevision($currentRevision);
-    }
-
-    /**
-     * Remove Current Revision
-     *
-     * @return void
-     */
-    public function removeCurrentRevision()
-    {
-        $this->setStagedRevision($this->currentRevision);
-    }
-
-    /**
-     * Gets the Current Staged property
-     *
-     * @return Revision CurrentRevision
+     * @return Revision Staged Revision
      */
     public function getStagedRevision()
     {
@@ -273,7 +241,7 @@ abstract class ContainerAbstract implements ContainerInterface
     }
 
     /**
-     * Sets the current staged property
+     * Sets the staged revision
      *
      * @param Revision $revision Revision object to add
      *
@@ -281,13 +249,21 @@ abstract class ContainerAbstract implements ContainerInterface
      */
     public function setStagedRevision(Revision $revision)
     {
-        if (!empty($this->currentRevision)
-            && $this->currentRevision->getRevisionId() == $revision->getRevisionId()
+        if (!empty($this->publishedRevision)
+            && $this->publishedRevision->getRevisionId() == $revision->getRevisionId()
         ) {
-            $this->currentRevision = null;
+            $this->publishedRevision = null;
         }
 
         $this->stagedRevision = $revision;
+    }
+
+    /**
+     * Remove Published Revision
+     */
+    public function removePublishedRevision()
+    {
+        $this->publishedRevision = null;
     }
 
     /**
@@ -295,7 +271,7 @@ abstract class ContainerAbstract implements ContainerInterface
      *
      * @return void
      */
-    public function removedStagedRevision()
+    public function removeStagedRevision()
     {
         $this->stagedRevision = null;
     }
@@ -345,7 +321,7 @@ abstract class ContainerAbstract implements ContainerInterface
     }
 
     /**
-     * Overwrite current revisions and Set a group of revisions
+     * Overwrite revisions and Set a group of revisions
      *
      * @param array $revisions Array of Revisions to be added
      *
@@ -374,14 +350,14 @@ abstract class ContainerAbstract implements ContainerInterface
      */
     public function getLastSavedDraftRevision()
     {
-        $current = $this->currentRevision;
+        $published = $this->publishedRevision;
         $staged = $this->stagedRevision;
 
         /** @var \Rcm\Entity\Revision $revision */
         foreach ($this->revisions as &$revision) {
 
-            if (!empty($current)
-                && $revision->getRevisionId() == $current->getRevisionId()
+            if (!empty($published)
+                && $revision->getRevisionId() == $published->getRevisionId()
             ) {
                 continue;
             }

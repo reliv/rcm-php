@@ -233,10 +233,6 @@ return array(
                 => 'Rcm\Factory\PluginManagerFactory',
             'Rcm\Service\LayoutManager'
                 => 'Rcm\Factory\LayoutManagerFactory',
-            'Rcm\Service\DomainManager'
-                => 'Rcm\Factory\DomainManagerFactory',
-            'Rcm\Service\RedirectManager'
-                => 'Rcm\Factory\RedirectManagerFactory',
             'Rcm\Service\SiteManager'
                 => 'Rcm\Factory\SiteManagerFactory',
             'Rcm\Service\PageManager'
@@ -304,6 +300,8 @@ return array(
                 => 'Rcm\Factory\ShouldShowRevisionsPluginFactory',
             'rcmIsAllowed' =>
                 'Rcm\Factory\RcmIsAllowedFactory',
+            'rcmIsSiteAdmin' =>
+                'Rcm\Factory\IsSiteAdminPluginFactory',
         ),
         'invokables' => array(
             'redirectToPage'

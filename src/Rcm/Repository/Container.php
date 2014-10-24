@@ -54,9 +54,9 @@ class Container extends EntityRepository implements ContainerInterface
     public function getPublishedRevisionId($siteId, $name)
     {
         $queryBuilder = $this->_em->createQueryBuilder()
-            ->select('currentRevision.revisionId')
+            ->select('publishedRevision.revisionId')
             ->from('\Rcm\Entity\Container', 'container')
-            ->join('container.currentRevision', 'currentRevision')
+            ->join('container.publishedRevision', 'publishedRevision')
             ->join('container.site', 'site')
             ->where('site.siteId = :siteId')
             ->andWhere('container.name = :containerName')
@@ -99,13 +99,13 @@ class Container extends EntityRepository implements ContainerInterface
         $queryBuilder = $this->_em->createQueryBuilder()
             ->select(
                 'container,'
-                . 'currentRevision.revisionId,'
+                . 'publishedRevision.revisionId,'
                 . 'revision,'
                 . 'pluginWrappers,'
                 . 'pluginInstances'
             )
             ->from('\Rcm\Entity\Container', 'container')
-            ->leftJoin('container.currentRevision', 'currentRevision')
+            ->leftJoin('container.publishedRevision', 'publishedRevision')
             ->leftJoin('container.site', 'site')
             ->leftJoin('container.revisions', 'revision')
             ->leftJoin('revision.pluginWrappers', 'pluginWrappers')

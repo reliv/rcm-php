@@ -83,6 +83,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $mockRedirectToPage;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    protected $mockIsSiteAdmin;
+
     /**
      * Setup for tests
      *
@@ -137,6 +140,11 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->mockIsSiteAdmin = $this
+            ->getMockBuilder('\Rcm\Controller\Plugin\IsSiteAdmin')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->currentSite = new Site();
         $this->currentSite->setSiteId(1);
 
@@ -179,7 +187,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->controller->getPluginManager()
             ->setService('rcmIsAllowed', $this->mockUserServicePlugin)
             ->setService('shouldShowRevisions', $this->mockShouldShowRevisions)
-            ->setService('redirectToPage', $this->mockRedirectToPage);
+            ->setService('redirectToPage', $this->mockRedirectToPage)
+            ->setService('rcmIsSiteAdmin', $this->mockIsSiteAdmin);
 
         $this->request = new Request();
         $this->routeMatch = new RouteMatch(array('controller' => 'index'));

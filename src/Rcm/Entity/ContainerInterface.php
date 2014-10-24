@@ -131,29 +131,6 @@ interface ContainerInterface
     public function setPublishedRevision(Revision $revision);
 
     /**
-     * Gets the CurrentRevision property
-     *
-     * @return Revision CurrentRevision
-     */
-    public function getCurrentRevision();
-
-    /**
-     * Sets the CurrentRevision property
-     *
-     * @param Revision $currentRevision Revision object to add
-     *
-     * @return null
-     */
-    public function setCurrentRevision(Revision $currentRevision);
-
-    /**
-     * Remove Current Revision
-     *
-     * @return void
-     */
-    public function removeCurrentRevision();
-
-    /**
      * Gets the Current Staged property
      *
      * @return Revision CurrentRevision
@@ -170,11 +147,18 @@ interface ContainerInterface
     public function setStagedRevision(Revision $revision);
 
     /**
+     * Remove Published Revision
+     *
+     * @return void
+     */
+    public function removePublishedRevision();
+
+    /**
      * Remove Staged Revision
      *
      * @return void
      */
-    public function removedStagedRevision();
+    public function removeStagedRevision();
 
     /**
      * Get the site that uses this page.

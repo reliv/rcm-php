@@ -47,6 +47,8 @@ use Zend\View\Model\ViewModel;
  *                                                                  Page
  *
  * @method boolean rcmIsAllowed($resource, $action) Is User Allowed
+ * @method boolean shouldShowRevisions($siteId, $pageName, $pageType = 'n') Should Show Revisions for pages
+ * @method boolean rcmIsSiteAdmin() Is user a CMS admin
  */
 class IndexController extends AbstractActionController
 {
@@ -85,7 +87,7 @@ class IndexController extends AbstractActionController
      * @param Site          $currentSite     Current Site Entity
      */
     public function __construct(
-        SiteManager $siteManager,
+        SiteManager   $siteManager,
         LayoutManager $layoutManager,
         Site          $currentSite
     ) {
@@ -242,7 +244,7 @@ class IndexController extends AbstractActionController
 
     public function getShortRevisionList()
     {
-        $allowed = $this->rcmIsAllowed('sites.' . $this->siteId, 'admin');
+        $allowed = $this->rcmIsSiteAdmin($this->currentSite);
 
         if (!$allowed) {
             return array();
@@ -255,7 +257,7 @@ class IndexController extends AbstractActionController
         }
 
         $revisions = array(
-            'Live' => $page['currentRevision'],
+            'Live' => $page['publishedRevision'],
             'Staged' => $page['stagedRevision'],
             'Draft' => $page['lastDraft'],
         );
