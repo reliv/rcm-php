@@ -248,7 +248,7 @@ class Site
                 $clonedPage->setName($page->getName());
                 $clonedPages[] = $clonedPage;
 
-                $revision = $clonedPage->getCurrentRevision();
+                $revision = $clonedPage->getPublishedRevision();
 
                 if (empty($revision)) {
                     continue;
@@ -272,7 +272,7 @@ class Site
                 $clonedContainer->setSite($this);
                 $clonedContainers[] = $clonedContainer;
 
-                $revision = $clonedContainer->getCurrentRevision();
+                $revision = $clonedContainer->getPublishedRevision();
 
                 if (empty($revision)) {
                     continue;

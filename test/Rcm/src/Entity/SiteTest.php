@@ -1187,7 +1187,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         foreach ($clonedPages as $page) {
             $this->assertNull($page->getPageId());
 
-            $clonedRevision = $page->getCurrentRevision();
+            $clonedRevision = $page->getPublishedRevision();
 
             if (empty($clonedRevision)) {
                 continue;
@@ -1210,7 +1210,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         foreach ($clonedContainers as $container) {
             $this->assertNull($container->getContainerId());
 
-            $clonedRevision = $container->getCurrentRevision();
+            $clonedRevision = $container->getPublishedRevision();
 
             if (empty($clonedRevision)) {
                 continue;

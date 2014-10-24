@@ -211,9 +211,9 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
         $publishedRevision = new Revision();
         $publishedRevision->setRevisionId(6);
 
-        $this->container->setCurrentRevision($publishedRevision);
+        $this->container->setPublishedRevision($publishedRevision);
 
-        $actual = $this->container->getCurrentRevision();
+        $actual = $this->container->getPublishedRevision();
 
         $this->assertEquals($publishedRevision, $actual);
     }
@@ -228,7 +228,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testAliasSetCurrentRevisionOnlyAcceptsDateTime()
     {
-        $this->container->setCurrentRevision(time());
+        $this->container->setPublishedRevision(time());
     }
 
     /**
@@ -243,15 +243,15 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
         $publishedRevision = new Revision();
         $publishedRevision->setRevisionId(6);
 
-        $this->container->setCurrentRevision($publishedRevision);
+        $this->container->setPublishedRevision($publishedRevision);
 
-        $actual = $this->container->getCurrentRevision();
+        $actual = $this->container->getPublishedRevision();
 
         $this->assertEquals($publishedRevision, $actual);
 
-        $this->container->removeCurrentRevision();
+        $this->container->removePublishedRevision();
 
-        $shouldBeEmpty = $this->container->getCurrentRevision();
+        $shouldBeEmpty = $this->container->getPublishedRevision();
 
         $this->assertEmpty($shouldBeEmpty);
     }
@@ -306,7 +306,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($publishedRevision, $actual);
 
-        $this->container->removedStagedRevision();
+        $this->container->removeStagedRevision();
 
         $shouldBeEmpty = $this->container->getStagedRevision();
 

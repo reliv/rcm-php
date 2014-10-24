@@ -259,11 +259,19 @@ abstract class ContainerAbstract implements ContainerInterface
     }
 
     /**
+     * Remove Published Revision
+     */
+    public function removePublishedRevision()
+    {
+        $this->publishedRevision = null;
+    }
+
+    /**
      * Remove Staged Revision
      *
      * @return void
      */
-    public function removedStagedRevision()
+    public function removeStagedRevision()
     {
         $this->stagedRevision = null;
     }

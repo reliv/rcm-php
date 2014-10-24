@@ -147,11 +147,18 @@ interface ContainerInterface
     public function setStagedRevision(Revision $revision);
 
     /**
+     * Remove Published Revision
+     *
+     * @return void
+     */
+    public function removePublishedRevision();
+
+    /**
      * Remove Staged Revision
      *
      * @return void
      */
-    public function removedStagedRevision();
+    public function removeStagedRevision();
 
     /**
      * Get the site that uses this page.
