@@ -444,7 +444,7 @@ class SiteManager
         }
 
         if (empty($revisionNumber)) {
-            $revision = $container->getCurrentRevision();
+            $revision = $container->getPublishedRevision();
             $publishRevision = true;
         } else {
             $revision = $container->getRevisionById($revisionNumber);
@@ -500,7 +500,7 @@ class SiteManager
 
             if ($publishRevision) {
                 $newRevision->publishRevision();
-                $container->setCurrentRevision($newRevision);
+                $container->setPublishedRevision($newRevision);
             }
 
             $stagedRevision = $container->getStagedRevision();

@@ -2,6 +2,7 @@
 
 namespace Rcm\Acl;
 
+use Rcm\Entity\Site;
 use RcmUser\Service\RcmUserService;
 
 class CmsPermissionChecks
@@ -12,6 +13,15 @@ class CmsPermissionChecks
     public function __construct(RcmUserService $rcmUserService)
     {
         $this->rcmUserService = $rcmUserService;
+    }
+
+    public function siteAdminCheck(Site $site)
+    {
+        return $this->rcmUserService->isAllowed(
+            'sites.' . $site->getSiteId(),
+            'admin',
+            'Rcm\Acl\ResourceProvider'
+        );
     }
 
     /**

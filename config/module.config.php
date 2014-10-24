@@ -300,6 +300,8 @@ return array(
                 => 'Rcm\Factory\ShouldShowRevisionsPluginFactory',
             'rcmIsAllowed' =>
                 'Rcm\Factory\RcmIsAllowedFactory',
+            'rcmIsSiteAdmin' =>
+                'Rcm\Factory\IsSiteAdminPluginFactory',
         ),
         'invokables' => array(
             'redirectToPage'

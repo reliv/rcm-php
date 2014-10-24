@@ -122,7 +122,7 @@ class Page extends ContainerAbstract
      * @ORM\OneToOne(targetEntity="Revision")
      * @ORM\JoinColumn(name="publishedRevisionId", referencedColumnName="revisionId")
      */
-    protected $currentRevision;
+    protected $publishedRevision;
 
     /**
      * @var Revision Integer Staged Revision ID

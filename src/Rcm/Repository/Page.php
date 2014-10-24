@@ -50,7 +50,7 @@ use Rcm\Exception\RuntimeException;
 class Page extends EntityRepository implements ContainerInterface
 {
     /**
-     * Gets the DB result of the current Published Revision
+     * Gets the DB result of the Published Revision
      *
      * @param integer $siteId Site Id
      * @param string  $name   Name of the container
@@ -63,9 +63,9 @@ class Page extends EntityRepository implements ContainerInterface
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('currentRevision.revisionId')
+        $queryBuilder->select('publishedRevision.revisionId')
             ->from('\Rcm\Entity\Page', 'page')
-            ->join('page.currentRevision', 'currentRevision')
+            ->join('page.publishedRevision', 'publishedRevision')
             ->join('page.site', 'site')
             ->where('site.siteId = :siteId')
             ->andWhere('page.name = :pageName')
@@ -129,7 +129,7 @@ class Page extends EntityRepository implements ContainerInterface
         $queryBuilder->select(
             'page,
             site.siteId,
-            currentRevision.revisionId currentRevisionId,
+            publishedRevision.revisionId publishedRevisionId,
             stagedRevision.revisionId stagedRevisionId,
             revision,
             pluginWrappers,
@@ -137,7 +137,7 @@ class Page extends EntityRepository implements ContainerInterface
         )->from('\Rcm\Entity\Page', 'page')
             ->leftJoin('page.site', 'site')
             ->leftJoin('page.revisions', 'revision')
-            ->leftJoin('page.currentRevision', 'currentRevision')
+            ->leftJoin('page.publishedRevision', 'publishedRevision')
             ->leftJoin('page.stagedRevision', 'stagedRevision')
             ->leftJoin('revision.pluginWrappers', 'pluginWrappers')
             ->leftJoin('pluginWrappers.instance', 'pluginInstances')
@@ -162,7 +162,7 @@ class Page extends EntityRepository implements ContainerInterface
             $result = $getData[0];
             $result['revision'] = $result['revisions'][$revisionId];
             $result['siteId'] = $getData['siteId'];
-            $result['currentRevisionId'] = $getData['currentRevisionId'];
+            $result['publishedRevisionId'] = $getData['publishedRevisionId'];
             $result['stagedRevisionId'] = $getData['stagedRevisionId'];
             unset($result['revisions'], $getData);
         }
@@ -433,9 +433,9 @@ class Page extends EntityRepository implements ContainerInterface
     {
         $publishedQueryBuilder = $this->_em->createQueryBuilder();
 
-        $publishedQueryBuilder->select('PARTIAL page.{pageId}, current, staged ')
+        $publishedQueryBuilder->select('PARTIAL page.{pageId}, published, staged ')
             ->from('\Rcm\Entity\Page', 'page')
-            ->leftjoin('page.currentRevision', 'current')
+            ->leftjoin('page.publishedRevision', 'published')
             ->leftjoin('page.stagedRevision', 'staged')
             ->where('page.site = :siteId')
             ->andWhere('page.name = :pageName')
