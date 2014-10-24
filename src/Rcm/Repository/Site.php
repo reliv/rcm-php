@@ -170,6 +170,22 @@ class Site extends EntityRepository
      * @return SiteEntity
      */
     public function getSiteByDomain($domain) {
+
+        try {
+            return $this->getSiteByDomainFromDb($domain);
+        } catch (NoResultException $e) {
+            $primary = $this->getPrimaryDomain($domain);
+
+            if (!empty($primary)) {
+                return $this->getSiteByDomainFromDb($primary->getDomainName());
+            }
+        }
+
+        return null;
+    }
+
+    protected function getSiteByDomainFromDb($domain)
+    {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('site, country, language, domain')
             ->from('\Rcm\Entity\Site', 'site')
@@ -179,13 +195,33 @@ class Site extends EntityRepository
             ->where('domain.domain = :domainName')
             ->setParameter('domainName', $domain);
 
-        try {
-            $result =  $queryBuilder->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            $result = null;
+        return $queryBuilder->getQuery()->getSingleResult();
+    }
+
+    /**
+     * Get the Primary Domain for site lookup
+     *
+     * @param $domain
+     *
+     * @return null|\Rcm\Entity\Domain
+     */
+    protected function getPrimaryDomain($domain)
+    {
+        /** @var \Rcm\Entity\Domain $domain */
+        $domain = $this->_em->getRepository('\Rcm\Entity\Domain')
+            ->findOneBy(array('domain' => $domain));
+
+        if (empty($domain)) {
+            return null;
         }
 
-        return $result;
+        $primary = $domain->getPrimary();
+
+        if (empty($primary->getPrimary())) {
+            return $primary;
+        }
+
+        return $this->getPrimaryDomain($primary->getDomainName());
     }
 
     public function getDoctrine()

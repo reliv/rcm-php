@@ -18,6 +18,7 @@
  */
 namespace Rcm\Factory;
 
+use Rcm\Validator\MainLayout;
 use Rcm\Validator\Page;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -47,9 +48,12 @@ class MainLayoutValidatorFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceLocator->get('\Rcm\Service\CurrentSite');
+
         /** @var \Rcm\Service\LayoutManager $layoutManager */
         $layoutManager = $serviceLocator->get('\Rcm\Service\LayoutManager');
 
-        return $layoutManager->getMainLayoutValidator();
+        return new MainLayout($currentSite, $layoutManager);
     }
 }

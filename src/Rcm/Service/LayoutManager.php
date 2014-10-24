@@ -18,6 +18,7 @@
  */
 namespace Rcm\Service;
 
+use Rcm\Entity\Site;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\RuntimeException;
 use Rcm\Validator\MainLayout;
@@ -42,21 +43,16 @@ use Rcm\Validator\MainLayout;
  */
 class LayoutManager
 {
-    /** @var \Rcm\Service\SiteManager */
-    protected $siteManager;
-
     /** @var Array */
     protected $config;
 
     /**
      * Constructor
      *
-     * @param SiteManager $siteManager Rcm Site Manager
-     * @param Array       $config      Config Array
+     * @param Array $config      Config Array
      */
-    public function __construct(SiteManager $siteManager, $config)
+    public function __construct($config)
     {
-        $this->siteManager = $siteManager;
         $this->config = $config;
     }
 
@@ -108,26 +104,17 @@ class LayoutManager
      * Find out if selected theme exists and has site layouts defined in config
      * or fallback to generic theme
      *
-     * @param integer $siteId Site Id to lookup.  If none passed will get the
-     *                        currents theme.
+     * @param Site $site Site to get theme from.
      *
      * @return array                                   Config Array For Theme
      * @throws \Rcm\Exception\RuntimeException
      * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getSiteThemeLayoutsConfig($siteId = null)
+    public function getSiteThemeLayoutsConfig(Site $site)
     {
-        if (!$siteId) {
-            $siteId = $this->siteManager->getCurrentSiteId();
-        }
+        $theme = $site->getTheme();
 
-        if (!$this->siteManager->isValidSiteId($siteId)) {
-            throw new InvalidArgumentException('Invalid Site ID');
-        }
-
-        $theme = $this->siteManager->getSiteTheme($siteId);
-
-        $rcmThemeConfig = $this->getThemeConfig($theme, $siteId);
+        $rcmThemeConfig = $this->getThemeConfig($theme);
 
         if (empty($rcmThemeConfig['layouts'])) {
             throw new RuntimeException(
@@ -145,18 +132,18 @@ class LayoutManager
      * renderer.
      *
      * @param string|null  $layout Layout to find
-     * @param integer|null $siteId Site to lookup
+     * @param Site         $site Site to lookup
      *
      * @return string
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function getSiteLayout($layout = null, $siteId = null)
+    public function getSiteLayout(Site $site, $layout = null)
     {
-        $themeLayoutConfig = $this->getSiteThemeLayoutsConfig($siteId);
+        $themeLayoutConfig = $this->getSiteThemeLayoutsConfig($site);
 
         if (empty($layout)) {
-            $layout = $this->siteManager->getSiteDefaultLayout($siteId);
+            $layout = $site->getSiteLayout();
         }
 
         if (!empty($themeLayoutConfig[$layout])
@@ -177,24 +164,16 @@ class LayoutManager
      * Find out if selected theme exists and has site layouts defined in config
      * or fallback to generic theme
      *
-     * @param integer|null $siteId Site Id if none passed in will use current siteId
+     * @param Site $site Site To Search
      *
      * @return array Config Array For Theme
      *
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function getSiteThemePagesTemplateConfig($siteId = null)
+    public function getSiteThemePagesTemplateConfig(Site $site)
     {
-        if (!$siteId) {
-            $siteId = $this->siteManager->getCurrentSiteId();
-        }
-
-        if (!$this->siteManager->isValidSiteId($siteId)) {
-            throw new InvalidArgumentException('Invalid Site ID');
-        }
-
-        $theme = $this->siteManager->getSiteTheme($siteId);
+        $theme = $site->getTheme();
 
         $rcmThemesConfig = $this->getThemeConfig($theme);
 
@@ -212,16 +191,17 @@ class LayoutManager
      * config for the page.  Default page template is set by the themes
      * configuration and can also be set per page.
      *
-     * @param string|null  $template Template to find
-     * @param integer|null $siteId   Site to lookup
+     * @param Site        $site     Site to lookup
+     * @param string|null $template Template to find
+     *
      *
      * @return string
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function getSitePageTemplateConfig($template = null, $siteId = null)
+    public function getSitePageTemplateConfig(Site $site, $template = null)
     {
-        $themePageConfig = $this->getSiteThemePagesTemplateConfig($siteId);
+        $themePageConfig = $this->getSiteThemePagesTemplateConfig($site);
 
         if (!empty($themePageConfig[$template])) {
             return $themePageConfig[$template];
@@ -240,16 +220,16 @@ class LayoutManager
      * renderer.  Default page template is set by the themes configuration and can
      * also be set per page.
      *
+     * @param Site        $site      Site to lookup
      * @param string|null  $template Template to find
-     * @param integer|null $siteId   Site to lookup
      *
      * @return string
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function getSitePageTemplate($template = null, $siteId = null)
+    public function getSitePageTemplate(Site $site, $template = null)
     {
-        $themePageConfig = $this->getSitePageTemplateConfig($template, $siteId);
+        $themePageConfig = $this->getSitePageTemplateConfig($site, $template);
 
         if (empty($themePageConfig['file'])) {
             throw new RuntimeException('No Page Template Found in config');
@@ -261,16 +241,15 @@ class LayoutManager
     /**
      * Check to see if a layout is valid and available for a theme
      *
+     * @param Site    $site      Site to lookup
      * @param string  $layoutKey Layout name to search
-     * @param integer $siteId    Site Id to use.  If none provided will use current
-     *                           sites ID
      *
      * @return boolean
      * @throws InvalidArgumentException
      */
-    public function isLayoutValid($layoutKey, $siteId = null)
+    public function isLayoutValid(Site $site, $layoutKey)
     {
-        $themesConfig = $this->getSiteThemeLayoutsConfig($siteId);
+        $themesConfig = $this->getSiteThemeLayoutsConfig($site);
 
         if (!empty($themesConfig[$layoutKey])) {
             return true;
@@ -279,13 +258,4 @@ class LayoutManager
         return false;
     }
 
-    /**
-     * Get the main layout validator
-     *
-     * @return MainLayout
-     */
-    public function getMainLayoutValidator()
-    {
-        return new MainLayout($this);
-    }
 }

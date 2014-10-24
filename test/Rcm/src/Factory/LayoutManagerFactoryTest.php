@@ -49,21 +49,8 @@ class LayoutManagerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mockSiteManager = $this->getMockBuilder('\Rcm\Service\SiteManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockLayoutManager = $this->getMockBuilder('\Rcm\Service\LayoutManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockSiteManager->expects($this->any())
-            ->method('getLayoutManager')
-            ->will($this->returnValue($mockLayoutManager));
-
-
         $sm = new ServiceManager();
-        $sm->setService('Rcm\Service\SiteManager', $mockSiteManager);
+        $sm->setService('config', array());
 
         $factory = new LayoutManagerFactory();
         $object = $factory->createService($sm);

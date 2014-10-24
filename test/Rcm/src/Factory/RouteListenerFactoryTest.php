@@ -49,25 +49,32 @@ class RouteListenerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mockDomainManager = $this->getMockBuilder('\Rcm\Service\DomainManager')
+        $mockEm = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockRedirectManager = $this->getMockBuilder(
-            '\Rcm\Service\RedirectManager'
-        )
+        $mockRedirectRepo = $this->getMockBuilder('\Rcm\Repository\Redirect')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockEm->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($mockRedirectRepo));
+
+        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
             ->disableOriginalConstructor()
             ->getMock();
 
         $serviceLocator = new ServiceManager();
         $serviceLocator->setService(
-            'Rcm\Service\DomainManager',
-            $mockDomainManager
+            'Doctrine\ORM\EntityManager',
+            $mockEm
         );
         $serviceLocator->setService(
-            'Rcm\Service\RedirectManager',
-            $mockRedirectManager
+            'Rcm\Service\CurrentSite',
+            $mockCurrentSite
         );
+        $serviceLocator->setService('config', array());
 
         $factory = new RouteListenerFactory();
         $object = $factory->createService($serviceLocator);

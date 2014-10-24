@@ -18,8 +18,8 @@
  */
 namespace Rcm\EventListener;
 
+use Rcm\Entity\Site;
 use Rcm\Service\LayoutManager;
-use Rcm\Service\SiteManager;
 use Zend\Mvc\MvcEvent;
 use Zend\View\HelperPluginManager;
 
@@ -45,8 +45,8 @@ class DispatchListener
     /** @var \Rcm\Service\LayoutManager */
     protected $layoutManager;
 
-    /** @var \Rcm\Service\SiteManager */
-    protected $siteManager;
+    /** @var \Rcm\Entity\Site */
+    protected $currentSite;
 
     /** @var \Zend\View\HelperPluginManager */
     protected $viewHelperManager;
@@ -55,16 +55,16 @@ class DispatchListener
      * Constructor
      *
      * @param LayoutManager       $layoutManager     RCM Layout Manager
-     * @param SiteManager         $siteManager       Rcm Site Manager
+     * @param Site                $currentSite       Rcm Site Manager
      * @param HelperPluginManager $viewHelperManager Zend Framework View Helper Mgr
      */
     public function __construct(
-        LayoutManager $layoutManager,
-        SiteManager $siteManager,
+        LayoutManager       $layoutManager,
+        Site                $currentSite,
         HelperPluginManager $viewHelperManager
     ) {
-        $this->layoutManager = $layoutManager;
-        $this->siteManager = $siteManager;
+        $this->layoutManager     = $layoutManager;
+        $this->currentSite       = $currentSite;
         $this->viewHelperManager = $viewHelperManager;
     }
 
@@ -81,10 +81,8 @@ class DispatchListener
         /** @var \Zend\View\Model\ViewModel $viewModel */
         $viewModel = $event->getViewModel();
 
-        $template = $this->layoutManager->getSiteLayout();
+        $template = $this->layoutManager->getSiteLayout($this->currentSite);
         $viewModel->setTemplate('layout/' . $template);
-
-        $siteInfo = $this->siteManager->getCurrentSiteInfo();
 
         //Inject Meta Tags
         /** @var \Zend\View\Helper\HeadLink $headLink */
@@ -96,19 +94,22 @@ class DispatchListener
         /** @var \Zend\View\Helper\HeadTitle $headTitle */
         $headTitle = $this->viewHelperManager->get('headTitle');
 
+        $favicon = $this->currentSite->getFavIcon();
+        $siteTitle = $this->currentSite->getSiteTitle();
+
         //Add Favicon for site
-        if (!empty($siteInfo['favIcon'])) {
+        if (!empty($favicon)) {
             $headLink(
                 array(
                     'rel' => 'shortcut icon',
                     'type' => 'image/vnd.microsoft.icon',
-                    'href' => $basePath() . $siteInfo['favIcon'],
+                    'href' => $basePath() . $favicon,
                 )
             );
         }
 
-        if (!empty($siteInfo['siteTitle'])) {
-            $headTitle($siteInfo['siteTitle']);
+        if (!empty($siteTitle)) {
+            $headTitle($siteTitle);
         }
 
         $headTitle()->setSeparator(' - ');

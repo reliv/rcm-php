@@ -83,6 +83,10 @@ class SiteManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getServer')
             ->will($this->returnValue(new \Zend\Stdlib\Parameters()));
 
+        $mockLayoutValidator = $this->getMockBuilder('\Rcm\Validator\MainLayout')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
             'Rcm\Service\DomainManager',
@@ -98,6 +102,8 @@ class SiteManagerFactoryTest extends \PHPUnit_Framework_TestCase
             'Rcm\Service\Cache',
             $mockCache
         );
+
+        $serviceManager->setService('Rcm\Validator\MainLayout', $mockLayoutValidator);
 
         $serviceManager->setService('Rcm\Repository\Site', $mockSiteRepo);
         $serviceManager->setService('Doctrine\ORM\EntityManager',$mockEntityManager);

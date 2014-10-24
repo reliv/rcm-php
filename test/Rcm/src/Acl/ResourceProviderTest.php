@@ -354,7 +354,7 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetProviderId()
     {
-        $expected = '\Rcm\Acl\ResourceProvider';
+        $expected = 'Rcm\Acl\ResourceProvider';
 
         $resourceProvider = $this->getProviderWithMocks();
 

@@ -21,6 +21,9 @@ namespace RcmTest\EventListener;
 
 require_once __DIR__ . '/../../../autoload.php';
 
+use Rcm\Entity\Domain;
+use Rcm\Entity\Redirect;
+use Rcm\Entity\Site;
 use Rcm\EventListener\RouteListener;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\Response;
@@ -50,6 +53,11 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
 
     protected $redirects;
 
+    protected $redirectRepo;
+
+    /** @var \Rcm\Entity\Site */
+    protected $currentSite;
+
     /**
      * Setup for tests
      *
@@ -75,15 +83,27 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->redirects = array(
-            'reliv.com/requestOne' => array(
-                'requestUrl' => 'reliv.com/requestOne',
+            '/requestOne' => array(
+                'requestUrl' => '/requestOne',
                 'redirectUrl' => 'reliv.com/redirectOne',
             ),
-            'reliv.com/requestTwo' => array(
-                'requestUrl' => 'reliv.com/requestTwo',
+            '/requestTwo' => array(
+                'requestUrl' => '/requestTwo',
                 'redirectUrl' => 'reliv.com/redirectTwo',
             ),
         );
+
+        $config = array();
+
+        $this->currentSite = new Site();
+        $this->currentSite->setSiteId(1);
+        $this->currentSite->setStatus('A');
+
+        $domain = new Domain();
+        $domain->setDomainId(1);
+        $domain->setDomainName('reliv.com');
+
+        $this->currentSite->setDomain($domain);
 
         $mockDomainManager = $this
             ->getMockBuilder('\Rcm\Service\DomainManager')
@@ -94,20 +114,33 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getActiveDomainList')
             ->will($this->returnValue($this->domains));
 
-        $mockRedirectManager = $this
-            ->getMockBuilder('\Rcm\Service\RedirectManager')
+        $this->redirectRepo = $this
+            ->getMockBuilder('\Rcm\Repository\Redirect')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockRedirectManager->expects($this->any())
-            ->method('getRedirectList')
-            ->will($this->returnValue($this->redirects));
+        $map = array();
+
+        foreach ($this->redirects as $key => $redirect) {
+            $redirectEntity = new Redirect();
+            $redirectEntity->setRedirectUrl($redirect['requestUrl']);
+            $redirectEntity->setRedirectUrl($redirect['redirectUrl']);
+
+            $map[] = array($key, $this->currentSite->getSiteId(), $redirectEntity);
+        }
+
+        $this->redirectRepo->expects($this->any())
+            ->method('getRedirect')
+            ->will($this->returnValueMap($map));
+
+
 
         /** @var \Rcm\Service\DomainManager $mockDomainManager */
         /** @var \Rcm\Service\RedirectManager $mockRedirectManager */
         $this->routeListener = new RouteListener(
-            $mockDomainManager,
-            $mockRedirectManager
+            $this->currentSite,
+            $this->redirectRepo,
+            $config
         );
     }
 
@@ -160,6 +193,12 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         $actual = $this->routeListener->checkDomain($event);
 
         $this->assertTrue($actual instanceof Response);
+        $this->assertEquals(302, $actual->getStatusCode());
+
+        $this->assertEquals(
+            '//'.$this->currentSite->getDomain()->getDomainName(),
+            $actual->getHeaders()->get('Location')->getFieldValue()
+        );
     }
 
     /**
@@ -176,6 +215,9 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
                 'HTTP_HOST' => 'not.found.com'
             )
         );
+
+        $this->currentSite->setDomain(new Domain());
+        $this->currentSite->setSiteId(null);
 
         $request = new Request();
         $request->setServer($serverParams);
@@ -214,7 +256,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
 
         $expectedLocation
             = 'Location: //'
-            . $this->redirects['reliv.com/requestOne']['redirectUrl'];
+            . $this->redirects['/requestOne']['redirectUrl'];
 
         $actual = $this->routeListener->checkRedirect($event);
 

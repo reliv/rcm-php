@@ -51,15 +51,15 @@ class DispatchListenerFactory implements FactoryInterface
         /** @var \Rcm\Service\LayoutManager $layoutManager */
         $layoutManager = $serviceLocator->get('Rcm\Service\LayoutManager');
 
-        /** @var \Rcm\Service\SiteManager $siteManager */
-        $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
 
         /** @var \Zend\View\HelperPluginManager $viewHelperManager */
         $viewHelperManager = $serviceLocator->get('viewHelperManager');
 
         return new DispatchListener(
             $layoutManager,
-            $siteManager,
+            $currentSite,
             $viewHelperManager
         );
     }
