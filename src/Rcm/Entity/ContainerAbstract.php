@@ -19,6 +19,7 @@
 namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Util\Debug;
 use Rcm\Exception\InvalidArgumentException;
 
 /**
@@ -367,8 +368,10 @@ abstract class ContainerAbstract implements ContainerInterface
         $published = $this->publishedRevision;
         $staged = $this->stagedRevision;
 
+        $arrayCollection = $this->revisions->toArray();
+
         /** @var \Rcm\Entity\Revision $revision */
-        $revision = $this->revisions->last();
+        $revision = end($arrayCollection);
 
         if (empty($revision)) {
             return null;
@@ -387,7 +390,7 @@ abstract class ContainerAbstract implements ContainerInterface
                 $found = true;
             }
 
-            $revision = $this->revisions->prev();
+            $revision = prev($arrayCollection);
 
         }
 
