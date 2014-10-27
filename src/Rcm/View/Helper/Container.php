@@ -18,8 +18,13 @@
  */
 namespace Rcm\View\Helper;
 
+use Rcm\Entity\Page;
+use Rcm\Entity\PluginInstance;
+use Rcm\Entity\PluginWrapper;
+use Rcm\Entity\Revision;
 use Rcm\Exception\PluginReturnedResponseException;
 use Rcm\Service\ContainerManager;
+use Rcm\Service\PluginManager;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -41,6 +46,9 @@ class Container extends AbstractHelper
     /** @var \Rcm\Service\ContainerManager */
     protected $containerManager;
 
+    /** @var \Rcm\Service\PluginManager */
+    protected $pluginManager;
+
     /** @var  \Zend\Stdlib\ResponseInterface */
     protected $response;
 
@@ -48,10 +56,14 @@ class Container extends AbstractHelper
      * Constructor
      *
      * @param ContainerManager $containerManager Rcm Container Manager
+     * @param PluginManager    $pluginManager    Rcm Plugin Manager
      */
-    public function __construct(ContainerManager $containerManager)
-    {
+    public function __construct(
+        ContainerManager $containerManager,
+        PluginManager $pluginManager
+    ) {
         $this->containerManager = $containerManager;
+        $this->pluginManager = $pluginManager;
     }
 
     /**
@@ -101,11 +113,49 @@ class Container extends AbstractHelper
         /** @var \Zend\View\Model\ViewModel $view */
         $view = $this->getView();
 
-        $html = '';
-        $html .= $this->getContainerHtml($view->pageInfo, $name);
+        return $this->getPageContainerHtmlByName($view->page, $name);
+    }
+
+    protected function getPageContainerHtmlByName(Page $page, $name)
+    {
+        $revision = $page->getCurrentRevision();
+        $pluginWrappers = $revision->getPluginWrappersByPageContainerName($name);
+
+        $pluginHtml = '';
+
+        if (!empty($pluginWrappers) && is_array($pluginWrappers)) {
+            foreach ($pluginWrappers as $wrapper) {
+                $pluginHtml .= $this->getNewPluginHtml($wrapper);
+            }
+        }
+
+        return $this->getContainerWrapperHtml($revision, $name, $pluginHtml, true);
+    }
+
+    protected function getContainerWrapperHtml(
+        Revision $revision,
+        $containerName,
+        $pluginsHtml,
+        $pageContainer = false
+    ) {
+
+        $html = '<div class="rcmContainer"'
+            . ' data-containerId="' . $containerName . '"'
+            . ' data-containerRevision="'
+            . $revision->getRevisionId()
+            . '"';
+
+        if ($pageContainer) {
+            $html .= ' data-isPageContainer="Y"';
+        }
+
+        $html .= ' id="' . $containerName . '">';
+
+        $html .= $pluginsHtml;
+
+        $html .= '<div style="clear:both;"></div></div>';
 
         return $html;
-
     }
 
     /**
@@ -115,6 +165,7 @@ class Container extends AbstractHelper
      * @param string $pageContainerName Page container name for page containers.
      *
      * @return string
+     * @deprecated
      */
     protected function getContainerHtml(
         $containerData,
@@ -153,6 +204,67 @@ class Container extends AbstractHelper
         }
 
         $html .= '<div style="clear:both;"></div></div>';
+
+        return $html;
+    }
+
+    /**
+     * Get Plugin Html
+     *
+     * @param PluginWrapper $pluginWrapper Plugin Wrapper
+     *
+     * @return string
+     */
+    protected function getNewPluginHtml(PluginWrapper $pluginWrapper)
+    {
+        $extraStyle = '';
+        $resized = 'N';
+
+        $this->pluginManager->prepPluginForDisplay($pluginWrapper->getInstance());
+        $this->getNewPluginCss($pluginWrapper->getInstance());
+        $this->getNewPluginHeadScript($pluginWrapper->getInstance());
+
+        if (!empty($pluginWrapper->getHeight())) {
+            $extraStyle .= 'height: ' . $pluginWrapper->getHeight() . '; ';
+            $resized = 'Y';
+        }
+
+        if (!empty($pluginWrapper->getWidth())) {
+            $extraStyle .= 'width: ' . $pluginWrapper->getWidth() . '; ';
+            $resized = 'Y';
+        }
+
+        $extraStyle .= 'float: left; ';
+
+        if (!empty($pluginWrapper->getDivFloat())) {
+            $extraStyle .= 'float: ' . $pluginWrapper->getDivFloat() . '; ';
+        }
+
+        $plugin = $pluginWrapper->getInstance();
+
+        $html = '<div class="rcmPlugin '
+            . $plugin->getPlugin() . ' '
+            . str_replace(' ', '', $plugin->getDisplayName())
+            . ' "'
+            . ' data-rcmPluginName="' . $plugin->getPlugin() . '"'
+            . ' data-rcmPluginInstanceId="'
+            . $plugin->getInstanceId()
+            . '"'
+            . ' data-rcmSiteWidePlugin="' . $plugin->isSiteWide()
+            . '"'
+            . ' data-rcmPluginResized="' . $resized . '"'
+            . ' data-rcmPluginDisplayName="'
+            . $plugin->getDisplayName()
+            . '"'
+            . ' style=" ' . $extraStyle
+            . '">';
+
+        $html .= '<div class="rcmPluginContainer">';
+
+        $html .= $plugin->getRenderedHtml();
+
+        $html .= '</div>';
+        $html .= '</div>';
 
         return $html;
     }
@@ -210,6 +322,41 @@ class Container extends AbstractHelper
         $html .= '</div>';
 
         return $html;
+    }
+
+    protected function getNewPluginCss(PluginInstance $instance)
+    {
+        /** @var \Zend\View\Model\ViewModel $view */
+        $view = $this->getView();
+
+        $cssArray = $instance->getRenderedCss();
+
+        if (!empty($cssArray)) {
+            foreach ($cssArray as &$css) {
+                $container = unserialize($css);
+
+                if (!$this->isDuplicateCss($container)) {
+                    $view->headLink()->append($container);
+                }
+            }
+        }
+    }
+
+    protected function getNewPluginHeadScript(PluginInstance $instance)
+    {
+        $view = $this->getView();
+
+        $jsArray = $instance->getRenderedJs();
+
+        if (!empty($jsArray)) {
+            foreach ($jsArray as &$js) {
+                $container = unserialize($js);
+
+                if (!$this->isDuplicateScript($container)) {
+                    $view->headScript()->append($container);
+                }
+            }
+        }
     }
 
     /**

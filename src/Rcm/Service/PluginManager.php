@@ -117,6 +117,36 @@ class PluginManager
         return $viewData;
     }
 
+    public function prepPluginForDisplay(PluginInstance $instance)
+    {
+        $cacheId = 'rcmPluginInstance_viewData_' . $instance->getInstanceId();
+
+        if ($this->cache->hasItem($cacheId)) {
+            $viewData = $this->cache->getItem($cacheId);
+        } else {
+            $viewData = $this->getPluginViewData(
+                $instance->getPlugin(),
+                $instance->getInstanceId(),
+                $instance->getInstanceConfig()
+            );
+
+            if ($viewData['canCache']) {
+                $this->cache->setItem($cacheId, $viewData);
+            }
+        }
+
+        $instance->setRenderedHtml($viewData['html']);
+        $instance->setRenderedCss($viewData['css']);
+        $instance->setRenderedJs($viewData['js']);
+        $instance->setEditJs($viewData['editJs']);
+        $instance->setEditCss($viewData['editCss']);
+        $instance->setTooltip($viewData['tooltip']);
+        $instance->setIcon($viewData['icon']);
+        $instance->setCanCache($viewData['canCache']);
+
+        return;
+    }
+
     /**
      * Get a plugin by instance Id
      *
@@ -124,6 +154,7 @@ class PluginManager
      *
      * @return array|mixed
      * @throws \Rcm\Exception\PluginInstanceNotFoundException
+     * @deprecated
      */
     public function getPluginByInstanceId($pluginInstanceId)
     {
@@ -258,15 +289,6 @@ class PluginManager
             'pluginInstanceId' => $pluginInstanceId,
         );
 
-//        if (isset($this->config['rcmPlugin'][$pluginName]['editJs'])) {
-//            $return['editJs']
-//                = $this->config['rcmPlugin'][$pluginName]['editJs'];
-//        }
-//
-//        if (isset($this->config['rcmPlugin'][$pluginName]['editCss'])) {
-//            $return['editCss']
-//                = $this->config['rcmPlugin'][$pluginName]['editCss'];
-//        }
 
         if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
             $return['displayName']

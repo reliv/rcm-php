@@ -20,6 +20,7 @@
 
 namespace Rcm\Repository;
 
+use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
@@ -49,6 +50,36 @@ use Rcm\Exception\RuntimeException;
  */
 class Page extends EntityRepository implements ContainerInterface
 {
+    /**
+     * Get a page entity by name
+     *
+     * @param SiteEntity $site     Site to lookup
+     * @param string     $pageName Page Name
+     * @param string     $pageType Page Type
+     *
+     * @return null|PageEntity
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getPageByName(SiteEntity $site,
+        $pageName,
+        $pageType='n'
+    ) {
+        $queryBuilder = $this->createQueryBuilder('page')
+            ->leftJoin('page.publishedRevision', 'publishedRevision')
+            ->leftJoin('publishedRevision.pluginWrappers', 'pluginWrappers')
+            ->leftJoin('pluginWrappers.instance', 'pluginInstances')
+            ->where('page.site = :site')
+            ->andWhere('page.name = :pageName')
+            ->andWhere('page.pageType = :pageType')
+            ->setParameter('site', $site)
+            ->setParameter('pageName', $pageName)
+            ->setParameter('pageType', $pageType);
+
+        /** @var \Rcm\Entity\Page $result */
+        return $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
+    }
+
+
     /**
      * Gets the DB result of the Published Revision
      *
@@ -261,6 +292,9 @@ class Page extends EntityRepository implements ContainerInterface
      * @param string     $newPageTitle    Title of page
      * @param integer    $pageRevisionId  Page Revision ID to use for copy.  Defaults to currently published
      * @param string     $newPageType     Page type of page.  Defaults to "n"
+     * @param boolean    $pubishNewPage   Publish page instead of setting to staged
+     *
+     * @returns boolean
      *
      * @throws \Rcm\Exception\InvalidArgumentException
      * @throws \Rcm\Exception\PageNotFoundException

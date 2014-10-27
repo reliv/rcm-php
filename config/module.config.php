@@ -279,19 +279,23 @@ return array(
         ),
         'factories' => array(
             'Rcm\Controller\IndexController'
-            => 'Rcm\Factory\IndexControllerFactory',
+                => 'Rcm\Factory\IndexControllerFactory',
         ),
     ),
     'view_helpers' => array(
         'factories' => array(
             'rcmContainer'
-            => 'Rcm\Factory\ContainerViewHelperFactory',
+                => 'Rcm\Factory\ContainerViewHelperFactory',
             'rcmTextEdit' => 'Rcm\Factory\TextEditFactory',
             'rcmRichEdit' => 'Rcm\Factory\RichEditFactory',
         ),
         'invokables' => array(
             'rcmOutOfDateBrowserWarning'
-            => 'Rcm\View\Helper\OutOfDateBrowserWarning',
+                => 'Rcm\View\Helper\OutOfDateBrowserWarning',
+            'urlToPage'
+                => 'Rcm\View\Helper\UrlToPage',
+            'revisionHelper'
+                => 'Rcm\View\Helper\RevisionHelper',
         ),
     ),
     'controller_plugins' => array(
@@ -302,6 +306,8 @@ return array(
                 'Rcm\Factory\RcmIsAllowedFactory',
             'rcmIsSiteAdmin' =>
                 'Rcm\Factory\IsSiteAdminPluginFactory',
+            'rcmIsPageAllowed' =>
+                '\Rcm\Factory\RcmIsPageAllowedPluginFactory',
         ),
         'invokables' => array(
             'redirectToPage'

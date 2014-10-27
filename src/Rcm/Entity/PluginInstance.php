@@ -89,6 +89,33 @@ class PluginInstance
      */
     protected $instanceConfig;
 
+    /**
+     * @var string Place holder for rendered HTML
+     */
+    protected $renderedHtml;
+
+    /**
+     * @var array Place holder for rendered Css
+     */
+    protected $renderedCss = array();
+
+    /**
+     * @var array Place holder for rendered Js
+     */
+    protected $renderedJs = array();
+
+    protected $editJs;
+
+    protected $editCss;
+
+    protected $tooltip;
+
+    protected $icon;
+
+    protected $canCache;
+
+
+
     public function __clone()
     {
         if (!$this->pluginInstanceId) {
@@ -259,4 +286,133 @@ class PluginInstance
     {
         $this->instanceConfig = json_encode($instanceConfig);
     }
+
+    /**
+     * @return string
+     */
+    public function getRenderedCss()
+    {
+        return $this->renderedCss;
+    }
+
+    /**
+     * @param string $renderedCss
+     */
+    public function setRenderedCss($renderedCss)
+    {
+        $this->renderedCss = $renderedCss;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRenderedHtml()
+    {
+        return $this->renderedHtml;
+    }
+
+    /**
+     * @param string $renderedHtml
+     */
+    public function setRenderedHtml($renderedHtml)
+    {
+        $this->renderedHtml = $renderedHtml;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRenderedJs()
+    {
+        return $this->renderedJs;
+    }
+
+    /**
+     * @param array $renderedJs
+     */
+    public function setRenderedJs($renderedJs)
+    {
+        $this->renderedJs = $renderedJs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCanCache()
+    {
+        return $this->canCache;
+    }
+
+    /**
+     * @param mixed $canCache
+     */
+    public function setCanCache($canCache)
+    {
+        $this->canCache = $canCache;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEditCss()
+    {
+        return $this->editCss;
+    }
+
+    /**
+     * @param array $editCss
+     */
+    public function setEditCss($editCss)
+    {
+        $this->editCss = $editCss;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEditJs()
+    {
+        return $this->editJs;
+    }
+
+    /**
+     * @param mixed $editJs
+     */
+    public function setEditJs($editJs)
+    {
+        $this->editJs = $editJs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * @param mixed $icon
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTooltip()
+    {
+        return $this->tooltip;
+    }
+
+    /**
+     * @param mixed $tooltip
+     */
+    public function setTooltip($tooltip)
+    {
+        $this->tooltip = $tooltip;
+    }
+
 }

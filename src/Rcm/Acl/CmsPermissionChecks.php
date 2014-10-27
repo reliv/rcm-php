@@ -2,6 +2,7 @@
 
 namespace Rcm\Acl;
 
+use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use RcmUser\Service\RcmUserService;
 
@@ -13,6 +14,29 @@ class CmsPermissionChecks
     public function __construct(RcmUserService $rcmUserService)
     {
         $this->rcmUserService = $rcmUserService;
+    }
+
+    public function isPageAllowedForReading(Page $page)
+    {
+        $allowed = $this->rcmUserService->isAllowed(
+            'sites.' . $page->getSite()->getSiteId() . '.pages.' . $page->getPageType() . '.' . $page->getName(),
+            'read',
+            'Rcm\Acl\ResourceProvider'
+        );
+
+        $path = '/'.$page->getName();
+        $siteLoginPage = $page->getSite()->getLoginPage();
+        $notAuthorizedPage = $page->getSite()->getNotAuthorizedPage();
+        $notFoundPage = $page->getSite()->getNotFoundPage();
+
+        if ($siteLoginPage == $path
+            || $notAuthorizedPage == $path
+            || $notFoundPage == $path
+        ) {
+            $allowed = true;
+        }
+
+        return $allowed;
     }
 
     public function siteAdminCheck(Site $site)

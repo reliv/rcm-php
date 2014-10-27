@@ -60,6 +60,14 @@ class ContainerViewHelperFactory implements FactoryInterface
             'Rcm\Service\ContainerManager'
         );
 
-        return new Container($containerManager);
+        /** @var \Rcm\Service\PluginManager $pluginManager */
+        $pluginManager = $serviceLocator->get(
+            'Rcm\Service\PluginManager'
+        );
+
+        return new Container(
+            $containerManager,
+            $pluginManager
+        );
     }
 }

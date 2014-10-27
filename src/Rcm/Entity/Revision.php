@@ -113,6 +113,8 @@ class Revision
 
     public $isDirty = false;
 
+    protected $wrappersSortedByPageContainer = array();
+
     /**
      * Constructor for Page Revision Entity.
      */
@@ -251,6 +253,31 @@ class Revision
     public function getPluginWrappers()
     {
         return $this->pluginWrappers;
+    }
+
+    public function getPluginWrappersByPageContainerName($containerName)
+    {
+        if (empty($this->wrappersSortedByPageContainer)) {
+            /** @var \Rcm\Entity\PluginWrapper $wrapper */
+            foreach($this->pluginWrappers as $wrapper) {
+
+                $renderOrder = $wrapper->getRenderOrderNumber();
+
+                if (!empty($this->wrappersSortedByPageContainer[$wrapper->getLayoutContainer()][$wrapper->getRenderOrderNumber()])) {
+                    $renderOrder++;
+                }
+
+                $this->wrappersSortedByPageContainer[$wrapper->getLayoutContainer()][$renderOrder] = $wrapper;
+            }
+
+            ksort($this->wrappersSortedByPageContainer[$wrapper->getLayoutContainer()]);
+        }
+
+        if (empty($this->wrappersSortedByPageContainer[$containerName])) {
+            return null;
+        }
+
+        return $this->wrappersSortedByPageContainer[$containerName];
     }
 
     /**

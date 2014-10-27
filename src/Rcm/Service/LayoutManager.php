@@ -21,7 +21,6 @@ namespace Rcm\Service;
 use Rcm\Entity\Site;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\RuntimeException;
-use Rcm\Validator\MainLayout;
 
 /**
  * Rcm Layout Manager
@@ -104,21 +103,19 @@ class LayoutManager
      * Find out if selected theme exists and has site layouts defined in config
      * or fallback to generic theme
      *
-     * @param Site $site Site to get theme from.
+     * @param string $theme Theme to lookup in config
      *
      * @return array                                   Config Array For Theme
      * @throws \Rcm\Exception\RuntimeException
      * @throws \Rcm\Exception\InvalidArgumentException
      */
-    public function getSiteThemeLayoutsConfig(Site $site)
+    public function getSiteThemeLayoutsConfig($theme)
     {
-        $theme = $site->getTheme();
-
         $rcmThemeConfig = $this->getThemeConfig($theme);
 
         if (empty($rcmThemeConfig['layouts'])) {
             throw new RuntimeException(
-                'No theme config found for site and no default theme found'
+                'No theme config found for theme "'.$theme.'" and no default theme found'
             );
         }
 
@@ -140,7 +137,7 @@ class LayoutManager
      */
     public function getSiteLayout(Site $site, $layout = null)
     {
-        $themeLayoutConfig = $this->getSiteThemeLayoutsConfig($site);
+        $themeLayoutConfig = $this->getSiteThemeLayoutsConfig($site->getTheme());
 
         if (empty($layout)) {
             $layout = $site->getSiteLayout();
@@ -249,7 +246,7 @@ class LayoutManager
      */
     public function isLayoutValid(Site $site, $layoutKey)
     {
-        $themesConfig = $this->getSiteThemeLayoutsConfig($site);
+        $themesConfig = $this->getSiteThemeLayoutsConfig($site->getTheme());
 
         if (!empty($themesConfig[$layoutKey])) {
             return true;

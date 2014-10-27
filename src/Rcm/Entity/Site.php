@@ -192,6 +192,13 @@ class Site
     protected $notAuthorizedPage;
 
     /**
+     * @var string URL to not authorized page.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     **/
+    protected $notFoundPage = 'not-found';
+
+    /**
      * Constructor for site
      */
     public function __construct()
@@ -719,6 +726,24 @@ class Site
     {
         $this->notAuthorizedPage = $notAuthorizedPage;
     }
+
+    /**
+     * @return string
+     */
+    public function getNotFoundPage()
+    {
+        return $this->notFoundPage;
+    }
+
+    /**
+     * @param string $notFoundPage
+     */
+    public function setNotFoundPage($notFoundPage)
+    {
+        $this->notFoundPage = $notFoundPage;
+    }
+
+
 
     public function getLocale()
     {

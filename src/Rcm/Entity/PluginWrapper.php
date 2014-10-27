@@ -222,6 +222,10 @@ class PluginWrapper
      */
     public function getHeight()
     {
+        if (empty($this->height)) {
+            return null;
+        }
+
         return $this->height . 'px';
     }
 
@@ -244,6 +248,10 @@ class PluginWrapper
      */
     public function getWidth()
     {
+        if (empty($this->width)) {
+            return null;
+        }
+
         return $this->width . 'px';
     }
 

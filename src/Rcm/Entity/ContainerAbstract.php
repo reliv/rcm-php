@@ -80,6 +80,16 @@ abstract class ContainerAbstract implements ContainerInterface
     protected $revisions;
 
     /**
+     * @var Revision Used to store the current displayed revision
+     */
+    protected $currentRevision;
+
+    /**
+     * @var Place Holder for last saved draft
+     */
+    protected $lastSavedDraft;
+
+    /**
      * Clone the container
      *
      * @return void
@@ -350,40 +360,37 @@ abstract class ContainerAbstract implements ContainerInterface
      */
     public function getLastSavedDraftRevision()
     {
+        if (!empty($this->lastSavedDraft)) {
+            return $this->lastSavedDraft;
+        }
+
         $published = $this->publishedRevision;
         $staged = $this->stagedRevision;
 
         /** @var \Rcm\Entity\Revision $revision */
-        foreach ($this->revisions as &$revision) {
+        $revision = $this->revisions->last();
 
-            if (!empty($published)
-                && $revision->getRevisionId() == $published->getRevisionId()
-            ) {
-                continue;
-            }
-
-            if (!empty($staged)
-                && $revision->getRevisionId() == $staged->getRevisionId()
-            ) {
-                continue;
-            }
-
-            if ($revision->wasPublished()) {
-                continue;
-            }
-
-            $sorted[$revision->getRevisionId()] = $revision;
-        }
-
-        if (empty($sorted)) {
+        if (empty($revision)) {
             return null;
         }
 
-        ksort($sorted, SORT_NUMERIC);
+        $found = false;
 
-        $return = array_pop($sorted);
+        while (!$found) {
+            $revision = $this->revisions->prev();
 
-        return $return;
+            if (empty($revision)) {
+                break;
+            } elseif (!empty($published) && $published->getRevisionId() == $revision->getRevisionId()) {
+                $found = false;
+            } elseif (!empty($staged) && $staged->getRevisionId() == $staged->getRevisionId()) {
+                $found = false;
+            } else {
+                $found = true;
+            }
+        }
+
+        return $this->lastSavedDraft = $revision;
     }
 
     /**
@@ -397,4 +404,22 @@ abstract class ContainerAbstract implements ContainerInterface
     {
         return $this->revisions->get($revisionId);
     }
+
+    /**
+     * @return Revision
+     */
+    public function getCurrentRevision()
+    {
+        return $this->currentRevision;
+    }
+
+    /**
+     * @param Revision $currentRevision
+     */
+    public function setCurrentRevision($currentRevision)
+    {
+        $this->currentRevision = $currentRevision;
+    }
+
+
 }
