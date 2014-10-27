@@ -377,8 +377,6 @@ abstract class ContainerAbstract implements ContainerInterface
         $found = false;
 
         while (!$found) {
-            $revision = $this->revisions->prev();
-
             if (empty($revision)) {
                 break;
             } elseif (!empty($published) && $published->getRevisionId() == $revision->getRevisionId()) {
@@ -388,6 +386,9 @@ abstract class ContainerAbstract implements ContainerInterface
             } else {
                 $found = true;
             }
+
+            $revision = $this->revisions->prev();
+
         }
 
         return $this->lastSavedDraft = $revision;
