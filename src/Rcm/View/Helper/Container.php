@@ -22,10 +22,11 @@ use Rcm\Entity\Page;
 use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
+use Rcm\Exception\ContainerNotFoundException;
 use Rcm\Exception\PluginReturnedResponseException;
-use Rcm\Service\ContainerManager;
 use Rcm\Service\PluginManager;
 use Zend\View\Helper\AbstractHelper;
+use Rcm\Repository\Container as ContainerRepo;
 
 /**
  * Rcm Container View Helper
@@ -43,8 +44,8 @@ use Zend\View\Helper\AbstractHelper;
  */
 class Container extends AbstractHelper
 {
-    /** @var \Rcm\Service\ContainerManager */
-    protected $containerManager;
+    /** @var ContainerRepo */
+    protected $containerRepo;
 
     /** @var \Rcm\Service\PluginManager */
     protected $pluginManager;
@@ -55,14 +56,13 @@ class Container extends AbstractHelper
     /**
      * Constructor
      *
-     * @param ContainerManager $containerManager Rcm Container Manager
+     * @param ContainerRepo    $containerRepo    Rcm Container Manager
      * @param PluginManager    $pluginManager    Rcm Plugin Manager
      */
     public function __construct(
-        ContainerManager $containerManager,
+        ContainerRepo $containerRepo,
         PluginManager $pluginManager
     ) {
-        $this->containerManager = $containerManager;
         $this->pluginManager = $pluginManager;
     }
 
@@ -79,26 +79,42 @@ class Container extends AbstractHelper
     /**
      * Render a plugin container
      *
-     * @param string  $name     Container Name
-     * @param integer $revision Revision Id to Render
+     * @param string  $name       Container Name
+     * @param integer $revisionId Revision Id to Render
      *
      * @return null|string
      */
-    public function renderContainer($name, $revision = null)
+    public function renderContainer($name, $revisionId = null)
     {
-        try {
-            $containerData
-                = $this->containerManager->getRevisionInfo($name, $revision);
-        } catch (PluginReturnedResponseException $exception) {
-            $this->handlePluginResponse($exception);
+        $view = $this->getView();
 
-            return null;
+        /** @var \Rcm\Entity\Site $site */
+        $site = $view->site;
+
+        $container = $site->getContainer($name);
+
+        if (empty($container)) {
+            throw new ContainerNotFoundException("Can not find container: ".$name);
         }
 
-        $html = '';
-        $html .= $this->getContainerHtml($containerData);
+        if (empty($revisionId)) {
+            $revision = $container->getPublishedRevision();
+        } else {
+            $revision = $container->getRevisionById($revisionId);
+        }
 
-        return $html;
+        $pluginWrappers = $revision->getPluginWrappers();
+
+        $pluginHtml = '';
+
+        if (!empty($pluginWrappers)) {
+            /** @var \Rcm\Entity\PluginWrapper $wrapper */
+            foreach ($pluginWrappers as $wrapper) {
+                $pluginHtml .= $this->getPluginHtml($wrapper);
+            }
+        }
+
+        return $this->getContainerWrapperHtml($revision, $name, $pluginHtml, false);
     }
 
     /**
@@ -125,7 +141,7 @@ class Container extends AbstractHelper
 
         if (!empty($pluginWrappers) && is_array($pluginWrappers)) {
             foreach ($pluginWrappers as $wrapper) {
-                $pluginHtml .= $this->getNewPluginHtml($wrapper);
+                $pluginHtml .= $this->getPluginHtml($wrapper);
             }
         }
 
@@ -158,55 +174,6 @@ class Container extends AbstractHelper
         return $html;
     }
 
-    /**
-     * Get Container HTML
-     *
-     * @param array  $containerData     container db result
-     * @param string $pageContainerName Page container name for page containers.
-     *
-     * @return string
-     * @deprecated
-     */
-    protected function getContainerHtml(
-        $containerData,
-        $pageContainerName = null
-    ) {
-        $containerName = $containerData['name'];
-        $isPageContainer = false;
-
-        if (!empty($pageContainerName)) {
-            $containerName = $pageContainerName;
-            $isPageContainer = true;
-        }
-
-        $html = '<div class="rcmContainer"'
-            . ' data-containerId="' . $containerName . '"'
-            . ' data-containerRevision="'
-            . $containerData['revision']['revisionId']
-            . '"';
-
-        if ($isPageContainer) {
-            $html .= ' data-isPageContainer="Y"';
-        }
-
-        $html .= ' id="' . $containerData['name'] . '">';
-
-        foreach ($containerData['revision']['pluginWrappers'] as &$pluginInstance) {
-            if ($isPageContainer
-                && $pluginInstance['layoutContainer'] != $pageContainerName
-            ) {
-                continue;
-            }
-
-            $html .= $this->getPluginHtml($pluginInstance);
-            $this->getPluginCss($pluginInstance);
-            $this->getPluginHeadScript($pluginInstance);
-        }
-
-        $html .= '<div style="clear:both;"></div></div>';
-
-        return $html;
-    }
 
     /**
      * Get Plugin Html
@@ -215,14 +182,14 @@ class Container extends AbstractHelper
      *
      * @return string
      */
-    protected function getNewPluginHtml(PluginWrapper $pluginWrapper)
+    protected function getPluginHtml(PluginWrapper $pluginWrapper)
     {
         $extraStyle = '';
         $resized = 'N';
 
         $this->pluginManager->prepPluginForDisplay($pluginWrapper->getInstance());
-        $this->getNewPluginCss($pluginWrapper->getInstance());
-        $this->getNewPluginHeadScript($pluginWrapper->getInstance());
+        $this->getPluginCss($pluginWrapper->getInstance());
+        $this->getPluginHeadScript($pluginWrapper->getInstance());
 
         if (!empty($pluginWrapper->getHeight())) {
             $extraStyle .= 'height: ' . $pluginWrapper->getHeight() . '; ';
@@ -269,62 +236,8 @@ class Container extends AbstractHelper
         return $html;
     }
 
-    /**
-     * Get Plugin Html
-     *
-     * @param array &$pluginData Plugin Data
-     *
-     * @return string
-     */
-    protected function getPluginHtml(&$pluginData)
-    {
-        $extraStyle = '';
-        $resized = 'N';
 
-        if (!empty($pluginData['height'])) {
-            $extraStyle .= 'height: ' . $pluginData['height'] . 'px; ';
-            $resized = 'Y';
-        }
-
-        if (!empty($pluginData['width'])) {
-            $extraStyle .= 'width: ' . $pluginData['width'] . 'px; ';
-            $resized = 'Y';
-        }
-
-        $extraStyle .= 'float: left; ';
-
-        if (!empty($pluginData['divFloat'])) {
-            $extraStyle .= 'float: ' . $pluginData['divFloat'] . '; ';
-        }
-
-        $html = '<div class="rcmPlugin '
-            . $pluginData['instance']['plugin'] . ' '
-            . str_replace(' ', '', $pluginData['instance']['displayName'])
-            . ' "'
-            . ' data-rcmPluginName="' . $pluginData['instance']['plugin'] . '"'
-            . ' data-rcmPluginInstanceId="'
-            . $pluginData['instance']['pluginInstanceId']
-            . '"'
-            . ' data-rcmSiteWidePlugin="' . $pluginData['instance']['siteWide']
-            . '"'
-            . ' data-rcmPluginResized="' . $resized . '"'
-            . ' data-rcmPluginDisplayName="'
-            . $pluginData['instance']['displayName']
-            . '"'
-            . ' style=" ' . $extraStyle
-            . '">';
-
-        $html .= '<div class="rcmPluginContainer">';
-
-        $html .= $pluginData['instance']['renderedData']['html'];
-
-        $html .= '</div>';
-        $html .= '</div>';
-
-        return $html;
-    }
-
-    protected function getNewPluginCss(PluginInstance $instance)
+    protected function getPluginCss(PluginInstance $instance)
     {
         /** @var \Zend\View\Model\ViewModel $view */
         $view = $this->getView();
@@ -342,7 +255,7 @@ class Container extends AbstractHelper
         }
     }
 
-    protected function getNewPluginHeadScript(PluginInstance $instance)
+    protected function getPluginHeadScript(PluginInstance $instance)
     {
         $view = $this->getView();
 
@@ -350,51 +263,6 @@ class Container extends AbstractHelper
 
         if (!empty($jsArray)) {
             foreach ($jsArray as &$js) {
-                $container = unserialize($js);
-
-                if (!$this->isDuplicateScript($container)) {
-                    $view->headScript()->append($container);
-                }
-            }
-        }
-    }
-
-    /**
-     * Get Plugin CSS
-     *
-     * @param array &$pluginData Plugin Data
-     *
-     * @return void
-     */
-    protected function getPluginCss(&$pluginData)
-    {
-        /** @var \Zend\View\Model\ViewModel $view */
-        $view = $this->getView();
-
-        if (!empty($pluginData['instance']['renderedData']['css'])) {
-            foreach ($pluginData['instance']['renderedData']['css'] as &$css) {
-                $container = unserialize($css);
-
-                if (!$this->isDuplicateCss($container)) {
-                    $view->headLink()->append($container);
-                }
-            }
-        }
-    }
-
-    /**
-     * Get Plugin Head Script
-     *
-     * @param array &$pluginData Plugin data
-     *
-     * @return void
-     */
-    protected function getPluginHeadScript(&$pluginData)
-    {
-        $view = $this->getView();
-
-        if (!empty($pluginData['instance']['renderedData']['js'])) {
-            foreach ($pluginData['instance']['renderedData']['js'] as &$js) {
                 $container = unserialize($js);
 
                 if (!$this->isDuplicateScript($container)) {

@@ -84,12 +84,6 @@ class SiteManager
      * Additional Services
      */
 
-    /** @var \Rcm\Service\PageManager */
-    protected $pageManager;
-
-    /** @var \Rcm\Service\ContainerManager */
-    protected $containerManager;
-
     /** @var \Rcm\Service\PluginManager */
     protected $pluginManager;
 
@@ -679,23 +673,6 @@ class SiteManager
     }
 
     /**
-     * @param \Rcm\Service\ContainerManager $containerManager
-     */
-    public function setContainerManager($containerManager)
-    {
-        $this->containerManager = $containerManager;
-    }
-
-    /**
-     * @return \Rcm\Service\ContainerManager
-     */
-    public function getContainerManager()
-    {
-        return $this->containerManager;
-    }
-
-
-    /**
      * @param \Rcm\Repository\Site $siteRepo
      */
     public function setSiteRepo($siteRepo)
@@ -725,22 +702,6 @@ class SiteManager
     public function getDomain()
     {
         return $this->domain;
-    }
-
-    /**
-     * @param \Rcm\Service\PageManager $pageManager
-     */
-    public function setPageManager($pageManager)
-    {
-        $this->pageManager = $pageManager;
-    }
-
-    /**
-     * @return \Rcm\Service\PageManager
-     */
-    public function getPageManager()
-    {
-        return $this->pageManager;
     }
 
     /**

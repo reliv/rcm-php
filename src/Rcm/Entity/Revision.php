@@ -252,7 +252,26 @@ class Revision
      */
     public function getPluginWrappers()
     {
-        return $this->pluginWrappers;
+        if (empty($this->pluginWrappers)) {
+            return array();
+        }
+
+        $wrappers = array();
+
+        /** @var \Rcm\Entity\PluginWrapper $wrapper */
+        foreach($this->pluginWrappers as $wrapper) {
+            $orderNumber = $wrapper->getRenderOrderNumber();
+
+            if (!empty($wrappers[$orderNumber])) {
+                $orderNumber++;
+            }
+
+            $wrappers[$orderNumber] = $wrapper;
+        }
+
+        ksort($wrappers);
+
+        return $wrappers;
     }
 
     public function getPluginWrappersByPageContainerName($containerName)

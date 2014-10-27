@@ -118,30 +118,19 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
             $mockReturn[] = $site;
         }
 
-        $mockSiteManager = $this->getMockBuilder('\Rcm\Service\SiteManager')
+        $mockSiteRepo = $this->getMockBuilder('\Rcm\Repository\Site')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSiteManager->expects($this->any())
-            ->method('getAllActiveSites')
+        $mockSiteRepo->expects($this->any())
+            ->method('getSites')
             ->will($this->returnValue($mockReturn));
 
-        $mockPageManager = $this->getMockBuilder('\Rcm\Service\PageManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockPluginManager = $this->getMockBuilder('\Rcm\Service\PluginManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        /** @var \Rcm\Service\SiteManager $mockSiteManager */
-        /** @var \Rcm\Service\PageManager $mockPageManager */
+        /** @var \Rcm\Repository\Site $mockSiteRepo */
         /** @var \Rcm\Service\PluginManager $mockPluginManager */
         return new ResourceProvider(
             $this->config,
-            $mockSiteManager,
-            $mockPageManager,
-            $mockPluginManager
+            $mockSiteRepo
         );
     }
 

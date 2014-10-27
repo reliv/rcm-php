@@ -93,40 +93,7 @@ class SiteManagerFactory implements FactoryInterface
         $this->cache = $serviceLocator->get('Rcm\Service\Cache');
         $this->siteManager->setCache($this->cache);
 
-        $this->siteManager->setPageManager($this->constructPageManager());
-        $this->siteManager->setContainerManager($this->constructContainerManager());
-
         return $this->siteManager;
-    }
-
-    private function constructPageManager()
-    {
-        /** @var \Doctrine\ORM\EntityRepository $repository */
-        $repository = $this->entityManager->getRepository('\Rcm\Entity\Page');
-
-        /** @var \Rcm\Validator\MainLayout $layoutValidator */
-        $layoutValidator = $this->serviceLocator->get('Rcm\Validator\MainLayout');
-
-        return new PageManager(
-            $this->pluginManager,
-            $repository,
-            $this->cache,
-            $this->siteManager,
-            $layoutValidator
-        );
-    }
-
-    private function constructContainerManager()
-    {
-        /** @var \Doctrine\ORM\EntityRepository $repository */
-        $repository = $this->entityManager->getRepository('\Rcm\Entity\Container');
-
-        return new ContainerManager(
-            $this->pluginManager,
-            $repository,
-            $this->cache,
-            $this->siteManager
-        );
     }
 
     /**

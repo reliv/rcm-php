@@ -160,7 +160,7 @@ class IndexController extends AbstractActionController
             return $this->redirectToPage($page->getName(), $page->getPageType());
         }
 
-        $this->prepLayoutView($page, $page->getSiteLayoutOverride());
+        $this->prepLayoutView($site , $page, $page->getSiteLayoutOverride());
 
         $viewModel = new ViewModel(array('page' => $page));
 
@@ -172,7 +172,7 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
-    protected function prepLayoutView(Page $page, $layoutOverRide)
+    protected function prepLayoutView(Site $site, Page $page, $layoutOverRide)
     {
         /** @var ViewModel $layoutView */
         $layoutView = $this->layout();
@@ -191,6 +191,7 @@ class IndexController extends AbstractActionController
         }
 
         $layoutView->setVariable('page', $page);
+        $layoutView->setVariable('site', $site);
     }
 
     public function prepPageRevisionForDisplay(Page $page, $pageRevisionId=null)

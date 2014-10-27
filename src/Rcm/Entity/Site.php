@@ -148,6 +148,7 @@ class Site
      * @ORM\OneToMany(
      *     targetEntity="Container",
      *     mappedBy="site",
+     *     indexBy="name",
      *     cascade={"persist"}
      * )
      */
@@ -536,22 +537,17 @@ class Site
      *
      * @param string $name Name of container
      *
-     * @return ArrayCollection Array of page entities
+     * @return Container Container Entity
      */
     public function getContainer($name)
     {
-        if (empty($this->containers)) {
+        $container = $this->containers->get($name);
+
+        if (empty($container)) {
             return null;
         }
 
-        /** @var \Rcm\Entity\Container $container */
-        foreach ($this->containers as $container) {
-            if ($container->getName() == $name) {
-                return $container;
-            }
-        }
-
-        return null;
+        return $container;
     }
 
     /**
