@@ -379,10 +379,10 @@ class SiteManager
 
         foreach ($result as $plugin) {
             $list[$plugin['displayName']] = [
-                'name' => $plugin['displayName'],
+                'displayName' => $plugin['displayName'],
                 'icon' => '/modules/rcm/images/GenericIcon.png',
                 'siteWide' => true,
-                'displayName' => $plugin['plugin'],
+                'name' => $plugin['plugin'],
                 'instanceId' => $plugin['pluginInstanceId']
             ];
         }
