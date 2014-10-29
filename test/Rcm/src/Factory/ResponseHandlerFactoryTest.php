@@ -50,7 +50,7 @@ class ResponseHandlerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mockSiteManager = $this->getMockBuilder('\Rcm\Service\SiteManager')
+        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -60,8 +60,8 @@ class ResponseHandlerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
-            'Rcm\Service\SiteManager',
-            $mockSiteManager
+            'Rcm\Service\CurrentSite',
+            $mockCurrentSite
         );
         $serviceManager->setService(
             'RcmUser\Service\RcmUserService',

@@ -21,8 +21,12 @@ namespace RcmTest\Controller;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Controller\IndexController;
+use Rcm\Entity\Country;
+use Rcm\Entity\Domain;
+use Rcm\Entity\Language;
+use Rcm\Entity\Page;
+use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
-use Rcm\Exception\ContainerNotFoundException;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
@@ -71,11 +75,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $mockUserServicePlugin;
 
-    /** @var  \PHPUnit_Framework_MockObject_MockObject */
-    protected $mockPageManager;
-
     /** @var \PHPUnit_Framework_MockObject_MockObject */
-    protected $mockSiteManager;
+    protected $mockIsPageAllowed;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $mockShouldShowRevisions;
@@ -86,6 +87,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $mockIsSiteAdmin;
 
+    /** @var  \Rcm\Repository\Page */
+    protected $mockPageRepo;
+
     /**
      * Setup for tests
      *
@@ -93,20 +97,16 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->mockSiteManager = $this
-            ->getMockBuilder('\Rcm\Service\SiteManager')
+
+        $this->mockPageRepo = $this
+            ->getMockBuilder('\Rcm\Repository\Page')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->mockPageManager = $this
-            ->getMockBuilder('\Rcm\Service\PageManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->mockPageManager->expects($this->any())
-            ->method('getRevisionInfo')
+        $this->mockPageRepo->expects($this->any())
+            ->method('getPageByName')
             ->will(
-                $this->returnCallback(array($this, 'pageManagerMockCallback'))
+                $this->returnCallback(array($this, 'pageRepoMockCallback'))
             );
 
         $mockLayoutManager = $this
@@ -120,13 +120,13 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
                 $this->returnCallback(array($this, 'layoutManagerMockCallback'))
             );
 
-        $this->mockSiteManager->expects($this->any())
-            ->method('getPageManager')
-            ->will($this->returnValue($this->mockPageManager));
-
-
         $this->mockUserServicePlugin = $this
             ->getMockBuilder('\Rcm\Controller\Plugin\RcmIsAllowed')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->mockIsPageAllowed = $this
+            ->getMockBuilder('\Rcm\Controller\Plugin\RcmIsPageAllowed')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -175,20 +175,19 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-
-        /** @var \Rcm\Service\PageManager $mockPageManager */
         /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
         $this->controller = new IndexController(
-            $this->mockSiteManager,
             $mockLayoutManager,
-            $this->currentSite
+            $this->currentSite,
+            $this->mockPageRepo
         );
 
         $this->controller->getPluginManager()
             ->setService('rcmIsAllowed', $this->mockUserServicePlugin)
             ->setService('shouldShowRevisions', $this->mockShouldShowRevisions)
             ->setService('redirectToPage', $this->mockRedirectToPage)
-            ->setService('rcmIsSiteAdmin', $this->mockIsSiteAdmin);
+            ->setService('rcmIsSiteAdmin', $this->mockIsSiteAdmin)
+            ->setService('rcmIsPageAllowed', $this->mockIsPageAllowed);
 
         $this->request = new Request();
         $this->routeMatch = new RouteMatch(array('controller' => 'index'));
@@ -209,15 +208,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        /** @var \Rcm\Service\SiteManager $mockSiteManager */
-        $mockSiteManager = $this
-            ->getMockBuilder('\Rcm\Service\SiteManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        /** @var \Rcm\Service\PageManager $mockPageManager */
-        $mockPageManager = $this
-            ->getMockBuilder('\Rcm\Service\PageManager')
+        /** @var \Rcm\Repository\Page $mockPageRepo */
+        $mockPageRepo = $this
+            ->getMockBuilder('\Rcm\Repository\Page')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -227,22 +220,13 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSiteManager->expects($this->any())
-            ->method('getSiteManager')
-            ->will($this->returnValue($mockPageManager));
-
-
-        $mockSiteManager->expects($this->any())
-            ->method('getCurrentSiteId')
-            ->will($this->returnValue(1));
-
         $currentSite = new Site();
         $currentSite->setSiteId(1);
 
         $controller = new IndexController(
-                $mockSiteManager,
                 $mockLayoutManager,
-                $currentSite
+                $currentSite,
+                $mockPageRepo
         );
 
         $this->assertTrue($controller instanceof IndexController);
@@ -271,13 +255,16 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
+        $this->mockIsPageAllowed->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
         $result = $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($this->pageData, $result->pageInfo);
         $this->assertEquals('my-test', $this->controller->pageName);
         $this->assertEquals('z', $this->controller->pageType);
         $this->assertEquals(443, $this->controller->pageRevisionId);
@@ -295,13 +282,24 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->routeMatch->setParam('action', 'index');
 
+        $this->mockUserServicePlugin->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
+        $this->mockShouldShowRevisions->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
+        $this->mockIsPageAllowed->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
         $result = $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($this->pageData, $result->pageInfo);
         $this->assertEquals('index', $this->controller->pageName);
         $this->assertEquals('n', $this->controller->pageType);
         $this->assertEquals(null, $this->controller->pageRevisionId);
@@ -317,7 +315,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
     public function testIndexActionHomePageRedirectWhenUserNotAllowedForRevisions(
     )
     {
-        $this->pageData = $this->getPageData(42, 'my-test', 443, 'n');
+        $this->pageData = $this->getPageData(42, 'my-test', 443, 'z');
 
         $this->routeMatch->setParam('action', 'index');
         $this->routeMatch->setParam('page', 'my-test');
@@ -327,6 +325,10 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $response = $this->controller->getResponse();
         $response->getHeaders()->addHeaderLine('Location', '/my-test');
         $response->setStatusCode(302);
+
+        $this->mockIsPageAllowed->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
 
         $mockRedirectToPage = $this
             ->getMockBuilder('\Rcm\Controller\Plugin\RedirectToPage')
@@ -375,13 +377,16 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
+        $this->mockIsPageAllowed->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
         $result = $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
 
         $this->assertEquals(404, $response->getStatusCode());
-        $this->assertEquals($this->pageData, $result->pageInfo);
         $this->assertEquals('not-found', $this->controller->pageName);
         $this->assertEquals('n', $this->controller->pageType);
         $this->assertEquals(null, $this->controller->pageRevisionId);
@@ -408,6 +413,10 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $this->mockShouldShowRevisions->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
+        $this->mockIsPageAllowed->expects($this->any())
             ->method('__invoke')
             ->will($this->returnValue(true));
 
@@ -452,13 +461,16 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
+        $this->mockIsPageAllowed->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
         $result = $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($this->pageData, $result->pageInfo);
         $this->assertEquals('my-test', $this->controller->pageName);
         $this->assertEquals('z', $this->controller->pageType);
         $this->assertEquals(443, $this->controller->pageRevisionId);
@@ -474,11 +486,11 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      * @return mixed
      * @throws \Rcm\Exception\ContainerNotFoundException
      */
-    public function pageManagerMockCallback()
+    public function pageRepoMockCallback()
     {
         if ($this->skipCounter > 0) {
             $this->skipCounter--;
-            throw new ContainerNotFoundException('Page Not Found');
+            return null;
         }
 
         return $this->pageData;
@@ -496,7 +508,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get Test Page Data for PageManager Mocks
+     * Get Test Page Data for Page Repo Mocks
      *
      * @param integer $pageId             PageID
      * @param integer $pageName           PageName
@@ -513,65 +525,49 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $pageType = 'n',
         $siteLayoutOverride = null
     ) {
-        return array(
-            'pageId' => $pageId,
-            'name' => $pageName,
-            'author' => 'Test Script',
-            'createdDate' => new \DateTime(),
-            'lastPublished' => new \DateTime(),
-            'pageLayout' => null,
-            'siteLayoutOverride' => $siteLayoutOverride,
-            'pageTitle' => 'Test Page',
-            'description' => 'Test Page',
-            'keywords' => 'My Test Page',
-            'pageType' => $pageType,
-            'revision' =>
-                array(
-                    'revisionId' => $revisionId,
-                    'author' => 'Test Script',
-                    'createdDate' => new \DateTime(),
-                    'published' => true,
-                    'md5' => '664af24be398368b59bbf3c6d2b3459a',
-                    'staged' => false,
-                    'pluginInstances' =>
-                        array(
-                            0 => array(
-                                'pluginWrapperId' => 227075,
-                                'layoutContainer' => 4,
-                                'renderOrder' => 0,
-                                'height' => 391,
-                                'width' => 287,
-                                'divFloat' => 'left',
-                                'instance' => array(
-                                    'pluginInstanceId' => 19889,
-                                    'plugin' => 'RcmHtmlArea',
-                                    'siteWide' => false,
-                                    'displayName' => 'Rich Content Area',
-                                    'md5' => 'f5672a3279ac62664a3d3920aff7936a',
-                                    'previousEntity' => 11817,
-                                    'renderedData' => array(
-                                        'html' => '<a></a>',
-                                        'css' => array(),
-                                        'js' => array(),
-                                        'editJs' => '',
-                                        'editCss' => '',
-                                        'displayName' => 'Rich Content Area',
-                                        'tooltip' => 'My ToolTip',
-                                        'icon' => '',
-                                        'siteWide' => false,
-                                        'md5' => 'f5672a3279ac62664a3d3920aff7936a',
-                                        'fromCache' => false,
-                                        'canCache' => true,
-                                        'pluginName' => 'RcmHtmlArea',
-                                        'pluginInstanceId' => 19889,
-                                    ),
-                                ),
-                            ),
-                        ),
-                ),
-            'siteId' => 1,
-            'currentRevisionId' => $revisionId,
-            'stagedRevisionId' => $revisionId,
-        );
+        $country = new Country();
+        $country->setCountryName('United States');
+        $country->setIso2('US');
+        $country->setIso3('USA');
+
+        $language = new Language();
+        $language->setLanguageId(1);
+        $language->setIso6391('en');
+        $language->setIso6392b('eng');
+        $language->setIso6392t('eng');
+
+        $domain = new Domain();
+        $domain->setDefaultLanguage($language);
+        $domain->setDomainId(1);
+        $domain->setDomainName('reliv.com');
+
+        $site = new Site();
+        $site->setSiteId(1);
+        $site->setCountry($country);
+        $site->setLanguage($language);
+        $site->setLoginPage('login');
+        $site->setNotFoundPage('not-found');
+        $site->setDomain($domain);
+
+        $revision = new Revision();
+        $revision->setRevisionId($revisionId);
+        $revision->setAuthor('Westin Shafer');
+        $revision->setCreatedDate(new \DateTime());
+        $revision->setPublishedDate(new \DateTime());
+
+
+        $page = new Page();
+        $page->setSite($site);
+        $page->setName($pageName);
+        $page->setPageId($pageId);
+        $page->setPageType($pageType);
+        $page->addRevision($revision);
+        $page->setPublishedRevision($revision);
+        $page->setStagedRevision($revision);
+        $page->setPageId(22);
+        $page->setSiteLayoutOverride($siteLayoutOverride);
+
+
+        return $page;
     }
 }

@@ -85,23 +85,21 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $mockSiteManager = $this->getMockBuilder('\Rcm\Service\SiteManager')
+        $mockEntityManager = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockPageManager = $this->getMockBuilder('\Rcm\Service\PageManager')
+        $mockSiteRepo = $this->getMockBuilder('\Rcm\Repository\Site')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockPluginManager = $this->getMockBuilder('\Rcm\Service\PluginManager')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockEntityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($mockSiteRepo));
 
         $sm = new ServiceManager();
         $sm->setService('config', $config);
-        $sm->setService('Rcm\Service\SiteManager', $mockSiteManager);
-        $sm->setService('Rcm\Service\PageManager', $mockPageManager);
-        $sm->setService('Rcm\Service\PluginManager', $mockPluginManager);
+        $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
 
         $factory = new AclResourceProviderFactory();
         $object = $factory->createService($sm);
@@ -119,23 +117,21 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $config = array();
 
-        $mockSiteManager = $this->getMockBuilder('\Rcm\Service\SiteManager')
+        $mockEntityManager = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockPageManager = $this->getMockBuilder('\Rcm\Service\PageManager')
+        $mockSiteRepo = $this->getMockBuilder('\Rcm\Repository\Site')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockPluginManager = $this->getMockBuilder('\Rcm\Service\PluginManager')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockEntityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($mockSiteRepo));
 
         $sm = new ServiceManager();
         $sm->setService('config', $config);
-        $sm->setService('Rcm\Service\SiteManager', $mockSiteManager);
-        $sm->setService('Rcm\Service\PageManager', $mockPageManager);
-        $sm->setService('Rcm\Service\PluginManager', $mockPluginManager);
+        $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
 
         $factory = new AclResourceProviderFactory();
         $object = $factory->createService($sm);

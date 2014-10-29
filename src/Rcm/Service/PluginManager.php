@@ -117,6 +117,36 @@ class PluginManager
         return $viewData;
     }
 
+    public function prepPluginForDisplay(PluginInstance $instance)
+    {
+        $cacheId = 'rcmPluginInstance_viewData_' . $instance->getInstanceId();
+
+        if ($this->cache->hasItem($cacheId)) {
+            $viewData = $this->cache->getItem($cacheId);
+        } else {
+            $viewData = $this->getPluginViewData(
+                $instance->getPlugin(),
+                $instance->getInstanceId(),
+                $this->getInstanceConfigFromEntity($instance)
+            );
+
+            if ($viewData['canCache']) {
+                $this->cache->setItem($cacheId, $viewData);
+            }
+        }
+
+        $instance->setRenderedHtml($viewData['html']);
+        $instance->setRenderedCss($viewData['css']);
+        $instance->setRenderedJs($viewData['js']);
+        $instance->setEditJs($viewData['editJs']);
+        $instance->setEditCss($viewData['editCss']);
+        $instance->setTooltip($viewData['tooltip']);
+        $instance->setIcon($viewData['icon']);
+        $instance->setCanCache($viewData['canCache']);
+
+        return;
+    }
+
     /**
      * Get a plugin by instance Id
      *
@@ -124,6 +154,7 @@ class PluginManager
      *
      * @return array|mixed
      * @throws \Rcm\Exception\PluginInstanceNotFoundException
+     * @deprecated
      */
     public function getPluginByInstanceId($pluginInstanceId)
     {
@@ -258,15 +289,6 @@ class PluginManager
             'pluginInstanceId' => $pluginInstanceId,
         );
 
-//        if (isset($this->config['rcmPlugin'][$pluginName]['editJs'])) {
-//            $return['editJs']
-//                = $this->config['rcmPlugin'][$pluginName]['editJs'];
-//        }
-//
-//        if (isset($this->config['rcmPlugin'][$pluginName]['editCss'])) {
-//            $return['editCss']
-//                = $this->config['rcmPlugin'][$pluginName]['editCss'];
-//        }
 
         if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
             $return['displayName']
@@ -292,49 +314,6 @@ class PluginManager
 
         return $return;
 
-    }
-
-    /**
-     * Save a plugin instance
-     *
-     * @param integer $pluginInstanceId Current Instance Id
-     * @param string  $pluginName       Plugin Name
-     * @param mixed   $saveData         Plugin Data to Save
-     * @param boolean $siteWide         Is this a site wide
-     * @param string  $displayName      Plugin name for site wide
-     *
-     * @return PluginInstance New saved plugin instance
-     */
-    public function savePlugin(
-        $pluginInstanceId,
-        $pluginName,
-        $saveData,
-        $siteWide=false,
-        $displayName=''
-    ) {
-        if ($pluginInstanceId > 0) {
-            return $this->saveExistingPlugin($pluginInstanceId, $pluginName, $saveData);
-        }
-
-        return $this->saveNewInstance($pluginName, $saveData, $siteWide, $displayName);
-    }
-
-    public function saveExistingPlugin($pluginInstanceId, $pluginName, $saveData)
-    {
-        $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
-
-        if ($pluginInstance->getMd5() == md5(serialize($saveData))) {
-            return $pluginInstance;
-        }
-
-        $newPluginInstance = $this->saveNewInstance(
-            $pluginInstance->getPlugin(),
-            $saveData,
-            $pluginInstance->isSiteWide(),
-            $pluginInstance->getDisplayName()
-        );
-
-        return $newPluginInstance;
     }
 
     /**
@@ -368,48 +347,7 @@ class PluginManager
         $this->entityManager->flush();
     }
 
-    /**
-     * Save a new plugin instance
-     *
-     * @param string      $pluginName  Plugin name
-     * @param array       $saveData    Save Data
-     * @param bool        $siteWide    Site Wide marker
-     * @param null|string $displayName Display name for site wide plugins.  Required
-     *                                 for site wide plugin instances.
-     *
-     * @return PluginInstance
-     */
-    public function saveNewInstance(
-        $pluginName,
-        $saveData,
-        $siteWide = false,
-        $displayName = null
-    ) {
-        $pluginInstance = new PluginInstance();
-        $pluginInstance->setPlugin($pluginName);
 
-        if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
-            $pluginInstance->setDisplayName(
-                $this->config['rcmPlugin'][$pluginName]['display']
-            );
-        }
-
-        if ($siteWide) {
-            $pluginInstance->setSiteWide();
-
-            if (!empty($displayName)) {
-                $pluginInstance->setDisplayName($displayName);
-            }
-        }
-
-        $pluginInstance->setMd5(md5(serialize($saveData)));
-        $pluginInstance->setInstanceConfig($saveData);
-
-        $this->entityManager->persist($pluginInstance);
-        $this->entityManager->flush();
-
-        return $pluginInstance;
-    }
 
 
     /**

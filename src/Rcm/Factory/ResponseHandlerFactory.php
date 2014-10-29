@@ -49,8 +49,8 @@ class ResponseHandlerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \Rcm\Service\SiteManager $siteManager */
-        $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
 
         /** @var \RcmUser\Service\RcmUserService $rcmUserService */
         $rcmUserService = $serviceLocator->get('RcmUser\Service\RcmUserService');
@@ -62,7 +62,7 @@ class ResponseHandlerFactory implements FactoryInterface
 
         return new ResponseHandler(
             $request,
-            $siteManager,
+            $currentSite,
             $responseSender,
             $rcmUserService
         );

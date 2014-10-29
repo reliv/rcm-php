@@ -33,7 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Rcm\Repository\PluginWrapper")
  * @ORM\Table(name="rcm_plugin_wrappers")
  */
 class PluginWrapper
@@ -222,6 +222,10 @@ class PluginWrapper
      */
     public function getHeight()
     {
+        if (empty($this->height)) {
+            return null;
+        }
+
         return $this->height . 'px';
     }
 
@@ -244,6 +248,10 @@ class PluginWrapper
      */
     public function getWidth()
     {
+        if (empty($this->width)) {
+            return null;
+        }
+
         return $this->width . 'px';
     }
 

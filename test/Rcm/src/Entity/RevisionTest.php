@@ -177,8 +177,8 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
 
         $actual = $this->revision->getPluginWrappers();
 
-        $this->assertTrue($actual instanceof ArrayCollection);
-        $this->assertEquals($expected, $actual->toArray());
+        $this->assertTrue(is_array($actual));
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -226,9 +226,9 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
 
         $actual = $this->revision->getPluginWrappers();
 
-        $this->assertTrue($actual instanceof ArrayCollection);
+        $this->assertTrue(is_array($actual));
 
-        $reIndexedArray = array_values($actual->toArray());
+        $reIndexedArray = array_values($actual);
 
         $this->assertEquals($expected, $reIndexedArray);
     }

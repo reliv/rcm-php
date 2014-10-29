@@ -137,6 +137,7 @@ class Site
      * @ORM\OneToMany(
      *     targetEntity="Page",
      *     mappedBy="site",
+     *     indexBy="name",
      *     cascade={"persist"}
      * )
      */
@@ -148,6 +149,7 @@ class Site
      * @ORM\OneToMany(
      *     targetEntity="Container",
      *     mappedBy="site",
+     *     indexBy="name",
      *     cascade={"persist"}
      * )
      */
@@ -190,6 +192,13 @@ class Site
      * @ORM\Column(type="string", nullable=true)
      **/
     protected $notAuthorizedPage;
+
+    /**
+     * @var string URL to not authorized page.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     **/
+    protected $notFoundPage = 'not-found';
 
     /**
      * Constructor for site
@@ -499,7 +508,7 @@ class Site
      */
     public function addPage(Page $page)
     {
-        $this->pages[] = $page;
+        $this->pages[$page->getName()] = $page;
     }
 
     /**
@@ -529,22 +538,17 @@ class Site
      *
      * @param string $name Name of container
      *
-     * @return ArrayCollection Array of page entities
+     * @return Container Container Entity
      */
     public function getContainer($name)
     {
-        if (empty($this->containers)) {
+        $container = $this->containers->get($name);
+
+        if (empty($container)) {
             return null;
         }
 
-        /** @var \Rcm\Entity\Container $container */
-        foreach ($this->containers as $container) {
-            if ($container->getName() == $name) {
-                return $container;
-            }
-        }
-
-        return null;
+        return $container;
     }
 
     /**
@@ -556,7 +560,7 @@ class Site
      */
     public function addContainer(Container $container)
     {
-        $this->containers[] = $container;
+        $this->containers[$container->getName()] = $container;
     }
 
     /**
@@ -606,6 +610,31 @@ class Site
         }
 
         $this->sitePlugins->add($plugin);
+    }
+
+    public function listAvailableSiteWidePlugins()
+    {
+        $plugins = $this->getSiteWidePlugins();
+
+        $list = array();
+
+
+        if (empty($plugins)) {
+            return $list;
+        }
+
+        /** @var \Rcm\Entity\PluginInstance $plugin */
+        foreach ($plugins as $plugin) {
+            $list[$plugin->getDisplayName()] = [
+                'displayName' => $plugin->getDisplayName(),
+                'icon' => '/modules/rcm/images/GenericIcon.png',
+                'siteWide' => true,
+                'name' => $plugin->getPlugin(),
+                'instanceId' => $plugin->getInstanceId()
+            ];
+        }
+
+        return $list;
     }
 
     /**
@@ -719,6 +748,24 @@ class Site
     {
         $this->notAuthorizedPage = $notAuthorizedPage;
     }
+
+    /**
+     * @return string
+     */
+    public function getNotFoundPage()
+    {
+        return $this->notFoundPage;
+    }
+
+    /**
+     * @param string $notFoundPage
+     */
+    public function setNotFoundPage($notFoundPage)
+    {
+        $this->notFoundPage = $notFoundPage;
+    }
+
+
 
     public function getLocale()
     {

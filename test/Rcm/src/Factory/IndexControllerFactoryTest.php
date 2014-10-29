@@ -50,9 +50,17 @@ class IndexControllerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mockSiteManager = $this->getMockBuilder('\Rcm\Service\SiteManager')
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $mockPageRepo = $this->getMockBuilder('\Rcm\Repository\Page')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockEntityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($mockPageRepo));
 
         $mockLayoutManager = $this->getMockBuilder('\Rcm\Service\LayoutManager')
             ->disableOriginalConstructor()
@@ -64,8 +72,8 @@ class IndexControllerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
-            'Rcm\Service\SiteManager',
-            $mockSiteManager
+            'Doctrine\ORM\EntityManager',
+            $mockEntityManager
         );
         $serviceManager->setService(
             'Rcm\Service\LayoutManager',

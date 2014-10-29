@@ -227,16 +227,10 @@ return array(
                 => 'Rcm\Factory\EventFinishListenerFactory',
             'Rcm\EventListener\ViewEventListener'
                 => 'Rcm\Factory\ViewEventListenerFactory',
-            'Rcm\Service\ContainerManager'
-                => 'Rcm\Factory\ContainerManagerFactory',
             'Rcm\Service\PluginManager'
                 => 'Rcm\Factory\PluginManagerFactory',
             'Rcm\Service\LayoutManager'
                 => 'Rcm\Factory\LayoutManagerFactory',
-            'Rcm\Service\SiteManager'
-                => 'Rcm\Factory\SiteManagerFactory',
-            'Rcm\Service\PageManager'
-                => 'Rcm\Factory\PageManagerFactory',
             'Rcm\Service\ResponseHandler'
                 => 'Rcm\Factory\ResponseHandlerFactory',
             'Rcm\Service\Cache'
@@ -249,8 +243,10 @@ return array(
                 => 'Rcm\Factory\AclResourceProviderFactory',
             'Rcm\Validator\Page'
                 => 'Rcm\Factory\PageValidatorFactory',
+            'Rcm\Validator\PageTemplate'
+                => 'Rcm\Factory\PageTemplateFactory',
             'Rcm\Validator\MainLayout'
-                => 'Rcm\Factory\MainLayoutValidatorFactory',
+            => 'Rcm\Factory\MainLayoutValidatorFactory',
             'Rcm\Service\Logger'
                 => 'Rcm\Factory\LoggerFactory',
             'Rcm\Service\ZendLogger'
@@ -279,19 +275,23 @@ return array(
         ),
         'factories' => array(
             'Rcm\Controller\IndexController'
-            => 'Rcm\Factory\IndexControllerFactory',
+                => 'Rcm\Factory\IndexControllerFactory',
         ),
     ),
     'view_helpers' => array(
         'factories' => array(
             'rcmContainer'
-            => 'Rcm\Factory\ContainerViewHelperFactory',
+                => 'Rcm\Factory\ContainerViewHelperFactory',
             'rcmTextEdit' => 'Rcm\Factory\TextEditFactory',
             'rcmRichEdit' => 'Rcm\Factory\RichEditFactory',
         ),
         'invokables' => array(
             'rcmOutOfDateBrowserWarning'
-            => 'Rcm\View\Helper\OutOfDateBrowserWarning',
+                => 'Rcm\View\Helper\OutOfDateBrowserWarning',
+            'urlToPage'
+                => 'Rcm\View\Helper\UrlToPage',
+            'revisionHelper'
+                => 'Rcm\View\Helper\RevisionHelper',
         ),
     ),
     'controller_plugins' => array(
@@ -302,6 +302,8 @@ return array(
                 'Rcm\Factory\RcmIsAllowedFactory',
             'rcmIsSiteAdmin' =>
                 'Rcm\Factory\IsSiteAdminPluginFactory',
+            'rcmIsPageAllowed' =>
+                '\Rcm\Factory\RcmIsPageAllowedPluginFactory',
         ),
         'invokables' => array(
             'redirectToPage'

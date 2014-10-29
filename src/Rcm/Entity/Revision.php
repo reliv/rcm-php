@@ -113,6 +113,8 @@ class Revision
 
     public $isDirty = false;
 
+    protected $wrappersSortedByPageContainer = array();
+
     /**
      * Constructor for Page Revision Entity.
      */
@@ -246,11 +248,61 @@ class Revision
     /**
      * Get Plugin Instances
      *
-     * @return ArrayCollection
+     * @return Array
      */
     public function getPluginWrappers()
     {
-        return $this->pluginWrappers;
+        if (empty($this->pluginWrappers)) {
+            return array();
+        }
+
+        $wrappers = array();
+
+        /** @var \Rcm\Entity\PluginWrapper $wrapper */
+        foreach($this->pluginWrappers as $wrapper) {
+            $orderNumber = $wrapper->getRenderOrderNumber();
+
+            if (empty($orderNumber)) {
+                $orderNumber = count($wrappers);
+            }
+
+            if (!empty($wrappers[$orderNumber])) {
+                $orderNumber++;
+            }
+
+            $wrappers[$orderNumber] = $wrapper;
+        }
+
+        ksort($wrappers);
+
+        return $wrappers;
+    }
+
+    public function getPluginWrappersByPageContainerName($containerName)
+    {
+        if (empty($this->wrappersSortedByPageContainer)) {
+            /** @var \Rcm\Entity\PluginWrapper $wrapper */
+            foreach($this->pluginWrappers as $wrapper) {
+
+                $renderOrder = $wrapper->getRenderOrderNumber();
+
+                if (!empty($this->wrappersSortedByPageContainer[$wrapper->getLayoutContainer()][$wrapper->getRenderOrderNumber()])) {
+                    $renderOrder++;
+                }
+
+                $this->wrappersSortedByPageContainer[$wrapper->getLayoutContainer()][$renderOrder] = $wrapper;
+            }
+
+            foreach ($this->wrappersSortedByPageContainer as $containerNameKey => $value) {
+                ksort($this->wrappersSortedByPageContainer[$containerNameKey]);
+            }
+        }
+
+        if (empty($this->wrappersSortedByPageContainer[$containerName])) {
+            return null;
+        }
+
+        return $this->wrappersSortedByPageContainer[$containerName];
     }
 
     /**

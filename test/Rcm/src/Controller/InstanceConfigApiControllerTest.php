@@ -39,7 +39,7 @@ class InstanceConfigApiControllerTest extends \PHPUnit_Framework_TestCase
     public function testUnauthorized()
     {
         $siteMgr = $this
-            ->getMockBuilder('Rcm\Service\SiteManager')
+            ->getMockBuilder('Rcm\Entity\Site')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -53,7 +53,7 @@ class InstanceConfigApiControllerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(false));
 
         $serviceMgr = new ServiceManager();
-        $serviceMgr->setService('Rcm\Service\SiteManager', $siteMgr);
+        $serviceMgr->setService('Rcm\Service\CurrentSite', $siteMgr);
         $serviceMgr->setService('RcmUser\Service\RcmUserService', $userSvc);
 
         $unit = new InstanceConfigApiController();

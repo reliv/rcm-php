@@ -41,7 +41,7 @@ use Doctrine\ORM\Query;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-class Container extends EntityRepository implements ContainerInterface
+class Container extends ContainerAbstract
 {
     /**
      * Gets the DB result of the current Published Revision

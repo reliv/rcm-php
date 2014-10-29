@@ -39,7 +39,7 @@ require_once __DIR__ . '/../../../autoload.php';
 class PageTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \PHPUnit_Framework_MockObject_MockObject */
-    protected $pageManager;
+    protected $pageRepo;
 
     /** @var \Rcm\Validator\Page */
     protected $validator;
@@ -51,14 +51,15 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $pageManager = $this->getMockBuilder('\Rcm\Service\PageManager')
+        $pageRepo = $this->getMockBuilder('\Rcm\Repository\Page')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->pageManager = $pageManager;
+        $this->pageRepo = $pageRepo;
 
-        /** @var \Rcm\Service\PageManager $pageManager */
-        $this->validator = new Page($pageManager);
+        /** @var \Rcm\Repository\Page $pageRepo */
+        $this->validator = new Page($pageRepo);
+        $this->validator->setSiteId(1);
     }
 
     /**
@@ -110,7 +111,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $reflectedProp->setAccessible(true);
         $defaultValue = $reflectedProp->getValue($this->validator);
 
-        $this->assertEquals(null, $defaultValue);
+        $this->assertEquals(1, $defaultValue);
 
         $this->validator->setSiteId(22);
 
@@ -131,9 +132,15 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $pageName = 'test-page';
         $pageType = 'z';
 
-        $this->pageManager->expects($this->once())
-            ->method('getPageByName')
-            ->with($this->equalTo($pageName), $this->equalTo($pageType))
+        $this->pageRepo->expects($this->once())
+            ->method('findOneBy')
+            ->with(
+                $this->equalTo(array(
+                        'name' => $pageName,
+                        'pageType' => $pageType,
+                        'site' => 1
+                    ))
+            )
             ->will($this->returnValue(false));
 
         $this->validator->setPageType($pageType);
@@ -157,9 +164,15 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $pageName = 'test-page';
         $pageType = 'z';
 
-        $this->pageManager->expects($this->once())
-            ->method('getPageByName')
-            ->with($this->equalTo($pageName), $this->equalTo($pageType))
+        $this->pageRepo->expects($this->once())
+            ->method('findOneBy')
+            ->with(
+                $this->equalTo(array(
+                        'name' => $pageName,
+                        'pageType' => $pageType,
+                        'site' => 1
+                    ))
+            )
             ->will($this->returnValue(true));
 
         $this->validator->setPageType($pageType);
@@ -189,8 +202,8 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $pageName = 'test page';
         $pageType = 'z';
 
-        $this->pageManager->expects($this->never())
-            ->method('getPageByName');
+        $this->pageRepo->expects($this->never())
+            ->method('findOneBy');
 
         $this->validator->setPageType($pageType);
 

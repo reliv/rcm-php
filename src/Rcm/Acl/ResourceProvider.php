@@ -20,9 +20,8 @@ namespace Rcm\Acl;
 
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
-use Rcm\Service\PageManager;
+use Rcm\Repository\Site as SiteRepo;
 use Rcm\Service\PluginManager;
-use Rcm\Service\SiteManager;
 use RcmUser\Acl\Provider\ResourceProvider as RcmUserResourceProvider;
 
 /**
@@ -43,34 +42,23 @@ class ResourceProvider extends RcmUserResourceProvider
     /** @var string */
     protected $providerId = 'Rcm\Acl\ResourceProvider';
 
-    /** @var \Rcm\Service\SiteManager */
-    protected $siteManager;
-
-    /** @var \Rcm\Service\PageManager */
-    protected $pageManager;
-
-    /** @var \Rcm\Service\PluginManager */
-    protected $pluginManager;
+    /** @var \Rcm\Repository\Site */
+    protected $siteRepo;
 
     /**
      * Constructor
      *
      * @param array         $resources     Config array of RCM resources
-     * @param SiteManager   $siteManager   Rcm Site Manager
-     * @param PageManager   $pageManager   Rcm Page Manager
+     * @param SiteRepo      $siteRepo      Rcm Site Repository
      * @param PluginManager $pluginManager Rcm Plugin Manager
      */
     public function __construct(
         Array         $resources,
-        SiteManager $siteManager,
-        PageManager $pageManager,
-        PluginManager $pluginManager
+        SiteRepo $siteRepo
     ) {
 
         $this->resources = $resources;
-        $this->siteManager = $siteManager;
-        $this->pageManager = $pageManager;
-        $this->pluginManager = $pluginManager;
+        $this->siteRepo = $siteRepo;
     }
 
     /**
@@ -97,7 +85,7 @@ class ResourceProvider extends RcmUserResourceProvider
     {
         $return = $this->resources;
 
-        $sites = $this->siteManager->getAllActiveSites();
+        $sites = $this->siteRepo->getSites(true);
 
         foreach ($sites as &$site) {
             $return = array_merge($this->getSiteResources($site), $return);

@@ -20,10 +20,11 @@
 
 namespace Rcm\Controller;
 
-use Rcm\Exception\ContainerNotFoundException;
+use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
+use Rcm\Repository\Page as PageRepo;
+use Rcm\Entity\Page;
 use Rcm\Service\LayoutManager;
-use Rcm\Service\SiteManager;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -49,6 +50,7 @@ use Zend\View\Model\ViewModel;
  * @method boolean rcmIsAllowed($resource, $action) Is User Allowed
  * @method boolean shouldShowRevisions($siteId, $pageName, $pageType = 'n') Should Show Revisions for pages
  * @method boolean rcmIsSiteAdmin() Is user a CMS admin
+ * @method boolean rcmIsPageAllowed(Page $page) Is user allowed to view a page
  */
 class IndexController extends AbstractActionController
 {
@@ -61,20 +63,17 @@ class IndexController extends AbstractActionController
     /** @var integer */
     public $pageRevisionId;
 
-    /** @var \Rcm\Service\SiteManager */
-    protected $siteManager;
-
     /** @var \Rcm\Entity\Site  */
     protected $currentSite;
 
     /** @var integer */
     protected $siteId;
 
-    /** @var \Rcm\Service\PageManager */
-    protected $pageManager;
-
     /** @var \Rcm\Service\LayoutManager */
     protected $layoutManager;
+
+    /** @var  \Rcm\Repository\Page */
+    protected $pageRepo;
 
     protected $pageInfo;
     protected $notFound = false;
@@ -82,47 +81,18 @@ class IndexController extends AbstractActionController
     /**
      * Constructor
      *
-     * @param SiteManager   $siteManager     Site Manager needed to get current page.
      * @param LayoutManager $layoutManager   Layout Manager to get layouts.
      * @param Site          $currentSite     Current Site Entity
+     * @param PageRepo      $pageRepo        Rcm Page Repository
      */
     public function __construct(
-        SiteManager   $siteManager,
         LayoutManager $layoutManager,
-        Site          $currentSite
+        Site          $currentSite,
+        PageRepo      $pageRepo
     ) {
-        $this->siteManager = $siteManager;
-        $this->pageManager = $siteManager->getPageManager();
         $this->layoutManager = $layoutManager;
-        $this->siteId = $siteManager->getCurrentSiteId();
         $this->currentSite = $currentSite;
-    }
-
-    /**
-     * Look for page titled not-found.  If can't find a CMS page by that name
-     * throw a generic 404 and let Zend take care of the error handling.
-     *
-     * @return mixed|null
-     */
-    protected function pageNotFound()
-    {
-        $this->notFound = true;
-
-        try {
-            $this->pageName = 'not-found';
-            $this->pageType = 'n';
-            $this->pageRevisionId = null;
-
-            $pageInfo = $this->pageManager->getRevisionInfo('not-found');
-
-            /** @var \Zend\Http\Response $response */
-            $response = $this->getResponse();
-            $response->setStatusCode(404);
-
-            return $pageInfo;
-        } catch (ContainerNotFoundException $e) {
-            return $this->notFoundAction();
-        }
+        $this->pageRepo = $pageRepo;
     }
 
     /**
@@ -144,91 +114,74 @@ class IndexController extends AbstractActionController
             ->getRouteMatch()
             ->getParam('revision', null);
 
-
-        $userCanSeeRevisions = $this->shouldShowRevisions(
-            $this->siteManager->getCurrentSiteId(),
+        return $this->getCmsResponse($this->currentSite,
             $this->pageName,
-            $this->pageType
+            $this->pageType,
+            $this->pageRevisionId
+        );
+    }
+
+    public function getCmsResponse(Site $site, $pageName, $pageType='n', $revisionId=null) {
+
+        /* Get the Page for display */
+        $page = $this->pageRepo->getPageByName(
+            $site,
+            $pageName,
+            $pageType
         );
 
-        if (!$userCanSeeRevisions && $this->pageRevisionId) {
-            return $this->redirectToPage($this->pageName, $this->pageType);
-        }
+        if (empty($page)) {
+            $this->pageName = $site->getNotFoundPage();
+            $this->pageType = 'n';
+            $this->pageRevisionId = null;
 
-        try {
-            $pageInfo = $this->pageManager->getRevisionInfo(
-                $this->pageName,
-                $this->pageRevisionId,
-                $this->pageType,
-                $userCanSeeRevisions
+            $page = $this->pageRepo->getPageByName(
+                $site,
+                $site->getNotFoundPage(),
+                'n'
             );
-        } catch (ContainerNotFoundException $e) {
-            $pageInfo = $this->pageNotFound();
 
-            if ($pageInfo instanceof ViewModel) {
-                return $pageInfo;
+            if (empty($page)) {
+                return $this->notFoundAction();
             }
+
+            $response = $this->getResponse();
+            $response->setStatusCode(404);
         }
 
-        $this->pageInfo = $pageInfo;
-
-        $allowed = $this->checkPermissions();
+        $allowed = $this->rcmIsPageAllowed($page);
 
         if (!$allowed) {
             return $this->getUnauthorizedResponse();
         }
 
-        $this->prepLayoutView();
+        $this->prepPageRevisionForDisplay($page, $revisionId);
 
-        $viewModel = new ViewModel(array('pageInfo' => $pageInfo));
+        if (!empty($revisionId) && empty($page->getCurrentRevision())) {
+            return $this->redirectToPage($page->getName(), $page->getPageType());
+        }
+
+        $this->prepLayoutView($site , $page, $page->getSiteLayoutOverride());
+
+        $viewModel = new ViewModel(array('page' => $page));
 
         $viewModel->setTemplate(
             'pages/'
-            . $this->layoutManager->getSitePageTemplate($this->currentSite, $pageInfo['pageLayout'])
+            . $this->layoutManager->getSitePageTemplate($site, $page->getPageLayout())
         );
 
         return $viewModel;
     }
 
-    protected function getUnauthorizedResponse()
-    {
-        $response = new \Rcm\Http\Response();
-        $response->setStatusCode(401);
-        return $response;
-    }
-
-    protected function checkPermissions()
-    {
-        $allowed = $this->rcmIsAllowed(
-            'sites.' . $this->siteId . '.pages.' . $this->pageInfo['pageType'] . '.' . $this->pageInfo['name'],
-            'read'
-        );
-
-        $url = $this->request->getUriString();
-        $parsedLogin = parse_url($url);
-        $siteLoginPage = $this->siteManager->getSiteLoginPage();
-        $notAuthorizedPage = $this->siteManager->getSiteNotAuthorizedPage();
-
-        if ($siteLoginPage == $url
-            || $siteLoginPage == $parsedLogin['path']
-            || $notAuthorizedPage == $url
-            || $notAuthorizedPage == $parsedLogin['path']
-        ) {
-            $allowed = true;
-        }
-
-        return $allowed;
-    }
-
-    protected function prepLayoutView()
+    protected function prepLayoutView(Site $site, Page $page, $layoutOverRide)
     {
         /** @var ViewModel $layoutView */
         $layoutView = $this->layout();
 
-        if (!empty($this->pageInfo['siteLayoutOverride'])) {
+        if (!empty($layoutOverRide)) {
             $layoutTemplatePath = $this->layoutManager->getSiteLayout(
-                $this->currentSite,
-                $this->pageInfo['siteLayoutOverride']
+                $page->getSite(),
+                $layoutOverRide
             );
 
             $layoutView->setTemplate('layout/' . $layoutTemplatePath);
@@ -238,67 +191,54 @@ class IndexController extends AbstractActionController
             $layoutView->setVariable('rcmDraft', true);
         }
 
-        $layoutView->setVariable('pageInfo', $this->pageInfo);
-        $layoutView->setVariable('shortRevList', $this->getShortRevisionList());
+        $layoutView->setVariable('page', $page);
+        $layoutView->setVariable('site', $site);
     }
 
-    public function getShortRevisionList()
+    public function prepPageRevisionForDisplay(Page $page, $pageRevisionId=null)
     {
-        $allowed = $this->rcmIsSiteAdmin($this->currentSite);
-
-        if (!$allowed) {
-            return array();
-        }
-
-        $page = $this->pageManager->getPageRevisionList($this->pageName, $this->pageType);
-
-        if (empty($page)) {
-            return array();
-        }
-
-        $revisions = array(
-            'Live' => $page['publishedRevision'],
-            'Staged' => $page['stagedRevision'],
-            'Draft' => $page['lastDraft'],
-        );
-
-        $return = array();
-        $selected = 'Draft';
-
-        /** @var \Rcm\Entity\Revision $revision */
-        foreach ($revisions as $key => $revision) {
-            if (empty($revision)) {
-                continue;
-            }
-
-            $return[$key] = array(
-                'href' => $this->urlToPage(
-                    $this->pageName,
-                    $this->pageType,
-                    $revision['revisionId']
-                ),
-
-                'author' => $revision['author'],
-                'date' => $revision['createdDate'],
-                'selected' => false,
+        //  First Check for a page Revision
+        if (!empty($pageRevisionId)) {
+            $userCanSeeRevisions = $this->shouldShowRevisions(
+                $page->getSite()->getSiteId(),
+                $page->getName(),
+                $page->getPageType()
             );
 
-            if (($this->pageInfo['revision']['revisionId'] == $revision['revisionId'])
-                || (empty($this->pageRevisionId) && $key == 'Live')
-            ) {
-                $return[$key]['selected'] = true;
-                $selected = $key;
-            }
+            if ($userCanSeeRevisions) {
+                $revision = $page->getRevisionById($pageRevisionId);
 
-            if ($key == 'Live') {
-                $return[$key]['href'] = $this->urlToPage(
-                    $this->pageName,
-                    $this->pageType
-                );
+                if (!empty($revision) || $revision instanceof Revision) {
+                    $page->setCurrentRevision($revision);
+                }
+
+                return;
             }
         }
 
-        $return['current'] = $selected;
-        return $return;
+        // Check for staging
+        if ($this->rcmIsSiteAdmin($page->getSite())) {
+            $revision = $page->getStagedRevision();
+
+            if (!empty($revision) || $revision instanceof Revision) {
+                $page->setCurrentRevision($revision);
+                return;
+            }
+        }
+
+        // Finally look for published revision
+        $revision = $page->getPublishedRevision();
+        if (!empty($revision) || $revision instanceof Revision) {
+            $page->setCurrentRevision($revision);
+        }
+
+        return;
+    }
+
+    protected function getUnauthorizedResponse()
+    {
+        $response = new \Rcm\Http\Response();
+        $response->setStatusCode(401);
+        return $response;
     }
 }

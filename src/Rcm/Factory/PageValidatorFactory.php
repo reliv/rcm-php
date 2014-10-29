@@ -47,9 +47,18 @@ class PageValidatorFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \Rcm\Service\PageManager $pageManager */
-        $pageManager = $serviceLocator->get('\Rcm\Service\PageManager');
+        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
+        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
-        return $pageManager->getPageValidator();
+        /** @var \Rcm\Repository\Page $pageRepo */
+        $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
+
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+
+        $pageValidator = new Page($pageRepo);
+        $pageValidator->setSiteId($currentSite->getSiteId());
+
+        return $pageValidator;
     }
 }

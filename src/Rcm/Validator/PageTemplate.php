@@ -19,7 +19,8 @@
 
 namespace Rcm\Validator;
 
-use Rcm\Service\PageManager;
+use Rcm\Entity\Site;
+use Rcm\Repository\Page as PageRepo;
 use Zend\Validator\AbstractValidator;
 
 /**
@@ -46,21 +47,26 @@ class PageTemplate extends AbstractValidator
             self::PAGE_TEMPLATE => "'%value%' is not a valid page template."
         );
 
-    /** @var \Rcm\Service\PageManager */
-    protected $pageManager;
+    /** @var \Rcm\Repository\Page */
+    protected $pageRepo;
 
     protected $pageType = 't';
 
-    protected $siteId = null;
+    /** @var  \Rcm\Entity\Site */
+    protected $site;
 
     /**
      * Constructor
      *
-     * @param PageManager $pageManager Rcm Page Manager
+     * @param Site     $currentSite Current Site
+     * @param PageRepo $pageRepo    Rcm Page Repo
      */
-    public function __construct(PageManager $pageManager)
-    {
-        $this->pageManager = $pageManager;
+    public function __construct(
+        Site     $currentSite,
+        PageRepo $pageRepo
+    ) {
+        $this->pageRepo = $pageRepo;
+        $this->site = $currentSite;
 
         parent::__construct();
     }
@@ -81,13 +87,13 @@ class PageTemplate extends AbstractValidator
      * Set the site id to use for validation.  If none is passed then we will
      * validate against the current site id.
      *
-     * @param integer $siteId Site Id
+     * @param Site $site Site for validation
      *
      * @return void
      */
-    public function setSiteId($siteId)
+    public function setSite(Site $site)
     {
-        $this->siteId = $siteId;
+        $this->site = $site;
     }
 
     /**
@@ -101,12 +107,15 @@ class PageTemplate extends AbstractValidator
     {
         $this->setValue($value);
 
-        if (!$this->pageManager->getPageById(
-            $value,
-            $this->pageType,
-            $this->siteId
-        )
-        ) {
+        $check = $this->pageRepo->findOneBy(
+            array(
+                'pageId' => $value,
+                'pageType' => $this->pageType,
+                'site' => $this->site
+            )
+        );
+
+        if (empty($check)) {
             $this->error(self::PAGE_TEMPLATE);
 
             return false;

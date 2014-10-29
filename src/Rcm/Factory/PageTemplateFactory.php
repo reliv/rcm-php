@@ -1,8 +1,8 @@
 <?php
 /**
- * Service Factory for the Container Manager
+ * Service Factory for the Rcm PageTemplate Validator
  *
- * This file contains the factory needed to generate a Container Manager.
+ * This file contains the factory needed to validate Rcm PageTemplate.
  *
  * PHP version 5.3
  *
@@ -18,14 +18,14 @@
  */
 namespace Rcm\Factory;
 
-use Rcm\Service\ContainerManager;
+use Rcm\Validator\Page;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Service Factory for the Container Manager
+ * Service Factory for the Rcm PageTemplate Validator
  *
- * Factory for the Container Manager.
+ * Factory for PageTemplate.
  *
  * @category  Reliv
  * @package   Rcm
@@ -36,20 +36,28 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class ContainerManagerFactory implements FactoryInterface
+class PageTemplateFactory implements FactoryInterface
 {
-
     /**
      * Creates Service
      *
      * @param ServiceLocatorInterface $serviceLocator Zend Service Locator
      *
-     * @return ContainerManager
+     * @return Page
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \Rcm\Service\SiteManager $siteManager */
-        $siteManager = $serviceLocator->get('Rcm\Service\SiteManager');
-        return $siteManager->getContainerManager();
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceLocator->get('\Rcm\Service\CurrentSite');
+
+        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
+        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
+
+        /** @var \Rcm\Repository\Page $pageRepo */
+        $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
+
+        $pageValidator = new \Rcm\Validator\PageTemplate($currentSite, $pageRepo);
+
+        return $pageValidator;
     }
 }

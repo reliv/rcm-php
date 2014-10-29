@@ -116,7 +116,6 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
 
 
         /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
-        /** @var \Rcm\Service\SiteManager $mockSiteManager */
         $listener = new DispatchListener(
             $mockLayoutManager,
             $currentSite,

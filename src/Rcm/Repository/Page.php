@@ -23,7 +23,9 @@ namespace Rcm\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Rcm\Entity\ContainerInterface;
 use Rcm\Entity\Page as PageEntity;
+use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\InvalidArgumentException;
@@ -47,8 +49,38 @@ use Rcm\Exception\RuntimeException;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-class Page extends EntityRepository implements ContainerInterface
+class Page extends ContainerAbstract
 {
+    /**
+     * Get a page entity by name
+     *
+     * @param SiteEntity $site     Site to lookup
+     * @param string     $pageName Page Name
+     * @param string     $pageType Page Type
+     *
+     * @return null|PageEntity
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getPageByName(SiteEntity $site,
+        $pageName,
+        $pageType='n'
+    ) {
+        $queryBuilder = $this->createQueryBuilder('page')
+            ->leftJoin('page.publishedRevision', 'publishedRevision')
+            ->leftJoin('publishedRevision.pluginWrappers', 'pluginWrappers')
+            ->leftJoin('pluginWrappers.instance', 'pluginInstances')
+            ->where('page.site = :site')
+            ->andWhere('page.name = :pageName')
+            ->andWhere('page.pageType = :pageType')
+            ->setParameter('site', $site)
+            ->setParameter('pageName', $pageName)
+            ->setParameter('pageType', $pageType);
+
+        /** @var \Rcm\Entity\Page $result */
+        return $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
+    }
+
+
     /**
      * Gets the DB result of the Published Revision
      *
@@ -254,13 +286,16 @@ class Page extends EntityRepository implements ContainerInterface
     /**
      * Copy a page
      *
-     * @param integer    $pageIdToCopy    Id of page to copy
+     * @param PageEntity $pageToCopy      Page Entity to copy
      * @param string     $newPageName     Page Name or URL.
      * @param string     $author          Author of copied page
      * @param SiteEntity $siteDestination Site Entity to copy page to
      * @param string     $newPageTitle    Title of page
      * @param integer    $pageRevisionId  Page Revision ID to use for copy.  Defaults to currently published
      * @param string     $newPageType     Page type of page.  Defaults to "n"
+     * @param boolean    $publishNewPage  Publish page instead of setting to staged
+     *
+     * @returns boolean
      *
      * @throws \Rcm\Exception\InvalidArgumentException
      * @throws \Rcm\Exception\PageNotFoundException
@@ -268,7 +303,7 @@ class Page extends EntityRepository implements ContainerInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function copyPage(
-        $pageIdToCopy,
+        PageEntity $pageToCopy,
         $newPageName,
         $author,
         SiteEntity $siteDestination,
@@ -277,24 +312,9 @@ class Page extends EntityRepository implements ContainerInterface
         $newPageType = 'n',
         $publishNewPage = false
     ) {
-        if (empty($pageIdToCopy) || !is_numeric($pageIdToCopy)) {
-            throw new InvalidArgumentException(
-                'Invalid Page ID Number to copy'
-            );
-        }
-
         if (empty($newPageName) || empty($author)) {
             throw new InvalidArgumentException(
                 'Missing needed information to create page copy.'
-            );
-        }
-
-        /** @var \Rcm\Entity\Page $pageToCopy */
-        $pageToCopy = $this->findOneBy(array('pageId' => $pageIdToCopy));
-
-        if (empty($pageToCopy)) {
-            throw new PageNotFoundException(
-                'Unable to locate page to copy.'
             );
         }
 
@@ -525,6 +545,31 @@ class Page extends EntityRepository implements ContainerInterface
             ->setParameter('published', $published)
             ->orderBy('revisions.revisionId', 'DESC');
 
+        if ($published) {
+            $revisionQueryBuilder->andWhere('revisions != page.publishedRevision');
+        }
+
         return $revisionQueryBuilder->getQuery();
+    }
+
+    public function savePage(
+        SiteEntity $siteEntity,
+        $pageName,
+        $pageRevision,
+        $pageType='n',
+        $saveData,
+        $author
+    ) {
+        if (!empty($saveData['containers'])) {
+            foreach($saveData['containers'] as $containerName => $containerData) {
+                /** @var \Rcm\Entity\Container $container */
+                $container = $siteEntity->getContainer($containerName);
+
+                $this->saveContainer($container, $containerData, $author);
+            }
+        }
+
+        $page = $siteEntity->getPage($pageName, $pageType);
+        return $this->saveContainer($page, $saveData['pageContainer'], $author, $pageRevision);
     }
 }
