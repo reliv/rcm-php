@@ -22,11 +22,11 @@ use Rcm\Entity\Page;
 use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
+use Rcm\Entity\Site;
 use Rcm\Exception\ContainerNotFoundException;
 use Rcm\Exception\PluginReturnedResponseException;
 use Rcm\Service\PluginManager;
 use Zend\View\Helper\AbstractHelper;
-use Rcm\Repository\Container as ContainerRepo;
 
 /**
  * Rcm Container View Helper
@@ -44,11 +44,11 @@ use Rcm\Repository\Container as ContainerRepo;
  */
 class Container extends AbstractHelper
 {
-    /** @var ContainerRepo */
-    protected $containerRepo;
-
     /** @var \Rcm\Service\PluginManager */
     protected $pluginManager;
+
+    /** @var Site */
+    protected $currentSite;
 
     /** @var  \Zend\Stdlib\ResponseInterface */
     protected $response;
@@ -56,14 +56,15 @@ class Container extends AbstractHelper
     /**
      * Constructor
      *
-     * @param ContainerRepo    $containerRepo    Rcm Container Manager
+     * @param Site             $currentSite      Rcm Site
      * @param PluginManager    $pluginManager    Rcm Plugin Manager
      */
     public function __construct(
-        ContainerRepo $containerRepo,
+        Site          $currentSite,
         PluginManager $pluginManager
     ) {
         $this->pluginManager = $pluginManager;
+        $this->currentSite = $currentSite;
     }
 
     /**
@@ -90,6 +91,11 @@ class Container extends AbstractHelper
 
         /** @var \Rcm\Entity\Site $site */
         $site = $view->site;
+
+        /** Fix for non CMS pages */
+        if (empty($site)) {
+            $site = $this->currentSite;
+        }
 
         $container = $site->getContainer($name);
 
