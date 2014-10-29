@@ -60,14 +60,13 @@ class ContainerViewHelperFactory implements FactoryInterface
             'Rcm\Service\PluginManager'
         );
 
-        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
-        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
-
-        /** @var \Rcm\Repository\Container $containerRepo */
-        $containerRepo = $entityManager->getRepository('\Rcm\Entity\Container');
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceLocator->get(
+            'Rcm\Service\CurrentSite'
+        );
 
         return new Container(
-            $containerRepo,
+            $currentSite,
             $pluginManager
         );
     }

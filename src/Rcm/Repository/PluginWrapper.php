@@ -72,6 +72,19 @@ class PluginWrapper extends EntityRepository
             $pluginData['sitewideName']
         );
 
+//        if (!empty($oldWrapper)
+//            && ($pluginData['isSitewide'] || $oldWrapper->getInstance()->isSiteWide())
+//            && $pluginInstance->getInstanceId() == $oldWrapper->getInstance()->getInstanceId()
+//        ) {
+//            $queryBuilder = $this->_em->createQueryBuilder();
+//            $queryBuilder->update('\Rcm\Entity\PluginWrapper', 'wrapper')
+//                ->set('wrapper.instance', $pluginInstance->getInstanceId())
+//                ->where('wrapper.instance = :oldInstance')
+//                ->setParameter('oldInstance', $oldWrapper->getInstance());
+//
+//            $queryBuilder->getQuery()->execute();
+//        }
+
         if (!empty($oldWrapper)
             && $oldWrapper->getRenderOrderNumber() == $pluginData['rank']
             && $oldWrapper->getDivFloat() == $pluginData['float']
