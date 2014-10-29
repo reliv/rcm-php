@@ -612,6 +612,31 @@ class Site
         $this->sitePlugins->add($plugin);
     }
 
+    public function listAvailableSiteWidePlugins()
+    {
+        $plugins = $this->getSiteWidePlugins();
+
+        $list = array();
+
+
+        if (empty($plugins)) {
+            return $list;
+        }
+
+        /** @var \Rcm\Entity\PluginInstance $plugin */
+        foreach ($plugins as $plugin) {
+            $list[$plugin->getDisplayName()] = [
+                'displayName' => $plugin->getDisplayName(),
+                'icon' => '/modules/rcm/images/GenericIcon.png',
+                'siteWide' => true,
+                'name' => $plugin->getPlugin(),
+                'instanceId' => $plugin->getInstanceId()
+            ];
+        }
+
+        return $list;
+    }
+
     /**
      * Remove a Site Wide Plugin Instance from the entity
      *

@@ -47,10 +47,10 @@ class PageSearchApiController extends AbstractRestfulController
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
         $entityMgr = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        $siteMgr = $this->getServiceLocator()->get(
-            'Rcm\Service\SiteManager'
+        $currentSite = $this->getServiceLocator()->get(
+            'Rcm\Service\CurrentSite'
         );
-        $siteId = $siteMgr->getCurrentSiteId();
+        $siteId = $currentSite->getSiteId();
 
         $results = $entityMgr->createQuery(
             '
@@ -81,10 +81,10 @@ class PageSearchApiController extends AbstractRestfulController
     public function allSitePagesAction()
     {
         $entityMgr = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $siteMgr = $this->getServiceLocator()->get(
-            'Rcm\Service\SiteManager'
+        $currentSite = $this->getServiceLocator()->get(
+            'Rcm\Service\CurrentSite'
         );
-        $siteId = $siteMgr->getCurrentSiteId();
+        $siteId = $currentSite->getSiteId();
 
         $site = $entityMgr->getRepository(
             '\Rcm\Entity\Site'

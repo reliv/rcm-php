@@ -18,13 +18,6 @@
  */
 namespace Rcm\View\Helper;
 
-use Rcm\Entity\Page;
-use Rcm\Entity\PluginInstance;
-use Rcm\Entity\PluginWrapper;
-use Rcm\Entity\Revision;
-use Rcm\Exception\PluginReturnedResponseException;
-use Rcm\Service\ContainerManager;
-use Rcm\Service\PluginManager;
 use Zend\View\Helper\AbstractHelper;
 
 /**

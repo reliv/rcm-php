@@ -19,6 +19,7 @@
 
 namespace Rcm\Validator;
 
+use Rcm\Entity\Site;
 use Rcm\Repository\Page as PageRepo;
 use Zend\Validator\AbstractValidator;
 
@@ -51,16 +52,21 @@ class PageTemplate extends AbstractValidator
 
     protected $pageType = 't';
 
-    protected $siteId = null;
+    /** @var  \Rcm\Entity\Site */
+    protected $site;
 
     /**
      * Constructor
      *
-     * @param PageRepo $pageRepo Rcm Page Repo
+     * @param Site     $currentSite Current Site
+     * @param PageRepo $pageRepo    Rcm Page Repo
      */
-    public function __construct(PageRepo $pageRepo)
-    {
+    public function __construct(
+        Site     $currentSite,
+        PageRepo $pageRepo
+    ) {
         $this->pageRepo = $pageRepo;
+        $this->site = $currentSite;
 
         parent::__construct();
     }
@@ -81,13 +87,13 @@ class PageTemplate extends AbstractValidator
      * Set the site id to use for validation.  If none is passed then we will
      * validate against the current site id.
      *
-     * @param integer $siteId Site Id
+     * @param Site $site Site for validation
      *
      * @return void
      */
-    public function setSiteId($siteId)
+    public function setSite(Site $site)
     {
-        $this->siteId = $siteId;
+        $this->site = $site;
     }
 
     /**
@@ -103,9 +109,9 @@ class PageTemplate extends AbstractValidator
 
         $check = $this->pageRepo->findOneBy(
             array(
-                'name' => $value,
+                'pageId' => $value,
                 'pageType' => $this->pageType,
-                'site' => $this->siteId
+                'site' => $this->site
             )
         );
 

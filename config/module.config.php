@@ -227,16 +227,10 @@ return array(
                 => 'Rcm\Factory\EventFinishListenerFactory',
             'Rcm\EventListener\ViewEventListener'
                 => 'Rcm\Factory\ViewEventListenerFactory',
-            'Rcm\Service\ContainerManager'
-                => 'Rcm\Factory\ContainerManagerFactory',
             'Rcm\Service\PluginManager'
                 => 'Rcm\Factory\PluginManagerFactory',
             'Rcm\Service\LayoutManager'
                 => 'Rcm\Factory\LayoutManagerFactory',
-            'Rcm\Service\SiteManager'
-                => 'Rcm\Factory\SiteManagerFactory',
-            'Rcm\Service\PageManager'
-                => 'Rcm\Factory\PageManagerFactory',
             'Rcm\Service\ResponseHandler'
                 => 'Rcm\Factory\ResponseHandlerFactory',
             'Rcm\Service\Cache'
@@ -249,8 +243,10 @@ return array(
                 => 'Rcm\Factory\AclResourceProviderFactory',
             'Rcm\Validator\Page'
                 => 'Rcm\Factory\PageValidatorFactory',
+            'Rcm\Validator\PageTemplate'
+                => 'Rcm\Factory\PageTemplateFactory',
             'Rcm\Validator\MainLayout'
-                => 'Rcm\Factory\MainLayoutValidatorFactory',
+            => 'Rcm\Factory\MainLayoutValidatorFactory',
             'Rcm\Service\Logger'
                 => 'Rcm\Factory\LoggerFactory',
             'Rcm\Service\ZendLogger'

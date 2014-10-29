@@ -69,9 +69,6 @@ class IndexController extends AbstractActionController
     /** @var integer */
     protected $siteId;
 
-    /** @var \Rcm\Service\PageManager */
-    protected $pageManager;
-
     /** @var \Rcm\Service\LayoutManager */
     protected $layoutManager;
 

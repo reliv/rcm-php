@@ -36,7 +36,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class PageTemplate implements FactoryInterface
+class PageTemplateFactory implements FactoryInterface
 {
     /**
      * Creates Service
@@ -47,14 +47,16 @@ class PageTemplate implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceLocator->get('\Rcm\Service\CurrentSite');
+
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
         /** @var \Rcm\Repository\Page $pageRepo */
         $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
 
-        $pageValidator = new \Rcm\Validator\PageTemplate($pageRepo);
-        $pageValidator->setSiteId($currentSite->getSiteId());
+        $pageValidator = new \Rcm\Validator\PageTemplate($currentSite, $pageRepo);
 
         return $pageValidator;
     }

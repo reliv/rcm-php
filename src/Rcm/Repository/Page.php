@@ -312,12 +312,6 @@ class Page extends ContainerAbstract
         $newPageType = 'n',
         $publishNewPage = false
     ) {
-        if (empty($pageIdToCopy) || !is_numeric($pageIdToCopy)) {
-            throw new InvalidArgumentException(
-                'Invalid Page ID Number to copy'
-            );
-        }
-
         if (empty($newPageName) || empty($author)) {
             throw new InvalidArgumentException(
                 'Missing needed information to create page copy.'
@@ -550,6 +544,10 @@ class Page extends ContainerAbstract
             ->setParameter('pageType', $pageType)
             ->setParameter('published', $published)
             ->orderBy('revisions.revisionId', 'DESC');
+
+        if ($published) {
+            $revisionQueryBuilder->andWhere('revisions != page.publishedRevision');
+        }
 
         return $revisionQueryBuilder->getQuery();
     }

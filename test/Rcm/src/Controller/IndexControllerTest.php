@@ -106,7 +106,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->mockPageRepo->expects($this->any())
             ->method('getPageByName')
             ->will(
-                $this->returnCallback(array($this, 'pageManagerMockCallback'))
+                $this->returnCallback(array($this, 'pageRepoMockCallback'))
             );
 
         $mockLayoutManager = $this
@@ -486,7 +486,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      * @return mixed
      * @throws \Rcm\Exception\ContainerNotFoundException
      */
-    public function pageManagerMockCallback()
+    public function pageRepoMockCallback()
     {
         if ($this->skipCounter > 0) {
             $this->skipCounter--;
@@ -508,7 +508,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get Test Page Data for PageManager Mocks
+     * Get Test Page Data for Page Repo Mocks
      *
      * @param integer $pageId             PageID
      * @param integer $pageName           PageName

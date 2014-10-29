@@ -48,7 +48,6 @@ class PageNameTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        /** @var \Rcm\Service\PageManager $pageManager */
         $this->validator = new PageName();
     }
 

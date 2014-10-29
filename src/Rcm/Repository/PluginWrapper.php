@@ -55,7 +55,7 @@ class PluginWrapper extends EntityRepository
      * @throws \Rcm\Exception\RuntimeException
      */
 
-    protected function savePluginWrapper($pluginData, $oldWrapper=null)
+    public function savePluginWrapper($pluginData, $oldWrapper=null)
     {
         if (!empty($oldWrapper) && !is_a($oldWrapper, '\Rcm\Entity\PluginWrapper')) {
             throw new RuntimeException('Wrapper passed in is not a valid plugin wrapper.');

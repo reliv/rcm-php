@@ -293,7 +293,9 @@ class Revision
                 $this->wrappersSortedByPageContainer[$wrapper->getLayoutContainer()][$renderOrder] = $wrapper;
             }
 
-            ksort($this->wrappersSortedByPageContainer[$wrapper->getLayoutContainer()]);
+            foreach ($this->wrappersSortedByPageContainer as $containerNameKey => $value) {
+                ksort($this->wrappersSortedByPageContainer[$containerNameKey]);
+            }
         }
 
         if (empty($this->wrappersSortedByPageContainer[$containerName])) {
