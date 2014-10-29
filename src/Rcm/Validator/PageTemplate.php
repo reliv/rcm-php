@@ -19,7 +19,7 @@
 
 namespace Rcm\Validator;
 
-use Rcm\Service\PageManager;
+use Rcm\Repository\Page as PageRepo;
 use Zend\Validator\AbstractValidator;
 
 /**
@@ -46,8 +46,8 @@ class PageTemplate extends AbstractValidator
             self::PAGE_TEMPLATE => "'%value%' is not a valid page template."
         );
 
-    /** @var \Rcm\Service\PageManager */
-    protected $pageManager;
+    /** @var \Rcm\Repository\Page */
+    protected $pageRepo;
 
     protected $pageType = 't';
 
@@ -56,11 +56,11 @@ class PageTemplate extends AbstractValidator
     /**
      * Constructor
      *
-     * @param PageManager $pageManager Rcm Page Manager
+     * @param PageRepo $pageRepo Rcm Page Repo
      */
-    public function __construct(PageManager $pageManager)
+    public function __construct(PageRepo $pageRepo)
     {
-        $this->pageManager = $pageManager;
+        $this->pageRepo = $pageRepo;
 
         parent::__construct();
     }
@@ -101,12 +101,15 @@ class PageTemplate extends AbstractValidator
     {
         $this->setValue($value);
 
-        if (!$this->pageManager->getPageById(
-            $value,
-            $this->pageType,
-            $this->siteId
-        )
-        ) {
+        $check = $this->pageRepo->findOneBy(
+            array(
+                'name' => $value,
+                'pageType' => $this->pageType,
+                'site' => $this->siteId
+            )
+        );
+
+        if (empty($check)) {
             $this->error(self::PAGE_TEMPLATE);
 
             return false;

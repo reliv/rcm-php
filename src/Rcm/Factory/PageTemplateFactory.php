@@ -1,8 +1,8 @@
 <?php
 /**
- * Service Factory for the Rcm Page Validator
+ * Service Factory for the Rcm PageTemplate Validator
  *
- * This file contains the factory needed to validate Rcm Pages.
+ * This file contains the factory needed to validate Rcm PageTemplate.
  *
  * PHP version 5.3
  *
@@ -23,9 +23,9 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Service Factory for the Rcm Page Validator
+ * Service Factory for the Rcm PageTemplate Validator
  *
- * Factory for Rcm Cache.
+ * Factory for PageTemplate.
  *
  * @category  Reliv
  * @package   Rcm
@@ -36,7 +36,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class PageValidatorFactory implements FactoryInterface
+class PageTemplate implements FactoryInterface
 {
     /**
      * Creates Service
@@ -53,10 +53,7 @@ class PageValidatorFactory implements FactoryInterface
         /** @var \Rcm\Repository\Page $pageRepo */
         $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
 
-        /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
-
-        $pageValidator = new Page($pageRepo);
+        $pageValidator = new \Rcm\Validator\PageTemplate($pageRepo);
         $pageValidator->setSiteId($currentSite->getSiteId());
 
         return $pageValidator;

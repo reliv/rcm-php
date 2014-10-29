@@ -134,6 +134,10 @@ class IndexController extends AbstractActionController
         );
 
         if (empty($page)) {
+            $this->pageName = $site->getNotFoundPage();
+            $this->pageType = 'n';
+            $this->pageRevisionId = null;
+
             $page = $this->pageRepo->getPageByName(
                 $site,
                 $site->getNotFoundPage(),

@@ -19,6 +19,7 @@
 
 namespace Rcm\Service;
 
+use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use RcmUser\Service\RcmUserService;
 use Zend\Http\PhpEnvironment\Request;
@@ -46,8 +47,8 @@ class ResponseHandler
     /** @var \Zend\Http\PhpEnvironment\Request */
     protected $request;
 
-    /** @var \Rcm\Service\SiteManager */
-    protected $siteManager;
+    /** @var \Rcm\Entity\Site */
+    protected $currentSite;
 
     /** @var \Zend\Mvc\ResponseSender\HttpResponseSender */
     protected $responseSender;
@@ -62,20 +63,20 @@ class ResponseHandler
      * Constructor
      *
      * @param RequestInterface   $request        Zend Request Object
-     * @param SiteManager        $siteManager    Rcm Site Manager
+     * @param Site               $currentSite    Rcm Site Manager
      * @param HttpResponseSender $responseSender Zend Http Response Sender.
      * @param RcmUserService     $rcmUserService Rcm User Service
      */
     public function __construct(
         RequestInterface $request,
-        SiteManager $siteManager,
+        Site $currentSite,
         HttpResponseSender $responseSender,
         RcmUserService $rcmUserService
     ) {
-        $this->request = $request;
-        $this->siteManager = $siteManager;
+        $this->request        = $request;
+        $this->currentSite    = $currentSite;
         $this->responseSender = $responseSender;
-        $this->userService = $rcmUserService;
+        $this->userService    = $rcmUserService;
     }
 
     /**
@@ -127,8 +128,8 @@ class ResponseHandler
      */
     protected function processNotAuthorized()
     {
-        $loginPage = $this->siteManager->getCurrentSiteLoginPage();
-        $notAuthorized = $this->siteManager->getCurrentSiteNotAuthorizedPage();
+        $loginPage = $this->currentSite->getLoginPage();
+        $notAuthorized = $this->currentSite->getNotAuthorizedPage();
         $returnToUrl = urlencode($this->request->getServer('REQUEST_URI'));
         $newResponse = new Response();
         $newResponse->setStatusCode('302');

@@ -64,6 +64,7 @@ class IndexControllerFactory implements FactoryInterface
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
+        /** @var \Rcm\Repository\Page $pageRepo */
         $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
 
         return new IndexController(

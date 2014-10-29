@@ -50,22 +50,34 @@ class PageValidatorFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateService()
     {
 
-        $mockPageManager = $this->getMockBuilder('\Rcm\Service\PageManager')
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $pageValidator = $this->getMockBuilder('\Rcm\Validator\Page')
+        $mockPageRepo = $this->getMockBuilder('\Rcm\Repository\Page')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockPageManager->expects($this->any())
-            ->method('getPageValidator')
-            ->will($this->returnValue($pageValidator));
+        $mockEntityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($mockPageRepo));
+
+        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockCurrentSite->expects($this->any())
+            ->method('getSiteId')
+            ->will($this->returnValue(1));
 
         $serviceLocator = new ServiceManager();
         $serviceLocator->setService(
-            'Rcm\Service\PageManager',
-            $mockPageManager
+            'Doctrine\ORM\EntityManager',
+            $mockEntityManager
+        );
+        $serviceLocator->setService(
+            'Rcm\Service\CurrentSite',
+            $mockCurrentSite
         );
 
         $factory = new PageValidatorFactory();

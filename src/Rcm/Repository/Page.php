@@ -20,11 +20,12 @@
 
 namespace Rcm\Repository;
 
-use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Rcm\Entity\ContainerInterface;
 use Rcm\Entity\Page as PageEntity;
+use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\InvalidArgumentException;
@@ -48,7 +49,7 @@ use Rcm\Exception\RuntimeException;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-class Page extends EntityRepository implements ContainerInterface
+class Page extends ContainerAbstract
 {
     /**
      * Get a page entity by name
@@ -285,14 +286,14 @@ class Page extends EntityRepository implements ContainerInterface
     /**
      * Copy a page
      *
-     * @param integer    $pageIdToCopy    Id of page to copy
+     * @param PageEntity $pageToCopy      Page Entity to copy
      * @param string     $newPageName     Page Name or URL.
      * @param string     $author          Author of copied page
      * @param SiteEntity $siteDestination Site Entity to copy page to
      * @param string     $newPageTitle    Title of page
      * @param integer    $pageRevisionId  Page Revision ID to use for copy.  Defaults to currently published
      * @param string     $newPageType     Page type of page.  Defaults to "n"
-     * @param boolean    $pubishNewPage   Publish page instead of setting to staged
+     * @param boolean    $publishNewPage  Publish page instead of setting to staged
      *
      * @returns boolean
      *
@@ -302,7 +303,7 @@ class Page extends EntityRepository implements ContainerInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function copyPage(
-        $pageIdToCopy,
+        PageEntity $pageToCopy,
         $newPageName,
         $author,
         SiteEntity $siteDestination,
@@ -320,15 +321,6 @@ class Page extends EntityRepository implements ContainerInterface
         if (empty($newPageName) || empty($author)) {
             throw new InvalidArgumentException(
                 'Missing needed information to create page copy.'
-            );
-        }
-
-        /** @var \Rcm\Entity\Page $pageToCopy */
-        $pageToCopy = $this->findOneBy(array('pageId' => $pageIdToCopy));
-
-        if (empty($pageToCopy)) {
-            throw new PageNotFoundException(
-                'Unable to locate page to copy.'
             );
         }
 
@@ -560,5 +552,26 @@ class Page extends EntityRepository implements ContainerInterface
             ->orderBy('revisions.revisionId', 'DESC');
 
         return $revisionQueryBuilder->getQuery();
+    }
+
+    public function savePage(
+        SiteEntity $siteEntity,
+        $pageName,
+        $pageRevision,
+        $pageType='n',
+        $saveData,
+        $author
+    ) {
+        if (!empty($saveData['containers'])) {
+            foreach($saveData['containers'] as $containerName => $containerData) {
+                /** @var \Rcm\Entity\Container $container */
+                $container = $siteEntity->getContainer($containerName);
+
+                $this->saveContainer($container, $containerData, $author);
+            }
+        }
+
+        $page = $siteEntity->getPage($pageName, $pageType);
+        return $this->saveContainer($page, $saveData['pageContainer'], $author, $pageRevision);
     }
 }

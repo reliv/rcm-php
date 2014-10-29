@@ -70,4 +70,21 @@ interface ContainerInterface
      * @throws \Rcm\Exception\PageNotFoundException
      */
     public function getRevisionDbInfo($siteId, $name, $revisionId);
+
+    /**
+     * Save a container
+     *
+     * @param \Rcm\Entity\ContainerInterface $container
+     * @param                                $containerData
+     * @param                                $author
+     * @param null                           $revisionNumber
+     *
+     * @return mixed
+     */
+    public function saveContainer(
+        \Rcm\Entity\ContainerInterface $container,
+        $containerData,
+        $author,
+        $revisionNumber=null
+    );
 }

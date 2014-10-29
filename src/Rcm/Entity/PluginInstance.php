@@ -35,7 +35,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Rcm\Repository\PluginInstance")
  * @ORM\Table(name="rcm_plugin_instances")
  */
 class PluginInstance

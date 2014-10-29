@@ -248,7 +248,7 @@ class Revision
     /**
      * Get Plugin Instances
      *
-     * @return ArrayCollection
+     * @return Array
      */
     public function getPluginWrappers()
     {
@@ -261,6 +261,10 @@ class Revision
         /** @var \Rcm\Entity\PluginWrapper $wrapper */
         foreach($this->pluginWrappers as $wrapper) {
             $orderNumber = $wrapper->getRenderOrderNumber();
+
+            if (empty($orderNumber)) {
+                $orderNumber = count($wrappers);
+            }
 
             if (!empty($wrappers[$orderNumber])) {
                 $orderNumber++;

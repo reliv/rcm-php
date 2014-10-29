@@ -50,13 +50,28 @@ class ContainerViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mockContainerManager = $this
-            ->getMockBuilder('\Rcm\Service\ContainerManager')
+        $mockPluginManager = $this
+            ->getMockBuilder('\Rcm\Service\PluginManager')
             ->disableOriginalConstructor()
             ->getMock();
 
+        $mockEntityManager = $this
+            ->getMockBuilder('\Doctrine\ORM\EntityManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockContainerRepo = $this
+            ->getMockBuilder('\Rcm\Repository\Container')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockEntityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($mockContainerRepo));
+
         $sm = new ServiceManager();
-        $sm->setService('Rcm\Service\ContainerManager', $mockContainerManager);
+        $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
+        $sm->setService('Rcm\Service\PluginManager', $mockPluginManager);
 
         $helperManager = new HelperPluginManager();
         $helperManager->setServiceLocator($sm);

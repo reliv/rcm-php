@@ -19,7 +19,6 @@
 namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Util\Debug;
 use Rcm\Exception\InvalidArgumentException;
 
 /**
@@ -86,7 +85,7 @@ abstract class ContainerAbstract implements ContainerInterface
     protected $currentRevision;
 
     /**
-     * @var Place Holder for last saved draft
+     * @var Revision Place Holder for last saved draft
      */
     protected $lastSavedDraft;
 
@@ -384,13 +383,17 @@ abstract class ContainerAbstract implements ContainerInterface
                 break;
             } elseif (!empty($published) && $published->getRevisionId() == $revision->getRevisionId()) {
                 $found = false;
-            } elseif (!empty($staged) && $staged->getRevisionId() == $staged->getRevisionId()) {
+            } elseif (!empty($staged) && $staged->getRevisionId() == $revision->getRevisionId()) {
+                $found = false;
+            } elseif ($revision->wasPublished()) {
                 $found = false;
             } else {
                 $found = true;
             }
 
-            $revision = prev($arrayCollection);
+            if (!$found) {
+                $revision = prev($arrayCollection);
+            }
 
         }
 
@@ -424,6 +427,4 @@ abstract class ContainerAbstract implements ContainerInterface
     {
         $this->currentRevision = $currentRevision;
     }
-
-
 }

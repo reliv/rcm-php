@@ -137,6 +137,7 @@ class Site
      * @ORM\OneToMany(
      *     targetEntity="Page",
      *     mappedBy="site",
+     *     indexBy="name",
      *     cascade={"persist"}
      * )
      */
@@ -507,7 +508,7 @@ class Site
      */
     public function addPage(Page $page)
     {
-        $this->pages[] = $page;
+        $this->pages[$page->getName()] = $page;
     }
 
     /**
@@ -559,7 +560,7 @@ class Site
      */
     public function addContainer(Container $container)
     {
-        $this->containers[] = $container;
+        $this->containers[$container->getName()] = $container;
     }
 
     /**

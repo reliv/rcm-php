@@ -19,7 +19,7 @@
 
 namespace Rcm\Validator;
 
-use Rcm\Service\PageManager;
+use Rcm\Repository\Page as PageRepo;
 
 /**
  * Rcm Page Validator
@@ -44,8 +44,8 @@ class Page extends PageName
 
     protected $pageNameOk = false;
 
-    /** @var \Rcm\Service\PageManager */
-    protected $pageManager;
+    /** @var \Rcm\Repository\Page */
+    protected $pageRepo;
 
     protected $pageType = 'n';
 
@@ -54,13 +54,14 @@ class Page extends PageName
     /**
      * Constructor
      *
-     * @param PageManager $pageManager Rcm Page Manager
+     * @param PageRepo $pageRepo Rcm Page Manager
      */
-    public function __construct(PageManager $pageManager)
+    public function __construct(PageRepo $pageRepo)
     {
         $this->messageTemplates[self::PAGE_EXISTS]
             = "Page '%value%' already exists";
-        $this->pageManager = $pageManager;
+
+        $this->pageRepo = $pageRepo;
 
         parent::__construct();
     }
@@ -105,12 +106,15 @@ class Page extends PageName
             return false;
         }
 
-        if ($this->pageManager->getPageByName(
-            $value,
-            $this->pageType,
-            $this->siteId
-        )
-        ) {
+        $check = $this->pageRepo->findOneBy(
+            array(
+                'name' => $value,
+                'pageType' => $this->pageType,
+                'site' => $this->siteId
+            )
+        );
+
+        if (!empty($check)) {
             $this->error(self::PAGE_EXISTS);
 
             return false;

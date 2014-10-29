@@ -127,7 +127,7 @@ class PluginManager
             $viewData = $this->getPluginViewData(
                 $instance->getPlugin(),
                 $instance->getInstanceId(),
-                $instance->getInstanceConfig()
+                $this->getInstanceConfigFromEntity($instance)
             );
 
             if ($viewData['canCache']) {
@@ -317,49 +317,6 @@ class PluginManager
     }
 
     /**
-     * Save a plugin instance
-     *
-     * @param integer $pluginInstanceId Current Instance Id
-     * @param string  $pluginName       Plugin Name
-     * @param mixed   $saveData         Plugin Data to Save
-     * @param boolean $siteWide         Is this a site wide
-     * @param string  $displayName      Plugin name for site wide
-     *
-     * @return PluginInstance New saved plugin instance
-     */
-    public function savePlugin(
-        $pluginInstanceId,
-        $pluginName,
-        $saveData,
-        $siteWide=false,
-        $displayName=''
-    ) {
-        if ($pluginInstanceId > 0) {
-            return $this->saveExistingPlugin($pluginInstanceId, $pluginName, $saveData);
-        }
-
-        return $this->saveNewInstance($pluginName, $saveData, $siteWide, $displayName);
-    }
-
-    public function saveExistingPlugin($pluginInstanceId, $pluginName, $saveData)
-    {
-        $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
-
-        if ($pluginInstance->getMd5() == md5(serialize($saveData))) {
-            return $pluginInstance;
-        }
-
-        $newPluginInstance = $this->saveNewInstance(
-            $pluginInstance->getPlugin(),
-            $saveData,
-            $pluginInstance->isSiteWide(),
-            $pluginInstance->getDisplayName()
-        );
-
-        return $newPluginInstance;
-    }
-
-    /**
      * Delete a plugin instance.  This should generally never be used unless the
      * container, page, or site is being deleted.  And only if the plugin instance
      * does not belong to a site wide plugin unless you are deleting the entire
@@ -390,48 +347,7 @@ class PluginManager
         $this->entityManager->flush();
     }
 
-    /**
-     * Save a new plugin instance
-     *
-     * @param string      $pluginName  Plugin name
-     * @param array       $saveData    Save Data
-     * @param bool        $siteWide    Site Wide marker
-     * @param null|string $displayName Display name for site wide plugins.  Required
-     *                                 for site wide plugin instances.
-     *
-     * @return PluginInstance
-     */
-    public function saveNewInstance(
-        $pluginName,
-        $saveData,
-        $siteWide = false,
-        $displayName = null
-    ) {
-        $pluginInstance = new PluginInstance();
-        $pluginInstance->setPlugin($pluginName);
 
-        if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
-            $pluginInstance->setDisplayName(
-                $this->config['rcmPlugin'][$pluginName]['display']
-            );
-        }
-
-        if ($siteWide) {
-            $pluginInstance->setSiteWide();
-
-            if (!empty($displayName)) {
-                $pluginInstance->setDisplayName($displayName);
-            }
-        }
-
-        $pluginInstance->setMd5(md5(serialize($saveData)));
-        $pluginInstance->setInstanceConfig($saveData);
-
-        $this->entityManager->persist($pluginInstance);
-        $this->entityManager->flush();
-
-        return $pluginInstance;
-    }
 
 
     /**
