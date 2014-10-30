@@ -18,6 +18,8 @@
  */
 namespace Rcm\EventListener;
 
+use Rcm\Entity\Page;
+use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
 use Rcm\Service\LayoutManager;
 use Zend\Mvc\MvcEvent;
@@ -80,6 +82,15 @@ class DispatchListener
 
         /** @var \Zend\View\Model\ViewModel $viewModel */
         $viewModel = $event->getViewModel();
+
+        /* Add on for non CMS pages */
+        $fakePage = new Page();
+        $fakeRevision = new Revision();
+        $fakePage->setCurrentRevision($fakeRevision);
+
+
+        $viewModel->setVariable('page', $fakePage);
+        $viewModel->setVariable('site', $this->currentSite);
 
         $template = $this->layoutManager->getSiteLayout($this->currentSite);
         $viewModel->setTemplate('layout/' . $template);
