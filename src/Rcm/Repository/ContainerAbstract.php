@@ -100,8 +100,7 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
                 $newRevision->addPluginWrapper($newPluginWrapper);
 
                 if (!empty($pluginWrapper)
-                    && $pluginWrapper->getPluginWrapperId()
-                    == $newPluginWrapper->getPluginWrapperId()
+                    && $pluginWrapper->getPluginWrapperId() == $newPluginWrapper->getPluginWrapperId()
                     && ($pluginWrapper->getInstance()->getInstanceId()
                         == $newPluginWrapper->getInstance()->getInstanceId()
                         || $pluginWrapper->getInstance()->isSiteWide())
@@ -115,6 +114,8 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
 
         if ($isDirty) {
             $this->_em->persist($newRevision);
+            $this->_em->flush($newRevision);
+
             $container->addRevision($newRevision);
 
             if ($publishRevision) {
@@ -128,7 +129,7 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
                 $container->setStagedRevision($newRevision);
             }
 
-            $this->_em->flush(array($newRevision, $container));
+            $this->_em->flush($container);
             return $newRevision->getRevisionId();
         }
 
