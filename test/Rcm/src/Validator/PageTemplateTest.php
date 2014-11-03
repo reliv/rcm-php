@@ -108,7 +108,6 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \Rcm\Validator\PageTemplate::setSiteId
      */
     public function testSetSiteId()
     {
