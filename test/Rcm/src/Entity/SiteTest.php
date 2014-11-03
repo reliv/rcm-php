@@ -1162,8 +1162,8 @@ class SIteTest extends \PHPUnit_Framework_TestCase
 
         /** Test site entity is setup correctly */
 
-        $this->assertCount(2, $this->site->getPages());
-        $this->assertCount(2, $this->site->getContainers());
+        $this->assertCount(1, $this->site->getPages());
+        $this->assertCount(1, $this->site->getContainers());
 
         $original = $this->site;
         $cloned = clone $this->site;
