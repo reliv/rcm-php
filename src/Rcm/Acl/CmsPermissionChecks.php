@@ -148,7 +148,7 @@ class CmsPermissionChecks
         $allowedRevisions = $this->rcmUserService->isAllowed(
             $this->buildPagesResourceId(
                 $siteId
-            ).
+            ),
             'create',
             'Rcm\Acl\ResourceProvider'
         );

@@ -5,6 +5,7 @@ namespace Rcm\Test\Acl;
 
 use Rcm\Acl\CmsPermissionChecks;
 use Rcm\Test\Mocks;
+use RcmUser\Result;
 
 require_once __DIR__ . '/../../../Mocks.php';
 
@@ -67,8 +68,12 @@ class CmsPermissionChecksTest extends Mocks
 
                 'aclDataService' => array(
                     'rules' => array(
-                        1 => 1,
-                        2 => 2,
+                        'data' => array(
+                            1 => 1,
+                            2 => 2,
+                        ),
+                        'code' => 1,
+                        'message' => 'TEST_MESSAGE'
                     ),
                 ),
 
@@ -90,7 +95,7 @@ class CmsPermissionChecksTest extends Mocks
                 'authorizeService' => array(
                     'isAllowedMap' => array(
                         array(
-                            'sites.123.pages.PAGE_TYPE.PAGE_NAME',
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'read',
                             'Rcm\Acl\ResourceProvider',
                             true
@@ -102,19 +107,19 @@ class CmsPermissionChecksTest extends Mocks
                             true
                         ),
                         array(
-                            'sites.123.pages.PAGE_TYPE.PAGE_NAME',
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'edit',
                             'Rcm\Acl\ResourceProvider',
-                            true
+                            false
                         ),
                         array(
-                            'sites.123.pages.PAGE_TYPE.PAGE_NAME',
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'approve',
                             'Rcm\Acl\ResourceProvider',
                             true
                         ),
                         array(
-                            'sites.123.pages.PAGE_TYPE.PAGE_NAME',
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'revisions',
                             'Rcm\Acl\ResourceProvider',
                             true
@@ -135,11 +140,225 @@ class CmsPermissionChecksTest extends Mocks
                 ),
 
                 'aclDataService' => array(
-                    'rules' => array(),
+                    'rules' => array(
+                        'data' => array(),
+                        'code' => 1,
+                        'message' => 'TEST_MESSAGE'
+                    ),
                 ),
 
                 'page' => array(
-                    'name' => 'PAGE_NAME',
+                    'name' => 'NOT_FOUND_PAGE',
+                    'type' => 'PAGE_TYPE',
+                ),
+
+                'site' => array(
+                    'siteId' => 123,
+                    'loginPage' => '/LOGIN_PAGE',
+                    'notAuthorizedPage' => '/NOT_AUTHED_PAGE',
+                    'notFoundPage' => '/NOT_FOUND_PAGE',
+                ),
+            ),
+            'ALLOW_CHECK2' => array(
+                'rcmUserService' => array(),
+
+                'authorizeService' => array(
+                    'isAllowedMap' => array(
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'read',
+                            'Rcm\Acl\ResourceProvider',
+                            true
+                        ),
+                        array(
+                            'sites.123',
+                            'admin',
+                            'Rcm\Acl\ResourceProvider',
+                            true
+                        ),
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'edit',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'approve',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'revisions',
+                            'Rcm\Acl\ResourceProvider',
+                            true
+                        ),
+                        array(
+                            'sites.123.pages',
+                            'create',
+                            'Rcm\Acl\ResourceProvider',
+                            true
+                        ),
+                        array(
+                            'NOPE',
+                            'NOPE',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                    )
+                ),
+
+                'aclDataService' => array(
+                    'rules' => array(
+                        'data' => array(),
+                        'code' => 1,
+                        'message' => 'TEST_MESSAGE'
+                    ),
+                ),
+
+                'page' => array(
+                    'name' => 'NOT_FOUND_PAGE',
+                    'type' => 'PAGE_TYPE',
+                ),
+
+                'site' => array(
+                    'siteId' => 123,
+                    'loginPage' => '/LOGIN_PAGE',
+                    'notAuthorizedPage' => '/NOT_AUTHED_PAGE',
+                    'notFoundPage' => '/NOT_FOUND_PAGE',
+                ),
+            ),
+            'ALLOW_CHECK3' => array(
+                'rcmUserService' => array(),
+
+                'authorizeService' => array(
+                    'isAllowedMap' => array(
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'read',
+                            'Rcm\Acl\ResourceProvider',
+                            true
+                        ),
+                        array(
+                            'sites.123',
+                            'admin',
+                            'Rcm\Acl\ResourceProvider',
+                            true
+                        ),
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'edit',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'approve',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'revisions',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                        array(
+                            'sites.123.pages',
+                            'create',
+                            'Rcm\Acl\ResourceProvider',
+                            true
+                        ),
+                        array(
+                            'NOPE',
+                            'NOPE',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                    )
+                ),
+
+                'aclDataService' => array(
+                    'rules' => array(
+                        'data' => array(),
+                        'code' => 1,
+                        'message' => 'TEST_MESSAGE'
+                    ),
+                ),
+
+                'page' => array(
+                    'name' => 'NOT_FOUND_PAGE',
+                    'type' => 'PAGE_TYPE',
+                ),
+
+                'site' => array(
+                    'siteId' => 123,
+                    'loginPage' => '/LOGIN_PAGE',
+                    'notAuthorizedPage' => '/NOT_AUTHED_PAGE',
+                    'notFoundPage' => '/NOT_FOUND_PAGE',
+                ),
+            ),
+            'ALLOW_CHECK4' => array(
+                'rcmUserService' => array(),
+
+                'authorizeService' => array(
+                    'isAllowedMap' => array(
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'read',
+                            'Rcm\Acl\ResourceProvider',
+                            true
+                        ),
+                        array(
+                            'sites.123',
+                            'admin',
+                            'Rcm\Acl\ResourceProvider',
+                            true
+                        ),
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'edit',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'approve',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                        array(
+                            'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
+                            'revisions',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                        array(
+                            'sites.123.pages',
+                            'create',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                        array(
+                            'NOPE',
+                            'NOPE',
+                            'Rcm\Acl\ResourceProvider',
+                            false
+                        ),
+                    )
+                ),
+
+                'aclDataService' => array(
+                    'rules' => array(
+                        'data' => array(),
+                        'code' => 1,
+                        'message' => 'TEST_MESSAGE'
+                    ),
+                ),
+
+                'page' => array(
+                    'name' => 'NOT_FOUND_PAGE',
                     'type' => 'PAGE_TYPE',
                 ),
 
@@ -224,9 +443,19 @@ class CmsPermissionChecksTest extends Mocks
             ->disableOriginalConstructor()
             ->getMock();
 
+        $rulesResult = new Result(
+            $testCase['aclDataService']['rules']['data'],
+            $testCase['aclDataService']['rules']['code'],
+            $testCase['aclDataService']['rules']['message']
+        );
+
         $aclDataService->expects($this->any())
             ->method('getRulesByResource')
-            ->will($this->returnValue($testCase['aclDataService']['rules']));
+            ->will($this->returnValue($rulesResult));
+
+        $aclDataService->expects($this->any())
+            ->method('getRulesByResourcePrivilege')
+            ->will($this->returnValue($rulesResult));
 
         return $aclDataService;
     }
@@ -295,11 +524,26 @@ class CmsPermissionChecksTest extends Mocks
         return new CmsPermissionChecks($this->getMockRcmUserService($testCaseKey));
     }
 
+    /**
+     * testIsPageAllowedForReading
+     *
+     * @return void
+     */
     public function testIsPageAllowedForReading()
     {
         $cmsPermissionChecks = $this->getCmsPermissionChecks('_DEFAULT');
 
-        $allowed = $cmsPermissionChecks->isPageAllowedForReading($this->getMockPage('_DEFAULT'));
+        $allowed = $cmsPermissionChecks->isPageAllowedForReading(
+            $this->getMockPage('_DEFAULT')
+        );
+
+        $this->assertTrue($allowed);
+
+        $cmsPermissionChecks = $this->getCmsPermissionChecks('NO_RULES');
+
+        $allowed = $cmsPermissionChecks->isPageAllowedForReading(
+            $this->getMockPage('NO_RULES')
+        );
 
         $this->assertTrue($allowed);
     }
@@ -308,7 +552,9 @@ class CmsPermissionChecksTest extends Mocks
     {
         $cmsPermissionChecks = $this->getCmsPermissionChecks('_DEFAULT');
 
-        $allowed = $cmsPermissionChecks->siteAdminCheck($this->getMockSite('_DEFAULT'));
+        $allowed = $cmsPermissionChecks->siteAdminCheck(
+            $this->getMockSite('_DEFAULT')
+        );
 
         $this->assertTrue($allowed);
     }
@@ -316,6 +562,7 @@ class CmsPermissionChecksTest extends Mocks
     public function testShouldShowRevisions()
     {
 
+        //echo "ALLOW_CHECK0\n";
         $testCaseKey = '_DEFAULT';
         $cmsPermissionChecks = $this->getCmsPermissionChecks($testCaseKey);
 
@@ -329,10 +576,64 @@ class CmsPermissionChecksTest extends Mocks
 
         $this->assertTrue($allowed);
 
+        //echo "ALLOW_CHECK1\n";
+        $testCaseKey = 'NO_RULES'; //
+        $cmsPermissionChecks = $this->getCmsPermissionChecks($testCaseKey);
 
+        $testCase = $this->getTestCase($testCaseKey);
+
+        $allowed = $cmsPermissionChecks->shouldShowRevisions(
+            $testCase['site']['siteId'],
+            $testCase['page']['type'],
+            $testCase['page']['name']
+        );
+
+        $this->assertTrue($allowed);
+
+        //echo "ALLOW_CHECK2\n";
+        $testCaseKey = 'ALLOW_CHECK2'; //
+        $cmsPermissionChecks = $this->getCmsPermissionChecks($testCaseKey);
+
+        $testCase = $this->getTestCase($testCaseKey);
+
+        $allowed = $cmsPermissionChecks->shouldShowRevisions(
+            $testCase['site']['siteId'],
+            $testCase['page']['type'],
+            $testCase['page']['name']
+        );
+
+        $this->assertTrue($allowed);
+
+        //echo "ALLOW_CHECK3\n";
+        $testCaseKey = 'ALLOW_CHECK3'; //
+        $cmsPermissionChecks = $this->getCmsPermissionChecks($testCaseKey);
+
+        $testCase = $this->getTestCase($testCaseKey);
+
+        $allowed = $cmsPermissionChecks->shouldShowRevisions(
+            $testCase['site']['siteId'],
+            $testCase['page']['type'],
+            $testCase['page']['name']
+        );
+
+        $this->assertTrue($allowed);
+
+        //echo "ALLOW_CHECK4\n";
+        $testCaseKey = 'ALLOW_CHECK4'; //
+        $cmsPermissionChecks = $this->getCmsPermissionChecks($testCaseKey);
+
+        $testCase = $this->getTestCase($testCaseKey);
+
+        $allowed = $cmsPermissionChecks->shouldShowRevisions(
+            $testCase['site']['siteId'],
+            $testCase['page']['type'],
+            $testCase['page']['name']
+        );
+
+        $this->assertFalse($allowed);
     }
 
-    public function XXXtestIsPageRestricted()
+    public function testIsPageRestricted()
     {
         $testCaseKey = '_DEFAULT';
         $cmsPermissionChecks = $this->getCmsPermissionChecks($testCaseKey);
@@ -348,6 +649,11 @@ class CmsPermissionChecksTest extends Mocks
 
         $this->assertTrue($allowed);
 
+        $testCaseKey = 'NO_RULES';
+        $cmsPermissionChecks = $this->getCmsPermissionChecks($testCaseKey);
+
+        $testCase = $this->getTestCase($testCaseKey);
+
         $allowed = $cmsPermissionChecks->isPageRestricted(
             $testCase['site']['siteId'],
             $testCase['page']['type'],
@@ -355,12 +661,47 @@ class CmsPermissionChecksTest extends Mocks
             'read'
         );
 
-        $this->assertTrue($allowed);
+        $this->assertFalse($allowed);
     }
 
-    public function testBuildSiteResourceId()
+    public function testBuildResourceIds()
     {
 
+        $testCaseKey = '_DEFAULT';
+        $cmsPermissionChecks = $this->getCmsPermissionChecks($testCaseKey);
+
+        $testCase = $this->getTestCase($testCaseKey);
+
+        $siteId = $testCase['site']['siteId'];
+        $pageType = $testCase['page']['type'];
+        $pageName = $testCase['page']['name'];
+
+        $siteResouceId = $cmsPermissionChecks->buildSiteResourceId(
+            $siteId
+        );
+
+        $this->assertEquals(
+            'sites.' . $siteId, $siteResouceId
+        );
+
+        $pagesResouceId = $cmsPermissionChecks->buildPagesResourceId(
+            $siteId
+        );
+
+        $this->assertEquals(
+            'sites.' . $siteId . '.pages', $pagesResouceId
+        );
+
+        $pageResouceId = $cmsPermissionChecks->buildPageResourceId(
+            $siteId,
+            $pageType,
+            $pageName
+        );
+
+        $this->assertEquals(
+            'sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName,
+            $pageResouceId
+        );
     }
 
     public function testBuildPagesResourceId()
