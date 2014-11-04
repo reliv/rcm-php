@@ -110,7 +110,7 @@ class PageSearchApiController extends AbstractRestfulController
                 && $_GET['format'] == 'tinyMceLinkList'
             ) {
                 $return[] = [
-                    'title' => $pageName,
+                    'title' => $pageUrl,
                     'value' => $pageUrl
                 ];
             } else {
