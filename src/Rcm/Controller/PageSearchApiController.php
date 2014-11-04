@@ -45,7 +45,9 @@ class PageSearchApiController extends AbstractRestfulController
     public function siteTitleSearchAction()
     {
         $query = $this->getEvent()->getRouteMatch()->getParam('query');
-        $entityMgr = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $entityMgr = $this->getServiceLocator()->get(
+            'Doctrine\ORM\EntityManager'
+        );
 
         $currentSite = $this->getServiceLocator()->get(
             'Rcm\Service\CurrentSite'
@@ -80,7 +82,9 @@ class PageSearchApiController extends AbstractRestfulController
      */
     public function allSitePagesAction()
     {
-        $entityMgr = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $entityMgr = $this->getServiceLocator()->get(
+            'Doctrine\ORM\EntityManager'
+        );
         $currentSite = $this->getServiceLocator()->get(
             'Rcm\Service\CurrentSite'
         );
@@ -89,10 +93,10 @@ class PageSearchApiController extends AbstractRestfulController
         $site = $entityMgr->getRepository(
             '\Rcm\Entity\Site'
         )->findOneBy(
-            array(
-                'siteId' => $siteId
+                array(
+                    'siteId' => $siteId
                 )
-        );
+            );
         /**
          * @var \Rcm\Entity\Page $pages
          */
@@ -102,7 +106,16 @@ class PageSearchApiController extends AbstractRestfulController
         foreach ($pages as $page) {
             $pageName = $page->getName();
             $pageUrl = $this->urlToPage($pageName, $page->getPageType());
-            $return[$pageUrl] = $pageName;
+            if (isset($_GET['format'])
+                && $_GET['format'] == 'tinyMceLinkList'
+            ) {
+                $return[] = [
+                    'title' => $pageName,
+                    'value' => $pageUrl
+                ];
+            } else {
+                $return[$pageUrl] = $pageName;
+            }
         }
         asort($return);
         return new JsonModel($return);
