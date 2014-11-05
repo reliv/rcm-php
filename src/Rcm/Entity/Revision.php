@@ -262,7 +262,7 @@ class Revision
         foreach($this->pluginWrappers as $wrapper) {
             $orderNumber = $wrapper->getRenderOrderNumber();
 
-            if (empty($orderNumber)) {
+            if (!is_int($orderNumber)) {
                 $orderNumber = count($wrappers);
             }
 
