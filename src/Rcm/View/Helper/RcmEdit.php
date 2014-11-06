@@ -47,8 +47,10 @@ class RcmEdit extends AbstractHelper
      * @param \HTMLPurifier $htmlPurifier html purifier class for striping web script
      * @param bool          $isRichEdit   true if the edit is a rich edit
      */
-    public function __construct(\HTMLPurifier $htmlPurifier, $isRichEdit = false)
-    {
+    public function __construct(
+        \HTMLPurifier $htmlPurifier,
+        $isRichEdit = false
+    ) {
         $this->htmlPurifier = $htmlPurifier;
         $this->editAttributeKey = ($isRichEdit ? 'data-richEdit'
             : 'data-textEdit');
@@ -94,7 +96,8 @@ class RcmEdit extends AbstractHelper
          */
         $elementType = htmlentities($elementType, ENT_QUOTES);
         return '<' . $elementType . $attributes . '>'
-        . $this->htmlPurifier->purify($defaultContent)
+//        . $this->htmlPurifier->purify($defaultContent)
+        . $defaultContent //This is a hole and is temporary
         . '</' . $elementType . '>';
     }
 }
