@@ -150,8 +150,8 @@ class RouteListener
 
         $serverParam = $request->getServer();
         $requestUri = $serverParam->get('REQUEST_URI');
-
-        $requestUrl = $requestUri;
+        $baseUri = explode('?', $requestUri);
+        $requestUrl = $baseUri[0];
 
         $redirect = $this->redirectRepo->getRedirect($requestUrl, $siteId);
 
@@ -161,7 +161,7 @@ class RouteListener
             $response->getHeaders()
                 ->addHeaderLine(
                     'Location',
-                    '//'.$redirect->getRedirectUrl()
+                    $redirect->getRedirectUrl()
                 );
             $event->stopPropagation(true);
 
