@@ -19,6 +19,7 @@
 
 namespace RcmTest\Validator;
 
+use Rcm\Entity\Site;
 use Rcm\Validator\PageTemplate;
 
 require_once __DIR__ . '/../../../autoload.php';
@@ -44,6 +45,9 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
     /** @var \Rcm\Validator\PageTemplate */
     protected $validator;
 
+    /** @var  \Rcm\Entity\Site */
+    protected $currentSite;
+
     /**
      * Setup for tests
      *
@@ -57,9 +61,11 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
 
         $this->pageRepo = $pageRepo;
 
+        $this->currentSite = new Site();
+        $this->currentSite->setSiteId(1);
+
         /** @var \Rcm\Repository\Page $pageRepo */
-        $this->validator = new PageTemplate($pageRepo);
-        $this->validator->setSiteId(1);
+        $this->validator = new PageTemplate($this->currentSite, $pageRepo);
     }
 
     /**
@@ -102,22 +108,24 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @covers \Rcm\Validator\PageTemplate::setSiteId
      */
     public function testSetSiteId()
     {
         $reflectedClass = new \ReflectionClass($this->validator);
-        $reflectedProp = $reflectedClass->getProperty('siteId');
+        $reflectedProp = $reflectedClass->getProperty('site');
         $reflectedProp->setAccessible(true);
         $defaultValue = $reflectedProp->getValue($this->validator);
 
-        $this->assertEquals(1, $defaultValue);
+        $this->assertEquals(1, $defaultValue->getSiteId());
 
-        $this->validator->setSiteId(22);
+        $site = new Site();
+        $site->setSiteId(22);
+
+        $this->validator->setSite($site);
 
         $result = $reflectedProp->getValue($this->validator);
 
-        $this->assertEquals(22, $result);
+        $this->assertEquals(22, $result->getSiteId());
     }
 
     /**
@@ -136,9 +144,9 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
             ->method('findOneBy')
             ->with(
                 $this->equalTo(array(
-                        'name' => $templateId,
                         'pageType' => $pageType,
-                        'site' => 1
+                        'site' => $this->currentSite,
+                        'pageId' => 44,
                 ))
             )->will($this->returnValue(true));
 
@@ -167,9 +175,9 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
             ->method('findOneBy')
             ->with(
                 $this->equalTo(array(
-                    'name' => $templateId,
                     'pageType' => $pageType,
-                    'site' => 1
+                    'site' => $this->currentSite,
+                    'pageId' => 44,
                 ))
             )->will($this->returnValue(false));
 
