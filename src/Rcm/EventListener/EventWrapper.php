@@ -185,6 +185,9 @@ class EventWrapper
 
         if ($logout) {
             session_destroy();
+            $request = explode('?', $_SERVER['REQUEST_URI']);
+            header('Location: //' . $_SERVER['HTTP_HOST'] . $request[0]);
+            die;
         }
     }
 }
