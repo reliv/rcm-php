@@ -184,9 +184,7 @@ class EventWrapper
         $logout = (bool)$request->getQuery('logout', 0);
 
         if ($logout) {
-            /** @var $rcmUserService \RcmUser\Service\RcmUserService */
-            $rcmUserService = $sm->get('RcmUser\Service\RcmUserService');
-            $rcmUserService->clearIdentity();
+            session_destroy();
         }
     }
 }
