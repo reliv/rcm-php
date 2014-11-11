@@ -56,11 +56,11 @@ class Container extends AbstractHelper
     /**
      * Constructor
      *
-     * @param Site             $currentSite      Rcm Site
-     * @param PluginManager    $pluginManager    Rcm Plugin Manager
+     * @param Site          $currentSite   Rcm Site
+     * @param PluginManager $pluginManager Rcm Plugin Manager
      */
     public function __construct(
-        Site          $currentSite,
+        Site $currentSite,
         PluginManager $pluginManager
     ) {
         $this->pluginManager = $pluginManager;
@@ -78,14 +78,11 @@ class Container extends AbstractHelper
     }
 
     /**
-     * Render a plugin container
+     * getSite
      *
-     * @param string  $name       Container Name
-     * @param integer $revisionId Revision Id to Render
-     *
-     * @return null|string
+     * @return Site
      */
-    public function renderContainer($name, $revisionId = null)
+    public function getSite()
     {
         $view = $this->getView();
 
@@ -97,10 +94,25 @@ class Container extends AbstractHelper
             $site = $this->currentSite;
         }
 
+        return $site;
+    }
+
+    /**
+     * Render a plugin container
+     *
+     * @param string  $name       Container Name
+     * @param integer $revisionId Revision Id to Render
+     *
+     * @return null|string
+     */
+    public function renderContainer($name, $revisionId = null)
+    {
+        $site = $this->getSite();
+
         $container = $site->getContainer($name);
 
         if (empty($container)) {
-            throw new ContainerNotFoundException("Can not find container: ".$name);
+            throw new ContainerNotFoundException("Can not find container: " . $name);
         }
 
         if (empty($revisionId)) {
