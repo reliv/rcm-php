@@ -217,9 +217,7 @@ class Site extends EntityRepository
 
         $primary = $domain->getPrimary();
 
-        $extraPrimaryCheck = $primary->getPrimary();
-
-        if (empty($extraPrimaryCheck)) {
+        if ($primary->getPrimary()) {
             return $primary;
         }
 
