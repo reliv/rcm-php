@@ -242,7 +242,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         $event->setRequest($request);
 
         $expectedLocation
-            = 'Location: //'
+            = 'Location: '
             . $this->redirects['/requestOne']['redirectUrl'];
 
         $actual = $this->routeListener->checkRedirect($event);
