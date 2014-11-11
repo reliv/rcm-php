@@ -157,7 +157,7 @@ class IndexController extends AbstractActionController
 
         $this->prepPageRevisionForDisplay($page, $revisionId);
 
-        if (!empty($revisionId) && empty($page->getCurrentRevision())) {
+        if (!empty($revisionId) && !$page->getCurrentRevision()) {
             return $this->redirectToPage($page->getName(), $page->getPageType());
         }
 
