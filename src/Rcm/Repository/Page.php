@@ -376,7 +376,7 @@ class Page extends ContainerAbstract
         );
 
         return $this->copyPage(
-            $pageIdToCopy,
+            $this->find($pageIdToCopy),
             $newPageName,
             $author,
             $siteDestination,
