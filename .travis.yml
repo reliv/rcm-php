@@ -4,8 +4,6 @@ php:
   - "5.5"
   - "5.4"
 before_script:
-  - "mkdir -p ~/.composer"
-  - cp .travis.composer.config.json ~/.composer/config.json
   - composer self-update
   - composer config -g github-oauth.github.com 1e1ca0848e259cf8a115f2e661b9c8198f2fb3cf
   - composer update --prefer-source
