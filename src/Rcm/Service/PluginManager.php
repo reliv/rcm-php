@@ -28,11 +28,13 @@ use Rcm\Exception\RuntimeException;
 use Rcm\Http\Response;
 use Rcm\Plugin\PluginInterface;
 use Zend\Cache\Storage\StorageInterface;
+use Zend\EventManager\EventManagerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
 use Zend\View\Helper\Placeholder\Container;
 use Zend\View\Renderer\PhpRenderer;
+use Zend\View\ViewEvent;
 
 /**
  * Rcm Plugin Manager
@@ -75,6 +77,9 @@ class PluginManager
     /** @var \Zend\Cache\Storage\StorageInterface */
     protected $cache;
 
+    /** @var  \Zend\EventManager\EventManager */
+    protected $eventManager;
+
     /**
      * Constructor
      *
@@ -91,7 +96,8 @@ class PluginManager
         ServiceLocatorInterface $serviceManager,
         PhpRenderer $renderer,
         RequestInterface $request,
-        StorageInterface $cache
+        StorageInterface $cache,
+        EventManagerInterface $eventManager
     ) {
         $this->serviceManager = $serviceManager;
         $this->request = $request;
@@ -99,6 +105,7 @@ class PluginManager
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->cache = $cache;
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -245,13 +252,10 @@ class PluginManager
         );
 
         if ($viewModel instanceof ResponseInterface) {
-            $exception = new PluginReturnedResponseException(
-                'Plugin returned response instead of View Model'
-            );
-
-            $exception->setResponse($viewModel);
-
-            throw $exception;
+            $event = new ViewEvent();
+            $event->setResponse($viewModel);
+            $this->eventManager->trigger(ViewEvent::EVENT_RESPONSE, $event);
+            return null;
         }
 
         /** @var \Zend\View\Helper\Headlink $headlink */
