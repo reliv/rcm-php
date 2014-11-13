@@ -70,9 +70,29 @@ class PluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockCache = $this->getMockBuilder('\Zend\Cache\Storage\Adapter\Memory')
+        $mockCache = $this->getMockBuilder('Zend\Cache\Storage\Adapter\Memory')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $mockEventManager = $this->getMockBuilder('Zend\EventManager\EventManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockView = $this->getMockBuilder('Zend\View\View')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockView->expects($this->any())
+            ->method('getEventManager')
+            ->will($this->returnValue($mockEventManager));
+
+        $mockViewManager = $this->getMockBuilder('Zend\Mvc\View\Http\ViewManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockViewManager->expects($this->any())
+            ->method('getView')
+            ->will($this->returnValue($mockView));
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
@@ -84,6 +104,7 @@ class PluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('request', $mockRequest);
         $serviceManager->setService('Rcm\Service\Cache', $mockCache);
         $serviceManager->setService('config', array());
+        $serviceManager->setService('ViewManager', $mockViewManager);
 
         $factory = new PluginManagerFactory();
         $object = $factory->createService($serviceManager);

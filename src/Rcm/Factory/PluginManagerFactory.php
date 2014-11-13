@@ -62,13 +62,19 @@ class PluginManagerFactory implements FactoryInterface
 
         $config = $serviceLocator->get('config');
 
+        $viewEventManager = $serviceLocator->get('ViewManager')
+            ->getView()
+            ->getEventManager();
+
+
         return new PluginManager(
             $entityManager,
             $config,
             $serviceLocator,
             $viewRenderer,
             $request,
-            $cache
+            $cache,
+            $viewEventManager
         );
     }
 }
