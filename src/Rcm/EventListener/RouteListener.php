@@ -156,16 +156,20 @@ class RouteListener
         $redirect = $this->redirectRepo->getRedirect($requestUrl, $siteId);
 
         if (!empty($redirect)){
-            $response = new Response();
-            $response->setStatusCode(302);
-            $response->getHeaders()
-                ->addHeaderLine(
-                    'Location',
-                    $redirect->getRedirectUrl()
-                );
-            $event->stopPropagation(true);
+            header('Location: '.$redirect->getRedirectUrl(), true, 302);
+            exit;
 
-            return $response;
+            /* Below is the ZF2 way but Response is not short-circuiting the event like it should */
+//            $response = new Response();
+//            $response->setStatusCode(302);
+//            $response->getHeaders()
+//                ->addHeaderLine(
+//                    'Location',
+//                    $redirect->getRedirectUrl()
+//                );
+//            $event->stopPropagation(true);
+//
+//            return $response;
         }
 
         return null;

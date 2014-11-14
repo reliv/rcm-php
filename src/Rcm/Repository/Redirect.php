@@ -77,12 +77,24 @@ class Redirect extends EntityRepository
         }
 
         try {
-            $result = $this->getQuery($siteId, $url)->getSingleResult();
+            $result = $this->getQuery($siteId, $url)->getResult();
         } catch (NoResultException $e) {
-            $result = null;
+            return null;
         }
 
-        return $result;
+
+        if (count($result) > 1) {
+            /** @var \Rcm\Entity\Redirect $redirect */
+            foreach ($result as $redirect)
+            {
+                $site = $redirect->getSite();
+                if ($site && $site->getSiteId() == $siteId) {
+                    return $redirect;
+                }
+            }
+        }
+
+        return array_pop($result);
     }
 
     /**
@@ -105,7 +117,9 @@ class Redirect extends EntityRepository
         $queryBuilder
             ->select('r')
             ->from('\Rcm\Entity\Redirect', 'r', 'r.requestUrl')
+            ->join('r.site', 'site')
             ->where('r.site = :siteId')
+            ->orWhere('r.site is null')
             ->setParameter('siteId', $siteId);
 
         if (!empty($url)) {
