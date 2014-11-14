@@ -358,35 +358,6 @@ class Page extends ContainerAbstract
         return true;
     }
 
-    public function copyPageByName(
-        $pageToCopyName,
-        $pageToCopyType,
-        $newPageName,
-        $author,
-        SiteEntity $siteDestination,
-        $newPageTitle = null,
-        $pageRevisionId = null,
-        $newPageType = 'n',
-        $publishNewPage = false
-    ) {
-        $pageIdToCopy = $this->getOnlyPageIdByName(
-            $siteDestination->getSiteId(),
-            $pageToCopyName,
-            $pageToCopyType
-        );
-
-        return $this->copyPage(
-            $this->find($pageIdToCopy),
-            $newPageName,
-            $author,
-            $siteDestination,
-            $newPageTitle,
-            $pageRevisionId,
-            $newPageType,
-            $publishNewPage
-        );
-    }
-
     public function getOnlyPageIdByName($siteId, $name, $pageType='n')
     {
         $queryBuilder = $this->_em->createQueryBuilder();
