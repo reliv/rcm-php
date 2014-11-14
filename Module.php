@@ -68,7 +68,7 @@ class Module
         $eventManager->attach(
             MvcEvent::EVENT_ROUTE,
             array($eventWrapper, 'routeEvent'),
-            -10000
+            10000
         );
 
         // Set the sites layout.
