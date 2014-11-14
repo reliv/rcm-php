@@ -20,7 +20,6 @@
 
 namespace Rcm\Repository;
 
-use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Rcm\Exception\InvalidArgumentException;
