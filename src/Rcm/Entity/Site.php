@@ -54,13 +54,6 @@ class Site
     protected $siteId;
 
     /**
-     * @var int Owners account number
-     *
-     * @ORM\Column(type="string")
-     */
-    protected $owner;
-
-    /**
      * @var \Rcm\Entity\Domain Primary Domain name for a site.
      *
      * @ORM\OneToOne(targetEntity="Domain")
@@ -336,29 +329,6 @@ class Site
     public function setSiteId($siteId)
     {
         $this->siteId = $siteId;
-    }
-
-    /**
-     * Gets the Owner property
-     *
-     * @return string Owner
-     *
-     */
-    public function getOwner()
-    {
-        return $this->owner;
-    }
-
-    /**
-     * Sets the Owner property
-     *
-     * @param string $owner Owner Account Number
-     *
-     * @return void
-     */
-    public function setOwner($owner)
-    {
-        $this->owner = $owner;
     }
 
     /**
