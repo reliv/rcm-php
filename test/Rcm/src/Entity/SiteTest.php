@@ -79,24 +79,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Get and Set Owner Id
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Site
-     */
-    public function testGetAndSetOwner()
-    {
-        $owner = '32155679';
-
-        $this->site->setOwner($owner);
-
-        $actual = $this->site->getOwner();
-
-        $this->assertEquals($owner, $actual);
-    }
-
-    /**
      * Test Get and Set the Domain Object
      *
      * @return void
@@ -1171,7 +1153,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($original->getSiteId(), $cloned->getSiteId());
         $this->assertNull($cloned->getSiteId());
 
-        $this->assertEquals($original->getOwner(), $cloned->getOwner());
         $this->assertNull($cloned->getDomain());
         $this->assertEquals($original->getTheme(), $cloned->getTheme());
         $this->assertEquals($original->getSiteLayout(), $cloned->getSiteLayout());
