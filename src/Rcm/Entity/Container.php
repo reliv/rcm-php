@@ -44,6 +44,9 @@ use Doctrine\ORM\Mapping as ORM;
  *             name="uq_name_site",
  *             columns={"name", "siteId"}
  *         )
+ *     },
+ *     indexes={
+ *         @ORM\Index(name="container_name", columns={"name"})
  *     }
  * )
  *
