@@ -318,7 +318,7 @@ class Language implements \JsonSerializable, \IteratorAggregate
      */
     public function jsonSerialize()
     {
-        return $this->getBasicProperties();
+        return $this->toArray();
     }
 
     /**
@@ -328,10 +328,15 @@ class Language implements \JsonSerializable, \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->getBasicProperties());
+        return new \ArrayIterator($this->toArray());
     }
 
-    protected function getBasicProperties()
+    /**
+     * getBasicProperties
+     *
+     * @return array
+     */
+    protected function toArray()
     {
         return array(
             'languageId' => $this->getLanguageId(),

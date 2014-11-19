@@ -844,7 +844,7 @@ class Site implements \JsonSerializable, \IteratorAggregate
      */
     public function jsonSerialize()
     {
-        return get_object_vars($this);
+        return $this->toArray();
     }
 
     /**
@@ -854,6 +854,16 @@ class Site implements \JsonSerializable, \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayIterator(get_object_vars($this));
+        return new \ArrayIterator($this->toArray());
+    }
+
+    /**
+     * toArray
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return get_object_vars($this);
     }
 }
