@@ -43,7 +43,7 @@ use Zend\Validator\ValidatorInterface;
  * @ORM\Entity (repositoryClass="Rcm\Repository\Domain")
  * @ORM\Table(name="rcm_domains")
  */
-class Domain
+class Domain implements \JsonSerializable, \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -277,5 +277,25 @@ class Domain
     public function getDefaultLanguage()
     {
         return $this->defaultLanguage;
+    }
+
+    /**
+     * jsonSerialize
+     *
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
+    }
+
+    /**
+     * getIterator
+     *
+     * @return array|Traversable
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator(get_object_vars($this));
     }
 }

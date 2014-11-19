@@ -42,7 +42,7 @@ use Rcm\Exception\InvalidArgumentException;
  *
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class Page extends ContainerAbstract
+class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -395,5 +395,25 @@ class Page extends ContainerAbstract
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * jsonSerialize
+     *
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
+    }
+
+    /**
+     * getIterator
+     *
+     * @return array|Traversable
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator(get_object_vars($this));
     }
 }

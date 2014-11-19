@@ -24,6 +24,8 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
+use Rcm\Entity\Language as LanguageEntity;
+use Rcm\Exception\DuplicateDomainException;
 
 /**
  * Domain Repository
@@ -79,7 +81,7 @@ class Domain extends EntityRepository
      *
      * @return Query
      */
-    private function getDomainLookupQuery($domain=null)
+    private function getDomainLookupQuery($domain = null)
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -108,5 +110,71 @@ class Domain extends EntityRepository
         }
 
         return $queryBuilder->getQuery();
+    }
+
+    /**
+     * getDomainByName
+     *
+     * @param      $domainName
+     * @param null $default
+     *
+     * @return null|object
+     */
+    public function getDomainByName($domainName, $default = null)
+    {
+        if (empty($domainName)) {
+
+            return $default;
+        }
+
+        try {
+            $result = $this->findOneBy(array('domain' => $domainName));
+        } catch (NoResultException $e) {
+            $result = $default;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Create Domain
+     *
+     * @param string $domainName
+     * @param LanguageEntity $defaultLanguage
+     * @param null $primaryDomain
+     *
+     * @return \Rcm\Entity\Domain
+     * @throws DomainNotFoundException
+     */
+    public function createDomain(
+        $domainName,
+        LanguageEntity $defaultLanguage,
+        $primaryDomain = null
+    ) {
+        if (empty($domainName)) {
+            throw new DomainNotFoundException('Domain name is required.');
+        }
+
+        // Check if exists first
+        $existingDomain = $this->getDomainByName($domainName);
+
+        if (!empty($existingDomain)) {
+            throw new DuplicateDomainException(
+                'Duplicate domains may not be created.'
+            );
+        }
+
+        $domain = new \Rcm\Entity\Domain();
+        $domain->setDomainName($domainName);
+        $domain->setDefaultLanguage($defaultLanguage);
+
+        if ($primaryDomain instanceof \Rcm\Entity\Domain) {
+            $domain->setPrimary($primaryDomain);
+        }
+
+        $this->getEntityManager()->persist($domain);
+        $this->getEntityManager()->flush();
+
+        return $domain;
     }
 }
