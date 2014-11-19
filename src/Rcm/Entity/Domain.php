@@ -41,7 +41,10 @@ use Zend\Validator\ValidatorInterface;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity (repositoryClass="Rcm\Repository\Domain")
- * @ORM\Table(name="rcm_domains")
+ * @ORM\Table(name="rcm_domains",
+ *     indexes={
+ *         @ORM\Index(name="domain_name", columns={"domain"})
+ *     })
  */
 class Domain implements \JsonSerializable, \IteratorAggregate
 {
@@ -60,6 +63,13 @@ class Domain implements \JsonSerializable, \IteratorAggregate
      * @ORM\Column(type="string")
      */
     protected $domain;
+
+    /**
+     * @var \Rcm\Entity\Site
+     *
+     * @ORM\OneToOne(targetEntity="Site", mappedBy="domain")
+     */
+    protected $site;
 
     /**
      * @var \Rcm\Entity\Domain Site Object that the domain name belongs
@@ -82,19 +92,6 @@ class Domain implements \JsonSerializable, \IteratorAggregate
      * @ORM\OneToMany(targetEntity="Domain", mappedBy="primaryDomain")
      */
     protected $additionalDomains;
-
-    /**
-     * @var \Rcm\Entity\Language This domain's default language.  Needed for
-     *                           translations by some plugins.
-     *
-     * @ORM\ManyToOne(targetEntity="Language")
-     * @ORM\JoinColumn(
-     *     name="defaultLanguageId",
-     *     referencedColumnName="languageId",
-     *     onDelete="SET NULL"
-     * )
-     */
-    protected $defaultLanguage;
 
     /**
      * @var \Zend\Validator\ValidatorInterface
@@ -257,29 +254,6 @@ class Domain implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
-     * Sets the DefaultLanguage property
-     *
-     * @param \Rcm\Entity\Language $defaultLanguage DefaultLanguage
-     *
-     * @return null
-     */
-    public function setDefaultLanguage(Language $defaultLanguage)
-    {
-        $this->defaultLanguage = $defaultLanguage;
-    }
-
-    /**
-     * Gets the DefaultLanguage property
-     *
-     * @return \Rcm\Entity\Language defaultLanguage DefaultLanguage
-     *
-     */
-    public function getDefaultLanguage()
-    {
-        return $this->defaultLanguage;
-    }
-
-    /**
      * jsonSerialize
      *
      * @return array|mixed
@@ -308,4 +282,22 @@ class Domain implements \JsonSerializable, \IteratorAggregate
     {
         return get_object_vars($this);
     }
+
+    /**
+     * @return Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * @param Site $site
+     */
+    public function setSite(Site $site)
+    {
+        $this->site = $site;
+    }
+
+
 }
