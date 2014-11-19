@@ -25,6 +25,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Rcm\Entity\Language as LanguageEntity;
+use Rcm\Exception\DomainNotFoundException;
 use Rcm\Exception\DuplicateDomainException;
 
 /**
@@ -139,9 +140,9 @@ class Domain extends EntityRepository
     /**
      * Create Domain
      *
-     * @param string $domainName
+     * @param string         $domainName
      * @param LanguageEntity $defaultLanguage
-     * @param null $primaryDomain
+     * @param null           $primaryDomain
      *
      * @return \Rcm\Entity\Domain
      * @throws DomainNotFoundException
@@ -173,7 +174,6 @@ class Domain extends EntityRepository
         }
 
         $this->getEntityManager()->persist($domain);
-        $this->getEntityManager()->flush();
 
         return $domain;
     }
