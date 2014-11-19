@@ -42,7 +42,7 @@ use Rcm\Exception\InvalidArgumentException;
  *
  * @SuppressWarnings(PHPMD)
  */
-class Site
+class Site implements \JsonSerializable, \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -451,6 +451,14 @@ class Site
         return $this->pages;
     }
 
+    /**
+     * getPage
+     *
+     * @param        $pageName
+     * @param string $pageType
+     *
+     * @return null|Page
+     */
     public function getPage($pageName, $pageType='n')
     {
         if (empty($this->pages)) {
@@ -582,6 +590,11 @@ class Site
         $this->sitePlugins->add($plugin);
     }
 
+    /**
+     * listAvailableSiteWidePlugins
+     *
+     * @return array
+     */
     public function listAvailableSiteWidePlugins()
     {
         $plugins = $this->getSiteWidePlugins();
@@ -735,8 +748,11 @@ class Site
         $this->notFoundPage = $notFoundPage;
     }
 
-
-
+    /**
+     * getLocale
+     *
+     * @return string
+     */
     public function getLocale()
     {
         return
@@ -745,4 +761,109 @@ class Site
             strtoupper($this->getCountry()->getIso2());
     }
 
+    /**
+     * populate @todo some properties are missing
+     *
+     * @param array $data
+     *
+     * @return void
+     */
+    public function populate($data)
+    {
+        if (!empty($data['siteId'])) {
+            $this->setSiteId($data['siteId']);
+        }
+        if (!empty($data['domain']) && $data['domain'] instanceof Domain) {
+            $this->setDomain($data['domain']);
+        }
+        if (!empty($data['theme'])) {
+            $this->setTheme($data['theme']);
+        }
+        if (!empty($data['siteLayout'])) {
+            $this->setSiteLayout($data['siteLayout']);
+        }
+        if (!empty($data['siteTitle'])) {
+            $this->setSiteTitle($data['siteTitle']);
+        }
+        if (!empty($data['language']) && $data['language'] instanceof Language) {
+            $this->setLanguage($data['language']);
+        }
+        if (!empty($data['country']) && $data['country'] instanceof Country) {
+            $this->setCountry($data['country']);
+        }
+        if (!empty($data['status'])) {
+            $this->setStatus($data['status']);
+        }
+        if (!empty($data['favIcon'])) {
+            $this->setFavIcon($data['favIcon']);
+        }
+        if (!empty($data['loginPage'])) {
+            $this->setLoginPage($data['loginPage']);
+        }
+        if (!empty($data['notAuthorizedPage'])) {
+            $this->setNotAuthorizedPage($data['notAuthorizedPage']);
+        }
+        if (!empty($data['notFoundPage'])) {
+            $this->setNotAuthorizedPage($data['notFoundPage']);
+        }
+    }
+
+    /**
+     * populateFromSite - @todo some properties are missing
+     *
+     * @param Site $site
+     *
+     * @return void
+     */
+    public function populateFromSite(Site $site)
+    {
+        $this->setSiteId($site->getSiteId());
+        if (is_object($site->getDomain())) {
+            $this->setDomain($site->getDomain());
+        }
+        $this->setTheme($site->getTheme());
+        $this->setSiteLayout($site->getSiteLayout());
+        $this->setSiteTitle($site->getSiteTitle());
+        if (is_object($site->getLanguage())) {
+            $this->setLanguage($site->getLanguage());
+        }
+        if (is_object($site->getCountry())) {
+            $this->setCountry($site->getCountry());
+        }
+        $this->setStatus($site->getStatus());
+        $this->setFavIcon($site->getFavIcon());
+        $this->setLoginPage($site->getLoginPage());
+        $this->setNotAuthorizedPage($site->getNotAuthorizedPage());
+        $this->setNotFoundPage($site->getNotFoundPage());
+    }
+
+    /**
+     * jsonSerialize
+     *
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * getIterator
+     *
+     * @return array|Traversable
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->toArray());
+    }
+
+    /**
+     * toArray
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return get_object_vars($this);
+    }
 }

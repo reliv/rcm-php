@@ -36,12 +36,12 @@ use Rcm\Exception\InvalidArgumentException;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Rcm\Repository\Language")
  * @ORM\Table(name="rcm_languages")
  *
  * @SuppressWarnings("CamelCase")
  */
-class Language
+class Language implements \JsonSerializable, \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -309,5 +309,41 @@ class Language
     public function setOldWebLanguage($language)
     {
         $this->oldWebLanguage = $language;
+    }
+
+    /**
+     * jsonSerialize
+     *
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * getIterator
+     *
+     * @return array|Traversable
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->toArray());
+    }
+
+    /**
+     * getBasicProperties
+     *
+     * @return array
+     */
+    protected function toArray()
+    {
+        return array(
+            'languageId' => $this->getLanguageId(),
+            'languageName' => $this->getLanguageName(),
+            'iso639_1' => $this->getIso6391(),
+            'iso639_2b' => $this->getIso6392b(),
+            'iso639_2t' => $this->getIso6392t(),
+        );
     }
 }

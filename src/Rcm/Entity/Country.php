@@ -39,10 +39,10 @@ use Rcm\Exception\InvalidArgumentException;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Rcm\Repository\Country")
  * @ORM\Table(name="rcm_countries")
  */
-class Country
+class Country implements \JsonSerializable, \IteratorAggregate
 {
     /**
      * @var string ISO Three Digit Country Code
@@ -148,5 +148,35 @@ class Country
     public function getIso3()
     {
         return $this->iso3;
+    }
+
+    /**
+     * jsonSerialize
+     *
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * getIterator
+     *
+     * @return array|Traversable
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->toArray());
+    }
+
+    /**
+     * toArray
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return get_object_vars($this);
     }
 }
