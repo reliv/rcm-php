@@ -25,6 +25,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Rcm\Entity\Language as LanguageEntity;
+use Rcm\Exception\DomainNotFoundException;
 use Rcm\Exception\DuplicateDomainException;
 
 /**

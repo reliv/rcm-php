@@ -4,6 +4,7 @@
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 use Rcm\Exception\CountryNotFoundException;
 
 

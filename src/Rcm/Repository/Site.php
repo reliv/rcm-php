@@ -24,6 +24,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Rcm\Entity\Site as SiteEntity;
+use Rcm\Exception\SiteNotFoundException;
 
 /**
  * Site Repository
