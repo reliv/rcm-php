@@ -38,7 +38,11 @@ use Rcm\Exception\InvalidArgumentException;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity (repositoryClass="Rcm\Repository\Page")
- * @ORM\Table(name="rcm_pages")
+ * @ORM\Table(name="rcm_pages",
+ *     indexes={
+ *         @ORM\Index(name="page_name", columns={"name"})
+ *     }
+ * )
  *
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
