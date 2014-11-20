@@ -254,6 +254,40 @@ class Domain implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
+     * populate
+     *
+     * @param array $data
+     *
+     * @return void
+     */
+    public function populate($data = array())
+    {
+        if (!empty($data['domainId'])) {
+            $this->setDomainId($data['domainId']);
+        }
+        if (!empty($data['domain'])) {
+            $this->setDomainName($data['domain']);
+        }
+        if (!empty($data['primaryDomain']) && $data['primaryDomain'] instanceof Domain) {
+            $this->setPrimary($data['primaryDomain']);
+        }
+    }
+
+    /**
+     * populateFromObject
+     *
+     * @param \Rcm\Entity\Domain $data
+     *
+     * @return void
+     */
+    public function populateFromObject(Domain $data)
+    {
+        $this->setDomainId($data->getDomainId());
+        $this->setDomainName($data->getDomainName());
+        $this->setPrimary($data->getPrimary());
+    }
+
+    /**
      * jsonSerialize
      *
      * @return array|mixed

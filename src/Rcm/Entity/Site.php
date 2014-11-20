@@ -196,7 +196,8 @@ class Site implements \JsonSerializable, \IteratorAggregate
     /**
      * @var array will only clone these page types
      */
-    protected $cloneablePageTypes = array(
+    protected $cloneablePageTypes
+        = array(
             'n',
             'z',
             't',
@@ -308,7 +309,7 @@ class Site implements \JsonSerializable, \IteratorAggregate
      * fixRevisionSiteWides
      *
      * @param Revision $revision
-     * @param array $siteWideIdsToChange
+     * @param array    $siteWideIdsToChange
      *
      * @return void
      */
@@ -373,7 +374,9 @@ class Site implements \JsonSerializable, \IteratorAggregate
      */
     public function removeCloneablePageType($cloneablePageType)
     {
-        if(($key = array_search($cloneablePageType, $this->cloneablePageTypes)) !== false) {
+        if (($key = array_search($cloneablePageType, $this->cloneablePageTypes))
+            !== false
+        ) {
             unset($this->cloneablePageTypes[$key]);
         }
     }
@@ -849,6 +852,12 @@ class Site implements \JsonSerializable, \IteratorAggregate
         if (!empty($data['domain']) && $data['domain'] instanceof Domain) {
             $this->setDomain($data['domain']);
         }
+        if (!empty($data['domain']) && is_array($data['domain'])) {
+            // is this right?
+            $domain = new Domain();
+            $domain->populate($data['domain']);
+            $this->setDomain($domain);
+        }
         if (!empty($data['theme'])) {
             $this->setTheme($data['theme']);
         }
@@ -861,8 +870,18 @@ class Site implements \JsonSerializable, \IteratorAggregate
         if (!empty($data['language']) && $data['language'] instanceof Language) {
             $this->setLanguage($data['language']);
         }
+        if (!empty($data['language']) && is_array($data['language'])) {
+            $language = new Language();
+            $language->populate($data['language']);
+            $this->setLanguage($language);
+        }
         if (!empty($data['country']) && $data['country'] instanceof Country) {
             $this->setCountry($data['country']);
+        }
+        if (!empty($data['country']) && is_array($data['country'])) {
+            $country = new Country();
+            $country->populate($data['country']);
+            $this->setCountry($country);
         }
         if (!empty($data['status'])) {
             $this->setStatus($data['status']);
@@ -877,18 +896,18 @@ class Site implements \JsonSerializable, \IteratorAggregate
             $this->setNotAuthorizedPage($data['notAuthorizedPage']);
         }
         if (!empty($data['notFoundPage'])) {
-            $this->setNotAuthorizedPage($data['notFoundPage']);
+            $this->setNotFoundPage($data['notFoundPage']);
         }
     }
 
     /**
-     * populateFromSite - @todo some properties are missing
+     * populateFromObject - @todo some properties are missing
      *
      * @param Site $site
      *
      * @return void
      */
-    public function populateFromSite(Site $site)
+    public function populateFromObject(Site $site)
     {
         $this->setSiteId($site->getSiteId());
         if (is_object($site->getDomain())) {

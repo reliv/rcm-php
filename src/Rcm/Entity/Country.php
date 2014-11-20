@@ -151,6 +151,40 @@ class Country implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
+     * populate
+     *
+     * @param array $data
+     *
+     * @return void
+     */
+    public function populate($data = array())
+    {
+        if (!empty($data['iso3'])) {
+            $this->setIso3($data['iso3']);
+        }
+        if (!empty($data['iso2'])) {
+            $this->setIso2($data['iso2']);
+        }
+        if (!empty($data['countryName'])) {
+            $this->setCountryName($data['countryName']);
+        }
+    }
+
+    /**
+     * populateFromObject
+     *
+     * @param Country $data
+     *
+     * @return void
+     */
+    public function populateFromObject(Country $data)
+    {
+        $this->setIso3($data->getIso3());
+        $this->setIso2($data->getIso2());
+        $this->setCountryName($data->getCountryName());
+    }
+
+    /**
      * jsonSerialize
      *
      * @return array|mixed
