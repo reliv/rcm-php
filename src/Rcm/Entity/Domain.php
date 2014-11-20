@@ -283,7 +283,7 @@ class Domain implements \JsonSerializable, \IteratorAggregate
         return array(
             'domainId' => $this->getDomainId(),
             'domain' => $this->getDomainName(),
-            //'primaryDomain => $this->getPrimary(),
+            'primaryDomain' => $this->getPrimary(),
         );
     }
 

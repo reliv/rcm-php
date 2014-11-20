@@ -177,6 +177,10 @@ class Country implements \JsonSerializable, \IteratorAggregate
      */
     public function toArray()
     {
-        return get_object_vars($this);
+        return array(
+            'iso3' => $this->getIso3(),
+            'iso2' => $this->getIso2(),
+            'countryName' => $this->getCountryName()
+        );
     }
 }
