@@ -336,7 +336,7 @@ class Language implements \JsonSerializable, \IteratorAggregate
      *
      * @return array
      */
-    protected function toArray()
+    public function toArray()
     {
         return array(
             'languageId' => $this->getLanguageId(),

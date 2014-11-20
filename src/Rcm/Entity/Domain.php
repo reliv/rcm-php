@@ -280,7 +280,11 @@ class Domain implements \JsonSerializable, \IteratorAggregate
      */
     public function toArray()
     {
-        return get_object_vars($this);
+        return array(
+            'domainId' => $this->getDomainId(),
+            'domain' => $this->getDomainName(),
+            //'primaryDomain => $this->getPrimary(),
+        );
     }
 
     /**

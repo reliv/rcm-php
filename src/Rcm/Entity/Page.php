@@ -408,7 +408,7 @@ class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggr
      */
     public function jsonSerialize()
     {
-        return get_object_vars($this);
+        return $this->toArray();
     }
 
     /**
@@ -418,6 +418,16 @@ class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggr
      */
     public function getIterator()
     {
-        return new \ArrayIterator(get_object_vars($this));
+        return new \ArrayIterator($this->toArray());
+    }
+
+    /**
+     * toArray
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return get_object_vars($this);
     }
 }
