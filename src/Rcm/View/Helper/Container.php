@@ -111,28 +111,29 @@ class Container extends AbstractHelper
 
         $container = $site->getContainer($name);
 
-        if (empty($container)) {
-            throw new ContainerNotFoundException("Can not find container: " . $name);
-        }
-
-        if (empty($revisionId)) {
-            $revision = $container->getPublishedRevision();
-        } else {
-            $revision = $container->getRevisionById($revisionId);
-        }
-
-        $pluginWrappers = $revision->getPluginWrappers();
-
         $pluginHtml = '';
 
-        if (!empty($pluginWrappers)) {
-            /** @var \Rcm\Entity\PluginWrapper $wrapper */
-            foreach ($pluginWrappers as $wrapper) {
-                $pluginHtml .= $this->getPluginHtml($wrapper);
+        if (!empty($container)) {
+            if (empty($revisionId)) {
+                $revision = $container->getPublishedRevision();
+            } else {
+                $revision = $container->getRevisionById($revisionId);
             }
+
+            $pluginWrappers = $revision->getPluginWrappers();
+
+            if (!empty($pluginWrappers)) {
+                /** @var \Rcm\Entity\PluginWrapper $wrapper */
+                foreach ($pluginWrappers as $wrapper) {
+                    $pluginHtml .= $this->getPluginHtml($wrapper);
+                }
+            }
+            $revisionId = $revision->getRevisionId();
+        } else {
+            $revisionId = -1;
         }
 
-        return $this->getContainerWrapperHtml($revision, $name, $pluginHtml, false);
+        return $this->getContainerWrapperHtml($revisionId, $name, $pluginHtml, false);
     }
 
     /**
@@ -163,11 +164,11 @@ class Container extends AbstractHelper
             }
         }
 
-        return $this->getContainerWrapperHtml($revision, $name, $pluginHtml, true);
+        return $this->getContainerWrapperHtml($revision->getRevisionId(), $name, $pluginHtml, true);
     }
 
     protected function getContainerWrapperHtml(
-        Revision $revision,
+        $revisionId,
         $containerName,
         $pluginsHtml,
         $pageContainer = false
@@ -176,7 +177,7 @@ class Container extends AbstractHelper
         $html = '<div class="rcmContainer"'
             . ' data-containerId="' . $containerName . '"'
             . ' data-containerRevision="'
-            . $revision->getRevisionId()
+            . $revisionId
             . '"';
 
         if ($pageContainer) {
