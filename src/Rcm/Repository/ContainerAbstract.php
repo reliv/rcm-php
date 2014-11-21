@@ -54,10 +54,6 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
         $revision = null;
         $publishRevision = false;
 
-        if (empty($container)) {
-            throw new RuntimeException('Invalid container');
-        }
-
         if (empty($revisionNumber)) {
             $revision = $container->getPublishedRevision();
             $publishRevision = true;
@@ -65,14 +61,12 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
             $revision = $container->getRevisionById($revisionNumber);
         }
 
-        if (empty($revision)) {
-            throw new RuntimeException('Unable to locate revision.');
-        }
-
         $md5 = md5(serialize($containerData));
 
-        if (empty($revision) || $revision->getMd5() == $md5) {
-            return null;
+        if (!empty($revision)) {
+            if ($revision->getMd5() == $md5) {
+                return null;
+            }
         }
 
         $newRevision = new Revision();
@@ -88,15 +82,20 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
             $isDirty = true;
         } else {
             foreach ($containerData as $pluginData) {
-                /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
-                $pluginWrapper = $revision->getPluginWrapper(
-                    $pluginData['instanceId']
-                );
+                $pluginWrapper = null;
+
+                if (!empty($revision)) {
+                    /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
+                    $pluginWrapper = $revision->getPluginWrapper(
+                        $pluginData['instanceId']
+                    );
+                }
 
                 $newPluginWrapper = $pluginWrapperRepo->savePluginWrapper(
                     $pluginData,
                     $pluginWrapper
                 );
+
                 $newRevision->addPluginWrapper($newPluginWrapper);
 
                 if (!empty($pluginWrapper)

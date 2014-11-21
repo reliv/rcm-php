@@ -23,6 +23,7 @@ namespace Rcm\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Rcm\Entity\Container;
 use Rcm\Entity\ContainerInterface;
 use Rcm\Entity\Page as PageEntity;
 use Rcm\Entity\PluginWrapper;
@@ -535,6 +536,12 @@ class Page extends ContainerAbstract
             foreach($saveData['containers'] as $containerName => $containerData) {
                 /** @var \Rcm\Entity\Container $container */
                 $container = $siteEntity->getContainer($containerName);
+
+                if (empty($container)) {
+                    /** @var \Rcm\Repository\Container $containerRepo */
+                    $containerRepo = $this->_em->getRepository('\Rcm\Entity\Container');
+                    $container = $containerRepo->createContainer($siteEntity, $containerName, $author);
+                }
 
                 $this->saveContainer($container, $containerData, $author);
             }
