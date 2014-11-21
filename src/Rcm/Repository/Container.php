@@ -136,11 +136,12 @@ class Container extends ContainerAbstract
         return $result;
     }
 
-    public function createContainer(SiteEntity $site, $name)
+    public function createContainer(SiteEntity $site, $name, $author)
     {
         $container = new ContainerEntity();
         $container->setName($name);
         $container->setSite($site);
+        $container->setAuthor($author);
 
         $this->_em->persist($container);
         $this->_em->flush($container);

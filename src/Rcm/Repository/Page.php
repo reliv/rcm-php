@@ -540,7 +540,7 @@ class Page extends ContainerAbstract
                 if (empty($container)) {
                     /** @var \Rcm\Repository\Container $containerRepo */
                     $containerRepo = $this->_em->getRepository('\Rcm\Entity\Container');
-                    $container = $containerRepo->createContainer($siteEntity, $containerName);
+                    $container = $containerRepo->createContainer($siteEntity, $containerName, $author);
                 }
 
                 $this->saveContainer($container, $containerData, $author);

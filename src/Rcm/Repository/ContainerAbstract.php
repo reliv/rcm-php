@@ -61,9 +61,9 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
             $revision = $container->getRevisionById($revisionNumber);
         }
 
-        if (!empty($revision)) {
-            $md5 = md5(serialize($containerData));
+        $md5 = md5(serialize($containerData));
 
+        if (!empty($revision)) {
             if ($revision->getMd5() == $md5) {
                 return null;
             }
