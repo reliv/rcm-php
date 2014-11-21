@@ -62,9 +62,10 @@ class Page extends ContainerAbstract
      * @return null|PageEntity
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getPageByName(SiteEntity $site,
+    public function getPageByName(
+        SiteEntity $site,
         $pageName,
-        $pageType='n'
+        $pageType = 'n'
     ) {
         $queryBuilder = $this->createQueryBuilder('page')
             ->leftJoin('page.publishedRevision', 'publishedRevision')
@@ -248,7 +249,7 @@ class Page extends ContainerAbstract
      * @param SiteEntity $site      Site Entity
      * @param string     $pageType  Page Type
      *
-     * @return Page
+     * @return PageEntity
      */
     public function createNewPage(
         $pageName,
@@ -256,7 +257,9 @@ class Page extends ContainerAbstract
         $layout,
         $author,
         SiteEntity $site,
-        $pageType = 'n'
+        $pageType = 'n',
+        $skipFlush = false,
+        $publishPage = false
     ) {
         $revision = new Revision();
         $revision->setAuthor($author);
@@ -269,7 +272,12 @@ class Page extends ContainerAbstract
         $page->setPageType($pageType);
         $page->setPageTitle($pageTitle);
         $page->setSite($site);
-        $page->setStagedRevision($revision);
+        if(!$publishPage){
+            $page->setStagedRevision($revision);
+        }else{
+            $page->setPublishedRevision($revision);
+        }
+
         $page->addRevision($revision);
 
         if ($layout != 'default') {
@@ -279,7 +287,14 @@ class Page extends ContainerAbstract
         $this->_em->persist($revision);
         $this->_em->persist($page);
 
-        $this->_em->flush(array($revision, $page));
+        if (!$skipFlush) {
+            $this->_em->flush(
+                array(
+                    $revision,
+                    $page
+                )
+            );
+        }
 
         return $page;
     }
@@ -359,7 +374,7 @@ class Page extends ContainerAbstract
         return true;
     }
 
-    public function getOnlyPageIdByName($siteId, $name, $pageType='n')
+    public function getOnlyPageIdByName($siteId, $name, $pageType = 'n')
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('page.pageId')
@@ -376,6 +391,7 @@ class Page extends ContainerAbstract
 
     /**
      * Get a page entity containing a Revision Id.
+     *
      * @param integer $siteId     Site Id
      * @param string  $pageName   Name of page
      * @param string  $pageType   Page Type
@@ -405,7 +421,9 @@ class Page extends ContainerAbstract
         $page = $pageQueryBuilder->getQuery()->getSingleResult();
 
         if (empty($page)) {
-            throw new PageNotFoundException('Unable to locate page by revision '.$revisionId);
+            throw new PageNotFoundException(
+                'Unable to locate page by revision ' . $revisionId
+            );
         }
 
         $revision = $page->getRevisionById($revisionId);
@@ -416,7 +434,12 @@ class Page extends ContainerAbstract
 
         $page->setPublishedRevision($revision);
 
-        $this->_em->flush(array($revision, $page));
+        $this->_em->flush(
+            array(
+                $revision,
+                $page
+            )
+        );
 
         return $page;
     }
@@ -436,27 +459,37 @@ class Page extends ContainerAbstract
             ->setParameter('pageName', $pageName)
             ->setParameter('pageType', $pageType);
 
-        $lastDraftQueryBuilder = $this->getRevisionQuery($siteId, $pageName, $pageType);
+        $lastDraftQueryBuilder = $this->getRevisionQuery(
+            $siteId,
+            $pageName,
+            $pageType
+        );
 
-        $result = $publishedQueryBuilder->getQuery()->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        $result = $publishedQueryBuilder->getQuery()->getSingleResult(
+            \Doctrine\ORM\Query::HYDRATE_ARRAY
+        );
 
         try {
-            $lastDraft = $lastDraftQueryBuilder->setMaxResults(1)->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+            $lastDraft = $lastDraftQueryBuilder->setMaxResults(1)->getSingleResult(
+                \Doctrine\ORM\Query::HYDRATE_ARRAY
+            );
             $lastDraft = array_values($lastDraft['revisions']);
         } catch (NoResultException $e) {
-            $lastDraft = array(0=> null);
+            $lastDraft = array(0 => null);
         }
 
         $result['lastDraft'] = $lastDraft[0];
 
-        if ($result['lastDraft']['revisionId'] == $result['stagedRevision']['revisionId']) {
+        if ($result['lastDraft']['revisionId']
+            == $result['stagedRevision']['revisionId']
+        ) {
             $result['lastDraft'] = null;
         }
 
         return $result;
     }
 
-    public function isValid($siteId, $pageName, $pageType='n')
+    public function isValid($siteId, $pageName, $pageType = 'n')
     {
         $isValidQueryBuilder = $this->_em->createQueryBuilder();
         $isValidQueryBuilder->select('page.pageId')
@@ -481,18 +514,25 @@ class Page extends ContainerAbstract
     public function getRevisionList(
         $siteId,
         $pageName,
-        $pageType='n',
-        $published=false,
-        $limit=10
+        $pageType = 'n',
+        $published = false,
+        $limit = 10
     ) {
-        $draftRevisionQuery = $this->getRevisionQuery($siteId, $pageName, $pageType, $published);
+        $draftRevisionQuery = $this->getRevisionQuery(
+            $siteId,
+            $pageName,
+            $pageType,
+            $published
+        );
 
         if ($limit > 0) {
             $draftRevisionQuery->setMaxResults($limit);
         }
 
         try {
-            $result = $draftRevisionQuery->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+            $result = $draftRevisionQuery->getSingleResult(
+                \Doctrine\ORM\Query::HYDRATE_ARRAY
+            );
         } catch (NoResultException $e) {
             return array();
         }
@@ -500,8 +540,12 @@ class Page extends ContainerAbstract
         return $result;
     }
 
-    protected function getRevisionQuery($siteId, $pageName, $pageType, $published=false)
-    {
+    protected function getRevisionQuery(
+        $siteId,
+        $pageName,
+        $pageType,
+        $published = false
+    ) {
         $revisionQueryBuilder = $this->_em->createQueryBuilder();
         $revisionQueryBuilder->select('page.pageId, revisions')
             ->select('PARTIAL page.{pageId}, revisions ')
@@ -528,19 +572,25 @@ class Page extends ContainerAbstract
         SiteEntity $siteEntity,
         $pageName,
         $pageRevision,
-        $pageType='n',
+        $pageType = 'n',
         $saveData,
         $author
     ) {
         if (!empty($saveData['containers'])) {
-            foreach($saveData['containers'] as $containerName => $containerData) {
+            foreach ($saveData['containers'] as $containerName => $containerData) {
                 /** @var \Rcm\Entity\Container $container */
                 $container = $siteEntity->getContainer($containerName);
 
                 if (empty($container)) {
                     /** @var \Rcm\Repository\Container $containerRepo */
-                    $containerRepo = $this->_em->getRepository('\Rcm\Entity\Container');
-                    $container = $containerRepo->createContainer($siteEntity, $containerName, $author);
+                    $containerRepo = $this->_em->getRepository(
+                        '\Rcm\Entity\Container'
+                    );
+                    $container = $containerRepo->createContainer(
+                        $siteEntity,
+                        $containerName,
+                        $author
+                    );
                 }
 
                 $this->saveContainer($container, $containerData, $author);
@@ -548,6 +598,11 @@ class Page extends ContainerAbstract
         }
 
         $page = $siteEntity->getPage($pageName, $pageType);
-        return $this->saveContainer($page, $saveData['pageContainer'], $author, $pageRevision);
+        return $this->saveContainer(
+            $page,
+            $saveData['pageContainer'],
+            $author,
+            $pageRevision
+        );
     }
 }
