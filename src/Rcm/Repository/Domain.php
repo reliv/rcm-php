@@ -140,16 +140,13 @@ class Domain extends EntityRepository
     /**
      * Create Domain
      *
-     * @param string         $domainName
-     * @param LanguageEntity $defaultLanguage
-     * @param null           $primaryDomain
+     * @param string $domainName
+     * @param mixed $primaryDomain
      *
      * @return \Rcm\Entity\Domain
-     * @throws DomainNotFoundException
      */
     public function createDomain(
         $domainName,
-        LanguageEntity $defaultLanguage,
         $primaryDomain = null
     ) {
         if (empty($domainName)) {
@@ -167,7 +164,6 @@ class Domain extends EntityRepository
 
         $domain = new \Rcm\Entity\Domain();
         $domain->setDomainName($domainName);
-        $domain->setDefaultLanguage($defaultLanguage);
 
         if ($primaryDomain instanceof \Rcm\Entity\Domain) {
             $domain->setPrimary($primaryDomain);
