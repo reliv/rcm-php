@@ -9,7 +9,7 @@ use Zend\Stdlib\ArrayUtils;
 /**
  * Class ApiJsonModel
  *
- * Includes a wrapper for a standard return format
+ * Includes a wrapper for a standard return format for client
  *
  * PHP version 5
  *
@@ -28,16 +28,20 @@ class ApiJsonModel extends JsonModel {
 
     protected $message = '';
 
+    protected $errors = array();
+
     /**
      * @param null   $variables
      * @param null   $options
-     * @param int    $code
-     * @param string $message
+     * @param int    $code - 0 for success
+     * @param string $message - General public message for client
+     * @param array  $errors - Example - Pass the messages from input validator
      */
-    public function __construct($variables = null, $options = null, $code = 1, $message = '')
+    public function __construct($variables = null, $options = null, $code = 0, $message = '', $errors = array())
     {
         $this->setCode($code);
         $this->setMessage($message);
+        $this->setErrors($errors);
         parent::__construct($variables, $options);
     }
 
@@ -70,7 +74,41 @@ class ApiJsonModel extends JsonModel {
      */
     public function setMessage($message)
     {
-        $this->message = $message;
+        $this->message = (string) $message;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * setErrors
+     *
+     * @param array $errors
+     *
+     * @return void
+     */
+    public function setErrors(array $errors)
+    {
+        $this->errors = $errors;
+    }
+
+    /**
+     * setError
+     *
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function setError($name, $value)
+    {
+        $name = (string) $name;
+        $this->errors[$name] = $value;
     }
 
     /**
@@ -82,7 +120,8 @@ class ApiJsonModel extends JsonModel {
     {
         $result = array(
             'code' => $this->getCode(),
-            'message' => $this->getMessage()
+            'message' => $this->getMessage(),
+            'errors' => $this->getErrors()
         );
 
         $result['data'] = $this->getVariables();

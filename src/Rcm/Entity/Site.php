@@ -84,7 +84,7 @@ class Site implements \JsonSerializable, \IteratorAggregate
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $siteTitle;
+    protected $siteTitle = null;
 
     /**
      * @var \Rcm\Entity\Language Default language for the site
@@ -122,7 +122,7 @@ class Site implements \JsonSerializable, \IteratorAggregate
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $favIcon;
+    protected $favIcon = null;
 
     /**
      * @var array Array of pages
@@ -146,7 +146,7 @@ class Site implements \JsonSerializable, \IteratorAggregate
      *     cascade={"persist"}
      * )
      */
-    protected $containers;
+    protected $containers = null;
 
     /**
      * @ORM\ManyToMany(
@@ -170,21 +170,21 @@ class Site implements \JsonSerializable, \IteratorAggregate
      *     }
      * )
      **/
-    protected $sitePlugins;
+    protected $sitePlugins = array();
 
     /**
      * @var string URL to login page.
      *
      * @ORM\Column(type="string", nullable=true)
      **/
-    protected $loginPage;
+    protected $loginPage = 'login';
 
     /**
      * @var string URL to not authorized page.
      *
      * @ORM\Column(type="string", nullable=true)
      **/
-    protected $notAuthorizedPage;
+    protected $notAuthorizedPage = 'not-authorized';
 
     /**
      * @var string URL to not authorized page.
@@ -192,6 +192,16 @@ class Site implements \JsonSerializable, \IteratorAggregate
      * @ORM\Column(type="string", nullable=true)
      **/
     protected $notFoundPage = 'not-found';
+
+    /**
+     * @var array will only clone these page types
+     */
+    protected $cloneablePageTypes
+        = array(
+            'n',
+            'z',
+            't',
+        );
 
     /**
      * Constructor for site
@@ -206,6 +216,11 @@ class Site implements \JsonSerializable, \IteratorAggregate
         $this->language = new Language();
     }
 
+    /**
+     * __clone
+     *
+     * @return void
+     */
     public function __clone()
     {
 
@@ -225,7 +240,8 @@ class Site implements \JsonSerializable, \IteratorAggregate
             /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
             foreach ($siteWidePlugins as $siteWidePlugin) {
                 $clonedSiteWide = clone $siteWidePlugin;
-                $siteWideIdsToChange[$siteWidePlugin->getInstanceId()] = $clonedSiteWide;
+                $siteWideIdsToChange[$siteWidePlugin->getInstanceId()]
+                    = $clonedSiteWide;
                 $clonedSiteWides[] = $clonedSiteWide;
             }
         }
@@ -240,10 +256,10 @@ class Site implements \JsonSerializable, \IteratorAggregate
 
                 $pageType = $page->getPageType();
 
-                // THIS MUST STAY HERE! Non CMS pages can not be cloned!
-//                if ($pageType != 'n' && $pageType != 'z' && $pageType != 't') {
-//                    continue;
-//                }
+                // Only clone if is cloneable
+                if (!in_array($pageType, $this->cloneablePageTypes)) {
+                    continue;
+                }
 
                 $clonedPage = clone $page;
                 $clonedPage->setSite($this);
@@ -289,6 +305,14 @@ class Site implements \JsonSerializable, \IteratorAggregate
 
     }
 
+    /**
+     * fixRevisionSiteWides
+     *
+     * @param Revision $revision
+     * @param array    $siteWideIdsToChange
+     *
+     * @return void
+     */
     protected function fixRevisionSiteWides(Revision $revision, $siteWideIdsToChange)
     {
         $pluginWrappers = $revision->getPluginWrappers();
@@ -302,6 +326,58 @@ class Site implements \JsonSerializable, \IteratorAggregate
             ) {
                 $pluginWrapper->setInstance($siteWideIdsToChange[$instanceId]);
             }
+        }
+    }
+
+    /**
+     * getCloneablePageTypes
+     *
+     * @return array
+     */
+    public function getCloneablePageTypes()
+    {
+        return $this->cloneablePageTypes;
+    }
+
+    /**
+     * setCloneablePageTypes
+     *
+     * @param array $cloneablePageTypes
+     *
+     * @return void
+     */
+    public function setCloneablePageTypes(array $cloneablePageTypes)
+    {
+        $this->cloneablePageTypes = $cloneablePageTypes;
+    }
+
+    /**
+     * Add Cloneable Page Type
+     *
+     * @param string $cloneablePageType
+     *
+     * @return void
+     */
+    public function addCloneablePageType($cloneablePageType)
+    {
+        if (!in_array($cloneablePageType, $this->cloneablePageTypes)) {
+            $this->cloneablePageTypes[] = $cloneablePageType;
+        }
+    }
+
+    /**
+     * Remove Cloneable Page Type
+     *
+     * @param $cloneablePageType
+     *
+     * @return void
+     */
+    public function removeCloneablePageType($cloneablePageType)
+    {
+        if (($key = array_search($cloneablePageType, $this->cloneablePageTypes))
+            !== false
+        ) {
+            unset($this->cloneablePageTypes[$key]);
         }
     }
 
@@ -459,7 +535,7 @@ class Site implements \JsonSerializable, \IteratorAggregate
      *
      * @return null|Page
      */
-    public function getPage($pageName, $pageType='n')
+    public function getPage($pageName, $pageType = 'n')
     {
         if (empty($this->pages)) {
             return null;
@@ -757,7 +833,7 @@ class Site implements \JsonSerializable, \IteratorAggregate
     {
         return
             strtolower($this->getLanguage()->getIso6391())
-            .'_'.
+            . '_' .
             strtoupper($this->getCountry()->getIso2());
     }
 
@@ -776,6 +852,12 @@ class Site implements \JsonSerializable, \IteratorAggregate
         if (!empty($data['domain']) && $data['domain'] instanceof Domain) {
             $this->setDomain($data['domain']);
         }
+        if (!empty($data['domain']) && is_array($data['domain'])) {
+            // is this right?
+            $domain = new Domain();
+            $domain->populate($data['domain']);
+            $this->setDomain($domain);
+        }
         if (!empty($data['theme'])) {
             $this->setTheme($data['theme']);
         }
@@ -788,8 +870,18 @@ class Site implements \JsonSerializable, \IteratorAggregate
         if (!empty($data['language']) && $data['language'] instanceof Language) {
             $this->setLanguage($data['language']);
         }
+        if (!empty($data['language']) && is_array($data['language'])) {
+            $language = new Language();
+            $language->populate($data['language']);
+            $this->setLanguage($language);
+        }
         if (!empty($data['country']) && $data['country'] instanceof Country) {
             $this->setCountry($data['country']);
+        }
+        if (!empty($data['country']) && is_array($data['country'])) {
+            $country = new Country();
+            $country->populate($data['country']);
+            $this->setCountry($country);
         }
         if (!empty($data['status'])) {
             $this->setStatus($data['status']);
@@ -804,18 +896,18 @@ class Site implements \JsonSerializable, \IteratorAggregate
             $this->setNotAuthorizedPage($data['notAuthorizedPage']);
         }
         if (!empty($data['notFoundPage'])) {
-            $this->setNotAuthorizedPage($data['notFoundPage']);
+            $this->setNotFoundPage($data['notFoundPage']);
         }
     }
 
     /**
-     * populateFromSite - @todo some properties are missing
+     * populateFromObject - @todo some properties are missing
      *
      * @param Site $site
      *
      * @return void
      */
-    public function populateFromSite(Site $site)
+    public function populateFromObject(Site $site)
     {
         $this->setSiteId($site->getSiteId());
         if (is_object($site->getDomain())) {

@@ -312,6 +312,48 @@ class Language implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
+     * populate
+     *
+     * @param array $data
+     *
+     * @return void
+     */
+    public function populate($data = array())
+    {
+        if (!empty($data['languageId'])) {
+            $this->setLanguageId($data['languageId']);
+        }
+        if (!empty($data['languageName'])) {
+            $this->setLanguageName($data['languageName']);
+        }
+        if (!empty($data['iso639_1'])) {
+            $this->setIso6391($data['iso639_1']);
+        }
+        if (!empty($data['iso639_2b'])) {
+            $this->setIso6392b($data['iso639_2b']);
+        }
+        if (!empty($data['iso639_2t'])) {
+            $this->setIso6392t($data['iso639_2t']);
+        }
+    }
+
+    /**
+     * populateFromObject
+     *
+     * @param Language $data
+     *
+     * @return void
+     */
+    public function populateFromObject(Language $data)
+    {
+        $this->setLanguageId($data->getLanguageId());
+        $this->setLanguageName($data->getLanguageName());
+        $this->setIso6391($data->getIso6391());
+        $this->setIso6392b($data->getIso6392b());
+        $this->setIso6392t($data->getIso6392t());
+    }
+
+    /**
      * jsonSerialize
      *
      * @return array|mixed
@@ -336,7 +378,7 @@ class Language implements \JsonSerializable, \IteratorAggregate
      *
      * @return array
      */
-    protected function toArray()
+    public function toArray()
     {
         return array(
             'languageId' => $this->getLanguageId(),
