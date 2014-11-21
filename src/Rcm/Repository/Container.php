@@ -23,6 +23,9 @@ namespace Rcm\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Rcm\Entity\Container as ContainerEntity;
+use Rcm\Entity\Revision;
+use Rcm\Entity\Site as SiteEntity;
 
 /**
  * Container Repository
@@ -131,5 +134,17 @@ class Container extends ContainerAbstract
         }
 
         return $result;
+    }
+
+    public function createContainer(SiteEntity $site, $name)
+    {
+        $container = new ContainerEntity();
+        $container->setName($name);
+        $container->setSite($site);
+
+        $this->_em->persist($container);
+        $this->_em->flush($container);
+
+        return $container;
     }
 }
