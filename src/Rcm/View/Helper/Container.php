@@ -53,6 +53,9 @@ class Container extends AbstractHelper
     /** @var  \Zend\Stdlib\ResponseInterface */
     protected $response;
 
+    /** @var string Default if nothing passed */
+    protected $defaultContainerName = 'body';
+
     /**
      * Constructor
      *
@@ -142,14 +145,24 @@ class Container extends AbstractHelper
      *
      * @return string
      */
-    public function renderPageContainer($name)
+    public function renderPageContainer($name = '')
     {
+        $name = $this->prepareContainerName($name);
+
         /** @var \Zend\View\Model\ViewModel $view */
         $view = $this->getView();
 
         return $this->getPageContainerHtmlByName($view->page, $name);
     }
 
+    /**
+     * getPageContainerHtmlByName
+     *
+     * @param Page $page
+     * @param string $name
+     *
+     * @return string
+     */
     protected function getPageContainerHtmlByName(Page $page, $name)
     {
         $revision = $page->getCurrentRevision();
@@ -166,6 +179,16 @@ class Container extends AbstractHelper
         return $this->getContainerWrapperHtml($revision, $name, $pluginHtml, true);
     }
 
+    /**
+     * getContainerWrapperHtml
+     *
+     * @param Revision $revision
+     * @param string $containerName
+     * @param string $pluginsHtml
+     * @param bool $pageContainer
+     *
+     * @return string
+     */
     protected function getContainerWrapperHtml(
         Revision $revision,
         $containerName,
@@ -254,7 +277,13 @@ class Container extends AbstractHelper
         return $html;
     }
 
-
+    /**
+     * getPluginCss
+     *
+     * @param PluginInstance $instance
+     *
+     * @return void
+     */
     protected function getPluginCss(PluginInstance $instance)
     {
         /** @var \Zend\View\Model\ViewModel $view */
@@ -273,6 +302,13 @@ class Container extends AbstractHelper
         }
     }
 
+    /**
+     * getPluginHeadScript
+     *
+     * @param PluginInstance $instance
+     *
+     * @return void
+     */
     protected function getPluginHeadScript(PluginInstance $instance)
     {
         $view = $this->getView();
@@ -366,5 +402,24 @@ class Container extends AbstractHelper
     public function getResponse()
     {
         return $this->response;
+    }
+
+    /**
+     * prepareConatinerName
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    protected function prepareContainerName($name = '')
+    {
+        $name = (string) $name;
+
+        if(empty($name)){
+
+            return $this->defaultContainerName;
+        }
+
+        return $name;
     }
 }
