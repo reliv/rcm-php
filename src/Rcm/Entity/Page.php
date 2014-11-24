@@ -433,6 +433,10 @@ class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggr
             $this->setKeywords($data['keywords']);
         }
 
+        if (!empty($data['author'])) {
+            $this->setAuthor($data['author']);
+        }
+
         if (!empty($data['pageLayout'])) {
             $this->setPageLayout($data['pageLayout']);
         }

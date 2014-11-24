@@ -263,17 +263,43 @@ class Page extends ContainerAbstract
         $skipFlush = false,
         $publishPage = false
     ) {
+        $pageData = array();
+
+        $pageData['pageName'] = $pageName;
+        $pageData['pageTitle'] = $pageTitle;
+        $pageData['siteLayoutOverride'] = $layout;
+        $pageData['author'] = $author;
+        $pageData['pageType'] = $pageType;
+
+        return $this->createPage($site, $pageData, $skipFlush, $publishPage);
+    }
+
+    /**
+     * createPage
+     *
+     * @param SiteEntity $site
+     * @param array $pageData
+     * @param bool $skipFlush
+     * @param bool $publishPage
+     *
+     * @return PageEntity
+     */
+    public function createPage(
+        SiteEntity $site,
+        $pageData,
+        $skipFlush = false,
+        $publishPage = false
+    ){
         $revision = new Revision();
-        $revision->setAuthor($author);
+        $revision->setAuthor($pageData['author']);
         $revision->setCreatedDate(new \DateTime());
 
         $page = new PageEntity();
+        $page->populate($pageData);
         $page->setCreatedDate(new \DateTime());
-        $page->setAuthor($author);
-        $page->setName($pageName);
-        $page->setPageType($pageType);
-        $page->setPageTitle($pageTitle);
+
         $page->setSite($site);
+
         if(!$publishPage){
             $page->setStagedRevision($revision);
         }else{
@@ -281,8 +307,6 @@ class Page extends ContainerAbstract
         }
 
         $page->addRevision($revision);
-
-        $page->setSiteLayoutOverride($layout);
 
         $this->_em->persist($revision);
         $this->_em->persist($page);
