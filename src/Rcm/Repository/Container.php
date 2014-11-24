@@ -136,6 +136,15 @@ class Container extends ContainerAbstract
         return $result;
     }
 
+    /**
+     * createContainer
+     *
+     * @param SiteEntity $site
+     * @param            $name
+     * @param            $author
+     *
+     * @return ContainerEntity
+     */
     public function createContainer(SiteEntity $site, $name, $author)
     {
         $container = new ContainerEntity();

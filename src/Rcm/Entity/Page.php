@@ -90,28 +90,28 @@ class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggr
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $pageLayout;
+    protected $pageLayout = null;
 
     /**
      * @var string Default Site Layout
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $siteLayoutOverride;
+    protected $siteLayoutOverride = null;
 
     /**
      * @var string Page Title
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $pageTitle;
+    protected $pageTitle = 'My Page';
 
     /**
      * @var string Page Description
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $description;
+    protected $description = 'My Page';
 
     /**
      * @var string Meta Keywords
@@ -366,6 +366,10 @@ class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggr
      */
     public function setSiteLayoutOverride($layout)
     {
+        if ($layout === 'default') {
+            $layout = null;
+        }
+
         $this->siteLayoutOverride = $layout;
     }
 
@@ -399,6 +403,53 @@ class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggr
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * populate
+     *
+     * @param array $data
+     *
+     * @return void
+     */
+    public function populate($data)
+    {
+        if (!empty($data['name'])) {
+            $this->name = $data['name'];
+        }
+        if (!empty($data['pageTitle'])) {
+            $this->setPageTitle($data['pageTitle']);
+            }
+
+        if (!empty($data['pageType'])) {
+            $this->setPageType($data['pageType']);
+        }
+
+        if (!empty($data['description'])) {
+            $this->setDescription($data['description']);
+        }
+
+        if (!empty($data['keywords'])) {
+            $this->setKeywords($data['keywords']);
+        }
+
+        if (!empty($data['pageLayout'])) {
+            $this->setPageLayout($data['pageLayout']);
+        }
+
+        if (!empty($data['siteLayoutOverride'])) {
+            $this->setSiteLayoutOverride($data['siteLayoutOverride']);
+        }
+
+        if (empty($data['parent'])) {
+            $parent = null;
+        } else {
+            $parent = $data['parent'];
+        }
+
+        if ($parent instanceof Page) {
+            $this->setParent($parent);
+        }
     }
 
     /**
