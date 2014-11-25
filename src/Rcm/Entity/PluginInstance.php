@@ -66,7 +66,7 @@ class PluginInstance
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $displayName;
+    protected $displayName = null;
 
     /**
      * @var string Md5 of posted data
@@ -80,7 +80,7 @@ class PluginInstance
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $previousEntity;
+    protected $previousEntity = null;
 
     /**
      * @var string config that will be stored in the DB as JSON
@@ -238,6 +238,19 @@ class PluginInstance
     public function getMd5()
     {
         return $this->md5;
+    }
+
+    /**
+     * setSaveData
+     *
+     * @param $saveData
+     *
+     * @return void
+     */
+    public function setSaveData($saveData)
+    {
+        $this->setMd5(md5(serialize($saveData)));
+        $this->setInstanceConfig($saveData);
     }
 
     /**
@@ -413,6 +426,76 @@ class PluginInstance
     public function setTooltip($tooltip)
     {
         $this->tooltip = $tooltip;
+    }
+
+    /**
+     * populate
+     *
+     * @param array $data
+     *
+     * @return void
+     */
+    public function populate($data)
+    {
+        if(isset($data['plugin'])) {
+            $this->setPlugin($data['plugin']);
+        }
+
+        if(isset($data['siteWide']) && (bool) $data['siteWide'] === true) {
+            $this->setSiteWide();
+        }
+
+        if(isset($data['displayName'])) {
+            $this->setDisplayName($data['displayName']);
+        }
+
+        if(isset($data['instanceConfig'])){
+            $this->setInstanceConfig($data['instanceConfig']);
+        }
+
+        if(isset($data['md5'])){
+            $this->setMd5($data['md5']);
+        }
+
+        if(isset($data['saveData'])){
+            $this->setSaveData($data['saveData']);
+        }
+
+        if(isset($data['previousInstance']) && $data['previousInstance'] instanceof PluginInstance){
+            $this->setPreviousInstance($data['previousInstance']);
+        }
+
+        if(isset($data['renderedCss'])){
+            $this->setRenderedCss($data['renderedCss']);
+        }
+
+        if(isset($data['renderedJs'])){
+            $this->setRenderedJs($data['renderedJs']);
+        }
+
+        if(isset($data['renderedHtml'])){
+            $this->setRenderedHtml($data['renderedHtml']);
+        }
+
+        if(isset($data['canCache'])){
+            $this->setCanCache($data['canCache']);
+        }
+
+        if(isset($data['editCss'])){
+            $this->setEditCss($data['editCss']);
+        }
+
+        if(isset($data['editJs'])){
+            $this->setEditJs($data['editJs']);
+        }
+
+        if(isset($data['icon'])){
+            $this->setIcon($data['icon']);
+        }
+
+        if(isset($data['tooltip'])){
+            $this->setTooltip($data['tooltip']);
+        }
     }
 
 }

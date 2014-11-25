@@ -52,28 +52,28 @@ class PluginWrapper
      *
      * @ORM\Column(type="string")
      */
-    protected $layoutContainer;
+    protected $layoutContainer = null;
 
     /**
      * @var integer Order of Layout Placement
      *
      * @ORM\Column(type="integer")
      */
-    protected $renderOrder;
+    protected $renderOrder = 0;
 
     /**
      * @var integer Order of Layout Placement
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $height;
+    protected $height = null;
 
     /**
      * @var integer Order of Layout Placement
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $width;
+    protected $width = null;
 
     /**
      * @var integer Order of Layout Placement
@@ -98,6 +98,11 @@ class PluginWrapper
      **/
     protected $instance;
 
+    /**
+     * __clone
+     *
+     * @return void
+     */
     public function __clone()
     {
         if (!$this->pluginWrapperId) {
@@ -275,5 +280,39 @@ class PluginWrapper
     public function getDivFloat()
     {
         return $this->divFloat;
+    }
+
+    /**
+     * populate
+     *
+     * @param array $data
+     *
+     * @return void
+     */
+    public function populate($data)
+    {
+        if (isset($data['layoutContainer'])) {
+            $this->setLayoutContainer($data['layoutContainer']);
+        }
+
+        if (isset($data['renderOrder'])) {
+            $this->setRenderOrderNumber($data['renderOrder']);
+        }
+
+        if (isset($data['height'])) {
+            $this->setHeight($data['height']);
+        }
+
+        if (isset($data['width'])) {
+            $this->setWidth($data['width']);
+        }
+
+        if (isset($data['divFloat'])) {
+            $this->setDivFloat($data['divFloat']);
+        }
+
+        if (isset($data['instance']) && $data['instance'] instanceof PluginInstance) {
+            $this->setInstance($data['instance']);
+        }
     }
 }

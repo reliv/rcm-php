@@ -207,6 +207,22 @@ class Domain implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
+     * @return Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * @param Site $site
+     */
+    public function setSite(Site $site)
+    {
+        $this->site = $site;
+    }
+
+    /**
      * Return the Primary Domain.
      *
      * @return \Rcm\Entity\Domain
@@ -321,21 +337,7 @@ class Domain implements \JsonSerializable, \IteratorAggregate
         );
     }
 
-    /**
-     * @return Site
-     */
-    public function getSite()
-    {
-        return $this->site;
-    }
 
-    /**
-     * @param Site $site
-     */
-    public function setSite(Site $site)
-    {
-        $this->site = $site;
-    }
 
 
 }

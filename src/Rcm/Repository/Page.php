@@ -248,7 +248,7 @@ class Page extends ContainerAbstract
      * @param string     $author    Author
      * @param SiteEntity $site      Site Entity
      * @param string     $pageType  Page Type
-     * @param bool       $skipFlush
+     * @param bool       $doFlush
      * @param bool       $publishPage
      *
      * @return PageEntity
@@ -260,7 +260,7 @@ class Page extends ContainerAbstract
         $author,
         SiteEntity $site,
         $pageType = 'n',
-        $skipFlush = false,
+        $doFlush = true,
         $publishPage = false
     ) {
         $pageData = array();
@@ -271,25 +271,29 @@ class Page extends ContainerAbstract
         $pageData['author'] = $author;
         $pageData['pageType'] = $pageType;
 
-        return $this->createPage($site, $pageData, $skipFlush, $publishPage);
+        return $this->createPage($site, $pageData, $publishPage, $doFlush);
     }
 
     /**
      * createPage
      *
      * @param SiteEntity $site
-     * @param array $pageData
-     * @param bool $skipFlush
-     * @param bool $publishPage
+     * @param array      $pageData
+     * @param bool       $publishPage
+     * @param bool       $doFlush
      *
      * @return PageEntity
+     * @throws \Exception
      */
     public function createPage(
         SiteEntity $site,
         $pageData,
-        $skipFlush = false,
-        $publishPage = false
-    ){
+        $publishPage = false,
+        $doFlush = true
+    ) {
+        if(empty($pageData['author'])){
+            throw new \Exception('Author is required to create a page.');
+        }
         $revision = new Revision();
         $revision->setAuthor($pageData['author']);
         $revision->setCreatedDate(new \DateTime());
@@ -300,9 +304,9 @@ class Page extends ContainerAbstract
 
         $page->setSite($site);
 
-        if(!$publishPage){
+        if (!$publishPage) {
             $page->setStagedRevision($revision);
-        }else{
+        } else {
             $page->setPublishedRevision($revision);
         }
 
@@ -311,7 +315,7 @@ class Page extends ContainerAbstract
         $this->_em->persist($revision);
         $this->_em->persist($page);
 
-        if (!$skipFlush) {
+        if ($doFlush) {
             $this->_em->flush(
                 array(
                     $revision,
@@ -321,6 +325,38 @@ class Page extends ContainerAbstract
         }
 
         return $page;
+    }
+
+    /**
+     * createPages
+     *
+     * @param SiteEntity $site
+     * @param array      $pagesData
+     * @param bool       $publishPage
+     * @param bool       $doFlush
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function createPages(
+        SiteEntity $site,
+        $pagesData,
+        $publishPage = false,
+        $doFlush = false
+    ) {
+        $results = array();
+
+        foreach ($pagesData as $name => $pageData) {
+
+            $results[] = $this->createPage(
+                $site,
+                $pageData,
+                $publishPage,
+                $doFlush
+            );
+        }
+
+        return $results;
     }
 
     /**

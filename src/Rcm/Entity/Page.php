@@ -414,41 +414,41 @@ class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggr
      */
     public function populate($data)
     {
-        if (!empty($data['name'])) {
+        if (isset($data['name'])) {
             $this->name = $data['name'];
         }
-        if (!empty($data['pageTitle'])) {
+        if (isset($data['pageTitle'])) {
             $this->setPageTitle($data['pageTitle']);
-            }
+        }
 
-        if (!empty($data['pageType'])) {
+        if (isset($data['pageType'])) {
             $this->setPageType($data['pageType']);
         }
 
-        if (!empty($data['description'])) {
+        if (isset($data['description'])) {
             $this->setDescription($data['description']);
         }
 
-        if (!empty($data['keywords'])) {
+        if (isset($data['keywords'])) {
             $this->setKeywords($data['keywords']);
         }
 
-        if (!empty($data['author'])) {
+        if (isset($data['author'])) {
             $this->setAuthor($data['author']);
         }
 
-        if (!empty($data['pageLayout'])) {
+        if (isset($data['pageLayout'])) {
             $this->setPageLayout($data['pageLayout']);
         }
 
-        if (!empty($data['siteLayoutOverride'])) {
+        if (isset($data['siteLayoutOverride'])) {
             $this->setSiteLayoutOverride($data['siteLayoutOverride']);
         }
 
-        if (empty($data['parent'])) {
-            $parent = null;
-        } else {
+        if (isset($data['parent'])) {
             $parent = $data['parent'];
+        } else {
+            $parent = null;
         }
 
         if ($parent instanceof Page) {

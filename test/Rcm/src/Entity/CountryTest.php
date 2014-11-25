@@ -160,5 +160,44 @@ class CountryTest extends \PHPUnit_Framework_TestCase
         $iso3 = 'US';
         $this->country->setIso3($iso3);
     }
+
+
+    public function testUtilities()
+    {
+        $data = array();
+        $data['iso3'] = 'TST';
+        $data['iso2'] = 'TS';
+        $data['countryName'] = 'TEST';
+
+        $newCountry = new Country();
+
+        $newCountry->populate($data);
+
+        $this->assertEquals($data['iso3'], $newCountry->getIso3());
+        $this->assertEquals($data['iso2'], $newCountry->getIso2());
+        $this->assertEquals($data['countryName'], $newCountry->getCountryName());
+
+        $secCountry = new Country();
+
+        $secCountry->populateFromObject($newCountry);
+
+        $this->assertEquals($newCountry->getIso3(), $secCountry->getIso3());
+        $this->assertEquals($newCountry->getIso2(), $secCountry->getIso2());
+        $this->assertEquals($newCountry->getCountryName(), $secCountry->getCountryName());
+
+        $json = json_encode($secCountry);
+
+        $this->assertJson($json);
+
+        $iterator = $secCountry->getIterator();
+
+        $this->assertInstanceOf('\ArrayIterator', $iterator);
+
+        $array = $secCountry->toArray();
+
+        $this->assertEquals($data['iso3'], $array['iso3']);
+        $this->assertEquals($data['iso2'], $array['iso2']);
+        $this->assertEquals($data['countryName'], $array['countryName']);
+    }
 }
  

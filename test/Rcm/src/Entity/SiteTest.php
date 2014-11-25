@@ -1081,7 +1081,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->site->setSiteId($site['siteId']);
-        $this->site->setOwner($site['owner']);
         $this->site->setDomain($site['domain']);
         $this->site->setTheme($site['theme']);
         $this->site->setSiteLayout($site['siteLayout']);

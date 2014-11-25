@@ -300,6 +300,10 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
                 $this->assertNotNull($clonedWrapper->getInstance()->getInstanceId());
             }
         }
+
+        $this->container->setContainerId(null);
+
+        $noContainerClone = clone($this->container);
     }
 }
  

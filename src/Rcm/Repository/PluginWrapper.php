@@ -64,12 +64,10 @@ class PluginWrapper extends EntityRepository
         /** @var \Rcm\Repository\PluginInstance $pluginInstanceRepo */
         $pluginInstanceRepo = $this->_em->getRepository('\Rcm\Entity\PluginInstance');
 
-        $pluginInstance = $pluginInstanceRepo->savePlugin(
-            $pluginData['instanceId'],
-            $pluginData['name'],
-            $pluginData['saveData'],
-            $pluginData['isSitewide'],
-            $pluginData['sitewideName']
+        $pluginData = $this->prepareData($pluginData);
+
+        $pluginInstance = $pluginInstanceRepo->updatePlugin(
+            $pluginData
         );
 
         if (!empty($oldWrapper)
@@ -98,15 +96,57 @@ class PluginWrapper extends EntityRepository
         }
 
         $pluginWrapper = new PluginWrapperEntity();
-        $pluginWrapper->setDivFloat($pluginData['float']);
-        $pluginWrapper->setHeight($pluginData['height']);
-        $pluginWrapper->setWidth($pluginData['width']);
-        $pluginWrapper->setLayoutContainer($pluginData['containerName']);
+        $pluginWrapper->populate($pluginData);
         $pluginWrapper->setInstance($pluginInstance);
-        $pluginWrapper->setRenderOrderNumber($pluginData['rank']);
 
         $this->_em->persist($pluginWrapper);
         $this->_em->flush($pluginWrapper);
         return $pluginWrapper;
     }
+
+    /**
+     * prepareData
+     *
+     * @param array $pluginData
+     *
+     * @return array
+     */
+    public function prepareData($pluginData = array())
+    {
+        // Data migration of alternate keys
+        if(!isset($pluginData['layoutContainer']) && array_key_exists('containerName', $pluginData)){
+            $pluginData['layoutContainer'] = $pluginData['containerName'];
+        }
+
+        if(!isset($pluginData['renderOrder']) && array_key_exists('rank', $pluginData)){
+            $pluginData['renderOrder'] = $pluginData['rank'];
+        }
+
+        if(!isset($pluginData['divFloat']) && array_key_exists('float', $pluginData)){
+            $pluginData['divFloat'] = $pluginData['float'];
+        }
+
+        // Defaults
+        if(!isset($pluginData['layoutContainer'])){
+            $pluginData['layoutContainer'] = null;
+        }
+
+        if(!isset($pluginData['siteWide'])){
+            $pluginData['siteWide'] = 0;
+        }
+
+        if(!isset($pluginData['renderOrder'])){
+            $pluginData['renderOrder'] = 0;
+        }
+
+        if(!isset($pluginData['divFloat'])){
+            $pluginData['divFloat'] = null;
+        }
+
+        /** @var \Rcm\Repository\PluginInstance $pluginInstanceRepo */
+        $pluginInstanceRepo = $this->_em->getRepository('\Rcm\Entity\PluginInstance');
+
+        return $pluginInstanceRepo->prepareData($pluginData);;
+    }
+
 }
