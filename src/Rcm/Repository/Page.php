@@ -265,7 +265,7 @@ class Page extends ContainerAbstract
     ) {
         $pageData = array();
 
-        $pageData['pageName'] = $pageName;
+        $pageData['name'] = $pageName;
         $pageData['pageTitle'] = $pageTitle;
         $pageData['siteLayoutOverride'] = $layout;
         $pageData['author'] = $author;
