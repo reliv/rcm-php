@@ -24,6 +24,7 @@ require_once __DIR__ . '/../../../autoload.php';
 use Doctrine\Common\Collections\ArrayCollection;
 use Rcm\Entity\Domain;
 use Rcm\Entity\Language;
+use Rcm\Entity\Site;
 
 /**
  * Unit Test for the Domain Entity
@@ -135,6 +136,16 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         $actual = $this->domain->getDomainName();
 
         $this->assertEquals($domainName, $actual);
+    }
+
+    public function testGetAndSetSite()
+    {
+        $site = new Site();
+
+        $this->domain->setSite($site);
+        $actual = $this->domain->getSite();
+
+        $this->assertEquals($site, $actual);
     }
 
     /**
@@ -251,35 +262,42 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual->toArray());
     }
 
-    /**
-     * Test is Get and Set Default Language
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Domain
-     */
-    public function testGetAndSetDefaultLanguage()
-    {
-        $defaultLanguage = new Language();
-        $defaultLanguage->setIso6391('en');
+    public function testUtilities(){
 
-        $this->domain->setDefaultLanguage($defaultLanguage);
-        $actual = $this->domain->getDefaultLanguage();
+        $data = array();
+        $data['domainId'] = 123;
+        $data['domain'] = 'TEST';
+        $data['primaryDomain'] = new Domain();
 
-        $this->assertEquals($defaultLanguage, $actual);
-    }
+        $objOne = new Domain();
 
-    /**
-     * Test is Set Default Language only accepts Language Objects
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Domain
-     * @expectedException \PHPUnit_Framework_Error
-     */
-    public function testSetDefaultLanguageAcceptsOnlyDomains()
-    {
-        $this->domain->setDefaultLanguage(time());
+        $objOne->populate($data);
+
+        $this->assertEquals($data['domainId'], $objOne->getDomainId());
+        $this->assertEquals($data['domain'], $objOne->getDomainName());
+        $this->assertEquals($data['primaryDomain'], $objOne->getPrimary());
+
+        $objTwo = new Domain();
+
+        $objTwo->populateFromObject($objOne);
+
+        $this->assertEquals($objOne->getDomainId(), $objTwo->getDomainId());
+        $this->assertEquals($objOne->getDomainName(), $objTwo->getDomainName());
+        $this->assertEquals($objOne->getPrimary(), $objTwo->getPrimary());
+
+        $json = json_encode($objTwo);
+
+        $this->assertJson($json);
+
+        $iterator = $objTwo->getIterator();
+
+        $this->assertInstanceOf('\ArrayIterator', $iterator);
+
+        $array = $objTwo->toArray();
+
+        $this->assertEquals($data['domainId'], $array['domainId']);
+        $this->assertEquals($data['domain'], $array['domain']);
+        $this->assertEquals($data['primaryDomain'], $array['primaryDomain']);
     }
 }
  

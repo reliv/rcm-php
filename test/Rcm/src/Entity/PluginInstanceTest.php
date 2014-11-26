@@ -225,6 +225,98 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($cloned->isSiteWide());
         $this->assertNotEquals($instanceId, $cloned->getInstanceId());
         $this->assertNull($cloned->getInstanceId());
+
+        $pluginInstance = new PluginInstance();
+
+        $clone = clone($pluginInstance);
+
+        $this->assertInstanceOf('Rcm\Entity\PluginInstance', $clone);
+    }
+
+    public function getTestData()
+    {
+        $data = array();
+        $data['plugin'] = 'NAME';
+        $data['siteWide'] = true;
+        $data['displayName'] = 'DISPLAYNAME';
+        $data['instanceConfig'] = array('test' => 'insconf');
+        $data['md5'] = 'MD5';
+        //
+        $data['previousInstance'] = new PluginInstance();
+        $data['previousInstance']->setInstanceId(123);
+        $data['renderedCss'] = 'RENDCSS';
+        $data['renderedJs'] = 'RENDJS';
+        $data['renderedHtml'] = 'RENDHTML';
+        $data['canCache'] = true;
+        $data['editCss'] = 'EDITCSS';
+        $data['editJs'] = 'EDITJS';
+        $data['icon'] = 'ICON';
+        $data['tooltip'] = 'TOOLTIP';
+
+        return $data;
+    }
+
+    public function testUtilities()
+    {
+        $data = $this->getTestData();
+
+        $obj1 = new PluginInstance();
+
+        $obj1->populate($data);
+
+        $this->assertEquals($data['plugin'], $obj1->getPlugin());
+        $this->assertEquals($data['siteWide'], $obj1->isSiteWide());
+        $this->assertEquals($data['displayName'], $obj1->getDisplayName());
+        $this->assertEquals($data['instanceConfig'], $obj1->getInstanceConfig());
+        $this->assertEquals($data['md5'], $obj1->getMd5());
+        $this->assertEquals(
+            $data['previousInstance']->getInstanceId(),
+            $obj1->getPreviousInstance()
+        );
+        $this->assertEquals($data['renderedCss'], $obj1->getRenderedCss());
+        $this->assertEquals($data['renderedJs'], $obj1->getRenderedJs());
+        $this->assertEquals($data['renderedHtml'], $obj1->getRenderedHtml());
+        $this->assertEquals($data['canCache'], $obj1->getCanCache());
+        $this->assertEquals($data['editCss'], $obj1->getEditCss());
+        $this->assertEquals($data['editJs'], $obj1->getEditJs());
+        $this->assertEquals($data['icon'], $obj1->getIcon());
+        $this->assertEquals($data['tooltip'], $obj1->getTooltip());
+
+
+        $data['saveData'] = array('testSave' => 'saveData');
+
+        $obj1->populate($data);
+
+        $this->assertEquals($data['saveData'], $obj1->getInstanceConfig());
+        $this->assertEquals(md5(serialize($data['saveData'])), $obj1->getMd5());
+
+        // sync the data back up
+        $data['md5'] = $obj1->getMd5();
+        $data['instanceConfig'] = $obj1->getInstanceConfig();
+
+        $json = json_encode($obj1);
+
+        $this->assertJson($json);
+
+        $iterator = $obj1->getIterator();
+
+        $this->assertInstanceOf('\ArrayIterator', $iterator);
+
+        $array = $obj1->toArray();
+
+        $this->assertEquals($data['plugin'], $array['plugin']);
+        $this->assertEquals($data['siteWide'], $array['siteWide']);
+        $this->assertEquals($data['displayName'], $array['displayName']);
+        $this->assertEquals($data['instanceConfig'], $array['instanceConfig']);
+        $this->assertEquals($data['md5'], $array['md5']);
+        $this->assertEquals($data['renderedCss'], $array['renderedCss']);
+        $this->assertEquals($data['renderedJs'], $array['renderedJs']);
+        $this->assertEquals($data['renderedHtml'], $array['renderedHtml']);
+        $this->assertEquals($data['canCache'], $array['canCache']);
+        $this->assertEquals($data['editCss'], $array['editCss']);
+        $this->assertEquals($data['editJs'], $array['editJs']);
+        $this->assertEquals($data['icon'], $array['icon']);
+        $this->assertEquals($data['tooltip'], $array['tooltip']);
     }
 
 

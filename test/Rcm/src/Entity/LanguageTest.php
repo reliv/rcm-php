@@ -302,5 +302,51 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($oldCode, $actual);
     }
+
+    public function testUtilities()
+    {
+        $data = array();
+        $data['languageId'] = 123;
+        $data['languageName'] = 'TESTLANG';
+        $data['iso639_1'] = 'tt';
+        $data['iso639_2b'] = 'tst';
+        $data['iso639_2t'] = 'ttt';
+
+        $obj1 = new Language();
+
+        $obj1->populate($data);
+
+        $this->assertEquals($data['languageId'], $obj1->getLanguageId());
+        $this->assertEquals($data['languageName'], $obj1->getLanguageName());
+        $this->assertEquals($data['iso639_1'], $obj1->getIso6391());
+        $this->assertEquals($data['iso639_2b'], $obj1->getIso6392b());
+        $this->assertEquals($data['iso639_2t'], $obj1->getIso6392t());
+
+        $obj2 = new Language();
+
+        $obj2->populateFromObject($obj1);
+
+        $this->assertEquals($obj1->getLanguageId(), $obj2->getLanguageId());
+        $this->assertEquals($obj1->getLanguageName(), $obj2->getLanguageName());
+        $this->assertEquals($obj1->getIso6391(), $obj2->getIso6391());
+        $this->assertEquals($obj1->getIso6392b(), $obj2->getIso6392b());
+        $this->assertEquals($obj1->getIso6392t(), $obj2->getIso6392t());
+
+        $json = json_encode($obj2);
+
+        $this->assertJson($json);
+
+        $iterator = $obj2->getIterator();
+
+        $this->assertInstanceOf('\ArrayIterator', $iterator);
+
+        $array = $obj2->toArray();
+
+        $this->assertEquals($data['languageId'], $array['languageId']);
+        $this->assertEquals($data['languageName'], $array['languageName']);
+        $this->assertEquals($data['iso639_1'], $array['iso639_1']);
+        $this->assertEquals($data['iso639_2b'], $array['iso639_2b']);
+        $this->assertEquals($data['iso639_2t'], $array['iso639_2t']);
+    }
 }
  

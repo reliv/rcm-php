@@ -194,6 +194,12 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $actual = $this->page->getSiteLayoutOverride();
 
         $this->assertEquals($layout, $actual);
+
+        $this->page->setSiteLayoutOverride('default');
+
+        $actual = $this->page->getSiteLayoutOverride();
+
+        $this->assertEquals(null, $actual);
     }
 
     /**
@@ -452,12 +458,75 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         /** @var \Rcm\Entity\PluginWrapper $clonedWrapper */
         foreach ($clonedWrappers as $clonedWrapper) {
-            if(!$clonedWrapper->getInstance()->isSiteWide()) {
+            if (!$clonedWrapper->getInstance()->isSiteWide()) {
                 $this->assertNull($clonedWrapper->getInstance()->getInstanceId());
             } else {
                 $this->assertNotNull($clonedWrapper->getInstance()->getInstanceId());
             }
         }
+
+        $page = new Page();
+
+        $clone = clone($page);
+
+        $this->assertInstanceOf('\Rcm\Entity\Page', $clone);
+    }
+
+    public function testUtilities()
+    {
+        $data = array();
+        $data['name'] = 'TESTNAME';
+        $data['pageTitle'] = 'TESTTITLE';
+        $data['pageType'] = 'n';
+        $data['description'] = 'TESTDESC';
+        $data['keywords'] = 'KEY,WORD';
+        $data['author'] = 'TESTAUTHOR';
+        $data['pageLayout'] = 'TESTPAGELAYOUT';
+        $data['siteLayoutOverride'] = 'TESTLAYOUTOVERRIDE';
+        $data['parent'] = null;
+
+
+        $obj1 = new Page();
+
+        $obj1->populate($data);
+
+        $this->assertEquals($data['name'], $obj1->getName());
+        $this->assertEquals($data['pageTitle'], $obj1->getPageTitle());
+        $this->assertEquals($data['pageType'], $obj1->getPageType());
+        $this->assertEquals($data['description'], $obj1->getDescription());
+        $this->assertEquals($data['keywords'], $obj1->getKeywords());
+        $this->assertEquals($data['author'], $obj1->getAuthor());
+        $this->assertEquals($data['pageLayout'], $obj1->getPageLayout());
+        $this->assertEquals($data['siteLayoutOverride'], $obj1->getSiteLayoutOverride());
+        $this->assertEquals($data['parent'], $obj1->getParent());
+
+        $data['parent'] = new Page();
+
+        $obj1->populate($data);
+
+        $this->assertEquals($data['parent'], $obj1->getParent());
+
+        //
+
+        $json = json_encode($obj1);
+
+        $this->assertJson($json);
+
+        $iterator = $obj1->getIterator();
+
+        $this->assertInstanceOf('\ArrayIterator', $iterator);
+
+        $array = $obj1->toArray();
+
+        $this->assertEquals($data['name'], $array['name']);
+        $this->assertEquals($data['pageTitle'], $array['pageTitle']);
+        $this->assertEquals($data['pageType'], $array['pageType']);
+        $this->assertEquals($data['description'], $array['description']);
+        $this->assertEquals($data['keywords'], $array['keywords']);
+        $this->assertEquals($data['author'], $array['author']);
+        $this->assertEquals($data['pageLayout'], $array['pageLayout']);
+        $this->assertEquals($data['siteLayoutOverride'], $array['siteLayoutOverride']);
+        $this->assertEquals($data['parent'], $array['parent']);
     }
 }
  

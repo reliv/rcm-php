@@ -342,6 +342,53 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
                 $clonedInstance->getMd5()
             );
         }
+
+        $wrapper = new PluginWrapper();
+
+        $clone = clone($wrapper);
+
+        $this->assertInstanceOf('Rcm\Entity\PluginWrapper', $clone);
+    }
+
+    public function testUtilities()
+    {
+        $data = array();
+        $data['layoutContainer'] = 'TESTCONT';
+        $data['renderOrder'] = 3;
+        $data['height'] = 123;
+        $data['width'] = 321;
+        $data['divFloat'] = 'left';
+        $data['instance'] = new PluginInstance();
+
+        $obj1 = new PluginWrapper();
+
+        $obj1->populate($data);
+
+        $this->assertEquals($data['layoutContainer'], $obj1->getLayoutContainer());
+        $this->assertEquals($data['renderOrder'], $obj1->getRenderOrderNumber());
+        // Why does this return an altered data format?
+        $this->assertEquals($data['height'] . 'px', $obj1->getHeight());
+        $this->assertEquals($data['width'] . 'px', $obj1->getWidth());
+
+        $this->assertEquals($data['divFloat'], $obj1->getDivFloat());
+        $this->assertEquals($data['instance'], $obj1->getInstance());
+
+        $json = json_encode($obj1);
+
+        $this->assertJson($json);
+
+        $iterator = $obj1->getIterator();
+
+        $this->assertInstanceOf('\ArrayIterator', $iterator);
+
+        $array = $obj1->toArray();
+
+        $this->assertEquals($data['layoutContainer'], $array['layoutContainer']);
+        $this->assertEquals($data['renderOrder'], $array['renderOrder']);
+        $this->assertEquals($data['height'], $array['height']);
+        $this->assertEquals($data['width'], $array['width']);
+        $this->assertEquals($data['divFloat'], $array['divFloat']);
+        $this->assertEquals($data['instance'], $array['instance']);
     }
 }
  
