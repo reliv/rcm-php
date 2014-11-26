@@ -38,7 +38,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Rcm\Repository\PluginInstance")
  * @ORM\Table(name="rcm_plugin_instances")
  */
-class PluginInstance
+class PluginInstance implements \JsonSerializable, \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -113,7 +113,6 @@ class PluginInstance
     protected $icon;
 
     protected $canCache;
-
 
 
     public function __clone()
@@ -437,65 +436,99 @@ class PluginInstance
      */
     public function populate($data)
     {
-        if(isset($data['plugin'])) {
+        if (isset($data['plugin'])) {
             $this->setPlugin($data['plugin']);
         }
 
-        if(isset($data['siteWide']) && (bool) $data['siteWide'] === true) {
+        if (isset($data['siteWide']) && (bool)$data['siteWide'] === true) {
             $this->setSiteWide();
         }
 
-        if(isset($data['displayName'])) {
+        if (isset($data['displayName'])) {
             $this->setDisplayName($data['displayName']);
         }
 
-        if(isset($data['instanceConfig'])){
+        if (isset($data['instanceConfig'])) {
             $this->setInstanceConfig($data['instanceConfig']);
         }
 
-        if(isset($data['md5'])){
+        if (isset($data['md5'])) {
             $this->setMd5($data['md5']);
         }
 
-        if(isset($data['saveData'])){
+        if (isset($data['saveData'])) {
             $this->setSaveData($data['saveData']);
         }
 
-        if(isset($data['previousInstance']) && $data['previousInstance'] instanceof PluginInstance){
+        if (isset($data['previousInstance'])
+            && $data['previousInstance'] instanceof PluginInstance
+        ) {
             $this->setPreviousInstance($data['previousInstance']);
         }
 
-        if(isset($data['renderedCss'])){
+        if (isset($data['renderedCss'])) {
             $this->setRenderedCss($data['renderedCss']);
         }
 
-        if(isset($data['renderedJs'])){
+        if (isset($data['renderedJs'])) {
             $this->setRenderedJs($data['renderedJs']);
         }
 
-        if(isset($data['renderedHtml'])){
+        if (isset($data['renderedHtml'])) {
             $this->setRenderedHtml($data['renderedHtml']);
         }
 
-        if(isset($data['canCache'])){
+        if (isset($data['canCache'])) {
             $this->setCanCache($data['canCache']);
         }
 
-        if(isset($data['editCss'])){
+        if (isset($data['editCss'])) {
             $this->setEditCss($data['editCss']);
         }
 
-        if(isset($data['editJs'])){
+        if (isset($data['editJs'])) {
             $this->setEditJs($data['editJs']);
         }
 
-        if(isset($data['icon'])){
+        if (isset($data['icon'])) {
             $this->setIcon($data['icon']);
         }
 
-        if(isset($data['tooltip'])){
+        if (isset($data['tooltip'])) {
             $this->setTooltip($data['tooltip']);
         }
+    }
+
+    /**
+     * jsonSerialize
+     *
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * getIterator
+     *
+     * @return array|Traversable
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->toArray());
+    }
+
+    /**
+     * toArray
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $data = get_object_vars($this);
+        $data['instanceConfig'] = $this->getInstanceConfig();
+        return $data;
     }
 
 }

@@ -251,9 +251,6 @@ class Domain implements \JsonSerializable, \IteratorAggregate
      */
     public function getAdditionalDomains()
     {
-        if(!isset($this->additionalDomains)){
-            $this->additionalDomains = new ArrayCollection();
-        }
         return $this->additionalDomains;
     }
 
@@ -336,8 +333,4 @@ class Domain implements \JsonSerializable, \IteratorAggregate
             'primaryDomain' => $this->getPrimary(),
         );
     }
-
-
-
-
 }

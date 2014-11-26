@@ -36,7 +36,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Rcm\Repository\PluginWrapper")
  * @ORM\Table(name="rcm_plugin_wrappers")
  */
-class PluginWrapper
+class PluginWrapper implements \JsonSerializable, \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -314,5 +314,35 @@ class PluginWrapper
         if (isset($data['instance']) && $data['instance'] instanceof PluginInstance) {
             $this->setInstance($data['instance']);
         }
+    }
+
+    /**
+     * jsonSerialize
+     *
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * getIterator
+     *
+     * @return array|Traversable
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->toArray());
+    }
+
+    /**
+     * toArray
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return get_object_vars($this);
     }
 }
