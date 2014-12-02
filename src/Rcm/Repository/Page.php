@@ -256,12 +256,15 @@ class Page extends ContainerAbstract
         $publishPage = false,
         $doFlush = true
     ) {
-        if(empty($pageData['author'])){
+        if (empty($pageData['author'])) {
             throw new \Exception('Author is required to create a page.');
         }
         $revision = new Revision();
         $revision->setAuthor($pageData['author']);
         $revision->setCreatedDate(new \DateTime());
+
+        // we should not have an Id on page create
+        unset($pageData['pageId']);
 
         $page = new PageEntity();
         $page->populate($pageData);
@@ -325,14 +328,46 @@ class Page extends ContainerAbstract
     }
 
     /**
+     * updatePage
+     *
+     * @param PageEntity $page
+     * @param array      $pageData
+     * @param bool       $doFlush
+     *
+     * @return void
+     */
+    public function updatePage(
+        PageEntity $page,
+        $pageData,
+        $doFlush = true
+    ) {
+
+        // author should not be changed
+        unset($pageData['author']);
+
+        // createdDate should not be changed
+        unset($pageData['createdDate']);
+
+        // @todo should lastPublished be set when page data changes?
+        unset($pageData['lastPublished']);
+
+        $page->populate($pageData);
+
+        $this->getEntityManager()->persist($page);
+        if ($doFlush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
      * Copy a page
      *
      * @param SiteEntity $destinationSite Site Entity to copy page to
-     * @param PageEntity $pageToCopy Page Entity to copy
-     * @param array      $pageData Array of data to populate the page entity
-     * @param null       $pageRevisionId Page Revision ID to use for copy.  Defaults to currently published
-     * @param bool       $publishNewPage Publish page instead of setting to staged
-     * @param bool       $doFlush Force flush
+     * @param PageEntity $pageToCopy      Page Entity to copy
+     * @param array      $pageData        Array of data to populate the page entity
+     * @param null       $pageRevisionId  Page Revision ID to use for copy.  Defaults to currently published
+     * @param bool       $publishNewPage  Publish page instead of setting to staged
+     * @param bool       $doFlush         Force flush
      *
      * @return PageEntity
      */
@@ -343,15 +378,14 @@ class Page extends ContainerAbstract
         $pageRevisionId = null,
         $publishNewPage = false,
         $doFlush = true
-    )
-    {
+    ) {
         if (empty($pageData['name']) || empty($pageData['author'])) {
             throw new InvalidArgumentException(
                 'Missing needed information to create page copy.'
             );
         }
 
-        if(isset($pageData['pageId'])){
+        if (isset($pageData['pageId'])) {
             unset($pageData['pageId']);
         }
 
@@ -384,7 +418,7 @@ class Page extends ContainerAbstract
 
         $this->_em->persist($clonedPage);
 
-        if($doFlush) {
+        if ($doFlush) {
             $this->_em->flush($clonedPage);
         }
 

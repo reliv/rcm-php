@@ -238,6 +238,7 @@ abstract class ContainerAbstract implements ContainerInterface
 
         $revision->publishRevision();
         $this->publishedRevision = $revision;
+        $this->setLastPublished(new \DateTime());
     }
 
     /**
