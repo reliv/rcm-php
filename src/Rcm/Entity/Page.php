@@ -414,9 +414,18 @@ class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggr
      */
     public function populate($data)
     {
+        if (isset($data['site']) && $data['site'] instanceof Site) {
+            $this->setSite($data['site']);
+        }
+
         if (isset($data['name'])) {
             $this->name = $data['name'];
         }
+
+        if (isset($data['pageId'])) {
+            $this->setPageId($data['pageId']);
+        }
+
         if (isset($data['pageTitle'])) {
             $this->setPageTitle($data['pageTitle']);
         }
@@ -435,6 +444,14 @@ class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggr
 
         if (isset($data['author'])) {
             $this->setAuthor($data['author']);
+        }
+
+        if (isset($data['lastPublished']) && $data['lastPublished'] instanceof \DateTime) {
+            $this->setLastPublished($data['lastPublished']);
+        }
+
+        if (isset($data['createdDate']) && $data['createdDate'] instanceof \DateTime) {
+            $this->setLastPublished($data['createdDate']);
         }
 
         if (isset($data['pageLayout'])) {
