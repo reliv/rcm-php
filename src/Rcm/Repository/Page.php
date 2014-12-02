@@ -240,41 +240,6 @@ class Page extends ContainerAbstract
     }
 
     /**
-     * Add a new page to the DB
-     *
-     * @param string     $pageName  Page Name
-     * @param string     $pageTitle Page Title
-     * @param string     $layout    Site Layout
-     * @param string     $author    Author
-     * @param SiteEntity $site      Site Entity
-     * @param string     $pageType  Page Type
-     * @param bool       $doFlush
-     * @param bool       $publishPage
-     *
-     * @return PageEntity
-     */
-    public function createNewPage(
-        $pageName,
-        $pageTitle,
-        $layout,
-        $author,
-        SiteEntity $site,
-        $pageType = 'n',
-        $doFlush = true,
-        $publishPage = false
-    ) {
-        $pageData = array();
-
-        $pageData['name'] = $pageName;
-        $pageData['pageTitle'] = $pageTitle;
-        $pageData['siteLayoutOverride'] = $layout;
-        $pageData['author'] = $author;
-        $pageData['pageType'] = $pageType;
-
-        return $this->createPage($site, $pageData, $publishPage, $doFlush);
-    }
-
-    /**
      * createPage
      *
      * @param SiteEntity $site
@@ -362,48 +327,38 @@ class Page extends ContainerAbstract
     /**
      * Copy a page
      *
-     * @param PageEntity $pageToCopy      Page Entity to copy
-     * @param string     $newPageName     Page Name or URL.
-     * @param string     $author          Author of copied page
-     * @param SiteEntity $siteDestination Site Entity to copy page to
-     * @param string     $newPageTitle    Title of page
-     * @param integer    $pageRevisionId  Page Revision ID to use for copy.  Defaults to currently published
-     * @param string     $newPageType     Page type of page.  Defaults to "n"
-     * @param boolean    $publishNewPage  Publish page instead of setting to staged
+     * @param SiteEntity $destinationSite Site Entity to copy page to
+     * @param PageEntity $pageToCopy Page Entity to copy
+     * @param array      $pageData Array of data to populate the page entity
+     * @param null       $pageRevisionId Page Revision ID to use for copy.  Defaults to currently published
+     * @param bool       $publishNewPage Publish page instead of setting to staged
+     * @param bool       $doFlush Force flush
      *
-     * @returns boolean
-     *
-     * @throws \Rcm\Exception\InvalidArgumentException
-     * @throws \Rcm\Exception\PageNotFoundException
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @return PageEntity
      */
     public function copyPage(
+        SiteEntity $destinationSite,
         PageEntity $pageToCopy,
-        $newPageName,
-        $author,
-        SiteEntity $siteDestination,
-        $newPageTitle = null,
+        $pageData,
         $pageRevisionId = null,
-        $newPageType = 'n',
-        $publishNewPage = false
-    ) {
-        if (empty($newPageName) || empty($author)) {
+        $publishNewPage = false,
+        $doFlush = true
+    )
+    {
+        if (empty($pageData['name']) || empty($pageData['author'])) {
             throw new InvalidArgumentException(
                 'Missing needed information to create page copy.'
             );
         }
 
-        if (empty($newPageTitle)) {
-            $newPageTitle = $pageToCopy->getPageTitle();
+        if(isset($pageData['pageId'])){
+            unset($pageData['pageId']);
         }
 
+        $pageData['site'] = $destinationSite;
+
         $clonedPage = clone $pageToCopy;
-        $clonedPage->setName($newPageName);
-        $clonedPage->setPageTitle($newPageTitle);
-        $clonedPage->setAuthor($author);
-        $clonedPage->setPageType($newPageType);
-        $clonedPage->setSite($siteDestination);
+        $clonedPage->populate($pageData);
 
         if (!empty($pageRevisionId) && is_numeric($pageRevisionId)) {
             $revisionToUse = $pageToCopy->getRevisionById($pageRevisionId);
@@ -423,15 +378,17 @@ class Page extends ContainerAbstract
             } else {
                 $clonedPage->setStagedRevision($clonedRevision);
             }
-
         }
 
-        $siteDestination->addPage($clonedPage);
+        $destinationSite->addPage($clonedPage);
 
         $this->_em->persist($clonedPage);
-        $this->_em->flush($clonedPage);
 
-        return true;
+        if($doFlush) {
+            $this->_em->flush($clonedPage);
+        }
+
+        return $clonedPage;
     }
 
     /**
