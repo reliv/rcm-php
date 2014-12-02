@@ -342,13 +342,10 @@ class Page extends ContainerAbstract
         $doFlush = true
     ) {
 
-        // author should not be changed
+        // Values cannot be changed
+        unset($pageData['pageId']);
         unset($pageData['author']);
-
-        // createdDate should not be changed
         unset($pageData['createdDate']);
-
-        // @todo should lastPublished be set when page data changes?
         unset($pageData['lastPublished']);
 
         $page->populate($pageData);
@@ -385,9 +382,11 @@ class Page extends ContainerAbstract
             );
         }
 
-        if (isset($pageData['pageId'])) {
-            unset($pageData['pageId']);
-        }
+        // Values cannot be changed
+        unset($pageData['pageId']);
+        unset($pageData['author']);
+        unset($pageData['createdDate']);
+        unset($pageData['lastPublished']);
 
         $pageData['site'] = $destinationSite;
 
