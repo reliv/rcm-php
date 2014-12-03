@@ -194,13 +194,26 @@ class Site implements \JsonSerializable, \IteratorAggregate
     protected $notFoundPage = 'not-found';
 
     /**
-     * @var array will only clone these page types
+     * @var array Supported page types - these should be populated at object creation
+     * @todo This should be part of the DB schema, so each site can have a list on creation
      */
-    protected $cloneablePageTypes
+    protected $supportedPageTypes
         = array(
-            'n',
-            'z',
-            't',
+            'n' => array(
+                'type' => 'n',
+                'title' => 'Normal Page',
+                'canClone' => true,
+            ),
+            't' => array(
+                'type' => 't',
+                'title' => 'Template Page',
+                'canClone' => true,
+            ),
+            'z' => array(
+                'type' => 'z',
+                'title' => 'System Page',
+                'canClone' => true,
+            ),
         );
 
     /**
@@ -256,8 +269,12 @@ class Site implements \JsonSerializable, \IteratorAggregate
 
                 $pageType = $page->getPageType();
 
+                // Only clone if is supported
+                if (!isset($this->supportedPageTypes[$pageType])) {
+                    continue;
+                }
                 // Only clone if is cloneable
-                if (!in_array($pageType, $this->cloneablePageTypes)) {
+                if (!$this->supportedPageTypes[$pageType]['canClone']) {
                     continue;
                 }
 
@@ -330,55 +347,49 @@ class Site implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
-     * getCloneablePageTypes
+     * getSupportedPageTypes
      *
      * @return array
      */
-    public function getCloneablePageTypes()
+    public function getSupportedPageTypes()
     {
-        return $this->cloneablePageTypes;
+        return $this->supportedPageTypes;
     }
 
     /**
-     * setCloneablePageTypes
+     * setSupportedPageTypes
      *
-     * @param array $cloneablePageTypes
+     * @param array $supportedPageTypes
      *
      * @return void
      */
-    public function setCloneablePageTypes(array $cloneablePageTypes)
+    public function setSupportedPageTypes(array $supportedPageTypes)
     {
-        $this->cloneablePageTypes = $cloneablePageTypes;
+        $this->supportedPageTypes = $supportedPageTypes;
     }
 
     /**
-     * Add Cloneable Page Type
+     * Add Supported Page Type
      *
-     * @param string $cloneablePageType
+     * @param array $pageType
      *
      * @return void
      */
-    public function addCloneablePageType($cloneablePageType)
+    public function addPageType(array $pageType)
     {
-        if (!in_array($cloneablePageType, $this->cloneablePageTypes)) {
-            $this->cloneablePageTypes[] = $cloneablePageType;
-        }
+        $this->supportedPageTypes[$pageType['type']] = $pageType;
     }
 
     /**
-     * Remove Cloneable Page Type
+     * Remove Supported Page Type
      *
-     * @param $cloneablePageType
+     * @param array $pageType
      *
      * @return void
      */
-    public function removeCloneablePageType($cloneablePageType)
+    public function removePageType(array $pageType)
     {
-        if (($key = array_search($cloneablePageType, $this->cloneablePageTypes))
-            !== false
-        ) {
-            unset($this->cloneablePageTypes[$key]);
-        }
+        unset($this->supportedPageTypes[$pageType['type']]);
     }
 
     /**
@@ -898,6 +909,9 @@ class Site implements \JsonSerializable, \IteratorAggregate
         if (!empty($data['notFoundPage'])) {
             $this->setNotFoundPage($data['notFoundPage']);
         }
+        if (!empty($data['supportedPageTypes'])) {
+            $this->setSupportedPageTypes($data['supportedPageTypes']);
+        }
     }
 
     /**
@@ -927,6 +941,7 @@ class Site implements \JsonSerializable, \IteratorAggregate
         $this->setLoginPage($site->getLoginPage());
         $this->setNotAuthorizedPage($site->getNotAuthorizedPage());
         $this->setNotFoundPage($site->getNotFoundPage());
+        $this->setSupportedPageTypes($site->getSupportedPageTypes());
     }
 
     /**
