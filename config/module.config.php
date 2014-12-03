@@ -23,6 +23,26 @@ return array(
 
     'Rcm' => array(
         'defaultDomain' => null,
+        /**
+         * Available page types
+         */
+        'pageTypes' => array(
+            'n' => array(
+                'type' => 'n',
+                'title' => 'Normal Page',
+                'canClone' => true,
+            ),
+            't' => array(
+                'type' => 't',
+                'title' => 'Template Page',
+                'canClone' => true,
+            ),
+            'z' => array(
+                'type' => 'z',
+                'title' => 'System Page',
+                'canClone' => true,
+            ),
+        ),
         'successfulLoginUrl' => '/',
         'Acl' => array(
             'sites' => array(

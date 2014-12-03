@@ -32,12 +32,12 @@ class ApiJsonModel extends JsonModel {
 
     /**
      * @param null   $variables
-     * @param null   $options
-     * @param int    $code - 0 for success
+     * @param mixed|int    $code - 0 for success
      * @param string $message - General public message for client
      * @param array  $errors - Example - Pass the messages from input validator
+     * @param null   $options
      */
-    public function __construct($variables = null, $options = null, $code = 0, $message = '', $errors = array())
+    public function __construct($variables = null, $code = 0, $message = '', $errors = array(), $options = null)
     {
         $this->setCode($code);
         $this->setMessage($message);
