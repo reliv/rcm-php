@@ -42,7 +42,7 @@ use Rcm\Exception\InvalidArgumentException;
  *
  * @SuppressWarnings(PHPMD)
  */
-class Site implements \JsonSerializable, \IteratorAggregate
+class Site implements ApiInterface
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -917,31 +917,34 @@ class Site implements \JsonSerializable, \IteratorAggregate
     /**
      * populateFromObject - @todo some properties are missing
      *
-     * @param Site $site
+     * @param Site|ApiInterface $object
      *
      * @return void
      */
-    public function populateFromObject(Site $site)
+    public function populateFromObject(ApiInterface $object)
     {
-        $this->setSiteId($site->getSiteId());
-        if (is_object($site->getDomain())) {
-            $this->setDomain($site->getDomain());
+        if (!$object instanceof Site) {
+            return;
         }
-        $this->setTheme($site->getTheme());
-        $this->setSiteLayout($site->getSiteLayout());
-        $this->setSiteTitle($site->getSiteTitle());
-        if (is_object($site->getLanguage())) {
-            $this->setLanguage($site->getLanguage());
+        $this->setSiteId($object->getSiteId());
+        if (is_object($object->getDomain())) {
+            $this->setDomain($object->getDomain());
         }
-        if (is_object($site->getCountry())) {
-            $this->setCountry($site->getCountry());
+        $this->setTheme($object->getTheme());
+        $this->setSiteLayout($object->getSiteLayout());
+        $this->setSiteTitle($object->getSiteTitle());
+        if (is_object($object->getLanguage())) {
+            $this->setLanguage($object->getLanguage());
         }
-        $this->setStatus($site->getStatus());
-        $this->setFavIcon($site->getFavIcon());
-        $this->setLoginPage($site->getLoginPage());
-        $this->setNotAuthorizedPage($site->getNotAuthorizedPage());
-        $this->setNotFoundPage($site->getNotFoundPage());
-        $this->setSupportedPageTypes($site->getSupportedPageTypes());
+        if (is_object($object->getCountry())) {
+            $this->setCountry($object->getCountry());
+        }
+        $this->setStatus($object->getStatus());
+        $this->setFavIcon($object->getFavIcon());
+        $this->setLoginPage($object->getLoginPage());
+        $this->setNotAuthorizedPage($object->getNotAuthorizedPage());
+        $this->setNotFoundPage($object->getNotFoundPage());
+        $this->setSupportedPageTypes($object->getSupportedPageTypes());
     }
 
     /**

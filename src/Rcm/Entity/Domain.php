@@ -46,7 +46,7 @@ use Zend\Validator\ValidatorInterface;
  *         @ORM\Index(name="domain_name", columns={"domain"})
  *     })
  */
-class Domain implements \JsonSerializable, \IteratorAggregate
+class Domain implements ApiInterface
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -289,15 +289,15 @@ class Domain implements \JsonSerializable, \IteratorAggregate
     /**
      * populateFromObject
      *
-     * @param \Rcm\Entity\Domain $data
+     * @param \Rcm\Entity\Domain|ApiInterface $object
      *
      * @return void
      */
-    public function populateFromObject(Domain $data)
+    public function populateFromObject(ApiInterface $object)
     {
-        $this->setDomainId($data->getDomainId());
-        $this->setDomainName($data->getDomainName());
-        $this->setPrimary($data->getPrimary());
+        if ($object instanceof Domain) {
+            $this->populate($object->toArray());
+        }
     }
 
     /**
