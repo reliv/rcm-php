@@ -46,7 +46,7 @@ use Rcm\Exception\InvalidArgumentException;
  *
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggregate
+class Page extends ContainerAbstract implements ApiInterface
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -470,6 +470,20 @@ class Page extends ContainerAbstract implements \JsonSerializable, \IteratorAggr
 
         if ($parent instanceof Page) {
             $this->setParent($parent);
+        }
+    }
+
+    /**
+     * populateFromObject
+     *
+     * @param Page|ApiInterface $object
+     *
+     * @return void
+     */
+    public function populateFromObject(ApiInterface $object)
+    {
+        if ($object instanceof Page) {
+            $this->populate($object->toArray());
         }
     }
 

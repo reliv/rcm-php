@@ -41,7 +41,7 @@ use Rcm\Exception\InvalidArgumentException;
  *
  * @SuppressWarnings("CamelCase")
  */
-class Language implements \JsonSerializable, \IteratorAggregate
+class Language implements ApiInterface
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -340,17 +340,15 @@ class Language implements \JsonSerializable, \IteratorAggregate
     /**
      * populateFromObject
      *
-     * @param Language $data
+     * @param Language|ApiInterface $object
      *
      * @return void
      */
-    public function populateFromObject(Language $data)
+    public function populateFromObject(ApiInterface $object)
     {
-        $this->setLanguageId($data->getLanguageId());
-        $this->setLanguageName($data->getLanguageName());
-        $this->setIso6391($data->getIso6391());
-        $this->setIso6392b($data->getIso6392b());
-        $this->setIso6392t($data->getIso6392t());
+        if ($object instanceof Language) {
+            $this->populate($object->toArray());
+        }
     }
 
     /**

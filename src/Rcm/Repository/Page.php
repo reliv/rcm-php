@@ -376,15 +376,19 @@ class Page extends ContainerAbstract
         $publishNewPage = false,
         $doFlush = true
     ) {
-        if (empty($pageData['name']) || empty($pageData['author'])) {
+        if (empty($pageData['name'])) {
             throw new InvalidArgumentException(
-                'Missing needed information to create page copy.'
+                'Missing needed information (name) to create page copy.'
+            );
+        }
+        if (empty($pageData['author'])) {
+            throw new InvalidArgumentException(
+                'Missing needed information (author) to create page copy.'
             );
         }
 
         // Values cannot be changed
         unset($pageData['pageId']);
-        unset($pageData['author']);
         unset($pageData['createdDate']);
         unset($pageData['lastPublished']);
 
