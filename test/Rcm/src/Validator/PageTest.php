@@ -135,11 +135,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->pageRepo->expects($this->once())
             ->method('findOneBy')
             ->with(
-                $this->equalTo(array(
+                $this->equalTo([
                         'name' => $pageName,
                         'pageType' => $pageType,
                         'site' => 1
-                    ))
+                    ])
             )
             ->will($this->returnValue(false));
 
@@ -167,11 +167,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->pageRepo->expects($this->once())
             ->method('findOneBy')
             ->with(
-                $this->equalTo(array(
+                $this->equalTo([
                         'name' => $pageName,
                         'pageType' => $pageType,
                         'site' => 1
-                    ))
+                    ])
             )
             ->will($this->returnValue(true));
 

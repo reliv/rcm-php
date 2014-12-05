@@ -97,12 +97,12 @@ class PluginInstance implements \JsonSerializable, \IteratorAggregate
     /**
      * @var array Place holder for rendered Css
      */
-    protected $renderedCss = array();
+    protected $renderedCss = [];
 
     /**
      * @var array Place holder for rendered Js
      */
-    protected $renderedJs = array();
+    protected $renderedJs = [];
 
     protected $editJs;
 

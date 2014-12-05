@@ -103,7 +103,7 @@ class PluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('ViewRenderer', $mockViewRenderer);
         $serviceManager->setService('request', $mockRequest);
         $serviceManager->setService('Rcm\Service\Cache', $mockCache);
-        $serviceManager->setService('config', array());
+        $serviceManager->setService('config', []);
         $serviceManager->setService('ViewManager', $mockViewManager);
 
         $factory = new PluginManagerFactory();

@@ -69,32 +69,32 @@ class UrlToPage extends AbstractHelper
         } elseif ($pageType == 'n' && empty($pageRevision)) {
             return $view->url(
                 'contentManager',
-                array('page' => $pageName)
+                ['page' => $pageName]
             );
         } elseif ($pageType == 'n' && !empty($pageRevision)) {
             return $view->url(
                 'contentManager',
-                array(
+                [
                     'revision' => $pageRevision,
                     'page' => $pageName,
-                )
+                ]
             );
         } elseif ($pageType != 'n' && !empty($pageRevision)) {
             return $view->url(
                 'contentManagerWithPageType',
-                array(
+                [
                     'revision' => $pageRevision,
                     'pageType' => $pageType,
                     'page' => $pageName,
-                )
+                ]
             );
         } else {
             return $view->url(
                 'contentManagerWithPageType',
-                array(
+                [
                     'pageType' => $pageType,
                     'page' => $pageName,
-                )
+                ]
             );
         }
     }

@@ -49,17 +49,17 @@ class CacheFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $config = array(
-            'rcmCache' => array(
+        $config = [
+            'rcmCache' => [
                 'adapter' => 'Memory',
-                'options' => array(
+                'options' => [
                     'memory_limit' => 0,
-                ),
-                'plugins' => array(
-                    'exception_handler' => array('throw_exceptions' => false),
-                ),
-            ),
-        );
+                ],
+                'plugins' => [
+                    'exception_handler' => ['throw_exceptions' => false],
+                ],
+            ],
+        ];
 
         $sm = new ServiceManager();
         $sm->setService('config', $config);

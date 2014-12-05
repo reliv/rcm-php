@@ -111,11 +111,11 @@ class DispatchListener
         //Add Favicon for site
         if (!empty($favicon)) {
             $headLink(
-                array(
+                [
                     'rel' => 'shortcut icon',
                     'type' => 'image/vnd.microsoft.icon',
                     'href' => $basePath() . $favicon,
-                )
+                ]
             );
         }
 

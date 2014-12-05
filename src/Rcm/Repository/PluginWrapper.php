@@ -111,7 +111,7 @@ class PluginWrapper extends EntityRepository
      *
      * @return array
      */
-    public function prepareData($pluginData = array())
+    public function prepareData($pluginData = [])
     {
         // Data migration of alternate keys
         if(!isset($pluginData['layoutContainer']) && array_key_exists('containerName', $pluginData)){

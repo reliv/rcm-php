@@ -57,7 +57,7 @@ class Redirect extends EntityRepository
         try {
             $result = $this->getQuery($siteId)->getResult();
         } catch (NoResultException $e) {
-            $result = array();
+            $result = [];
         }
 
         return $result;

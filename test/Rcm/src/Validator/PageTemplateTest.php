@@ -143,11 +143,11 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
         $this->pageRepo->expects($this->once())
             ->method('findOneBy')
             ->with(
-                $this->equalTo(array(
+                $this->equalTo([
                         'pageType' => $pageType,
                         'site' => $this->currentSite,
                         'pageId' => 44,
-                ))
+                ])
             )->will($this->returnValue(true));
 
         $this->validator->setPageType($pageType);
@@ -174,11 +174,11 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
         $this->pageRepo->expects($this->once())
             ->method('findOneBy')
             ->with(
-                $this->equalTo(array(
+                $this->equalTo([
                     'pageType' => $pageType,
                     'site' => $this->currentSite,
                     'pageId' => 44,
-                ))
+                ])
             )->will($this->returnValue(false));
 
         $this->validator->setPageType($pageType);

@@ -106,7 +106,7 @@ class PluginInstance extends EntityRepository
      */
     public function saveExistingPlugin($pluginInstanceId, $saveData, $doFlush = true)
     {
-        $pluginData = array();
+        $pluginData = [];
         $pluginData['pluginInstanceId'] = $pluginInstanceId;
         $pluginData['saveData'] = $saveData;
         $pluginData = $this->prepareData($pluginData);
@@ -140,7 +140,7 @@ class PluginInstance extends EntityRepository
         }
 
         /** @var PluginInstanceEntity $pluginInstance */
-        $pluginInstance = $this->findOneBy(array('pluginInstanceId' => $pluginData['pluginInstanceId']));
+        $pluginInstance = $this->findOneBy(['pluginInstanceId' => $pluginData['pluginInstanceId']]);
 
         if (empty($pluginInstance)) {
             throw new InvalidArgumentException('No plugin found for instance Id: '.$pluginData['pluginInstanceId']);
@@ -227,7 +227,7 @@ class PluginInstance extends EntityRepository
      *
      * @return array
      */
-    public function prepareData($pluginData = array())
+    public function prepareData($pluginData = [])
     {
         // Data migration of alternate keys
         if(!isset($pluginData['pluginInstanceId']) && array_key_exists('instanceId',$pluginData)){

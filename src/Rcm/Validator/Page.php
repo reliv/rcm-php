@@ -107,11 +107,11 @@ class Page extends PageName
         }
 
         $check = $this->pageRepo->findOneBy(
-            array(
+            [
                 'name' => $value,
                 'pageType' => $this->pageType,
                 'site' => $this->siteId
-            )
+            ]
         );
 
         if (!empty($check)) {

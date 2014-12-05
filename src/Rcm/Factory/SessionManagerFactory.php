@@ -122,7 +122,7 @@ class SessionManagerFactory implements FactoryInterface
         }
 
         $class = '\Zend\Session\Config\SessionConfig';
-        $options = array();
+        $options = [];
 
         if (isset($sessionConfig['config']['class'])
         ) {
@@ -259,7 +259,7 @@ class SessionManagerFactory implements FactoryInterface
 
             $chain->attach(
                 'session.validate',
-                array($validator, 'isValid')
+                [$validator, 'isValid']
             );
         }
     }

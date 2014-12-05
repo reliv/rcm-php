@@ -360,10 +360,10 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
         $revisionSix = new Revision();
         $revisionSix->setRevisionId(6);
 
-        $expected = array(
+        $expected = [
             5 => $revisionFive,
             6 => $revisionSix
-        );
+        ];
 
         $this->container->addRevision($revisionFive);
         $this->container->addRevision($revisionSix);
@@ -491,114 +491,114 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
         $site = new Site();
         $site->setSiteId(55);
 
-        $container = array(
+        $container = [
             'containerId' => '200',
             'name' => 'containerOne',
             'author' => 'Westin Shafer',
             'createdDate' => new \DateTime('yesterday'),
             'lastPublished' => new \DateTime('yesterday'),
-            'revisions' => array(
-                0 => array(
+            'revisions' => [
+                0 => [
                     'revisionId' => 100,
                     'author' => 'Westin Shafer',
                     'createdDate' => new \DateTime('yesterday'),
                     'publishedDate' => new \DateTime('yesterday'),
                     'published' => true,
                     'md5' => 'revisionMD5',
-                    'instances' => array(
-                        0 => array(
+                    'instances' => [
+                        0 => [
                             'pluginWrapperId' => 43,
                             'layoutContainer' => 'layoutOne',
                             'renderOrder' => 0,
                             'height' => 32,
                             'width' => 100,
                             'divFloat' => 'right',
-                            'instance' => array(
+                            'instance' => [
                                 'pluginInstanceId' => 44,
                                 'plugin' => 'MockPlugin',
                                 'siteWide' => false,
                                 'displayName' => null,
-                                'instanceConfig' => array(
+                                'instanceConfig' => [
                                     'var1' => 1,
                                     'var2' => 2
-                                ),
+                                ],
                                 'md5' => 'firstMd5'
-                            ),
-                        ),
+                            ],
+                        ],
 
-                        1 => array(
+                        1 => [
                             'pluginWrapperId' => 45,
                             'layoutContainer' => 'layoutTwo',
                             'renderOrder' => 1,
                             'height' => 33,
                             'width' => 101,
                             'divFloat' => 'none',
-                            'instance' => array(
+                            'instance' => [
                                 'pluginInstanceId' => 46,
                                 'plugin' => 'MockPlugin2',
                                 'siteWide' => true,
                                 'displayName' => 'TestSiteWide',
-                                'instanceConfig' => array(
+                                'instanceConfig' => [
                                     'var3' => 3,
                                     'var4' => 4
-                                ),
+                                ],
                                 'md5' => 'secondMd5'
-                            ),
-                        ),
-                    ),
-                ),
+                            ],
+                        ],
+                    ],
+                ],
 
-                1 => array(
+                1 => [
                     'revisionId' => 101,
                     'author' => 'Westin Shafer',
                     'createdDate' => new \DateTime('-1 month'),
                     'publishedDate' => new \DateTime('-1 month'),
                     'published' => false,
                     'md5' => 'revision2MD5',
-                    'instances' => array(
-                        0 => array(
+                    'instances' => [
+                        0 => [
                             'pluginWrapperId' => 47,
                             'layoutContainer' => 'layoutThree',
                             'renderOrder' => 2,
                             'height' => 33,
                             'width' => 102,
                             'divFloat' => 'right',
-                            'instance' => array(
+                            'instance' => [
                                 'pluginInstanceId' => 48,
                                 'plugin' => 'MockPlugin3',
                                 'siteWide' => false,
                                 'displayName' => null,
-                                'instanceConfig' => array(
+                                'instanceConfig' => [
                                     'var1' => 1,
                                     'var2' => 2
-                                ),
+                                ],
                                 'md5' => 'firstMd5'
-                            ),
-                        ),
+                            ],
+                        ],
 
-                        1 => array(
+                        1 => [
                             'pluginWrapperId' => 49,
                             'layoutContainer' => 'layoutFour',
                             'renderOrder' => 3,
                             'height' => 34,
                             'width' => 103,
                             'divFloat' => 'left',
-                            'instance' => array(
+                            'instance' => [
                                 'pluginInstanceId' => 50,
                                 'plugin' => 'MockPlugin4',
                                 'siteWide' => true,
                                 'displayName' => 'TestSiteWide2',
-                                'instanceConfig' => array(
+                                'instanceConfig' => [
                                     'var3' => 3,
                                     'var4' => 4
-                                ),
+                                ],
                                 'md5' => 'secondMd5'
-                            ),
-                        ),
-                    )
-                )
-            ),
-        );
+                            ],
+                        ],
+                    ]
+                ]
+            ],
+        ];
 
         $this->container->setContainerId($container['containerId']);
         $this->container->setName($container['name']);

@@ -163,7 +163,7 @@ class IndexController extends AbstractActionController
 
         $this->prepLayoutView($site , $page, $page->getSiteLayoutOverride());
 
-        $viewModel = new ViewModel(array('page' => $page));
+        $viewModel = new ViewModel(['page' => $page]);
 
         $viewModel->setTemplate(
             'pages/'

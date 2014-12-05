@@ -50,7 +50,7 @@ class AclResourceProviderFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('config');
 
-        $aclConfig = array();
+        $aclConfig = [];
 
         if (!empty($config['Rcm']['Acl'])) {
             $aclConfig = $config['Rcm']['Acl'];

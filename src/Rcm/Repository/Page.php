@@ -230,7 +230,7 @@ class Page extends ContainerAbstract
             return null;
         }
 
-        $return = array();
+        $return = [];
 
         foreach ($result as &$page) {
             $return[$page['pageId']] = $page['name'];
@@ -285,10 +285,10 @@ class Page extends ContainerAbstract
 
         if ($doFlush) {
             $this->_em->flush(
-                array(
+                [
                     $revision,
                     $page
-                )
+                ]
             );
         }
 
@@ -312,7 +312,7 @@ class Page extends ContainerAbstract
         $publishPage = false,
         $doFlush = false
     ) {
-        $results = array();
+        $results = [];
 
         foreach ($pagesData as $name => $pageData) {
 
@@ -406,7 +406,7 @@ class Page extends ContainerAbstract
                 );
             }
 
-            $clonedPage->setRevisions(array());
+            $clonedPage->setRevisions([]);
             $clonedRevision = clone $revisionToUse;
             $clonedPage->addRevision($clonedRevision);
 
@@ -498,10 +498,10 @@ class Page extends ContainerAbstract
         $page->setPublishedRevision($revision);
 
         $this->_em->flush(
-            array(
+            [
                 $revision,
                 $page
-            )
+            ]
         );
 
         return $page;
@@ -549,7 +549,7 @@ class Page extends ContainerAbstract
             );
             $lastDraft = array_values($lastDraft['revisions']);
         } catch (NoResultException $e) {
-            $lastDraft = array(0 => null);
+            $lastDraft = [0 => null];
         }
 
         $result['lastDraft'] = $lastDraft[0];
@@ -629,7 +629,7 @@ class Page extends ContainerAbstract
                 \Doctrine\ORM\Query::HYDRATE_ARRAY
             );
         } catch (NoResultException $e) {
-            return array();
+            return [];
         }
 
         return $result;

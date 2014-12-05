@@ -246,11 +246,11 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         $domainThree = new Domain();
         $domainThree->setDomainId(3);
 
-        $expected = array(
+        $expected = [
             $domainOne,
             $domainTwo,
             $domainThree
-        );
+        ];
 
         $this->domain->setAdditionalDomain($domainOne);
         $this->domain->setAdditionalDomain($domainTwo);
@@ -264,7 +264,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
 
     public function testUtilities(){
 
-        $data = array();
+        $data = [];
         $data['domainId'] = 123;
         $data['domain'] = 'TEST';
         $data['primaryDomain'] = new Domain();

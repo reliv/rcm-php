@@ -54,7 +54,7 @@ class RedirectToPageTest extends \PHPUnit_Framework_TestCase
             '\Rcm\Controller\Plugin\RedirectToPage'
         )
             ->disableOriginalConstructor()
-            ->setMethods(array('redirect'))
+            ->setMethods(['redirect'])
             ->getMock();
 
         $mockPlugin->expects($this->once())
@@ -122,7 +122,7 @@ class RedirectToPageTest extends \PHPUnit_Framework_TestCase
             ->method('toRoute')
             ->with(
                 $this->equalTo('contentManager'),
-                $this->equalTo(array('page' => $pageName))
+                $this->equalTo(['page' => $pageName])
             );
 
         $controller = $this->getMockBuilder('\Rcm\Controller\IndexController')
@@ -161,10 +161,10 @@ class RedirectToPageTest extends \PHPUnit_Framework_TestCase
             ->with(
                 $this->equalTo('contentManagerWithPageType'),
                 $this->equalTo(
-                    array(
+                    [
                         'pageType' => $pageType,
                         'page' => $pageName,
-                    )
+                    ]
                 )
             );
 

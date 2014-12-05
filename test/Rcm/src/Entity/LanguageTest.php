@@ -305,7 +305,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
     public function testUtilities()
     {
-        $data = array();
+        $data = [];
         $data['languageId'] = 123;
         $data['languageName'] = 'TESTLANG';
         $data['iso639_1'] = 'tt';

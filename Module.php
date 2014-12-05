@@ -67,21 +67,21 @@ class Module
         // Check for redirects from the CMS
         $eventManager->attach(
             MvcEvent::EVENT_ROUTE,
-            array($eventWrapper, 'routeEvent'),
+            [$eventWrapper, 'routeEvent'],
             10000
         );
 
         // Set the sites layout.
         $eventManager->attach(
             MvcEvent::EVENT_DISPATCH,
-            array($eventWrapper, 'dispatchEvent'),
+            [$eventWrapper, 'dispatchEvent'],
             10000
         );
 
         // Set the custom http response checker
         $eventManager->attach(
             MvcEvent::EVENT_FINISH,
-            array($eventWrapper, 'finishEvent'),
+            [$eventWrapper, 'finishEvent'],
             10000
         );
 
@@ -92,7 +92,7 @@ class Module
         // Set the plugin response over-ride
         $viewEventManager->attach(
             ViewEvent::EVENT_RESPONSE,
-            array($eventWrapper, 'viewResponseEvent'),
+            [$eventWrapper, 'viewResponseEvent'],
             -10000
         );
 
@@ -110,16 +110,16 @@ class Module
      */
     public function getAutoloaderConfig()
     {
-        return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
+        return [
+            'Zend\Loader\ClassMapAutoloader' => [
                 __DIR__ . '/autoload_classmap.php',
-            ),
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
+            ],
+            'Zend\Loader\StandardAutoloader' => [
+                'namespaces' => [
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**

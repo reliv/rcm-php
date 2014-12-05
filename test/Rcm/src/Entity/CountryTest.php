@@ -164,7 +164,7 @@ class CountryTest extends \PHPUnit_Framework_TestCase
 
     public function testUtilities()
     {
-        $data = array();
+        $data = [];
         $data['iso3'] = 'TST';
         $data['iso2'] = 'TS';
         $data['countryName'] = 'TEST';

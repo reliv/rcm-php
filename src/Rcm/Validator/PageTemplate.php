@@ -43,9 +43,9 @@ class PageTemplate extends AbstractValidator
     const PAGE_TEMPLATE = 'pageTemplate';
 
     protected $messageTemplates
-        = array(
+        = [
             self::PAGE_TEMPLATE => "'%value%' is not a valid page template."
-        );
+        ];
 
     /** @var \Rcm\Repository\Page */
     protected $pageRepo;
@@ -108,11 +108,11 @@ class PageTemplate extends AbstractValidator
         $this->setValue($value);
 
         $check = $this->pageRepo->findOneBy(
-            array(
+            [
                 'pageId' => $value,
                 'pageType' => $this->pageType,
                 'site' => $this->site
-            )
+            ]
         );
 
         if (empty($check)) {

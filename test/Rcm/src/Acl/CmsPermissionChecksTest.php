@@ -15,361 +15,361 @@ class CmsPermissionChecksTest extends Mocks
      *
      */
     public $testCases
-        = array(
-            '_DEFAULT' => array(
-                'rcmUserService' => array(),
+        = [
+            '_DEFAULT' => [
+                'rcmUserService' => [],
 
-                'authorizeService' => array(
-                    'isAllowedMap' => array(
-                        array(
+                'authorizeService' => [
+                    'isAllowedMap' => [
+                        [
                             'sites.123.pages.PAGE_TYPE.PAGE_NAME',
                             'read',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123',
                             'admin',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.PAGE_NAME',
                             'edit',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.PAGE_NAME',
                             'approve',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.PAGE_NAME',
                             'revisions',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages',
                             'create',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'NOPE',
                             'NOPE',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                    )
-                ),
+                        ],
+                    ]
+                ],
 
-                'aclDataService' => array(
-                    'rules' => array(
-                        'data' => array(
+                'aclDataService' => [
+                    'rules' => [
+                        'data' => [
                             1 => 1,
                             2 => 2,
-                        ),
+                        ],
                         'code' => 1,
                         'message' => 'TEST_MESSAGE'
-                    ),
-                ),
+                    ],
+                ],
 
-                'page' => array(
+                'page' => [
                     'name' => 'PAGE_NAME',
                     'type' => 'PAGE_TYPE',
-                ),
+                ],
 
-                'site' => array(
+                'site' => [
                     'siteId' => 123,
                     'loginPage' => '/LOGIN_PAGE',
                     'notAuthorizedPage' => '/NOT_AUTHED_PAGE',
                     'notFoundPage' => '/NOT_FOUND_PAGE',
-                ),
-            ),
-            'NO_RULES' => array(
-                'rcmUserService' => array(),
+                ],
+            ],
+            'NO_RULES' => [
+                'rcmUserService' => [],
 
-                'authorizeService' => array(
-                    'isAllowedMap' => array(
-                        array(
+                'authorizeService' => [
+                    'isAllowedMap' => [
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'read',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123',
                             'admin',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'edit',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'approve',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'revisions',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages',
                             'create',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'NOPE',
                             'NOPE',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                    )
-                ),
+                        ],
+                    ]
+                ],
 
-                'aclDataService' => array(
-                    'rules' => array(
-                        'data' => array(),
+                'aclDataService' => [
+                    'rules' => [
+                        'data' => [],
                         'code' => 1,
                         'message' => 'TEST_MESSAGE'
-                    ),
-                ),
+                    ],
+                ],
 
-                'page' => array(
+                'page' => [
                     'name' => 'NOT_FOUND_PAGE',
                     'type' => 'PAGE_TYPE',
-                ),
+                ],
 
-                'site' => array(
+                'site' => [
                     'siteId' => 123,
                     'loginPage' => '/LOGIN_PAGE',
                     'notAuthorizedPage' => '/NOT_AUTHED_PAGE',
                     'notFoundPage' => '/NOT_FOUND_PAGE',
-                ),
-            ),
-            'ALLOW_CHECK2' => array(
-                'rcmUserService' => array(),
+                ],
+            ],
+            'ALLOW_CHECK2' => [
+                'rcmUserService' => [],
 
-                'authorizeService' => array(
-                    'isAllowedMap' => array(
-                        array(
+                'authorizeService' => [
+                    'isAllowedMap' => [
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'read',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123',
                             'admin',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'edit',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'approve',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'revisions',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages',
                             'create',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'NOPE',
                             'NOPE',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                    )
-                ),
+                        ],
+                    ]
+                ],
 
-                'aclDataService' => array(
-                    'rules' => array(
-                        'data' => array(),
+                'aclDataService' => [
+                    'rules' => [
+                        'data' => [],
                         'code' => 1,
                         'message' => 'TEST_MESSAGE'
-                    ),
-                ),
+                    ],
+                ],
 
-                'page' => array(
+                'page' => [
                     'name' => 'NOT_FOUND_PAGE',
                     'type' => 'PAGE_TYPE',
-                ),
+                ],
 
-                'site' => array(
+                'site' => [
                     'siteId' => 123,
                     'loginPage' => '/LOGIN_PAGE',
                     'notAuthorizedPage' => '/NOT_AUTHED_PAGE',
                     'notFoundPage' => '/NOT_FOUND_PAGE',
-                ),
-            ),
-            'ALLOW_CHECK3' => array(
-                'rcmUserService' => array(),
+                ],
+            ],
+            'ALLOW_CHECK3' => [
+                'rcmUserService' => [],
 
-                'authorizeService' => array(
-                    'isAllowedMap' => array(
-                        array(
+                'authorizeService' => [
+                    'isAllowedMap' => [
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'read',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123',
                             'admin',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'edit',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'approve',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'revisions',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages',
                             'create',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'NOPE',
                             'NOPE',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                    )
-                ),
+                        ],
+                    ]
+                ],
 
-                'aclDataService' => array(
-                    'rules' => array(
-                        'data' => array(),
+                'aclDataService' => [
+                    'rules' => [
+                        'data' => [],
                         'code' => 1,
                         'message' => 'TEST_MESSAGE'
-                    ),
-                ),
+                    ],
+                ],
 
-                'page' => array(
+                'page' => [
                     'name' => 'NOT_FOUND_PAGE',
                     'type' => 'PAGE_TYPE',
-                ),
+                ],
 
-                'site' => array(
+                'site' => [
                     'siteId' => 123,
                     'loginPage' => '/LOGIN_PAGE',
                     'notAuthorizedPage' => '/NOT_AUTHED_PAGE',
                     'notFoundPage' => '/NOT_FOUND_PAGE',
-                ),
-            ),
-            'ALLOW_CHECK4' => array(
-                'rcmUserService' => array(),
+                ],
+            ],
+            'ALLOW_CHECK4' => [
+                'rcmUserService' => [],
 
-                'authorizeService' => array(
-                    'isAllowedMap' => array(
-                        array(
+                'authorizeService' => [
+                    'isAllowedMap' => [
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'read',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123',
                             'admin',
                             'Rcm\Acl\ResourceProvider',
                             true
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'edit',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'approve',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'revisions',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                        array(
+                        ],
+                        [
                             'sites.123.pages',
                             'create',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                        array(
+                        ],
+                        [
                             'NOPE',
                             'NOPE',
                             'Rcm\Acl\ResourceProvider',
                             false
-                        ),
-                    )
-                ),
+                        ],
+                    ]
+                ],
 
-                'aclDataService' => array(
-                    'rules' => array(
-                        'data' => array(),
+                'aclDataService' => [
+                    'rules' => [
+                        'data' => [],
                         'code' => 1,
                         'message' => 'TEST_MESSAGE'
-                    ),
-                ),
+                    ],
+                ],
 
-                'page' => array(
+                'page' => [
                     'name' => 'NOT_FOUND_PAGE',
                     'type' => 'PAGE_TYPE',
-                ),
+                ],
 
-                'site' => array(
+                'site' => [
                     'siteId' => 123,
                     'loginPage' => '/LOGIN_PAGE',
                     'notAuthorizedPage' => '/NOT_AUTHED_PAGE',
                     'notFoundPage' => '/NOT_FOUND_PAGE',
-                ),
-            )
-        );
+                ],
+            ]
+        ];
 
     public function getTestCase($testCaseKey = '_DEFAULT')
     {

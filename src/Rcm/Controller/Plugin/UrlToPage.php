@@ -71,32 +71,32 @@ class UrlToPage extends AbstractPlugin
         } elseif ($pageType == 'n' && empty($pageRevision)) {
             return $controller->url()->fromRoute(
                 'contentManager',
-                array('page' => $pageName)
+                ['page' => $pageName]
             );
         } elseif ($pageType == 'n' && !empty($pageRevision)) {
             return $controller->url()->fromRoute(
                 'contentManager',
-                array(
+                [
                     'revision' => $pageRevision,
                     'page' => $pageName,
-                )
+                ]
             );
         } elseif ($pageType != 'n' && !empty($pageRevision)) {
             return $controller->url()->fromRoute(
                 'contentManagerWithPageType',
-                array(
+                [
                     'revision' => $pageRevision,
                     'pageType' => $pageType,
                     'page' => $pageName,
-                )
+                ]
             );
         } else {
             return $controller->url()->fromRoute(
                 'contentManagerWithPageType',
-                array(
+                [
                     'pageType' => $pageType,
                     'page' => $pageName,
-                )
+                ]
             );
         }
     }

@@ -72,7 +72,7 @@ class RcmEdit extends AbstractHelper
         $name,
         $defaultContent = null,
         $elementType = 'div',
-        $elementAttributes = array()
+        $elementAttributes = []
     ) {
         /**
          * Use whats saved in the instance config if its available
