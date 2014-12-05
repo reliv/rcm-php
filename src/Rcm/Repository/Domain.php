@@ -129,7 +129,7 @@ class Domain extends EntityRepository
         }
 
         try {
-            $result = $this->findOneBy(array('domain' => $domainName));
+            $result = $this->findOneBy(['domain' => $domainName]);
         } catch (NoResultException $e) {
             $result = $default;
         }

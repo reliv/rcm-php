@@ -80,11 +80,11 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
 
-        $expectedFavicon = array(
+        $expectedFavicon = [
             'rel' => 'shortcut icon',
             'type' => 'image/vnd.microsoft.icon',
             'href' => $favicon,
-        );
+        ];
 
         $mockHeadLink->expects($this->once())
             ->method('__invoke')
@@ -103,7 +103,7 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->mockHeadTitle->expects($this->any())
             ->method('__invoke')
-            ->will($this->returnCallback(array($this, 'callBackForHeadTitle')));
+            ->will($this->returnCallback([$this, 'callBackForHeadTitle']));
 
         $this->mockHeadTitle->expects($this->any())
             ->method('setSeparator');

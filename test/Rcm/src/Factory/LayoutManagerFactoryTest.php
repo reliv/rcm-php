@@ -50,7 +50,7 @@ class LayoutManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateService()
     {
         $sm = new ServiceManager();
-        $sm->setService('config', array());
+        $sm->setService('config', []);
 
         $factory = new LayoutManagerFactory();
         $object = $factory->createService($sm);

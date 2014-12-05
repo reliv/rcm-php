@@ -202,47 +202,47 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testClone()
     {
-        $instances = array(
-            0 => array(
+        $instances = [
+            0 => [
                 'pluginWrapperId' => 43,
                 'layoutContainer' => 'layoutOne',
                 'renderOrder' => 0,
                 'height' => 32,
                 'width' => 100,
                 'divFloat' => 'right',
-                'instance' => array(
+                'instance' => [
                     'pluginInstanceId' => 44,
                     'plugin' => 'MockPlugin',
                     'siteWide' => false,
                     'displayName' => null,
-                    'instanceConfig' => array(
+                    'instanceConfig' => [
                         'var1' => 1,
                         'var2' => 2
-                    ),
+                    ],
                     'md5' => 'firstMd5'
-                ),
-            ),
+                ],
+            ],
 
-            1 => array(
+            1 => [
                 'pluginWrapperId' => 45,
                 'layoutContainer' => 'layoutTwo',
                 'renderOrder' => 1,
                 'height' => 33,
                 'width' => 101,
                 'divFloat' => 'none',
-                'instance' => array(
+                'instance' => [
                     'pluginInstanceId' => 46,
                     'plugin' => 'MockPlugin2',
                     'siteWide' => true,
                     'displayName' => 'TestSiteWide',
-                    'instanceConfig' => array(
+                    'instanceConfig' => [
                         'var3' => 3,
                         'var4' => 4
-                    ),
+                    ],
                     'md5' => 'secondMd5'
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         foreach ($instances as $instance) {
             $plugin = new PluginInstance();
@@ -352,7 +352,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
 
     public function testUtilities()
     {
-        $data = array();
+        $data = [];
         $data['layoutContainer'] = 'TESTCONT';
         $data['renderOrder'] = 3;
         $data['height'] = 123;

@@ -231,11 +231,11 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $pageThree = new Page();
         $pageThree->setPageId(14);
 
-        $expected = array(
+        $expected = [
             $pageOne,
             $pageTwo,
             $pageThree
-        );
+        ];
 
         $this->site->addPage($pageOne);
         $this->site->addPage($pageTwo);
@@ -265,10 +265,10 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $pageThree = new Page();
         $pageThree->setPageId(14);
 
-        $expected = array(
+        $expected = [
             $pageTwo,
             $pageThree
-        );
+        ];
 
         $this->site->addPage($pageOne);
         $this->site->addPage($pageTwo);
@@ -329,11 +329,11 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $containerThree = new Container();
         $containerThree->setContainerId(51);
 
-        $expected = array(
+        $expected = [
             $containerOne,
             $containerTwo,
             $containerThree
-        );
+        ];
 
         $this->site->addContainer($containerOne);
         $this->site->addContainer($containerTwo);
@@ -363,10 +363,10 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $containerThree = new Container();
         $containerThree->setContainerId(51);
 
-        $expected = array(
+        $expected = [
             $containerTwo,
             $containerThree
-        );
+        ];
 
         $this->site->addContainer($containerOne);
         $this->site->addContainer($containerTwo);
@@ -433,11 +433,11 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $pluginThree->setSiteWide();
         $pluginThree->setDisplayName('Plugin Three');
 
-        $expected = array(
+        $expected = [
             $pluginOne,
             $pluginTwo,
             $pluginThree
-        );
+        ];
 
         $this->site->addSiteWidePlugin($pluginOne);
         $this->site->addSiteWidePlugin($pluginTwo);
@@ -508,10 +508,10 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $pluginThree->setSiteWide();
         $pluginThree->setDisplayName('Plugin Three');
 
-        $expected = array(
+        $expected = [
             $pluginTwo,
             $pluginThree
-        );
+        ];
 
         $this->site->addSiteWidePlugin($pluginOne);
         $this->site->addSiteWidePlugin($pluginTwo);
@@ -626,7 +626,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $country = new Country();
         $country->setIso3('USA');
 
-        $site = array(
+        $site = [
             'siteId' => '1000',
             'owner' => 'wshafer',
             'domain' => $domain,
@@ -639,446 +639,446 @@ class SIteTest extends \PHPUnit_Framework_TestCase
             'loginRequired' => true,
             'loginPage' => 'login.html',
             'aclRoles' => 'role1,role2',
-            'pages' => array(
-                0 => array(
+            'pages' => [
+                0 => [
                     'pageId' => '200',
                     'name' => 'pageOne',
                     'author' => 'Westin Shafer',
                     'createdDate' => new \DateTime('yesterday'),
                     'lastPublished' => new \DateTime('yesterday'),
-                    'revisions' => array(
-                        0 => array(
+                    'revisions' => [
+                        0 => [
                             'revisionId' => 100,
                             'author' => 'Westin Shafer',
                             'createdDate' => new \DateTime('yesterday'),
                             'publishedDate' => new \DateTime('yesterday'),
                             'published' => true,
                             'md5' => 'revisionMD5',
-                            'instances' => array(
-                                0 => array(
+                            'instances' => [
+                                0 => [
                                     'pluginWrapperId' => 43,
                                     'layoutContainer' => 'layoutOne',
                                     'renderOrder' => 0,
                                     'height' => 32,
                                     'width' => 100,
                                     'divFloat' => 'right',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 80,
                                         'plugin' => 'MockPlugin',
                                         'siteWide' => false,
                                         'displayName' => null,
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var1' => 1,
                                             'var2' => 2
-                                        ),
+                                        ],
                                         'md5' => 'firstMd5'
-                                    ),
-                                ),
+                                    ],
+                                ],
 
-                                1 => array(
+                                1 => [
                                     'pluginWrapperId' => 45,
                                     'layoutContainer' => 'layoutTwo',
                                     'renderOrder' => 1,
                                     'height' => 33,
                                     'width' => 101,
                                     'divFloat' => 'none',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 81,
                                         'plugin' => 'MockPlugin2',
                                         'siteWide' => true,
                                         'displayName' => 'TestSiteWide',
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var3' => 3,
                                             'var4' => 4
-                                        ),
+                                        ],
                                         'md5' => 'secondMd5'
-                                    ),
-                                ),
-                            ),
-                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
 
-                        1 => array(
+                        1 => [
                             'revisionId' => 101,
                             'author' => 'Westin Shafer',
                             'createdDate' => new \DateTime('-1 month'),
                             'publishedDate' => new \DateTime('-1 month'),
                             'published' => false,
                             'md5' => 'revision2MD5',
-                            'instances' => array(
-                                0 => array(
+                            'instances' => [
+                                0 => [
                                     'pluginWrapperId' => 47,
                                     'layoutContainer' => 'layoutThree',
                                     'renderOrder' => 2,
                                     'height' => 33,
                                     'width' => 102,
                                     'divFloat' => 'right',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 82,
                                         'plugin' => 'MockPlugin3',
                                         'siteWide' => false,
                                         'displayName' => null,
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var1' => 1,
                                             'var2' => 2
-                                        ),
+                                        ],
                                         'md5' => 'firstMd5'
-                                    ),
-                                ),
+                                    ],
+                                ],
 
-                                1 => array(
+                                1 => [
                                     'pluginWrapperId' => 49,
                                     'layoutContainer' => 'layoutFour',
                                     'renderOrder' => 3,
                                     'height' => 34,
                                     'width' => 103,
                                     'divFloat' => 'left',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 83,
                                         'plugin' => 'MockPlugin4',
                                         'siteWide' => true,
                                         'displayName' => 'TestSiteWide2',
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var3' => 3,
                                             'var4' => 4
-                                        ),
+                                        ],
                                         'md5' => 'secondMd5'
-                                    ),
-                                ),
-                            )
-                        )
-                    ),
-                ),
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
 
-                1 => array(
+                1 => [
                     'pageId' => '200',
                     'name' => 'pageOne',
                     'author' => 'Westin Shafer',
                     'createdDate' => new \DateTime('yesterday'),
                     'lastPublished' => new \DateTime('yesterday'),
-                    'revisions' => array(
-                        0 => array(
+                    'revisions' => [
+                        0 => [
                             'revisionId' => 100,
                             'author' => 'Westin Shafer',
                             'createdDate' => new \DateTime('yesterday'),
                             'publishedDate' => new \DateTime('yesterday'),
                             'published' => true,
                             'md5' => 'revisionMD5',
-                            'instances' => array(
-                                0 => array(
+                            'instances' => [
+                                0 => [
                                     'pluginWrapperId' => 61,
                                     'layoutContainer' => 'layoutOne',
                                     'renderOrder' => 0,
                                     'height' => 32,
                                     'width' => 100,
                                     'divFloat' => 'right',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 84,
                                         'plugin' => 'MockPlugin',
                                         'siteWide' => false,
                                         'displayName' => null,
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var1' => 1,
                                             'var2' => 2
-                                        ),
+                                        ],
                                         'md5' => 'firstMd5'
-                                    ),
-                                ),
+                                    ],
+                                ],
 
-                                1 => array(
+                                1 => [
                                     'pluginWrapperId' => 60,
                                     'layoutContainer' => 'layoutTwo',
                                     'renderOrder' => 1,
                                     'height' => 33,
                                     'width' => 101,
                                     'divFloat' => 'none',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 85,
                                         'plugin' => 'MockPlugin2',
                                         'siteWide' => true,
                                         'displayName' => 'TestSiteWide',
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var3' => 3,
                                             'var4' => 4
-                                        ),
+                                        ],
                                         'md5' => 'secondMd5'
-                                    ),
-                                ),
-                            ),
-                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
 
-                        1 => array(
+                        1 => [
                             'revisionId' => 101,
                             'author' => 'Westin Shafer',
                             'createdDate' => new \DateTime('-1 month'),
                             'publishedDate' => new \DateTime('-1 month'),
                             'published' => false,
                             'md5' => 'revision2MD5',
-                            'instances' => array(
-                                0 => array(
+                            'instances' => [
+                                0 => [
                                     'pluginWrapperId' => 63,
                                     'layoutContainer' => 'layoutThree',
                                     'renderOrder' => 2,
                                     'height' => 33,
                                     'width' => 102,
                                     'divFloat' => 'right',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 86,
                                         'plugin' => 'MockPlugin3',
                                         'siteWide' => false,
                                         'displayName' => null,
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var1' => 1,
                                             'var2' => 2
-                                        ),
+                                        ],
                                         'md5' => 'firstMd5'
-                                    ),
-                                ),
+                                    ],
+                                ],
 
-                                1 => array(
+                                1 => [
                                     'pluginWrapperId' => 49,
                                     'layoutContainer' => 'layoutFour',
                                     'renderOrder' => 3,
                                     'height' => 34,
                                     'width' => 103,
                                     'divFloat' => 'left',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 87,
                                         'plugin' => 'MockPlugin4',
                                         'siteWide' => true,
                                         'displayName' => 'TestSiteWide2',
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var3' => 3,
                                             'var4' => 4
-                                        ),
+                                        ],
                                         'md5' => 'secondMd5'
-                                    ),
-                                ),
-                            )
-                        )
-                    ),
-                ),
-            ),
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+            ],
 
-            'containers' => array(
-                0 => array(
+            'containers' => [
+                0 => [
                     'containerId' => '200',
                     'name' => 'containerOne',
                     'author' => 'Westin Shafer',
                     'createdDate' => new \DateTime('yesterday'),
                     'lastPublished' => new \DateTime('yesterday'),
-                    'revisions' => array(
-                        0 => array(
+                    'revisions' => [
+                        0 => [
                             'revisionId' => 100,
                             'author' => 'Westin Shafer',
                             'createdDate' => new \DateTime('yesterday'),
                             'publishedDate' => new \DateTime('yesterday'),
                             'published' => true,
                             'md5' => 'revisionMD5',
-                            'instances' => array(
-                                0 => array(
+                            'instances' => [
+                                0 => [
                                     'pluginWrapperId' => 43,
                                     'layoutContainer' => 'layoutOne',
                                     'renderOrder' => 0,
                                     'height' => 32,
                                     'width' => 100,
                                     'divFloat' => 'right',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 998,
                                         'plugin' => 'MockPlugin',
                                         'siteWide' => false,
                                         'displayName' => null,
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var1' => 1,
                                             'var2' => 2
-                                        ),
+                                        ],
                                         'md5' => 'firstMd5'
-                                    ),
-                                ),
+                                    ],
+                                ],
 
-                                1 => array(
+                                1 => [
                                     'pluginWrapperId' => 45,
                                     'layoutContainer' => 'layoutTwo',
                                     'renderOrder' => 1,
                                     'height' => 33,
                                     'width' => 101,
                                     'divFloat' => 'none',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 88,
                                         'plugin' => 'MockPlugin2',
                                         'siteWide' => true,
                                         'displayName' => 'TestSiteWide',
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var3' => 3,
                                             'var4' => 4
-                                        ),
+                                        ],
                                         'md5' => 'secondMd5'
-                                    ),
-                                ),
-                            ),
-                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
 
-                        1 => array(
+                        1 => [
                             'revisionId' => 101,
                             'author' => 'Westin Shafer',
                             'createdDate' => new \DateTime('-1 month'),
                             'publishedDate' => new \DateTime('-1 month'),
                             'published' => false,
                             'md5' => 'revision2MD5',
-                            'instances' => array(
-                                0 => array(
+                            'instances' => [
+                                0 => [
                                     'pluginWrapperId' => 47,
                                     'layoutContainer' => 'layoutThree',
                                     'renderOrder' => 2,
                                     'height' => 33,
                                     'width' => 102,
                                     'divFloat' => 'right',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 89,
                                         'plugin' => 'MockPlugin3',
                                         'siteWide' => false,
                                         'displayName' => null,
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var1' => 1,
                                             'var2' => 2
-                                        ),
+                                        ],
                                         'md5' => 'firstMd5'
-                                    ),
-                                ),
+                                    ],
+                                ],
 
-                                1 => array(
+                                1 => [
                                     'pluginWrapperId' => 49,
                                     'layoutContainer' => 'layoutFour',
                                     'renderOrder' => 3,
                                     'height' => 34,
                                     'width' => 103,
                                     'divFloat' => 'left',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 90,
                                         'plugin' => 'MockPlugin4',
                                         'siteWide' => true,
                                         'displayName' => 'TestSiteWide2',
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var3' => 3,
                                             'var4' => 4
-                                        ),
+                                        ],
                                         'md5' => 'secondMd5'
-                                    ),
-                                ),
-                            )
-                        )
-                    ),
-                ),
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
 
-                1 => array(
+                1 => [
                     'containerId' => '200',
                     'name' => 'containerOne',
                     'author' => 'Westin Shafer',
                     'createdDate' => new \DateTime('yesterday'),
                     'lastPublished' => new \DateTime('yesterday'),
-                    'revisions' => array(
-                        0 => array(
+                    'revisions' => [
+                        0 => [
                             'revisionId' => 100,
                             'author' => 'Westin Shafer',
                             'createdDate' => new \DateTime('yesterday'),
                             'publishedDate' => new \DateTime('yesterday'),
                             'published' => true,
                             'md5' => 'revisionMD5',
-                            'instances' => array(
-                                0 => array(
+                            'instances' => [
+                                0 => [
                                     'pluginWrapperId' => 43,
                                     'layoutContainer' => 'layoutOne',
                                     'renderOrder' => 0,
                                     'height' => 32,
                                     'width' => 100,
                                     'divFloat' => 'right',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 91,
                                         'plugin' => 'MockPlugin',
                                         'siteWide' => false,
                                         'displayName' => null,
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var1' => 1,
                                             'var2' => 2
-                                        ),
+                                        ],
                                         'md5' => 'firstMd5'
-                                    ),
-                                ),
+                                    ],
+                                ],
 
-                                1 => array(
+                                1 => [
                                     'pluginWrapperId' => 45,
                                     'layoutContainer' => 'layoutTwo',
                                     'renderOrder' => 1,
                                     'height' => 33,
                                     'width' => 101,
                                     'divFloat' => 'none',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 92,
                                         'plugin' => 'MockPlugin2',
                                         'siteWide' => true,
                                         'displayName' => 'TestSiteWide',
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var3' => 3,
                                             'var4' => 4
-                                        ),
+                                        ],
                                         'md5' => 'secondMd5'
-                                    ),
-                                ),
-                            ),
-                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
 
-                        1 => array(
+                        1 => [
                             'revisionId' => 101,
                             'author' => 'Westin Shafer',
                             'createdDate' => new \DateTime('-1 month'),
                             'publishedDate' => new \DateTime('-1 month'),
                             'published' => false,
                             'md5' => 'revision2MD5',
-                            'instances' => array(
-                                0 => array(
+                            'instances' => [
+                                0 => [
                                     'pluginWrapperId' => 47,
                                     'layoutContainer' => 'layoutThree',
                                     'renderOrder' => 2,
                                     'height' => 33,
                                     'width' => 102,
                                     'divFloat' => 'right',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 93,
                                         'plugin' => 'MockPlugin3',
                                         'siteWide' => false,
                                         'displayName' => null,
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var1' => 1,
                                             'var2' => 2
-                                        ),
+                                        ],
                                         'md5' => 'firstMd5'
-                                    ),
-                                ),
+                                    ],
+                                ],
 
-                                1 => array(
+                                1 => [
                                     'pluginWrapperId' => 49,
                                     'layoutContainer' => 'layoutFour',
                                     'renderOrder' => 3,
                                     'height' => 34,
                                     'width' => 103,
                                     'divFloat' => 'left',
-                                    'instance' => array(
+                                    'instance' => [
                                         'pluginInstanceId' => 94,
                                         'plugin' => 'MockPlugin4',
                                         'siteWide' => true,
                                         'displayName' => 'TestSiteWide2',
-                                        'instanceConfig' => array(
+                                        'instanceConfig' => [
                                             'var3' => 3,
                                             'var4' => 4
-                                        ),
+                                        ],
                                         'md5' => 'secondMd5'
-                                    ),
-                                ),
-                            )
-                        )
-                    ),
-                ),
-            ),
-        );
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+            ],
+        ];
 
         $this->site->setSiteId($site['siteId']);
         $this->site->setDomain($site['domain']);

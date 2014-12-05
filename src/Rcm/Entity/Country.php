@@ -157,7 +157,7 @@ class Country implements ApiInterface
      *
      * @return void
      */
-    public function populate($data = array())
+    public function populate($data = [])
     {
         if (!empty($data['iso3'])) {
             $this->setIso3($data['iso3']);
@@ -211,10 +211,10 @@ class Country implements ApiInterface
      */
     public function toArray()
     {
-        return array(
+        return [
             'iso3' => $this->getIso3(),
             'iso2' => $this->getIso2(),
             'countryName' => $this->getCountryName()
-        );
+        ];
     }
 }

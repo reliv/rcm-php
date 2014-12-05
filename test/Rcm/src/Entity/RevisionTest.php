@@ -167,10 +167,10 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
         $wrapperTwo = new PluginWrapper();
         $wrapperTwo->setPluginWrapperId(45);
 
-        $expected = array(
+        $expected = [
             $wrapperOne,
             $wrapperTwo
-        );
+        ];
 
         $this->revision->addPluginWrapper($wrapperOne);
         $this->revision->addPluginWrapper($wrapperTwo);
@@ -213,10 +213,10 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
         $wrapperThree = new PluginWrapper();
         $wrapperThree->setPluginWrapperId(46);
 
-        $expected = array(
+        $expected = [
             $wrapperTwo,
             $wrapperThree
-        );
+        ];
 
         $this->revision->addPluginWrapper($wrapperOne);
         $this->revision->addPluginWrapper($wrapperTwo);
@@ -288,55 +288,55 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      */
     public function testClone()
     {
-        $revision = array(
+        $revision = [
             'revisionId' => 100,
             'author' => 'Westin Shafer',
             'createdDate' => new \DateTime('yesterday'),
             'publishedDate' => new \DateTime('yesterday'),
             'published' => true,
             'md5' => 'revisionMD5',
-            'instances' => array(
-                0 => array(
+            'instances' => [
+                0 => [
                     'pluginWrapperId' => 43,
                     'layoutContainer' => 'layoutOne',
                     'renderOrder' => 0,
                     'height' => 32,
                     'width' => 100,
                     'divFloat' => 'right',
-                    'instance' => array(
+                    'instance' => [
                         'pluginInstanceId' => 44,
                         'plugin' => 'MockPlugin',
                         'siteWide' => false,
                         'displayName' => null,
-                        'instanceConfig' => array(
+                        'instanceConfig' => [
                             'var1' => 1,
                             'var2' => 2
-                        ),
+                        ],
                         'md5' => 'firstMd5'
-                    ),
-                ),
+                    ],
+                ],
 
-                1 => array(
+                1 => [
                     'pluginWrapperId' => 45,
                     'layoutContainer' => 'layoutTwo',
                     'renderOrder' => 1,
                     'height' => 33,
                     'width' => 101,
                     'divFloat' => 'none',
-                    'instance' => array(
+                    'instance' => [
                         'pluginInstanceId' => 46,
                         'plugin' => 'MockPlugin2',
                         'siteWide' => true,
                         'displayName' => 'TestSiteWide',
-                        'instanceConfig' => array(
+                        'instanceConfig' => [
                             'var3' => 3,
                             'var4' => 4
-                        ),
+                        ],
                         'md5' => 'secondMd5'
-                    ),
-                ),
-            )
-        );
+                    ],
+                ],
+            ]
+        ];
 
         $this->revision->setRevisionId($revision['revisionId']);
         $this->revision->setAuthor($revision['author']);

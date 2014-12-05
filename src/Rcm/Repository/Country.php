@@ -26,11 +26,11 @@ use Rcm\Exception\CountryNotFoundException;
 
 class Country extends EntityRepository {
 
-    protected $validFormats = array(
+    protected $validFormats = [
         'iso3',
         'iso2',
         'countryName',
-    );
+    ];
 
     public function getCountryByString(
         $code,
@@ -49,7 +49,7 @@ class Country extends EntityRepository {
 
         try {
 
-            $result = $this->findOneBy(array($format => $code));
+            $result = $this->findOneBy([$format => $code]);
         } catch (NoResultException $e) {
 
             $result = $default;

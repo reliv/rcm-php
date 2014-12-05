@@ -52,13 +52,13 @@ class CacheFactory implements FactoryInterface
         $config = $serviceLocator->get('config');
 
         return StorageFactory::factory(
-            array(
-                'adapter' => array(
+            [
+                'adapter' => [
                     'name' => $config['rcmCache']['adapter'],
                     'options' => $config['rcmCache']['options'],
-                ),
+                ],
                 'plugins' => $config['rcmCache']['plugins'],
-            )
+            ]
         );
     }
 }

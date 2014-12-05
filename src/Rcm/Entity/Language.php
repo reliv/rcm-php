@@ -318,7 +318,7 @@ class Language implements ApiInterface
      *
      * @return void
      */
-    public function populate($data = array())
+    public function populate($data = [])
     {
         if (!empty($data['languageId'])) {
             $this->setLanguageId($data['languageId']);
@@ -378,12 +378,12 @@ class Language implements ApiInterface
      */
     public function toArray()
     {
-        return array(
+        return [
             'languageId' => $this->getLanguageId(),
             'languageName' => $this->getLanguageName(),
             'iso639_1' => $this->getIso6391(),
             'iso639_2b' => $this->getIso6392b(),
             'iso639_2t' => $this->getIso6392t(),
-        );
+        ];
     }
 }

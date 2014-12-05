@@ -68,17 +68,17 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $config = array(
-            'Rcm\Api\Page\Check' => array(
+        $config = [
+            'Rcm\Api\Page\Check' => [
                 'type' => 'Segment',
-                'options' => array(
+                'options' => [
                     'route' => '/rcm/page/check[/:pageType]/:pageId',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Rcm\Controller\PageCheckController',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
         $this->mockPageValidator = $this
             ->getMockBuilder('\Rcm\Validator\Page')
@@ -98,7 +98,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
         $this->request = new Request();
         $this->request->setMethod('GET');
         $this->routeMatch = new RouteMatch(
-            array('controller' => 'Rcm\Controller\PageCheckController')
+            ['controller' => 'Rcm\Controller\PageCheckController']
         );
         $this->event = new MvcEvent();
         $routerConfig = $config;
@@ -135,9 +135,9 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
 
         $result = $result->getVariables();
 
-        $expected = array(
+        $expected = [
             'valid' => true,
-        );
+        ];
 
         $this->assertEquals($expected, $result);
     }
@@ -158,7 +158,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
         $this->mockPageValidator->expects($this->any())
             ->method('getMessages')
             ->will(
-                $this->returnValue(array("pageName" => 'Page Name Invalid'))
+                $this->returnValue(["pageName" => 'Page Name Invalid'])
             );
 
         $this->routeMatch->setParam('pageId', 'my invalid test page');
@@ -174,12 +174,12 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
 
         $result = $result->getVariables();
 
-        $expected = array(
+        $expected = [
             'valid' => false,
-            'error' => array(
+            'error' => [
                 'pageName' => 'Page Name Invalid'
-            )
-        );
+            ]
+        ];
 
         $this->assertEquals($expected, $result);
     }
@@ -199,7 +199,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->mockPageValidator->expects($this->any())
             ->method('getMessages')
-            ->will($this->returnValue(array("pageExists" => 'Page Exists')));
+            ->will($this->returnValue(["pageExists" => 'Page Exists']));
 
         $this->routeMatch->setParam('pageId', 'page-exists');
 
@@ -214,12 +214,12 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
 
         $result = $result->getVariables();
 
-        $expected = array(
+        $expected = [
             'valid' => false,
-            'error' => array(
+            'error' => [
                 'pageExists' => 'Page Exists'
-            )
-        );
+            ]
+        ];
 
         $this->assertEquals($expected, $result);
     }

@@ -49,27 +49,27 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $config = array(
-            'Rcm' => array(
-                'Acl' => array(
-                    'Sites' => array(
+        $config = [
+            'Rcm' => [
+                'Acl' => [
+                    'Sites' => [
                         'resourceId' => 'Sites',
                         'parentResourceId' => null,
-                        'privileges' => array(
+                        'privileges' => [
                             'read',
                             'edit',
                             'create',
                             'delete',
                             'theme',
                             'admin',
-                        ),
+                        ],
                         'name' => 'Sites',
                         'description' => 'Global resource for sites',
-                    ),
-                    'Pages' => array(
+                    ],
+                    'Pages' => [
                         'resourceId' => 'Pages',
                         'parentResourceId' => null,
-                        'privileges' => array(
+                        'privileges' => [
                             'read',
                             'edit',
                             'create',
@@ -77,13 +77,13 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
                             'copy',
                             'approve',
                             'layout',
-                        ),
+                        ],
                         'name' => 'Pages',
                         'description' => 'Global resource for pages',
-                    ),
-                )
-            ),
-        );
+                    ],
+                ]
+            ],
+        ];
 
         $mockEntityManager = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
@@ -115,7 +115,7 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceNoConfig()
     {
-        $config = array();
+        $config = [];
 
         $mockEntityManager = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()

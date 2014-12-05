@@ -128,9 +128,9 @@ class Domain implements ApiInterface
 
         if(empty($this->domainValidator)){
             $this->domainValidator = new Hostname(
-                array(
+                [
                     'allow' => Hostname::ALLOW_LOCAL | Hostname::ALLOW_IP
-                )
+                ]
             );
         }
 
@@ -273,7 +273,7 @@ class Domain implements ApiInterface
      *
      * @return void
      */
-    public function populate($data = array())
+    public function populate($data = [])
     {
         if (!empty($data['domainId'])) {
             $this->setDomainId($data['domainId']);
@@ -327,10 +327,10 @@ class Domain implements ApiInterface
      */
     public function toArray()
     {
-        return array(
+        return [
             'domainId' => $this->getDomainId(),
             'domain' => $this->getDomainName(),
             'primaryDomain' => $this->getPrimary(),
-        );
+        ];
     }
 }

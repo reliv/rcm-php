@@ -55,7 +55,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateService()
     {
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('config', array());
+        $serviceManager->setService('config', []);
 
         $factory = new SessionManagerFactory();
         $object = $factory->createService($serviceManager);
@@ -73,13 +73,13 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateServiceWithConfig()
     {
 
-        $config = array(
-            'session' => array(
-                'config' => array(
+        $config = [
+            'session' => [
+                'config' => [
                     'class' => '\Zend\Session\Config\SessionConfig'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('config', $config);
@@ -100,9 +100,9 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionConfigWithNoConfigArray()
     {
 
-        $config = array(
+        $config = [
             'SomeVar'
-        );
+        ];
 
         $serviceManager = new ServiceManager();
 
@@ -127,11 +127,11 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionConfigWithClassConfigButNotOptions()
     {
 
-        $config = array(
-            'config' => array(
+        $config = [
+            'config' => [
                 'class' => '\Zend\Session\Config\SessionConfig'
-            )
-        );
+            ]
+        ];
 
         $serviceManager = new ServiceManager();
 
@@ -156,11 +156,11 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionConfigWithServiceLocatorObjectButNotOptions()
     {
 
-        $config = array(
-            'config' => array(
+        $config = [
+            'config' => [
                 'class' => 'mockSessionConfigObject'
-            )
-        );
+            ]
+        ];
 
         $mockSessionConfig = $this
             ->getMockBuilder('\Zend\Session\Config\SessionConfig')
@@ -194,14 +194,14 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionConfigWithClassConfigAndOptions()
     {
 
-        $config = array(
-            'config' => array(
+        $config = [
+            'config' => [
                 'class' => '\Zend\Session\Config\SessionConfig',
-                'options' => array(
+                'options' => [
                     'name' => 'myTest'
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $serviceManager = new ServiceManager();
 
@@ -229,13 +229,13 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionConfigWithNoClassConfigButHasOptions()
     {
 
-        $config = array(
-            'config' => array(
-                'options' => array(
+        $config = [
+            'config' => [
+                'options' => [
                     'name' => 'myTest'
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
@@ -263,11 +263,11 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionConfigWithInvalidClassType()
     {
 
-        $config = array(
-            'config' => array(
+        $config = [
+            'config' => [
                 'class' => '\Rcm\Factory\SessionManagerFactory'
-            )
-        );
+            ]
+        ];
 
         $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
@@ -290,9 +290,9 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionStorageWithNoConfigArray()
     {
 
-        $config = array(
+        $config = [
             'SomeVar'
-        );
+        ];
 
         $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
@@ -315,9 +315,9 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionStorageWithStorageClassSetInConfig()
     {
 
-        $config = array(
+        $config = [
             'storage' => '\Zend\Session\Storage\SessionArrayStorage'
-        );
+        ];
 
         $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
@@ -340,9 +340,9 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionStorageWithStorageClassInServiceLocator()
     {
 
-        $config = array(
+        $config = [
             'storage' => 'MockSessionArrayStorage'
-        );
+        ];
 
         $mockStorageHandler = $this
             ->getMockBuilder('\Zend\Session\Storage\SessionArrayStorage')
@@ -377,9 +377,9 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionStorageWithInvalidStorageClassSetInConfig()
     {
 
-        $config = array(
+        $config = [
             'storage' => '\Rcm\Factory\SessionManagerFactory'
-        );
+        ];
 
         $serviceManager = new ServiceManager();
 
@@ -402,9 +402,9 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionSaveHandlerWithNoConfigArray()
     {
 
-        $config = array(
+        $config = [
             'SomeVar'
-        );
+        ];
 
         $serviceManager = new ServiceManager();
         $factory = new SessionManagerFactory();
@@ -428,9 +428,9 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetSessionSaveHandlerWithClassSetInServiceManager()
     {
 
-        $config = array(
+        $config = [
             'save_handler' => 'MockSaveHandler'
-        );
+        ];
 
         $mockSaveHandler = $this
             ->getMockBuilder('\Zend\Session\SaveHandler\MongoDB')
@@ -463,9 +463,9 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     )
     {
 
-        $config = array(
+        $config = [
             'save_handler' => 'MockSaveHandler'
-        );
+        ];
 
         $mockSaveHandler = $this
             ->getMockBuilder('\Rcm\Factory\SessionManagerFactory')
@@ -494,9 +494,9 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testSetValidatorChainWithNoConfigArray()
     {
 
-        $config = array(
+        $config = [
             'SomeVar'
-        );
+        ];
 
         $sessionManager = new SessionManager();
 
@@ -528,12 +528,12 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testSetValidatorChainWithClassInConfigArray()
     {
 
-        $config = array(
-            'validators' => array(
+        $config = [
+            'validators' => [
                 'Zend\Session\Validator\HttpUserAgent',
                 'Zend\Session\Validator\RemoteAddr'
-            )
-        );
+            ]
+        ];
 
         $sessionManager = new SessionManager();
 
@@ -554,7 +554,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $list = $validators->getIterator()->toArray();
 
         /** @var \Zend\Stdlib\CallbackHandler $item */
-        $hasItems = array();
+        $hasItems = [];
 
         foreach ($list as &$item) {
             $validator = $item->getCallback();
@@ -575,12 +575,12 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testSetValidatorChainWithServiceInConfigArray()
     {
 
-        $config = array(
-            'validators' => array(
+        $config = [
+            'validators' => [
                 'HttpUserAgent',
                 'RemoteAddr'
-            )
-        );
+            ]
+        ];
 
         $mockHttpUserAgent = $this
             ->getMockBuilder('Zend\Session\Validator\HttpUserAgent')
@@ -617,7 +617,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $list = $validators->getIterator()->toArray();
 
         /** @var \Zend\Stdlib\CallbackHandler $item */
-        $hasItems = array();
+        $hasItems = [];
 
         foreach ($list as &$item) {
             $validator = $item->getCallback();
@@ -639,11 +639,11 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testSetValidatorChainWithInvalidClassInConfigArray()
     {
 
-        $config = array(
-            'validators' => array(
+        $config = [
+            'validators' => [
                 '\Rcm\Factory\SessionManagerFactory',
-            )
-        );
+            ]
+        ];
 
         $sessionManager = new SessionManager();
 

@@ -106,7 +106,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->mockPageRepo->expects($this->any())
             ->method('getPageByName')
             ->will(
-                $this->returnCallback(array($this, 'pageRepoMockCallback'))
+                $this->returnCallback([$this, 'pageRepoMockCallback'])
             );
 
         $mockLayoutManager = $this
@@ -117,7 +117,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $mockLayoutManager->expects($this->any())
             ->method('getSiteLayout')
             ->will(
-                $this->returnCallback(array($this, 'layoutManagerMockCallback'))
+                $this->returnCallback([$this, 'layoutManagerMockCallback'])
             );
 
         $this->mockUserServicePlugin = $this
@@ -149,31 +149,31 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $this->currentSite->setSiteId(1);
 
 
-        $config = array(
-            'contentManager' => array(
+        $config = [
+            'contentManager' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
+                'options' => [
                     'route' => '/rcm[/:page][/:revision]',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Rcm\Controller\IndexController',
                         'action' => 'index',
-                    )
-                ),
-            ),
-            'contentManagerWithPageType' => array(
+                    ]
+                ],
+            ],
+            'contentManagerWithPageType' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
+                'options' => [
                     'route' => '/rcm/:pageType/:page[/:revision]',
-                    'constraints' => array(
+                    'constraints' => [
                         'pageType' => '[a-z]',
-                    ),
-                    'defaults' => array(
+                    ],
+                    'defaults' => [
                         'controller' => 'Rcm\Controller\IndexController',
                         'action' => 'index',
-                    )
-                ),
-            ),
-        );
+                    ]
+                ],
+            ],
+        ];
 
         /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
         $this->controller = new IndexController(
@@ -190,7 +190,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->setService('rcmIsPageAllowed', $this->mockIsPageAllowed);
 
         $this->request = new Request();
-        $this->routeMatch = new RouteMatch(array('controller' => 'index'));
+        $this->routeMatch = new RouteMatch(['controller' => 'index']);
         $this->event = new MvcEvent();
         $routerConfig = $config;
         $router = HttpRouter::factory($routerConfig);

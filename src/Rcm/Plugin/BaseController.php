@@ -98,11 +98,11 @@ class BaseController extends AbstractActionController implements PluginInterface
     public function renderInstance($instanceId, $instanceConfig)
     {
         $view = new ViewModel(
-            array(
+            [
                 'instanceId' => $instanceId,
                 'instanceConfig' => $instanceConfig,
                 'config' => $this->config,
-            )
+            ]
         );
 
         $view->setTemplate($this->template);

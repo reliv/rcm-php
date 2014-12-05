@@ -52,7 +52,7 @@ class UrlToPageTest extends \PHPUnit_Framework_TestCase
 
         $mockPlugin = $this->getMockBuilder('\Rcm\Controller\Plugin\UrlToPage')
             ->disableOriginalConstructor()
-            ->setMethods(array('url'))
+            ->setMethods(['url'])
             ->getMock();
 
         $mockPlugin->expects($this->once())
@@ -106,7 +106,7 @@ class UrlToPageTest extends \PHPUnit_Framework_TestCase
             ->method('fromRoute')
             ->with(
                 $this->equalTo('contentManager'),
-                $this->equalTo(array('page' => $pageName))
+                $this->equalTo(['page' => $pageName])
             );
 
         $controller = $this->getMockBuilder('\Rcm\Controller\IndexController')
@@ -143,10 +143,10 @@ class UrlToPageTest extends \PHPUnit_Framework_TestCase
             ->with(
                 $this->equalTo('contentManagerWithPageType'),
                 $this->equalTo(
-                    array(
+                    [
                         'pageType' => $pageType,
                         'page' => $pageName,
-                    )
+                    ]
                 )
             );
 

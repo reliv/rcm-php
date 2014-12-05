@@ -178,10 +178,10 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetInstanceConfig()
     {
-        $expected = array(
+        $expected = [
             'var1' => 1,
             'var2' => 2
-        );
+        ];
 
         $this->pluginInstance->setInstanceConfig($expected);
 
@@ -200,10 +200,10 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
     public function testClone()
     {
         $instanceId = 42;
-        $instanceConfig = array(
+        $instanceConfig = [
             'var1' => 1,
             'var2' => 2
-        );
+        ];
         $displayName = 'Display Name One';
 
         $md5 = md5(serialize($instanceConfig));
@@ -235,11 +235,11 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
 
     public function getTestData()
     {
-        $data = array();
+        $data = [];
         $data['plugin'] = 'NAME';
         $data['siteWide'] = true;
         $data['displayName'] = 'DISPLAYNAME';
-        $data['instanceConfig'] = array('test' => 'insconf');
+        $data['instanceConfig'] = ['test' => 'insconf'];
         $data['md5'] = 'MD5';
         //
         $data['previousInstance'] = new PluginInstance();
@@ -283,7 +283,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['tooltip'], $obj1->getTooltip());
 
 
-        $data['saveData'] = array('testSave' => 'saveData');
+        $data['saveData'] = ['testSave' => 'saveData'];
 
         $obj1->populate($data);
 

@@ -65,35 +65,35 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->domains = array(
-            'reliv.com' => array(
+        $this->domains = [
+            'reliv.com' => [
                 'domain' => 'local.reliv.com',
                 'primaryDomain' => null,
                 'languageId' => 'eng',
                 'siteId' => 1,
                 'countryId' => 'USA',
-            ),
-            'www.reliv.com' => array(
+            ],
+            'www.reliv.com' => [
                 'domain' => 'local.reliv.com',
                 'primaryDomain' => 'reliv.com',
                 'languageId' => 'eng',
                 'siteId' => 1,
                 'countryId' => 'USA',
-            ),
-        );
+            ],
+        ];
 
-        $this->redirects = array(
-            '/requestOne' => array(
+        $this->redirects = [
+            '/requestOne' => [
                 'requestUrl' => '/requestOne',
                 'redirectUrl' => 'reliv.com/redirectOne',
-            ),
-            '/requestTwo' => array(
+            ],
+            '/requestTwo' => [
                 'requestUrl' => '/requestTwo',
                 'redirectUrl' => 'reliv.com/redirectTwo',
-            ),
-        );
+            ],
+        ];
 
-        $config = array();
+        $config = [];
 
         $this->currentSite = new Site();
         $this->currentSite->setSiteId(1);
@@ -110,14 +110,14 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $map = array();
+        $map = [];
 
         foreach ($this->redirects as $key => $redirect) {
             $redirectEntity = new Redirect();
             $redirectEntity->setRedirectUrl($redirect['requestUrl']);
             $redirectEntity->setRedirectUrl($redirect['redirectUrl']);
 
-            $map[] = array($key, $this->currentSite->getSiteId(), $redirectEntity);
+            $map[] = [$key, $this->currentSite->getSiteId(), $redirectEntity];
         }
 
         $this->redirectRepo->expects($this->any())
@@ -141,9 +141,9 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
     public function testCheckDomain()
     {
         $serverParams = new Parameters(
-            array(
+            [
                 'HTTP_HOST' => 'reliv.com'
-            )
+            ]
         );
 
         $request = new Request();
@@ -167,9 +167,9 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
     public function testCheckDomainRedirectsToPrimary()
     {
         $serverParams = new Parameters(
-            array(
+            [
                 'HTTP_HOST' => 'www.reliv.com'
-            )
+            ]
         );
 
         $request = new Request();
@@ -198,9 +198,9 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
     public function testCheckDomainReturnsNotFound()
     {
         $serverParams = new Parameters(
-            array(
+            [
                 'HTTP_HOST' => 'not.found.com'
-            )
+            ]
         );
 
         $this->currentSite->setDomain(new Domain());
@@ -230,10 +230,10 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
     public function testCheckRedirects()
     {
         $serverParams = new Parameters(
-            array(
+            [
                 'HTTP_HOST' => 'reliv.com',
                 'REQUEST_URI' => '/requestOne'
-            )
+            ]
         );
 
         $request = new Request();
@@ -273,10 +273,10 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
     public function testCheckRedirectsNoRedirectFound()
     {
         $serverParams = new Parameters(
-            array(
+            [
                 'HTTP_HOST' => 'reliv.com',
                 'REQUEST_URI' => '/no-redirect'
-            )
+            ]
         );
 
         $request = new Request();

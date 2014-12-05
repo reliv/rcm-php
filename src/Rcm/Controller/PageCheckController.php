@@ -54,9 +54,9 @@ class PageCheckController extends AbstractRestfulController implements ServiceLo
         $validator = $this->getServiceLocator()->get('Rcm\Validator\Page');
         $validator->setPageType($pageType);
 
-        $return = array(
+        $return = [
             'valid' => true
-        );
+        ];
 
         if (!$validator->isValid($pageId)) {
             $return['valid'] = false;

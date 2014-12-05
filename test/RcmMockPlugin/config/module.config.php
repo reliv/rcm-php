@@ -17,25 +17,25 @@
  * @version   GIT: <git_id>
  */
 
-return array(
+return [
 
-    'rcmPlugin' => array(
-        'RcmMockPlugin' => array(
+    'rcmPlugin' => [
+        'RcmMockPlugin' => [
             'type' => 'Common',
             'display' => 'Mock Object Display Name',
             'tooltip' => 'This plugin does absolutely nothing.  Do not use!',
             'icon' => ''
-        ),
-    ),
-    'view_manager' => array(
-        'template_path_stack' => array(
+        ],
+    ],
+    'view_manager' => [
+        'template_path_stack' => [
             __DIR__ . '/../view',
-        ),
-    ),
-    'controllers' => array(
-        'factories' => array(
+        ],
+    ],
+    'controllers' => [
+        'factories' => [
             'RcmMockPlugin' => 'RcmMockPlugin\Factory\RcmMockPluginFactory'
-        )
-    )
+        ]
+    ]
 
-);
+];

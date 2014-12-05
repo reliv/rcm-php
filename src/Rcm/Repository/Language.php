@@ -26,11 +26,11 @@ use Rcm\Exception\LanguageNotFoundException;
 
 class Language extends EntityRepository {
 
-    protected $validFormats = array(
+    protected $validFormats = [
         'iso639_1',
         'iso639_2b',
         'iso639_2t',
-    );
+    ];
 
     public function getLanguageByString(
         $code,
@@ -49,7 +49,7 @@ class Language extends EntityRepository {
 
         try {
 
-            $result = $this->findOneBy(array($format => $code));
+            $result = $this->findOneBy([$format => $code]);
         } catch (NoResultException $e) {
 
             $result = $default;

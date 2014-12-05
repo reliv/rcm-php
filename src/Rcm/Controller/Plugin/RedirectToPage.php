@@ -69,15 +69,15 @@ class RedirectToPage extends AbstractPlugin
         } elseif ($pageType == 'n') {
             return $controller->redirect()->toRoute(
                 'contentManager',
-                array('page' => $pageName)
+                ['page' => $pageName]
             );
         } else {
             return $controller->redirect()->toRoute(
                 'contentManagerWithPageType',
-                array(
+                [
                     'pageType' => $pageType,
                     'page' => $pageName,
-                )
+                ]
             );
         }
     }

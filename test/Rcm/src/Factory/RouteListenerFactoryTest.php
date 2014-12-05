@@ -74,7 +74,7 @@ class RouteListenerFactoryTest extends \PHPUnit_Framework_TestCase
             'Rcm\Service\CurrentSite',
             $mockCurrentSite
         );
-        $serviceLocator->setService('config', array());
+        $serviceLocator->setService('config', []);
 
         $factory = new RouteListenerFactory();
         $object = $factory->createService($serviceLocator);

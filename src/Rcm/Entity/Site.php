@@ -170,7 +170,7 @@ class Site implements ApiInterface
      *     }
      * )
      **/
-    protected $sitePlugins = array();
+    protected $sitePlugins = [];
 
     /**
      * @var string URL to login page.
@@ -198,23 +198,23 @@ class Site implements ApiInterface
      * @todo This should be part of the DB schema, so each site can have a list on creation
      */
     protected $supportedPageTypes
-        = array(
-            'n' => array(
+        = [
+            'n' => [
                 'type' => 'n',
                 'title' => 'Normal Page',
                 'canClone' => true,
-            ),
-            't' => array(
+            ],
+            't' => [
                 'type' => 't',
                 'title' => 'Template Page',
                 'canClone' => true,
-            ),
-            'z' => array(
+            ],
+            'z' => [
                 'type' => 'z',
                 'title' => 'System Page',
                 'canClone' => true,
-            ),
-        );
+            ],
+        ];
 
     /**
      * Constructor for site
@@ -246,8 +246,8 @@ class Site implements ApiInterface
 
         /* Clone Site Wide Plugins */
         $siteWidePlugins = $this->sitePlugins;
-        $clonedSiteWides = array();
-        $siteWideIdsToChange = array();
+        $clonedSiteWides = [];
+        $siteWideIdsToChange = [];
 
         if (!empty($siteWidePlugins)) {
             /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
@@ -261,7 +261,7 @@ class Site implements ApiInterface
 
         /* Get Cloned Pages */
         $pages = $this->getPages();
-        $clonedPages = array();
+        $clonedPages = [];
 
         if (!empty($pages)) {
             /** @var \Rcm\Entity\Page $page */
@@ -297,7 +297,7 @@ class Site implements ApiInterface
 
         /* Get Cloned Containers */
         $containers = $this->getContainers();
-        $clonedContainers = array();
+        $clonedContainers = [];
 
         if (!empty($containers)) {
             /** @var \Rcm\Entity\Container $container */
@@ -686,7 +686,7 @@ class Site implements ApiInterface
     {
         $plugins = $this->getSiteWidePlugins();
 
-        $list = array();
+        $list = [];
 
 
         if (empty($plugins)) {

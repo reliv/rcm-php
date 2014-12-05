@@ -64,13 +64,13 @@ class PageSearchApiController extends AbstractRestfulController
             ->setParameter('siteId', '%' . $siteId . '%')
             ->getResult();
 
-        $pageNames = array();
+        $pageNames = [];
         foreach ($results as $result) {
 
-            $pageNames[$result['name']] = array(
+            $pageNames[$result['name']] = [
                 'title' => $result['pageTitle'],
                 'url' => $this->urlToPage($result['name'], $result['pageType'])
-            );
+            ];
         }
         return new JsonModel($pageNames);
     }
@@ -93,9 +93,9 @@ class PageSearchApiController extends AbstractRestfulController
         $site = $entityMgr->getRepository(
             '\Rcm\Entity\Site'
         )->findOneBy(
-                array(
+                [
                     'siteId' => $siteId
-                )
+                ]
             );
         /**
          * @var \Rcm\Entity\Page $pages

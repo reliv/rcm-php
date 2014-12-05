@@ -28,7 +28,7 @@ class ApiJsonModel extends JsonModel {
 
     protected $message = '';
 
-    protected $errors = array();
+    protected $errors = [];
 
     /**
      * @param null   $variables
@@ -37,7 +37,7 @@ class ApiJsonModel extends JsonModel {
      * @param array  $errors - Example - Pass the messages from input validator
      * @param null   $options
      */
-    public function __construct($variables = null, $code = 0, $message = 'OK', $errors = array(), $options = null)
+    public function __construct($variables = null, $code = 0, $message = 'OK', $errors = [], $options = null)
     {
         $this->setCode($code);
         $this->setMessage($message);
@@ -118,11 +118,11 @@ class ApiJsonModel extends JsonModel {
      */
     public function serialize()
     {
-        $result = array(
+        $result = [
             'code' => $this->getCode(),
             'message' => $this->getMessage(),
             'errors' => $this->getErrors()
-        );
+        ];
 
         $result['data'] = $this->getVariables();
 

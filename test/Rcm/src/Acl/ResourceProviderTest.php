@@ -59,25 +59,25 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function getConfig()
     {
-        return array(
-            'sites' => array(
+        return [
+            'sites' => [
                 'resourceId' => 'sites',
                 'parentResourceId' => null,
-                'privileges' => array(
+                'privileges' => [
                     'read',
                     'edit',
                     'create',
                     'delete',
                     'theme',
                     'admin',
-                ),
+                ],
                 'name' => 'sites',
                 'description' => 'Global resource for sites',
-            ),
-            'pages' => array(
+            ],
+            'pages' => [
                 'resourceId' => 'pages',
                 'parentResourceId' => null,
-                'privileges' => array(
+                'privileges' => [
                     'read',
                     'edit',
                     'create',
@@ -85,11 +85,11 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                     'copy',
                     'approve',
                     'layout',
-                ),
+                ],
                 'name' => 'pages',
                 'description' => 'Global resource for pages',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -101,7 +101,7 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function getProviderWithMocks($skipSite = false)
     {
-        $mockReturn = array();
+        $mockReturn = [];
 
         if (!$skipSite) {
             $domain = new Domain();
@@ -158,7 +158,7 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResourcesNoConfig()
     {
-        $this->config = array();
+        $this->config = [];
 
         $resourceProvider = $this->getProviderWithMocks(true);
 
@@ -177,11 +177,11 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResourcesWithSites()
     {
-        $siteExpected = array(
-            'sites.10.pages.n.test-page' => array(
+        $siteExpected = [
+            'sites.10.pages.n.test-page' => [
                 'resourceId' => 'sites.10.pages.n.test-page',
                 'parentResourceId' => 'sites.10.pages',
-                'privileges' => array(
+                'privileges' => [
                     'read',
                     'edit',
                     'create',
@@ -189,28 +189,28 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                     'copy',
                     'approve',
                     'layout',
-                ),
+                ],
                 'name' => 'test.reliv.com - pages - test-page',
                 'description' => 'Global resource for pages',
-            ),
-            'sites.10' => array(
+            ],
+            'sites.10' => [
                 'resourceId' => 'sites.10',
                 'parentResourceId' => 'sites',
-                'privileges' => array(
+                'privileges' => [
                     'read',
                     'edit',
                     'create',
                     'delete',
                     'theme',
                     'admin',
-                ),
+                ],
                 'name' => 'test.reliv.com',
                 'description' => 'Global resource for sites',
-            ),
-            'sites.10.pages' => array(
+            ],
+            'sites.10.pages' => [
                 'resourceId' => 'sites.10.pages',
                 'parentResourceId' => 'sites.10',
-                'privileges' => array(
+                'privileges' => [
                     'read',
                     'edit',
                     'create',
@@ -218,11 +218,11 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                     'copy',
                     'approve',
                     'layout',
-                ),
+                ],
                 'name' => 'test.reliv.com - pages',
                 'description' => 'Global resource for pages',
-            ),
-        );
+            ],
+        ];
 
         $expected = array_merge($siteExpected, $this->config);
 
@@ -260,20 +260,20 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResourceForSite()
     {
-        $expected = array(
+        $expected = [
             'resourceId' => 'sites.10',
             'parentResourceId' => 'sites',
-            'privileges' => array(
+            'privileges' => [
                 'read',
                 'edit',
                 'create',
                 'delete',
                 'theme',
                 'admin',
-            ),
+            ],
             'name' => 'sites',
             'description' => 'Global resource for sites',
-        );
+        ];
 
         $resourceProvider = $this->getProviderWithMocks();
 
@@ -292,10 +292,10 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResourceForPage()
     {
-        $expected = array(
+        $expected = [
             'resourceId' => 'sites.10.pages.n.test-page',
             'parentResourceId' => 'sites.10.pages',
-            'privileges' => array(
+            'privileges' => [
                 'read',
                 'edit',
                 'create',
@@ -303,10 +303,10 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                 'copy',
                 'approve',
                 'layout',
-            ),
+            ],
             'name' => 'pages',
             'description' => 'Global resource for pages',
-        );
+        ];
 
         $resourceProvider = $this->getProviderWithMocks();
 

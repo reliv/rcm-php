@@ -276,7 +276,7 @@ class PluginManager
         $css = $headlink->getContainer()->getArrayCopy();
         $script = $headScript->getContainer()->getArrayCopy();
 
-        $return = array(
+        $return = [
             'html' => $html,
             'css' => $this->getContainerSrc($css),
             'js' => $this->getContainerSrc($script),
@@ -291,7 +291,7 @@ class PluginManager
             'canCache' => true,
             'pluginName' => $pluginName,
             'pluginInstanceId' => $pluginInstanceId,
-        );
+        ];
 
 
         if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
@@ -365,10 +365,10 @@ class PluginManager
     public function getContainerSrc($container)
     {
         if (empty($container) || !is_array($container)) {
-            return array();
+            return [];
         }
 
-        $return = array();
+        $return = [];
 
         foreach ($container as &$item) {
 
@@ -447,7 +447,7 @@ class PluginManager
     {
         return $this->entityManager
             ->getRepository('\Rcm\Entity\PluginInstance')
-            ->findOneBy(array('pluginInstanceId' => $pluginInstanceId));
+            ->findOneBy(['pluginInstanceId' => $pluginInstanceId]);
     }
 
     public function getInstanceConfig($pluginInstanceId)
@@ -482,7 +482,7 @@ class PluginManager
             $instanceConfig = $pluginInstance->getInstanceConfig();
 
             if (!is_array($instanceConfig)) {
-                $instanceConfig = array();
+                $instanceConfig = [];
             }
 
             //Merge the default and db instance configs. Db overwrites.
@@ -506,7 +506,7 @@ class PluginManager
     {
         $pluginConfigs = $this->config['rcmPlugin'];
 
-        $defaultInstanceConfig = array();
+        $defaultInstanceConfig = [];
 
         if (array_key_exists(
             'defaultInstanceConfig',
