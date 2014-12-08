@@ -24,6 +24,7 @@ use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
 use Rcm\Exception\ContainerNotFoundException;
+use Rcm\Exception\PageNotFoundException;
 use Rcm\Exception\PluginReturnedResponseException;
 use Rcm\Service\PluginManager;
 use Zend\View\Helper\AbstractHelper;
@@ -167,6 +168,11 @@ class Container extends AbstractHelper
     protected function getPageContainerHtmlByName(Page $page, $name)
     {
         $revision = $page->getCurrentRevision();
+
+        if(empty($revision)){
+            throw new PageNotFoundException('No revision found for this page.');
+        }
+
         $pluginWrappers = $revision->getPluginWrappersByPageContainerName($name);
 
         $pluginHtml = '';
