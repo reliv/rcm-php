@@ -376,6 +376,7 @@ class Page extends ContainerAbstract
         $publishNewPage = false,
         $doFlush = true
     ) {
+
         if (empty($pageData['name'])) {
             throw new InvalidArgumentException(
                 'Missing needed information (name) to create page copy.'
@@ -398,6 +399,7 @@ class Page extends ContainerAbstract
         $clonedPage->populate($pageData);
 
         if (!empty($pageRevisionId) && is_numeric($pageRevisionId)) {
+
             $revisionToUse = $pageToCopy->getRevisionById($pageRevisionId);
 
             if (empty($revisionToUse)) {
@@ -406,15 +408,19 @@ class Page extends ContainerAbstract
                 );
             }
 
-            $clonedPage->setRevisions([]);
-            $clonedRevision = clone $revisionToUse;
-            $clonedPage->addRevision($clonedRevision);
+        } else {
 
-            if ($publishNewPage) {
-                $clonedPage->setPublishedRevision($clonedRevision);
-            } else {
-                $clonedPage->setStagedRevision($clonedRevision);
-            }
+            $revisionToUse = $clonedPage->getPublishedRevision();
+        }
+
+        $clonedRevision = clone $revisionToUse;
+        $clonedPage->setRevisions([]);
+        $clonedPage->addRevision($clonedRevision);
+
+        if ($publishNewPage) {
+            $clonedPage->setPublishedRevision($clonedRevision);
+        } else {
+            $clonedPage->setStagedRevision($clonedRevision);
         }
 
         $destinationSite->addPage($clonedPage);
