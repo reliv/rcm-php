@@ -283,12 +283,19 @@ class Site implements ApiInterface
                 $clonedPage->setName($page->getName());
                 $clonedPages[] = $clonedPage;
 
-                $revision = $clonedPage->getPublishedRevision();
+                $check = $page->getPublishedRevision();
+
+                if (empty($check)) {
+                    continue;
+                }
+
+                $revision = $clonedPage->getStagedRevision();
 
                 if (empty($revision)) {
                     continue;
                 }
 
+                $clonedPage->setPublishedRevision($revision);
                 $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
             }
 

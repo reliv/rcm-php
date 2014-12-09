@@ -75,7 +75,7 @@ class RouteListener
      */
     public function checkDomain(MvcEvent $event)
     {
-        if (empty($this->currentSite->getSiteId()) || $this->currentSite->getStatus() != 'A') {
+        if (!$this->currentSite->getSiteId() || $this->currentSite->getStatus() != 'A') {
 
             if (empty($this->config['Rcm']['defaultDomain'])
                 || $this->config['Rcm']['defaultDomain'] == $this->currentSite->getDomain()->getDomainName()
