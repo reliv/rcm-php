@@ -204,6 +204,7 @@ class Site extends EntityRepository
 
         if ($domain->getPrimary()) {
             $site = $domain->getPrimary()->getSite();
+            $this->_em->detach($site);
             $site->setDomain($domain);
         } else {
             $site = $domain->getSite();
