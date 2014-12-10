@@ -75,30 +75,30 @@ class RouteListener
      */
     public function checkDomain(MvcEvent $event)
     {
-        if (!$this->currentSite->getSiteId() || $this->currentSite->getStatus() != 'A') {
-
-            if (empty($this->config['Rcm']['defaultDomain'])
-                || $this->config['Rcm']['defaultDomain'] == $this->currentSite->getDomain()->getDomainName()
-            ) {
-                $response = new Response();
-                $response->setStatusCode(404);
-                $event->stopPropagation(true);
-
-                return $response;
-            }
-
-            $response = new Response();
-            $response->setStatusCode(302);
-            $response->getHeaders()
-                ->addHeaderLine(
-                    'Location',
-                    '//' . $this->config['Rcm']['defaultDomain']
-                );
-
-            $event->stopPropagation(true);
-            return $response;
-
-        }
+//        if (!$this->currentSite->getSiteId() || $this->currentSite->getStatus() != 'A') {
+//
+//            if (empty($this->config['Rcm']['defaultDomain'])
+//                || $this->config['Rcm']['defaultDomain'] == $this->currentSite->getDomain()->getDomainName()
+//            ) {
+//                $response = new Response();
+//                $response->setStatusCode(404);
+//                $event->stopPropagation(true);
+//
+//                return $response;
+//            }
+//
+//            $response = new Response();
+//            $response->setStatusCode(302);
+//            $response->getHeaders()
+//                ->addHeaderLine(
+//                    'Location',
+//                    '//' . $this->config['Rcm']['defaultDomain']
+//                );
+//
+//            $event->stopPropagation(true);
+//            return $response;
+//
+//        }
 
         $primaryCheck = $this->currentSite->getDomain()->getDomainName();
 
