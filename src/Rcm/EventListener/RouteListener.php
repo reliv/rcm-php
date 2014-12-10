@@ -111,7 +111,7 @@ class RouteListener
             return null;
         }
 
-        if (!empty($primaryCheck) && $primaryCheck != $currentDomain) {
+        if (!empty($primaryCheck) && $primaryCheck->getDomainName() != $currentDomain) {
             $response = new Response();
             $response->setStatusCode(302);
             $response->getHeaders()
