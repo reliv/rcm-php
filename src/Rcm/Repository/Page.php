@@ -397,30 +397,32 @@ class Page extends ContainerAbstract
 
         $clonedPage = clone $pageToCopy;
         $clonedPage->populate($pageData);
+        $revisionToUse = $clonedPage->getStagedRevision();
 
-        if (!empty($pageRevisionId) && is_numeric($pageRevisionId)) {
+        if (!empty($pageRevisionId)) {
+            $sourceRevision = $pageToCopy->getRevisionById($pageRevisionId);
 
-            $revisionToUse = $pageToCopy->getRevisionById($pageRevisionId);
-
-            if (empty($revisionToUse)) {
+            if (empty($sourceRevision)) {
                 throw new PageNotFoundException(
                     'Page revision not found.'
                 );
             }
 
-        } else {
-
-            $revisionToUse = $clonedPage->getPublishedRevision();
+            $revisionToUse = clone $sourceRevision;
+            $clonedPage->setRevisions([]);
+            $clonedPage->addRevision($revisionToUse);
         }
 
-        $clonedRevision = clone $revisionToUse;
-        $clonedPage->setRevisions([]);
-        $clonedPage->addRevision($clonedRevision);
+        if (empty($revisionToUse)) {
+            throw new RuntimeException(
+                'Page revision not found.'
+            );
+        }
 
         if ($publishNewPage) {
-            $clonedPage->setPublishedRevision($clonedRevision);
+            $clonedPage->setPublishedRevision($revisionToUse);
         } else {
-            $clonedPage->setStagedRevision($clonedRevision);
+            $clonedPage->setStagedRevision($revisionToUse);
         }
 
         $destinationSite->addPage($clonedPage);
