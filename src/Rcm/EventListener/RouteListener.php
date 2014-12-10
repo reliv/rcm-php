@@ -117,7 +117,7 @@ class RouteListener
             $response->getHeaders()
                 ->addHeaderLine(
                     'Location',
-                    '//' . $primaryCheck
+                    '//' . $primaryCheck->getDomainName()
                 );
 
             $event->stopPropagation(true);
