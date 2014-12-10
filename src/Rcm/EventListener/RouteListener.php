@@ -100,7 +100,7 @@ class RouteListener
 
         }
 
-        $primaryCheck = $this->currentSite->getDomain()->getDomainName();
+        $primaryCheck = $this->currentSite->getDomain()->getPrimary();
 
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request = $event->getRequest();
