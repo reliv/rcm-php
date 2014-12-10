@@ -278,25 +278,13 @@ class Site implements ApiInterface
                     continue;
                 }
 
-                $clonedPage = clone $page;
-                $clonedPage->setSite($this);
-                $clonedPage->setName($page->getName());
+                $clonedPage = $this->getContainerClone($page, $siteWideIdsToChange);
+
+                if (!$clonedPage) {
+                    continue;
+                }
+
                 $clonedPages[] = $clonedPage;
-
-                $check = $page->getPublishedRevision();
-
-                if (empty($check)) {
-                    continue;
-                }
-
-                $revision = $clonedPage->getStagedRevision();
-
-                if (empty($revision)) {
-                    continue;
-                }
-
-                $clonedPage->setPublishedRevision($revision);
-                $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
             }
 
             $this->pages = new ArrayCollection($clonedPages);
@@ -309,24 +297,43 @@ class Site implements ApiInterface
         if (!empty($containers)) {
             /** @var \Rcm\Entity\Container $container */
             foreach ($containers as $container) {
+                $clonedContainer = $this->getContainerClone($container, $siteWideIdsToChange);
 
-                $clonedContainer = clone $container;
-                $clonedContainer->setSite($this);
-                $clonedContainers[] = $clonedContainer;
-
-                $revision = $clonedContainer->getPublishedRevision();
-
-                if (empty($revision)) {
+                if (!$clonedContainer) {
                     continue;
                 }
 
-                $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
+                $clonedContainers[] = $clonedContainer;
             }
 
             $this->containers = new ArrayCollection($clonedContainers);
         }
+    }
+
+    protected function getContainerClone(ContainerInterface $original, $siteWideIdsToChange)
+    {
+        $clonedContainer = clone $original;
+        $clonedContainer->setSite($this);
+        $clonedContainer->setName($original->getName());
 
 
+        $check = $original->getPublishedRevision();
+
+        if (empty($check)) {
+            return null;
+        }
+
+        $revision = $clonedContainer->getStagedRevision();
+
+        if (empty($revision)) {
+            return null;
+        }
+
+        $clonedContainer->setPublishedRevision($revision);
+
+        $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
+
+        return $clonedContainer;
     }
 
     /**
