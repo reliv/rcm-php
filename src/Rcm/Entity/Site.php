@@ -68,7 +68,7 @@ class Site implements ApiInterface
     /**
      * @var string Theme of site
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $theme;
 
