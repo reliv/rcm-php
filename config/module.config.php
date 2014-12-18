@@ -200,6 +200,16 @@ return [
                     ],
                 ],
             ],
+            'Rcm\Cache\Flush' => [
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/rcm/cache/flush',
+                    'defaults' => [
+                        'controller' => '\Rcm\Controller\CacheController',
+                        'action'     => 'flush',
+                    ],
+                ],
+            ]
 
         ],
     ],
@@ -285,13 +295,14 @@ return [
     'controllers' => [
         'invokables' => [
             'Rcm\Controller\PageCheckController'
-            => 'Rcm\Controller\PageCheckController',
+                => 'Rcm\Controller\PageCheckController',
             'Rcm\Controller\InstanceConfigApiController'
-            => 'Rcm\Controller\InstanceConfigApiController',
+                => 'Rcm\Controller\InstanceConfigApiController',
             'Rcm\Controller\PageSearchApiController'
-            => 'Rcm\Controller\PageSearchApiController',
+                => 'Rcm\Controller\PageSearchApiController',
             'Rcm\Controller\NewPluginInstanceApiController'
-            => 'Rcm\Controller\NewPluginInstanceApiController'
+                => 'Rcm\Controller\NewPluginInstanceApiController',
+            'Rcm\Controller\CacheController' => '\Rcm\Controller\CacheController'
         ],
         'factories' => [
             'Rcm\Controller\IndexController'
