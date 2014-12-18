@@ -1,9 +1,8 @@
 <?php
 /**
- * Index Controller for the entire application
+ * Cache Controller for the application
  *
- * This file contains the main controller used for the application.  This
- * should extend from the base class and should need no further modification.
+ * Currently this controller just allows a person to flush the entire cache
  *
  * PHP version 5.3
  *
@@ -30,11 +29,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 /**
- * Index Controller for the entire application
+ * Cache Controller for the application
  *
- * This is main controller used for the application.  This should extend from
- * the base class located in Rcm and should need no further
- * modification.
+ * Currently this controller just allows a person to flush the entire cache
  *
  * @category  Reliv
  * @package   Rcm
@@ -43,14 +40,6 @@ use Zend\View\Model\ViewModel;
  * @license   License.txt New BSD License
  * @version   Release: 1.0
  * @link      http://github.com/reliv
- *
- * @method Response redirectToPage($pageName, $pageType) Redirect to CMS
- *                                                                  Page
- *
- * @method boolean rcmIsAllowed($resource, $action) Is User Allowed
- * @method boolean shouldShowRevisions($siteId, $pageName, $pageType = 'n') Should Show Revisions for pages
- * @method boolean rcmIsSiteAdmin() Is user a CMS admin
- * @method boolean rcmIsPageAllowed(Page $page) Is user allowed to view a page
  */
 class CacheController extends AbstractActionController
 {
