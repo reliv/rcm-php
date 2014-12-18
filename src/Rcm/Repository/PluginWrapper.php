@@ -90,7 +90,7 @@ class PluginWrapper extends EntityRepository
             && $oldWrapper->getWidth() == $pluginData['width']
             && $oldWrapper->getLayoutContainer() == $pluginData['containerName']
             && ($oldWrapper->getInstance()->getInstanceId() == $pluginInstance->getInstanceId()
-                || $pluginInstance->isSiteWide())
+                || $pluginData['isSitewide'])
         ) {
             return $oldWrapper;
         }
