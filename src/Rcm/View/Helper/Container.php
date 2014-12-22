@@ -23,7 +23,6 @@ use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
-use Rcm\Exception\ContainerNotFoundException;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Exception\PluginReturnedResponseException;
 use Rcm\Service\PluginManager;
@@ -137,7 +136,12 @@ class Container extends AbstractHelper
             $revisionId = -1;
         }
 
-        return $this->getContainerWrapperHtml($revisionId, $name, $pluginHtml, false);
+        return $this->getContainerWrapperHtml(
+            $revisionId,
+            $name,
+            $pluginHtml,
+            false
+        );
     }
 
     /**
@@ -151,8 +155,12 @@ class Container extends AbstractHelper
     {
         $name = $this->prepareContainerName($name);
 
-        /** @var \Zend\View\Model\ViewModel $view */
+        /** @var \Zend\View\Renderer\PhpRenderer $view */
         $view = $this->getView();
+
+        $view->headMeta($view->page->getDescription(), 'description');
+        $view->headMeta($view->page->getKeywords(), 'keywords');
+        $view->headTitle($view->page->getPageTitle());
 
         return $this->getPageContainerHtmlByName($view->page, $name);
     }
@@ -160,7 +168,7 @@ class Container extends AbstractHelper
     /**
      * getPageContainerHtmlByName
      *
-     * @param Page $page
+     * @param Page   $page
      * @param string $name
      *
      * @return string
@@ -169,11 +177,13 @@ class Container extends AbstractHelper
     {
         $revision = $page->getCurrentRevision();
 
-        if(empty($revision)){
+        if (empty($revision)) {
             throw new PageNotFoundException('No revision found for this page.');
         }
 
-        $pluginWrappers = $revision->getPluginWrappersByPageContainerName($name);
+        $pluginWrappers = $revision->getPluginWrappersByPageContainerName(
+            $name
+        );
 
         $pluginHtml = '';
 
@@ -183,16 +193,21 @@ class Container extends AbstractHelper
             }
         }
 
-        return $this->getContainerWrapperHtml($revision->getRevisionId(), $name, $pluginHtml, true);
+        return $this->getContainerWrapperHtml(
+            $revision->getRevisionId(),
+            $name,
+            $pluginHtml,
+            true
+        );
     }
 
     /**
      * getContainerWrapperHtml
      *
      * @param Revision $revision
-     * @param string $containerName
-     * @param string $pluginsHtml
-     * @param bool $pageContainer
+     * @param string   $containerName
+     * @param string   $pluginsHtml
+     * @param bool     $pageContainer
      *
      * @return string
      */
@@ -235,7 +250,9 @@ class Container extends AbstractHelper
         $extraStyle = '';
         $resized = 'N';
 
-        $this->pluginManager->prepPluginForDisplay($pluginWrapper->getInstance());
+        $this->pluginManager->prepPluginForDisplay(
+            $pluginWrapper->getInstance()
+        );
         $this->getPluginCss($pluginWrapper->getInstance());
         $this->getPluginHeadScript($pluginWrapper->getInstance());
 
@@ -420,9 +437,9 @@ class Container extends AbstractHelper
      */
     protected function prepareContainerName($name = '')
     {
-        $name = (string) $name;
+        $name = (string)$name;
 
-        if(empty($name)){
+        if (empty($name)) {
 
             return $this->defaultContainerName;
         }
