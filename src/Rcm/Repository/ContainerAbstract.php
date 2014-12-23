@@ -69,61 +69,91 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
         }
 
         $newRevision = new Revision();
-        $this->_em->persist($newRevision);
         $newRevision->setAuthor($author);
         $newRevision->setMd5($md5);
+
+        $isDirty = false;
 
         /** @var \Rcm\Repository\PluginWrapper $pluginWrapperRepo */
         $pluginWrapperRepo = $this->_em->getRepository(
             '\Rcm\Entity\PluginWrapper'
         );
 
-        foreach ($containerData as $pluginData) {
-            $pluginWrapper = null;
+        //Make a list of original wrappers so we can see if one was removed
+        $deletedWrapperIds = [];
+        foreach ($revision->getPluginWrappers() as $wrapper) {
+            $deletedWrapperIds[$wrapper->getPluginWrapperId()] = true;
+        }
 
-            if (!empty($revision)) {
-                /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
-                $pluginWrapper = $revision->getPluginWrapper(
-                    $pluginData['instanceId']
+        if (empty($containerData)) {
+            $isDirty = true;
+        } else {
+            foreach ($containerData as $pluginData) {
+                $pluginWrapper = null;
+
+                if (!empty($revision)) {
+                    /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
+                    $pluginWrapper = $revision->getPluginWrapper(
+                        $pluginData['instanceId']
+                    );
+                    if ($pluginWrapper
+                        && $deletedWrapperIds[$pluginWrapper->getPluginWrapperId(
+                        )]
+                    ) {
+                        unset($deletedWrapperIds[$pluginWrapper->getPluginWrapperId(
+                        )]);
+                    }
+                }
+
+                $newPluginWrapper = $pluginWrapperRepo->savePluginWrapper(
+                    $pluginData,
+                    $pluginWrapper
                 );
+
+                $newRevision->addPluginWrapper($newPluginWrapper);
+
+                if (!empty($pluginWrapper)
+                    && $pluginWrapper->getPluginWrapperId()
+                    == $newPluginWrapper->getPluginWrapperId()
+                    && ($pluginWrapper->getInstance()->getInstanceId()
+                        == $newPluginWrapper->getInstance()->getInstanceId()
+                        || $pluginWrapper->getInstance()->isSiteWide())
+                ) {
+                    continue;
+                }
+dd($pluginWrapper,$newPluginWrapper);
+                $isDirty = true;
+            }
+        }
+
+        if (count($deletedWrapperIds)) {
+            $isDirty = true;
+        }
+
+        if ($isDirty) {
+            $this->_em->persist($newRevision);
+            $this->_em->flush($newRevision);
+
+            $container->addRevision($newRevision);
+
+            if ($publishRevision) {
+                $newRevision->publishRevision();
+                $container->setPublishedRevision($newRevision);
             }
 
-            $newPluginWrapper = $pluginWrapperRepo->savePluginWrapper(
-                $pluginData,
-                $pluginWrapper
-            );
+            $stagedRevision = $container->getStagedRevision();
 
-            $newRevision->addPluginWrapper($newPluginWrapper);
-
-            if (!empty($pluginWrapper)
-                && $pluginWrapper->getPluginWrapperId()
-                == $newPluginWrapper->getPluginWrapperId()
-                && ($pluginWrapper->getInstance()->getInstanceId()
-                    == $newPluginWrapper->getInstance()->getInstanceId()
-                    || $pluginWrapper->getInstance()->isSiteWide())
+            if (!empty($stagedRevision)
+                &&
+                $revision->getRevisionId() == $stagedRevision->getRevisionId()
             ) {
-                continue;
+                $container->setStagedRevision($newRevision);
             }
+
+            $this->_em->flush($container);
+            return $newRevision->getRevisionId();
         }
 
-
-        $container->addRevision($newRevision);
-
-        if ($publishRevision) {
-            $newRevision->publishRevision();
-            $container->setPublishedRevision($newRevision);
-        }
-
-        $stagedRevision = $container->getStagedRevision();
-
-        if (!empty($stagedRevision)
-            && $revision->getRevisionId() == $stagedRevision->getRevisionId()
-        ) {
-            $container->setStagedRevision($newRevision);
-        }
-
-        $this->_em->flush();
-
-        return $newRevision->getRevisionId();
+        return null;
     }
 }
