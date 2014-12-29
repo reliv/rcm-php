@@ -121,7 +121,7 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
                 ) {
                     continue;
                 }
-dd($pluginWrapper,$newPluginWrapper);
+
                 $isDirty = true;
             }
         }
