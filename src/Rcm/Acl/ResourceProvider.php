@@ -215,7 +215,14 @@ class ResourceProvider extends RcmUserResourceProvider
      */
     protected function getSiteResources(Site $site)
     {
-        $primaryDomainName = $site->getDomain()->getDomainName();
+        $primaryDomain = $site->getDomain();
+
+        if(empty($primaryDomain)){
+            // no resources if domain missing
+            return array();
+        }
+
+        $primaryDomainName = $primaryDomain->getDomainName();
         $siteId = $site->getSiteId();
 
         $return['sites.' . $siteId] = [
