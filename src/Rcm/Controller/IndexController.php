@@ -20,10 +20,10 @@
 
 namespace Rcm\Controller;
 
+use Rcm\Entity\Page;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
 use Rcm\Repository\Page as PageRepo;
-use Rcm\Entity\Page;
 use Rcm\Service\LayoutManager;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -63,7 +63,7 @@ class IndexController extends AbstractActionController
     /** @var integer */
     public $pageRevisionId;
 
-    /** @var \Rcm\Entity\Site  */
+    /** @var \Rcm\Entity\Site */
     protected $currentSite;
 
     /** @var integer */
@@ -81,14 +81,14 @@ class IndexController extends AbstractActionController
     /**
      * Constructor
      *
-     * @param LayoutManager $layoutManager   Layout Manager to get layouts.
-     * @param Site          $currentSite     Current Site Entity
-     * @param PageRepo      $pageRepo        Rcm Page Repository
+     * @param LayoutManager $layoutManager Layout Manager to get layouts.
+     * @param Site          $currentSite   Current Site Entity
+     * @param PageRepo      $pageRepo      Rcm Page Repository
      */
     public function __construct(
         LayoutManager $layoutManager,
-        Site          $currentSite,
-        PageRepo      $pageRepo
+        Site $currentSite,
+        PageRepo $pageRepo
     ) {
         $this->layoutManager = $layoutManager;
         $this->currentSite = $currentSite;
@@ -114,14 +114,20 @@ class IndexController extends AbstractActionController
             ->getRouteMatch()
             ->getParam('revision', null);
 
-        return $this->getCmsResponse($this->currentSite,
+        return $this->getCmsResponse(
+            $this->currentSite,
             $this->pageName,
             $this->pageType,
             $this->pageRevisionId
         );
     }
 
-    public function getCmsResponse(Site $site, $pageName, $pageType='n', $revisionId=null) {
+    public function getCmsResponse(
+        Site $site,
+        $pageName,
+        $pageType = 'n',
+        $revisionId = null
+    ) {
 
         /* Get the Page for display */
         $page = $this->pageRepo->getPageByName(
@@ -130,23 +136,8 @@ class IndexController extends AbstractActionController
             $pageType
         );
 
-        if (empty($page)) {
-            $this->pageName = $site->getNotFoundPage();
-            $this->pageType = 'n';
-            $this->pageRevisionId = null;
-
-            $page = $this->pageRepo->getPageByName(
-                $site,
-                $site->getNotFoundPage(),
-                'n'
-            );
-
-            if (empty($page)) {
-                return $this->notFoundAction();
-            }
-
-            $response = $this->getResponse();
-            $response->setStatusCode(410);
+        if (!$page) {
+            $page = $this->renderNotFoundPage($site);
         }
 
         $allowed = $this->rcmIsPageAllowed($page);
@@ -158,25 +149,52 @@ class IndexController extends AbstractActionController
         $this->prepPageRevisionForDisplay($page, $revisionId);
 
         if (!empty($revisionId) && !$page->getCurrentRevision()) {
-            return $this->redirectToPage($page->getName(), $page->getPageType());
+            return $this->redirectToPage(
+                $page->getName(),
+                $page->getPageType()
+            );
         }
 
         // if we have no revision, page is not found
-        if (empty($page->getCurrentRevision())) {
-            $response = $this->getResponse();
-            $response->setStatusCode(404);
+        if (!$page->getCurrentRevision()) {
+            $page = $this->renderNotFoundPage($site);
         }
 
-        $this->prepLayoutView($site , $page, $page->getSiteLayoutOverride());
+        $this->prepLayoutView($site, $page, $page->getSiteLayoutOverride());
 
         $viewModel = new ViewModel(['page' => $page]);
 
         $viewModel->setTemplate(
             'pages/'
-            . $this->layoutManager->getSitePageTemplate($site, $page->getPageLayout())
+            . $this->layoutManager->getSitePageTemplate(
+                $site,
+                $page->getPageLayout()
+            )
         );
 
         return $viewModel;
+    }
+
+    public function renderNotFoundPage($site)
+    {
+        $this->pageName = $site->getNotFoundPage();
+        $this->pageType = 'n';
+        $this->pageRevisionId = null;
+
+        $page = $this->pageRepo->getPageByName(
+            $site,
+            $site->getNotFoundPage(),
+            'n'
+        );
+
+        if (empty($page)) {
+            return $this->notFoundAction();
+        }
+
+        $response = $this->getResponse();
+        $response->setStatusCode(410);
+
+        return $page;
     }
 
     protected function prepLayoutView(Site $site, Page $page, $layoutOverRide)
@@ -193,7 +211,9 @@ class IndexController extends AbstractActionController
             $layoutView->setTemplate('layout/' . $layoutTemplatePath);
         }
 
-        if ($this->pageInfo['currentRevisionId'] != $this->pageInfo['revision']['revisionId']) {
+        if ($this->pageInfo['currentRevisionId']
+            != $this->pageInfo['revision']['revisionId']
+        ) {
             $layoutView->setVariable('rcmDraft', true);
         }
 
@@ -201,8 +221,10 @@ class IndexController extends AbstractActionController
         $layoutView->setVariable('site', $site);
     }
 
-    public function prepPageRevisionForDisplay(Page $page, $pageRevisionId=null)
-    {
+    public function prepPageRevisionForDisplay(
+        Page $page,
+        $pageRevisionId = null
+    ) {
         //  First Check for a page Revision
         if (!empty($pageRevisionId)) {
             $userCanSeeRevisions = $this->shouldShowRevisions(
