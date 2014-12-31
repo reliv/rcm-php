@@ -23,6 +23,7 @@ use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
+use Rcm\Exception\PageNotFoundException;
 use Rcm\Exception\PluginReturnedResponseException;
 use Rcm\Service\PluginManager;
 use Zend\View\Helper\AbstractHelper;
@@ -177,11 +178,7 @@ class Container extends AbstractHelper
         $revision = $page->getCurrentRevision();
 
         if (empty($revision)) {
-            header('HTTP/1.0 404 Not Found');
-            exit($this->getView()->translate(
-                'Coming soon. A page by this name exists but it hasen\'t been published yet.'
-            ));
-            //throw new PageNotFoundException('No revision found for this page.');
+            throw new PageNotFoundException('No revision found for this page.');
         }
 
         $pluginWrappers = $revision->getPluginWrappersByPageContainerName(
