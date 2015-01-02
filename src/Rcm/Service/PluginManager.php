@@ -288,7 +288,7 @@ class PluginManager
             'siteWide' => false,
             'md5' => '',
             'fromCache' => false,
-            'canCache' => true,
+            'canCache' => false,
             'pluginName' => $pluginName,
             'pluginInstanceId' => $pluginInstanceId,
         ];
