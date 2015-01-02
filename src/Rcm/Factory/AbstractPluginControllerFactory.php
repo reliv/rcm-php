@@ -2,6 +2,9 @@
 /**
  * AbstractPluginControllerFactory.php
  *
+ * This class allows plugins to not have to have their own controller or
+ * controller factory if they contain no custom php code.
+ *
  * PHP version 5
  *
  * @category  Reliv
