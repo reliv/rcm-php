@@ -97,8 +97,9 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
                         $pluginData['instanceId']
                     );
                     if ($pluginWrapper
-                        && $deletedWrapperIds[$pluginWrapper->getPluginWrapperId(
-                        )]
+                        && isset(
+                        $deletedWrapperIds[$pluginWrapper->getPluginWrapperId()]
+                        )
                     ) {
                         unset($deletedWrapperIds[$pluginWrapper->getPluginWrapperId(
                         )]);

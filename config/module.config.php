@@ -206,7 +206,7 @@ return [
                     'route' => '/rcm/cache/flush',
                     'defaults' => [
                         'controller' => '\Rcm\Controller\CacheController',
-                        'action'     => 'flush',
+                        'action' => 'flush',
                     ],
                 ],
             ]
@@ -244,49 +244,52 @@ return [
         ]
     ],
     'service_manager' => [
+        'abstract_factories' => [
+            'Rcm\Factory\AbstractPluginControllerFactory'
+        ],
         'factories' => [
             'doctrine.cache.doctrine_cache'
-                => 'Rcm\Factory\DoctrineCacheFactory',
+            => 'Rcm\Factory\DoctrineCacheFactory',
             'Rcm\EventListener\EventWrapper'
-                => 'Rcm\Factory\EventWrapperFactory',
+            => 'Rcm\Factory\EventWrapperFactory',
             'Rcm\EventListener\RouteListener'
-                => 'Rcm\Factory\RouteListenerFactory',
+            => 'Rcm\Factory\RouteListenerFactory',
             'Rcm\EventListener\DispatchListener'
-                => 'Rcm\Factory\DispatchListenerFactory',
+            => 'Rcm\Factory\DispatchListenerFactory',
             'Rcm\EventListener\EventFinishListener'
-                => 'Rcm\Factory\EventFinishListenerFactory',
+            => 'Rcm\Factory\EventFinishListenerFactory',
             'Rcm\EventListener\ViewEventListener'
-                => 'Rcm\Factory\ViewEventListenerFactory',
+            => 'Rcm\Factory\ViewEventListenerFactory',
             'Rcm\Service\PluginManager'
-                => 'Rcm\Factory\PluginManagerFactory',
+            => 'Rcm\Factory\PluginManagerFactory',
             'Rcm\Service\LayoutManager'
-                => 'Rcm\Factory\LayoutManagerFactory',
+            => 'Rcm\Factory\LayoutManagerFactory',
             'Rcm\Service\ResponseHandler'
-                => 'Rcm\Factory\ResponseHandlerFactory',
+            => 'Rcm\Factory\ResponseHandlerFactory',
             'Rcm\Service\Cache'
-                => 'Rcm\Factory\CacheFactory',
+            => 'Rcm\Factory\CacheFactory',
             'Rcm\Service\AssetManagerCache'
-                => 'Rcm\Factory\AssetManagerCacheFactory',
+            => 'Rcm\Factory\AssetManagerCacheFactory',
             'Rcm\Service\SessionMgr'
-                => 'Rcm\Factory\SessionManagerFactory',
+            => 'Rcm\Factory\SessionManagerFactory',
             'Rcm\Acl\ResourceProvider'
-                => 'Rcm\Factory\AclResourceProviderFactory',
+            => 'Rcm\Factory\AclResourceProviderFactory',
             'Rcm\Validator\Page'
-                => 'Rcm\Factory\PageValidatorFactory',
+            => 'Rcm\Factory\PageValidatorFactory',
             'Rcm\Validator\PageTemplate'
-                => 'Rcm\Factory\PageTemplateFactory',
+            => 'Rcm\Factory\PageTemplateFactory',
             'Rcm\Validator\MainLayout'
             => 'Rcm\Factory\MainLayoutValidatorFactory',
             'Rcm\Service\Logger'
-                => 'Rcm\Factory\LoggerFactory',
+            => 'Rcm\Factory\LoggerFactory',
             'Rcm\Service\ZendLogger'
-                => '\Rcm\Factory\ZendLogFactory',
+            => '\Rcm\Factory\ZendLogFactory',
             'Rcm\Service\ZendLogWriter'
-                => '\Rcm\Factory\ZendLogWriterFactory',
+            => '\Rcm\Factory\ZendLogWriterFactory',
             'Rcm\Acl\CmsPermissionsChecks'
-                => '\Rcm\Factory\CmsPermissionsChecksFactory',
+            => '\Rcm\Factory\CmsPermissionsChecksFactory',
             'Rcm\Service\CurrentSite'
-                => '\Rcm\Factory\CurrentSiteFactory',
+            => '\Rcm\Factory\CurrentSiteFactory',
         ],
         'aliases' => [
             'rcmLogger' => 'Rcm\Service\Logger',
@@ -295,40 +298,40 @@ return [
     'controllers' => [
         'invokables' => [
             'Rcm\Controller\PageCheckController'
-                => 'Rcm\Controller\PageCheckController',
+            => 'Rcm\Controller\PageCheckController',
             'Rcm\Controller\InstanceConfigApiController'
-                => 'Rcm\Controller\InstanceConfigApiController',
+            => 'Rcm\Controller\InstanceConfigApiController',
             'Rcm\Controller\PageSearchApiController'
-                => 'Rcm\Controller\PageSearchApiController',
+            => 'Rcm\Controller\PageSearchApiController',
             'Rcm\Controller\NewPluginInstanceApiController'
-                => 'Rcm\Controller\NewPluginInstanceApiController',
+            => 'Rcm\Controller\NewPluginInstanceApiController',
             'Rcm\Controller\CacheController' => '\Rcm\Controller\CacheController'
         ],
         'factories' => [
             'Rcm\Controller\IndexController'
-                => 'Rcm\Factory\IndexControllerFactory',
+            => 'Rcm\Factory\IndexControllerFactory',
         ],
     ],
     'view_helpers' => [
         'factories' => [
             'rcmContainer'
-                => 'Rcm\Factory\ContainerViewHelperFactory',
+            => 'Rcm\Factory\ContainerViewHelperFactory',
             'rcmTextEdit' => 'Rcm\Factory\TextEditFactory',
             'rcmRichEdit' => 'Rcm\Factory\RichEditFactory',
         ],
         'invokables' => [
             'rcmOutOfDateBrowserWarning'
-                => 'Rcm\View\Helper\OutOfDateBrowserWarning',
+            => 'Rcm\View\Helper\OutOfDateBrowserWarning',
             'urlToPage'
-                => 'Rcm\View\Helper\UrlToPage',
+            => 'Rcm\View\Helper\UrlToPage',
             'revisionHelper'
-                => 'Rcm\View\Helper\RevisionHelper',
+            => 'Rcm\View\Helper\RevisionHelper',
         ],
     ],
     'controller_plugins' => [
         'factories' => [
             'shouldShowRevisions'
-                => 'Rcm\Factory\ShouldShowRevisionsPluginFactory',
+            => 'Rcm\Factory\ShouldShowRevisionsPluginFactory',
             'rcmIsAllowed' =>
                 'Rcm\Factory\RcmIsAllowedFactory',
             'rcmIsSiteAdmin' =>
@@ -338,9 +341,9 @@ return [
         ],
         'invokables' => [
             'redirectToPage'
-                => 'Rcm\Controller\Plugin\RedirectToPage',
+            => 'Rcm\Controller\Plugin\RedirectToPage',
             'urlToPage'
-                => 'Rcm\Controller\Plugin\UrlToPage',
+            => 'Rcm\Controller\Plugin\UrlToPage',
         ],
     ],
     'asset_manager' => [
