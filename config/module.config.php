@@ -244,9 +244,6 @@ return [
         ]
     ],
     'service_manager' => [
-        'abstract_factories' => [
-            'Rcm\Factory\AbstractPluginControllerFactory'
-        ],
         'factories' => [
             'doctrine.cache.doctrine_cache'
             => 'Rcm\Factory\DoctrineCacheFactory',
@@ -296,6 +293,9 @@ return [
         ]
     ],
     'controllers' => [
+        'abstract_factories' => [
+            'Rcm\Factory\AbstractPluginControllerFactory'
+        ],
         'invokables' => [
             'Rcm\Controller\PageCheckController'
             => 'Rcm\Controller\PageCheckController',
