@@ -30,11 +30,16 @@ class ApiBase implements ApiInterface
      *
      * @return void
      */
-    public function populate($data)
+    public function populate($data, $ignore = [])
     {
         $setterPrefix = 'set';
 
         foreach ($data as $property => $value) {
+
+            // Check for ignore keys
+            if(in_array($property, $ignore)){
+                continue;
+            }
 
             $setter = $setterPrefix . ucfirst($property);
 
