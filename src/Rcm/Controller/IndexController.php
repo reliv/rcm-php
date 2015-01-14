@@ -23,6 +23,7 @@ namespace Rcm\Controller;
 use Rcm\Entity\Page;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
+use Rcm\Exception\PageNotFoundException;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Service\LayoutManager;
 use Zend\Http\Response;
@@ -188,7 +189,8 @@ class IndexController extends AbstractActionController
         );
 
         if (empty($page)) {
-            return $this->notFoundAction();
+            throw new PageNotFoundException('No default page defined for 404 not found error');
+            // return $this->notFoundAction();
         }
 
         $response = $this->getResponse();
