@@ -19,6 +19,7 @@
 namespace Rcm\Factory;
 
 use Rcm\Entity\Site;
+use Rcm\Logger\DoctrineQueryLoggerWithTime;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
@@ -43,12 +44,18 @@ class CurrentSiteFactory implements FactoryInterface
     /**
      * Create Service
      *
-     * @param ServiceLocatorInterface $viewServiceManager Zend View Helper Mgr
+     * @param ServiceLocatorInterface $serviceLocator Zend View Helper Mgr
      *
      * @return Site
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+//        //Uncomment to turn on sql query logging. They echo in the browser
+//        $serviceLocator->get('Doctrine\ORM\EntityManager')
+//            ->getConnection()
+//            ->getConfiguration()
+//            ->setSQLLogger(new DoctrineQueryLoggerWithTime());
+
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request = $serviceLocator->get('request');
 
