@@ -51,12 +51,4 @@ interface PluginInterface
      * @return \Zend\View\Model\ViewModel
      */
     public function renderInstance($instanceId, $instanceConfig);
-
-    /**
-     * Set serviceManager instance
-     *
-     * @param  ServiceLocatorInterface $serviceLocator
-     * @return void
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator);
 }
