@@ -21,6 +21,8 @@
 namespace Rcm\Plugin;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Stdlib\RequestInterface;
+use Zend\Stdlib\ResponseInterface;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -151,5 +153,29 @@ class BaseController extends AbstractActionController implements PluginInterface
     public function getPluginName()
     {
         return $this->pluginName;
+    }
+
+    /**
+     * Set zend request object
+     *
+     * @param RequestInterface $request
+     *
+     * @return mixed
+     */
+    public function setRequest(RequestInterface $request)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * Set zend response object
+     *
+     * @param ResponseInterface $response
+     *
+     * @return mixed
+     */
+    public function setResponse(ResponseInterface $response)
+    {
+        $this->response = $response;
     }
 }
