@@ -156,18 +156,6 @@ class BaseController extends AbstractActionController implements PluginInterface
     }
 
     /**
-     * Set zend response object
-     *
-     * @param ResponseInterface $response
-     *
-     * @return mixed
-     */
-    public function setResponse(ResponseInterface $response)
-    {
-        $this->response = $response;
-    }
-
-    /**
      * Set zend request object
      *
      * @param RequestInterface $request
@@ -177,5 +165,17 @@ class BaseController extends AbstractActionController implements PluginInterface
     public function setRequest(RequestInterface $request)
     {
         $this->request = $request;
+    }
+
+    /**
+     * Set zend response object
+     *
+     * @param ResponseInterface $response
+     *
+     * @return mixed
+     */
+    public function setResponse(ResponseInterface $response)
+    {
+        $this->response = $response;
     }
 }
