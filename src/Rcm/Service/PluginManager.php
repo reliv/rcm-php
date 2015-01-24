@@ -236,13 +236,8 @@ class PluginManager
             );
         }
 
-        $reflectionRequest = new \ReflectionProperty($controller, 'request');
-        $reflectionRequest->setAccessible(true);
-        $reflectionRequest->setValue($controller, $this->request);
-
-        $reflectionResponse = new \ReflectionProperty($controller, 'response');
-        $reflectionResponse->setAccessible(true);
-        $reflectionResponse->setValue($controller, new Response());
+        $controller->setRequest($this->request);
+        $controller->setResponse(new Response());
 
         $viewModel = $controller->renderInstance(
             $pluginInstanceId,

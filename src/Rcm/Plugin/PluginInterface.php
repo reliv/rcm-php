@@ -21,6 +21,7 @@ namespace Rcm\Plugin;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\RequestInterface;
+use Zend\Stdlib\ResponseInterface;
 
 /**
  * Plugin Controller Interface
@@ -51,4 +52,22 @@ interface PluginInterface
      * @return \Zend\View\Model\ViewModel
      */
     public function renderInstance($instanceId, $instanceConfig);
+
+    /**
+     * Set zend request object
+     *
+     * @param RequestInterface $request
+     *
+     * @return mixed
+     */
+    public function setRequest(RequestInterface $request);
+
+    /**
+     * Set zend response object
+     *
+     * @param ResponseInterface $response
+     *
+     * @return mixed
+     */
+    public function setResponse(ResponseInterface $response);
 }
