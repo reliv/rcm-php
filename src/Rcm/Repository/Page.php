@@ -722,7 +722,7 @@ class Page extends ContainerAbstract
             }
         }
 
-        $page = $siteEntity->getPage($pageName, $pageType);
+        $page = $this->getPageByName($siteEntity, $pageName, $pageType);
         return $this->saveContainer(
             $page,
             $saveData['pageContainer'],
