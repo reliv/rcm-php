@@ -266,8 +266,6 @@ class Container extends AbstractHelper
             $resized = 'Y';
         }
 
-        $extraStyle .= 'float: left; ';
-
         if (!empty($pluginWrapper->getDivFloat())) {
             $extraStyle .= 'float: ' . $pluginWrapper->getDivFloat() . '; ';
         }
