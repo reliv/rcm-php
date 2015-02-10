@@ -183,10 +183,22 @@ class RouteListener
     public function addLocale()
     {
         $locale = $this->currentSite->getLocale();
-        setlocale(
+
+        /* Conversion for Ubuntu and Mac local settings. */
+        if (!setlocale(
             LC_ALL,
-            $locale
-        );
+            $locale.'.utf8'
+        )) {
+            if (!setlocale(
+                LC_ALL,
+                $locale.'.UTF-8'
+            )) {
+                throw new \RuntimeException(
+                    "Unable to set local : ".$locale
+                );
+            }
+        }
+
         \Locale::setDefault($locale);
 
         return null;
