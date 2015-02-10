@@ -193,8 +193,9 @@ class RouteListener
                 LC_ALL,
                 $locale.'.UTF-8'
             )) {
-                throw new \RuntimeException(
-                    "Unable to set local : ".$locale
+                setlocale(
+                    LC_ALL,
+                   'en_US.UTF-8'
                 );
             }
         }
