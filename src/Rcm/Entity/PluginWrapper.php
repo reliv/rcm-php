@@ -76,6 +76,20 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     protected $width = null;
 
     /**
+     * @var int Row Number
+     *
+     * @ORM\Column(type="integer", options={"default":0})
+     */
+    protected $rowNumber = 0;
+
+    /**
+     * @var string Column CSS Class
+     *
+     * @ORM\Column(type="string", options={"default":"col-md-12"})
+     */
+    protected $columnClass = 'col-md-12';
+
+    /**
      * @var integer Order of Layout Placement
      *
      * @ORM\Column(type="string", nullable=true)
@@ -209,6 +223,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
+     * @deprecated
      * Set the height of the plugin html container
      *
      * @param int $height Height for HTML Container
@@ -221,6 +236,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
+     * @deprecated
      * Get the height for the HTML plugin container
      *
      * @return int
@@ -235,6 +251,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
+     * @deprecated
      * Set the width for the html plugin container.
      *
      * @param int $width Width for the Html Plugin Container
@@ -247,6 +264,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
+     * @deprecated
      * Get the width for the html plugin container
      *
      * @return int
@@ -261,6 +279,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
+     * @deprecated
      * Set the float of the HTML plugin container
      *
      * @param string $divFloat Float left, right, none
@@ -273,6 +292,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
+     * @deprecated
      * Get the float for the HTML plugin container
      *
      * @return string
@@ -280,6 +300,50 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     public function getDivFloat()
     {
         return $this->divFloat;
+    }
+
+    /**
+     * setRowNumber
+     *
+     * @param int $rowNumber
+     *
+     * @return void
+     */
+    public function setRowNumber($rowNumber)
+    {
+        $this->rowNumber = (int) $rowNumber;
+    }
+
+    /**
+     * getRowNumber
+     *
+     * @return int
+     */
+    public function getRowNumber()
+    {
+        return (int) $this->rowNumber;
+    }
+
+    /**
+     * setColumnClass
+     *
+     * @param string $columnCss
+     *
+     * @return void
+     */
+    public function setColumnClass($columnCss)
+    {
+        $this->columnCss = (string) $columnCss;
+    }
+
+    /**
+     * getColumnClass
+     *
+     * @return string
+     */
+    public function getColumnClass()
+    {
+        return (string) $this->columnClass;
     }
 
     /**
@@ -309,6 +373,14 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
 
         if (isset($data['divFloat'])) {
             $this->setDivFloat($data['divFloat']);
+        }
+
+        if (isset($data['rowNumber'])) {
+            $this->setRowNumber($data['rowNumber']);
+        }
+
+        if (isset($data['columnClass'])) {
+            $this->setColumnClass($data['columnClass']);
         }
 
         if (isset($data['instance']) && $data['instance'] instanceof PluginInstance) {
