@@ -185,7 +185,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function getRenderOrderNumber()
     {
-        return $this->renderOrder;
+        return (int) $this->renderOrder;
     }
 
     /**
@@ -197,7 +197,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function setRenderOrderNumber($order)
     {
-        $this->renderOrder = $order;
+        $this->renderOrder = (int) $order;
     }
 
     /**

@@ -633,9 +633,9 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                 $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
                 $wrapper->setLayoutContainer($instance['layoutContainer']);
                 $wrapper->setRenderOrderNumber($instance['renderOrder']);
-                $wrapper->setHeight($instance['height']);
-                $wrapper->setWidth($instance['width']);
-                $wrapper->setDivFloat($instance['divFloat']);
+//                $wrapper->setHeight($instance['height']);
+//                $wrapper->setWidth($instance['width']);
+//                $wrapper->setDivFloat($instance['divFloat']);
                 $wrapper->setInstance($plugin);
 
                 $revision->addPluginWrapper($wrapper);
@@ -661,11 +661,11 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertNull($clonedContainer->getContainerId());
-        $this->assertNull($clonedContainer->getStagedRevision());
+        $this->assertNull($clonedContainer->getPublishedRevision());
         $this->assertCount(1, $clonedContainer->getRevisions());
 
         $currentRevision = $this->container->getPublishedRevision();
-        $clonedCurrentRev = $clonedContainer->getPublishedRevision();
+        $clonedCurrentRev = $clonedContainer->getStagedRevision();
 
         /* Test Revision */
         $this->assertNotEquals(
@@ -685,7 +685,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
             $clonedCurrentRev->getCreatedDate()
         );
 
-        $this->assertTrue($clonedCurrentRev->wasPublished());
+        $this->assertFalse($clonedCurrentRev->wasPublished());
 
         $this->assertEquals(
             $currentRevision->getMd5(),

@@ -190,7 +190,6 @@ class IndexController extends AbstractActionController
 
         if (empty($page)) {
             throw new PageNotFoundException('No default page defined for 404 not found error');
-            // return $this->notFoundAction();
         }
 
         $response = $this->getResponse();

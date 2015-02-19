@@ -305,6 +305,7 @@ class Container extends AbstractHelper
             . ' data-rcmPluginDefaultClass="' . $plugin->getPlugin() . ' ' . $displayName . '"'
             . ' data-rcmPluginColumnClass="' . $pluginWrapper->getColumnClass() . '"'
             . ' data-rcmPluginRowNumber="' . $pluginWrapper->getRowNumber() . '"'
+            . ' data-rcmPluginRenderOrderNumber="' . $pluginWrapper->getRenderOrderNumber() . '"'
             . ' data-rcmPluginInstanceId="' . $plugin->getInstanceId() . '"'
             . ' data-rcmPluginWrapperId="' . $pluginWrapper->getPluginWrapperId() . '"'
             . ' data-rcmSiteWidePlugin="' . $plugin->isSiteWide() . '"'
