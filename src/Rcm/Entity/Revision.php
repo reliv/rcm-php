@@ -115,6 +115,8 @@ class Revision
 
     protected $wrappersSortedByPageContainer = [];
 
+    protected $wrappersByRows = [];
+
     /**
      * Constructor for Page Revision Entity.
      */
@@ -255,24 +257,7 @@ class Revision
             return [];
         }
 
-        $wrappers = [];
-
-        /** @var \Rcm\Entity\PluginWrapper $wrapper */
-        foreach($this->pluginWrappers as $wrapper) {
-            $orderNumber = $wrapper->getRenderOrderNumber();
-
-            if (!is_int($orderNumber)) {
-                $orderNumber = count($wrappers);
-            }
-
-            if (!empty($wrappers[$orderNumber])) {
-                $orderNumber++;
-            }
-
-            $wrappers[$orderNumber] = $wrapper;
-        }
-
-        ksort($wrappers);
+        $wrappers = $this->orderPluginWrappersByRenderOrder($this->pluginWrappers);
 
         return $wrappers;
     }
@@ -282,69 +267,50 @@ class Revision
      *
      * @return Array
      */
-    public function getPluginWrappersByRow()
+    public function getPluginWrappersByRow($refresh = false)
     {
         if (empty($this->pluginWrappers)) {
             return [];
         }
 
-        $wrapperRows = [];
-
-        /** @var \Rcm\Entity\PluginWrapper $wrapper */
-        foreach($this->pluginWrappers as $wrapper) {
-
-            $rowNumber = $wrapper->getRowNumber();
-
-            if(!isset($wrapperRows[$rowNumber])){
-                $wrapperRows[$rowNumber] = [];
-            }
-
-            $orderNumber = $wrapper->getRenderOrderNumber();
-
-            if (!is_int($orderNumber)) {
-                $orderNumber = count($wrapperRows[$rowNumber]);
-            }
-
-            if (!empty($wrapperRows[$rowNumber][$orderNumber])) {
-                $orderNumber++;
-            }
-
-            $wrapperRows[$rowNumber][$orderNumber] = $wrapper;
+        // Per request caching
+        if (!empty($this->wrappersByRows) && !$refresh) {
+            return $this->wrappersByRows;
         }
 
-        ksort($wrapperRows);
+        $this->wrappersByRows = $this->orderPluginWrappersByRow(
+            $this->pluginWrappers
+        );
 
-        foreach ($wrapperRows as $wrapperRow){
-
-            ksort($wrapperRow);
-        }
-
-        return $wrapperRows;
+        return $this->wrappersByRows;
     }
 
+    /**
+     * getPluginWrappersByPageContainerName
+     *
+     * @param string $containerName
+     *
+     * @return null
+     */
     public function getPluginWrappersByPageContainerName($containerName)
     {
-        if (empty($this->wrappersSortedByPageContainer)) {
-            /** @var \Rcm\Entity\PluginWrapper $wrapper */
-            foreach($this->pluginWrappers as $wrapper) {
-
-                $renderOrder = $wrapper->getRenderOrderNumber();
-
-                if (!empty($this->wrappersSortedByPageContainer[$wrapper->getLayoutContainer()][$wrapper->getRenderOrderNumber()])) {
-                    $renderOrder++;
-                }
-
-                $this->wrappersSortedByPageContainer[$wrapper->getLayoutContainer()][$renderOrder] = $wrapper;
-            }
-
-            foreach ($this->wrappersSortedByPageContainer as $containerNameKey => $value) {
-                ksort($this->wrappersSortedByPageContainer[$containerNameKey]);
-            }
+        // check cache
+        if (!empty($this->wrappersSortedByPageContainer[$containerName])) {
+            return $this->wrappersSortedByPageContainer[$containerName];
         }
+
+        // if value was not in cache and cache is not empty, we dont have it, return null
+        if (!empty($this->wrappersSortedByPageContainer)) {
+            return null;
+        }
+
+        $this->wrappersSortedByPageContainer
+            = $this->orderPluginWrappersByContainerName($this->pluginWrappers);
 
         if (empty($this->wrappersSortedByPageContainer[$containerName])) {
             return null;
         }
+
 
         return $this->wrappersSortedByPageContainer[$containerName];
     }
@@ -440,5 +406,101 @@ class Revision
     public function getMd5()
     {
         return $this->md5;
+    }
+
+    //////// SORTING ////////
+    /**
+     * orderPluginWrappersByRenderOrder
+     *
+     * @param array $pluginWrappers
+     *
+     * @return array
+     */
+    public function orderPluginWrappersByRenderOrder($pluginWrappers)
+    {
+        $wrappersByRenderOrder = [];
+
+        foreach ($pluginWrappers as $wrapper) {
+
+            $orderNumber = $wrapper->getRenderOrderNumber();
+
+            if (!is_int($orderNumber)) {
+                $orderNumber = count($wrappersByRenderOrder);
+            }
+
+            if (!empty($wrappersByRenderOrder[$orderNumber])) {
+                $orderNumber++;
+            }
+
+            $wrappersByRenderOrder[$orderNumber] = $wrapper;
+        }
+
+        ksort($wrappersByRenderOrder);
+    }
+
+    /**
+     * orderPluginWrappersByRow
+     *
+     * @param array $pluginWrappers
+     *
+     * @return array
+     */
+    public function orderPluginWrappersByRow($pluginWrappers)
+    {
+        $wrappersByRows = [];
+
+        /** @var \Rcm\Entity\PluginWrapper $wrapper */
+        foreach ($pluginWrappers as $wrapper) {
+
+            $rowNumber = $wrapper->getRowNumber();
+
+            if (!isset($wrappersByRows[$rowNumber])) {
+                $wrappersByRows[$rowNumber] = [];
+            }
+
+            $wrappersByRows[$rowNumber][] = $wrapper;
+        }
+
+        ksort($wrappersByRows);
+
+        foreach ($wrappersByRows as $rowNumber => $wrapperRow) {
+
+            $wrapperRow[$rowNumber] = $this->orderPluginWrappersByRenderOrder(
+                $wrapperRow
+            );
+        }
+
+        return $wrappersByRows;
+    }
+
+    /**
+     * orderPluginWrappersByContainerName
+     *
+     * @param array $pluginWrappers
+     *
+     * @return array
+     */
+    public function orderPluginWrappersByContainerName($pluginWrappers)
+    {
+        $wrappersSortedByPageContainer = [];
+
+        /** @var \Rcm\Entity\PluginWrapper $wrapper */
+        foreach ($pluginWrappers as $wrapper) {
+
+            $containerName = $wrapper->getLayoutContainer();
+
+            $wrappersSortedByPageContainer[$containerName][] = $wrapper;
+        }
+
+        foreach (
+            $wrappersSortedByPageContainer as $containerName => $wrapperContainer
+        ) {
+            $wrappersSortedByPageContainer[$containerName]
+                = $this->orderPluginWrappersByRow($wrapperContainer);
+        }
+
+        ksort($wrappersSortedByPageContainer);
+
+        return $wrappersSortedByPageContainer;
     }
 }
