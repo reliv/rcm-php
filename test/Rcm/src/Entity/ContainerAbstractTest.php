@@ -633,9 +633,9 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                 $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
                 $wrapper->setLayoutContainer($instance['layoutContainer']);
                 $wrapper->setRenderOrderNumber($instance['renderOrder']);
-                $wrapper->setHeight($instance['height']);
-                $wrapper->setWidth($instance['width']);
-                $wrapper->setDivFloat($instance['divFloat']);
+//                $wrapper->setHeight($instance['height']);
+//                $wrapper->setWidth($instance['width']);
+//                $wrapper->setDivFloat($instance['divFloat']);
                 $wrapper->setInstance($plugin);
 
                 $revision->addPluginWrapper($wrapper);
