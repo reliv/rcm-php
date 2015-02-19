@@ -108,6 +108,7 @@ class Revision
      *         )
      *     }
      * )
+     * @ORM\OrderBy({"renderOrder" = "ASC"})
      **/
     protected $pluginWrappers;
 
@@ -247,7 +248,7 @@ class Revision
     }
 
     /**
-     * Get Plugin Instances
+     * Get Plugin Instances - Assumes we have ordered them by RenderOrder the DB join
      *
      * @return Array
      */
@@ -257,9 +258,7 @@ class Revision
             return [];
         }
 
-        $wrappers = $this->orderPluginWrappersByRenderOrder($this->pluginWrappers);
-
-        return $wrappers;
+        return $this->pluginWrappers;
     }
 
     /**
@@ -410,36 +409,7 @@ class Revision
 
     //////// SORTING ////////
     /**
-     * orderPluginWrappersByRenderOrder
-     *
-     * @param array $pluginWrappers
-     *
-     * @return array
-     */
-    public function orderPluginWrappersByRenderOrder($pluginWrappers)
-    {
-        $wrappersByRenderOrder = [];
-
-        foreach ($pluginWrappers as $wrapper) {
-
-            $orderNumber = $wrapper->getRenderOrderNumber();
-
-            if (!is_int($orderNumber)) {
-                $orderNumber = count($wrappersByRenderOrder);
-            }
-
-            if (!empty($wrappersByRenderOrder[$orderNumber])) {
-                $orderNumber++;
-            }
-
-            $wrappersByRenderOrder[$orderNumber] = $wrapper;
-        }
-
-        ksort($wrappersByRenderOrder);
-    }
-
-    /**
-     * orderPluginWrappersByRow
+     * orderPluginWrappersByRow - Assumes we have ordered them by RenderOrder the DB join
      *
      * @param array $pluginWrappers
      *
@@ -462,13 +432,6 @@ class Revision
         }
 
         ksort($wrappersByRows);
-
-        foreach ($wrappersByRows as $rowNumber => $wrapperRow) {
-
-            $wrapperRow[$rowNumber] = $this->orderPluginWrappersByRenderOrder(
-                $wrapperRow
-            );
-        }
 
         return $wrappersByRows;
     }
