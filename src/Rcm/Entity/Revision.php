@@ -277,6 +277,51 @@ class Revision
         return $wrappers;
     }
 
+    /**
+     * Get Plugin Instances
+     *
+     * @return Array
+     */
+    public function getPluginWrappersByRow()
+    {
+        if (empty($this->pluginWrappers)) {
+            return [];
+        }
+
+        $wrapperRows = [];
+
+        /** @var \Rcm\Entity\PluginWrapper $wrapper */
+        foreach($this->pluginWrappers as $wrapper) {
+
+            $rowNumber = $wrapper->getRowNumber();
+
+            if(!isset($wrapperRows[$rowNumber])){
+                $wrapperRows[$rowNumber] = [];
+            }
+
+            $orderNumber = $wrapper->getRenderOrderNumber();
+
+            if (!is_int($orderNumber)) {
+                $orderNumber = count($wrapperRows[$rowNumber]);
+            }
+
+            if (!empty($wrapperRows[$rowNumber][$orderNumber])) {
+                $orderNumber++;
+            }
+
+            $wrapperRows[$rowNumber][$orderNumber] = $wrapper;
+        }
+
+        ksort($wrapperRows);
+
+        foreach ($wrapperRows as $wrapperRow){
+
+            ksort($wrapperRow);
+        }
+
+        return $wrapperRows;
+    }
+
     public function getPluginWrappersByPageContainerName($containerName)
     {
         if (empty($this->wrappersSortedByPageContainer)) {

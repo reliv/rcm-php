@@ -5,6 +5,7 @@ namespace Rcm\Acl;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use RcmUser\Service\RcmUserService;
+use RcmUser\User\Entity\UserRoleProperty;
 
 /**
  * Class CmsPermissionChecks
@@ -94,6 +95,16 @@ class CmsPermissionChecks
             'admin',
             'Rcm\Acl\ResourceProvider'
         );
+    }
+
+    public function hasRoleBasedAccess($role)
+    {
+        return $this->rcmUserService->hasRoleBasedAccess($role);
+    }
+
+    public function isCurrentUserLoggedIn()
+    {
+        return $this->rcmUserService->hasIdentity();
     }
 
     /**
@@ -240,6 +251,4 @@ class CmsPermissionChecks
         '.' .
         $pageName;
     }
-
-
 }
