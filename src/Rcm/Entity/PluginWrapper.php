@@ -327,13 +327,13 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     /**
      * setColumnClass
      *
-     * @param string $columnCss
+     * @param string $columnClass
      *
      * @return void
      */
-    public function setColumnClass($columnCss)
+    public function setColumnClass($columnClass)
     {
-        $this->columnCss = (string) $columnCss;
+        $this->columnClass = (string) $columnClass;
     }
 
     /**
