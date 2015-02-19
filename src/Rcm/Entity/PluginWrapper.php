@@ -363,18 +363,6 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
             $this->setRenderOrderNumber($data['renderOrder']);
         }
 
-        if (isset($data['height'])) {
-            $this->setHeight($data['height']);
-        }
-
-        if (isset($data['width'])) {
-            $this->setWidth($data['width']);
-        }
-
-        if (isset($data['divFloat'])) {
-            $this->setDivFloat($data['divFloat']);
-        }
-
         if (isset($data['rowNumber'])) {
             $this->setRowNumber($data['rowNumber']);
         }
