@@ -147,6 +147,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->currentSite = new Site();
         $this->currentSite->setSiteId(1);
+        $this->currentSite->setNotFoundPage('not-found');
 
 
         $config = [
@@ -224,9 +225,9 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $currentSite->setSiteId(1);
 
         $controller = new IndexController(
-                $mockLayoutManager,
-                $currentSite,
-                $mockPageRepo
+            $mockLayoutManager,
+            $currentSite,
+            $mockPageRepo
         );
 
         $this->assertTrue($controller instanceof IndexController);
@@ -251,6 +252,10 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
+        $this->mockIsPageAllowed->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+
         $this->mockShouldShowRevisions->expects($this->any())
             ->method('__invoke')
             ->will($this->returnValue(true));
@@ -259,7 +264,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
-        $result = $this->controller->dispatch($this->request);
+        $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
@@ -278,7 +283,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIndexActionHomePage()
     {
-        $this->pageData = $this->getPageData(42, 'my-test', 443, 'n');
+        $this->pageData = $this->getPageData(42, 'index', 443, 'n');
 
         $this->routeMatch->setParam('action', 'index');
 
@@ -294,7 +299,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->will($this->returnValue(true));
 
-        $result = $this->controller->dispatch($this->request);
+        $this->controller->dispatch($this->request);
 
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
@@ -401,7 +406,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIndexActionPageNotFoundWithCmsPageNotFoundMissing()
     {
-        $this->skipCounter = 2;
+        $this->skipCounter = 1;
         $this->pageData = $this->getPageData(3, 'not-found', 22, 'n');
 
         $this->routeMatch->setParam('action', 'index');
@@ -426,8 +431,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         /** @var \Zend\Http\Response $response */
         $response = $this->controller->getResponse();
 
-        $this->assertEquals(404, $response->getStatusCode());
-        $this->assertEmpty($result->pageInfo);
+        $this->assertEquals(410, $response->getStatusCode());
     }
 
 
@@ -446,6 +450,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
             'my-test',
             443,
             'z',
+            false,
             $this->layoutOverride
         );
 
@@ -515,6 +520,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      * @param integer $pageName           PageName
      * @param integer $revisionId         RevisionId
      * @param string  $pageType           PageType
+     * @param boolean $useStaged          Use staged revision instead of published
      * @param string  $siteLayoutOverride Layout Override
      *
      * @return array
@@ -524,6 +530,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $pageName,
         $revisionId,
         $pageType = 'n',
+        $useStaged = false,
         $siteLayoutOverride = null
     ) {
         $country = new Country();
@@ -563,7 +570,11 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $page->setPageType($pageType);
         $page->addRevision($revision);
         $page->setPublishedRevision($revision);
-        $page->setStagedRevision($revision);
+
+        if ($useStaged) {
+            $page->setStagedRevision($revision);
+        }
+
         $page->setPageId(22);
         $page->setSiteLayoutOverride($siteLayoutOverride);
 
