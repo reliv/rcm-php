@@ -298,9 +298,7 @@ class Container extends AbstractHelper
 
         $displayName = str_replace(' ', '', $plugin->getDisplayName());
 
-        $html = '<div class="rcmPlugin '
-            . $plugin->getPlugin() . ' ' . $displayName . ' '
-            . $pluginWrapper->getColumnClass() . '"'
+        $html = '<div class="rcmPlugin ' . $plugin->getPlugin() . ' ' . $displayName . ' ' . $pluginWrapper->getColumnClass() . '"'
             . ' data-rcmPluginName="' . $plugin->getPlugin() . '"'
             . ' data-rcmPluginDefaultClass="' . $plugin->getPlugin() . ' ' . $displayName . '"'
             . ' data-rcmPluginColumnClass="' . $pluginWrapper->getColumnClass() . '"'
@@ -310,7 +308,7 @@ class Container extends AbstractHelper
             . ' data-rcmPluginWrapperId="' . $pluginWrapper->getPluginWrapperId() . '"'
             . ' data-rcmSiteWidePlugin="' . $plugin->isSiteWide() . '"'
             . ' data-rcmPluginDisplayName="' . $plugin->getDisplayName() . '"'
-            . '">';
+            . '>';
 
         $html .= '<div class="rcmPluginContainer">';
 
