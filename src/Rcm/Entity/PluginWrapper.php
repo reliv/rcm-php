@@ -85,9 +85,9 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     /**
      * @var string Column CSS Class
      *
-     * @ORM\Column(type="string", options={"default":"col-md-12"})
+     * @ORM\Column(type="string", options={"default":"col-sm-12"})
      */
-    protected $columnClass = 'col-md-12';
+    protected $columnClass = 'col-sm-12';
 
     /**
      * @var integer Order of Layout Placement
