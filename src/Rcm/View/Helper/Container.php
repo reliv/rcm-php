@@ -266,9 +266,7 @@ class Container extends AbstractHelper
             return '';
         }
 
-        $rowNumber = $values[0]->getRowNumber();
-
-        $html = '<div class="row number-' . $rowNumber . '">';
+        $html = '<div class="row">';
 
         foreach ($pluginWrapperRow as $wrapper) {
             $html .= $this->getPluginHtml($wrapper);
