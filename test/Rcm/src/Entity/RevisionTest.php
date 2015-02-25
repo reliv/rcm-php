@@ -224,7 +224,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
         $this->revision->removeInstance($wrapperOne);
 
         $actual = $this->revision->getPluginWrappers();
-        
+
         $reIndexedArray = array_values($actual->toArray());
 
         $this->assertEquals($expected, $reIndexedArray);
