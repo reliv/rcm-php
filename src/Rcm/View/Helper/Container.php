@@ -21,7 +21,6 @@ namespace Rcm\View\Helper;
 use Rcm\Entity\Page;
 use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
-use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Exception\PluginReturnedResponseException;
@@ -135,6 +134,11 @@ class Container extends AbstractHelper
             $revisionId = -1;
         }
 
+        // The front end demands rows in empty containers
+        if (empty($pluginHtml)) {
+            $pluginHtml .= '<div class="row"></div>';
+        }
+
         return $this->getContainerWrapperHtml(
             $revisionId,
             $name,
@@ -230,7 +234,7 @@ class Container extends AbstractHelper
 
         $html .= $pluginsHtml;
 
-        $html .= '<div style="clear:both;"></div></div>';
+        $html .= '</div>';
 
         return $html;
     }
@@ -266,9 +270,7 @@ class Container extends AbstractHelper
             return '';
         }
 
-        $rowNumber = $values[0]->getRowNumber();
-
-        $html = '<div class="row number-' . $rowNumber . '">';
+        $html = '<div class="row">';
 
         foreach ($pluginWrapperRow as $wrapper) {
             $html .= $this->getPluginHtml($wrapper);
@@ -298,14 +300,22 @@ class Container extends AbstractHelper
 
         $displayName = str_replace(' ', '', $plugin->getDisplayName());
 
-        $html = '<div class="rcmPlugin ' . $plugin->getPlugin() . ' ' . $displayName . ' ' . $pluginWrapper->getColumnClass() . '"'
+        $html
+            =
+            '<div class="rcmPlugin ' . $plugin->getPlugin() . ' ' . $displayName
+            . ' ' . $pluginWrapper->getColumnClass() . '"'
             . ' data-rcmPluginName="' . $plugin->getPlugin() . '"'
-            . ' data-rcmPluginDefaultClass="' . $plugin->getPlugin() . ' ' . $displayName . '"'
-            . ' data-rcmPluginColumnClass="' . $pluginWrapper->getColumnClass() . '"'
-            . ' data-rcmPluginRowNumber="' . $pluginWrapper->getRowNumber() . '"'
-            . ' data-rcmPluginRenderOrderNumber="' . $pluginWrapper->getRenderOrderNumber() . '"'
+            . ' data-rcmPluginDefaultClass="' . $plugin->getPlugin() . ' '
+            . $displayName . '"'
+            . ' data-rcmPluginColumnClass="' . $pluginWrapper->getColumnClass()
+            . '"'
+            . ' data-rcmPluginRowNumber="' . $pluginWrapper->getRowNumber()
+            . '"'
+            . ' data-rcmPluginRenderOrderNumber="'
+            . $pluginWrapper->getRenderOrderNumber() . '"'
             . ' data-rcmPluginInstanceId="' . $plugin->getInstanceId() . '"'
-            . ' data-rcmPluginWrapperId="' . $pluginWrapper->getPluginWrapperId() . '"'
+            . ' data-rcmPluginWrapperId="' . $pluginWrapper->getPluginWrapperId(
+            ) . '"'
             . ' data-rcmSiteWidePlugin="' . $plugin->isSiteWide() . '"'
             . ' data-rcmPluginDisplayName="' . $plugin->getDisplayName() . '"'
             . '>';
