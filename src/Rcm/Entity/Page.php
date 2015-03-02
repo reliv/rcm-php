@@ -419,7 +419,7 @@ class Page extends ContainerAbstract implements ApiInterface
         }
 
         if (isset($data['name'])) {
-            $this->name = $data['name'];
+            $this->setName($data['name']);
         }
 
         if (isset($data['pageId'])) {
