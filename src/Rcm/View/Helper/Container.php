@@ -300,13 +300,16 @@ class Container extends AbstractHelper
 
         $displayName = str_replace(' ', '', $plugin->getDisplayName());
 
+        if($displayName !== ''){
+            $displayName = ' ' . $displayName;
+        }
+
         $html
             =
-            '<div class="rcmPlugin ' . $plugin->getPlugin() . ' ' . $displayName
+            '<div class="rcmPlugin ' . $plugin->getPlugin() . $displayName
             . ' ' . $pluginWrapper->getColumnClass() . '"'
             . ' data-rcmPluginName="' . $plugin->getPlugin() . '"'
-            . ' data-rcmPluginDefaultClass="' . $plugin->getPlugin() . ' '
-            . $displayName . '"'
+            . ' data-rcmPluginDefaultClass="' . $plugin->getPlugin() . $displayName . '"'
             . ' data-rcmPluginColumnClass="' . $pluginWrapper->getColumnClass()
             . '"'
             . ' data-rcmPluginRowNumber="' . $pluginWrapper->getRowNumber()

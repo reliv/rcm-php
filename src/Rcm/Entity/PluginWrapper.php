@@ -333,7 +333,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function setColumnClass($columnClass)
     {
-        $this->columnClass = (string) $columnClass;
+        $this->columnClass = trim((string) $columnClass);
     }
 
     /**
@@ -343,7 +343,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function getColumnClass()
     {
-        return (string) $this->columnClass;
+        return trim((string) $this->columnClass);
     }
 
     /**
