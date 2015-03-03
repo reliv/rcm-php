@@ -21,7 +21,6 @@ namespace Rcm\View\Helper;
 use Rcm\Entity\Page;
 use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
-use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Exception\PluginReturnedResponseException;
@@ -117,23 +116,27 @@ class Container extends AbstractHelper
         $pluginHtml = '';
 
         if (!empty($container)) {
+
             if (empty($revisionId)) {
                 $revision = $container->getPublishedRevision();
             } else {
                 $revision = $container->getRevisionById($revisionId);
             }
 
-            $pluginWrappers = $revision->getPluginWrappers();
+            $pluginWrapperRows = $revision->getPluginWrappersByRow();
 
-            if (!empty($pluginWrappers)) {
-                /** @var \Rcm\Entity\PluginWrapper $wrapper */
-                foreach ($pluginWrappers as $wrapper) {
-                    $pluginHtml .= $this->getPluginHtml($wrapper);
-                }
+            if (!empty($pluginWrapperRows)) {
+                $pluginHtml = $this->getPluginRowsHtml($pluginWrapperRows);
             }
+
             $revisionId = $revision->getRevisionId();
         } else {
             $revisionId = -1;
+        }
+
+        // The front end demands rows in empty containers
+        if (empty($pluginHtml)) {
+            $pluginHtml .= '<div class="row"></div>';
         }
 
         return $this->getContainerWrapperHtml(
@@ -181,16 +184,15 @@ class Container extends AbstractHelper
             throw new PageNotFoundException('No revision found for this page.');
         }
 
-        $pluginWrappers = $revision->getPluginWrappersByPageContainerName(
+        $pluginWrapperRows = $revision->getPluginWrappersByPageContainerName(
             $name
         );
 
         $pluginHtml = '';
 
-        if (!empty($pluginWrappers) && is_array($pluginWrappers)) {
-            foreach ($pluginWrappers as $wrapper) {
-                $pluginHtml .= $this->getPluginHtml($wrapper);
-            }
+        if (!empty($pluginWrapperRows) && is_array($pluginWrapperRows)) {
+
+            $pluginHtml = $this->getPluginRowsHtml($pluginWrapperRows);
         }
 
         return $this->getContainerWrapperHtml(
@@ -204,7 +206,7 @@ class Container extends AbstractHelper
     /**
      * getContainerWrapperHtml
      *
-     * @param Revision $revision
+     * @param          $revisionId
      * @param string   $containerName
      * @param string   $pluginsHtml
      * @param bool     $pageContainer
@@ -218,7 +220,7 @@ class Container extends AbstractHelper
         $pageContainer = false
     ) {
 
-        $html = '<div class="rcmContainer"'
+        $html = '<div class="container-fluid rcmContainer"'
             . ' data-containerId="' . $containerName . '"'
             . ' data-containerRevision="'
             . $revisionId
@@ -232,11 +234,52 @@ class Container extends AbstractHelper
 
         $html .= $pluginsHtml;
 
-        $html .= '<div style="clear:both;"></div></div>';
+        $html .= '</div>';
 
         return $html;
     }
 
+    /**
+     * getPluginRowsHtml
+     *
+     * @param $pluginWrapperRows
+     *
+     * @return string
+     */
+    protected function getPluginRowsHtml($pluginWrapperRows)
+    {
+        $html = '';
+        foreach ($pluginWrapperRows as $pluginRow) {
+            $html .= $this->getPluginRowHtml($pluginRow);
+        }
+
+        return $html;
+    }
+
+    /**
+     * getPluginRowHtml
+     *
+     * @param array $pluginWrapperRow
+     *
+     * @return string
+     */
+    protected function getPluginRowHtml($pluginWrapperRow)
+    {
+        $values = array_values($pluginWrapperRow);
+        if (empty($values[0])) {
+            return '';
+        }
+
+        $html = '<div class="row">';
+
+        foreach ($pluginWrapperRow as $wrapper) {
+            $html .= $this->getPluginHtml($wrapper);
+        }
+
+        $html .= '</div>';
+
+        return $html;
+    }
 
     /**
      * Get Plugin Html
@@ -247,47 +290,35 @@ class Container extends AbstractHelper
      */
     protected function getPluginHtml(PluginWrapper $pluginWrapper)
     {
-        $extraStyle = '';
-        $resized = 'N';
-
         $this->pluginManager->prepPluginForDisplay(
             $pluginWrapper->getInstance()
         );
         $this->getPluginCss($pluginWrapper->getInstance());
         $this->getPluginHeadScript($pluginWrapper->getInstance());
 
-        if (!empty($pluginWrapper->getHeight())) {
-            $extraStyle .= 'height: ' . $pluginWrapper->getHeight() . '; ';
-            $resized = 'Y';
-        }
-
-        if (!empty($pluginWrapper->getWidth())) {
-            $extraStyle .= 'width: ' . $pluginWrapper->getWidth() . '; ';
-            $resized = 'Y';
-        }
-
-        if (!empty($pluginWrapper->getDivFloat())) {
-            $extraStyle .= 'float: ' . $pluginWrapper->getDivFloat() . '; ';
-        }
-
         $plugin = $pluginWrapper->getInstance();
 
-        $html = '<div class="rcmPlugin '
-            . $plugin->getPlugin() . ' '
-            . str_replace(' ', '', $plugin->getDisplayName())
-            . ' "'
+        $displayName = str_replace(' ', '', $plugin->getDisplayName());
+
+        $html
+            =
+            '<div class="rcmPlugin ' . $plugin->getPlugin() . ' ' . $displayName
+            . ' ' . $pluginWrapper->getColumnClass() . '"'
             . ' data-rcmPluginName="' . $plugin->getPlugin() . '"'
-            . ' data-rcmPluginInstanceId="'
-            . $plugin->getInstanceId()
+            . ' data-rcmPluginDefaultClass="' . $plugin->getPlugin() . ' '
+            . $displayName . '"'
+            . ' data-rcmPluginColumnClass="' . $pluginWrapper->getColumnClass()
             . '"'
-            . ' data-rcmSiteWidePlugin="' . $plugin->isSiteWide()
+            . ' data-rcmPluginRowNumber="' . $pluginWrapper->getRowNumber()
             . '"'
-            . ' data-rcmPluginResized="' . $resized . '"'
-            . ' data-rcmPluginDisplayName="'
-            . $plugin->getDisplayName()
-            . '"'
-            . ' style=" ' . $extraStyle
-            . '">';
+            . ' data-rcmPluginRenderOrderNumber="'
+            . $pluginWrapper->getRenderOrderNumber() . '"'
+            . ' data-rcmPluginInstanceId="' . $plugin->getInstanceId() . '"'
+            . ' data-rcmPluginWrapperId="' . $pluginWrapper->getPluginWrapperId(
+            ) . '"'
+            . ' data-rcmSiteWidePlugin="' . $plugin->isSiteWide() . '"'
+            . ' data-rcmPluginDisplayName="' . $plugin->getDisplayName() . '"'
+            . '>';
 
         $html .= '<div class="rcmPluginContainer">';
 

@@ -85,9 +85,8 @@ class PluginWrapper extends EntityRepository
 
         if (!empty($oldWrapper)
             && $oldWrapper->getRenderOrderNumber() == $pluginData['rank']
-            && $oldWrapper->getDivFloat() == $pluginData['float']
-            && $oldWrapper->getHeight() == $pluginData['height']
-            && $oldWrapper->getWidth() == $pluginData['width']
+            && $oldWrapper->getRowNumber() == $pluginData['rowNumber']
+            && $oldWrapper->getColumnClass() == $pluginData['columnClass']
             && $oldWrapper->getLayoutContainer() == $pluginData['containerName']
             && ($oldWrapper->getInstance()->getInstanceId() == $pluginInstance->getInstanceId()
                 || $pluginData['isSitewide'])
@@ -122,10 +121,6 @@ class PluginWrapper extends EntityRepository
             $pluginData['renderOrder'] = $pluginData['rank'];
         }
 
-        if(!isset($pluginData['divFloat']) && array_key_exists('float', $pluginData)){
-            $pluginData['divFloat'] = $pluginData['float'];
-        }
-
         // Defaults
         if(!isset($pluginData['layoutContainer'])){
             $pluginData['layoutContainer'] = null;
@@ -139,14 +134,10 @@ class PluginWrapper extends EntityRepository
             $pluginData['renderOrder'] = 0;
         }
 
-        if(!isset($pluginData['divFloat'])){
-            $pluginData['divFloat'] = null;
-        }
-
         /** @var \Rcm\Repository\PluginInstance $pluginInstanceRepo */
         $pluginInstanceRepo = $this->_em->getRepository('\Rcm\Entity\PluginInstance');
 
-        return $pluginInstanceRepo->prepareData($pluginData);;
+        return $pluginInstanceRepo->prepareData($pluginData);
     }
 
 }
