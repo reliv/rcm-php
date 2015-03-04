@@ -71,7 +71,7 @@ class PluginWrapper extends EntityRepository
         );
 
         if (!empty($oldWrapper)
-            && ($pluginData['isSitewide'] || $oldWrapper->getInstance()->isSiteWide())
+            && ($pluginData['siteWide'] || $oldWrapper->getInstance()->isSiteWide())
             && $pluginInstance->getInstanceId() != $oldWrapper->getInstance()->getInstanceId()
         ) {
             $queryBuilder = $this->_em->createQueryBuilder();
@@ -89,7 +89,7 @@ class PluginWrapper extends EntityRepository
             && $oldWrapper->getColumnClass() == $pluginData['columnClass']
             && $oldWrapper->getLayoutContainer() == $pluginData['containerName']
             && ($oldWrapper->getInstance()->getInstanceId() == $pluginInstance->getInstanceId()
-                || $pluginData['isSitewide'])
+            || $pluginData['siteWide'])
         ) {
             return $oldWrapper;
         }

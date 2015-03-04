@@ -99,6 +99,7 @@ class PluginInstance extends EntityRepository
         $pluginData = $this->prepareData($pluginData);
 
         if ($pluginData['pluginInstanceId'] > 0) {
+
             return $this->updateExistingPlugin(
                 $pluginData,
                 $forceSave,
@@ -171,8 +172,8 @@ class PluginInstance extends EntityRepository
         $pluginData = $this->prepareData($pluginData);
 
         if (!$forceSave
-            &&
-            $pluginInstance->getMd5() == md5(serialize($pluginData['saveData']))
+            && $pluginInstance->getMd5() == md5(serialize($pluginData['saveData'])
+            && $pluginInstance->isSiteWide() == (bool) $pluginData['siteWide'])
         ) {
             return $pluginInstance;
         }
@@ -254,7 +255,7 @@ class PluginInstance extends EntityRepository
     {
         // Data migration of alternate keys
         if (array_key_exists('instanceId', $pluginData)) {
-            $pluginData['pluginInstanceId'] = $pluginData['instanceId'];
+            $pluginData['pluginInstanceId'] = (int) $pluginData['instanceId'];
         }
 
         if (array_key_exists('sitewideName', $pluginData)) {
