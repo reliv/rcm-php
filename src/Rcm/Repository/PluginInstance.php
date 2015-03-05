@@ -45,6 +45,7 @@ use Rcm\Exception\InvalidArgumentException;
 class PluginInstance extends EntityRepository
 {
     /**
+     * @deprecated
      * Save a plugin instance
      *
      * @param integer $pluginInstanceId Current Instance Id
@@ -112,6 +113,7 @@ class PluginInstance extends EntityRepository
     }
 
     /**
+     * @deprecated
      * saveExistingPlugin
      *
      * @param $pluginInstanceId
@@ -154,7 +156,9 @@ class PluginInstance extends EntityRepository
         $doFlush = true
     ) {
         if (empty($pluginData['pluginInstanceId'])) {
-            throw new InvalidArgumentException('Plugin instance Id required to update.');
+            throw new InvalidArgumentException(
+                'Plugin instance Id required to update.'
+            );
         }
 
         /** @var PluginInstanceEntity $pluginInstance */
@@ -163,8 +167,10 @@ class PluginInstance extends EntityRepository
         );
 
         if (empty($pluginInstance)) {
-            throw new InvalidArgumentException('No plugin found for instance Id: '
-            . $pluginData['pluginInstanceId']);
+            throw new InvalidArgumentException(
+                'No plugin found for instance Id: '
+                . $pluginData['pluginInstanceId']
+            );
         }
 
         $pluginData['plugin'] = $pluginInstance->getPlugin();
@@ -172,8 +178,8 @@ class PluginInstance extends EntityRepository
         $pluginData = $this->prepareData($pluginData);
 
         if (!$forceSave
-            && $pluginInstance->getMd5() == md5(serialize($pluginData['saveData'])
-            && $pluginInstance->isSiteWide() == (bool) $pluginData['siteWide'])
+            && $pluginInstance->getMd5() == md5(serialize($pluginData['saveData']))
+            && $pluginInstance->isSiteWide() == (bool) $pluginData['siteWide']
         ) {
             return $pluginInstance;
         }
@@ -187,6 +193,7 @@ class PluginInstance extends EntityRepository
     }
 
     /**
+     * @deprecated
      * Save a new plugin instance
      *
      * @param string      $pluginName  Plugin name
@@ -207,7 +214,9 @@ class PluginInstance extends EntityRepository
         $doFlush = true
     ) {
         if (empty($displayName) && $siteWide) {
-            throw new \Exception('SiteWide plugin requires a display name to be created.');
+            throw new \Exception(
+                'SiteWide plugin requires a display name to be created.'
+            );
         }
 
         $pluginData['plugin'] = $pluginName;
@@ -255,7 +264,7 @@ class PluginInstance extends EntityRepository
     {
         // Data migration of alternate keys
         if (array_key_exists('instanceId', $pluginData)) {
-            $pluginData['pluginInstanceId'] = (int) $pluginData['instanceId'];
+            $pluginData['pluginInstanceId'] = (int)$pluginData['instanceId'];
         }
 
         if (array_key_exists('sitewideName', $pluginData)) {
