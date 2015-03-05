@@ -68,6 +68,8 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
             }
         }
 
+        $site = $container->getSite();
+
         $newRevision = new Revision();
         $newRevision->setAuthor($author);
         $newRevision->setMd5($md5);
@@ -111,6 +113,7 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
 
                 $newPluginWrapper = $pluginWrapperRepo->savePluginWrapper(
                     $pluginData,
+                    $site,
                     $pluginWrapper
                 );
 
