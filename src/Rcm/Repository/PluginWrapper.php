@@ -23,6 +23,7 @@ namespace Rcm\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Rcm\Entity\PluginWrapper as PluginWrapperEntity;
+use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\RuntimeException;
 
 /**
@@ -45,17 +46,15 @@ use Rcm\Exception\RuntimeException;
 class PluginWrapper extends EntityRepository
 {
     /**
-     * Save a plugin wrapper
+     * savePluginWrapper Save a plugin wrapper
      *
-     * @param                    $pluginData
-     * @param null|PluginWrapperEntity $oldWrapper
+     * @param array $pluginData
+     * @param SiteEntity  $site
+     * @param null  $oldWrapper
      *
-     * @returns PluginWrapperEntity
-     *
-     * @throws \Rcm\Exception\RuntimeException
+     * @return null|PluginWrapperEntity
      */
-
-    public function savePluginWrapper($pluginData, $oldWrapper=null)
+    public function savePluginWrapper($pluginData, SiteEntity $site, $oldWrapper=null)
     {
         if (!empty($oldWrapper) && !is_a($oldWrapper, '\Rcm\Entity\PluginWrapper')) {
             throw new RuntimeException('Wrapper passed in is not a valid plugin wrapper.');
@@ -67,11 +66,12 @@ class PluginWrapper extends EntityRepository
         $pluginData = $this->prepareData($pluginData);
 
         $pluginInstance = $pluginInstanceRepo->updatePlugin(
-            $pluginData
+            $pluginData,
+            $site
         );
 
         if (!empty($oldWrapper)
-            && ($pluginData['isSitewide'] || $oldWrapper->getInstance()->isSiteWide())
+            && ($pluginData['siteWide'] || $oldWrapper->getInstance()->isSiteWide())
             && $pluginInstance->getInstanceId() != $oldWrapper->getInstance()->getInstanceId()
         ) {
             $queryBuilder = $this->_em->createQueryBuilder();
@@ -89,7 +89,7 @@ class PluginWrapper extends EntityRepository
             && $oldWrapper->getColumnClass() == $pluginData['columnClass']
             && $oldWrapper->getLayoutContainer() == $pluginData['containerName']
             && ($oldWrapper->getInstance()->getInstanceId() == $pluginInstance->getInstanceId()
-                || $pluginData['isSitewide'])
+            || $pluginData['siteWide'])
         ) {
             return $oldWrapper;
         }
