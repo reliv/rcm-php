@@ -181,10 +181,10 @@ return [
                     ]
                 ],
             ],
-            'load-balancer/health-check' => [
+            'load-balancer-health-check' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
-                    'route' => '/load-balancer/health-check',
+                    'route' => '/load-balancer-health-check',
                     'defaults' => [
                         'controller' => 'Rcm\Controller\PageSearchApiController',
                         'action' => 'allSitePages',
