@@ -39,7 +39,7 @@ use Zend\View\ViewEvent;
  */
 class EventWrapper
 {
-    /** @var ServiceLocatorInterface  */
+    /** @var ServiceLocatorInterface */
     protected $serviceLocator;
 
     /**
@@ -100,7 +100,7 @@ class EventWrapper
     {
         $matchRoute = $event->getRouteMatch();
 
-        if (empty($matchRoute)){
+        if (empty($matchRoute)) {
             return null;
         }
 
@@ -124,16 +124,19 @@ class EventWrapper
      *
      * @return null
      */
-    public function finishEvent(MvcEvent $event) {
+    public function finishEvent(MvcEvent $event)
+    {
         $matchRoute = $event->getRouteMatch();
 
-        if (empty($matchRoute)){
+        if (empty($matchRoute)) {
             return null;
         }
 
         /** @var \Rcm\EventListener\EventFinishListener $eventFinishListener */
         $eventFinishListener
-            = $this->serviceLocator->get('Rcm\EventListener\EventFinishListener');
+            = $this->serviceLocator->get(
+            'Rcm\EventListener\EventFinishListener'
+        );
 
         $return = $eventFinishListener->processRcmResponses($event);
 

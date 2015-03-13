@@ -98,9 +98,9 @@ class Site extends EntityRepository
     {
         $repo = $this->_em
             ->getRepository('\Rcm\Entity\Site');
-        if($mustBeActive){
-            return $repo ->findBy(['status' => 'A']);
-        }else{
+        if ($mustBeActive) {
+            return $repo->findBy(['status' => 'A']);
+        } else {
             return $repo->findAll();
         }
     }
@@ -146,7 +146,8 @@ class Site extends EntityRepository
         return false;
     }
 
-    public function getSiteWidePluginsList($siteId) {
+    public function getSiteWidePluginsList($siteId)
+    {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('partial site.{siteId}, plugins')
             ->from('\Rcm\Entity\Site', 'site')
@@ -154,7 +155,9 @@ class Site extends EntityRepository
             ->where('site.siteId = :siteId')
             ->setParameter('siteId', $siteId);
 
-        $result = $queryBuilder->getQuery()->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        $result = $queryBuilder->getQuery()->getSingleResult(
+            \Doctrine\ORM\Query::HYDRATE_ARRAY
+        );
 
         if (empty($result) || empty($result['sitePlugins'])) {
             return [];
@@ -164,28 +167,13 @@ class Site extends EntityRepository
     }
 
     /**
-     * Get Site By Domain Name
+     * Gets site from db by domain name
      *
-     * @param string $domain Domain Name to search by
+     * @param $domain
      *
-     * @return SiteEntity
+     * @return null|SiteEntity
      */
-    public function getSiteByDomain($domain) {
-
-        try {
-            return $this->getSiteByDomainFromDb($domain);
-        } catch (NoResultException $e) {
-            $primary = $this->getPrimaryDomain($domain);
-
-            if (!empty($primary)) {
-                return $this->getSiteByDomainFromDb($primary->getDomainName());
-            }
-        }
-
-        return null;
-    }
-
-    protected function getSiteByDomainFromDb($domain)
+    public function getSiteByDomain($domain)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('domain, site, primaryDomain')

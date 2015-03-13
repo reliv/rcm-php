@@ -19,11 +19,11 @@
 namespace Rcm\Factory;
 
 use Rcm\Entity\Site;
-use Rcm\Logger\DoctrineQueryLoggerWithTime;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Validator\Ip;
 
 /**
  * Service Helper for the current site
@@ -61,6 +61,13 @@ class CurrentSiteFactory implements FactoryInterface
 
         $serverParam = $request->getServer();
         $currentDomain = $serverParam->get('HTTP_HOST');
+
+        //Use the default site if the requested domain name is an IP address
+        $ipValidator = new Ip();
+        if ($ipValidator->isValid($currentDomain)) {
+            $config = $serviceLocator->get('config');
+            $currentDomain = $config['Rcm']['defaultDomain'];
+        }
 
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
