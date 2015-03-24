@@ -85,7 +85,6 @@ class BaseController extends AbstractActionController implements PluginInterface
         $this->template = $this->nameLowerDashed . '/plugin';
 
         $this->config = $config;
-
     }
 
     /**
