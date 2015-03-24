@@ -298,6 +298,9 @@ return [
             'Rcm\Service\CurrentSite'
             => '\Rcm\Factory\CurrentSiteFactory',
         ],
+        'invokables' => [
+            'Rcm\Service\DisplayCountService' => 'Rcm\Service\DisplayCountService'
+        ],
         'aliases' => [
             'rcmLogger' => 'Rcm\Service\Logger',
         ]
