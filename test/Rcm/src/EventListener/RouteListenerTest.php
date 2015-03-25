@@ -127,6 +127,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         $this->routeListener = new RouteListener(
             $this->currentSite,
             $this->redirectRepo,
+            new \Zend\Validator\Ip(),
             $config
         );
     }
