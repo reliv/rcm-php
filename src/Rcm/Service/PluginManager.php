@@ -124,6 +124,13 @@ class PluginManager
         return $viewData;
     }
 
+    /**
+     * prepPluginForDisplay
+     *
+     * @param PluginInstance $instance
+     *
+     * @return void
+     */
     public function prepPluginForDisplay(PluginInstance $instance)
     {
         $cacheId = 'rcmPluginInstance_viewData_' . $instance->getInstanceId();
@@ -344,9 +351,6 @@ class PluginManager
         $this->entityManager->flush();
     }
 
-
-
-
     /**
      * Get a plugin containers CSS and Javascript from either the headlink or
      * head script
@@ -386,7 +390,6 @@ class PluginManager
      */
     public function getPluginController($pluginName)
     {
-
         /*
          * Deprecated.  All controllers should come from the controller manager
          * now and not the service manager.
@@ -443,6 +446,13 @@ class PluginManager
             ->findOneBy(['pluginInstanceId' => $pluginInstanceId]);
     }
 
+    /**
+     * getInstanceConfig
+     *
+     * @param $pluginInstanceId
+     *
+     * @return array
+     */
     public function getInstanceConfig($pluginInstanceId)
     {
         $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
@@ -450,6 +460,33 @@ class PluginManager
         if (empty($pluginInstance)) {
             throw new PluginInstanceNotFoundException(
                 'Plugin for instance id ' . $pluginInstanceId . ' not found.'
+            );
+        }
+
+        return $this->getInstanceConfigFromEntity($pluginInstance);
+    }
+
+    /**
+     * getInstanceConfigForPlugin
+     *
+     * @param $pluginInstanceId
+     * @param $pluginName
+     *
+     * @return array
+     */
+    public function getInstanceConfigForPlugin($pluginInstanceId, $pluginName)
+    {
+        $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
+
+        if (empty($pluginInstance)) {
+            throw new PluginInstanceNotFoundException(
+                'Plugin for instance id ' . $pluginInstanceId . ' not found.'
+            );
+        }
+
+        if ($pluginInstance->getPlugin() !== $pluginName) {
+            throw new PluginInstanceNotFoundException(
+                'Plugin for instance id ' . $pluginInstanceId . ' is not a ' . $pluginName
             );
         }
 

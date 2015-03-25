@@ -96,9 +96,11 @@ abstract class AbstractPluginRestfulController extends AbstractRestfulController
 
         $instanceConfig = [];
 
+        $pluginName = $this->getRcmPluginName();
+
         if ($instanceId > 0) {
             try {
-                $instanceConfig = $pluginManager->getInstanceConfig($instanceId);
+                $instanceConfig = $pluginManager->getInstanceConfigForPlugin($instanceId, $pluginName);
             } catch (PluginInstanceNotFoundException $e) {
                 // ignore error
             }
@@ -107,7 +109,7 @@ abstract class AbstractPluginRestfulController extends AbstractRestfulController
         if (empty($instanceConfig)) {
 
             $instanceConfig = $pluginManager->getDefaultInstanceConfig(
-                $this->rcmPluginName
+                $pluginName
             );
         }
 
