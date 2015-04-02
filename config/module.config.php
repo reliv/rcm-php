@@ -370,10 +370,14 @@ return [
             ],
             'collections' => [
                 'modules/rcm/rcm-core.js' => [
+                    'modules/rcm/core/rcm-event-manager.js',
+                    'modules/rcm/core/rcm-loading.js',
                     'modules/rcm/core/rcm.js',
                     'modules/rcm/core/rcm-api.js',
+                    'modules/rcm/core/rcm-dialog.js',
                     'modules/rcm/core/rcm-form-double-submit-protect.js',
-                    'modules/rcm/core/rcm-bootstrap-alert-confirm.js'
+                    'modules/rcm/core/rcm-bootstrap-alert-confirm.js',
+                    'modules/rcm/core/rcm-popout-window.js',
                 ],
             ],
         ],

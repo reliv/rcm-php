@@ -309,7 +309,7 @@ angular.module('rcmApi', [])
             self.apiSuccess = function (data, apiParams, status, headers, config) {
                 // $log.info('An API success: ', data);
 
-                if (data.code > 0) {
+                if (data.code > 0 || typeof data !== 'object') {
 
                     self.prepareErrorData(
                         data,
@@ -349,6 +349,7 @@ angular.module('rcmApi', [])
                 if (!data.code) {
                     data.code = 1;
                 }
+
                 if (!data.message) {
                     data.message = 'An unknown error occured while making request.';
                 }

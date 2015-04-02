@@ -45,3 +45,13 @@
     border-width: 1px;
     height: 34px;
 }
+
+/* */
+.defaultSkin td.mceToolbar {
+    background-color: transparent !important;
+}
+
+.defaultSkin .mceButton, .defaultSkin table.mceLayout tr.mceFirst td,
+.defaultSkin table.mceLayout tr.mceLast td, .defaultSkin table.mceLayout {
+    border: none !important;
+}
