@@ -122,7 +122,7 @@ abstract class ContainerAbstract implements ContainerInterface
      */
     public function getName()
     {
-        return $this->name;
+        return strtolower ($this->name);
     }
 
     /**
@@ -137,6 +137,8 @@ abstract class ContainerAbstract implements ContainerInterface
      */
     public function setName($name)
     {
+        $name = strtolower ($name);
+
         //Check for spaces.  Throw exception if spaces are found.
         if (strpos($name, ' ')) {
             throw new InvalidArgumentException(

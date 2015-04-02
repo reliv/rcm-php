@@ -130,8 +130,8 @@ class IndexController extends AbstractActionController
         $revisionId = null
     ) {
         $requestedPageData = [
-            'rcmPageName' => $pageName,
-            'rcmPageType' => $pageType,
+            'rcmPageName' => strtolower($pageName),
+            'rcmPageType' => strtolower($pageType),
             'rcmPageRevision' => $revisionId,
         ];
 
