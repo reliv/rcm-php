@@ -1,0 +1,65 @@
+<!-- </htmlEditorToolbar.simple> //|| !rcmHtmlEditorService.hasEditors -->
+<div class="htmlEditorToolbar" ng-cloak>
+    <div class="loading" ng-show="rcmHtmlEditorService.toolbarLoading">
+        Loading...
+    </div>
+    <div class="htmlEditorToolbar" ng-cloak
+         ng-hide="rcmHtmlEditorService.toolbarLoading">
+        <div class="mce-fake"
+             ng-show="(rcmHtmlEditorService.showFixedToolbar || !rcmHtmlEditorService.fixedToolbarToggle) && !rcmHtmlEditorService.isEditing">
+            <div class="mce-tinymce mce-tinymce-inline mce-container mce-panel"
+                 role="presentation">
+                <div class="mce-container-body mce-abs-layout">
+                    <div class="mce-toolbar-grp mce-container mce-panel mce-first mce-last">
+                        <div class="mce-container-body mce-stack-layout">
+                            <div class="mce-container mce-toolbar mce-first mce-last mce-stack-layout-item">
+                                <div class="mce-container-body mce-flow-layout">
+                                    <div class="mce-container mce-first mce-flow-layout-item mce-btn-group">
+                                        <div>
+                                            <div class="mce-widget mce-btn mce-first mce-last mce-disabled"
+                                                 tabindex="-1"
+                                                 aria-labelledby="mceu_0"
+                                                 role="button"
+                                                 aria-label="Source code">
+                                                <div class="mce-widget mce-btn mce-first mce-disabled"
+                                                     tabindex="-1"
+                                                     aria-labelledby=" "
+                                                     role="button"
+                                                     aria-label="Bold">
+                                                    <button role="presentation"
+                                                            type="button"
+                                                            tabindex="-1">
+                                                        <i class="mce-ico mce-i-bold">
+                                                        </i>
+                                                    </button>
+                                                </div>
+                                                <div class="mce-widget mce-btn mce-disabled"
+                                                     tabindex="-1"
+                                                     aria-labelledby=" "
+                                                     role="button"
+                                                     aria-label="Italic">
+                                                    <button role="presentation"
+                                                            type="button"
+                                                            tabindex="-1">
+                                                        <i class="mce-ico mce-i-italic">
+                                                        </i>
+                                                    </button>
+                                                </div>
+                                                <button role="presentation"
+                                                        type="button" disabled
+                                                        tabindex="-1">Select editable text to show editor controls
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="externalToolbarWrapper"></div>
+    </div>
+</div>
+<!-- </htmlEditorToolbar.simple> -->
