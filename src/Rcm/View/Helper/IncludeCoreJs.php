@@ -89,7 +89,9 @@ class IncludeCoreJs extends AbstractHelper
         );
 
         $headScript()->prependFile(
-            $view->basePath() . '/modules/rcm/es5-shim-master/es5-shim.min.js'
+            $view->basePath() . '/modules/rcm/es5-shim-master/es5-shim.min.js',
+            'text/javascript',
+            array('conditional' => 'lt IE 9')
         );
         /* </CORE_JS_FILES> */
     }
