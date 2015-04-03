@@ -19,7 +19,7 @@ var RcmLoading = function (onloadingStart, onloadingEnd) {
     self.startLoading = function (namespace, id) {
 
         if (!namespace || !id) {
-            // console.warn('RcmLoading requires unique namespace and id to track loading state'.);
+            // @todo console.warn('RcmLoading requires unique namespace and id to track loading state'.);
             return;
         }
         if (!self.loading[namespace]) {
@@ -60,7 +60,7 @@ var RcmLoading = function (onloadingStart, onloadingEnd) {
     self.endLoading = function (namespace, id) {
 
         if (!namespace || !id) {
-            // console.warn('RcmLoading requires unique namespace and id to track loading state'.);
+            // @todo console.warn('RcmLoading requires unique namespace and id to track loading state'.);
             return;
         }
 
