@@ -339,8 +339,6 @@ return [
             => 'Rcm\View\Helper\UrlToPage',
             'revisionHelper'
             => 'Rcm\View\Helper\RevisionHelper',
-            'rcmJsLibIncludeHtmlEditor' =>
-                'Rcm\View\Helper\IncludeHtmlEditor',
             'rcmJsLibIncludeCoreJs' =>
                 'Rcm\View\Helper\IncludeCoreJs',
         ],
@@ -379,22 +377,6 @@ return [
                     'modules/rcm/core/rcm-form-double-submit-protect.js',
                     'modules/rcm/core/rcm-bootstrap-alert-confirm.js',
                     'modules/rcm/core/rcm-popout-window.js',
-                ],
-                'modules/rcm/rcm-html-editor.js' => [
-
-                    'modules/rcm/html-editor/adapter-tinymce/rcm-html-editor-config.js',
-                    'modules/rcm/html-editor/adapter-tinymce/rcm-html-editor-options.js',
-                    'modules/rcm/html-editor/adapter-tinymce/rcm-html-editor.js',
-                    'modules/rcm/html-editor/adapter-tinymce/rcm-html-editor-toolbar.js',
-
-                    'modules/rcm/html-editor/rcm-html-editor-guid.js',
-                    'modules/rcm/html-editor/rcm-html-editor-event-manager.js',
-                    'modules/rcm/html-editor/rcm-html-editor-service.js',
-
-                    'modules/rcm/html-editor/angular-rcm-html-editor.js',
-                ],
-                'modules/rcm/rcm-html-editor.css' => [
-                    'modules/rcm/html-editor/adapter-tinymce/css/editor.css',
                 ],
             ],
         ],
