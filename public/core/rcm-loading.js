@@ -101,8 +101,8 @@ var RcmLoading = function (onloadingStart, onloadingEnd) {
 
         if (!namespace) {
 
-            for (var i in self.loading) {
-                if (self.loading[i] > 0) {
+            for (var indx in self.loading) {
+                if (self.loading[indx] > 0) {
                     return true;
                 }
             }
@@ -114,7 +114,7 @@ var RcmLoading = function (onloadingStart, onloadingEnd) {
             return false;
         }
 
-        if (!id) {
+        if (id) {
 
             return (self.loading[namespace].indexOf(id) > -1);
         }
