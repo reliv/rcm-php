@@ -156,7 +156,7 @@ angular.module('RcmHtmlEditor', [])
      * Attributes options:
      *  html-editor-options
      *  html-editor-type
-     *  html-editor-attachedToolbar
+     *  html-editor-attached-toolbar
      *  html-editor-base-url
      *  html-editor-size
      *  id
@@ -193,7 +193,7 @@ angular.module('RcmHtmlEditor', [])
      * Attributes options:
      *  html-editor-options
      *  html-editor-type
-     *  html-editor-attachedToolbar
+     *  html-editor-attached-toolbar
      *  html-editor-base-url
      *  html-editor-size
      *  id

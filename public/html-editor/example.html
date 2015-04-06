@@ -33,6 +33,12 @@
     <script type="text/javascript"
             src="/modules/rcm/rcm-html-editor.js"></script>
 
+    <style type="text/css">
+        div[rcm-html-edit] {
+            color: #FF0000;
+        }
+    </style>
+
     <script type="application/javascript">
         angular.module('RcmHtmlEditor')
             /* @EXAMPLE */
@@ -45,7 +51,7 @@
                     function ($scope, $timeout, rcmHtmlEditorService) {
 
                         $scope.myModel = {
-                            a: "My Test Text",
+                            a: "My Example Content",
                             b: "Other Test Text",
                             c: "More Test Text",
                             d: "More Great Test Text",
@@ -119,28 +125,44 @@
 <body>
 <div class="container" ng-app="RcmHtmlEditor" ng-controller="RcmHtmlEditorTestController">
     <div>
-        <h1>RCM HTML Editor Examples</h1>
+        <h1>RCM HTML Editor adapter</h1>
+        <div class="lead">
+            <p>Objective: Make a standard Angular based adapter for open-source HTML editors (TinyMCE, CKEditor, etc..).</p>
+            <p>Currently only supporting TinyMCE.</p>
+        </div>
     </div>
 
     <div>
         <div>
-            <h2>One</h2>
-        </div>
-        <div class="lead">
-            Some details
-        </div>
-        <div>
-            <p>More info</p>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <example>
-                    Basic panel example
-                </example>
-            </div>
+            <h4>Directive can take multiple attribute based arguments:</h4>
+            <ul>
+                <li>html-editor-options="{'settings': 'jasone or angular model'}" - Additional config/settings or override of defaults. These will also be passed directly to the editor (TinyMCE, etc..).</li>
+                <li>html-editor-type="defaults" - The predifined config to use.  Defaults to the "defaults" config.</li>
+                <li>html-editor-attached-toolbar="true" - Used to create a toolbar that is only connected to the the current content.  Requires a toolbar did in the same dom scope as the editor and an ID related to the edito element (id="htmlEditorToolbar-myEditorId").</li>
+                <li>html-editor-size="small" - User to set some standard sizes for the toolbar that will be used.</li>
+                <li>html-editor-base-url="http://example.com" - Used to set a base url for the editor (not usually required)</li>
+                <li>id - This MUST be unique if set.  If this is not set, a GUID will be genterate.</li>
+            </ul>
+            <h4>Example</h4>
+<pre><code>    &lt;div id="htmlEditorToolbar-myEditorId"&gt;
+        &lt;!-- NOTICE how this id maps to the edit area id --&gt;
+    &lt;/div&gt;
+
+    &lt;div id="myEditorId"
+         rcm-html-edit="something"
+         html-editor-options="myOptionsModel"
+         html-editor-type="defaults"
+         html-editor-attached-toolbar="true"
+         html-editor-size="small"
+         html-editor-base-url="/"
+         ng-model="myModelData"
+            &gt;
+        Some place holder content
+    &lt;/div&gt;
+</code></pre>
         </div>
     </div>
-    <!-- //////////////////////////////// -->
+
     <div>
         <div>
             <h2>Fixed Toolbar</h2>
@@ -154,9 +176,8 @@
             <div class="panel-body">
                 <example>
                     <div>
-                        <h5>Toolbar</h5>
-
-                        <p>Shared toolbar</p>
+                        <h3>Shared toolbar</h3>
+                        <p>Same toolbar for all editors</p>
                     </div>
 
                     <div style="position: relative; min-height: 80px;">
@@ -168,7 +189,7 @@
                     </div>
 
                     <div>
-                        <h5>Simple editor</h5>
+                        <h4>Simple editor</h4>
                     </div>
                     <div rcm-html-edit="something"
                          ng-model="myModel.a"
@@ -177,7 +198,7 @@
                     </div>
 
                     <div>
-                        <h5>Simple editor 2 with the same model and toolbar</h5>
+                        <h4>Simple editor 2 with the same model and toolbar</h4>
                     </div>
                     <div rcm-html-edit="something"
                          ng-model="myModel.a"
@@ -192,36 +213,43 @@
             <div class="panel-body">
                 <example>
                     <div>
-                        <h5>Attached Toolbar</h5>
+                        <h3>Attached Toolbar</h3>
 
                         <p>Tool bar is not shared.</p>
                     </div>
 
-                    <div style="position: relative; min-height: 80px;">
-                        <div style="position: absolute; top: 0px; left: 0px; width: 100%; z-index: 1000">
-                            <div html-editor-toolbar>
-                                <!-- Use this to contain a master/shared toolbar -->
-                            </div>
-                        </div>
+                    <div>
+                        <h4>Editor with attached toolbar on top</h4>
                     </div>
 
-                    <div>
-                        <h5>Simple editor</h5>
+                    <div id="htmlEditorToolbar-myEditor1">
+                        <!-- NOTICE how this id maps to the edit area id -->
                     </div>
-                    <div rcm-html-edit="something"
+                    <div id="myEditor1"
+                         rcm-html-edit="something"
+                         html-editor-type="text"
+                         html-editor-attached-toolbar="true"
                          ng-model="myModel.a"
                             >
                         rcmHtmlEdit
                     </div>
 
+
                     <div>
-                        <h5>Simple editor 2 with the same model and toolbar</h5>
+                        <h4>Editor with attached toolbar on bottom</h4>
                     </div>
-                    <div rcm-html-edit="something"
+                    <div id="myEditor2"
+                         rcm-html-edit="something"
+                         html-editor-type="text"
+                         html-editor-attached-toolbar="true"
                          ng-model="myModel.a"
                             >
                         rcmHtmlEdit
                     </div>
+                    <div id="htmlEditorToolbar-myEditor2">
+                        <!-- NOTICE how this id maps to the edit area id -->
+                    </div>
+
                 </example>
             </div>
         </div>
