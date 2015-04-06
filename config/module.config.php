@@ -339,8 +339,6 @@ return [
             => 'Rcm\View\Helper\UrlToPage',
             'revisionHelper'
             => 'Rcm\View\Helper\RevisionHelper',
-            'rcmJsLibIncludeHtmlEditor' =>
-                'Rcm\View\Helper\IncludeHtmlEditor',
             'rcmJsLibIncludeCoreJs' =>
                 'Rcm\View\Helper\IncludeCoreJs',
         ],
@@ -370,6 +368,7 @@ return [
             ],
             'collections' => [
                 'modules/rcm/rcm-core.js' => [
+                    'modules/rcm/core/rcm-guid.js',
                     'modules/rcm/core/rcm-event-manager.js',
                     'modules/rcm/core/rcm-loading.js',
                     'modules/rcm/core/rcm.js',

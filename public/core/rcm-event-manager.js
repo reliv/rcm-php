@@ -1,5 +1,6 @@
 /**
  * RcmEventManager
+ * REQUIRES: rcmGuid
  * @constructor
  */
 var RcmEventManager = function() {
@@ -10,50 +11,67 @@ var RcmEventManager = function() {
      * events
      * @type {{}}
      */
-    self.events = {};
+    var events = {};
 
     /**
      * promises
      * @type {{}}
      */
-    self.promises = {};
+    var promises = {};
+
+    /**
+     * guid
+     * @type {{generate: Function}}
+     */
+    var guid = rcmGuid;
 
     /**
      * on - register listener
      * @param event
      * @param method
-     * @param checkPromise - For checking results of event after it fired
-     * @param id - Can specify an even id so only on listener will be registered
+     * @param [id] - Can specify an even id so only on listener will be registered
+     * @param [checkPromise] - For getting results of event on register of listener, in case it already fired
+     * @returns {event id}
      */
-    self.on = function (event, method, checkPromise, id) {
+    self.on = function (event, method, id, checkPromise) {
 
-        if (!self.events[event]) {
-            self.events[event] = [];
+        if (!events[event]) {
+            events[event] = {};
         }
 
-        if(typeof id  === 'undefined' || id === null) {
-            self.events[event].push(method);
+        if(typeof id  === 'undefined' || id === null || id === '') {
 
-            id = self.events[event].indexOf(method);
-        } else {
-            self.events[event][id] = method;
+            id = guid.generate();
         }
+
+        events[event][id] = method;
 
         if (checkPromise) {
-            self.honorPromise(event, method);
+            honorPromise(event, method);
         }
 
         return id;
     };
 
     /**
-     * clear event and related promises
+     * remove listener
      * @param event
+     * @param id
      */
-    //self.clear = function(event, id){
-    //    self.events[event] = [];
-    //    self.promises[event] = [];
-    //};
+    self.remove = function(event, id){
+
+        if (!events[event]) {
+            return;
+        }
+
+        events[event][id] = undefined;
+
+        try {
+            delete events[event][id];
+        } catch (e) {
+
+        }
+    };
 
     /**
      * trigger listener
@@ -62,15 +80,17 @@ var RcmEventManager = function() {
      */
     self.trigger = function (event, args) {
 
-        if (self.events[event]) {
+        if (events[event]) {
             jQuery.each(
-                self.events[event],
+                events[event],
                 function (index, value) {
-                    value(args);
+                    if(typeof value === 'function') {
+                        value(args);
+                    }
                 }
             );
 
-            self.makePromise(event, args);
+            makePromise(event, args);
         }
     };
 
@@ -79,9 +99,9 @@ var RcmEventManager = function() {
      * @param event
      * @param args
      */
-    self.makePromise = function(event, args){
+    var makePromise = function(event, args){
 
-        self.promises[event] = args;
+        promises[event] = args;
     };
 
     /**
@@ -89,11 +109,30 @@ var RcmEventManager = function() {
      * @param event
      * @param method
      */
-    self.honorPromise = function(event, method){
+    var honorPromise = function(event, method){
 
-        if (self.promises[event]) {
-            method(self.promises[event]);
+        if (promises[event]) {
+            method(promises[event]);
         }
+    };
+
+    /**
+     * hasEvent
+     * @param event
+     * @param id
+     * @returns {boolean}
+     */
+    self.hasEvent = function (event, id) {
+
+        if (!events[event]) {
+            return false;
+        }
+
+        if (!events[event][id]) {
+            return false;
+        }
+
+        return (typeof events[event][id] === 'function');
     };
 
     /**
@@ -103,10 +142,19 @@ var RcmEventManager = function() {
      */
     self.hasEvents = function (event) {
 
-        if (!self.events[event]) {
+        if (!events[event]) {
             return false;
         }
 
-        return (self.events[event].length > 0);
-    }
+        jQuery.each(
+            events[event],
+            function (index, value) {
+                if(typeof value === 'function') {
+                    return true;
+                }
+            }
+        );
+
+        return false;
+    };
 };
