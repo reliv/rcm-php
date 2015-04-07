@@ -2,7 +2,7 @@
 
 namespace Rcm\Factory;
 
-use Zend\Log\Writer\Null;
+use Zend\Log\Writer\Noop;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Log\Logger;
@@ -36,7 +36,7 @@ class ZendLogFactory implements FactoryInterface
         $config = $serviceLocator->get('config');
 
         if (empty($config['rcmLogger']['writer'])) {
-            $writer = new Null();
+            $writer = new Noop();
         } else {
             $writer = $serviceLocator->get(
                 $config['rcmLogger']['writer']
