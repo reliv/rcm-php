@@ -23,37 +23,53 @@ angular.module(
 
                     scope.dialog = RcmDialog.getDialog(dialogId);
 
+                    var existingAction = scope.dialog.getAction('save');
+
+                    var formAction = new RcmDialog.action();
+
+                    formAction.type = 'button';
+                    formAction.label = 'Save';
+                    formAction.css = 'btn btn-primary';
+                    formAction.method = function () {
+
+                        scope.dialog.loading = true;
+                        // @todo may need scope.$apply()
+                        var content = elm.find(".modal-body");
+                        var form = elm.find('form');
+                        var actionUrl = form.attr('action');
+
+                        jQuery.post(actionUrl, form.serialize())
+                            .done(
+                            function (data) {
+                                formAction.type = 'hide';
+                                scope.dialog.loading = false;
+                                scope.$apply();
+                            }
+                        )
+                            .fail(
+                            function () {
+                                scope.dialog.loading = false;
+                                scope.$apply();
+                            }
+                        )
+                            .always(
+                            function (data) {
+
+                                content.html(data);
+                                scope.dialog.loading = false;
+                                $compile(content)(scope);
+                                scope.$apply();
+                            }
+                        );
+                    };
+
+                    if(existingAction) {
+                        formAction = angular.extend(formAction, existingAction);
+                    }
+
                     scope.dialog.setAction(
                         'save',
-                        {
-                            type: 'button',
-                            label: 'Save',
-                            css: 'btn btn-primary',
-                            method: function () {
-                                scope.dialog.loading = true;
-                                // @todo may need scope.$apply()
-                                var content = elm.find(".modal-body");
-                                var form = elm.find('form');
-                                var actionUrl = form.attr('action');
-
-                                jQuery.post(actionUrl, form.serialize())
-                                    .fail(
-                                    function () {
-                                        scope.dialog.loading = false;
-                                        scope.$apply();
-                                    }
-                                )
-                                    .always(
-                                    function (data) {
-
-                                        content.html(data);
-                                        scope.dialog.loading = false;
-                                        $compile(content)(scope);
-                                        scope.$apply();
-                                    }
-                                );
-                            }
-                        }
+                        formAction
                     );
 
                     $http({method: 'GET', url: scope.dialog.url}).

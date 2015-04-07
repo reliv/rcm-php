@@ -119,11 +119,10 @@ var RcmDialog = {
 
         var self = this;
 
-        self.type = 'button'; // close, save, disabled, button
+        self.type = 'button'; // disabled, button, hide
         self.label = 'button';
         self.css = 'btn btn-default';
         self.method = function () {
-
         }
     },
 
@@ -140,12 +139,6 @@ var RcmDialog = {
         self.url = '';
         self.elm = null;
         self.openState = 'init';
-        // @todo make this a part of the actions
-        self.params = {
-            saveLabel: 'Save',
-            closeLabel: 'Close'
-        };
-
         self.preOpened = false;
 
         self.actions = {
@@ -204,6 +197,19 @@ var RcmDialog = {
                 'dialog.setAction',
                 self
             );
+        };
+
+        /**
+         * getAction
+         * @param actionName
+         * @returns {*}
+         */
+        self.getAction = function (actionName){
+            if(self.actions[actionName]){
+                return self.actions[actionName];
+            }
+
+            return null;
         };
 
         /**
@@ -295,7 +301,7 @@ var RcmDialog = {
 
     /**
      * addDialog
-     * @param addDialog
+     * @param dialog
      */
     addDialog: function (dialog) {
 
@@ -403,12 +409,10 @@ angular.module(
 
             var thisCompile = function (tElement, tAttrs) {
 
-                var thisLink = function (scope, elm, attrs, ctrl) {
+                return function (scope, elm, attrs, ctrl) {
 
                     rcmDialogElm = elm;
                 };
-
-                return thisLink;
             };
 
             return {
