@@ -57,15 +57,15 @@ class IncludeCoreJs extends AbstractHelper
 
         /* <RcmHtmlEditor> */
         $view->headScript()->prependFile(
-            $view->basePath() . '/modules/rcm-tinymce-js/tinymce/tinymce.js'
-        );
-
-        $view->headScript()->prependFile(
             $view->basePath() . '/modules/rcm-html-editor/rcm-html-editor.js'
         );
 
         $view->headLink()->prependStylesheet(
             $view->basePath().'/modules/rcm-html-editor/rcm-html-editor.css'
+        );
+
+        $view->headScript()->prependFile(
+            $view->basePath() . '/modules/rcm-tinymce-js/tinymce/tinymce.js'
         );
         /* </RcmHtmlEditor> */
 
