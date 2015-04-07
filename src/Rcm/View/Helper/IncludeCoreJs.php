@@ -55,7 +55,27 @@ class IncludeCoreJs extends AbstractHelper
             $view->basePath() . '/modules/rcm/plugins.css'
         );
 
-        /* <CORE_JS_FILES> */
+        /* <RcmHtmlEditor> */
+        $view->headScript()->prependFile(
+            $view->basePath() . '/modules/rcm-tinymce-js/tinymce/tinymce.js'
+        );
+
+        $view->headScript()->prependFile(
+            $view->basePath() . '/modules/rcm-html-editor/rcm-html-editor.js'
+        );
+
+        $view->headLink()->prependStylesheet(
+            $view->basePath().'/modules/rcm-html-editor/rcm-html-editor.css'
+        );
+        /* </RcmHtmlEditor> */
+
+        /* <RcmDialog> */
+        $headScript()->prependFile(
+            $view->basePath() . '/modules/rcm-dialog/dialog.js'
+        );
+        /* <RcmDialog> */
+
+        /* <RcmCore> */
         $headScript()->prependFile(
             $view->basePath() . '/modules/rcm/rcm-core.js'
         );
@@ -63,6 +83,8 @@ class IncludeCoreJs extends AbstractHelper
             $view->basePath()
             . '/modules/rcm-angular-js/ocLazyLoad/dist/ocLazyLoad.js'
         );
+        /* </RcmCore> */
+
         /* <TwitterBootstrap> */
         $view->headLink()->prependStylesheet(
             $view->basePath()
@@ -78,7 +100,19 @@ class IncludeCoreJs extends AbstractHelper
             $view->basePath()
             . '/modules/rcm-twitter-bootstrap/bootbox/bootbox.min.js'
         );
+
+        $view->headMeta()->appendName(
+            'viewport',
+            'width=device-width, initial-scale=1'
+        );
+
+        $view->headMeta()->appendName(
+            'X-UA-Compatible',
+            'IE=edge'
+        );
         /* <TwitterBootstrap> */
+
+        /* <libraries> */
         $headScript()->prependFile(
             $view->basePath() . '/modules/rcm-angular-js/angular/angular.js'
         );
@@ -93,6 +127,6 @@ class IncludeCoreJs extends AbstractHelper
             'text/javascript',
             array('conditional' => 'lt IE 9')
         );
-        /* </CORE_JS_FILES> */
+        /* </libraries> */
     }
 }
