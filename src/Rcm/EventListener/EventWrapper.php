@@ -98,8 +98,10 @@ class EventWrapper
      */
     public function dispatchEvent(MvcEvent $event)
     {
+        /**
+         * Don't do anything for assets
+         */
         $matchRoute = $event->getRouteMatch();
-
         if (empty($matchRoute)) {
             return null;
         }
