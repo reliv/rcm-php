@@ -419,7 +419,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($clonedContainer->getPublishedRevision());
         $this->assertCount(1, $clonedContainer->getRevisions());
 
-        $this->assertNull($clonedContainer->getName());
+        $this->assertTrue(empty($clonedContainer->getName()));
         $this->assertNull($clonedContainer->getParent());
 
         $currentRevision = $this->page->getPublishedRevision();
@@ -475,7 +475,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testUtilities()
     {
         $data = [];
-        $data['name'] = 'TESTNAME';
+        $data['name'] = 'testname';
         $data['pageTitle'] = 'TESTTITLE';
         $data['pageType'] = 'n';
         $data['description'] = 'TESTDESC';
