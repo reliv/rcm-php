@@ -20,10 +20,8 @@ namespace Rcm\EventListener;
 
 use Rcm\Entity\Page;
 use Rcm\Entity\Revision;
-use Rcm\Entity\Site;
-use Rcm\Service\LayoutManager;
 use Zend\Mvc\MvcEvent;
-use Zend\View\HelperPluginManager;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * RCM Dispatch Listener
@@ -43,31 +41,57 @@ use Zend\View\HelperPluginManager;
  */
 class DispatchListener
 {
-
-    /** @var \Rcm\Service\LayoutManager */
-    protected $layoutManager;
-
-    /** @var \Rcm\Entity\Site */
-    protected $currentSite;
-
-    /** @var \Zend\View\HelperPluginManager */
-    protected $viewHelperManager;
+    /** @var ServiceLocatorInterface */
+    protected $serviceLocator;
 
     /**
      * Constructor
      *
-     * @param LayoutManager       $layoutManager     RCM Layout Manager
-     * @param Site                $currentSite       Rcm Site Manager
-     * @param HelperPluginManager $viewHelperManager Zend Framework View Helper Mgr
+     * @param ServiceLocatorInterface $serviceLocator
      */
-    public function __construct(
-        LayoutManager       $layoutManager,
-        Site                $currentSite,
-        HelperPluginManager $viewHelperManager
-    ) {
-        $this->layoutManager     = $layoutManager;
-        $this->currentSite       = $currentSite;
-        $this->viewHelperManager = $viewHelperManager;
+    public function __construct(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+    }
+
+    /**
+     * getLayoutManager
+     *
+     * @return \Rcm\Service\LayoutManager
+     */
+    protected function getLayoutManager() {
+
+        return $this->serviceLocator->get('Rcm\Service\LayoutManager');
+    }
+
+    /**
+     * getCurrentSite
+     *
+     * @return \Rcm\Entity\Site
+     */
+    protected function getCurrentSite()
+    {
+        return $this->serviceLocator->get('Rcm\Service\CurrentSite');
+    }
+
+    /**
+     * getViewHelperManager
+     *
+     * @return \Zend\View\HelperPluginManager
+     */
+    protected function getViewHelperManager()
+    {
+        return $this->serviceLocator->get('viewHelperManager');
+    }
+
+    /**
+     * getSiteLayoutTemplate
+     *
+     * @return string
+     */
+    protected function getSiteLayoutTemplate()
+    {
+        return $this->getLayoutManager()->getSiteLayout($this->getCurrentSite());
     }
 
     /**
@@ -79,7 +103,6 @@ class DispatchListener
      */
     public function setSiteLayout(MvcEvent $event)
     {
-
         /** @var \Zend\View\Model\ViewModel $viewModel */
         $viewModel = $event->getViewModel();
 
@@ -88,25 +111,28 @@ class DispatchListener
         $fakeRevision = new Revision();
         $fakePage->setCurrentRevision($fakeRevision);
 
+        $currentSite = $this->getCurrentSite();
+        $viewHelperManager = $this->getViewHelperManager();
 
         $viewModel->setVariable('page', $fakePage);
-        $viewModel->setVariable('site', $this->currentSite);
+        $viewModel->setVariable('site', $currentSite);
 
-        $template = $this->layoutManager->getSiteLayout($this->currentSite);
+        $template = $this->getSiteLayoutTemplate();
+
         $viewModel->setTemplate('layout/' . $template);
 
         //Inject Meta Tags
         /** @var \Zend\View\Helper\HeadLink $headLink */
-        $headLink = $this->viewHelperManager->get('headLink');
+        $headLink = $viewHelperManager->get('headLink');
 
         /** @var \Zend\View\Helper\BasePath $basePath */
-        $basePath = $this->viewHelperManager->get('basePath');
+        $basePath = $viewHelperManager->get('basePath');
 
         /** @var \Zend\View\Helper\HeadTitle $headTitle */
-        $headTitle = $this->viewHelperManager->get('headTitle');
+        $headTitle = $viewHelperManager->get('headTitle');
 
-        $favicon = $this->currentSite->getFavIcon();
-        $siteTitle = $this->currentSite->getSiteTitle();
+        $favicon = $currentSite->getFavIcon();
+        $siteTitle = $currentSite->getSiteTitle();
 
         //Add Favicon for site
         if (!empty($favicon)) {
