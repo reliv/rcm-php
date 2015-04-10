@@ -114,12 +114,25 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
         $mockPluginHelper->setService('basePath', $mockBasePath);
         $mockPluginHelper->setService('headTitle', $this->mockHeadTitle);
 
+        $testCase = [
+            ['Rcm\Service\LayoutManager', $mockLayoutManager],
+            ['Rcm\Service\CurrentSite', $currentSite],
+            ['viewHelperManager', $mockPluginHelper],
+        ];
 
-        /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
+        // Zend\ServiceManager\ServiceLocatorInterface
+        $mockServiceLocator = $this->getMockBuilder('\Zend\ServiceManager\ServiceLocatorInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockServiceLocator->expects($this->any())
+            ->method('get')
+            ->will(
+                $this->returnValueMap($testCase)
+            );
+
         $listener = new DispatchListener(
-            $mockLayoutManager,
-            $currentSite,
-            $mockPluginHelper
+            $mockServiceLocator
         );
 
         $event = new MvcEvent();
