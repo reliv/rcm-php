@@ -217,6 +217,41 @@ class Page extends ContainerAbstract implements ApiInterface
     }
 
     /**
+     * Gets the Name property
+     *
+     * @return string Name
+     *
+     */
+    public function getName()
+    {
+        return strtolower ($this->name);
+    }
+
+    /**
+     * Sets the Name property
+     *
+     * @param string $name Name of Page.  Should be URL friendly and should not
+     *                     included spaces.
+     *
+     * @return null
+     *
+     * @throws InvalidArgumentException Exception thrown if name contains spaces.
+     */
+    public function setName($name)
+    {
+        $name = strtolower ($name);
+
+        //Check for spaces.  Throw exception if spaces are found.
+        if (strpos($name, ' ')) {
+            throw new InvalidArgumentException(
+                'Page Names can not contain spaces.'
+            );
+        }
+
+        $this->name = $name;
+    }
+
+    /**
      * Get the current Page ID
      *
      * @return int Unique page ID number
