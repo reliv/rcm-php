@@ -209,7 +209,9 @@ var RcmCore = function () {
     };
 
     /**
-     * @deprecated
+     * @deprecated Use RcmPluginModel.getPluginContainerSelector()
+     * Or Use RcmAdminPlugin.model.getPluginContainerSelector() AKA: pluginHandler.model.getPluginContainerSelector()
+     *
      * From old scripts
      * @param instanceId
      * @returns {string}
@@ -220,12 +222,14 @@ var RcmCore = function () {
     };
 
     /**
-     * @deprecated
+     * @deprecated Use RcmPluginModel.getElm
+     * Or Use RcmAdminPlugin.getElm() AKA: pluginHandler.getElm()
      * From old scripts
      * @param instanceId
      * @returns {*|jQuery|HTMLElement}
      */
     self.getPluginContainer = function (instanceId) {
+
         return $(self.getPluginContainerSelector(instanceId));
     };
 
