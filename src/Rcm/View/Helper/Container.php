@@ -309,7 +309,7 @@ class Container extends AbstractHelper
             '<div class="rcmPlugin ' . $plugin->getPlugin() . $displayName
             . ' ' . $pluginWrapper->getColumnClass() . '"'
             . ' data-rcmPluginName="' . $plugin->getPlugin() . '"'
-            . ' data-rcmPluginDefaultClass="' . $plugin->getPlugin() . $displayName . '"'
+            . ' data-rcmPluginDefaultClass="rcmPlugin ' . $plugin->getPlugin() . $displayName . '"'
             . ' data-rcmPluginColumnClass="' . $pluginWrapper->getColumnClass()
             . '"'
             . ' data-rcmPluginRowNumber="' . $pluginWrapper->getRowNumber()
