@@ -38,6 +38,7 @@
         "php": ">=5.4.0",
         "doctrine/doctrine-orm-module": "0.*",
         "zendframework/zendframework": "2.*",
+        "rm/factories-as-configuration-zf2-module": "1.*",
         "rwoverdijk/assetmanager": "1.*",
         "reliv/rcm-user": "dev-master"
     },
