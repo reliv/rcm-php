@@ -23,6 +23,7 @@ use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Validator\Ip;
 
 /**
  * Service Helper for the current site
@@ -43,17 +44,30 @@ class CurrentSiteFactory implements FactoryInterface
     /**
      * Create Service
      *
-     * @param ServiceLocatorInterface $viewServiceManager Zend View Helper Mgr
+     * @param ServiceLocatorInterface $serviceLocator Zend View Helper Mgr
      *
      * @return Site
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+//        //Uncomment to turn on sql query logging. They echo in the browser
+//        $serviceLocator->get('Doctrine\ORM\EntityManager')
+//            ->getConnection()
+//            ->getConfiguration()
+//            ->setSQLLogger(new DoctrineQueryLoggerWithTime());
+
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request = $serviceLocator->get('request');
 
         $serverParam = $request->getServer();
         $currentDomain = $serverParam->get('HTTP_HOST');
+
+        //Use the default site if the requested domain name is an IP address
+        $ipValidator = new Ip();
+        if ($ipValidator->isValid($currentDomain)) {
+            $config = $serviceLocator->get('config');
+            $currentDomain = $config['Rcm']['defaultDomain'];
+        }
 
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');

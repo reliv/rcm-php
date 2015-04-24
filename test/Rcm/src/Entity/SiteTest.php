@@ -224,12 +224,15 @@ class SIteTest extends \PHPUnit_Framework_TestCase
     {
         $pageOne = new Page();
         $pageOne->setPageId(12);
+        $pageOne->setName('t1');
 
         $pageTwo = new Page();
         $pageTwo->setPageId(13);
+        $pageTwo->setName('t2');
 
         $pageThree = new Page();
         $pageThree->setPageId(14);
+        $pageThree->setName('t3');
 
         $expected = [
             $pageOne,
@@ -244,7 +247,10 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $actual = $this->site->getPages();
 
         $this->assertTrue($actual instanceof ArrayCollection);
-        $this->assertEquals($expected, $actual->toArray());
+
+        $this->assertTrue(in_array($pageOne,$actual->toArray()));
+        $this->assertTrue(in_array($pageTwo,$actual->toArray()));
+        $this->assertTrue(in_array($pageThree,$actual->toArray()));
     }
 
     /**
@@ -258,12 +264,15 @@ class SIteTest extends \PHPUnit_Framework_TestCase
     {
         $pageOne = new Page();
         $pageOne->setPageId(12);
+        $pageOne->setName('t12');
 
         $pageTwo = new Page();
         $pageTwo->setPageId(13);
+        $pageTwo->setName('t13');
 
         $pageThree = new Page();
         $pageThree->setPageId(14);
+        $pageThree->setName('t14');
 
         $expected = [
             $pageTwo,
@@ -283,6 +292,10 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $reIndexedArray = array_values($actual->toArray());
 
         $this->assertEquals($expected, $reIndexedArray);
+
+        $this->assertFalse(in_array($pageOne,$actual->toArray()));
+        $this->assertTrue(in_array($pageTwo,$actual->toArray()));
+        $this->assertTrue(in_array($pageThree,$actual->toArray()));
     }
 
     /**
@@ -322,12 +335,15 @@ class SIteTest extends \PHPUnit_Framework_TestCase
     {
         $containerOne = new Container();
         $containerOne->setContainerId(49);
+        $containerOne->setName('t49');
 
         $containerTwo = new Container();
         $containerTwo->setContainerId(50);
+        $containerTwo->setName('t50');
 
         $containerThree = new Container();
         $containerThree->setContainerId(51);
+        $containerThree->setName('t51');
 
         $expected = [
             $containerOne,
@@ -342,7 +358,9 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $actual = $this->site->getContainers();
 
         $this->assertTrue($actual instanceof ArrayCollection);
-        $this->assertEquals($expected, $actual->toArray());
+        $this->assertTrue(in_array($containerOne,$actual->toArray()));
+        $this->assertTrue(in_array($containerTwo,$actual->toArray()));
+        $this->assertTrue(in_array($containerThree,$actual->toArray()));
     }
 
     /**
@@ -356,12 +374,15 @@ class SIteTest extends \PHPUnit_Framework_TestCase
     {
         $containerOne = new Container();
         $containerOne->setContainerId(49);
+        $containerOne->setName('t49');
 
         $containerTwo = new Container();
         $containerTwo->setContainerId(50);
+        $containerTwo->setName('t50');
 
         $containerThree = new Container();
         $containerThree->setContainerId(51);
+        $containerThree->setName('t51');
 
         $expected = [
             $containerTwo,

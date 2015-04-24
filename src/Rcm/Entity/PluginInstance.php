@@ -441,6 +441,7 @@ class PluginInstance implements \JsonSerializable, \IteratorAggregate
         }
 
         if (isset($data['siteWide']) && $data['siteWide']) {
+
             $this->setSiteWide();
         }
 

@@ -68,6 +68,8 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
             }
         }
 
+        $site = $container->getSite();
+
         $newRevision = new Revision();
         $newRevision->setAuthor($author);
         $newRevision->setMd5($md5);
@@ -81,8 +83,11 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
 
         //Make a list of original wrappers so we can see if one was removed
         $deletedWrapperIds = [];
-        foreach ($revision->getPluginWrappers() as $wrapper) {
-            $deletedWrapperIds[$wrapper->getPluginWrapperId()] = true;
+
+        if ($revision) {
+            foreach ($revision->getPluginWrappers() as $wrapper) {
+                $deletedWrapperIds[$wrapper->getPluginWrapperId()] = true;
+            }
         }
 
         if (empty($containerData)) {
@@ -108,6 +113,7 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
 
                 $newPluginWrapper = $pluginWrapperRepo->savePluginWrapper(
                     $pluginData,
+                    $site,
                     $pluginWrapper
                 );
 

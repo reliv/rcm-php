@@ -127,6 +127,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         $this->routeListener = new RouteListener(
             $this->currentSite,
             $this->redirectRepo,
+            new \Zend\Validator\Ip(),
             $config
         );
     }
@@ -172,6 +173,14 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
+        $primary = $this->currentSite->getDomain();
+        $domain = new Domain();
+        $domain->setDomainId(1);
+        $domain->setDomainName('www.reliv.com');
+        $domain->setPrimary($primary);
+
+        $this->currentSite->setDomain($domain);
+
         $request = new Request();
         $request->setServer($serverParams);
         $event = new MvcEvent();
@@ -183,7 +192,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(302, $actual->getStatusCode());
 
         $this->assertEquals(
-            '//'.$this->currentSite->getDomain()->getDomainName(),
+            '//'.$this->currentSite->getDomain()->getPrimary()->getDomainName(),
             $actual->getHeaders()->get('Location')->getFieldValue()
         );
     }

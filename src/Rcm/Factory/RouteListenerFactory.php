@@ -21,6 +21,7 @@ namespace Rcm\Factory;
 use Rcm\EventListener\RouteListener;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Validator\Ip;
 
 /**
  * Service Factory for the Route Listener
@@ -61,6 +62,7 @@ class RouteListenerFactory implements FactoryInterface
         return new RouteListener(
             $currentSite,
             $redirectRepo,
+            new Ip(),
             $config
         );
     }

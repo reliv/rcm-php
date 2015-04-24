@@ -23,6 +23,7 @@ use Rcm\Entity\Site;
 use Rcm\Repository\Redirect as RedirectRepo;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
+use Zend\Validator\Ip;
 
 /**
  * RCM Route Listener
@@ -48,21 +49,24 @@ class RouteListener
 
     protected $config;
 
+    protected $ipValidator;
+
     /**
-     * Constructor
-     *
-     * @param Site         $currentSite  Current Site Entity
-     * @param RedirectRepo $redirectRepo Rcm Redirect Manager
-     * @param Array        $config       Zf2 Config
+     * @param Site $currentSite
+     * @param RedirectRepo $redirectRepo
+     * @param Ip $ipValidator
+     * @param              $config
      */
     public function __construct(
         Site $currentSite,
         RedirectRepo $redirectRepo,
+        Ip $ipValidator,
         $config
     ) {
         $this->currentSite = $currentSite;
         $this->redirectRepo = $redirectRepo;
         $this->config = $config;
+        $this->ipValidator = $ipValidator;
     }
 
     /**
@@ -75,10 +79,23 @@ class RouteListener
      */
     public function checkDomain(MvcEvent $event)
     {
-        if (!$this->currentSite->getSiteId() || $this->currentSite->getStatus() != 'A') {
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $event->getRequest();
+        $serverParam = $request->getServer();
+        $currentDomain = $serverParam->get('HTTP_HOST');
+
+        if (empty($currentDomain)) {
+            // We are on CLI
+            return null;
+        }
+
+        if (!$this->currentSite->getSiteId()
+            || $this->currentSite->getStatus() != 'A'
+        ) {
 
             if (empty($this->config['Rcm']['defaultDomain'])
-                || $this->config['Rcm']['defaultDomain'] == $this->currentSite->getDomain()->getDomainName()
+                || $this->config['Rcm']['defaultDomain']
+                == $this->currentSite->getDomain()->getDomainName()
             ) {
                 $response = new Response();
                 $response->setStatusCode(404);
@@ -102,16 +119,13 @@ class RouteListener
 
         $primaryCheck = $this->currentSite->getDomain()->getPrimary();
 
-        /** @var \Zend\Http\PhpEnvironment\Request $request */
-        $request = $event->getRequest();
-        $serverParam = $request->getServer();
-        $currentDomain = $serverParam->get('HTTP_HOST');
-
-        if (empty($currentDomain)) {
-            return null;
-        }
-
-        if (!empty($primaryCheck) && $primaryCheck->getDomainName() != $currentDomain) {
+        /**
+         * If the IP is not a domain and is not the primary, redirect to primary
+         */
+        if (!$this->ipValidator->isValid($currentDomain)
+            && !empty($primaryCheck)
+            && $primaryCheck->getDomainName() != $currentDomain
+        ) {
             $response = new Response();
             $response->setStatusCode(302);
             $response->getHeaders()
@@ -155,8 +169,8 @@ class RouteListener
 
         $redirect = $this->redirectRepo->getRedirect($requestUrl, $siteId);
 
-        if (!empty($redirect)){
-            header('Location: '.$redirect->getRedirectUrl(), true, 302);
+        if (!empty($redirect)) {
+            header('Location: ' . $redirect->getRedirectUrl(), true, 302);
             exit;
 
             /* Below is the ZF2 way but Response is not short-circuiting the event like it should */
@@ -183,10 +197,25 @@ class RouteListener
     public function addLocale()
     {
         $locale = $this->currentSite->getLocale();
-        setlocale(
+
+        /* Conversion for Ubuntu and Mac local settings. */
+        if (!setlocale(
             LC_ALL,
-            $locale
-        );
+            $locale . '.utf8'
+        )
+        ) {
+            if (!setlocale(
+                LC_ALL,
+                $locale . '.UTF-8'
+            )
+            ) {
+                setlocale(
+                    LC_ALL,
+                    'en_US.UTF-8'
+                );
+            }
+        }
+
         \Locale::setDefault($locale);
 
         return null;

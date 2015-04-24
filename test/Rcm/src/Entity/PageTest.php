@@ -416,14 +416,14 @@ class PageTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertNull($clonedContainer->getPageId());
-        $this->assertNull($clonedContainer->getStagedRevision());
+        $this->assertNull($clonedContainer->getPublishedRevision());
         $this->assertCount(1, $clonedContainer->getRevisions());
 
-        $this->assertNull($clonedContainer->getName());
+        $this->assertTrue(empty($clonedContainer->getName()));
         $this->assertNull($clonedContainer->getParent());
 
         $currentRevision = $this->page->getPublishedRevision();
-        $clonedCurrentRev = $clonedContainer->getPublishedRevision();
+        $clonedCurrentRev = $clonedContainer->getStagedRevision();
 
         /* Test Revision */
         $this->assertNotEquals(
@@ -443,7 +443,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
             $clonedCurrentRev->getCreatedDate()
         );
 
-        $this->assertTrue($clonedCurrentRev->wasPublished());
+        $this->assertFalse($clonedCurrentRev->wasPublished());
 
         $this->assertEquals(
             $currentRevision->getMd5(),
@@ -475,7 +475,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testUtilities()
     {
         $data = [];
-        $data['name'] = 'TESTNAME';
+        $data['name'] = 'testname';
         $data['pageTitle'] = 'TESTTITLE';
         $data['pageType'] = 'n';
         $data['description'] = 'TESTDESC';

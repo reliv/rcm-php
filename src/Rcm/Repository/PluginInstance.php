@@ -23,6 +23,7 @@ namespace Rcm\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Rcm\Entity\PluginInstance as PluginInstanceEntity;
+use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\InvalidArgumentException;
 
 /**
@@ -45,115 +46,57 @@ use Rcm\Exception\InvalidArgumentException;
 class PluginInstance extends EntityRepository
 {
     /**
-     * Save a plugin instance
-     *
-     * @param integer $pluginInstanceId Current Instance Id
-     * @param string  $pluginName       Plugin Name
-     * @param mixed   $saveData         Plugin Data to Save
-     * @param boolean $siteWide         Is this a site wide
-     * @param string  $displayName      Plugin name for site wide
-     * @param bool    $doFlush
-     *
-     * @return PluginInstanceEntity New saved plugin instance
-     */
-    public function savePlugin(
-        $pluginInstanceId,
-        $pluginName,
-        $saveData,
-        $siteWide = false,
-        $displayName = '',
-        $doFlush = true
-    ) {
-        if ($pluginInstanceId > 0) {
-            return $this->saveExistingPlugin(
-                $pluginInstanceId,
-                $saveData,
-                $doFlush
-            );
-        }
-
-        return $this->saveNewInstance(
-            $pluginName,
-            $saveData,
-            $siteWide,
-            $displayName,
-            $doFlush
-        );
-    }
-
-    /**
      * updatePlugin
      *
-     * @param array $pluginData
-     * @param bool  $forceSave
-     * @param bool  $doFlush
+     * @param array      $pluginData
+     * @param SiteEntity $site
+     * @param bool       $forceSave
+     * @param bool       $doFlush
      *
      * @return PluginInstanceEntity
-     * @throws \Exception
      */
     public function updatePlugin(
         $pluginData,
+        SiteEntity $site,
         $forceSave = false,
         $doFlush = true
     ) {
         $pluginData = $this->prepareData($pluginData);
 
         if ($pluginData['pluginInstanceId'] > 0) {
+
             return $this->updateExistingPlugin(
                 $pluginData,
+                $site,
                 $forceSave,
                 $doFlush
             );
         }
 
-        return $this->createPluginInstance($pluginData, $doFlush);
-
-    }
-
-    /**
-     * saveExistingPlugin
-     *
-     * @param $pluginInstanceId
-     * @param $saveData
-     *
-     * @return null|object|PluginInstanceEntity
-     */
-    public function saveExistingPlugin(
-        $pluginInstanceId,
-        $saveData,
-        $doFlush = true
-    ) {
-        $pluginData = [];
-        $pluginData['pluginInstanceId'] = $pluginInstanceId;
-        $pluginData['saveData'] = $saveData;
-        $pluginData = $this->prepareData($pluginData);
-
-        $newPluginInstance = $this->updatePlugin(
-            $pluginData,
-            false,
-            $doFlush
-        );
-
-        return $newPluginInstance;
+        return $this->createPluginInstance($pluginData, $site, null, $doFlush);
     }
 
     /**
      * updateExistingPlugin
      *
-     * @param array $pluginData
-     * @param bool  $forceSave
-     * @param bool  $doFlush
+     * @param array      $pluginData
+     * @param SiteEntity $site
+     * @param bool       $forceSave
+     * @param bool       $doFlush
      *
      * @return PluginInstanceEntity
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function updateExistingPlugin(
         $pluginData,
+        SiteEntity $site,
         $forceSave = false,
         $doFlush = true
     ) {
         if (empty($pluginData['pluginInstanceId'])) {
-            throw new InvalidArgumentException('Plugin instance Id required to update.');
+            throw new InvalidArgumentException(
+                'Plugin instance Id required to update.'
+            );
         }
 
         /** @var PluginInstanceEntity $pluginInstance */
@@ -162,8 +105,10 @@ class PluginInstance extends EntityRepository
         );
 
         if (empty($pluginInstance)) {
-            throw new InvalidArgumentException('No plugin found for instance Id: '
-            . $pluginData['pluginInstanceId']);
+            throw new InvalidArgumentException(
+                'No plugin found for instance Id: '
+                . $pluginData['pluginInstanceId']
+            );
         }
 
         $pluginData['plugin'] = $pluginInstance->getPlugin();
@@ -171,14 +116,16 @@ class PluginInstance extends EntityRepository
         $pluginData = $this->prepareData($pluginData);
 
         if (!$forceSave
-            &&
-            $pluginInstance->getMd5() == md5(serialize($pluginData['saveData']))
+            && $pluginInstance->getMd5() == md5(serialize($pluginData['saveData']))
+            && $pluginInstance->isSiteWide() == (bool) $pluginData['siteWide']
         ) {
             return $pluginInstance;
         }
 
         $newPluginInstance = $this->createPluginInstance(
             $pluginData,
+            $site,
+            $pluginInstance,
             $doFlush
         );
 
@@ -186,61 +133,65 @@ class PluginInstance extends EntityRepository
     }
 
     /**
-     * Save a new plugin instance
-     *
-     * @param string      $pluginName  Plugin name
-     * @param array       $saveData    Save Data
-     * @param bool        $siteWide    Site Wide marker
-     * @param null|string $displayName Display name for site wide plugins.  Required
-     *                                 for site wide plugin instances.
-     * @param bool        $doFlush
-     *
-     * @return PluginInstanceEntity
-     * @throws \Exception
-     */
-    public function saveNewInstance(
-        $pluginName,
-        $saveData,
-        $siteWide = false,
-        $displayName = null,
-        $doFlush = true
-    ) {
-        if (empty($displayName) && $siteWide) {
-            throw new \Exception('SiteWide plugin requires a display name to be created.');
-        }
-
-        $pluginData['plugin'] = $pluginName;
-        $pluginData['saveData'] = $saveData;
-        $pluginData['siteWide'] = $siteWide;
-        $pluginData['displayName'] = $displayName;
-        $pluginData = $this->prepareData($pluginData);
-
-        return $this->createPluginInstance($pluginData, $doFlush);
-    }
-
-    /**
      * createPluginInstance
      *
-     * @param      $pluginData
-     * @param bool $doFlush
+     * @param array      $pluginData
+     * @param SiteEntity $site
+     * @param null       $oldPluginInstance
+     * @param bool       $doFlush
      *
      * @return PluginInstanceEntity
-     * @throws \Exception
      */
     public function createPluginInstance(
         $pluginData,
+        SiteEntity $site,
+        $oldPluginInstance = null,
         $doFlush = true
     ) {
         $pluginInstance = new PluginInstanceEntity();
         $pluginInstance->populate($pluginData);
 
+        $this->updateSiteSitewide(
+            $pluginInstance,
+            $site,
+            $oldPluginInstance
+        );
+
         $this->_em->persist($pluginInstance);
 
         if ($doFlush) {
-            $this->_em->flush($pluginInstance);
+            $this->_em->flush();
         }
 
         return $pluginInstance;
+    }
+
+    /**
+     * updateSiteSitewide
+     *
+     * @param PluginInstanceEntity $pluginInstance
+     * @param SiteEntity           $site
+     * @param null                 $oldPluginInstance
+     *
+     * @return void
+     */
+    public function updateSiteSitewide(
+        PluginInstanceEntity $pluginInstance,
+        SiteEntity $site,
+        $oldPluginInstance = null
+    ) {
+        // ignore non-sitewides
+        if(!$pluginInstance->isSiteWide()){
+            return;
+        }
+
+        if(!empty($oldPluginInstance)) {
+            $site->removeSiteWidePlugin($oldPluginInstance);
+        }
+
+        $site->addSiteWidePlugin($pluginInstance);
+
+        $this->_em->persist($site);
     }
 
     /**
@@ -254,7 +205,7 @@ class PluginInstance extends EntityRepository
     {
         // Data migration of alternate keys
         if (array_key_exists('instanceId', $pluginData)) {
-            $pluginData['pluginInstanceId'] = $pluginData['instanceId'];
+            $pluginData['pluginInstanceId'] = (int)$pluginData['instanceId'];
         }
 
         if (array_key_exists('sitewideName', $pluginData)) {
