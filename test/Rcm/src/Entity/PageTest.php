@@ -419,7 +419,9 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($clonedContainer->getPublishedRevision());
         $this->assertCount(1, $clonedContainer->getRevisions());
 
-        $this->assertTrue(empty($clonedContainer->getName()));
+        $containerName = $clonedContainer->getName();
+        $containerIsempty = empty($containerName);
+        $this->assertTrue($containerIsempty);
         $this->assertNull($clonedContainer->getParent());
 
         $currentRevision = $this->page->getPublishedRevision();

@@ -38,10 +38,12 @@
         "php": ">=5.4.0",
         "doctrine/doctrine-orm-module": "0.*",
         "zendframework/zendframework": "2.*",
-        "rwoverdijk/assetmanager": "1.*"
+        "rwoverdijk/assetmanager": "1.*",
+        "reliv/rcm-user": "0.1.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "~4.0",
+        "squizlabs/php_codesniffer": "1.5.*"
     },
     "autoload": {
         "psr-4": {
