@@ -396,9 +396,9 @@ class Container extends AbstractHelper
         /** @var \Zend\View\Helper\HeadLink $headLink */
         $headLink = $view->headLink();
 
-        $container = $headLink->getContainer();
+        $containers = $headLink->getContainer();
 
-        foreach ($container as &$item) {
+        foreach ($containers as &$item) {
             if (($item->rel == 'stylesheet')
                 && ($item->href == $container->href)
             ) {
