@@ -56,20 +56,13 @@ class BaseController extends AbstractActionController implements PluginInterface
         $config,
         $pluginName = null
     ) {
-        if ($pluginName === null) {
+        if (empty($pluginName)) {
             /**
              * Automatically detect the plugin name for controllers that extend
              * this class by looking at the first part of the child's namespace
              */
             $classParts = explode('\\', get_class($this));
             $this->pluginName = $classParts[0];
-        } elseif (substr($pluginName, 0, 1) == '/') {
-            /**
-             * @TODO REMOVE THIS AFTER REMOVING ALL USES OF IT
-             * Support the deprecated method of passing the plugin path rather
-             * than its name as the third argument
-             */
-            $this->pluginName = basename(realpath($pluginName));
         } else {
             /**
              * When this class is instantiated directly instead of being
