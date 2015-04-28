@@ -397,7 +397,7 @@ class Container extends AbstractHelper
         $headLink = $view->headLink();
 
         $container = $headLink->getContainer();
-        
+
         foreach ($container as &$item) {
             if (($item->rel == 'stylesheet')
                 && ($item->href == $container->href)
