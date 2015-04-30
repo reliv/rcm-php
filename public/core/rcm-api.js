@@ -296,7 +296,8 @@ angular.module('rcmApi', [])
                     function (data) {
                         apiParams.loading(false);
                         apiParams.error(data);
-                    }
+                    },
+                    status
                 );
             };
 
@@ -317,7 +318,8 @@ angular.module('rcmApi', [])
                         function (data) {
                             apiParams.loading(false);
                             apiParams.error(data);
-                        }
+                        },
+                        status
                     )
                 } else {
 
@@ -338,16 +340,19 @@ angular.module('rcmApi', [])
             /**
              * prepareErrorData
              * @param data
-             * @returns {ApiData} data
+             * @param apiParams
+             * @param callback
+             * @param status
+             * @returns {ApiData|*}
              */
-            self.prepareErrorData = function (data, apiParams, callback) {
+            self.prepareErrorData = function (data, apiParams, callback, status) {
 
                 if (typeof data !== 'object' || data === null) {
                     data = new self.ApiData();
                 }
 
                 if (!data.code) {
-                    data.code = 1;
+                    data.code = status;
                 }
 
                 if (!data.message) {
@@ -360,8 +365,8 @@ angular.module('rcmApi', [])
             /**
              * prepareData
              * @param data
-             * @param {boolean} prepareErrors
-             * @returns {ApiData} data
+             * @param apiParams
+             * @param callback
              */
             self.prepareData = function (data, apiParams, callback) {
 
@@ -376,7 +381,7 @@ angular.module('rcmApi', [])
             /**
              * prepareErrors
              * @param data
-             * @returns {ApiData} data
+             * @param callback
              */
             self.prepareErrors = function (data, callback) {
 
