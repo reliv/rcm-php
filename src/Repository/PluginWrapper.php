@@ -160,5 +160,4 @@ class PluginWrapper extends EntityRepository
 
         return $pluginInstanceRepo->prepareData($pluginData);
     }
-
 }

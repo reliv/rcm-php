@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Rcm\Exception\CountryNotFoundException;
 
-
 /**
  * Class Country
  *

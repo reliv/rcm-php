@@ -234,5 +234,4 @@ class PluginInstance extends EntityRepository
 
         return $pluginData;
     }
-
 }

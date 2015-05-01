@@ -38,5 +38,4 @@ interface DisplayInterface
      * @return mixed
      */
     public function setDisplay($canDisplay);
-
 }
