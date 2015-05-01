@@ -85,6 +85,6 @@ interface ContainerInterface
         \Rcm\Entity\ContainerInterface $container,
         $containerData,
         $author,
-        $revisionNumber=null
+        $revisionNumber = null
     );
 }

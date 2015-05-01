@@ -49,19 +49,26 @@ class PluginWrapper extends EntityRepository
      * savePluginWrapper Save a plugin wrapper
      *
      * @param array $pluginData
-     * @param SiteEntity  $site
-     * @param null  $oldWrapper
+     * @param SiteEntity $site
+     * @param null $oldWrapper
      *
      * @return null|PluginWrapperEntity
      */
-    public function savePluginWrapper($pluginData, SiteEntity $site, $oldWrapper=null)
-    {
+    public function savePluginWrapper(
+        $pluginData,
+        SiteEntity $site,
+        $oldWrapper = null
+    ) {
         if (!empty($oldWrapper) && !is_a($oldWrapper, '\Rcm\Entity\PluginWrapper')) {
-            throw new RuntimeException('Wrapper passed in is not a valid plugin wrapper.');
+            throw new RuntimeException(
+                'Wrapper passed in is not a valid plugin wrapper.'
+            );
         }
 
         /** @var \Rcm\Repository\PluginInstance $pluginInstanceRepo */
-        $pluginInstanceRepo = $this->_em->getRepository('\Rcm\Entity\PluginInstance');
+        $pluginInstanceRepo = $this->_em->getRepository(
+            '\Rcm\Entity\PluginInstance'
+        );
 
         $pluginData = $this->prepareData($pluginData);
 
@@ -72,7 +79,8 @@ class PluginWrapper extends EntityRepository
 
         if (!empty($oldWrapper)
             && ($pluginData['siteWide'] || $oldWrapper->getInstance()->isSiteWide())
-            && $pluginInstance->getInstanceId() != $oldWrapper->getInstance()->getInstanceId()
+            && $pluginInstance->getInstanceId() != $oldWrapper->getInstance()
+                ->getInstanceId()
         ) {
             $queryBuilder = $this->_em->createQueryBuilder();
             $queryBuilder->update('\Rcm\Entity\PluginWrapper', 'wrapper')
@@ -88,8 +96,9 @@ class PluginWrapper extends EntityRepository
             && $oldWrapper->getRowNumber() == $pluginData['rowNumber']
             && $oldWrapper->getColumnClass() == $pluginData['columnClass']
             && $oldWrapper->getLayoutContainer() == $pluginData['containerName']
-            && ($oldWrapper->getInstance()->getInstanceId() == $pluginInstance->getInstanceId()
-            || $pluginData['siteWide'])
+            && ($oldWrapper->getInstance()->getInstanceId()
+                == $pluginInstance->getInstanceId()
+                || $pluginData['siteWide'])
         ) {
             return $oldWrapper;
         }
@@ -113,31 +122,42 @@ class PluginWrapper extends EntityRepository
     public function prepareData($pluginData = [])
     {
         // Data migration of alternate keys
-        if(!isset($pluginData['layoutContainer']) && array_key_exists('containerName', $pluginData)){
+        if (!isset($pluginData['layoutContainer'])
+            && array_key_exists(
+                'containerName',
+                $pluginData
+            )
+        ) {
             $pluginData['layoutContainer'] = $pluginData['containerName'];
         }
 
-        if(!isset($pluginData['renderOrder']) && array_key_exists('rank', $pluginData)){
+        if (!isset($pluginData['renderOrder'])
+            && array_key_exists(
+                'rank',
+                $pluginData
+            )
+        ) {
             $pluginData['renderOrder'] = $pluginData['rank'];
         }
 
         // Defaults
-        if(!isset($pluginData['layoutContainer'])){
+        if (!isset($pluginData['layoutContainer'])) {
             $pluginData['layoutContainer'] = null;
         }
 
-        if(!isset($pluginData['siteWide'])){
+        if (!isset($pluginData['siteWide'])) {
             $pluginData['siteWide'] = 0;
         }
 
-        if(!isset($pluginData['renderOrder'])){
+        if (!isset($pluginData['renderOrder'])) {
             $pluginData['renderOrder'] = 0;
         }
 
         /** @var \Rcm\Repository\PluginInstance $pluginInstanceRepo */
-        $pluginInstanceRepo = $this->_em->getRepository('\Rcm\Entity\PluginInstance');
+        $pluginInstanceRepo = $this->_em->getRepository(
+            '\Rcm\Entity\PluginInstance'
+        );
 
         return $pluginInstanceRepo->prepareData($pluginData);
     }
-
 }

@@ -531,5 +531,4 @@ class PluginInstance implements \JsonSerializable, \IteratorAggregate
         $data['instanceConfig'] = $this->getInstanceConfig();
         return $data;
     }
-
 }

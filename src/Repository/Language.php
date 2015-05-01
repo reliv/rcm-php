@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Rcm\Exception\LanguageNotFoundException;
 
-
 /**
  * Class Language
  *
@@ -23,14 +22,15 @@ use Rcm\Exception\LanguageNotFoundException;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
+class Language extends EntityRepository
+{
 
-class Language extends EntityRepository {
-
-    protected $validFormats = [
-        'iso639_1',
-        'iso639_2b',
-        'iso639_2t',
-    ];
+    protected $validFormats
+        = [
+            'iso639_1',
+            'iso639_2b',
+            'iso639_2t',
+        ];
 
     public function getLanguageByString(
         $code,
@@ -42,7 +42,7 @@ class Language extends EntityRepository {
             return $default;
         }
 
-        if(!in_array($format, $this->validFormats)){
+        if (!in_array($format, $this->validFormats)) {
 
             throw new LanguageNotFoundException('Laguage Format not valid.');
         }
@@ -57,4 +57,4 @@ class Language extends EntityRepository {
 
         return $result;
     }
-} 
+}

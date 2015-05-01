@@ -37,7 +37,7 @@ class ApiBase implements ApiInterface
         foreach ($data as $property => $value) {
 
             // Check for ignore keys
-            if(in_array($property, $ignore)){
+            if (in_array($property, $ignore)) {
                 continue;
             }
 
@@ -92,4 +92,4 @@ class ApiBase implements ApiInterface
     {
         return new \ArrayIterator($this->toArray());
     }
-} 
+}

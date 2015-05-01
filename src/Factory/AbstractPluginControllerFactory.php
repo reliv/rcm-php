@@ -22,7 +22,6 @@ use Rcm\Plugin\BaseController;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-
 /**
  * AbstractPluginControllerFactory
  *
@@ -53,6 +52,7 @@ class AbstractPluginControllerFactory implements AbstractFactoryInterface
         $requestedName
     ) {
         $config = $serviceLocator->getServiceLocator()->get('config');
+
         return isset($config['rcmPlugin'][$requestedName]);
     }
 

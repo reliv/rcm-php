@@ -4,7 +4,7 @@
 namespace Rcm\Entity;
 
 
- /**
+/**
  * interface ApiInterface
  *
  * Rcm Standard Api Interface
@@ -20,7 +20,8 @@ namespace Rcm\Entity;
  * @link      https://github.com/reliv
  */
 
-interface ApiInterface extends \JsonSerializable, \IteratorAggregate   {
+interface ApiInterface extends \JsonSerializable, \IteratorAggregate
+{
 
     /**
      * populate
@@ -60,6 +61,4 @@ interface ApiInterface extends \JsonSerializable, \IteratorAggregate   {
      * @return array|Traversable
      */
     public function getIterator();
-
-
-} 
+}

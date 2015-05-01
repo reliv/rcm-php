@@ -51,11 +51,13 @@ class DoctrineQueryLoggerWithTime implements SQLLogger
         $this->queryCount++;
         $echo = '';
         if ($this->showTimeAndCount) {
-            $echo .= number_format(
+            $echo
+                .= number_format(
                     (microtime(true) - $this->lastStartTime)
                     * 1000,
                     1
-                ) . 'ms #' . $this->queryCount . ' ';
+                )
+                . 'ms #' . $this->queryCount . ' ';
         }
         $echo .= $this->lastSql . "\n\n";
         echo $echo;

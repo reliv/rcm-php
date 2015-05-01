@@ -85,8 +85,7 @@ class Redirect extends EntityRepository
 
         if (count($result) > 1) {
             /** @var \Rcm\Entity\Redirect $redirect */
-            foreach ($result as $redirect)
-            {
+            foreach ($result as $redirect) {
                 $site = $redirect->getSite();
                 if ($site && $site->getSiteId() == $siteId) {
                     return $redirect;
@@ -105,7 +104,7 @@ class Redirect extends EntityRepository
      *
      * @return \Doctrine\ORM\Query
      */
-    private function getQuery($siteId, $url=null)
+    private function getQuery($siteId, $url = null)
     {
         if (empty($siteId) || !is_numeric($siteId)) {
             throw new InvalidArgumentException('Invalid Site Id To Search By');

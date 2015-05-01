@@ -224,7 +224,7 @@ class Page extends ContainerAbstract implements ApiInterface
      */
     public function getName()
     {
-        return strtolower ($this->name);
+        return strtolower($this->name);
     }
 
     /**
@@ -239,7 +239,7 @@ class Page extends ContainerAbstract implements ApiInterface
      */
     public function setName($name)
     {
-        $name = strtolower ($name);
+        $name = strtolower($name);
 
         //Check for spaces.  Throw exception if spaces are found.
         if (strpos($name, ' ')) {

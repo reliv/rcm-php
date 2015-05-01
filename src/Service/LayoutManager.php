@@ -254,5 +254,4 @@ class LayoutManager
 
         return false;
     }
-
 }

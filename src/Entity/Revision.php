@@ -455,9 +455,7 @@ class Revision
             $wrappersSortedByPageContainer[$containerName][] = $wrapper;
         }
 
-        foreach (
-            $wrappersSortedByPageContainer as $containerName => $wrapperContainer
-        ) {
+        foreach ($wrappersSortedByPageContainer as $containerName => $wrapperContainer) {
             $wrappersSortedByPageContainer[$containerName]
                 = $this->orderPluginWrappersByRow($wrapperContainer);
         }

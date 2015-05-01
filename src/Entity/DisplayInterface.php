@@ -4,7 +4,7 @@
 namespace Rcm\Entity;
 
 
- /**
+/**
  * Class DisplayInterface
  *
  * LongDescHere
@@ -20,7 +20,8 @@ namespace Rcm\Entity;
  * @link      https://github.com/reliv
  */
 
-interface DisplayInterface {
+interface DisplayInterface
+{
 
     /**
      * getDisplay
@@ -37,5 +38,4 @@ interface DisplayInterface {
      * @return mixed
      */
     public function setDisplay($canDisplay);
-
 }

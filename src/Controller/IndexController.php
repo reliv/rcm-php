@@ -168,9 +168,14 @@ class IndexController extends AbstractActionController
             $page = $this->renderNotFoundPage($site);
         }
 
-        $this->prepLayoutView($site, $page, $requestedPageData, $page->getSiteLayoutOverride());
+        $this->prepLayoutView(
+            $site,
+            $page,
+            $requestedPageData,
+            $page->getSiteLayoutOverride()
+        );
 
-        $viewModel->setVariable('page',$page);
+        $viewModel->setVariable('page', $page);
 
         $viewModel->setTemplate(
             'pages/'
@@ -196,7 +201,9 @@ class IndexController extends AbstractActionController
         );
 
         if (empty($page)) {
-            throw new PageNotFoundException('No default page defined for 404 not found error');
+            throw new PageNotFoundException(
+                'No default page defined for 404 not found error'
+            );
         }
 
         $response = $this->getResponse();
@@ -205,8 +212,12 @@ class IndexController extends AbstractActionController
         return $page;
     }
 
-    protected function prepLayoutView(Site $site, Page $page, $requestedPageData, $layoutOverRide)
-    {
+    protected function prepLayoutView(
+        Site $site,
+        Page $page,
+        $requestedPageData,
+        $layoutOverRide
+    ) {
         /** @var ViewModel $layoutView */
         $layoutView = $this->layout();
 
@@ -252,7 +263,7 @@ class IndexController extends AbstractActionController
                 return;
 
             } else {
-                
+
                 return $this->redirectToPage(
                     $page->getName(),
                     $page->getPageType()

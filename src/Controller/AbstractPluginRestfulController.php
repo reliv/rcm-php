@@ -6,7 +6,6 @@ namespace Rcm\Controller;
 use Rcm\Exception\PluginInstanceNotFoundException;
 use Zend\Mvc\Controller\AbstractRestfulController;
 
-
 /**
  * Class AbstractPluginRestfulController
  *
@@ -100,7 +99,10 @@ abstract class AbstractPluginRestfulController extends AbstractRestfulController
 
         if ($instanceId > 0) {
             try {
-                $instanceConfig = $pluginManager->getInstanceConfigForPlugin($instanceId, $pluginName);
+                $instanceConfig = $pluginManager->getInstanceConfigForPlugin(
+                    $instanceId,
+                    $pluginName
+                );
             } catch (PluginInstanceNotFoundException $e) {
                 // ignore error
             }

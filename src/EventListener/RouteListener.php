@@ -52,9 +52,9 @@ class RouteListener
     protected $ipValidator;
 
     /**
-     * @param Site $currentSite
+     * @param Site         $currentSite
      * @param RedirectRepo $redirectRepo
-     * @param Ip $ipValidator
+     * @param Ip           $ipValidator
      * @param              $config
      */
     public function __construct(

@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Rcm\Exception\CountryNotFoundException;
 
-
 /**
  * Class Country
  *
@@ -23,14 +22,15 @@ use Rcm\Exception\CountryNotFoundException;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
+class Country extends EntityRepository
+{
 
-class Country extends EntityRepository {
-
-    protected $validFormats = [
-        'iso3',
-        'iso2',
-        'countryName',
-    ];
+    protected $validFormats
+        = [
+            'iso3',
+            'iso2',
+            'countryName',
+        ];
 
     public function getCountryByString(
         $code,
@@ -42,7 +42,7 @@ class Country extends EntityRepository {
             return $default;
         }
 
-        if(!in_array($format, $this->validFormats)){
+        if (!in_array($format, $this->validFormats)) {
 
             throw new CountryNotFoundException('Country Format not valid.');
         }
@@ -57,4 +57,4 @@ class Country extends EntityRepository {
 
         return $result;
     }
-} 
+}

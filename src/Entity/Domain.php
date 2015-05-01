@@ -126,7 +126,7 @@ class Domain implements ApiInterface
     public function getDomainValidator()
     {
 
-        if(empty($this->domainValidator)){
+        if (empty($this->domainValidator)) {
             $this->domainValidator = new Hostname(
                 [
                     'allow' => Hostname::ALLOW_LOCAL | Hostname::ALLOW_IP
@@ -281,7 +281,9 @@ class Domain implements ApiInterface
         if (!empty($data['domain'])) {
             $this->setDomainName($data['domain']);
         }
-        if (!empty($data['primaryDomain']) && $data['primaryDomain'] instanceof Domain) {
+        if (!empty($data['primaryDomain'])
+            && $data['primaryDomain'] instanceof Domain
+        ) {
             $this->setPrimary($data['primaryDomain']);
         }
     }
