@@ -26,9 +26,10 @@ class Ignore extends AbstractFilter
     /**
      * @var array
      */
-    protected $options = array(
-        'replacementValue' => null,
-    );
+    protected $options
+        = array(
+            'replacementValue' => null,
+        );
 
     /**
      * Constructor
@@ -57,7 +58,8 @@ class Ignore extends AbstractFilter
      *
      * @return $this
      */
-    public function setReplacementValue($value = null){
+    public function setReplacementValue($value = null)
+    {
         $this->options['replacementValue'] = $value;
         return $this;
     }
@@ -69,7 +71,7 @@ class Ignore extends AbstractFilter
      */
     public function getReplacementValue()
     {
-        return $this->options['replacementValue'] ;
+        return $this->options['replacementValue'];
     }
 
     /**
@@ -79,6 +81,7 @@ class Ignore extends AbstractFilter
      * types that should be considered null.
      *
      * @param  string $value
+     *
      * @return string
      */
     public function filter($value)

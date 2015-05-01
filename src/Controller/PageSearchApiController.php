@@ -93,10 +93,10 @@ class PageSearchApiController extends AbstractRestfulController
         $site = $entityMgr->getRepository(
             '\Rcm\Entity\Site'
         )->findOneBy(
-                [
-                    'siteId' => $siteId
-                ]
-            );
+            [
+                'siteId' => $siteId
+            ]
+        );
         /**
          * @var \Rcm\Entity\Page $pages
          */

@@ -59,7 +59,8 @@ class DispatchListener
      *
      * @return \Rcm\Service\LayoutManager
      */
-    protected function getLayoutManager() {
+    protected function getLayoutManager()
+    {
 
         return $this->serviceLocator->get('Rcm\Service\LayoutManager');
     }

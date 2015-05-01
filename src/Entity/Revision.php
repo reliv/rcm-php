@@ -448,14 +448,14 @@ class Revision
         $wrappersSortedByPageContainer = [];
 
         /** @var \Rcm\Entity\PluginWrapper $wrapper */
-        foreach ($pluginWrappers as $wrapper) {
+        foreach($pluginWrappers as $wrapper) {
 
             $containerName = $wrapper->getLayoutContainer();
 
             $wrappersSortedByPageContainer[$containerName][] = $wrapper;
         }
 
-        foreach (
+        foreach(
             $wrappersSortedByPageContainer as $containerName => $wrapperContainer
         ) {
             $wrappersSortedByPageContainer[$containerName]

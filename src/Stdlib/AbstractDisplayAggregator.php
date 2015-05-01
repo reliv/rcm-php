@@ -5,7 +5,6 @@ namespace Rcm\Stdlib;
 
 use Rcm\Entity\DisplayInterface;
 
-
 /**
  * Class AbstractDisplayAggregator
  *
@@ -188,5 +187,4 @@ abstract class AbstractDisplayAggregator implements \IteratorAggregate
     {
         return $this->getIterator()->getArrayCopy();
     }
-
 }

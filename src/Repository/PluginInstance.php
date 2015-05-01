@@ -117,7 +117,7 @@ class PluginInstance extends EntityRepository
 
         if (!$forceSave
             && $pluginInstance->getMd5() == md5(serialize($pluginData['saveData']))
-            && $pluginInstance->isSiteWide() == (bool) $pluginData['siteWide']
+            && $pluginInstance->isSiteWide() == (bool)$pluginData['siteWide']
         ) {
             return $pluginInstance;
         }
@@ -181,11 +181,11 @@ class PluginInstance extends EntityRepository
         $oldPluginInstance = null
     ) {
         // ignore non-sitewides
-        if(!$pluginInstance->isSiteWide()){
+        if (!$pluginInstance->isSiteWide()) {
             return;
         }
 
-        if(!empty($oldPluginInstance)) {
+        if (!empty($oldPluginInstance)) {
             $site->removeSiteWidePlugin($oldPluginInstance);
         }
 

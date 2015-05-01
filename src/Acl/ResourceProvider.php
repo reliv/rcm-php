@@ -217,7 +217,7 @@ class ResourceProvider extends RcmUserResourceProvider
     {
         $primaryDomain = $site->getDomain();
 
-        if(empty($primaryDomain)){
+        if (empty($primaryDomain)) {
             // no resources if domain missing
             return array();
         }
@@ -273,15 +273,17 @@ class ResourceProvider extends RcmUserResourceProvider
         $pageName = $page->getName();
         $pageType = $page->getPageType();
 
-        $return['sites.' . $siteId . '.pages.' . $pageType. '.' . $pageName] = [
-            'resourceId' => 'sites.' . $siteId . '.pages.' . $pageType. '.' . $pageName,
+        $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName] = [
+            'resourceId' => 'sites.' . $siteId . '.pages.' . $pageType . '.'
+                . $pageName,
             'parentResourceId' => 'sites.' . $siteId . '.pages',
             'name' => $primaryDomainName . ' - pages - ' . $pageName,
         ];
 
-        $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName] = array_merge(
+        $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
+            = array_merge(
             $this->resources['pages'],
-            $return['sites.' . $siteId . '.pages.' . $pageType. '.' . $pageName]
+            $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
         );
 
         return $return;

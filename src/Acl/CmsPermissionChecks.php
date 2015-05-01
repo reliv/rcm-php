@@ -188,10 +188,13 @@ class CmsPermissionChecks
         $aclDataService = $this->getAclDataService();
 
         //getting all set rules by resource Id
-        $rules = $aclDataService->getRulesByResourcePrivilege($resourceId, $privilege)
+        $rules = $aclDataService->getRulesByResourcePrivilege(
+            $resourceId,
+            $privilege
+        )
             ->getData();
 
-        if (empty($rules)){
+        if (empty($rules)) {
             return false;
         }
 

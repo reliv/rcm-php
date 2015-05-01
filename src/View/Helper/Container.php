@@ -300,16 +300,16 @@ class Container extends AbstractHelper
 
         $displayName = str_replace(' ', '', $plugin->getDisplayName());
 
-        if($displayName !== ''){
+        if ($displayName !== '') {
             $displayName = ' ' . $displayName;
         }
 
         $html
-            =
-            '<div class="rcmPlugin ' . $plugin->getPlugin() . $displayName
+            = '<div class="rcmPlugin ' . $plugin->getPlugin() . $displayName
             . ' ' . $pluginWrapper->getColumnClass() . '"'
             . ' data-rcmPluginName="' . $plugin->getPlugin() . '"'
-            . ' data-rcmPluginDefaultClass="rcmPlugin ' . $plugin->getPlugin() . $displayName . '"'
+            . ' data-rcmPluginDefaultClass="rcmPlugin ' . $plugin->getPlugin()
+            . $displayName . '"'
             . ' data-rcmPluginColumnClass="' . $pluginWrapper->getColumnClass()
             . '"'
             . ' data-rcmPluginRowNumber="' . $pluginWrapper->getRowNumber()
@@ -317,8 +317,8 @@ class Container extends AbstractHelper
             . ' data-rcmPluginRenderOrderNumber="'
             . $pluginWrapper->getRenderOrderNumber() . '"'
             . ' data-rcmPluginInstanceId="' . $plugin->getInstanceId() . '"'
-            . ' data-rcmPluginWrapperId="' . $pluginWrapper->getPluginWrapperId(
-            ) . '"'
+            . ' data-rcmPluginWrapperId="' . $pluginWrapper->getPluginWrapperId()
+            . '"'
             . ' data-rcmSiteWidePlugin="' . $plugin->isSiteWide() . '"'
             . ' data-rcmPluginDisplayName="' . $plugin->getDisplayName() . '"'
             . '>';

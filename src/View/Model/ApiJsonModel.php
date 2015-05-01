@@ -6,6 +6,7 @@ use Zend\View\Model\JsonModel;
 use Traversable;
 use Zend\Json\Json;
 use Zend\Stdlib\ArrayUtils;
+
 /**
  * Class ApiJsonModel
  *
@@ -22,7 +23,8 @@ use Zend\Stdlib\ArrayUtils;
  * @link      https://github.com/reliv
  */
 
-class ApiJsonModel extends JsonModel {
+class ApiJsonModel extends JsonModel
+{
 
     protected $code = 1;
 
@@ -136,4 +138,4 @@ class ApiJsonModel extends JsonModel {
 
         return Json::encode($result);
     }
-} 
+}
