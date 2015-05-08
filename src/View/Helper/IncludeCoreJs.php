@@ -88,17 +88,17 @@ class IncludeCoreJs extends AbstractHelper
         /* <TwitterBootstrap> */
         $view->headLink()->prependStylesheet(
             $view->basePath()
-            . '/modules/rcm-twitter-bootstrap/bootstrap/css/bootstrap.css'
+            . '/vendor/bootstrap/dist/css/bootstrap.min.css'
         );
 
         $headScript()->prependFile(
             $view->basePath()
-            . '/modules/rcm-twitter-bootstrap/bootstrap/js/bootstrap.js'
+            . '/vendor/bootstrap/dist/js/bootstrap.min.js'
         );
 
         $headScript()->appendFile(
             $view->basePath()
-            . '/modules/rcm-twitter-bootstrap/bootbox/bootbox.min.js'
+            . '/vendor/bootbox/bootbox.js'
         );
 
         $view->headMeta()->appendName(
