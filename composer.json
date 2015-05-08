@@ -44,6 +44,8 @@
         "bower-asset/angular":"1.2.*",
         "bower-asset/jquery": "1.10",
         "bower-asset/bootstrap": "3.*",
+        "bower-asset/bootbox": "4.3.0",
+        "bower-asset/bootstrap-tabcollapse": "0.2.4",
         "bower-asset/rcm-js-lib": "0.*",
         "bower-asset/rcm-loading": "0.*"
     },
