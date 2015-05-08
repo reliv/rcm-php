@@ -43,8 +43,9 @@
         "fxp/composer-asset-plugin": "~1.0",
         "bower-asset/angular":"1.2.*",
         "bower-asset/jquery": "1.10",
-        "bower-asset/bootstrap": "3.*"
-
+        "bower-asset/bootstrap": "3.*",
+        "bower-asset/rcm-js-lib": "0.*",
+        "bower-asset/rcm-loading": "0.*"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
