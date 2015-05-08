@@ -46,6 +46,8 @@
         "bower-asset/bootstrap": "3.*",
         "bower-asset/bootbox": "4.3.0",
         "bower-asset/bootstrap-tabcollapse": "0.2.4",
+        "bower-asset/html5shiv": "3.7.2",
+        "bower-asset/respond": "1.4.2",
         "bower-asset/rcm-js-lib": "0.*",
         "bower-asset/rcm-loading": "0.*"
     },
