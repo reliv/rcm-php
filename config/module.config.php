@@ -365,11 +365,11 @@ return [
         'resolver_configs' => [
             'aliases' => [
                 'modules/rcm/' => __DIR__ . '/../public/',
+                // Global JS path for dependencies
+                'vendor/' => __DIR__ . '/../../vendor/bower-asset',
             ],
             'collections' => [
                 'modules/rcm/rcm-core.js' => [
-                    'modules/rcm/core/rcm-guid.js',
-                    'modules/rcm/core/rcm-event-manager.js',
                     'modules/rcm/core/rcm-loading.js',
                     'modules/rcm/core/rcm.js',
                     'modules/rcm/core/rcm-api.js',
