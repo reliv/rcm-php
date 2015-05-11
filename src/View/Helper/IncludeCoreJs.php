@@ -80,6 +80,12 @@ class IncludeCoreJs extends AbstractHelper
             $view->basePath() . '/modules/rcm/rcm-core.js'
         );
         $headScript()->prependFile(
+            $view->basePath() . '/vendor/rcm-js-lib/dist/rcm-event-manager.js'
+        );
+        $headScript()->prependFile(
+            $view->basePath() . '/vendor/rcm-js-lib/dist/rcm-guid.js'
+        );
+        $headScript()->prependFile(
             $view->basePath()
             . '/modules/rcm-angular-js/ocLazyLoad/dist/ocLazyLoad.js'
         );
