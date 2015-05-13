@@ -113,7 +113,6 @@ class DispatchListener
         $fakePage->setCurrentRevision($fakeRevision);
 
         $currentSite = $this->getCurrentSite();
-        $viewHelperManager = $this->getViewHelperManager();
 
         $viewModel->setVariable('page', $fakePage);
         $viewModel->setVariable('site', $currentSite);
