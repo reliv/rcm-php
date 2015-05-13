@@ -333,6 +333,14 @@ return [
             'rcmRichEdit' => 'Rcm\Factory\RichEditFactory',
         ],
         'invokables' => [
+            /* <OVER-RIDE ZF2 HELPERS> */
+            'headmeta'
+            => 'Rcm\View\Helper\HeadMeta',
+            'headtitle'
+            => 'Rcm\View\Helper\HeadTitle',
+            'headlink'
+            => 'Rcm\View\Helper\HeadLink',
+            /* </OVER-RIDE ZF2 HELPERS> */
             'rcmOutOfDateBrowserWarning'
             => 'Rcm\View\Helper\OutOfDateBrowserWarning',
             'urlToPage'

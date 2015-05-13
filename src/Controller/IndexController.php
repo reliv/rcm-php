@@ -123,12 +123,26 @@ class IndexController extends AbstractActionController
         );
     }
 
+    /**
+     * getCmsResponse
+     *
+     * @param Site   $site
+     * @param        $pageName
+     * @param string $pageType
+     * @param null   $revisionId
+     *
+     * @return \Rcm\Http\Response|ViewModel
+     */
     public function getCmsResponse(
         Site $site,
         $pageName,
         $pageType = 'n',
         $revisionId = null
     ) {
+        /**
+         * @todo This should be handled better
+         * This is for client, so it can tell if this is an error page
+         */
         $requestedPageData = [
             'name' => strtolower($pageName),
             'type' => strtolower($pageType),
@@ -156,13 +170,6 @@ class IndexController extends AbstractActionController
 
         $this->prepPageRevisionForDisplay($page, $revisionId);
 
-        if (!empty($revisionId) && !$page->getCurrentRevision()) {
-            return $this->redirectToPage(
-                $page->getName(),
-                $page->getPageType()
-            );
-        }
-
         // if we have no revision, page is not found
         if (!$page->getCurrentRevision()) {
             $page = $this->renderNotFoundPage($site);
@@ -188,6 +195,13 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
+    /**
+     * renderNotFoundPage
+     *
+     * @param $site
+     *
+     * @return null|Page
+     */
     public function renderNotFoundPage($site)
     {
         $this->pageName = $site->getNotFoundPage();
@@ -212,6 +226,16 @@ class IndexController extends AbstractActionController
         return $page;
     }
 
+    /**
+     * prepLayoutView
+     *
+     * @param Site $site
+     * @param Page $page
+     * @param      $requestedPageData
+     * @param      $layoutOverRide
+     *
+     * @return void
+     */
     protected function prepLayoutView(
         Site $site,
         Page $page,
@@ -241,6 +265,14 @@ class IndexController extends AbstractActionController
         $layoutView->setVariable('requestedPageData', $requestedPageData);
     }
 
+    /**
+     * prepPageRevisionForDisplay
+     *
+     * @param Page $page
+     * @param null $pageRevisionId
+     *
+     * @return void|Response
+     */
     public function prepPageRevisionForDisplay(
         Page $page,
         $pageRevisionId = null
@@ -290,6 +322,11 @@ class IndexController extends AbstractActionController
         return;
     }
 
+    /**
+     * getUnauthorizedResponse
+     *
+     * @return \Rcm\Http\Response
+     */
     protected function getUnauthorizedResponse()
     {
         $response = new \Rcm\Http\Response();

@@ -161,10 +161,6 @@ class Container extends AbstractHelper
         /** @var \Zend\View\Renderer\PhpRenderer $view */
         $view = $this->getView();
 
-        $view->headMeta($view->page->getDescription(), 'description');
-        $view->headMeta($view->page->getKeywords(), 'keywords');
-        $view->headTitle($view->page->getPageTitle());
-
         return $this->getPageContainerHtmlByName($view->page, $name);
     }
 
