@@ -113,7 +113,6 @@ class DispatchListener
         $fakePage->setCurrentRevision($fakeRevision);
 
         $currentSite = $this->getCurrentSite();
-        $viewHelperManager = $this->getViewHelperManager();
 
         $viewModel->setVariable('page', $fakePage);
         $viewModel->setVariable('site', $currentSite);
@@ -121,34 +120,6 @@ class DispatchListener
         $template = $this->getSiteLayoutTemplate();
 
         $viewModel->setTemplate('layout/' . $template);
-
-        //Inject Meta Tags
-        /** @var \Zend\View\Helper\HeadLink $headLink */
-        $headLink = $viewHelperManager->get('headLink');
-
-        /** @var \Zend\View\Helper\BasePath $basePath */
-        $basePath = $viewHelperManager->get('basePath');
-
-        /** @var \Zend\View\Helper\HeadTitle $headTitle */
-        $headTitle = $viewHelperManager->get('headTitle');
-
-        $favicon = $currentSite->getFavIcon();
-        $siteTitle = $currentSite->getSiteTitle();
-
-        //Add Favicon for site
-        if (!empty($favicon)) {
-            $headLink([
-                'rel' => 'shortcut icon',
-                'type' => 'image/vnd.microsoft.icon',
-                'href' => $basePath() . $favicon,
-            ]);
-        }
-
-        if (!empty($siteTitle)) {
-            $headTitle($siteTitle);
-        }
-
-        $headTitle()->setSeparator(' - ');
 
         return null;
     }
