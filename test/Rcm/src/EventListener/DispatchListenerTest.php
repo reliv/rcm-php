@@ -75,49 +75,9 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
         $currentSite->setSiteTitle($title);
         $currentSite->setSiteLayout($layout);
 
-        $mockHeadLink = $this->getMockBuilder('\Zend\View\Helper\HeadLink')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-
-        $expectedFavicon = [
-            'rel' => 'shortcut icon',
-            'type' => 'image/vnd.microsoft.icon',
-            'href' => $favicon,
-        ];
-
-        $mockHeadLink->expects($this->once())
-            ->method('__invoke')
-            ->with($this->equalTo($expectedFavicon))
-            ->will($this->returnValue(null));
-
-        $mockBasePath = $this->getMockBuilder('\Zend\View\Helper\BasePath')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->mockHeadTitle = $this->getMockBuilder(
-            '\Zend\View\Helper\HeadTitle'
-        )
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->mockHeadTitle->expects($this->any())
-            ->method('__invoke')
-            ->will($this->returnCallback([$this, 'callBackForHeadTitle']));
-
-        $this->mockHeadTitle->expects($this->any())
-            ->method('setSeparator');
-
-
-        $mockPluginHelper = new HelperPluginManager();
-        $mockPluginHelper->setService('headLink', $mockHeadLink);
-        $mockPluginHelper->setService('basePath', $mockBasePath);
-        $mockPluginHelper->setService('headTitle', $this->mockHeadTitle);
-
         $testCase = [
             ['Rcm\Service\LayoutManager', $mockLayoutManager],
             ['Rcm\Service\CurrentSite', $currentSite],
-            ['viewHelperManager', $mockPluginHelper],
         ];
 
         // Zend\ServiceManager\ServiceLocatorInterface
@@ -144,8 +104,6 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
         $template = $view->getTemplate();
 
         $this->assertEquals('layout/' . $layout, $template);
-
-        $this->assertEquals($title, $this->title);
     }
 
     /**
