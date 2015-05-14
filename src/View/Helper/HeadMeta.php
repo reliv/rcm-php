@@ -73,9 +73,9 @@ class HeadMeta extends \Zend\View\Helper\HeadMeta
 
         if (!empty($view->page)) {
 
-            $this->setProperty('description', $view->page->getDescription());
+            $this->setName('description', $view->page->getDescription());
 
-            $this->setProperty('keywords', $view->page->getKeywords());
+            $this->setName('keywords', $view->page->getKeywords());
 
             $this->rcmIsSet = true;
         }
