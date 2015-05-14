@@ -89,13 +89,10 @@ class RouteListener
             return null;
         }
 
-        if (!$this->currentSite->getSiteId()
-            || $this->currentSite->getStatus() != 'A'
-        ) {
+        if (!$this->currentSite->getSiteId() || $this->currentSite->getStatus() != 'A') {
 
             if (empty($this->config['Rcm']['defaultDomain'])
-                || $this->config['Rcm']['defaultDomain']
-                == $this->currentSite->getDomain()->getDomainName()
+                || $this->config['Rcm']['defaultDomain'] == $this->currentSite->getDomain()->getDomainName()
             ) {
                 $response = new Response();
                 $response->setStatusCode(404);
@@ -106,11 +103,7 @@ class RouteListener
 
             $response = new Response();
             $response->setStatusCode(302);
-            $response->getHeaders()
-                ->addHeaderLine(
-                    'Location',
-                    '//' . $this->config['Rcm']['defaultDomain']
-                );
+            $response->getHeaders()->addHeaderLine('Location', '//' . $this->config['Rcm']['defaultDomain']);
 
             $event->stopPropagation(true);
             return $response;
@@ -128,11 +121,7 @@ class RouteListener
         ) {
             $response = new Response();
             $response->setStatusCode(302);
-            $response->getHeaders()
-                ->addHeaderLine(
-                    'Location',
-                    '//' . $primaryCheck->getDomainName()
-                );
+            $response->getHeaders()->addHeaderLine('Location', '//' . $primaryCheck->getDomainName());
 
             $event->stopPropagation(true);
 
@@ -199,20 +188,9 @@ class RouteListener
         $locale = $this->currentSite->getLocale();
 
         /* Conversion for Ubuntu and Mac local settings. */
-        if (!setlocale(
-            LC_ALL,
-            $locale . '.utf8'
-        )
-        ) {
-            if (!setlocale(
-                LC_ALL,
-                $locale . '.UTF-8'
-            )
-            ) {
-                setlocale(
-                    LC_ALL,
-                    'en_US.UTF-8'
-                );
+        if (!setlocale(LC_ALL, $locale . '.utf8')) {
+            if (!setlocale(LC_ALL, $locale . '.UTF-8')) {
+                setlocale(LC_ALL, 'en_US.UTF-8');
             }
         }
 
