@@ -331,6 +331,8 @@ return [
             => 'Rcm\Factory\ContainerViewHelperFactory',
             'rcmTextEdit' => 'Rcm\Factory\TextEditFactory',
             'rcmRichEdit' => 'Rcm\Factory\RichEditFactory',
+            'rcmJsLibIncludeCoreJs' =>
+                'Rcm\Factory\IncludeCoreJsHelperFactory',
         ],
         'invokables' => [
             /* <OVER-RIDE ZF2 HELPERS> */
@@ -347,8 +349,6 @@ return [
             => 'Rcm\View\Helper\UrlToPage',
             'revisionHelper'
             => 'Rcm\View\Helper\RevisionHelper',
-            'rcmJsLibIncludeCoreJs' =>
-                'Rcm\View\Helper\IncludeCoreJs',
         ],
     ],
     'controller_plugins' => [

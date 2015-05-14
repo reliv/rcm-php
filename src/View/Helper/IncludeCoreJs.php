@@ -22,6 +22,19 @@ use Zend\View\Helper\AbstractHelper;
 class IncludeCoreJs extends AbstractHelper
 {
     /**
+     * @var $translator
+     */
+    protected $translator;
+
+    /**
+     * @param $translator
+     */
+    public function __construct($translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
      * __invoke
      *
      * @return void
@@ -31,6 +44,16 @@ class IncludeCoreJs extends AbstractHelper
         $this->inject();
 
         return;
+    }
+
+    /**
+     * getTranslator
+     *
+     * @return mixed
+     */
+    protected function getTranslator()
+    {
+        return $this->translator;
     }
 
     /**
@@ -61,7 +84,7 @@ class IncludeCoreJs extends AbstractHelper
         );
 
         $view->headLink()->prependStylesheet(
-            $view->basePath().'/modules/rcm-html-editor/rcm-html-editor.css'
+            $view->basePath() . '/modules/rcm-html-editor/rcm-html-editor.css'
         );
 
         $view->headScript()->prependFile(
@@ -80,6 +103,17 @@ class IncludeCoreJs extends AbstractHelper
             $view->basePath() . '/modules/rcm/rcm-core.js'
         );
 
+        /* prepare translations  */
+        $rcmLoadingScript = "
+        (function(){
+            rcmLoading.config.loadingMessage = '"
+            . $this->getTranslator()->translate('Page Loading') . "';
+            rcmLoading.config.loadingCompleteMessage = '"
+            . $this->getTranslator()->translate('Page Load Complete') . "';
+        })();
+        ";
+        $headScript()->appendScript($rcmLoadingScript);
+
         $headScript()->prependFile(
             $view->basePath() . '/vendor/rcm-loading/dist/jquery-loader.js'
         );
@@ -87,6 +121,7 @@ class IncludeCoreJs extends AbstractHelper
         $headScript()->prependFile(
             $view->basePath() . '/vendor/rcm-loading/dist/rcm-loading.js'
         );
+
         $headScript()->prependFile(
             $view->basePath() . '/vendor/rcm-js-lib/dist/rcm-event-manager.js'
         );
@@ -143,5 +178,6 @@ class IncludeCoreJs extends AbstractHelper
             array('conditional' => 'lt IE 9')
         );
         /* </libraries> */
+
     }
 }
