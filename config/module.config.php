@@ -378,7 +378,6 @@ return [
             ],
             'collections' => [
                 'modules/rcm/rcm-core.js' => [
-                    'modules/rcm/core/rcm-loading.js',
                     'modules/rcm/core/rcm.js',
                     'modules/rcm/core/rcm-api.js',
                     'modules/rcm/core/rcm-form-double-submit-protect.js',
