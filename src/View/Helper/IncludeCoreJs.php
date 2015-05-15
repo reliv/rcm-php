@@ -103,17 +103,6 @@ class IncludeCoreJs extends AbstractHelper
             $view->basePath() . '/modules/rcm/rcm-core.js'
         );
 
-        /* prepare translations  */
-        $rcmLoadingScript = "
-        (function(){
-            rcmLoading.config.loadingMessage = '"
-            . $this->getTranslator()->translate('Page Loading') . "';
-            rcmLoading.config.loadingCompleteMessage = '"
-            . $this->getTranslator()->translate('Page Load Complete') . "';
-        })();
-        ";
-        $headScript()->appendScript($rcmLoadingScript);
-
         $headScript()->prependFile(
             $view->basePath() . '/vendor/rcm-loading/dist/jquery-loader.js'
         );
