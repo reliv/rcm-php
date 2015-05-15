@@ -5,7 +5,7 @@ php:
   - "5.4"
 before_script:
   - composer self-update
-  - composer config -g github-oauth.github.com 1e1ca0848e259cf8a115f2e661b9c8198f2fb3cf
+  - composer config -g github-oauth.github.com $github_oauth_token
   - composer update --prefer-source
 script:
   - find . -type d \( -path ./vendor -o -path ./test \) -prune -o -name "*.php" -print0 | xargs -0 -n1 -P8 php -l
