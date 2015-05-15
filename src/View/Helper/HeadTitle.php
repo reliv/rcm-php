@@ -75,7 +75,7 @@ class HeadTitle extends \Zend\View\Helper\HeadTitle
         $siteTitle = $view->site->getSiteTitle();
 
         if (!empty($siteTitle)) {
-            $this->prepend($siteTitle);
+            $this->prepend(strip_tags($siteTitle));
         }
 
         $this->rcmSiteIsSet = true;
@@ -98,7 +98,11 @@ class HeadTitle extends \Zend\View\Helper\HeadTitle
             return;
         }
 
-        $this->append($view->page->getPageTitle());
+        $pageTitle = $view->page->getPageTitle();
+
+        if (!empty($pageTitle)) {
+            $this->append(strip_tags($pageTitle));
+        }
 
         $this->rcmPageIsSet = true;
     }
