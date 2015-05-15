@@ -22,19 +22,6 @@ use Zend\View\Helper\AbstractHelper;
 class IncludeCoreJs extends AbstractHelper
 {
     /**
-     * @var $translator
-     */
-    protected $translator;
-
-    /**
-     * @param $translator
-     */
-    public function __construct($translator)
-    {
-        $this->translator = $translator;
-    }
-
-    /**
      * __invoke
      *
      * @return void
