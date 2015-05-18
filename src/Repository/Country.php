@@ -38,20 +38,16 @@ class Country extends EntityRepository
         $default = null
     ) {
         if (empty($code)) {
-
             return $default;
         }
 
         if (!in_array($format, $this->validFormats)) {
-
             throw new CountryNotFoundException('Country Format not valid.');
         }
 
         try {
-
             $result = $this->findOneBy([$format => $code]);
         } catch (NoResultException $e) {
-
             $result = $default;
         }
 

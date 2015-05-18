@@ -3,7 +3,6 @@
 
 namespace Rcm\Service;
 
-
 /**
  * Class DisplayCountService
  *
@@ -57,7 +56,6 @@ class DisplayCountService
          * @var \Rcm\Entity\DisplayInterface $item
          */
         foreach ($items as $key => $item) {
-
             if ($item->canDisplay()) {
                 $displayCount++;
             }

@@ -109,7 +109,6 @@ abstract class AbstractPluginRestfulController extends AbstractRestfulController
         }
 
         if (empty($instanceConfig)) {
-
             $instanceConfig = $pluginManager->getDefaultInstanceConfig(
                 $pluginName
             );

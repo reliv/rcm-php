@@ -38,20 +38,16 @@ class Language extends EntityRepository
         $default = null
     ) {
         if (empty($code)) {
-
             return $default;
         }
 
         if (!in_array($format, $this->validFormats)) {
-
             throw new LanguageNotFoundException('Laguage Format not valid.');
         }
 
         try {
-
             $result = $this->findOneBy([$format => $code]);
         } catch (NoResultException $e) {
-
             $result = $default;
         }
 

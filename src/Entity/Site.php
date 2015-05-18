@@ -266,7 +266,6 @@ class Site implements ApiInterface
         if (!empty($pages)) {
             /** @var \Rcm\Entity\Page $page */
             foreach ($pages as $page) {
-
                 $pageType = $page->getPageType();
 
                 // Only clone if is supported

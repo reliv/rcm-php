@@ -64,7 +64,6 @@ class PluginInstance extends EntityRepository
         $pluginData = $this->prepareData($pluginData);
 
         if ($pluginData['pluginInstanceId'] > 0) {
-
             return $this->updateExistingPlugin(
                 $pluginData,
                 $site,

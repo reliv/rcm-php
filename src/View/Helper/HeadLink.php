@@ -5,7 +5,6 @@ namespace Rcm\View\Helper;
 
 use Zend\View\Helper\Placeholder\Container\AbstractContainer;
 
-
 /**
  * Class HeadLink
  *
@@ -63,7 +62,6 @@ class HeadLink extends \Zend\View\Helper\HeadLink
         $view = $this->getView();
 
         if (!empty($view->site)) {
-
             $favicon = $view->site->getFavIcon();
 
             //Add Favicon for site

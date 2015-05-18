@@ -198,7 +198,6 @@ class PluginManager
         );
 
         if ($pluginInstance->isSiteWide()) {
-
             $return['siteWide'] = true;
 
             $displayName = $pluginInstance->getDisplayName();
@@ -368,7 +367,6 @@ class PluginManager
         $return = [];
 
         foreach ($container as &$item) {
-
             if ($item->type == 'text/css') {
                 $return[] = serialize($item);
             } elseif ($item->type == 'text/javascript') {

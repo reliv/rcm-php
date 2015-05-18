@@ -315,7 +315,6 @@ class Page extends ContainerAbstract
         $results = [];
 
         foreach ($pagesData as $name => $pageData) {
-
             $results[] = $this->createPage(
                 $site,
                 $pageData,
@@ -697,10 +696,14 @@ class Page extends ContainerAbstract
         SiteEntity $siteEntity,
         $pageName,
         $pageRevision,
-        $pageType = 'n',
+        $pageType,
         $saveData,
         $author
     ) {
+        if (empty($pageType)) {
+            $pageType = 'n';
+        }
+
         if (!empty($saveData['containers'])) {
             foreach ($saveData['containers'] as $containerName => $containerData) {
                 /** @var \Rcm\Entity\Container $container */

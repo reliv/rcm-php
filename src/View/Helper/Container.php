@@ -116,7 +116,6 @@ class Container extends AbstractHelper
         $pluginHtml = '';
 
         if (!empty($container)) {
-
             if (empty($revisionId)) {
                 $revision = $container->getPublishedRevision();
             } else {
@@ -187,7 +186,6 @@ class Container extends AbstractHelper
         $pluginHtml = '';
 
         if (!empty($pluginWrapperRows) && is_array($pluginWrapperRows)) {
-
             $pluginHtml = $this->getPluginRowsHtml($pluginWrapperRows);
         }
 
@@ -419,7 +417,9 @@ class Container extends AbstractHelper
         /** @var \Zend\View\Helper\HeadScript $headScript */
         $headScript = $view->headScript();
 
-        foreach ($headScript->getContainer() as &$item) {
+        $container = $headScript->getContainer();
+
+        foreach ($container as &$item) {
             if (($item->source === null)
                 && array_key_exists('src', $item->attributes)
                 && array_key_exists('src', $container->attributes)
@@ -470,7 +470,6 @@ class Container extends AbstractHelper
         $name = (string)$name;
 
         if (empty($name)) {
-
             return $this->defaultContainerName;
         }
 

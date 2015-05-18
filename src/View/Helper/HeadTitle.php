@@ -3,7 +3,6 @@
 
 namespace Rcm\View\Helper;
 
-
 /**
  * Class HeadTitle
  *

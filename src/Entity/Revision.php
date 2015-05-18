@@ -421,7 +421,6 @@ class Revision
 
         /** @var \Rcm\Entity\PluginWrapper $wrapper */
         foreach ($pluginWrappers as $wrapper) {
-
             $rowNumber = $wrapper->getRowNumber();
 
             if (!isset($wrappersByRows[$rowNumber])) {
@@ -449,7 +448,6 @@ class Revision
 
         /** @var \Rcm\Entity\PluginWrapper $wrapper */
         foreach ($pluginWrappers as $wrapper) {
-
             $containerName = $wrapper->getLayoutContainer();
 
             $wrappersSortedByPageContainer[$containerName][] = $wrapper;
