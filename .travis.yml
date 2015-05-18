@@ -5,6 +5,7 @@ php:
   - "5.4"
 before_script:
   - composer self-update
+  - echo "$github_oauth_token"
   - composer config -g github-oauth.github.com $github_oauth_token
   - composer install --prefer-source
 script:
