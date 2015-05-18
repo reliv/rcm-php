@@ -5,9 +5,8 @@ php:
   - "5.4"
 before_script:
   - composer self-update
-  - echo "$github_oauth_token"
   - composer config -g github-oauth.github.com $github_oauth_token
-  - composer install --prefer-source
+  - composer install
 script:
   - find . -type d \( -path ./vendor -o -path ./test \) -prune -o -name "*.php" -print0 | xargs -0 -n1 -P8 php -l
   - ./vendor/bin/phpunit

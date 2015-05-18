@@ -95,7 +95,9 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
 
         $author = $this->getCurrentAuthor();
 
-        foreach ($newSite->getPages() as &$page) {
+        $pages = $newSite->getPages();
+
+        foreach ($pages as &$page) {
             $page->setAuthor($author);
         }
 
