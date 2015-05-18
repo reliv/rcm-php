@@ -1,0 +1,47 @@
+<?php
+/** @var \Rcm\Entity\Page $page */
+$page = $layout->page;
+
+if (!$page->getPageId()) {
+    return;
+}
+?>
+<div id="rcmRevisionList">
+    <div class="dropdown">
+        <button class="btn-xs btn-default dropdown-toggle" type="button" id="revisionsList" data-toggle="dropdown">
+            <?= $this->headTitle()->renderTitle(); ?> - <?= $this->revisionHelper()->getRevisionType($page, $page->getCurrentRevision()); ?>
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="revisionsList">
+            <?php
+                if (!empty($page->getPublishedRevision())) {
+            ?>
+                <li role="presentation">
+                    <?= $this->revisionHelper()->getRevisionLink($page,$page->getPublishedRevision()) ?>
+                </li>
+            <?php
+                }
+            ?>
+
+            <?php
+                if (!empty($page->getStagedRevision())) {
+            ?>
+                    <li role="presentation">
+                        <?= $this->revisionHelper()->getRevisionLink($page,$page->getStagedRevision()) ?>
+                    </li>
+            <?php
+                }
+            ?>
+
+            <?php
+                if (!empty($page->getLastSavedDraftRevision())) {
+            ?>
+                    <li role="presentation">
+                        <?= $this->revisionHelper()->getRevisionLink($page,$page->getLastSavedDraftRevision()) ?>
+                    </li>
+            <?php
+                }
+            ?>
+        </ul>
+    </div>
+</div>

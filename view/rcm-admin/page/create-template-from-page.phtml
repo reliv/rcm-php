@@ -1,0 +1,69 @@
+<link rel="stylesheet" type="text/css"
+      href="<?=
+      $this->basePath(); ?>/modules/rcm-admin/create-template-from-page/form.css"
+    />
+
+<script type="text/javascript"
+        src="<?=
+        $this->basePath(); ?>/modules/rcm-admin/create-template-from-page/form.js"
+    >
+
+</script>
+
+<?php
+
+/** @var \RcmAdmin\Form\CreateTemplateFromPageForm $form */
+$form = $this->form;
+$form->prepare();
+
+$elements['templateName']['element'] = $form->get('template-name');
+
+
+foreach ($elements as &$element) {
+    if (count($element['element']->getMessages()) > 0) {
+        $element['attributes'] = array(
+            'class' => 'invalid-field'
+        );
+    } else {
+        $element['attributes'] = array();
+    }
+}
+
+// Assuming the "contact/process" route exists...
+$form->setAttribute(
+    'action',
+    $this->url(
+        'RcmAdmin\Page\CreateTemplateFromPage',
+        array(
+            'rcmPageName' => $this->rcmPageName,
+            'rcmPageType' => $this->rcmPageType,
+            'rcmPageRevision' => $this->rcmPageRevision,
+        )
+    )
+);
+
+// Set the method attribute for the form
+$form->setAttribute('method', 'post');
+
+// Get the form label plugin
+$formLabel = $this->plugin('formLabel');
+?>
+<div class="rcm-admin-create-template-from-page">
+
+<div id="rcmCreateTemplateErrorLine"><?= $this->displayErrors($this->errors); ?></div>
+
+<?= $this->form()->openTag($form); ?>
+
+<?= $this->message; ?><br/>
+
+<div id="templateName">
+    <?=
+    $formLabel->openTag($elements['templateName']['attributes'])
+    . $elements['templateName']['element']->getOption('label');
+    ?> &nbsp;
+    <?= $this->formInput($elements['templateName']['element']); ?>
+    <?= $formLabel->closeTag(); ?>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+</div>

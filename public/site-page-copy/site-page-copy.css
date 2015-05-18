@@ -1,0 +1,81 @@
+.rcmAdminSitePageCopy {
+}
+
+.rcmAdminSitePageCopy .page-title{
+    font-weight: bold;
+}
+
+.rcmAdminSitePageCopy .page-copy{
+    margin: 1em 0;
+}
+
+.rcmAdminSitePageCopy .message-label.page-title{
+}
+
+.rcmAdminSitePageCopy .form-group label {
+    font-weight: bold;
+}
+
+.rcmAdminSitePageCopy div.form-control {
+    height: auto;
+    padding: .5em .5em .5em .5em;
+}
+
+.rcmAdminSitePageCopy .pageSelect {
+    border: .1em solid #0073ea;
+    border-radius: .3em;
+    font-weight: normal;
+    margin: .3em 0 .2em 0;
+    padding: .2em .5em .5em .5em;
+}
+
+.rcmAdminSitePageCopy .form-group .pageSelect label {
+    font-weight: normal;
+}
+
+.rcmAdminSitePageCopy .pageSelection {
+    border: .1em solid #DDDDDD;
+    border-radius: .3em;
+    padding: .3em;
+}
+
+.rcmAdminSitePageCopy .page-search {
+    padding: .5em;
+}
+
+.rcmAdminSitePageCopy .page-search label{
+    display: block;
+}
+
+.rcmAdminSitePageCopy .page-search .form-group {
+    font-size: .8em;
+}
+
+.rcmAdminSitePageCopy .page-search .form-group .form-control {
+    height: 28px;
+    line-height: 1;
+    padding: .1em;
+}
+
+.rcmAdminSitePageCopy .page-search .form-group button {
+    position: absolute;
+    margin-top: 3px;
+}
+
+.rcmAdminSitePageCopy .page-copy .message {
+    font-size: 1.2em;
+    margin: .5em 0;
+}
+
+.rcmAdminSitePageCopy .page-copy.error{
+
+}
+
+.rcmAdminSitePageCopy .page-copy.success{
+
+}
+
+.rcmAdminSitePageCopy .complete-message {
+    font-size: 1.2em;
+    margin: .5em 0;
+}

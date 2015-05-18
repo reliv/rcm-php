@@ -1,0 +1,28 @@
+<?php
+$layout = $this->layout();
+?>
+<!-- <panel> -->
+<div class="rcmAdminPanelWrapper" ng-cloak>
+    <div class="rcmAdminPanelNav">
+        <?=
+        $this->render(
+            'rcm-admin/admin/partial/navigation/navigation.phtml'
+        ); ?>
+
+        <?php include 'revision-list.phtml';  ?>
+
+        <?php include 'buttons.phtml'; ?>
+    </div>
+
+    <div class="rcmPanelEditorToolbar">
+        <?php
+        // Requires Angular and /module/rcm/public/html-editor/html-editor.js
+        // and a parent angular controller
+        ?>
+        <div html-editor-toolbar html-editor-toolbar-toggle="false"
+             html-editor-toolbar-default-skin="lightgray"></div>
+    </div>
+</div>
+<div class="rcmAdminPanelSpacer"></div>
+<?= $this->availablePluginsList() ?>
+<!-- </panel> -->

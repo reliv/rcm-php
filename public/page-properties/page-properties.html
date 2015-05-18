@@ -1,0 +1,54 @@
+<div oc-lazy-load="{name: 'rcmAdminPage', files: ['/modules/rcm-admin/page-properties/page-properties.js']}">
+    <div ng-controller="PageProperties" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h1 class="modal-title" id="myModalLabel">Page Properties</h1>
+            </div>
+            <div class="modal-body">
+                <div class="conatiner-fluid">
+                    <form>
+                        <div class="form-group">
+                            <label>Page Title</label>
+                            <input class="form-control"
+                                   ng-model="title"
+                                   type="text" style="min-width: 50%;">
+                        </div>
+                        <div class="form-group">
+                            <label>Page Description</label>
+                            <input class="form-control"
+                                   ng-model="description"
+                                   type="text" style="min-width: 50%;">
+                        </div>
+                        <div class="form-group">
+                            <label>Keywords</label>
+                            <input class="form-control"
+                                   ng-model="keywords"
+                                   type="text" style="min-width: 50%;">
+                        </div>
+                    </form>
+
+                    <div ng-show="saveOk" class="alert alert-success" role="alert">
+                        <p>Page properties saved!</p>
+                    </div>
+
+                    <div ng-show="saveFail" class="alert alert-danger" role="alert">
+                        <p>Page properties failed to save</p>
+
+                        <p>{{message}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">Close
+                </button>
+                <button type="button" ng-click="save()"
+                        class="btn btn-primary saveBtn">Save
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>

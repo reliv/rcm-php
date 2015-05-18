@@ -1,0 +1,197 @@
+/* Menu */
+.availablePluginsMenu img {
+    height: 40px;
+    width: 40px;
+    margin-right: 1em;
+}
+
+.availablePluginsMenu {
+    width: 250px;
+    position: fixed;
+    z-index: 1000;
+}
+
+.availablePluginsMenu #availablePluginsGroup {
+    overflow-y: scroll;
+    max-height: 600px;
+}
+
+.availablePluginsMenu h1.panel-heading {
+    cursor: move;
+}
+
+.availablePluginsMenu .siteWideAlreadyOnPage {
+    display: none;
+}
+
+/* Layout Editor - Plugins */
+.rcmLayoutImage {
+    float: left;
+    padding-right: 5px;
+}
+
+.rcmLayoutTitle {
+    display: table-cell;
+    vertical-align: middle;
+    height: 40px;
+    cursor: pointer;
+}
+
+.rcmPluginSortPlaceHolder {
+    float: left;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+}
+
+/* <Plugin Overlays> */
+.rcmPluginLocked {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)"; /* IE 8 */
+    filter: alpha(opacity=30); /* IE 5-7 */
+    -moz-opacity: 0.3; /* Netscape */
+    -khtml-opacity: 0.3; /* Safari 1.x */
+    opacity: 0.3;
+}
+/* </Plugin Overlays> */
+
+/* <Plugin Menu Overlays> */
+.rcmLayoutEditHelper {
+    color: #000000;
+    display: none;
+    font-size: 12px;
+    position: absolute;
+    top: -.8em;
+    left: 0px;
+    width: 100%; height: 2em;
+    z-index: 20000;
+}
+
+.rcmLayoutEditHelper .rcmHandle {
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0px 0px 1px 1px rgba(127, 127, 127, 1);
+    font-family: 'Glyphicons Halflings';
+    padding: .3em .5em;
+    width: 2em; height: 2em;
+}
+
+[data-rcmsitewideplugin="1"] .rcmLayoutEditHelper .rcmHandle {
+    box-shadow: 0px 0px 1px 1px rgba(127, 0, 0, 1);
+}
+
+.rcmLayoutEditHelper .rcmHandle.sortableMenu {
+    cursor: move;
+    float: left;
+}
+
+.rcmLayoutEditHelper .rcmHandle.sortableMenu .icon:after {
+    content: "\e068";
+}
+
+/* Plugin Menu Overlays Drop Down */
+/* Container Menu */
+.rcmLayoutEditHelper .rcmHandle.containerMenu {
+    float: right;
+}
+
+.rcmLayoutEditHelper .rcmHandle.containerMenu .icon:after {
+    content: "\e012";
+}
+
+.rcmLayoutEditHelper .rcmContainerMenu {
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0px 0px 1px 1px rgba(127, 127, 127, 1);
+    border-radius: 5px;
+    color: #000000;
+    list-style: none;
+    line-height: 1;
+    margin: 0;
+    overflow: visible;
+    padding: .5em;
+    position: absolute;
+    top: 2em;
+    right: 0px;
+    z-index: 950;
+}
+
+[data-rcmsitewideplugin="1"] .rcmLayoutEditHelper .rcmContainerMenu {
+    box-shadow: 0px 0px 1px 1px rgba(127, 0, 0, 1);
+}
+
+.rcmLayoutEditHelper .rcmContainerMenu ul {
+    display: block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.rcmLayoutEditHelper .rcmContainerMenu ul li {
+    display: block;
+    width: 100%;
+}
+
+.rcmLayoutEditHelper .rcmContainerMenu ul li ul {
+    display: block;
+}
+
+.rcmLayoutEditHelper .rcmContainerMenu ul li ul li {
+    display: block;
+}
+
+.rcmLayoutEditHelper .rcmContainerMenu ul li a,
+.rcmLayoutEditHelper .rcmContainerMenu ul li a:link,
+.rcmLayoutEditHelper .rcmContainerMenu ul li a:visited,
+.rcmLayoutEditHelper .rcmContainerMenu ul li a:active,
+.rcmLayoutEditHelper .rcmContainerMenu ul li a:focus {
+    background-color: transparent;
+    color: #000000 !important;
+    display: block;
+    font-weight: bold;
+    padding: .5em;
+    text-decoration: none;
+}
+
+.rcmLayoutEditHelper .rcmContainerMenu ul li a:hover {
+    box-shadow: 0px 0px 1px 1px rgba(127, 127, 127, 1);
+    color: #000000 !important;
+}
+
+[data-rcmsitewideplugin="1"] .rcmLayoutEditHelper .rcmContainerMenu ul li a:hover {
+    box-shadow: 0px 0px 1px 1px rgba(127, 0, 0, 1);
+}
+
+/* </Plugin Menu Overlays> */
+
+/* Container Drag Targets */
+html.rcmEditingPlugins .rcmPlugin:hover {
+    box-shadow: 0px 0px 1px 1px rgba(127, 127, 127, 1);
+    /* For IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=0, Color='#888888')";
+}
+
+/* Container Drag Targets */
+html.rcmEditingPlugins .rcmPlugin[data-rcmsitewideplugin="1"]:hover,
+html.rcmEditingPlugins .rcmPlugin[data-rcmsitewideplugin="Y"]:hover {
+    /*border: 1px dashed grey;*/
+    box-shadow: 0px 0px 1px 1px rgba(127, 0, 0, 1);
+    /* For IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=0, Color='#880000')";
+}
+
+html.rcmArrangingPlugins .rcmContainer > .row {
+    border: 1px dashed grey;
+    border-bottom: 0;
+    min-height: 3em;
+}
+
+html.rcmArrangingPlugins .rcmContainer {
+    border-bottom: 1px dashed grey;
+}
+
+html.rcmArrangingPlugins .rcmPlugin {
+    border-color: transparent;
+}
+
+/* Unknown */
+.layoutPluginContainerIcon {
+    height: 40px;
+}

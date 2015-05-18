@@ -1,0 +1,110 @@
+.rcmAdminPanelSpacer {
+    width: 100%;
+    z-index: 1000;
+    position: relative;
+    height: 9em;
+}
+
+@media screen and (min-width: 666px) {
+    .rcmAdminPanelSpacer {
+        height: 7em;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .rcmAdminPanelSpacer {
+        height: 5em;
+    }
+}
+
+.rcmAdminPanelWrapper {
+    background-color: #FFFFFF;
+    position: fixed;
+    left: 0;
+    -webkit-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.10);
+    -moz-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.10);
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.10);
+    width: 100%;
+    z-index: 1001;
+}
+
+
+.rcmAdminPanelNav {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid black;
+    position: relative;
+    z-index: 1030;
+    font-size: 11px;
+}
+
+.rcmAdminPanelNav div.rcmPanelRightButtons {
+    float: right;
+}
+
+div.rcmPanelEditorToolbar {
+    padding: 0px;
+    position: relative;
+    width: 100%;
+    z-index: 1020;
+}
+
+.modal-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.modal-dialog {
+    width: auto !important;
+    max-width: 800px;
+}
+
+/* fixes the bug in bootstrap form-control input, width was wider in FF than it appears in Chrome */
+@-moz-document url-prefix() {
+    .form-control {
+        width: 96%;
+    }
+}
+
+#rcmRevisionList {
+    position: absolute;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 75px;
+    right: 0;
+    text-align: center;
+}
+
+#rcmRevisionList button {
+    width: 300px;
+    text-align: left;
+}
+
+#rcmRevisionList button .caret {
+    float: right;
+    margin-top: 7px;
+}
+
+#rcmRevisionList .dropdown-menu {
+    min-width: 300px;
+}
+.rcmPanelRightButtons .glyphicon.glyphicon-lock {
+    font-size: 1.5em;
+    padding: 3px 5px 0 5px;
+}
+.rcmPanelRightButtons .unlock {
+    padding: 3px 5px 0 5px;
+}
+
+.rcmPanelRightButtons #unlockPermissionsNonEdit{
+    float:right;
+}
+.rcmPanelRightButtons #lockPermissionsNonEdit {
+    float:right;
+}
+.rcmPanelRightButtons #unlockPermissionsEditMode{
+    float:right;
+}
+.rcmPanelRightButtons #lockPermissionsEditMode {
+    float:right;
+}

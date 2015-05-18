@@ -1,0 +1,95 @@
+label {
+    margin: 0.5em;
+    width: 100%;
+}
+
+label input[type="text"] {
+    width: 82%;
+    float: right;
+}
+
+label.fieldOk input[type="text"] {
+    background: #67b168;
+}
+
+label input.fieldError,
+label.invalid-field input[type="text"] {
+    background: #FF0000;
+    color: #000000;
+}
+
+label select {
+    float: right;
+    width: 80%;
+}
+
+label.invalid-field {
+    color: #FF0000;
+    font-weight: bold;
+}
+
+#rcmNewPageErrorLine {
+    text-align: center;
+    width: 100%;
+    display: none;
+}
+
+#rcmNewPageErrorLine p {
+    font-weight: bold;
+    color: #FF0000;
+}
+
+/* Page Layout Selector */
+#pageLayout input[type="radio"] {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+}
+
+#pageLayout label {
+    display: block;
+}
+
+#pageLayout label label,
+#pageLayout label label span.pageLayoutLabel,
+#pageLayout label label span.pageLayoutLabel span.pageLayoutImageOverlay,
+#pageLayout label label img {
+    width: 200px;
+    position: relative;
+    display: block;
+    z-index: 1;
+}
+
+#pageLayout label label {
+    text-align: center;
+    float: left;
+    margin: 2em;
+}
+
+#pageLayout label label span.pageLayoutLabel span.pageLayoutImageOverlay {
+    background: #CCCCCC;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    display: none;
+}
+
+#pageLayout label label {
+    border: 1px dashed #000000;
+    border-radius: 5px;
+}
+
+#pageLayout label label img {
+    width: 200px;
+}
+
+#pageLayout label label input[type="radio"]:checked + span span.pageLayoutImageOverlay {
+    display: block;
+    opacity: 0.5;
+}
+
+#pageLayout label label input[type="radio"]:checked + span img {
+    opacity: 1;
+}

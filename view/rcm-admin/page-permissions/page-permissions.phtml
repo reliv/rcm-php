@@ -1,0 +1,44 @@
+<div oc-lazy-load="{name: 'pagePermissions', files: ['/admin/rcmuser/js/core.js', '/modules/rcm-user/js/rcm-user-roles-service.js', '/modules/rcm-user/js/rcm-user-role-selector.js']}">
+    <div class="pagePermissions">
+        <div rcm-page-permissions
+             rcm-page-permissions-data="<?php echo $this->escapeHtmlAttr(
+                 json_encode($data)
+             ) ?>" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                    <h1 class="modal-title" id="myModalLabel">Page
+                        Permissions</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="permissionsBody">
+                        <div class="wrapperPagePerm">
+
+                            <div rcm-user-role-selector="pagePermissions"
+                                 rcm-user-role-selector-id-property="roleId"
+                                 rcm-user-role-selector-title-property="roleId"
+                                 rcm-user-role-selector-namespace-property="namespace"
+                                 rcm-user-role-selector-show-nesting=".."
+                                 rcm-user-role-selector-save-label=""
+                                 rcm-user-role-selector-search-label=""
+                                 rcm-user-role-selector-search-placeholder="Search..."
+                                 rcm-user-role-selector-save="savePermissions()"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">Close
+                    </button>
+                    <button type="button" ng-click="savePermissions()"
+                            class="btn btn-primary saveBtn"
+                            data-dismiss="modal">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

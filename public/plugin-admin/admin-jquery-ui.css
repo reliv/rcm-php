@@ -1,0 +1,37 @@
+.ui-dialog form.simple p {
+    margin-bottom: 10px;
+}
+
+.ui-dialog form.simple input {
+    width: 590px;
+}
+
+.ui-dialog form.simple .ui-tabs-panel input {
+    width: 550px;
+}
+
+.ui-dialog form.simple input[type="checkbox"] {
+    width: auto;
+}
+
+.ui-accordion .ui-accordion-content {
+    padding: 0px !important;
+}
+
+/* These might not be needed */
+.ui-autocomplete {
+    z-index: 1000001;
+}
+
+.ui-helper-hidden-accessible {
+    display: none;
+}
+
+/* Admin Screen Jquery Helpers */
+.RcmErrorInputHightlight {
+    background-color: #FF0000;
+}
+
+.RcmOkInputHightlight {
+    background-color: #d6e9c6;
+}

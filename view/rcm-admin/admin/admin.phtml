@@ -1,0 +1,69 @@
+<?php
+
+$this->rcmJsLibIncludeCoreJs();
+$this->rcmIncludeJqueryUi();
+
+// RcmUser JS
+$this->headScript()->appendFile(
+    $this->basePath()
+    . '/admin/rcmuser/js/core.js'
+);
+
+$this->headScript()->appendFile(
+    $this->basePath() . '/modules/rcm-admin/js/rcm-admin.js'
+);
+
+$this->headLink()->appendStylesheet(
+    $this->basePath() . '/modules/rcm-admin/css/rcm-admin.css'
+);
+
+$this->headLink()->appendStylesheet(
+    $this->basePath()
+    . '/modules/rcm-jquery/jquery-context-menu/jquery.contextMenu.css'
+);
+$this->headScript()->appendFile(
+    $this->basePath()
+    . '/modules/rcm-jquery/jquery-context-menu/jquery.contextMenu.js'
+);
+$this->headScript()->appendFile(
+    $this->basePath()
+    . '/modules/rcm-jquery/jquery-context-menu/jquery.ui.position.js'
+);
+
+
+$layout = $this->layout();
+
+/** @var \Rcm\Entity\Page $page */
+$page = $layout->page;
+
+/** @var \Rcm\Entity\Site $site */
+$site = $layout->site;
+
+/** @var array $requestedPageData */
+$requestedPageData = $layout->requestedPageData;
+
+$pageData = [
+    'site' => [
+        'id' => $site->getSiteId(),
+        'title' => $site->getSiteTitle(),
+    ],
+    'page' => [
+        'revision' => $page->getCurrentRevision()->getRevisionId(),
+        'type' => $page->getPageType(),
+        'name' => $page->getName(),
+        'id' => $page->getPageId(),
+        'title' => $page->getPageTitle(),
+        'keywords' => $page->getKeywords(),
+        'description' => $page->getDescription(),
+        'siteId' => $site->getSiteId(),
+    ],
+    'requestedPage' => $requestedPageData,
+];
+
+$this->headMeta()->setProperty(
+    'rcm:page',
+    json_encode($pageData)
+);
+?>
+<?= $this->render('rcm-admin/admin/partial/panel/panel.phtml'); ?>
+<?= $this->render('rcm-admin/admin/partial/dialog/dialog.phtml'); ?>
