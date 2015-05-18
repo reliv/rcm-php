@@ -3,7 +3,6 @@
 
 namespace Rcm\Entity;
 
-
 /**
  * interface ApiBase
  *
@@ -35,7 +34,6 @@ class ApiBase implements ApiInterface
         $setterPrefix = 'set';
 
         foreach ($data as $property => $value) {
-
             // Check for ignore keys
             if (in_array($property, $ignore)) {
                 continue;

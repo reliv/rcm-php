@@ -116,7 +116,6 @@ class Container extends AbstractHelper
         $pluginHtml = '';
 
         if (!empty($container)) {
-
             if (empty($revisionId)) {
                 $revision = $container->getPublishedRevision();
             } else {
@@ -187,7 +186,6 @@ class Container extends AbstractHelper
         $pluginHtml = '';
 
         if (!empty($pluginWrapperRows) && is_array($pluginWrapperRows)) {
-
             $pluginHtml = $this->getPluginRowsHtml($pluginWrapperRows);
         }
 
@@ -470,7 +468,6 @@ class Container extends AbstractHelper
         $name = (string)$name;
 
         if (empty($name)) {
-
             return $this->defaultContainerName;
         }
 

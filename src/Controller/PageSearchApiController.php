@@ -66,7 +66,6 @@ class PageSearchApiController extends AbstractRestfulController
 
         $pageNames = [];
         foreach ($results as $result) {
-
             $pageNames[$result['name']] = [
                 'title' => $result['pageTitle'],
                 'url' => $this->urlToPage($result['name'], $result['pageType'])

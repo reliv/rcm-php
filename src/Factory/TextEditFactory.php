@@ -17,7 +17,6 @@
 
 namespace Rcm\Factory;
 
-
 use Rcm\View\Helper\RcmEdit;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

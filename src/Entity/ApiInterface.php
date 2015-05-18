@@ -3,7 +3,6 @@
 
 namespace Rcm\Entity;
 
-
 /**
  * interface ApiInterface
  *

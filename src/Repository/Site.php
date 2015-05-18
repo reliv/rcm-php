@@ -239,7 +239,6 @@ class Site extends EntityRepository
     public function createNewSite($siteId = null)
     {
         if (empty($siteId)) {
-
             // new site
             /** @var \Rcm\Entity\Site $newSite */
             return new \Rcm\Entity\Site();
@@ -251,7 +250,6 @@ class Site extends EntityRepository
         $existingSite = $this->find($siteId);
 
         if (empty($existingSite)) {
-
             throw new SiteNotFoundException("Site {$siteId} not found.");
         }
 

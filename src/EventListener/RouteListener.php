@@ -90,7 +90,6 @@ class RouteListener
         }
 
         if (!$this->currentSite->getSiteId() || $this->currentSite->getStatus() != 'A') {
-
             if (empty($this->config['Rcm']['defaultDomain'])
                 || $this->config['Rcm']['defaultDomain'] == $this->currentSite->getDomain()->getDomainName()
             ) {

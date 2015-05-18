@@ -5,7 +5,6 @@ namespace Rcm\View\Helper;
 use Rcm\Entity\Page;
 use Zend\View\Helper\Placeholder\Container\AbstractContainer;
 
-
 /**
  * Class HeadMeta
  *
@@ -72,7 +71,6 @@ class HeadMeta extends \Zend\View\Helper\HeadMeta
         $view = $this->getView();
 
         if (!empty($view->page)) {
-
             $description = $view->page->getDescription();
 
             if (!empty($description)) {

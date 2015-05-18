@@ -124,7 +124,6 @@ class Domain extends EntityRepository
     public function getDomainByName($domainName, $default = null)
     {
         if (empty($domainName)) {
-
             return $default;
         }
 

@@ -295,7 +295,6 @@ class IndexController extends AbstractActionController
                 return;
 
             } else {
-
                 return $this->redirectToPage(
                     $page->getName(),
                     $page->getPageType()

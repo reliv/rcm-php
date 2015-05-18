@@ -155,7 +155,6 @@ abstract class AbstractDisplayAggregator implements \IteratorAggregate
         $displayCount = 0;
 
         foreach ($this->items as &$item) {
-
             $displayCount++;
             // @todo this should not ignore the items current display state
             // - Should check the current display state and try to keep it if possible
