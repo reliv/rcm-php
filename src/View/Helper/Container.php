@@ -417,7 +417,9 @@ class Container extends AbstractHelper
         /** @var \Zend\View\Helper\HeadScript $headScript */
         $headScript = $view->headScript();
 
-        foreach ($headScript->getContainer() as &$item) {
+        $container = $headScript->getContainer();
+
+        foreach ($container as &$item) {
             if (($item->source === null)
                 && array_key_exists('src', $item->attributes)
                 && array_key_exists('src', $container->attributes)
