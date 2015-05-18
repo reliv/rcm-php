@@ -1,4 +1,4 @@
-Rcm Action Button
+Rcm Admin
 ======
 
-Adds a colored action button to the Reliv Content Manager
+Provides all the basic admin screens for the Reliv Content manager
