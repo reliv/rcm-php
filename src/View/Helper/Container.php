@@ -421,8 +421,8 @@ class Container extends AbstractHelper
 
         foreach ($container as &$item) {
             if (($item->source === null)
-                && array_key_exists('src', $item->attributes)
-                && array_key_exists('src', $container->attributes)
+                && !empty($item->attributes['src'])
+                && !empty($container->attributes['src'])
                 && ($container->attributes['src'] == $item->attributes['src'])
             ) {
                 return true;
