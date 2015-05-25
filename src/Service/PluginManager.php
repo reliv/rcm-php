@@ -243,7 +243,17 @@ class PluginManager
         }
 
         $controller->setRequest($this->request);
-        $controller->setResponse(new Response());
+
+        $response = new Response();
+        $controller->setResponse($response);
+
+        /** @var \Zend\Mvc\MvcEvent $event */
+        $event = $controller->getEvent();
+        $event->setRequest($this->request);
+        $event->setResponse($response);
+
+        $controller->setEvent($event);
+
 
         $viewModel = $controller->renderInstance(
             $pluginInstanceId,

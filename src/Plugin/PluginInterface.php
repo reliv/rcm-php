@@ -19,7 +19,7 @@
 
 namespace Rcm\Plugin;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\EventManager\EventInterface as Event;
 use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
 
@@ -70,4 +70,18 @@ interface PluginInterface
      * @return mixed
      */
     public function setResponse(ResponseInterface $response);
+
+    /**
+     * Get the current event or return a new event
+     *
+     * @return Event
+     */
+    public function getEvent();
+
+    /**
+     * @param \Zend\EventManager\Event $event
+     *
+     * @return void
+     */
+    public function setEvent(Event $event);
 }
