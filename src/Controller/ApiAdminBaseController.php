@@ -3,7 +3,7 @@
 
 namespace RcmAdmin\Controller;
 
-use Zend\Mvc\Controller\AbstractRestfulController;
+use Rcm\Controller\AbstractRestfulJsonController;
 
 /**
  * Class ApiAdminBaseController
@@ -21,9 +21,8 @@ use Zend\Mvc\Controller\AbstractRestfulController;
  * @link      https://github.com/reliv
  */
 
-class ApiAdminBaseController extends AbstractRestfulController
+class ApiAdminBaseController extends AbstractRestfulJsonController
 {
-
 
     /**
      * getConfig
