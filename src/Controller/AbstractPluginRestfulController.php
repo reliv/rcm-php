@@ -4,7 +4,6 @@
 namespace Rcm\Controller;
 
 use Rcm\Exception\PluginInstanceNotFoundException;
-use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
  * Class AbstractPluginRestfulController
@@ -21,7 +20,7 @@ use Zend\Mvc\Controller\AbstractRestfulController;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
-abstract class AbstractPluginRestfulController extends AbstractRestfulController
+abstract class AbstractPluginRestfulController extends AbstractRestfulJsonController
 {
     /**
      * @var string
