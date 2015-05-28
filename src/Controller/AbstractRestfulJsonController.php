@@ -63,9 +63,11 @@ abstract class AbstractRestfulJsonController extends AbstractRestfulController
     /**
      * Override default actions as they do not return valid JsonModels
      *
+     * @param $data
+     *
      * @return ApiJsonModel
      */
-    public function deleteList()
+    public function deleteList($data)
     {
         return $this->methodNotAllowed();
     }
