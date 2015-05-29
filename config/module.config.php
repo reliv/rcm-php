@@ -494,7 +494,7 @@ return [
                 'modules/rcm-admin/' => __DIR__ . '/../public/',
             ],
             'collections' => [
-                'modules/rcm-admin/js/rcm-admin.js' => [
+                'modules/rcm-admin/admin.js' => [
 
                     /* <core> */
                     'modules/rcm-admin/core/rcm-admin-api.js',
@@ -535,7 +535,7 @@ return [
                     'modules/rcm-admin/site-page-copy/rcm-admin-site-page-copy.js',
                     'modules/rcm-admin/save-ajax-admin-window/rcm-save-ajax-admin-window.js',
                 ],
-                'modules/rcm-admin/css/rcm-admin.css' => [
+                'modules/rcm-admin/admin.css' => [
                     'modules/rcm-admin/core/styles.css',
                     'modules/rcm-admin/plugin-admin/admin-jquery-ui.css',
                     'modules/rcm-admin/rcm-page-admin/layout-editor.css',
