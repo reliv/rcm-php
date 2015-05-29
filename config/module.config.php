@@ -100,6 +100,67 @@ return [
             'contentManager' => 'contentManager',
             'contentManagerWithPageType' => 'contentManagerWithPageType',
             'blog' => 'blog',
+        ],
+        /**
+         * Scripts to be required always
+         */
+        'HtmlIncludes' => [
+            /* Meta tags that will always be loaded
+            Example
+            'keyValue' => [
+                'content' => 'value',
+                'modifiers' => [],
+            ],
+             */
+            'headMetaName' => [
+                'X-UA-Compatible' => [
+                    'content' => 'IE=edge',
+                ],
+                'viewport' => [
+                    'content' => 'width=device-width, initial-scale=1',
+                ],
+            ],
+            /* Script files that will always be loaded
+            Example
+            '/script/url' => [
+                'type' => 'text/javascript',
+                'attrs' => []
+            ],
+             */
+            'headScriptFile' => [
+                '/modules/rcm/es5-shim-master/es5-shim.min.js' => [
+                    'type' => 'text/javascript',
+                    'attrs' => [
+                        'conditional' => 'lt IE 9'
+                    ]
+                ],
+                '/modules/rcm-jquery/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js' => [],
+                // @todo Move this config to the modules that use it
+                '/modules/rcm-jquery/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js' => [],
+                '/modules/rcm-angular-js/angular/angular.js' => [],
+                '/vendor/bootbox/bootbox.js' => [],
+                '/vendor/bootstrap/dist/js/bootstrap.min.js' => [],
+                '/modules/rcm-tinymce-js/tinymce/tinymce.js' => [],
+                '/modules/rcm-angular-js/ocLazyLoad/dist/ocLazyLoad.js' => [],
+
+                '/modules/rcm/rcm.js' => [],
+                '/modules/rcm/modules.js' => [],
+            ],
+            /* Stylesheet files that will always be loaded
+            Example
+            '/stylesheet/url' => [
+                'media' => 'screen',
+                'conditionalStylesheet' => '',
+                'extras' => []
+            ],
+             */
+            'headLinkStylesheet' => [
+                '/vendor/bootstrap/dist/css/bootstrap.min.css' => [],
+                // @todo Move this config to the modules that use it
+                '/modules/rcm-jquery/jquery-ui-1.10.4.custom/css/smoothness/jquery-ui-1.10.4.custom.min.css' => [],
+                '/modules/rcm/rcm.css' => [],
+                '/modules/rcm/modules.css' => [],
+            ],
         ]
     ],
     'RcmUser' => [
@@ -256,47 +317,47 @@ return [
     'service_manager' => [
         'factories' => [
             'doctrine.cache.doctrine_cache'
-                => 'Rcm\Factory\DoctrineCacheFactory',
+            => 'Rcm\Factory\DoctrineCacheFactory',
             'Rcm\EventListener\EventWrapper'
-                => 'Rcm\Factory\EventWrapperFactory',
+            => 'Rcm\Factory\EventWrapperFactory',
             'Rcm\EventListener\RouteListener'
-                => 'Rcm\Factory\RouteListenerFactory',
+            => 'Rcm\Factory\RouteListenerFactory',
             'Rcm\EventListener\DispatchListener'
-                => 'Rcm\Factory\DispatchListenerFactory',
+            => 'Rcm\Factory\DispatchListenerFactory',
             'Rcm\EventListener\EventFinishListener'
-                => 'Rcm\Factory\EventFinishListenerFactory',
+            => 'Rcm\Factory\EventFinishListenerFactory',
             'Rcm\EventListener\ViewEventListener'
-                => 'Rcm\Factory\ViewEventListenerFactory',
+            => 'Rcm\Factory\ViewEventListenerFactory',
             'Rcm\Service\PluginManager'
-                => 'Rcm\Factory\PluginManagerFactory',
+            => 'Rcm\Factory\PluginManagerFactory',
             'Rcm\Service\LayoutManager'
-                => 'Rcm\Factory\LayoutManagerFactory',
+            => 'Rcm\Factory\LayoutManagerFactory',
             'Rcm\Service\ResponseHandler'
-                => 'Rcm\Factory\ResponseHandlerFactory',
+            => 'Rcm\Factory\ResponseHandlerFactory',
             'Rcm\Service\Cache'
-                => 'Rcm\Factory\CacheFactory',
+            => 'Rcm\Factory\CacheFactory',
             'Rcm\Service\AssetManagerCache'
-                => 'Rcm\Factory\AssetManagerCacheFactory',
+            => 'Rcm\Factory\AssetManagerCacheFactory',
             'Rcm\Service\SessionMgr'
-                => 'Rcm\Factory\SessionManagerFactory',
+            => 'Rcm\Factory\SessionManagerFactory',
             'Rcm\Acl\ResourceProvider'
-                => 'Rcm\Factory\AclResourceProviderFactory',
+            => 'Rcm\Factory\AclResourceProviderFactory',
             'Rcm\Validator\Page'
-                => 'Rcm\Factory\PageValidatorFactory',
+            => 'Rcm\Factory\PageValidatorFactory',
             'Rcm\Validator\PageTemplate'
-                => 'Rcm\Factory\PageTemplateFactory',
+            => 'Rcm\Factory\PageTemplateFactory',
             'Rcm\Validator\MainLayout'
-                => 'Rcm\Factory\MainLayoutValidatorFactory',
+            => 'Rcm\Factory\MainLayoutValidatorFactory',
             'Rcm\Service\Logger'
-                => 'Rcm\Factory\LoggerFactory',
+            => 'Rcm\Factory\LoggerFactory',
             'Rcm\Service\ZendLogger'
-                => '\Rcm\Factory\ZendLogFactory',
+            => '\Rcm\Factory\ZendLogFactory',
             'Rcm\Service\ZendLogWriter'
-                => '\Rcm\Factory\ZendLogWriterFactory',
+            => '\Rcm\Factory\ZendLogWriterFactory',
             'Rcm\Acl\CmsPermissionsChecks'
-                => '\Rcm\Factory\CmsPermissionsChecksFactory',
+            => '\Rcm\Factory\CmsPermissionsChecksFactory',
             'Rcm\Service\CurrentSite'
-                => '\Rcm\Factory\CurrentSiteFactory',
+            => '\Rcm\Factory\CurrentSiteFactory',
         ],
         'invokables' => [
             'Rcm\Service\DisplayCountService' => 'Rcm\Service\DisplayCountService'
@@ -331,6 +392,7 @@ return [
             => 'Rcm\Factory\ContainerViewHelperFactory',
             'rcmTextEdit' => 'Rcm\Factory\TextEditFactory',
             'rcmRichEdit' => 'Rcm\Factory\RichEditFactory',
+            'rcmHtmlIncludes'  => 'Rcm\Factory\RcmHtmlIncludesHelperFactory',
         ],
         'invokables' => [
             /* <OVER-RIDE ZF2 HELPERS> */
@@ -347,8 +409,7 @@ return [
             => 'Rcm\View\Helper\UrlToPage',
             'revisionHelper'
             => 'Rcm\View\Helper\RevisionHelper',
-            'rcmJsLibIncludeCoreJs'
-            => 'Rcm\View\Helper\IncludeCoreJs'
+
         ],
     ],
     'controller_plugins' => [
@@ -377,13 +438,34 @@ return [
                 'vendor/' => __DIR__ . '/../../vendor/bower-asset',
             ],
             'collections' => [
-                'modules/rcm/rcm-core.js' => [
+                /**
+                 * Core JS and css
+                 * (core features)
+                 */
+                'modules/rcm/rcm.js' => [
+                    'vendor/rcm-js-lib/dist/rcm-guid.js',
+                    'vendor/rcm-js-lib/dist/rcm-event-manager.js',
+                    'vendor/rcm-loading/dist/rcm-loading.js',
+                    'vendor/rcm-loading/dist/jquery-loader.js',
+
                     'modules/rcm/core/rcm.js',
                     'modules/rcm/core/rcm-api.js',
                     'modules/rcm/core/rcm-form-double-submit-protect.js',
                     'modules/rcm/core/rcm-bootstrap-alert-confirm.js',
                     'modules/rcm/core/rcm-popout-window.js',
+
+                    'modules/rcm-dialog/dialog.js',
+                    'modules/rcm-html-editor/rcm-html-editor.js',
                 ],
+                'modules/rcm/rcm.css' => [
+                    'modules/rcm-html-editor/rcm-html-editor.css',
+                ],
+                /**
+                 * Extended JS and css
+                 * (features for modules and lower level services)
+                 */
+                'modules/rcm/modules.js' => [],
+                'modules/rcm/modules.css' => [],
             ],
         ],
     ],
