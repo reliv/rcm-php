@@ -141,7 +141,6 @@ return [
                 '/vendor/bootbox/bootbox.js' => [],
                 '/vendor/bootstrap/dist/js/bootstrap.min.js' => [],
                 '/modules/rcm-tinymce-js/tinymce/tinymce.js' => [],
-                '/modules/rcm-angular-js/ocLazyLoad/dist/ocLazyLoad.js' => [],
 
                 '/modules/rcm/rcm.js' => [],
                 '/modules/rcm/modules.js' => [],
