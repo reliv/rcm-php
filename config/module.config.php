@@ -19,7 +19,6 @@
  * @link      https://github.com/reliv
  */
 return [
-
     'navigation' => [
         'RcmAdminMenu' => [
             'Page' => [
@@ -498,7 +497,7 @@ return [
 
                     /* <core> */
                     'modules/rcm-admin/core/rcm-admin-api.js',
-                    // RcmUser services - include using ZF2 'admin/rcmuser/js/core.js',
+                    // RcmUser services - include using ZF2
                     'modules/rcm-user/js/rcm-user-roles-service.js',
                     'modules/rcm-user/js/rcm-user-role-selector.js',
                     'modules/rcm-angular-js/angular-multi-select/angular-multi-select.js',
@@ -534,6 +533,9 @@ return [
                     'modules/rcm-admin/create-site/rcm-admin-create-site.js',
                     'modules/rcm-admin/site-page-copy/rcm-admin-site-page-copy.js',
                     'modules/rcm-admin/save-ajax-admin-window/rcm-save-ajax-admin-window.js',
+
+                    // features
+                    'modules/rcm-admin/page-properties/page-properties.js',
                 ],
                 'modules/rcm-admin/admin.css' => [
                     'modules/rcm-admin/core/styles.css',
