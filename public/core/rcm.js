@@ -28,7 +28,7 @@ var RcmCore = function () {
      *   files: ['/modules/my/script.js']
      * }
      */
-    self.addAngularModule = function (moduleName, lazyloadConfig) {
+    self.addAngularModule = function (moduleName) {
 
         if (self.hasModule(moduleName)) {
 
@@ -38,7 +38,10 @@ var RcmCore = function () {
         if (!self.app) {
 
             self.pushModuleName(moduleName);
+            return;
         }
+
+        console.error('Module: ' + moduleName + ' registered too late.');
     };
 
     /**
@@ -76,7 +79,7 @@ var RcmCore = function () {
      */
     self.hasModule = function (moduleName) {
 
-        return (self.moduleDepenencies.indexOf(moduleName) < 0);
+        return (self.moduleDepenencies.indexOf(moduleName) > -1);
     };
 
     /**
@@ -210,6 +213,7 @@ var RcmCore = function () {
 
     // construct
     self.initConsole();
+
     self.init(document);
 };
 
