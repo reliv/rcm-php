@@ -292,7 +292,7 @@ return [
             'RcmAdmin\\RpcAdminCanEdit' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
-                    'route' => '/api/rpc/rcm-admin/can-edit',
+                    'route' => '/api/rpc/rcm-admin/can-edit[/:id]',
                     'defaults' => [
                         'controller' => 'RcmAdmin\Controller\RpcAdminCanEdit',
                     ]
@@ -301,7 +301,7 @@ return [
             'RcmAdmin\\RpcAdminKeepAlive' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
-                    'route' => '/api/rpc/rcm-admin/keep-alive',
+                    'route' => '/api/rpc/rcm-admin/keep-alive[/:id]',
                     'defaults' => [
                         'controller' => 'RcmAdmin\Controller\RpcAdminKeepAlive',
                     ]
