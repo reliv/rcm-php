@@ -1,7 +1,6 @@
 <?php
 
-$this->rcmJsLibIncludeCoreJs();
-$this->rcmIncludeJqueryUi();
+$this->rcmHtmlIncludes();
 
 // RcmUser JS
 $this->headScript()->appendFile(
@@ -10,11 +9,11 @@ $this->headScript()->appendFile(
 );
 
 $this->headScript()->appendFile(
-    $this->basePath() . '/modules/rcm-admin/js/rcm-admin.js'
+    $this->basePath() . '/modules/rcm-admin/admin.js'
 );
 
 $this->headLink()->appendStylesheet(
-    $this->basePath() . '/modules/rcm-admin/css/rcm-admin.css'
+    $this->basePath() . '/modules/rcm-admin/admin.css'
 );
 
 $this->headLink()->appendStylesheet(
@@ -66,4 +65,4 @@ $this->headMeta()->setProperty(
 );
 ?>
 <?= $this->render('rcm-admin/admin/partial/panel/panel.phtml'); ?>
-<?= $this->render('rcm-admin/admin/partial/dialog/dialog.phtml'); ?>
+<?= $this->render('rcm-admin/admin/partial/dialog/dialog.phtml');

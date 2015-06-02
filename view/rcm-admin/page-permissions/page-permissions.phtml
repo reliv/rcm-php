@@ -1,9 +1,9 @@
-<div oc-lazy-load="{name: 'pagePermissions', files: ['/admin/rcmuser/js/core.js', '/modules/rcm-user/js/rcm-user-roles-service.js', '/modules/rcm-user/js/rcm-user-role-selector.js']}">
+<div>
     <div class="pagePermissions">
         <div rcm-page-permissions
-             rcm-page-permissions-data="<?php echo $this->escapeHtmlAttr(
-                 json_encode($data)
-             ) ?>" class="modal-dialog">
+             rcm-page-permissions-data="
+             <?php echo $this->escapeHtmlAttr(json_encode($data)) ?>
+             " class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"
