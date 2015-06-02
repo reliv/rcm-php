@@ -7,20 +7,15 @@
  *   - helps with loading Angular modules without using bootstrap
  *   - helps with console.log issues in IE 8 and lower
  *
- * Requires oc-lazy-load due to late loading of resources
- * - in modules that are loaded using AJAX, include the tag per the doc
- *   at https://github.com/ocombe/ocLazyLoad
- * - Including modules with dependencies VIA AJAX using ocLazyLoad is NOT supported
  */
 var RcmCore = function () {
 
     var self = this;
 
-    self.moduleDepenencies = ['oc.lazyLoad'];
+    self.moduleDepenencies = [];
 
     self.app = null;
 
-    self.ocLazyLoad;
     self.compile;
     self.scope;
 
@@ -33,29 +28,9 @@ var RcmCore = function () {
      *   files: ['/modules/my/script.js']
      * }
      */
-    self.addAngularModule = function (moduleName, lazyloadConfig) {
+    self.addAngularModule = function (moduleName) {
 
         if (self.hasModule(moduleName)) {
-
-            return;
-        }
-
-        if (self.ocLazyLoad) {
-
-            if (!lazyloadConfig) {
-                lazyloadConfig = {};
-            }
-
-            lazyloadConfig.name = moduleName;
-
-            self.ocLazyLoad.load(lazyloadConfig)
-                .then(
-                function () {
-                    self.pushModuleName(moduleName);
-
-                    self.rootScope.safeApply();
-                }
-            );
 
             return;
         }
@@ -63,7 +38,10 @@ var RcmCore = function () {
         if (!self.app) {
 
             self.pushModuleName(moduleName);
+            return;
         }
+
+        console.error('Module: ' + moduleName + ' registered too late.');
     };
 
     /**
@@ -101,12 +79,7 @@ var RcmCore = function () {
      */
     self.hasModule = function (moduleName) {
 
-        // @todo check oc-lazy-loader too
-        if (self.moduleDepenencies.indexOf(moduleName) < 0) {
-            return false;
-        }
-
-        return true;
+        return (self.moduleDepenencies.indexOf(moduleName) > -1);
     };
 
     /**
@@ -115,22 +88,7 @@ var RcmCore = function () {
      */
     self.init = function (document) {
 
-        var angularModule = angular.module('rcm', self.moduleDepenencies)
-            .config(
-            [
-                '$ocLazyLoadProvider',
-                function ($ocLazyLoadProvider) {
-                    $ocLazyLoadProvider.config(
-                        {
-                            //asyncLoader: requirejs,
-                            debug: true,
-                            events: true,
-                            loadedModules: ['rcm']
-                        }
-                    );
-                }
-            ]
-        );
+        var angularModule = angular.module('rcm', self.moduleDepenencies);
 
         angular.element(document).ready(
             function () {
@@ -141,8 +99,6 @@ var RcmCore = function () {
                 );
 
                 self.app = angularModule;
-
-                self.ocLazyLoad = angular.element(document).injector().get('$ocLazyLoad');
 
                 self.compile = angular.element(document).injector().get('$compile');
 
@@ -191,19 +147,6 @@ var RcmCore = function () {
                         }
                     );
                 };
-                /*
-                 self.scope.$on('ocLazyLoad.moduleLoaded', function (e, module) {
-                 console.log('module loaded', module);
-                 });
-
-                 self.scope.$on('ocLazyLoad.componentLoaded', function (e, module) {
-                 console.log('componentLoaded loaded', module);
-                 });
-
-                 self.scope.$on('ocLazyLoad.fileLoaded', function (e, module) {
-                 console.log('fileLoaded loaded', module);
-                 });
-                 */
             }
         );
     };
@@ -237,43 +180,40 @@ var RcmCore = function () {
      * Browser safe console replacement
      */
     self.console = function () {
+
+        var self = this;
+
+        self.log = function (msg) {
+        };
+
+        self.info = function (msg) {
+        };
+
+        self.warn = function (msg) {
+        };
+
+        self.error = function (msg) {
+        };
+
+        /* there are more methods, but this covers the basics */
     };
 
     /**
      * Initialize the console
      */
     self.initConsole = function () {
-        if (window.console) {
+
+        if (typeof window.console !== "undefined") {
 
             self.console = window.console;
-        } else {
-
-            /* keep older browsers from blowing up */
-            self.console = function () {
-
-                var self = this;
-
-                self.log = function (msg) {
-                };
-
-                self.info = function (msg) {
-                };
-
-                self.warn = function (msg) {
-                };
-
-                self.error = function (msg) {
-                };
-
-                /* there are more methods, but this covers the basics */
-            };
-
-            window.console = self.console;
         }
+
+        window.console = self.console;
     };
 
     // construct
     self.initConsole();
+
     self.init(document);
 };
 
