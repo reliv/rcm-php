@@ -134,13 +134,13 @@ return [
                         'conditional' => 'lt IE 9'
                     ]
                 ],
-                '/modules/rcm-jquery/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js' => [],
+                '/modules/rcm-jquery/jquery-ui-1.10.4.custom/js/jquery-1.10.2.min.js' => [],
                 // @todo Move this config to the modules that use it
                 '/modules/rcm-jquery/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js' => [],
-                '/modules/rcm-angular-js/angular/angular.js' => [],
+                '/modules/rcm-angular-js/angular/angular.min.js' => [],
                 '/vendor/bootbox/bootbox.js' => [],
                 '/vendor/bootstrap/dist/js/bootstrap.min.js' => [],
-                '/modules/rcm-tinymce-js/tinymce/tinymce.js' => [],
+                '/modules/rcm-tinymce-js/tinymce/tinymce.min.js' => [],
 
                 '/modules/rcm/rcm.js' => [],
                 '/modules/rcm/modules.js' => [],
