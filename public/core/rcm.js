@@ -20,6 +20,27 @@ var RcmCore = function () {
     self.scope;
 
     /**
+     * config - Exposes a standard way of sharing config data
+     * @type {{}}
+     */
+    self.config = {};
+
+    /**
+     * get Config Value
+     * @param configKey
+     * @param defaultValue
+     * @returns {*}
+     */
+    self.getConfigValue = function(configKey, defaultValue){
+
+        if(self.config[configKey]){
+            return self.config[configKey]
+        }
+
+        return defaultValue;
+    };
+
+    /**
      * @param moduleName AngularJS Module name
      * @param ezloadConfig
      * EXAMPLE:
