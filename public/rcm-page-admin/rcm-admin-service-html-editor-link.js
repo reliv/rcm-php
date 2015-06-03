@@ -16,8 +16,8 @@ RcmAdminService.getHtmlEditorLink = function (rcmHtmlEditorInit, rcmHtmlEditorDe
 
             // global check for extra options, these will merge with the current
             // option presets
-            if (typeof RcmThemeConfig == 'object' && typeof RcmThemeConfig.rcmAdminHtmlEditorOptions == 'object') {
-                config = RcmThemeConfig.rcmAdminHtmlEditorOptions;
+            if (typeof rcm !== 'undefined') {
+                config = rcm.getConfigValue('rcmHtmlEditorOptions', null);
             }
 
             scope.rcmAdminPage = page;
@@ -27,8 +27,6 @@ RcmAdminService.getHtmlEditorLink = function (rcmHtmlEditorInit, rcmHtmlEditorDe
             var toggleEditors = function () {
 
                 var pluginId = elm.attr('html-editor-plugin-id');
-
-                // if (pluginId)
 
                 if (!page.plugins[pluginId]) {
                     return;
