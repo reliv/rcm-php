@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 /**
  * Class AdminPanelControllerFactory
  *
- * LongDescHere
+ * Admin Panel Controller
  *
  * PHP version 5
  *

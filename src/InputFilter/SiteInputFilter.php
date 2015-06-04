@@ -7,7 +7,7 @@ use Zend\InputFilter\InputFilter;
 /**
  * Class SiteInputFilter
  *
- * LongDescHere
+ * Site Input Filter
  *
  * PHP version 5
  *

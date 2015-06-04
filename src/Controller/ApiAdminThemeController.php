@@ -9,7 +9,7 @@ use Zend\Http\Response;
 /**
  * Class ApiAdminThemeController
  *
- * LongDescHere
+ * API for Rcm Theme
  *
  * PHP version 5
  *

@@ -1,19 +1,5 @@
 <?php
-/**
- * PagePermissions.php
- *
- * LongDescHere
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   RcmAdmin\Controller
- * @author    Inna Davis <idavis@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
+
 
 namespace RcmAdmin\Controller;
 
@@ -23,7 +9,7 @@ use Zend\View\Model\ViewModel;
 /**
  * PagePermissions
  *
- * LongDescHere
+ * Page Permissions controller
  *
  * PHP version 5
  *
