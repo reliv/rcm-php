@@ -25,7 +25,7 @@ use Zend\Mvc\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel;
 
-require_once __DIR__ . '/../../../autoload.php';
+require_once __DIR__ . '/../autoload.php';
 
 /**
  * Unit Test for Dispatch Listener Event
@@ -122,6 +122,10 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
         $testViewVar = $panelView->getVariable('This-is-a-test');
 
         $this->assertTrue($testViewVar);
+
+        // No Match
+        $event = new MvcEvent();
+        $this->assertNull($this->listener->getAdminPanel($event));
     }
 
     /**

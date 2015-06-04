@@ -8,7 +8,7 @@ use Rcm\Entity\Page;
 /**
  * Class SitePageApiResponse
  *
- * LongDescHere
+ * SitePage API Response Model
  *
  * PHP version 5
  *

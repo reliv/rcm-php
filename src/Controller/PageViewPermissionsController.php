@@ -10,7 +10,7 @@ use Zend\View\Model\JsonModel;
 /**
  * PageViewPermissionsController
  *
- * LongDescHere
+ * Page Permissions CRUD controller
  *
  * PHP version 5
  *

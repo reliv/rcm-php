@@ -9,7 +9,7 @@ use Zend\Http\Response;
 /**
  * Class ApiAdminCountryController
  *
- * LongDescHere
+ * API for Rcm Country
  *
  * PHP version 5
  *

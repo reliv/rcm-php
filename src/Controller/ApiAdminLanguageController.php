@@ -9,7 +9,7 @@ use Rcm\View\Model\ApiJsonModel;
 /**
  * Class ApiAdminLanguageController
  *
- * LongDescHere
+ * API for Rcm Language
  *
  * PHP version 5
  *

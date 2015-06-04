@@ -21,7 +21,7 @@ namespace RcmAdminTest\View\Helper;
 
 use RcmAdmin\View\Helper\DisplayErrors;
 
-require_once __DIR__ . '/../../../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 /**
  * Unit Test for View Helper DisplayErrors
