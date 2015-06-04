@@ -55,7 +55,8 @@
     "bower-asset/es5-shim": "4.1.1",
     "bower-asset/respond": "1.4.2",
     "bower-asset/rcm-js-lib": "0.*",
-    "bower-asset/rcm-loading": "0.*"
+    "bower-asset/rcm-loading": "0.*",
+    "bower-asset/angular-translate":"2.7.2",
   },
   "require-dev": {
     "phpunit/phpunit": "4.6.*",
