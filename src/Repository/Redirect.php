@@ -84,13 +84,7 @@ class Redirect extends EntityRepository
 
 
         if (count($result) > 1) {
-            /** @var \Rcm\Entity\Redirect $redirect */
-            foreach ($result as $redirect) {
-                $site = $redirect->getSite();
-                if ($site && $site->getSiteId() == $siteId) {
-                    return $redirect;
-                }
-            }
+            return $result[0];
         }
 
         return array_pop($result);
@@ -100,7 +94,7 @@ class Redirect extends EntityRepository
      * Get Doctrine Query
      *
      * @param      $siteId Site Id For Search
-     * @param null $url    Url for search
+     * @param null $url Url for search
      *
      * @return \Doctrine\ORM\Query
      */
@@ -116,7 +110,7 @@ class Redirect extends EntityRepository
         $queryBuilder
             ->select('r')
             ->from('\Rcm\Entity\Redirect', 'r', 'r.requestUrl')
-            ->join('r.site', 'site')
+            ->leftJoin('r.site', 'site')
             ->where('r.site = :siteId')
             ->orWhere('r.site is null')
             ->setParameter('siteId', $siteId);
