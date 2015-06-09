@@ -143,6 +143,7 @@ return [
                 '/modules/rcm-tinymce-js/tinymce/tinymce.min.js' => [],
 
                 '/modules/rcm/rcm.js' => [],
+                '/vendor/rcm-dialog/dist/rcm-dialog.min.js' => [],
                 '/modules/rcm/modules.js' => [],
             ],
             /* Stylesheet files that will always be loaded
@@ -453,7 +454,6 @@ return [
                     'modules/rcm/core/rcm-bootstrap-alert-confirm.js',
                     'modules/rcm/core/rcm-popout-window.js',
 
-                    'modules/rcm-dialog/dialog.js',
                     'modules/rcm-html-editor/rcm-html-editor.js',
                 ],
                 'modules/rcm/rcm.css' => [
