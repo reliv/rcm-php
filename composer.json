@@ -57,6 +57,7 @@
     "bower-asset/rcm-js-lib": "0.*",
     "bower-asset/rcm-loading": "0.*",
     "bower-asset/rcm-dialog": "0.*",
+    "bower-asset/rcm-html-editor": "0.*",
     "bower-asset/angular-translate":"2.7.2"
   },
   "require-dev": {
