@@ -128,7 +128,7 @@ return [
             ],
              */
             'headScriptFile' => [
-                '/modules/rcm/es5-shim-master/es5-shim.min.js' => [
+                '/vendor/es5-shim/es5-shim.min.js' => [
                     'type' => 'text/javascript',
                     'attrs' => [
                         'conditional' => 'lt IE 9'
@@ -457,7 +457,9 @@ return [
                     'modules/rcm/core/rcm-bootstrap-alert-confirm.js',
                     'modules/rcm/core/rcm-popout-window.js',
                 ],
-                'modules/rcm/rcm.css' => [],
+                'modules/rcm/rcm.css' => [
+                    'modules/rcm/core/rcm.css',
+                ],
                 /**
                  * Extended JS and css
                  * (features for modules and lower level services)
