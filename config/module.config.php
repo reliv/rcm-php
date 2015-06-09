@@ -144,6 +144,8 @@ return [
 
                 '/modules/rcm/rcm.js' => [],
                 '/vendor/rcm-dialog/dist/rcm-dialog.min.js' => [],
+                '/vendor/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.js' => [],
+                '/vendor/rcm-html-editor/dist/rcm-html-editor.min.js' => [],
                 '/modules/rcm/modules.js' => [],
             ],
             /* Stylesheet files that will always be loaded
@@ -159,6 +161,7 @@ return [
                 // @todo Move this config to the modules that use it
                 '/modules/rcm-jquery/jquery-ui-1.10.4.custom/css/smoothness/jquery-ui-1.10.4.custom.min.css' => [],
                 '/modules/rcm/rcm.css' => [],
+                '/vendor/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.css',
                 '/modules/rcm/modules.css' => [],
             ],
         ]
@@ -453,12 +456,8 @@ return [
                     'modules/rcm/core/rcm-form-double-submit-protect.js',
                     'modules/rcm/core/rcm-bootstrap-alert-confirm.js',
                     'modules/rcm/core/rcm-popout-window.js',
-
-                    'modules/rcm-html-editor/rcm-html-editor.js',
                 ],
-                'modules/rcm/rcm.css' => [
-                    'modules/rcm-html-editor/rcm-html-editor.css',
-                ],
+                'modules/rcm/rcm.css' => [],
                 /**
                  * Extended JS and css
                  * (features for modules and lower level services)
