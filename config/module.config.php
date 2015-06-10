@@ -446,8 +446,7 @@ return [
                  * (core features)
                  */
                 'modules/rcm/rcm.js' => [
-                    'vendor/rcm-js-lib/dist/rcm-guid.js',
-                    'vendor/rcm-js-lib/dist/rcm-event-manager.js',
+                    'vendor/rcm-js-lib/dist/rcm-js-lib.min.js',
                     'vendor/rcm-loading/dist/rcm-loading.js',
                     'vendor/rcm-loading/dist/jquery-loader.js',
 
