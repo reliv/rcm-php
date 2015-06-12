@@ -447,8 +447,9 @@ return [
                  */
                 'modules/rcm/rcm.js' => [
                     'vendor/rcm-js-lib/dist/rcm-js-lib.min.js',
-                    'vendor/rcm-loading/dist/rcm-loading.js',
-                    'vendor/rcm-loading/dist/jquery-loader.js',
+                    'vendor/rcm-loading/dist/rcm-loading.min.js',
+                    'vendor/rcm-loading/dist/angular-rcm-loading.min.js',
+                    'vendor/rcm-loading/dist/jquery-loader.min.js',
 
                     'modules/rcm/core/rcm.js',
                     'modules/rcm/core/rcm-api.js',
