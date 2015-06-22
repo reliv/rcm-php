@@ -172,4 +172,22 @@ class Domain extends EntityRepository
 
         return $domain;
     }
+
+    /**
+     * Search for a domain name by query string.
+     *
+     * @param string $domainSearchParam Query String... ie. "domain LIKE '[queryString]"
+     *
+     * @return array
+     */
+    public function searchForDomain($domainSearchParam)
+    {
+        $domainsQueryBuilder = $pwsSites = $this->createQueryBuilder('domain');
+        $domainsQueryBuilder->where('domain.domain LIKE :domainSearchParam');
+
+        $query = $domainsQueryBuilder->getQuery();
+        $query->setParameter('domainSearchParam', $domainSearchParam);
+
+        return $query->getResult();
+    }
 }
