@@ -15,6 +15,8 @@
 
 namespace RcmAdmin\Controller;
 
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
 use Rcm\Entity\Site;
@@ -25,6 +27,7 @@ use RcmAdmin\Entity\SiteApiRequest;
 use RcmAdmin\Entity\SiteApiResponse;
 use RcmAdmin\Entity\SiteResponse;
 use RcmAdmin\InputFilter\SiteInputFilter;
+use Zend\Paginator\Paginator;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -67,8 +70,37 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
 
         /** @var \Rcm\Repository\Site $siteRepo */
         $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
+        $createQueryBuilder = $siteRepo->createQueryBuilder('site')
+            ->select('site')
+            ->leftjoin('site.domain', 'domain')
+            ->orderBy('domain.domain', 'ASC');
 
-        $sitesObjects = $siteRepo->findAll();
+        $query = $createQueryBuilder->getQuery();
+
+        $searchQuery = $this->params()->fromQuery('q');
+
+        if ($searchQuery) {
+            $createQueryBuilder->where($createQueryBuilder->expr()->like('domain.domain', ':searchQuery'));
+            $query = $createQueryBuilder->getQuery();
+            $query->setParameter('searchQuery', $searchQuery.'%');
+        }
+
+        $adaptor = new DoctrinePaginator(new ORMPaginator($query));
+        $paginator = new Paginator($adaptor);
+        $paginator->setDefaultItemCountPerPage(10);
+
+        $page = (int)$this->params()->fromQuery('page');
+        if ($page) {
+            $paginator->setCurrentPageNumber($page);
+        }
+
+        $pageSize = (int)$this->params()->fromQuery('page_size');
+        if ($pageSize) {
+            $paginator->setItemCountPerPage($pageSize);
+        }
+
+        $sitesObjects = $paginator->getCurrentItems();
+
 
         $sites = [];
 
@@ -77,7 +109,12 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
             $sites[] = $this->buildSiteApiResponse($site);
         }
 
-        return new ApiJsonModel($sites, 0, 'Success');
+        $list['items'] = $sites;
+        $list['itemCount'] = $paginator->getTotalItemCount();
+        $list['pageCount'] = $paginator->count();
+        $list['currentPage'] = $paginator->getCurrentPageNumber();
+
+        return new ApiJsonModel($list, 0, 'Success');
     }
 
     /**\

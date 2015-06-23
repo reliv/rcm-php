@@ -1,4 +1,4 @@
-angular.module('rcmAdmin').controller(
+angular.module('rcmAdmin', ['angularUtils.directives.dirPagination']).controller(
     'rcmAdminManageSitesController',
     [
         '$scope', '$http', 'rcmApiService', 'rcmAdminApiUrlService',
@@ -14,6 +14,9 @@ angular.module('rcmAdmin').controller(
             $scope.languages = {};
             $scope.countries = {};
 
+            $scope.resultsPerPage = 25; // this should match however many results your API puts on one page
+            $scope.keywords = '';
+            $scope.totalItems = 0;
 
             $scope.loading = false;
             $scope.loadings = {
@@ -23,6 +26,12 @@ angular.module('rcmAdmin').controller(
             $scope.tempSites = {};
 
             $scope.message = '';
+
+            getResultsPage(1);
+
+            $scope.pagination = {
+                current: 1
+            };
 
             $scope.disableSite = function (site) {
                 $scope.loadings[site.siteId] = true;
@@ -49,7 +58,7 @@ angular.module('rcmAdmin').controller(
                                 },
                                 success: function (data) {
                                     //Refresh site list
-                                    self.getSites();
+                                    $scope.getCurrentResultsPage();
                                 },
                                 error: function (data) {
                                     $scope.message = data.message;
@@ -73,7 +82,7 @@ angular.module('rcmAdmin').controller(
             $scope.hideCloneComplete = function (site) {
 
                 $scope.tempSites[site.siteId] = null;
-                self.getSites();
+                $scope.getCurrentResultsPage();
             };
 
             $scope.cloneSite = function (site) {
@@ -108,24 +117,6 @@ angular.module('rcmAdmin').controller(
                 )
             };
 
-            self.getSites = function () {
-
-                rcmApiService.get(
-                    {
-                        url: rcmAdminApiUrlService.sites,
-                        loading: function (loading) {
-                            $scope.loading = loading;
-                        },
-                        success: function (data) {
-                            $scope.sites = data.data;
-                        },
-                        error: function (data) {
-                            $scope.message = data.message;
-                        }
-                    }
-                );
-            };
-
             rcmApiService.get(
                 {
                     url: rcmAdminApiUrlService.languages,
@@ -158,7 +149,37 @@ angular.module('rcmAdmin').controller(
                 true
             );
 
-            self.getSites();
+            $scope.search = function(){
+                getResultsPage(1);
+            };
+
+            $scope.pageChanged = function(newPage) {
+                getResultsPage(newPage);
+            };
+
+            $scope.getCurrentResultsPage = function() {
+                getResultsPage($scope.pagination.current);
+            };
+
+
+            function getResultsPage(pageNumber) {
+                var pageParam = 'page=' + pageNumber;
+                var pageSizeParam = 'page_size=' + $scope.resultsPerPage;
+                var queryParam = '';
+
+                if ($scope.keywords.length > 0) {
+                    queryParam = 'q=' + $scope.keywords;
+                }
+
+                url = rcmAdminApiUrlService.sites;
+
+
+                $http.get(url + '?' + pageParam + '&' + pageSizeParam + '&' + queryParam)
+                    .then(function(result) {
+                        $scope.sites = result.data.data.items;
+                        $scope.totalItems = result.data.data.itemCount;
+                    });
+            }
         }
     ]
 );

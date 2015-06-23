@@ -25,3 +25,23 @@
     margin: .5em 0;
     text-align :right;
 }
+
+.controlBox {
+    width: 96%;
+    height: 78px;
+    position: fixed;
+    top: 59px;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #ddd;
+}
+
+.siteSearch {
+    float: right;
+    top: 20px;
+    width: 240px;
+}
+
+.fixedSpacer {
+    width: 96%;
+    height: 70px;
+}
