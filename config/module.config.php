@@ -456,6 +456,7 @@ return [
                     'modules/rcm/core/rcm-form-double-submit-protect.js',
                     'modules/rcm/core/rcm-bootstrap-alert-confirm.js',
                     'modules/rcm/core/rcm-popout-window.js',
+                    'vendor/angular-utils-pagination/dirPagination.js'
                 ],
                 'modules/rcm/rcm.css' => [
                     'modules/rcm/core/rcm.css',
