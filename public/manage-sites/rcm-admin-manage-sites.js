@@ -1,4 +1,4 @@
-angular.module('rcmAdmin', ['angularUtils.directives.dirPagination']).controller(
+angular.module('rcmAdmin').controller(
     'rcmAdminManageSitesController',
     [
         '$scope', '$http', 'rcmApiService', 'rcmAdminApiUrlService',
