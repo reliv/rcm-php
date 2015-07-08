@@ -24,8 +24,7 @@
 
                         <div class="col-sm-8">
                             <div class="form-control">
-                                <span class="site-title">{{sourceSite.siteTitle}}</span>
-                                <span class="site-domain">({{sourceSite.domain}})</span>
+                                <span class="site-domain">{{sourceSite.domain}}</span>
                             </div>
                         </div>
                     </div>
@@ -38,7 +37,7 @@
                             <select class="form-control"
                                     id="destinationSite"
                                     ng-model="destinationSite"
-                                    ng-options="v as v.siteTitle + ' (' + v.domain + ')' for (k, v) in destinationSites"
+                                    ng-options="v as v.domain for (k, v) in destinationSites"
                                     >
                             </select>
                         </div>

@@ -211,7 +211,7 @@ angular.module('rcmAdmin')
                             $scope.loadings.destinationSites = loading;
                         },
                         success: function (data) {
-                            $scope.destinationSites = data.data;
+                            $scope.destinationSites = data.data.items;
                         },
                         error: function (data) {
                             self.parseMessage(data);
