@@ -21,6 +21,8 @@ use Zend\View\Helper\AbstractHelper;
  */
 class RcmHtmlIncludes extends AbstractHelper
 {
+    protected $done = false;
+
     /**
      * @param $htmlIncludesConfig
      */
@@ -62,9 +64,9 @@ class RcmHtmlIncludes extends AbstractHelper
     /**
      * getConfigValue
      *
-     * @param array  $config
+     * @param array $config
      * @param string $key
-     * @param null   $default
+     * @param null $default
      *
      * @return mixed
      */
@@ -140,9 +142,18 @@ class RcmHtmlIncludes extends AbstractHelper
 
         foreach ($config as $href => $options) {
             $media = $this->getConfigValue($options, 'media', 'screen');
-            $conditionalStylesheet = $this->getConfigValue($options, 'conditionalStylesheet', '');
+            $conditionalStylesheet = $this->getConfigValue(
+                $options,
+                'conditionalStylesheet',
+                ''
+            );
             $extras = $this->getConfigValue($options, 'extras', []);
-            $headLink->prependStylesheet($href, $media, $conditionalStylesheet, $extras);
+            $headLink->prependStylesheet(
+                $href,
+                $media,
+                $conditionalStylesheet,
+                $extras
+            );
         }
     }
 
@@ -153,9 +164,15 @@ class RcmHtmlIncludes extends AbstractHelper
      */
     public function __invoke()
     {
+        /* this should only be done once per request */
+        if ($this->done) {
+            return;
+        }
         $this->includeMeta();
         $this->includeScripts();
         $this->includeStylesheets();
+
+        $this->done = true;
 
         return;
     }
