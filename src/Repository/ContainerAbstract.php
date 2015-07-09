@@ -103,11 +103,12 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
                     );
                     if ($pluginWrapper
                         && isset(
-                        $deletedWrapperIds[$pluginWrapper->getPluginWrapperId()]
+                            $deletedWrapperIds[$pluginWrapper->getPluginWrapperId()]
                         )
                     ) {
-                        unset($deletedWrapperIds[$pluginWrapper->getPluginWrapperId(
-                        )]);
+                        unset(
+                            $deletedWrapperIds[$pluginWrapper->getPluginWrapperId()]
+                        );
                     }
                 }
 
@@ -151,13 +152,13 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
             $stagedRevision = $container->getStagedRevision();
 
             if (!empty($stagedRevision)
-                &&
-                $revision->getRevisionId() == $stagedRevision->getRevisionId()
+                && $revision->getRevisionId() == $stagedRevision->getRevisionId()
             ) {
                 $container->setStagedRevision($newRevision);
             }
 
             $this->_em->flush($container);
+
             return $newRevision->getRevisionId();
         }
 
