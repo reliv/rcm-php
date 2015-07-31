@@ -46,7 +46,6 @@
     "rwoverdijk/assetmanager": "1.*",
     "reliv/rcm-user": "0.*",
     "fxp/composer-asset-plugin": ">=1.0.3",
-    "bower-asset/angular":"1.2.28",
     "bower-asset/jquery": "1.10.2",
     "bower-asset/bootstrap": "3.3.4",
     "bower-asset/bootbox": "4.3.0",
