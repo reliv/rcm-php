@@ -242,7 +242,7 @@ class Page extends ContainerAbstract implements ApiInterface
         $name = strtolower($name);
 
         //Check for everything except letters and dashes.  Throw exception if any are found.
-        if (preg_match("/[^a-z\-0-9\.]/i", $name)) {
+        if (preg_match("/[^a-z\-0-9\.]/", $name)) {
             throw new InvalidArgumentException(
                 'Page names can only contain letters, numbers, dots, and dashes. No spaces.'
             );
