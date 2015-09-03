@@ -34,16 +34,16 @@ class SitePageCreateInputFilter extends InputFilter
                     ['name' => 'StringTrim'],
                 ],
                 'validators' => [
-                    array(
+                    [
                         'name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/[^a-z\-0-9\.]/i',
-                            'messageTemplates' => array(
+                        'options' => [
+                            'pattern' => '/[a-z\-0-9\.]/',
+                            'messageTemplates' => [
                                 \Zend\Validator\Regex::NOT_MATCH
-                                => "Username can only contain letters and dashes"
-                            )
-                        ),
-                    ),
+                                => "Page name can only contain letters and dashes"
+                            ]
+                        ],
+                    ],
                 ]
             ],
             'pageLayout' => [
