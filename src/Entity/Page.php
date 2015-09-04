@@ -241,10 +241,10 @@ class Page extends ContainerAbstract implements ApiInterface
     {
         $name = strtolower($name);
 
-        //Check for spaces.  Throw exception if spaces are found.
-        if (strpos($name, ' ')) {
+        //Check for everything except letters and dashes.  Throw exception if any are found.
+        if (preg_match("/[^a-z\-0-9\.]/", $name)) {
             throw new InvalidArgumentException(
-                'Page Names can not contain spaces.'
+                'Page names can only contain letters, numbers, dots, and dashes. No spaces.'
             );
         }
 
