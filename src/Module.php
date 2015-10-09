@@ -50,6 +50,12 @@ class Module
     {
         $serviceManager = $event->getApplication()->getServiceManager();
 
+        $config = $serviceManager->get('config');
+
+        if (empty($config['Rcm']['installed']) && empty($config['Rcm']['defaultDomain'])) {
+            return;
+        }
+
         $request = $serviceManager->get('request');
 
         if ($request instanceof ConsoleRequest) {
