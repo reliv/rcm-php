@@ -49,7 +49,7 @@ class Country implements ApiInterface
      *
      * @link http://en.wikipedia.org/wiki/ISO_3166-1 ISO Standard
      *
-     * @ORM\Column(type="string", length=3, unique = true)
+     * @ORM\Column(type="string", length=3)
      * @ORM\Id
      */
     protected $iso3 = 'USA';
