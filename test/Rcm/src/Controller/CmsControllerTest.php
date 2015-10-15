@@ -1,8 +1,8 @@
 <?php
 /**
- * Unit Test for the IndexController
+ * Unit Test for the CmsController
  *
- * This file contains the unit test for the IndexController
+ * This file contains the unit test for the CmsController
  *
  * PHP version 5.3
  *
@@ -34,9 +34,9 @@ use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use Zend\Mvc\Router\RouteMatch;
 
 /**
- * Unit Test for the IndexController
+ * Unit Test for the CmsController
  *
- * Unit Test for the IndexController
+ * Unit Test for the CmsController
  *
  * @category  Reliv
  * @package   Rcm
@@ -156,7 +156,7 @@ class CmsControllerTest extends \PHPUnit_Framework_TestCase
                 'options' => [
                     'route' => '/rcm[/:page][/:revision]',
                     'defaults' => [
-                        'controller' => 'Rcm\Controller\IndexController',
+                        'controller' => 'Rcm\Controller\CmsController',
                         'action' => 'index',
                     ]
                 ],
@@ -169,7 +169,7 @@ class CmsControllerTest extends \PHPUnit_Framework_TestCase
                         'pageType' => '[a-z]',
                     ],
                     'defaults' => [
-                        'controller' => 'Rcm\Controller\IndexController',
+                        'controller' => 'Rcm\Controller\CmsController',
                         'action' => 'index',
                     ]
                 ],
@@ -205,7 +205,7 @@ class CmsControllerTest extends \PHPUnit_Framework_TestCase
      * Test the constructor is working
      *
      * @return void
-     * @covers Rcm\Controller\IndexController
+     * @covers Rcm\Controller\CmsController
      */
     public function testConstructor()
     {
@@ -224,20 +224,20 @@ class CmsControllerTest extends \PHPUnit_Framework_TestCase
         $currentSite = new Site();
         $currentSite->setSiteId(1);
 
-        $controller = new IndexController(
+        $controller = new CmsController(
             $mockLayoutManager,
             $currentSite,
             $mockPageRepo
         );
 
-        $this->assertTrue($controller instanceof IndexController);
+        $this->assertTrue($controller instanceof CmsController);
     }
 
     /**
      * Test the index controller for normal functionality
      *
      * @return null
-     * @covers Rcm\Controller\IndexController
+     * @covers Rcm\Controller\CmsController
      */
     public function testIndexAction()
     {
@@ -308,7 +308,7 @@ class CmsControllerTest extends \PHPUnit_Framework_TestCase
      * revision but user is not allowed to see revisions
      *
      * @return null
-     * @covers Rcm\Controller\IndexController
+     * @covers Rcm\Controller\CmsController
      */
     public function testIndexActionHomePageRedirectWhenUserNotAllowedForRevisions(
     )
@@ -381,7 +381,7 @@ class CmsControllerTest extends \PHPUnit_Framework_TestCase
      * Test the index controller attempts to fetch the index or home page
      *
      * @return null
-     * @covers Rcm\Controller\IndexController
+     * @covers Rcm\Controller\CmsController
      */
     public function testIndexActionPageNotFoundWithCmsPageNotFoundAvailable()
     {
@@ -443,7 +443,7 @@ class CmsControllerTest extends \PHPUnit_Framework_TestCase
      * Test the index controller with Layout Template override
      *
      * @return null
-     * @covers Rcm\Controller\IndexController
+     * @covers Rcm\Controller\CmsController
      */
     public function testIndexActionWithLayoutOverride()
     {
