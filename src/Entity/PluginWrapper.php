@@ -50,7 +50,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     /**
      * @var integer Layout Placement.  This is used only for Page Containers.
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $layoutContainer = null;
 
