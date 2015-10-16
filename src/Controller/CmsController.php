@@ -1,6 +1,5 @@
 <?php
 /**
- * DEPRECTED.  PLEASE USE CmsController Instead
  * Index Controller for the entire application
  *
  * This file contains the main controller used for the application.  This
@@ -32,7 +31,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 /**
- * DEPRECTED.  PLEASE USE CmsController Instead
  * Index Controller for the entire application
  *
  * This is main controller used for the application.  This should extend from
@@ -54,24 +52,11 @@ use Zend\View\Model\ViewModel;
  * @method boolean shouldShowRevisions($siteId, $pageName, $pageType = 'n') Should Show Revisions for pages
  * @method boolean rcmIsSiteAdmin() Is user a CMS admin
  * @method boolean rcmIsPageAllowed(Page $page) Is user allowed to view a page
- * @deprecated
  */
-class IndexController extends AbstractActionController
+class CmsController extends AbstractActionController
 {
-    /** @var string */
-    public $pageName;
-
-    /** @var string */
-    public $pageType;
-
-    /** @var integer */
-    public $pageRevisionId;
-
     /** @var \Rcm\Entity\Site */
     protected $currentSite;
-
-    /** @var integer */
-    protected $siteId;
 
     /** @var \Rcm\Service\LayoutManager */
     protected $layoutManager;
@@ -106,23 +91,18 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        $this->pageName = $this->getEvent()
+        $page = $this->getEvent()
             ->getRouteMatch()
-            ->getParam('page', 'index');
+            ->getParam('page');
 
-        $this->pageType = $this->getEvent()
-            ->getRouteMatch()
-            ->getParam('pageType', 'n');
-
-        $this->pageRevisionId = $this->getEvent()
+        $revision = $this->getEvent()
             ->getRouteMatch()
             ->getParam('revision', null);
 
         return $this->getCmsResponse(
             $this->currentSite,
-            $this->pageName,
-            $this->pageType,
-            $this->pageRevisionId
+            $page,
+            $revision
         );
     }
 
@@ -130,16 +110,14 @@ class IndexController extends AbstractActionController
      * getCmsResponse
      *
      * @param Site   $site
-     * @param        $pageName
-     * @param string $pageType
+     * @param Page   $page
      * @param null   $revisionId
      *
      * @return \Rcm\Http\Response|ViewModel
      */
     public function getCmsResponse(
         Site $site,
-        $pageName,
-        $pageType = 'n',
+        Page $page,
         $revisionId = null
     ) {
         /**
@@ -147,17 +125,10 @@ class IndexController extends AbstractActionController
          * This is for client, so it can tell if this is an error page
          */
         $requestedPageData = [
-            'name' => strtolower($pageName),
-            'type' => strtolower($pageType),
+            'name' => strtolower($page->getName()),
+            'type' => strtolower($page->getPageType()),
             'revision' => $revisionId,
         ];
-
-        /* Get the Page for display */
-        $page = $this->pageRepo->getPageByName(
-            $site,
-            $pageName,
-            $pageType
-        );
 
         $viewModel = new ViewModel();
 
@@ -202,16 +173,12 @@ class IndexController extends AbstractActionController
     /**
      * renderNotFoundPage
      *
-     * @param $site
+     * @param Site $site
      *
      * @return null|Page
      */
     public function renderNotFoundPage($site)
     {
-        $this->pageName = $site->getNotFoundPage();
-        $this->pageType = 'n';
-        $this->pageRevisionId = null;
-
         $page = $this->pageRepo->getPageByName(
             $site,
             $site->getNotFoundPage(),
@@ -251,7 +218,7 @@ class IndexController extends AbstractActionController
 
         if (!empty($layoutOverRide)) {
             $layoutTemplatePath = $this->layoutManager->getSiteLayout(
-                $page->getSite(),
+                $this->currentSite,
                 $layoutOverRide
             );
 
@@ -284,7 +251,7 @@ class IndexController extends AbstractActionController
         //  First Check for a page Revision
         if (!empty($pageRevisionId)) {
             $userCanSeeRevisions = $this->shouldShowRevisions(
-                $page->getSite()->getSiteId(),
+                $this->currentSite->getSiteId(),
                 $page->getName(),
                 $page->getPageType()
             );
@@ -307,7 +274,7 @@ class IndexController extends AbstractActionController
         }
 
         // Check for staging
-        if ($this->rcmIsSiteAdmin($page->getSite())) {
+        if ($this->rcmIsSiteAdmin($this->currentSite)) {
             $revision = $page->getStagedRevision();
 
             if (!empty($revision) || $revision instanceof Revision) {

@@ -369,6 +369,13 @@ return [
             'rcmLogger' => 'Rcm\Service\Logger',
         ]
     ],
+
+    'route_manager' => [
+        'invokables' => [
+            'Rcm\Route\Cms' => 'Rcm\Route\Cms'
+        ],
+    ],
+
     'controllers' => [
         'abstract_factories' => [
             'Rcm\Factory\AbstractPluginControllerFactory'
@@ -385,8 +392,8 @@ return [
             'Rcm\Controller\CacheController' => '\Rcm\Controller\CacheController'
         ],
         'factories' => [
-            'Rcm\Controller\IndexController'
-            => 'Rcm\Factory\IndexControllerFactory',
+            'Rcm\Controller\IndexController' => 'Rcm\Factory\IndexControllerFactory',
+            'Rcm\Controller\CmsController' => 'Rcm\Factory\CmsControllerFactory',
         ],
     ],
     'view_helpers' => [
@@ -438,7 +445,7 @@ return [
             'aliases' => [
                 'modules/rcm/' => __DIR__ . '/../public/',
                 // Global JS path for dependencies
-                'vendor/' => __DIR__ . '/../../vendor/bower-asset',
+                'vendor/' => __DIR__ . '/../../../bower-asset/',
             ],
             'collections' => [
                 /**

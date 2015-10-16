@@ -64,14 +64,15 @@ class CmsPermissionChecks
             'Rcm\Acl\ResourceProvider'
         );
 
-        $path = '/' . $page->getName();
-        $siteLoginPage = $page->getSite()->getLoginPage();
-        $notAuthorizedPage = $page->getSite()->getNotAuthorizedPage();
-        $notFoundPage = $page->getSite()->getNotFoundPage();
+        /* ltrim added for BC */
+        $currentPage = $page->getName();
+        $siteLoginPage = ltrim($page->getSite()->getLoginPage(), '/');
+        $notAuthorizedPage = ltrim($page->getSite()->getNotAuthorizedPage(), '/');
+        $notFoundPage = ltrim($page->getSite()->getNotFoundPage(), '/');
 
-        if ($siteLoginPage == $path
-            || $notAuthorizedPage == $path
-            || $notFoundPage == $path
+        if ($siteLoginPage == $currentPage
+            || $notAuthorizedPage == $currentPage
+            || $notFoundPage == $currentPage
         ) {
             $allowed = true;
         }
