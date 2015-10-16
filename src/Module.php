@@ -47,14 +47,22 @@ class Module
      */
     public function onBootstrap(MvcEvent $e)
     {
+
+        $serviceManager = $e->getApplication()->getServiceManager();
+
+        $config = $serviceManager->get('config');
+
+        if (empty($config['Rcm']['installed']) && empty($config['Rcm']['defaultDomain'])) {
+            return;
+        }
+
         // Don't break console routes
         if ($e->getRequest() instanceof Request) {
             return;
         }
-        $sm = $e->getApplication()->getServiceManager();
 
         //Add Domain Checker
-        $onDispatchListener = $sm->get(
+        $onDispatchListener = $serviceManager->get(
             'RcmAdmin\EventListener\DispatchListener'
         );
 
