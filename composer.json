@@ -1,5 +1,5 @@
 {
-  "name": "reliv/rcm-admin",
+  "name": "rcm/admin",
   "description": "Provides all the basic admin screens for the Reliv Content manager",
   "license": "BSD-3-Clause",
   "keywords": [
