@@ -445,7 +445,7 @@ return [
             'aliases' => [
                 'modules/rcm/' => __DIR__ . '/../public/',
                 // Global JS path for dependencies
-                'vendor/' => __DIR__ . '/../../vendor/bower-asset',
+                'vendor/' => __DIR__ . '/../../../bower-asset/',
             ],
             'collections' => [
                 /**
