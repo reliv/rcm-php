@@ -39,8 +39,8 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "reliv/rcm": "0.*",
-    "reliv/rcm-user": "0.*"
+    "rcm/core": "0.*",
+    "rcm/user": "0.*"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.0",
