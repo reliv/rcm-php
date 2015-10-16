@@ -79,7 +79,6 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
             return null;
         }
 
-
         if (empty($page)) {
             return false;
         }
@@ -87,7 +86,8 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         $cms_params = array(
             'page' => $page,
             'controller' => $this->getController($type),
-            'action' => $this->getAction($type)
+            'action' => $this->getAction($type),
+            'revision' => $pageParams['revision']
         );
 
         return new RouteMatch($cms_params, strlen($pageUrl));
@@ -96,11 +96,13 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
     protected function parseUrl($url)
     {
         $parsed = array(
-            'pageName' => 'index'
+            'pageName' => 'index',
+            'revision' => null
         );
 
         $options = $this->getOptions();
-        $path = str_replace($options['route'], '', $url);
+        $path = substr($url, strlen($options['route']));
+
         $path = ltrim($path, '/');
         $splitPath = explode('/', $path);
 
