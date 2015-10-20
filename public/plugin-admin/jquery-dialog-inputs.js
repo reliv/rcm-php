@@ -6,22 +6,31 @@ var inputImageEventsDelegated = false;
     var richEditToolbars = {
 
         'basic': [
-            { name: 'document', items: [ 'Source' ] },
-            { name: 'undoRedo', items: ['Undo', 'Redo'] },
-            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
-            { name: 'insert', items: [ 'SpecialChar' ]},
-            { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] }
+            {name: 'document', items: ['Source']},
+            {name: 'undoRedo', items: ['Undo', 'Redo']},
+            {
+                name: 'basicstyles',
+                items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+            },
+            {name: 'insert', items: ['SpecialChar']},
+            {name: 'links', items: ['Link', 'Unlink', 'Anchor']}
         ],
 
         'defaults': [
-            { name: 'document', items: [ 'Source' ] },
-            { name: 'undoRedo', items: ['Undo', 'Redo'] },
-            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
-            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
-                '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
-            { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord'] },
-            { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Templates'] },
-            { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] }
+            {name: 'document', items: ['Source']},
+            {name: 'undoRedo', items: ['Undo', 'Redo']},
+            {
+                name: 'basicstyles',
+                items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+            },
+            {
+                name: 'paragraph',
+                items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
+                    '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']
+            },
+            {name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord']},
+            {name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Templates']},
+            {name: 'links', items: ['Link', 'Unlink', 'Anchor']}
         ]
     };
 
@@ -53,7 +62,8 @@ var inputImageEventsDelegated = false;
                 urlInputBox.attr('value', path);
                 urlInputBox.trigger('change');
             },
-            fileType
+            fileType,
+            urlInputBox.val()
         )
     };
 
@@ -62,9 +72,23 @@ var inputImageEventsDelegated = false;
      *
      * @param {Function} callBack this is called when the user picks a file
      * @param {String} fileType optional file type to allow
+     * @param oldPath the old path of the file
      */
-    var showFileBrowser = function (callBack, fileType) {
-        //Declare a function for the file picker to call when user picks a file
+    var showFileBrowser = function (callBack, fileType, oldPath) {
+        /**
+         * This is the new way all file choosers should work in RCM
+         */
+        if (window.rcmFileChooser) {
+            rcmFileChooser.chooseFile(callBack, oldPath);
+            return;
+        }
+        /**
+         * This is the deprecated way file choosers should work.
+         * This will be removed once we have an rcmFileChooser
+         * js factory for elfinder.
+         * @param url
+         */
+            //Declare a function for the file picker to call when user picks a file
         window['elFinderFileSelected'] = function (url) {
             callBack(url);
         };
@@ -146,7 +170,7 @@ var inputImageEventsDelegated = false;
 
             var p = $('<p class="dialogElement imageInput" data-dialogElementName="' + name + '" style="overflow-y:hidden"></p>');
             p.append('<label for="' + name + '">' + description + '</label><br>' +
-                '<img style="max-width:120px !important;max-height:170px !important;float:left;margin-right:10px" src="' + src + '" onerror="this.src=\'/modules/rcm/images/no-image.png\';">');
+            '<img style="max-width:120px !important;max-height:170px !important;float:left;margin-right:10px" src="' + src + '" onerror="this.src=\'/modules/rcm/images/no-image.png\';">');
             var urlBox = $('<input style="width:370px;margin-right:10px" name="' + name + '" value="' + src + '">');
             p.append(urlBox);
             p.append('<button type="button" class="image-button ui-button ui-widget ' +
@@ -506,7 +530,7 @@ var inputImageEventsDelegated = false;
                 'checkValue': inputValue
             };
 
-            $.getJSON(ajaxPath, dataToSend,function (data) {
+            $.getJSON(ajaxPath, dataToSend, function (data) {
                 if (data.dataOk == 'Y') {
                     methods.inputFieldOk(inputField, resultContainer);
                     if (typeof(successCallback) === 'function') {
@@ -675,7 +699,7 @@ var inputImageEventsDelegated = false;
 
         // Method calling logic
         if (methods[inputType]) {
-            p = methods[ inputType ].apply(
+            p = methods[inputType].apply(
                 this, Array.prototype.slice.call(arguments, 1)
             );
         } else if (typeof inputType === 'object' || !method) {
