@@ -361,6 +361,8 @@ return [
             => '\Rcm\Factory\CmsPermissionsChecksFactory',
             'Rcm\Service\CurrentSite'
             => '\Rcm\Factory\CurrentSiteFactory',
+            'Rcm\Service\RcmUser'
+            => 'Rcm\Factory\RcmUserFactory',
         ],
         'invokables' => [
             'Rcm\Service\DisplayCountService' => 'Rcm\Service\DisplayCountService'
