@@ -4,6 +4,7 @@
 namespace Rcm\Entity;
 
 /**
+ * @deprecated Use rcm-api-lib AbstractApiModel
  * interface ApiInterface
  *
  * Rcm Standard Api Interface

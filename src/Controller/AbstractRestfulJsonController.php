@@ -7,6 +7,7 @@ use Rcm\View\Model\ApiJsonModel;
 use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
+ * @deprecated Use rcm-api-lib controller
  * Class AbstractRestfulJsonController
  *
  * ZF2 AbstractRestfulController returns arrays for missing methods

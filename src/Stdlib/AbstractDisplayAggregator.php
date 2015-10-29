@@ -8,7 +8,7 @@ use Rcm\Entity\DisplayInterface;
 /**
  * Class AbstractDisplayAggregator
  *
- * LongDescHere
+ * @todo This is a general file, does not belong in RCM
  *
  * PHP version 5
  *

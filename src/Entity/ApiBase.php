@@ -4,7 +4,8 @@
 namespace Rcm\Entity;
 
 /**
- * interface ApiBase
+ * @deprecated Use rcm-api-lib AbstractApiModel
+ * Class ApiBase
  *
  * Rcm Standard Api Base class
  *
