@@ -10,7 +10,7 @@ git clone https://github.com/zendframework/ZendSkeletonApplication.git
 Add these entries to the "require" section inside "path-to-zf2-project-root/composer.json"
 ```php
 "require": {
-    "reliv/Rcm" : "dev-master"
+    "rcm/core" : "dev-master"
 }
 ```
 
