@@ -59,6 +59,11 @@ class CurrentSiteFactory implements FactoryInterface
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request = $serviceLocator->get('request');
 
+        if ($request instanceof \Zend\Console\Request) {
+            // Fake Site for console
+            return new Site();
+        }
+
         $serverParam = $request->getServer();
         $currentDomain = $serverParam->get('HTTP_HOST');
 
