@@ -64,6 +64,22 @@ class Redirect extends EntityRepository
     }
 
     /**
+     * getRedirectEntityList
+     *
+     * @param $siteId
+     * @return array
+     */
+    public function getRedirectEntityList($siteId)
+    {
+        try {
+            $result = $this->getRedirectQuery($siteId)->getResult();
+        } catch (NoResultException $e) {
+            $result = [];
+        }
+
+        return $result;
+    }
+    /**
      * @param $url
      * @param $siteId
      *
@@ -110,6 +126,38 @@ class Redirect extends EntityRepository
         $queryBuilder
             ->select('r')
             ->from('\Rcm\Entity\Redirect', 'r', 'r.requestUrl')
+            ->leftJoin('r.site', 'site')
+            ->where('r.site = :siteId')
+            ->orWhere('r.site is null')
+            ->setParameter('siteId', $siteId);
+
+        if (!empty($url)) {
+            $queryBuilder->andWhere('r.requestUrl = :requestUrl');
+            $queryBuilder->setParameter('requestUrl', $url);
+        }
+
+        return $queryBuilder->getQuery();
+    }
+
+    /**
+     * getRedirectQuery
+     *
+     * @param $siteId
+     * @param null $url
+     * @return \Doctrine\ORM\Query
+     */
+    private function getRedirectQuery($siteId, $url = null)
+    {
+        if (empty($siteId) || !is_numeric($siteId)) {
+            throw new InvalidArgumentException('Invalid Site Id To Search By');
+        }
+
+        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
+        $queryBuilder = $this->_em->createQueryBuilder();
+
+        $queryBuilder
+            ->select('r.redirectId', 'r.requestUrl', 'r.redirectUrl')
+            ->from('\Rcm\Entity\Redirect', 'r')
             ->leftJoin('r.site', 'site')
             ->where('r.site = :siteId')
             ->orWhere('r.site is null')
