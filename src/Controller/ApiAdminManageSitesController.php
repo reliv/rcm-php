@@ -15,8 +15,8 @@
 
 namespace RcmAdmin\Controller;
 
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 use Rcm\Entity\Country;
 use Rcm\Entity\Language;
 use Rcm\Entity\Site;
@@ -80,9 +80,14 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $searchQuery = $this->params()->fromQuery('q');
 
         if ($searchQuery) {
-            $createQueryBuilder->where($createQueryBuilder->expr()->like('domain.domain', ':searchQuery'));
+            $createQueryBuilder->where(
+                $createQueryBuilder->expr()->like(
+                    'domain.domain',
+                    ':searchQuery'
+                )
+            );
             $query = $createQueryBuilder->getQuery();
-            $query->setParameter('searchQuery', $searchQuery.'%');
+            $query->setParameter('searchQuery', $searchQuery . '%');
         }
 
         $adaptor = new DoctrinePaginator(new ORMPaginator($query));
@@ -155,7 +160,9 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         }
 
         /** @var \Rcm\Repository\Site $siteRepo */
-        $siteRepo = $this->getEntityManager()->getRepository('\Rcm\Entity\Site');
+        $siteRepo = $this->getEntityManager()->getRepository(
+            '\Rcm\Entity\Site'
+        );
 
         try {
             $site = $siteRepo->find($id);
@@ -167,9 +174,12 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
             );
         }
 
-        $result = $this->buildSiteApiResponse($site);
-
-        return new ApiJsonModel($result, 0, 'Success');
+        if ($site instanceof Site) {
+            $result = $this->buildSiteApiResponse($site);
+            return new ApiJsonModel($result, 0, 'Success');
+        } else {
+            return new ApiJsonModel(null, 1, "Failed to find site by id ({$id})");
+        }
     }
 
     /**
@@ -303,7 +313,11 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         }
 
         try {
-            $this->createPagePlugins($newSite, $this->getDefaultSitePageSettings($author), false);
+            $this->createPagePlugins(
+                $newSite,
+                $this->getDefaultSitePageSettings($author),
+                false
+            );
 
             $entityManager->flush();
         } catch (\Exception $e) {
@@ -360,7 +374,9 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
 
         if (!empty($data['language'])) {
             /** @var \Rcm\Repository\Language $languageRepo */
-            $languageRepo = $entitymanager->getRepository('\Rcm\Entity\Language');
+            $languageRepo = $entitymanager->getRepository(
+                '\Rcm\Entity\Language'
+            );
 
             $data['language'] = $languageRepo->getLanguageByString(
                 $data['language'],
@@ -459,14 +475,18 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     /**
      * createPagePlugins
      *
-     * @param Site  $site
+     * @param Site $site
      * @param array $pagesData
-     * @param bool  $doFlush
+     * @param bool $doFlush
      *
      * @return void
      * @throws \Exception
      */
-    protected function createPagePlugins(Site $site, $pagesData = [], $doFlush = true)
+    protected function createPagePlugins(
+        Site $site,
+        $pagesData = [],
+        $doFlush = true
+    )
     {
         $entityManager = $this->getEntityManager();
 
@@ -474,10 +494,14 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
 
         /** @var \Rcm\Repository\PluginInstance $pluginInstanceRepo */
-        $pluginInstanceRepo = $entityManager->getRepository('\Rcm\Entity\PluginInstance');
+        $pluginInstanceRepo = $entityManager->getRepository(
+            '\Rcm\Entity\PluginInstance'
+        );
 
         /** @var \Rcm\Repository\PluginWrapper $pluginWrapperRepo */
-        $pluginWrapperRepo = $entityManager->getRepository('\Rcm\Entity\PluginWrapper');
+        $pluginWrapperRepo = $entityManager->getRepository(
+            '\Rcm\Entity\PluginWrapper'
+        );
 
         foreach ($pagesData as $pageName => $pageData) {
             if (empty($pageData['plugins'])) {
@@ -490,7 +514,9 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
                 $pageRevison = $page->getPublishedRevision();
 
                 if (empty($pageRevison)) {
-                    throw new \Exception("Could not find published revision for page {$page->getPageId()}");
+                    throw new \Exception(
+                        "Could not find published revision for page {$page->getPageId()}"
+                    );
                 }
 
                 foreach ($pageData['plugins'] as $pluginData) {
@@ -500,9 +526,13 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
                         false
                     );
 
-                    $pluginData['pluginInstanceId'] = $pluginInstance->getInstanceId();
+                    $pluginData['pluginInstanceId']
+                        = $pluginInstance->getInstanceId();
 
-                    $wrapper = $pluginWrapperRepo->savePluginWrapper($pluginData, $site);
+                    $wrapper = $pluginWrapperRepo->savePluginWrapper(
+                        $pluginData,
+                        $site
+                    );
 
                     $pageRevison->addPluginWrapper($wrapper);
 
