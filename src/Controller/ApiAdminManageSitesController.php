@@ -173,6 +173,8 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
                 "Failed to find site by id ({$id})"
             );
         }
+        /* ADDED THIS CHECK TO GET RID OF ERROR. */
+        /* NOT SURE WHY TRY CATCH ABOVE ISN'T WORKING */
 
         if ($site instanceof Site) {
             $result = $this->buildSiteApiResponse($site);
