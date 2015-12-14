@@ -115,14 +115,18 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginHandler) {
                     edit: {
                         name: 'Edit Properties',
                         icon: 'edit',
-                        callback: function () {
-                            showMainPropertiesCallback();
-                        }
+                        callback: showMainPropertiesCallback
                     }
-
                 }
             }
         );
+
+        pluginHandler.pluginMenu = {
+            'editproperties': {
+                title: 'Edit Properties',
+                method: showMainPropertiesCallback
+            }
+        }
     }
 };
 /* </AjaxPluginEditHelper|ajax-plugin-edit-helper> */
