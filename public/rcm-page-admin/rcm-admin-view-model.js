@@ -26,35 +26,35 @@ var RcmAdminViewModel = function (config, model, page) {
             var form = $('<form></form>')
                 .append(pluginName)
                 .dialog(
-                {
-                    title: 'Create Site Wide Plugin',
-                    modal: true,
-                    width: 620,
-                    buttons: {
-                        Cancel: function () {
-                            $(this).dialog("close");
-                        },
-                        Ok: {
-                            "class": "okButton",
-                            text: 'Ok',
-                            click: function () {
-
-                                //Get user-entered data from form
-                                self.model.RcmPluginModel.setIsSitewide(
-                                    $(container),
-                                    true
-                                );
-                                $(container).attr(
-                                    'data-rcmplugindisplayname',
-                                    pluginName.val()
-                                );
-
+                    {
+                        title: 'Create Site Wide Plugin',
+                        modal: true,
+                        width: 620,
+                        buttons: {
+                            Cancel: function () {
                                 $(this).dialog("close");
+                            },
+                            Ok: {
+                                "class": "okButton",
+                                text: 'Ok',
+                                click: function () {
+
+                                    //Get user-entered data from form
+                                    self.model.RcmPluginModel.setIsSitewide(
+                                        $(container),
+                                        true
+                                    );
+                                    $(container).attr(
+                                        'data-rcmplugindisplayname',
+                                        pluginName.val()
+                                    );
+
+                                    $(this).dialog("close");
+                                }
                             }
                         }
                     }
-                }
-            );
+                );
         },
 
         /**
@@ -211,7 +211,7 @@ var RcmAdminViewModel = function (config, model, page) {
          * @param elm
          * @param onComplete
          */
-        createLayoutHelper: function(elm, onComplete) {
+        createLayoutHelper: function (elm, onComplete) {
 
             var id = self.model.RcmPluginModel.getId(elm);
 
@@ -224,7 +224,6 @@ var RcmAdminViewModel = function (config, model, page) {
             if (!isSitewide) {
                 sitewideOption = '<li><a href="#" class="rcmSiteWidePluginMenuItem">Mark as site-wide</a></li>';
             }
-
 
             var menu = jQuery(
                 '<div id="rcmLayoutEditHelper' + id + '" class="rcmLayoutEditHelper">' +
@@ -243,14 +242,47 @@ var RcmAdminViewModel = function (config, model, page) {
                 ' </div>'
             );
 
-            var rcmContainerMenu = jQuery(
-                ' <div class="rcmContainerMenu" title="Container Menu">' +
+            var rcmContainerMenuList = jQuery(
                 '  <ul>' +
                 '   ' + sitewideOption +
                 '   <li><a href="#" class="rcmDeletePluginMenuItem">Delete Plugin</a> </li>' +
                 '   <li><a href="#" class="rcmResetSizePluginMenuItem">Reset Size</a> </li>' +
-                '  </ul>' +
+                '  </ul>'
+            );
+
+            var rcmContainerMenu = jQuery(
+                ' <div class="rcmContainerMenu" title="Container Menu">' +
                 ' </div>'
+            );
+
+            if (elm.pluginMenu && typeof elm.pluginMenu === 'object') {
+                var menuOptionsAElm = null;
+                var menuOptionsElm = null;
+                jQuery.each(
+                    elm.pluginMenu,
+                    function (index, value) {
+                        menuOptionsAElm = jQuery(
+                            '<a href="#" class="rcmPluginMenuItem ' + index + '">' + value.title + '</a>'
+                        );
+                        menuOptionsElm = jQuery('<li></li>');
+                        menuOptionsAElm.click(
+                            function() {
+                                rcmContainerMenu.hide();
+                                value.method();
+                            }
+                        );
+                        menuOptionsElm.append(
+                            menuOptionsAElm
+                        );
+                        rcmContainerMenuList.append(
+                            menuOptionsElm
+                        );
+                    }
+                );
+            }
+
+            rcmContainerMenu.append(
+                rcmContainerMenuList
             );
 
             rcmContainerMenu.hide();
@@ -263,7 +295,6 @@ var RcmAdminViewModel = function (config, model, page) {
                     rcmContainerMenu.hide();
                 }
             );
-
             containerMenu.hover(
                 function () {
                     rcmContainerMenu.show();
@@ -311,7 +342,11 @@ var RcmAdminViewModel = function (config, model, page) {
 
             elm.find(".rcmSiteWidePluginMenuItem").click(
                 function (e) {
-                    self.RcmPluginViewModel.makeSiteWide(jQuery(this).parents(".rcmPlugin"));
+                    self.RcmPluginViewModel.makeSiteWide(
+                        jQuery(this).parents(
+                            ".rcmPlugin"
+                        )
+                    );
                     e.preventDefault();
                 }
             );
