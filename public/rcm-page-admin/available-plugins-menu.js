@@ -28,12 +28,35 @@ var RcmAvailablePluginsMenu = {
                 function () {
                     RcmAvailablePluginsMenu.menu = $('<div class="availablePluginsMenu panel panel-default"></div>');
                     var menu = RcmAvailablePluginsMenu.menu;
+                    menu.minified = false;
+                    menu.toggleMinified = function() {
+                        menu.minified = !menu.minified;
+                        if(menu.minified) {
+                            menu.find('.panel-minified-hide').hide();
+                            menu.find('.panel-minified-show').show();
+                        } else {
+                            menu.find('.panel-minified-hide').show();
+                            menu.find('.panel-minified-show').hide();
+                        }
+                    };
                     $('body').prepend(menu);
                     menu.css('top', $('.rcmAdminPanelWrapper').height());
-                    var header = $('<h1 class="panel-heading">Available Plugins</h1>');
+                    /* HEADER */
+                    var header = $('<div class="panel-header"></div>');
+                    var minify = $('<div class="panel-minify"></div>');
+                    var plus = $('<div class="glyphicon glyphicon-plus panel-minified-show"></div>');
+                    plus.click(menu.toggleMinified);
+                    var minus = $('<div class="glyphicon glyphicon-minus panel-minified-hide"></div>');
+                    minus.click(menu.toggleMinified);
+                    minify.append(plus);
+                    minify.append(minus);
+                    header.append(minify);
+
+                    var heading = $('<div class="panel-heading"><h1>Available Plugins</h1></div>');
+                    header.append(heading);
                     menu.append(header);
 
-                    var accordion = $('<div class="panel-group" id="availablePluginsGroup">');
+                    var accordion = $('<div class="panel-group panel-minified-hide" id="availablePluginsGroup">');
                     menu.append(accordion);
                     menu.draggable({cancel: '.panel-group'});
                     var categoryIndex = 0;
@@ -95,6 +118,14 @@ var RcmAvailablePluginsMenu = {
                                     var outerContainer = $('<div class="rcmPlugin">');
                                     outerContainer.addClass(pluginInfo.name);
                                     outerContainer.addClass(colClass);
+                                    outerContainer.attr(
+                                        'data-rcmPluginDefaultClass',
+                                        'rcmPlugin '+pluginInfo.name
+                                    );
+                                    outerContainer.attr(
+                                        'editing',
+                                        true
+                                    );
                                     outerContainer.attr(
                                         'data-rcmPluginInstanceId',
                                         instanceId
