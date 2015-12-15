@@ -68,6 +68,7 @@ var RcmAdminViewModel = function (config, model, page) {
 
             elm.removeClass('rcmPluginLocked');
             elm.unbind('dblclick');
+            elm.attr('editing', true);
 
             jQuery.contextMenu('destroy', '[data-rcmPluginInstanceId=' + id + ']');
 

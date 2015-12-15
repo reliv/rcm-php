@@ -96,6 +96,14 @@ var RcmAvailablePluginsMenu = {
                                     outerContainer.addClass(pluginInfo.name);
                                     outerContainer.addClass(colClass);
                                     outerContainer.attr(
+                                        'data-rcmPluginDefaultClass',
+                                        'rcmPlugin '+pluginInfo.name
+                                    );
+                                    outerContainer.attr(
+                                        'editing',
+                                        true
+                                    );
+                                    outerContainer.attr(
                                         'data-rcmPluginInstanceId',
                                         instanceId
                                     );

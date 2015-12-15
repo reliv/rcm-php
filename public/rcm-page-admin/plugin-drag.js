@@ -87,6 +87,8 @@ var RcmPluginDrag = {
         //Get Ajax
         RcmPluginDrag.pluginDraggableStart(helper, pluginContainer);
         RcmPluginDrag.setHelperWidth(helper, pluginContainer);
+        $(helper).attr('data-rcmPluginInstanceId', '-1');
+        console.log(helper[0].outerHTML);
         return $(helper);
     },
 
