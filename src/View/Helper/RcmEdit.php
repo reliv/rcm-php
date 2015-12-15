@@ -96,8 +96,9 @@ class RcmEdit extends AbstractHelper
          */
         $elementType = htmlentities($elementType, ENT_QUOTES);
         return '<' . $elementType . $attributes . '>'
-//        . $this->htmlPurifier->purify($defaultContent)
-        . $defaultContent //This is a hole and is temporary
+        // @todo This is a hole and is temporary
+        // . $this->htmlPurifier->purify($defaultContent)
+        . $defaultContent
         . '</' . $elementType . '>';
     }
 }

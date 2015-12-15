@@ -8,6 +8,7 @@ use Zend\Json\Json;
 use Zend\Stdlib\ArrayUtils;
 
 /**
+ * @deprecated Use rcm-api-lib controller::getApiResponse
  * Class ApiJsonModel
  *
  * Includes a wrapper for a standard return format for client
