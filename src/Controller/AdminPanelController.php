@@ -19,6 +19,7 @@
 namespace RcmAdmin\Controller;
 
 use Rcm\Acl\CmsPermissionChecks;
+use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use RcmUser\Acl\Service\AclDataService;
 use RcmUser\Service\RcmUserService;
@@ -88,6 +89,11 @@ class AdminPanelController extends AbstractActionController
         $routeMatch = $this->getEvent()->getRouteMatch();
         $siteId = $this->currentSite->getSiteId();
         $sourcePageName = $routeMatch->getParam('page', 'index');
+
+        if ($sourcePageName instanceof Page) {
+            $sourcePageName = $sourcePageName->getName();
+        }
+
         $pageType = $routeMatch->getParam('pageType', 'n');
 
         $view = new ViewModel();

@@ -27,6 +27,12 @@ var RcmAdminPlugin = function (page, id, container, rcmAdminService) {
     self.defaultInstanceConfig = null;
 
     /**
+     * pluginMenu
+     * @type {{'optionId': {'title': 'String', 'method': {function}}}}
+     */
+    self.pluginMenu = null;
+
+    /**
      * getType
      * @returns string
      */
@@ -347,6 +353,7 @@ var RcmAdminPlugin = function (page, id, container, rcmAdminService) {
     self.enableArrange = function (onComplete) {
 
         var elm = self.getElm();
+        elm.pluginMenu = self.pluginMenu;
         self.viewModel.enableArrange(
             elm,
             onComplete
