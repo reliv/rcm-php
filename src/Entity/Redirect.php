@@ -21,6 +21,7 @@ namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Reliv\RcmApiLib\Model\AbstractApiModel;
 use Zend\Validator\Uri;
 use Zend\Validator\ValidatorInterface;
 
@@ -45,7 +46,7 @@ use Zend\Validator\ValidatorInterface;
  *     }
  * )
  */
-class Redirect
+class Redirect extends AbstractApiModel
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -82,6 +83,13 @@ class Redirect
      **/
     protected $site;
 
+    /**
+     * @var int|null $siteId
+     *
+     * @ORM\Column(type="integer")
+     */
+    protected $siteId = null;
+
     /** @var \Zend\Validator\ValidatorInterface */
     protected $urlValidator;
 
@@ -91,6 +99,14 @@ class Redirect
     public function __construct()
     {
         $this->urlValidator = new Uri();
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getSiteId()
+    {
+        return $this->siteId;
     }
 
     /**
@@ -192,6 +208,7 @@ class Redirect
      */
     public function setSite(Site $site)
     {
+        $this->siteId = $site->getSiteId();
         $this->site = $site;
     }
 
@@ -203,5 +220,20 @@ class Redirect
     public function getSite()
     {
         return $this->site;
+    }
+
+    /**
+     * toArray
+     *
+     * @param array $ignore
+     * @return array
+     */
+    public function toArray($ignore = ['site'])
+    {
+        $array = parent::toArray($ignore);
+        if (!in_array('siteId', $ignore)) {
+            $array['siteId'] = $this->getSite()->getSiteId();
+        }
+        return $array;
     }
 }
