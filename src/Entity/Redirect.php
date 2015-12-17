@@ -206,9 +206,15 @@ class Redirect extends AbstractApiModel
      *
      * @return void
      */
-    public function setSite(Site $site)
+    public function setSite($site)
     {
+        if ($site === null) {
+            $this->siteId = null;
+            $this->site = null;
+            return;
+        }
         $this->siteId = $site->getSiteId();
+
         $this->site = $site;
     }
 
@@ -232,7 +238,7 @@ class Redirect extends AbstractApiModel
     {
         $array = parent::toArray($ignore);
         if (!in_array('siteId', $ignore)) {
-            $array['siteId'] = $this->getSite()->getSiteId();
+            $array['siteId'] = $this->getSiteId();
         }
         return $array;
     }
