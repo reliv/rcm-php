@@ -53,17 +53,12 @@ class RcmIsAllowedFactory implements FactoryInterface
         /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $pluginManager->getServiceLocator();
 
-        /** @var \RcmUser\Acl\Service\AuthorizeService $authorizeService */
-        $authorizeService = $serviceLocator->get(
-            'RcmUser\Acl\Service\AuthorizeService'
+        /** @var \RcmUser\Service\RcmUserService $rcmUserService */
+        $rcmUserService = $serviceLocator->get(
+            'RcmUser\Service\RcmUserService'
         );
 
-        /** @var \RcmUser\Authentication\Service\UserAuthenticationService $userAuthService */
-        $userAuthService = $serviceLocator->get(
-            'RcmUser\Authentication\Service\UserAuthenticationService'
-        );
-
-        $service = new RcmIsAllowed($authorizeService, $userAuthService);
+        $service = new RcmIsAllowed($rcmUserService);
 
         return $service;
     }

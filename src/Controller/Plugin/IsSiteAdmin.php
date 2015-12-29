@@ -41,6 +41,11 @@ class IsSiteAdmin extends AbstractPlugin
     /** @var \Rcm\Acl\CmsPermissionChecks  */
     public $checker;
 
+    /**
+     * IsSiteAdmin constructor.
+     *
+     * @param CmsPermissionChecks $cmsPermissionChecks
+     */
     public function __construct(CmsPermissionChecks $cmsPermissionChecks)
     {
         $this->checker = $cmsPermissionChecks;
