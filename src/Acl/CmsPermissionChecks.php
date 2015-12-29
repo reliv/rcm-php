@@ -5,12 +5,9 @@ namespace Rcm\Acl;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use RcmUser\Service\RcmUserService;
-use RcmUser\User\Entity\UserRoleProperty;
 
 /**
  * Class CmsPermissionChecks
- *
- * LongDescHere
  *
  * PHP version 5
  *
@@ -98,11 +95,23 @@ class CmsPermissionChecks
         );
     }
 
+    /**
+     * hasRoleBasedAccess
+     *
+     * @param $role
+     *
+     * @return bool
+     */
     public function hasRoleBasedAccess($role)
     {
         return $this->rcmUserService->hasRoleBasedAccess($role);
     }
 
+    /**
+     * isCurrentUserLoggedIn
+     *
+     * @return bool
+     */
     public function isCurrentUserLoggedIn()
     {
         return $this->rcmUserService->hasIdentity();
@@ -192,8 +201,7 @@ class CmsPermissionChecks
         $rules = $aclDataService->getRulesByResourcePrivilege(
             $resourceId,
             $privilege
-        )
-            ->getData();
+        )->getData();
 
         if (empty($rules)) {
             return false;

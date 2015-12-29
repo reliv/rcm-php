@@ -1,22 +1,9 @@
 <?php
-/**
- * RcmIsAllowed.php
- *
- * RcmIsAllowed
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   RcmUser\Controller\Plugin
- * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
+
 namespace Rcm\Controller\Plugin;
 
-use RcmUser\Controller\Plugin\RcmUserIsAllowed;
+use RcmUser\Service\RcmUserService;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
  * RcmIsAllowed
@@ -33,8 +20,24 @@ use RcmUser\Controller\Plugin\RcmUserIsAllowed;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
-class RcmIsAllowed extends RcmUserIsAllowed
+class RcmIsAllowed extends AbstractPlugin
 {
+    /**
+     * @var RcmUserService
+     */
+    protected $rcmUserService;
+
+    /**
+     * RcmIsAllowed constructor.
+     *
+     * @param RcmUserService $rcmUserService
+     */
+    public function __construct(
+        RcmUserService $rcmUserService
+    ) {
+        $this->rcmUserService = $rcmUserService;
+    }
+
     /**
      * __invoke
      *
@@ -49,7 +52,7 @@ class RcmIsAllowed extends RcmUserIsAllowed
         $privilege = null,
         $providerId = 'Rcm\Acl\ResourceProvider'
     ) {
-        return parent::__invoke(
+        return $this->rcmUserService->isAllowed(
             $resourceId,
             $privilege,
             $providerId
