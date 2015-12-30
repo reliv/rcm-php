@@ -193,7 +193,9 @@ var RcmAdminViewModel = function (config, model, page) {
         disableLinks: function (elm, onComplete) {
             // Disable normal events
             var donDoIt = function () {
-                return false;
+                if (!jQuery(this).hasClass('RcmKeepEnabled')) {
+                    return false;
+                }
             };
             elm.find('button').unbind();
             elm.find('[role="button"]').unbind();
