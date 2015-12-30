@@ -1,4 +1,3 @@
-
 <?php
 
 /** @var \Rcm\Entity\Page $page */
@@ -8,10 +7,20 @@ if (empty($page->getPageId())) {
     return;
 }
 
+$wasPublished = true;
+$currentRevisionId = '';
+$pageType = $page->getPageType();
+$pageName = $page->getName();
+$currentRevision = $page->getCurrentRevision();
+if ($currentRevision instanceof \Rcm\Entity\Revision) {
+    $wasPublished = $currentRevision->wasPublished();
+    $currentRevisionId = $currentRevision->getRevisionId();
+}
+
 /** @var \Rcm\Entity\Site $site */
 $site = $layout->site;
 ?>
-<div class="rcmPanelRightButtons"  data-rcm-admin-menu-actions>
+<div class="rcmPanelRightButtons" data-rcm-admin-menu-actions>
     <div ng-show="rcmAdminPage.editMode">
         <div class="btn-group">
             <button
@@ -19,10 +28,10 @@ $site = $layout->site;
                 rcm-admin-edit-button="save"
                 ng-disabled="loading"
                 type="button"
-                >
+            >
                 <span
                     class="glyphicon glyphicon glyphicon glyphicon-ok"
-                    ></span>
+                ></span>
                 Save Draft
             </button>
             <button
@@ -30,10 +39,10 @@ $site = $layout->site;
                 rcm-admin-edit-button="cancel"
                 ng-disabled="loading"
                 type="button"
-                >
+            >
                 <span
                     class="glyphicon glyphicon glyphicon-remove"
-                    ></span>
+                ></span>
                 Cancel
             </button>
             <div id="lockPermissionsEditMode"
@@ -43,14 +52,17 @@ $site = $layout->site;
             </div>
             <div id="unlockPermissionsEditMode"
                  style="<?= (isset($restrictions) && $restrictions == true)
-                     ? 'display:none' : '' ?>"><span class="unlock">
-                        <img src="/modules/rcm-admin/img/glyphicons_unlock.png" width="14px" height="16px"></span>
+                     ? 'display:none' : '' ?>">
+                <span class="unlock">
+                    <img src="/modules/rcm-admin/img/glyphicons_unlock.png"
+                         width="14px"
+                         height="16px"></span>
             </div>
         </div>
     </div>
     <div ng-hide="rcmAdminPage.editMode">
         <div class="btn-group">
-            <?php if ($page->getCurrentRevision()->wasPublished() !== true) : ?>
+            <?php if ($wasPublished !== true) : ?>
                 <button
                     class="btn btn-primary btn-xs rcmMenuPost publishBtn"
                     type="button"
@@ -58,12 +70,12 @@ $site = $layout->site;
                     $this->url(
                         'RcmAdmin\Page\PublishPageRevision',
                         array(
-                            'rcmPageRevision' => $page->getCurrentRevision()->getRevisionId(),
-                            'rcmPageType' => $page->getPageType(),
-                            'rcmPageName' => $page->getName(),
+                            'rcmPageRevision' => $currentRevisionId,
+                            'rcmPageType' => $pageType,
+                            'rcmPageName' => $pageName,
                         )
                     ); ?>"
-                    >
+                >
                     <span class="glyphicon glyphicon-check"></span>
                     Publish
                 </button>
@@ -73,7 +85,7 @@ $site = $layout->site;
                 rcm-admin-edit-button="page"
                 ng-disabled="loading"
                 type="button"
-                >
+            >
                 <span class="glyphicon glyphicon-edit"></span>
                 Edit
             </button>
@@ -84,9 +96,12 @@ $site = $layout->site;
             </div>
             <div id="unlockPermissionsNonEdit"
                  style="<?= (isset($restrictions) && $restrictions == true)
-                     ? 'display:none' : '' ?>"><span class="unlock">
+                     ? 'display:none' : '' ?>">
+                <span class="unlock">
 
-                        <img src="/modules/rcm-admin/img/glyphicons_unlock.png" width="14px" height="16px"></span>
+                    <img src="/modules/rcm-admin/img/glyphicons_unlock.png"
+                         width="14px"
+                         height="16px"></span>
 
             </div>
         </div>
