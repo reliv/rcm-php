@@ -39,7 +39,7 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "rcm/core": "0.*",
+    "rcm/core": ">=0.3.5",
     "rcm/user": "1.*",
     "rcm/user-ui": "1.*"
   },
