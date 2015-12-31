@@ -44,7 +44,7 @@
     "doctrine/doctrine-orm-module": "0.*",
     "zendframework/zendframework": "2.*",
     "rwoverdijk/assetmanager": "1.*",
-    "rcm/user": "0.*",
+    "rcm/user": "1.*",
     "fxp/composer-asset-plugin": ">=1.0.3",
     "bower-asset/jquery": "1.10.2",
     "bower-asset/bootstrap": "3.3.4",
