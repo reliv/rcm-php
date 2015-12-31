@@ -5,7 +5,7 @@ $this->rcmHtmlIncludes();
 // RcmUser JS
 $this->headScript()->appendFile(
     $this->basePath()
-    . '/admin/rcmuser/js/core.js'
+    . '/modules/rcm-user/core.js'
 );
 
 $this->headScript()->appendFile(
@@ -41,13 +41,19 @@ $site = $layout->site;
 /** @var array $requestedPageData */
 $requestedPageData = $layout->requestedPageData;
 
+$revisionId = '';
+$revision = $page->getCurrentRevision();
+if($revision instanceof \Rcm\Entity\Revision) {
+    $revisionId = $revision->getRevisionId();
+}
+
 $pageData = [
     'site' => [
         'id' => $site->getSiteId(),
         'title' => $site->getSiteTitle(),
     ],
     'page' => [
-        'revision' => $page->getCurrentRevision()->getRevisionId(),
+        'revision' => $revisionId,
         'type' => $page->getPageType(),
         'name' => $page->getName(),
         'id' => $page->getPageId(),
