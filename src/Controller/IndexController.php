@@ -176,7 +176,7 @@ class IndexController extends AbstractActionController
         // if we have no revision, page is not found
         if (!$page->getCurrentRevision()) {
             $page = $this->renderNotFoundPage($site);
-            $this->prepPageRevisionForDisplay($page, $revisionId);
+            $this->prepPageRevisionForDisplay($page);
         }
 
         $this->prepLayoutView(
