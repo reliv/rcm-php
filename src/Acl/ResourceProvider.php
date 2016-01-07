@@ -46,6 +46,15 @@ class ResourceProvider extends RcmUserResourceProvider
     protected $siteRepo;
 
     /**
+     * @var array
+     */
+    protected $validResourceParts
+        = [
+            'sites',
+            'pages',
+        ];
+
+    /**
      * Constructor
      *
      * @param array         $resources     Config array of RCM resources
@@ -75,6 +84,8 @@ class ResourceProvider extends RcmUserResourceProvider
     }
 
     /**
+     * @todo This can be refactored to only get the current site resources
+     * @todo This currently is returning too many results and causes issues
      * getResources (ALL resources)
      * Return a multi-dimensional array of resources and privileges
      * containing ALL possible resources including run-time resources
@@ -117,6 +128,26 @@ class ResourceProvider extends RcmUserResourceProvider
         }
 
         return null;
+    }
+
+    /**
+     * hasResource
+     *
+     * @param string $resourceId
+     *
+     * @return bool
+     */
+    public function hasResource($resourceId)
+    {
+        if (array_key_exists($resourceId, $this->resources)) {
+            return true;
+        }
+
+        $resources = explode('.', $resourceId);
+
+        $validDyn = array_intersect($resources, $this->validResourceParts);
+
+        return (!empty($validDyn));
     }
 
     /**
@@ -282,9 +313,9 @@ class ResourceProvider extends RcmUserResourceProvider
 
         $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
             = array_merge(
-                $this->resources['pages'],
-                $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
-            );
+            $this->resources['pages'],
+            $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
+        );
 
         return $return;
     }
