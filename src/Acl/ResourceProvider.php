@@ -115,7 +115,7 @@ class ResourceProvider extends RcmUserResourceProvider
             return true;
         }
 
-        if(!$this->startsWith($resourceId, 'sites.')) {
+        if (!$this->startsWith($resourceId, 'sites.')) {
             return false;
         }
 
@@ -136,6 +136,7 @@ class ResourceProvider extends RcmUserResourceProvider
     protected function startsWith($haystack, $needle)
     {
         $length = strlen($needle);
+
         return (substr($haystack, 0, $length) === $needle);
     }
 
