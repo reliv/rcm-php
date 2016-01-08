@@ -45,6 +45,9 @@ class ResourceProvider extends RcmUserResourceProvider
     /** @var \Rcm\Repository\Site */
     protected $siteRepo;
 
+    /** @var Site */
+    protected $currentSite;
+
     /**
      * @var array
      */
@@ -55,19 +58,20 @@ class ResourceProvider extends RcmUserResourceProvider
         ];
 
     /**
-     * Constructor
+     * ResourceProvider constructor.
      *
-     * @param array         $resources     Config array of RCM resources
-     * @param SiteRepo      $siteRepo      Rcm Site Repository
-     * @param PluginManager $pluginManager Rcm Plugin Manager
+     * @param array    $resources
+     * @param SiteRepo $siteRepo
+     * @param Site     $currentSite
      */
     public function __construct(
         Array         $resources,
-        SiteRepo $siteRepo
+        SiteRepo $siteRepo,
+        Site $currentSite
     ) {
-
         $this->resources = $resources;
         $this->siteRepo = $siteRepo;
+        $this->currentSite = $currentSite;
     }
 
     /**
@@ -84,8 +88,6 @@ class ResourceProvider extends RcmUserResourceProvider
     }
 
     /**
-     * @todo This can be refactored to only get the current site resources
-     * @todo This currently is returning too many results and causes issues
      * getResources (ALL resources)
      * Return a multi-dimensional array of resources and privileges
      * containing ALL possible resources including run-time resources
@@ -96,11 +98,8 @@ class ResourceProvider extends RcmUserResourceProvider
     {
         $return = $this->resources;
 
-        $sites = $this->siteRepo->getSites(true);
-
-        foreach ($sites as &$site) {
-            $return = array_merge($this->getSiteResources($site), $return);
-        }
+        // We will only expose the resources for the current site
+        $return = array_merge($this->getSiteResources($this->currentSite), $return);
 
         return $return;
 
