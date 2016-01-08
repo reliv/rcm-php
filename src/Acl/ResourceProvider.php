@@ -1,27 +1,10 @@
 <?php
-/**
- * Acl Resource Provider
- *
- * This file contains the resource provider for RcmUser to be used by the CMS
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Acl;
 
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use Rcm\Repository\Site as SiteRepo;
-use Rcm\Service\PluginManager;
 use RcmUser\Acl\Provider\ResourceProvider as RcmUserResourceProvider;
 
 /**
@@ -102,7 +85,6 @@ class ResourceProvider extends RcmUserResourceProvider
         $return = array_merge($this->getSiteResources($this->currentSite), $return);
 
         return $return;
-
     }
 
     /**

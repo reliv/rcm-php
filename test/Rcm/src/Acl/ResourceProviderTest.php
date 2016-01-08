@@ -1,21 +1,5 @@
 <?php
-/**
- * Unit Test for the IndexController
- *
- * This file contains the unit test for the IndexController
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace RcmTest\Acl;
 
 use Rcm\Acl\ResourceProvider;
@@ -26,9 +10,7 @@ use Rcm\Entity\Site;
 require_once __DIR__ . '/../../../autoload.php';
 
 /**
- * Unit Test for the IndexController
- *
- * Unit Test for the IndexController
+ * Unit Test for the ResourceProviderTest
  *
  * @category  Reliv
  * @package   Rcm
@@ -40,6 +22,9 @@ require_once __DIR__ . '/../../../autoload.php';
  */
 class ResourceProviderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var
+     */
     protected $config;
 
     /**
@@ -103,6 +88,17 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $mockReturn = [];
 
+        $currdomain = new Domain();
+        $currdomain->setDomainName('curr.reliv.com');
+
+        $currpage = new Page();
+        $currpage->setName('curr-page');
+
+        $currsite = new Site();
+        $currsite->setDomain($currdomain);
+        $currsite->setSiteId(1);
+        $currsite->addPage($currpage);
+
         if (!$skipSite) {
             $domain = new Domain();
             $domain->setDomainName('test.reliv.com');
@@ -114,7 +110,6 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
             $site->setDomain($domain);
             $site->setSiteId(10);
             $site->addPage($page);
-
             $mockReturn[] = $site;
         }
 
@@ -130,41 +125,9 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
         /** @var \Rcm\Service\PluginManager $mockPluginManager */
         return new ResourceProvider(
             $this->config,
-            $mockSiteRepo
+            $mockSiteRepo,
+            $currsite
         );
-    }
-
-    /**
-     * Test Get Resources Method
-     *
-     * @return void
-     * @covers \Rcm\Acl\ResourceProvider::getResources
-     * @covers \Rcm\Acl\ResourceProvider::__construct
-     */
-    public function testGetResourcesNoSites()
-    {
-        $resourceProvider = $this->getProviderWithMocks(true);
-
-        $return = $resourceProvider->getResources();
-
-        $this->assertEquals($this->config, $return);
-    }
-
-    /**
-     * Test Get Resources Method No Config
-     *
-     * @return void
-     * @covers \Rcm\Acl\ResourceProvider::getResources
-     */
-    public function testGetResourcesNoConfig()
-    {
-        $this->config = [];
-
-        $resourceProvider = $this->getProviderWithMocks(true);
-
-        $return = $resourceProvider->getResources();
-
-        $this->assertEquals($this->config, $return);
     }
 
     /**
@@ -178,50 +141,89 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetResourcesWithSites()
     {
         $siteExpected = [
-            'sites.10.pages.n.test-page' => [
-                'resourceId' => 'sites.10.pages.n.test-page',
-                'parentResourceId' => 'sites.10.pages',
-                'privileges' => [
-                    'read',
-                    'edit',
-                    'create',
-                    'delete',
-                    'copy',
-                    'approve',
-                    'layout',
+            'sites.1.pages.n.curr-page' =>
+                [
+                    'resourceId' => 'sites.1.pages.n.curr-page',
+                    'parentResourceId' => 'sites.1.pages',
+                    'privileges' =>
+                        [
+                            0 => 'read',
+                            1 => 'edit',
+                            2 => 'create',
+                            3 => 'delete',
+                            4 => 'copy',
+                            5 => 'approve',
+                            6 => 'layout',
+                        ],
+                    'name' => 'curr.reliv.com - pages - curr-page',
+                    'description' => 'Global resource for pages',
                 ],
-                'name' => 'test.reliv.com - pages - test-page',
-                'description' => 'Global resource for pages',
-            ],
-            'sites.10' => [
-                'resourceId' => 'sites.10',
-                'parentResourceId' => 'sites',
-                'privileges' => [
-                    'read',
-                    'edit',
-                    'create',
-                    'delete',
-                    'theme',
-                    'admin',
+            'sites.1' =>
+                [
+                    'resourceId' => 'sites.1',
+                    'parentResourceId' => 'sites',
+                    'privileges' =>
+                        [
+                            0 => 'read',
+                            1 => 'edit',
+                            2 => 'create',
+                            3 => 'delete',
+                            4 => 'theme',
+                            5 => 'admin',
+                        ],
+                    'name' => 'curr.reliv.com',
+                    'description' => 'Global resource for sites',
                 ],
-                'name' => 'test.reliv.com',
-                'description' => 'Global resource for sites',
-            ],
-            'sites.10.pages' => [
-                'resourceId' => 'sites.10.pages',
-                'parentResourceId' => 'sites.10',
-                'privileges' => [
-                    'read',
-                    'edit',
-                    'create',
-                    'delete',
-                    'copy',
-                    'approve',
-                    'layout',
+            'sites.1.pages' =>
+                [
+                    'resourceId' => 'sites.1.pages',
+                    'parentResourceId' => 'sites.1',
+                    'privileges' =>
+                        [
+                            0 => 'read',
+                            1 => 'edit',
+                            2 => 'create',
+                            3 => 'delete',
+                            4 => 'copy',
+                            5 => 'approve',
+                            6 => 'layout',
+                        ],
+                    'name' => 'curr.reliv.com - pages',
+                    'description' => 'Global resource for pages',
                 ],
-                'name' => 'test.reliv.com - pages',
-                'description' => 'Global resource for pages',
-            ],
+            'sites' =>
+                [
+                    'resourceId' => 'sites',
+                    'parentResourceId' => null,
+                    'privileges' =>
+                        [
+                            0 => 'read',
+                            1 => 'edit',
+                            2 => 'create',
+                            3 => 'delete',
+                            4 => 'theme',
+                            5 => 'admin',
+                        ],
+                    'name' => 'sites',
+                    'description' => 'Global resource for sites',
+                ],
+            'pages' =>
+                [
+                    'resourceId' => 'pages',
+                    'parentResourceId' => null,
+                    'privileges' =>
+                        [
+                            0 => 'read',
+                            1 => 'edit',
+                            2 => 'create',
+                            3 => 'delete',
+                            4 => 'copy',
+                            5 => 'approve',
+                            6 => 'layout',
+                        ],
+                    'name' => 'pages',
+                    'description' => 'Global resource for pages',
+                ],
         ];
 
         $expected = array_merge($siteExpected, $this->config);
