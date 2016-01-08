@@ -313,9 +313,9 @@ class ResourceProvider extends RcmUserResourceProvider
 
         $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
             = array_merge(
-            $this->resources['pages'],
-            $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
-        );
+                $this->resources['pages'],
+                $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
+            );
 
         return $return;
     }
