@@ -32,15 +32,6 @@ class ResourceProvider extends RcmUserResourceProvider
     protected $currentSite;
 
     /**
-     * @var array
-     */
-    protected $validResourceParts
-        = [
-            'sites',
-            'pages',
-        ];
-
-    /**
      * ResourceProvider constructor.
      *
      * @param array    $resources
@@ -124,11 +115,7 @@ class ResourceProvider extends RcmUserResourceProvider
             return true;
         }
 
-        $resources = explode('.', $resourceId);
-
-        $validDyn = array_intersect($resources, $this->validResourceParts);
-
-        if(!empty($validDyn)) {
+        if(!$this->startsWith($resourceId, 'sites.')) {
             return false;
         }
 
@@ -136,6 +123,20 @@ class ResourceProvider extends RcmUserResourceProvider
         $resource = $this->getResource($resourceId);
 
         return ($resource !== null);
+    }
+
+    /**
+     * startsWith
+     *
+     * @param $haystack
+     * @param $needle
+     *
+     * @return bool
+     */
+    protected function startsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
     }
 
     /**
