@@ -128,7 +128,14 @@ class ResourceProvider extends RcmUserResourceProvider
 
         $validDyn = array_intersect($resources, $this->validResourceParts);
 
-        return (!empty($validDyn));
+        if(!empty($validDyn)) {
+            return false;
+        }
+
+        // @todo this can be made more efficient
+        $resource = $this->getResource($resourceId);
+
+        return ($resource !== null);
     }
 
     /**
