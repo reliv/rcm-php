@@ -97,9 +97,14 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($mockSiteRepo));
 
+        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $sm = new ServiceManager();
         $sm->setService('config', $config);
         $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
+        $sm->setService('Rcm\Service\CurrentSite', $mockCurrentSite);
 
         $factory = new AclResourceProviderFactory();
         $object = $factory->createService($sm);
@@ -129,9 +134,14 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($mockSiteRepo));
 
+        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $sm = new ServiceManager();
         $sm->setService('config', $config);
         $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
+        $sm->setService('Rcm\Service\CurrentSite', $mockCurrentSite);
 
         $factory = new AclResourceProviderFactory();
         $object = $factory->createService($sm);
