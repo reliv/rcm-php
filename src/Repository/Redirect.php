@@ -22,8 +22,9 @@ namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Rcm\Exception\InvalidArgumentException;
 use Rcm\Entity\Redirect as RedirectEntity;
+use Rcm\Exception\InvalidArgumentException;
+use Rcm\Exception\RedirectException;
 
 /**
  * Redirect Repository
@@ -63,6 +64,23 @@ class Redirect extends EntityRepository
         return $result;
     }
 
+
+    public function save(\Rcm\Entity\Redirect $redirect)
+    {
+        $result = $this->findOneBy(
+            [
+                'requestUrl' => $redirect->getRequestUrl(),
+                'site' => $redirect->getSite()
+            ]
+        );
+
+        if (!empty($result)) {
+            throw new RedirectException('Duplicate redirects not allowed');
+        }
+        $this->getEntityManager()->persist($redirect);
+        $this->getEntityManager()->flush($redirect);
+    }
+
     /**
      * getRedirectEntityList
      *
@@ -79,6 +97,7 @@ class Redirect extends EntityRepository
 
         return $result;
     }
+
     /**
      * @param $url
      * @param $siteId

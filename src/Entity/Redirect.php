@@ -90,35 +90,18 @@ class Redirect extends AbstractApiModel
      */
     protected $siteId = null;
 
-    /** @var \Zend\Validator\ValidatorInterface */
-    protected $urlValidator;
 
-    /**
-     * Constructor for Entity
-     */
-    public function __construct()
+    protected function getUrlValidator()
     {
-        $this->urlValidator = new Uri();
-    }
+        return new Uri();
 
+    }
     /**
      * @return int|null
      */
     public function getSiteId()
     {
         return $this->siteId;
-    }
-
-    /**
-     * Overwrite the default validator
-     *
-     * @param ValidatorInterface $urlValidator URL Validator
-     *
-     * @return void
-     */
-    public function setUrlValidator(ValidatorInterface $urlValidator)
-    {
-        $this->urlValidator = $urlValidator;
     }
 
     /**
@@ -155,7 +138,8 @@ class Redirect extends AbstractApiModel
      */
     public function setRedirectUrl($redirectUrl)
     {
-        if (!$this->urlValidator->isValid($redirectUrl)) {
+
+        if (!$this->getUrlValidator()->isValid($redirectUrl)) {
             throw new InvalidArgumentException('URL provided is invalid');
         }
 
@@ -240,6 +224,14 @@ class Redirect extends AbstractApiModel
         if (!in_array('siteId', $ignore)) {
             $array['siteId'] = $this->getSiteId();
         }
+
+        if (!in_array('domain', $ignore)) {
+            $site = $this->site;
+            if ($site !== null) {
+                $array['domain'] = $site->getDomain()->getDomainName();
+            }
+        }
+
         return $array;
     }
 }

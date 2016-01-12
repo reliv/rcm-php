@@ -69,9 +69,6 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
             ->method('isValid')
             ->will($this->returnValue(true));
 
-        /** @var \Zend\Validator\Hostname $mockValidator */
-        $this->redirect->setUrlValidator($mockValidator);
-
         $this->redirect->setRedirectUrl('reliv.com');
     }
 
@@ -191,4 +188,3 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
         $this->redirect->setSite(time());
     }
 }
- 
