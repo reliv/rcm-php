@@ -166,7 +166,7 @@ class Redirect extends AbstractApiModel
      */
     public function setRequestUrl($requestUrl)
     {
-        if (!$this->urlValidator->isValid($requestUrl)) {
+        if (!$this->getUrlValidator()->isValid($requestUrl)) {
             throw new InvalidArgumentException('URL provided is invalid');
         }
 
