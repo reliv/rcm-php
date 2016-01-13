@@ -21,6 +21,7 @@ namespace RcmTest\Entity;
 
 require_once __DIR__ . '/../../../autoload.php';
 
+use Rcm\Entity\Domain;
 use Rcm\Entity\Redirect;
 use Rcm\Entity\Site;
 
@@ -50,26 +51,6 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     public function setup()
     {
         $this->redirect = new Redirect();
-    }
-
-    /**
-     * Test Set URL Validator and test that it gets called.
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Redirect
-     */
-    public function testSetValidatorAndValidatorCalled()
-    {
-        $mockValidator = $this->getMockBuilder('\Zend\Validator\Hostname')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockValidator->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-
-        $this->redirect->setRedirectUrl('reliv.com');
     }
 
     /**
@@ -157,12 +138,25 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Get and Set Site For Redirect
+     * testGetAndSetSiteId
      *
      * @return void
      *
      * @covers \Rcm\Entity\Redirect
      */
+    public function testGetAndSetSiteId()
+    {
+        $siteId = new Site();
+
+        $siteId->setSiteId(1);
+
+        $this->redirect->setSiteId($siteId);
+
+        $actual = $this->redirect->getSiteId();
+
+        $this->assertEquals($siteId, $actual);
+    }
+
     public function testGetAndSetSite()
     {
         $site = new Site();
@@ -175,16 +169,27 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($site, $actual);
     }
 
-    /**
-     * Test Set Site Only Accepts a Site object
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Redirect
-     * @expectedException \PHPUnit_Framework_Error
-     */
-    public function testSetSiteOnlyAcceptsSite()
+    public function testToArray()
     {
-        $this->redirect->setSite(time());
+        $unit = new Redirect();
+
+        $site = new Site();
+
+        $domain = new Domain();
+
+        $site->setSiteId(28);
+
+        $domain->setDomainName('test.com');
+
+        $site->setDomain($domain);
+
+        $unit->setSite($site);
+
+        $result = $unit->toArray();
+
+        $this->assertEquals('test.com', $result['domain']);
+
+        $this->assertEquals(28, $result['siteId']);
+
     }
 }

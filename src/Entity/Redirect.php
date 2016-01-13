@@ -96,6 +96,18 @@ class Redirect extends AbstractApiModel
         return new Uri();
 
     }
+
+    /**
+     * setSiteId
+     *
+     * @param $siteId
+     * @return void
+     */
+    public function setSiteId($siteId)
+    {
+        $this->siteId = $siteId;
+    }
+
     /**
      * @return int|null
      */
@@ -103,7 +115,6 @@ class Redirect extends AbstractApiModel
     {
         return $this->siteId;
     }
-
     /**
      * Set the Redirect Id.  This was added for unit testing and
      * should not be used by calling scripts.  Instead please persist the object
