@@ -21,6 +21,7 @@ namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Reliv\RcmApiLib\Model\AbstractApiModel;
 use Zend\Validator\Uri;
 use Zend\Validator\ValidatorInterface;
 
@@ -45,7 +46,7 @@ use Zend\Validator\ValidatorInterface;
  *     }
  * )
  */
-class Redirect
+class Redirect extends AbstractApiModel
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -82,29 +83,38 @@ class Redirect
      **/
     protected $site;
 
-    /** @var \Zend\Validator\ValidatorInterface */
-    protected $urlValidator;
-
     /**
-     * Constructor for Entity
+     * @var int|null $siteId
+     *
+     * @ORM\Column(type="integer")
      */
-    public function __construct()
+    protected $siteId = null;
+
+
+    protected function getUrlValidator()
     {
-        $this->urlValidator = new Uri();
+        return new Uri();
+
     }
 
     /**
-     * Overwrite the default validator
+     * setSiteId
      *
-     * @param ValidatorInterface $urlValidator URL Validator
-     *
+     * @param $siteId
      * @return void
      */
-    public function setUrlValidator(ValidatorInterface $urlValidator)
+    public function setSiteId($siteId)
     {
-        $this->urlValidator = $urlValidator;
+        $this->siteId = $siteId;
     }
 
+    /**
+     * @return int|null
+     */
+    public function getSiteId()
+    {
+        return $this->siteId;
+    }
     /**
      * Set the Redirect Id.  This was added for unit testing and
      * should not be used by calling scripts.  Instead please persist the object
@@ -139,7 +149,8 @@ class Redirect
      */
     public function setRedirectUrl($redirectUrl)
     {
-        if (!$this->urlValidator->isValid($redirectUrl)) {
+
+        if (!$this->getUrlValidator()->isValid($redirectUrl)) {
             throw new InvalidArgumentException('URL provided is invalid');
         }
 
@@ -166,7 +177,7 @@ class Redirect
      */
     public function setRequestUrl($requestUrl)
     {
-        if (!$this->urlValidator->isValid($requestUrl)) {
+        if (!$this->getUrlValidator()->isValid($requestUrl)) {
             throw new InvalidArgumentException('URL provided is invalid');
         }
 
@@ -190,8 +201,15 @@ class Redirect
      *
      * @return void
      */
-    public function setSite(Site $site)
+    public function setSite($site)
     {
+        if ($site === null) {
+            $this->siteId = null;
+            $this->site = null;
+            return;
+        }
+        $this->siteId = $site->getSiteId();
+
         $this->site = $site;
     }
 
@@ -203,5 +221,28 @@ class Redirect
     public function getSite()
     {
         return $this->site;
+    }
+
+    /**
+     * toArray
+     *
+     * @param array $ignore
+     * @return array
+     */
+    public function toArray($ignore = ['site'])
+    {
+        $array = parent::toArray($ignore);
+        if (!in_array('siteId', $ignore)) {
+            $array['siteId'] = $this->getSiteId();
+        }
+
+        if (!in_array('domain', $ignore)) {
+            $site = $this->site;
+            if ($site !== null) {
+                $array['domain'] = $site->getDomain()->getDomainName();
+            }
+        }
+
+        return $array;
     }
 }

@@ -22,8 +22,9 @@ namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Rcm\Exception\InvalidArgumentException;
 use Rcm\Entity\Redirect as RedirectEntity;
+use Rcm\Exception\InvalidArgumentException;
+use Rcm\Exception\RedirectException;
 
 /**
  * Redirect Repository
@@ -56,6 +57,40 @@ class Redirect extends EntityRepository
     {
         try {
             $result = $this->getQuery($siteId)->getResult();
+        } catch (NoResultException $e) {
+            $result = [];
+        }
+
+        return $result;
+    }
+
+
+    public function save(\Rcm\Entity\Redirect $redirect)
+    {
+        $result = $this->findOneBy(
+            [
+                'requestUrl' => $redirect->getRequestUrl(),
+                'site' => $redirect->getSite()
+            ]
+        );
+
+        if (!empty($result)) {
+            throw new RedirectException('Duplicate redirects not allowed');
+        }
+        $this->getEntityManager()->persist($redirect);
+        $this->getEntityManager()->flush($redirect);
+    }
+
+    /**
+     * getRedirectEntityList
+     *
+     * @param $siteId
+     * @return array
+     */
+    public function getRedirectEntityList($siteId)
+    {
+        try {
+            $result = $this->getRedirectQuery($siteId)->getResult();
         } catch (NoResultException $e) {
             $result = [];
         }
@@ -110,6 +145,38 @@ class Redirect extends EntityRepository
         $queryBuilder
             ->select('r')
             ->from('\Rcm\Entity\Redirect', 'r', 'r.requestUrl')
+            ->leftJoin('r.site', 'site')
+            ->where('r.site = :siteId')
+            ->orWhere('r.site is null')
+            ->setParameter('siteId', $siteId);
+
+        if (!empty($url)) {
+            $queryBuilder->andWhere('r.requestUrl = :requestUrl');
+            $queryBuilder->setParameter('requestUrl', $url);
+        }
+
+        return $queryBuilder->getQuery();
+    }
+
+    /**
+     * getRedirectQuery
+     *
+     * @param $siteId
+     * @param null $url
+     * @return \Doctrine\ORM\Query
+     */
+    private function getRedirectQuery($siteId, $url = null)
+    {
+        if (empty($siteId) || !is_numeric($siteId)) {
+            throw new InvalidArgumentException('Invalid Site Id To Search By');
+        }
+
+        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
+        $queryBuilder = $this->_em->createQueryBuilder();
+
+        $queryBuilder
+            ->select('r.redirectId', 'r.requestUrl', 'r.redirectUrl')
+            ->from('\Rcm\Entity\Redirect', 'r')
             ->leftJoin('r.site', 'site')
             ->where('r.site = :siteId')
             ->orWhere('r.site is null')
