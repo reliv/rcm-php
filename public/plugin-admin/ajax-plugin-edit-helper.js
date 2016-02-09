@@ -89,6 +89,10 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginHandler) {
     };
 
     me.buildEmailInputGroup = function (emailGroupData) {
+        emailGroupData = angular.extend(
+            {fromEmail: null, fromName: null, subject: null, body: null},
+            emailGroupData
+        );
         return {
             fromEmail: $.dialogIn('text', 'From Email', emailGroupData['fromEmail']),
             fromName: $.dialogIn('text', 'From Name', emailGroupData['fromName']),
