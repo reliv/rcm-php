@@ -153,6 +153,12 @@ return [
                         'class' => 'RcmAdminMenu rcmStandardDialog',
                         'uri' => '/modules/rcm-google-analytics/admin-analytics.html',
                         'title' => 'Google Analytics Settings',
+                    ],
+                    'Redirect Editor' => [
+                        'label' => 'Redirect Editor',
+                        'class' => '',
+                        'uri' => '/redirect',
+                        'title' => 'Redirect Editor',
                     ]
                 ]
             ],
@@ -166,7 +172,6 @@ return [
                         'uri' => '/admin/rcmuser-acl',
                     ],
                     'UserManagement' => [
-                        //'class'  => 'RcmAdminMenu RcmBlankIframeDialog',
                         'label' => 'User Management',
                         'uri' => '/admin/rcmuser-users',
                     ],
