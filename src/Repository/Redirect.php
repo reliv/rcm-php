@@ -65,18 +65,28 @@ class Redirect extends EntityRepository
     }
 
 
+    /**
+     * save
+     *
+     * @param RedirectEntity $redirect
+     * @return void
+     */
     public function save(\Rcm\Entity\Redirect $redirect)
     {
+        /** @var \Rcm\Entity\Redirect $result */
         $result = $this->findOneBy(
             [
                 'requestUrl' => $redirect->getRequestUrl(),
-                'site' => $redirect->getSite()
+                'redirectUrl' => $redirect->getRedirectUrl(),
+                'siteId' => $redirect->getSiteId(),
             ]
         );
 
-        if (!empty($result)) {
+        if (!empty($result) && $result->getRedirectId() !== $redirect->getRedirectId()) {
             throw new RedirectException('Duplicate redirects not allowed');
         }
+
+
         if ($redirect->getSiteId() !== null) {
             $siteRepo = $this->getEntityManager()->getRepository(
                 'Rcm\Entity\Site'
