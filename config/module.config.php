@@ -148,18 +148,6 @@ return [
                         'uri' => '/modules/rcm-admin/site-page-copy/site-page-copy.html',
                         'title' => 'Copy Pages',
                     ],
-                    'Google Analytics' => [
-                        'label' => 'Google Analytics',
-                        'class' => 'RcmAdminMenu rcmStandardDialog',
-                        'uri' => '/modules/rcm-google-analytics/admin-analytics.html',
-                        'title' => 'Google Analytics Settings',
-                    ],
-                    'Redirect Editor' => [
-                        'label' => 'Redirect Editor',
-                        'class' => '',
-                        'uri' => '/redirect',
-                        'title' => 'Redirect Editor',
-                    ]
                 ]
             ],
             'User' => [
