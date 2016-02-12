@@ -62,9 +62,13 @@ class AclResourceProviderFactory implements FactoryInterface
         /** @var \Rcm\Repository\Site $siteRepo */
         $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
 
+        /** @var \Rcm\Entity\Site $currentSite */
+        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+
         return new ResourceProvider(
             $aclConfig,
-            $siteRepo
+            $siteRepo,
+            $currentSite
         );
     }
 }

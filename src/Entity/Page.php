@@ -244,7 +244,8 @@ class Page extends ContainerAbstract implements ApiInterface
         //Check for everything except letters and dashes.  Throw exception if any are found.
         if (preg_match("/[^a-z\-0-9\.]/", $name)) {
             throw new InvalidArgumentException(
-                'Page names can only contain letters, numbers, dots, and dashes. No spaces.'
+                'Page names can only contain letters, numbers, dots, and dashes.'
+                . ' No spaces. This page name is invalid: ' . $name
             );
         }
 

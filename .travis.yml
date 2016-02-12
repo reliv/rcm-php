@@ -14,7 +14,9 @@ script:
   - ./vendor/bin/phpcs --standard=PSR2 --ignore=vendor,test,config,data,autoload_classmap.php --extensions=php ./
 cache:
   directories:
-    - $HOME/.composer/cache
+  - vendor
+  - $HOME/.composer/cache
+  - node_modules
 matrix:
   fast_finish: true
   allow_failures:

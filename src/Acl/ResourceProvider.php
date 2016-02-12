@@ -1,27 +1,10 @@
 <?php
-/**
- * Acl Resource Provider
- *
- * This file contains the resource provider for RcmUser to be used by the CMS
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Acl;
 
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use Rcm\Repository\Site as SiteRepo;
-use Rcm\Service\PluginManager;
 use RcmUser\Acl\Provider\ResourceProvider as RcmUserResourceProvider;
 
 /**
@@ -45,20 +28,24 @@ class ResourceProvider extends RcmUserResourceProvider
     /** @var \Rcm\Repository\Site */
     protected $siteRepo;
 
+    /** @var Site */
+    protected $currentSite;
+
     /**
-     * Constructor
+     * ResourceProvider constructor.
      *
-     * @param array         $resources     Config array of RCM resources
-     * @param SiteRepo      $siteRepo      Rcm Site Repository
-     * @param PluginManager $pluginManager Rcm Plugin Manager
+     * @param array    $resources
+     * @param SiteRepo $siteRepo
+     * @param Site     $currentSite
      */
     public function __construct(
         Array         $resources,
-        SiteRepo $siteRepo
+        SiteRepo $siteRepo,
+        Site $currentSite
     ) {
-
         $this->resources = $resources;
         $this->siteRepo = $siteRepo;
+        $this->currentSite = $currentSite;
     }
 
     /**
@@ -85,14 +72,10 @@ class ResourceProvider extends RcmUserResourceProvider
     {
         $return = $this->resources;
 
-        $sites = $this->siteRepo->getSites(true);
-
-        foreach ($sites as &$site) {
-            $return = array_merge($this->getSiteResources($site), $return);
-        }
+        // We will only expose the resources for the current site
+        $return = array_merge($this->getSiteResources($this->currentSite), $return);
 
         return $return;
-
     }
 
     /**
@@ -117,6 +100,44 @@ class ResourceProvider extends RcmUserResourceProvider
         }
 
         return null;
+    }
+
+    /**
+     * hasResource
+     *
+     * @param string $resourceId
+     *
+     * @return bool
+     */
+    public function hasResource($resourceId)
+    {
+        if (array_key_exists($resourceId, $this->resources)) {
+            return true;
+        }
+
+        if (!$this->startsWith($resourceId, 'sites.')) {
+            return false;
+        }
+
+        // @todo this can be made more efficient
+        $resource = $this->getResource($resourceId);
+
+        return ($resource !== null);
+    }
+
+    /**
+     * startsWith
+     *
+     * @param $haystack
+     * @param $needle
+     *
+     * @return bool
+     */
+    protected function startsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+
+        return (substr($haystack, 0, $length) === $needle);
     }
 
     /**
