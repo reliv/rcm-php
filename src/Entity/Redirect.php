@@ -86,7 +86,7 @@ class Redirect extends AbstractApiModel
     /**
      * @var int|null $siteId
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $siteId = null;
 

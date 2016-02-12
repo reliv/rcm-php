@@ -92,7 +92,7 @@ class PluginManager
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        Array                   $config,
+        array                   $config,
         ServiceLocatorInterface $serviceManager,
         PhpRenderer $renderer,
         RequestInterface $request,

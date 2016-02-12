@@ -39,7 +39,7 @@ class ResourceProvider extends RcmUserResourceProvider
      * @param Site     $currentSite
      */
     public function __construct(
-        Array         $resources,
+        array         $resources,
         SiteRepo $siteRepo,
         Site $currentSite
     ) {

@@ -65,18 +65,41 @@ class Redirect extends EntityRepository
     }
 
 
+    /**
+     * save
+     *
+     * @param RedirectEntity $redirect
+     * @return void
+     */
     public function save(\Rcm\Entity\Redirect $redirect)
     {
+        /** @var \Rcm\Entity\Redirect $result */
         $result = $this->findOneBy(
             [
                 'requestUrl' => $redirect->getRequestUrl(),
-                'site' => $redirect->getSite()
+                'redirectUrl' => $redirect->getRedirectUrl(),
+                'siteId' => $redirect->getSiteId(),
             ]
         );
 
-        if (!empty($result)) {
+        if (!empty($result) && $result->getRedirectId() !== $redirect->getRedirectId()) {
             throw new RedirectException('Duplicate redirects not allowed');
         }
+
+
+        if ($redirect->getSiteId() !== null) {
+            $siteRepo = $this->getEntityManager()->getRepository(
+                'Rcm\Entity\Site'
+            );
+
+            $site = $siteRepo->find($redirect->getSiteId());
+
+            if (empty($site)) {
+                throw new RedirectException('Valid site required');
+            }
+            $redirect->setSite($site);
+        }
+
         $this->getEntityManager()->persist($redirect);
         $this->getEntityManager()->flush($redirect);
     }
@@ -117,11 +140,6 @@ class Redirect extends EntityRepository
             return null;
         }
 
-
-        if (count($result) > 1) {
-            return $result[0];
-        }
-
         return array_pop($result);
     }
 
@@ -148,6 +166,8 @@ class Redirect extends EntityRepository
             ->leftJoin('r.site', 'site')
             ->where('r.site = :siteId')
             ->orWhere('r.site is null')
+            ->orderBy('site.siteId', 'DESC')
+            ->setMaxResults(1)
             ->setParameter('siteId', $siteId);
 
         if (!empty($url)) {
@@ -157,6 +177,7 @@ class Redirect extends EntityRepository
 
         return $queryBuilder->getQuery();
     }
+
 
     /**
      * getRedirectQuery
