@@ -150,6 +150,13 @@ return [
                     ],
                 ]
             ],
+            'User' => [
+                'label' => 'Users',
+                'uri' => '#',
+                'pages' => [
+
+                ],
+            ],
         ],
     ],
     'router' => [
