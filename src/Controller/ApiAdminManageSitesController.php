@@ -488,8 +488,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         Site $site,
         $pagesData = [],
         $doFlush = true
-    )
-    {
+    ) {
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Page $pageRepo */
