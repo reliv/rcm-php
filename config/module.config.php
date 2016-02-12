@@ -150,21 +150,6 @@ return [
                     ],
                 ]
             ],
-            'User' => [
-                'label' => 'Users',
-                'uri' => '#',
-                'pages' => [
-                    'RolesAndAccess' => [
-                        //'class'  => 'RcmAdminMenu RcmBlankIframeDialog',
-                        'label' => 'Roles and Access',
-                        'uri' => '/admin/rcmuser-acl',
-                    ],
-                    'UserManagement' => [
-                        'label' => 'User Management',
-                        'uri' => '/admin/rcmuser-users',
-                    ],
-                ],
-            ],
         ],
     ],
     'router' => [
