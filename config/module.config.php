@@ -148,28 +148,13 @@ return [
                         'uri' => '/modules/rcm-admin/site-page-copy/site-page-copy.html',
                         'title' => 'Copy Pages',
                     ],
-                    'Google Analytics' => [
-                        'label' => 'Google Analytics',
-                        'class' => 'RcmAdminMenu rcmStandardDialog',
-                        'uri' => '/modules/rcm-google-analytics/admin-analytics.html',
-                        'title' => 'Google Analytics Settings',
-                    ]
                 ]
             ],
             'User' => [
                 'label' => 'Users',
                 'uri' => '#',
                 'pages' => [
-                    'RolesAndAccess' => [
-                        //'class'  => 'RcmAdminMenu RcmBlankIframeDialog',
-                        'label' => 'Roles and Access',
-                        'uri' => '/admin/rcmuser-acl',
-                    ],
-                    'UserManagement' => [
-                        //'class'  => 'RcmAdminMenu RcmBlankIframeDialog',
-                        'label' => 'User Management',
-                        'uri' => '/admin/rcmuser-users',
-                    ],
+
                 ],
             ],
         ],
