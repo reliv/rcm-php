@@ -19,6 +19,7 @@
 
 namespace RcmAdmin\Factory;
 
+use Rcm\Entity\Page;
 use Zend\Navigation\Service\AbstractNavigationFactory;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\RouteStackInterface as Router;
@@ -94,6 +95,11 @@ class AdminNavigationFactory extends AbstractNavigationFactory
         }
 
         $pageMatch = $routeMatch->getParam('page', 'index');
+
+        if ($pageMatch instanceof Page) {
+            $pageMatch = $pageMatch->getName();
+        }
+
         $this->pageRevision = $routeMatch->getParam('revision', null);
         $pageTypeMatch = $routeMatch->getParam('pageType', 'n');
 

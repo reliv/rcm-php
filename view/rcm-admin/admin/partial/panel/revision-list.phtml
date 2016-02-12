@@ -5,42 +5,84 @@ $page = $layout->page;
 if (!$page->getPageId()) {
     return;
 }
+
+$currentRevisionType = "N/A";
+$publishedRevisionLink = "<a>N/A</a>";
+$stagedRevisionLink = "<a>N/A</a>";
+$lastSavedDraftRevisionLink = "<a>N/A</a>";
+
+$currentRevision = $page->getCurrentRevision();
+$publishedRevision = $page->getPublishedRevision();
+$stagedRevision = $page->getStagedRevision();
+$lastSavedDraftRevision = $page->getLastSavedDraftRevision();
+
+if ($currentRevision instanceof \Rcm\Entity\Revision) {
+    $currentRevisionType = $this->revisionHelper()->getRevisionType(
+        $page,
+        $currentRevision
+    );
+}
+
+if ($publishedRevision instanceof \Rcm\Entity\Revision) {
+    $publishedRevisionLink = $this->revisionHelper()->getRevisionLink(
+        $page,
+        $publishedRevision
+    );
+}
+
+if ($stagedRevision instanceof \Rcm\Entity\Revision) {
+    $stagedRevisionLink = $this->revisionHelper()->getRevisionLink(
+        $page,
+        $stagedRevision
+    );
+}
+
+if ($lastSavedDraftRevision instanceof \Rcm\Entity\Revision) {
+    $lastSavedDraftRevisionLink = $this->revisionHelper()->getRevisionLink(
+        $page,
+        $lastSavedDraftRevision
+    );
+}
+
 ?>
 <div id="rcmRevisionList">
     <div class="dropdown">
-        <button class="btn-xs btn-default dropdown-toggle" type="button" id="revisionsList" data-toggle="dropdown">
-            <?= $this->headTitle()->renderTitle(); ?> - <?= $this->revisionHelper()->getRevisionType($page, $page->getCurrentRevision()); ?>
+        <button class="btn-xs btn-default dropdown-toggle"
+                type="button"
+                id="revisionsList"
+                data-toggle="dropdown">
+            <?= $this->headTitle()->renderTitle(); ?> - <?= $currentRevisionType; ?>
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="revisionsList">
             <?php
-                if (!empty($page->getPublishedRevision())) {
-            ?>
+            if (!empty($publishedRevision)) {
+                ?>
                 <li role="presentation">
-                    <?= $this->revisionHelper()->getRevisionLink($page,$page->getPublishedRevision()) ?>
+                    <?= $publishedRevisionLink ?>
                 </li>
-            <?php
-                }
+                <?php
+            }
             ?>
 
             <?php
-                if (!empty($page->getStagedRevision())) {
-            ?>
-                    <li role="presentation">
-                        <?= $this->revisionHelper()->getRevisionLink($page,$page->getStagedRevision()) ?>
-                    </li>
-            <?php
-                }
+            if (!empty($stagedRevision)) {
+                ?>
+                <li role="presentation">
+                    <?= $stagedRevisionLink ?>
+                </li>
+                <?php
+            }
             ?>
 
             <?php
-                if (!empty($page->getLastSavedDraftRevision())) {
-            ?>
-                    <li role="presentation">
-                        <?= $this->revisionHelper()->getRevisionLink($page,$page->getLastSavedDraftRevision()) ?>
-                    </li>
-            <?php
-                }
+            if (!empty($lastSavedDraftRevision)) {
+                ?>
+                <li role="presentation">
+                    <?= $lastSavedDraftRevisionLink ?>
+                </li>
+                <?php
+            }
             ?>
         </ul>
     </div>

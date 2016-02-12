@@ -503,8 +503,8 @@ return [
                     /* <core> */
                     'modules/rcm-admin/core/rcm-admin-api.js',
                     // RcmUser services - include using ZF2
-                    'modules/rcm-user/js/rcm-user-roles-service.js',
-                    'modules/rcm-user/js/rcm-user-role-selector.js',
+                    'modules/rcm-user/rcm-user-roles-service.js',
+                    'modules/rcm-user/rcm-user-role-selector.js',
                     'modules/rcm-angular-js/angular-multi-select/angular-multi-select.js',
                     'modules/rcm-admin/core/rcm-permissions.js',
                     /* </core> */
@@ -550,7 +550,7 @@ return [
                     'modules/rcm-admin/rcm-page-admin-panel/navigation.css',
                     'modules/rcm-admin/rcm-column-resize/style.css',
                     // RcmUser services - CSS
-                    'modules/rcm-user/css/rcm-user-role-selector.css',
+                    'modules/rcm-user/rcm-user-role-selector.css',
                     'modules/rcm-admin/page-permissions/permissions.css',
                     'modules/rcm-angular-js/angular-multi-select/angular-multi-select.css'
                 ],

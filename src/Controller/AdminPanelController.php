@@ -58,12 +58,12 @@ class AdminPanelController extends AbstractActionController
     /**
      * Constructor
      *
-     * @param array               $adminPanelConfig
-     * @param Site                $currentSite
+     * @param array $adminPanelConfig
+     * @param Site $currentSite
      * @param CmsPermissionChecks $cmsPermissionChecks
      */
     public function __construct(
-        Array          $adminPanelConfig,
+        array $adminPanelConfig,
         Site $currentSite,
         CmsPermissionChecks $cmsPermissionChecks
     ) {
@@ -103,6 +103,7 @@ class AdminPanelController extends AbstractActionController
 
         $view->setVariable('adminMenu', $this->adminPanelConfig);
         $view->setTemplate('rcm-admin/admin/admin');
+
         return $view;
     }
 }

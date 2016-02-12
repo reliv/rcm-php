@@ -77,7 +77,9 @@ var RcmPluginDrag = {
     pluginDraggableHelper: function (container) {
         var pluginContainer = $(container).find(".rcmPlugin");
         var pluginData = RcmPluginDrag.getPluginContainerInfo(pluginContainer);
-        if (pluginData.instanceId < 0) {//greater than 0 not sitewide instance
+
+        // greater than 0 not sitewide instance
+        if (pluginData.instanceId < 0) {
             $(pluginContainer).attr(
                 'data-rcmPluginInstanceId',
                 pluginData.instanceId * 10
@@ -86,7 +88,7 @@ var RcmPluginDrag = {
         var helper = $(pluginContainer).clone(false);
         //Get Ajax
         RcmPluginDrag.pluginDraggableStart(helper, pluginContainer);
-        RcmPluginDrag.setHelperWidth(helper, pluginContainer);
+
         return $(helper);
     },
 
@@ -115,22 +117,6 @@ var RcmPluginDrag = {
     },
 
     /**
-     * Set the width for helper divs when dragging new plugins. This
-     * keeps plugins from spanning the entire page.
-     *
-     * @param helper
-     * @param pluginContainer
-     */
-    setHelperWidth: function (helper, pluginContainer) {
-        var divWidth = RcmPluginDrag.getElementWidth(pluginContainer);
-        if (divWidth > 1000) {
-            $(helper).width(350);
-        } else {
-            $(helper).width(divWidth);
-        }
-    },
-
-    /**
      * Runs after a successful ajax request for a new plugin.
      *
      * @param data
@@ -140,7 +126,6 @@ var RcmPluginDrag = {
     getInstanceSuccessCallback: function (data, helper, pluginContainer) {
         $(helper).html(data);
         $(pluginContainer).find(".rcmPluginContainer").html(data);
-        RcmPluginDrag.setHelperWidth(helper, pluginContainer);
     },
 
     /**
@@ -157,55 +142,55 @@ var RcmPluginDrag = {
          */
         if (placeHolder.length && !placeHolder.html().length) {
             RcmPluginDrag.pluginDragPlaceHolder($(container).find(".rcmPlugin"));
-        }
-    },
+                }
+            },
 
-    /**
-     * Fix for containers that have no current plugins.
-     *
-     * @param container
-     */
-    pluginDragPlaceHolder: function (container) {
-        var placeHolder = $('.rcmPluginSortPlaceHolder');
-        // If placeholder exists and has not yet been filled with a plugin
-        if (placeHolder.length && !placeHolder.html().length) {
-            // Copy plugin css classes
-            placeHolder.attr(
-                'class',
-                container.attr('class')
-                + ' rcmPluginSortPlaceHolder'
-            );
-            // Copy plugin html
-            placeHolder.html(container.html());
-        }
-    },
+            /**
+             * Fix for containers that have no current plugins.
+             *
+             * @param container
+             */
+            pluginDragPlaceHolder: function (container) {
+            var placeHolder = $('.rcmPluginSortPlaceHolder');
+            // If placeholder exists and has not yet been filled with a plugin
+            if (placeHolder.length && !placeHolder.html().length) {
+                // Copy plugin css classes
+                placeHolder.attr(
+                    'class',
+                    container.attr('class')
+                    + ' rcmPluginSortPlaceHolder'
+                );
+                // Copy plugin html
+                placeHolder.html(container.html());
+            }
+        },
 
-    /**
-     * Makes plugins sortable.
-     */
-    makePluginsSortable: function () {
-        try {
-            $(".rcmContainer > .row").sortable('destroy');
-        } catch (e) {
-            //No problem
-        }
-        $(".rcmContainer > .row").sortable(
-            {
-                connectWith: '.rcmContainer > .row',
-                dropOnEmpty: true,
-                helper: "original",
-                tolerance: 'pointer',
-                placeholder: "rcmPluginSortPlaceHolder",
-                forcePlaceholderSize: false,
-                handle: '.rcmHandle.sortableMenu',
-                change: function (event, ui) {
-                    RcmPluginDrag.pluginSortableChange(ui);
-                },
-                receive: function (event, ui) {
-                    RcmPluginDrag.pluginSortableReceive(this, ui);
-                },
-                start: function (event, ui) {
-                    RcmPluginDrag.pluginSortableStart(ui);
+        /**
+         * Makes plugins sortable.
+         */
+        makePluginsSortable: function () {
+            try {
+                $(".rcmContainer > .row").sortable('destroy');
+            } catch (e) {
+                //No problem
+            }
+            $(".rcmContainer > .row").sortable(
+                {
+                    connectWith: '.rcmContainer > .row',
+                    dropOnEmpty: true,
+                    helper: "original",
+                    tolerance: 'pointer',
+                    placeholder: "rcmPluginSortPlaceHolder",
+                    forcePlaceholderSize: false,
+                    handle: '.rcmHandle.sortableMenu',
+                    change: function (event, ui) {
+                        RcmPluginDrag.pluginSortableChange(ui);
+                    },
+                    receive: function (event, ui) {
+                        RcmPluginDrag.pluginSortableReceive(this, ui);
+                    },
+                    start: function (event, ui) {
+                        RcmPluginDrag.pluginSortableStart(ui);
                 },
                 stop: RcmPluginDrag.pluginSortableStop
             }
@@ -319,21 +304,6 @@ var RcmPluginDrag = {
                 rcmAdminPlugin.updateView();
             }
         );
-    },
-
-    /**
-     * getElementWidth
-     * @param container
-     * @returns {*|jQuery}
-     */
-    getElementWidth: function (container) {
-        var elementToUse = container;
-        var loopCounter = 0;
-        while ($(elementToUse).width() == 0 && loopCounter < 10) {
-            elementToUse = $(container).parent();
-            loopCounter++;
-        }
-        return $(elementToUse).width();
     },
 
     /**
