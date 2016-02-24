@@ -120,7 +120,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
     /**
      * hasPage
      *
-     * @param Site   $site
+     * @param Site $site
      * @param string $pageName
      * @param string $pageType
      *
@@ -176,7 +176,12 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         //ACCESS CHECK
         $sitePagesResource = $this->getSitePagesResourceId($siteId);
-        if (!$this->isAllowed('pages', 'read') && !$this->isAllowed($sitePagesResource, 'read')) {
+        if (!$this->isAllowed('pages', 'read')
+            && !$this->isAllowed(
+                $sitePagesResource,
+                'read'
+            )
+        ) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();
@@ -222,7 +227,12 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         //ACCESS CHECK
         $sitePagesResource = $this->getSitePagesResourceId($siteId);
-        if (!$this->isAllowed('pages', 'read') && !$this->isAllowed($sitePagesResource, 'read')) {
+        if (!$this->isAllowed('pages', 'read')
+            && !$this->isAllowed(
+                $sitePagesResource,
+                'read'
+            )
+        ) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();
@@ -271,7 +281,12 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         //ACCESS CHECK
         $sitePagesResource = $this->getSitePagesResourceId($siteId);
-        if (!$this->isAllowed('pages', 'edit') && !$this->isAllowed($sitePagesResource, 'edit')) {
+        if (!$this->isAllowed('pages', 'edit')
+            && !$this->isAllowed(
+                $sitePagesResource,
+                'edit'
+            )
+        ) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();
@@ -337,7 +352,12 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         //ACCESS CHECK
         $sitePagesResource = $this->getSitePagesResourceId($siteId);
-        if (!$this->isAllowed('pages', 'create') && !$this->isAllowed($sitePagesResource, 'create')) {
+        if (!$this->isAllowed('pages', 'create')
+            && !$this->isAllowed(
+                $sitePagesResource,
+                'create'
+            )
+        ) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();
@@ -412,7 +432,12 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         //ACCESS CHECK
         $sitePagesResource = $this->getSitePagesResourceId($siteId);
-        if (!$this->isAllowed('pages', 'delete') && !$this->isAllowed($sitePagesResource, 'delete')) {
+        if (!$this->isAllowed('pages', 'delete')
+            && !$this->isAllowed(
+                $sitePagesResource,
+                'delete'
+            )
+        ) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return new ApiJsonModel(
@@ -446,7 +471,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         $result = $pageRepo->setPageDeleted($page);
 
-        if(!$result) {
+        if (!$result) {
             return new ApiJsonModel([$result], 1, 'Page could not be deleted');
         }
 
