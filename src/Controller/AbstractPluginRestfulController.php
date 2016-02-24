@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Rcm\Controller;
 
 use Rcm\Exception\PluginInstanceNotFoundException;
