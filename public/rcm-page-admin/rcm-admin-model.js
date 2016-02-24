@@ -52,18 +52,6 @@ var RcmAdminModel = function () {
 
             var data = JSON.parse(jQuery('meta[property="rcm:page"]').attr('content'));
 
-            //data.title = jQuery(document).find("head > title").text();
-            ////data.url = jQuery(location).attr('href');
-            ////data.path = jQuery(location).attr('pathname');
-            //data.description = jQuery('meta[name="description"]').attr('content');
-            //data.keywords = jQuery('meta[name="keywords"]').attr('content');
-            //
-            //data.name = pageInfo.rcmPageName;
-            //data.type = pageInfo.rcmPageType;
-            //data.revision = pageInfo.rcmPageRevision;
-            //data.siteId = pageInfo.rcmSiteId;
-            //data.requestedPageData = pageInfo.requestedPageData;
-
             if (typeof onComplete === 'function') {
                 onComplete(data)
             }
@@ -605,7 +593,9 @@ var RcmAdminModel = function () {
          */
         isSitewide: function (pluginElm, onComplete) {
 
-            var value = (pluginElm.attr('data-rcmSiteWidePlugin') == '1' || pluginElm.attr('data-rcmSiteWidePlugin') == 'Y');
+            var value = (pluginElm.attr('data-rcmSiteWidePlugin') == '1' || pluginElm.attr(
+                'data-rcmSiteWidePlugin'
+            ) == 'Y');
 
             if (typeof onComplete === 'function') {
                 onComplete(value)
