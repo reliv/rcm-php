@@ -1,6 +1,5 @@
 <?php
 
-
 namespace RcmAdmin\Controller;
 
 use Rcm\Entity\Site;
@@ -25,6 +24,38 @@ use RcmAdmin\InputFilter\SitePageUpdateInputFilter;
  */
 class ApiAdminSitePageController extends ApiAdminBaseController
 {
+    /**
+     * isAllowed
+     *
+     * @param $resourceId
+     * @param $privilege
+     *
+     * @return mixed
+     */
+    protected function isAllowed($resourceId, $privilege)
+    {
+        $rcmUserService = $this->getServiceLocator()->get(
+            'RcmUser\Service\RcmUserService'
+        );
+
+        return $rcmUserService->isAllowed(
+            $resourceId,
+            $privilege
+        );
+    }
+
+    /**
+     * getSitePagesResourceId
+     *
+     * @param $siteId
+     *
+     * @return string
+     */
+    protected function getSitePagesResourceId($siteId)
+    {
+        return 'sites.' . $siteId . '.pages';
+    }
+
     /**
      * getPageRepo
      *
@@ -131,7 +162,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
             $siteId = $this->getCurrentSite()->getSiteId();
         }
 
-        return (int) $siteId;
+        return (int)$siteId;
     }
 
     /**
@@ -141,17 +172,20 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     public function getList()
     {
+        $siteId = $this->getRequestSiteId();
+
         //ACCESS CHECK
-        if (!$this->rcmIsAllowed(
-            'sites',
-            'admin'
-        )
+        $sitePagesResource = $this->getSitePagesResourceId($siteId);
+        if (!$this->isAllowed('pages', 'read')
+            && !$this->isAllowed(
+                $sitePagesResource,
+                'read'
+            )
         ) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+
             return $this->getResponse();
         }
-
-        $siteId = $this->getRequestSiteId();
 
         $site = $this->getSite($siteId);
 
@@ -180,7 +214,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         );
     }
 
-    /**\
+    /**
      * get
      *
      * @param mixed $id
@@ -189,13 +223,20 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     public function get($id)
     {
+        $siteId = $this->getRequestSiteId();
+
         //ACCESS CHECK
-        if (!$this->rcmIsAllowed('sites', 'admin')) {
+        $sitePagesResource = $this->getSitePagesResourceId($siteId);
+        if (!$this->isAllowed('pages', 'read')
+            && !$this->isAllowed(
+                $sitePagesResource,
+                'read'
+            )
+        ) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+
             return $this->getResponse();
         }
-
-        $siteId = $this->getRequestSiteId();
 
         $site = $this->getSite($siteId);
 
@@ -227,7 +268,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
     /**
      * update
      *
-     * @todo Needs input filter and data prepare for site and exception message needs scrubbed
+     * @todo Needs data prepare for site and exception message needs scrubbed
      *
      * @param mixed $id
      * @param mixed $data
@@ -236,9 +277,18 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     public function update($id, $data)
     {
+        $siteId = $this->getRequestSiteId();
+
         //ACCESS CHECK
-        if (!$this->rcmIsAllowed('sites', 'admin')) {
+        $sitePagesResource = $this->getSitePagesResourceId($siteId);
+        if (!$this->isAllowed('pages', 'edit')
+            && !$this->isAllowed(
+                $sitePagesResource,
+                'edit'
+            )
+        ) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+
             return $this->getResponse();
         }
 
@@ -256,8 +306,6 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         }
 
         $data = $inputFilter->getValues();
-
-        $siteId = $this->getRequestSiteId();
 
         $site = $this->getSite($siteId);
 
@@ -300,13 +348,20 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     public function create($data)
     {
+        $siteId = $this->getRequestSiteId();
+
         //ACCESS CHECK
-        if (!$this->rcmIsAllowed('sites', 'admin')) {
+        $sitePagesResource = $this->getSitePagesResourceId($siteId);
+        if (!$this->isAllowed('pages', 'create')
+            && !$this->isAllowed(
+                $sitePagesResource,
+                'create'
+            )
+        ) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+
             return $this->getResponse();
         }
-
-        $siteId = $this->getRequestSiteId();
 
         $site = $this->getSite($siteId);
 
@@ -362,5 +417,64 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         $apiResponse->populate($page->toArray());
 
         return new ApiJsonModel($apiResponse, 0, 'Success: Page created');
+    }
+
+    /**
+     * delete
+     *
+     * @param string $id
+     *
+     * @return ApiJsonModel
+     */
+    public function delete($id)
+    {
+        $siteId = $this->getRequestSiteId();
+
+        //ACCESS CHECK
+        $sitePagesResource = $this->getSitePagesResourceId($siteId);
+        if (!$this->isAllowed('pages', 'delete')
+            && !$this->isAllowed(
+                $sitePagesResource,
+                'delete'
+            )
+        ) {
+            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+
+            return new ApiJsonModel(
+                null,
+                1,
+                "Access denied"
+            );
+        }
+
+        $site = $this->getSite($siteId);
+
+        if (empty($site)) {
+            return new ApiJsonModel(
+                null,
+                1,
+                "Site was not found with id {$siteId}."
+            );
+        }
+
+        $page = $this->getPage($site, $id);
+
+        if (empty($page)) {
+            return new ApiJsonModel(
+                null,
+                404,
+                "Page was not found with id {$id}."
+            );
+        }
+
+        $pageRepo = $this->getPageRepo();
+
+        $result = $pageRepo->setPageDeleted($page);
+
+        if (!$result) {
+            return new ApiJsonModel([$result], 1, 'Page could not be deleted');
+        }
+
+        return new ApiJsonModel([$result], 0, 'Page deleted');
     }
 }

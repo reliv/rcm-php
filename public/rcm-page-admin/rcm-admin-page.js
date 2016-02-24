@@ -240,7 +240,6 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
 
     /**
      * removePlugin
-     * @param containerId
      * @param pluginId
      */
     self.removePlugin = function (pluginId) {
