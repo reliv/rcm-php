@@ -137,9 +137,9 @@ class Page extends ContainerAbstract implements ApiInterface
     protected $stagedRevision;
 
     /**
-     * @var string Page Type n=Normal, t=Template, z=System
+     * @var string Page Type n=Normal, t=Template, z=System, deleted-{originalPageType}
      *
-     * @ORM\Column(type="string", length=1)
+     * @ORM\Column(type="string", length=32)
      */
     protected $pageType = 'n';
 
@@ -286,9 +286,9 @@ class Page extends ContainerAbstract implements ApiInterface
      */
     public function setPageType($type)
     {
-        if (strlen($type) != 1) {
+        if (strlen($type) > 32) {
             throw new InvalidArgumentException(
-                'Page type can not exceed 1 character'
+                'Page type can not exceed 32 character'
             );
         }
 

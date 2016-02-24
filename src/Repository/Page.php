@@ -20,13 +20,9 @@
 
 namespace Rcm\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
-use Rcm\Entity\Container;
-use Rcm\Entity\ContainerInterface;
 use Rcm\Entity\Page as PageEntity;
-use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\InvalidArgumentException;
@@ -52,6 +48,11 @@ use Rcm\Exception\RuntimeException;
  */
 class Page extends ContainerAbstract
 {
+    /**
+     * PAGE_TYPE_DELETED
+     */
+    const PAGE_TYPE_DELETED = 'deleted-';
+
     /**
      * Get a page entity by name
      *
@@ -81,7 +82,6 @@ class Page extends ContainerAbstract
         /** @var \Rcm\Entity\Page $result */
         return $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
     }
-
 
     /**
      * Gets the DB result of the Published Revision
@@ -293,6 +293,31 @@ class Page extends ContainerAbstract
         }
 
         return $page;
+    }
+
+    /**
+     * setPageDeleted - A way of making pages appear deleted without deleting the DB entries
+     *
+     * @param PageEntity $page
+     *
+     * @return bool
+     */
+    public function setPageDeleted(
+        PageEntity $page
+    ) {
+        $pageType = $page->getPageType();
+
+        if (strpos($pageType, self::PAGE_TYPE_DELETED) !== false) {
+            // Already set as deleted
+            return false;
+        }
+
+        $page->setPageType(self::PAGE_TYPE_DELETED . $pageType);
+
+        $this->_em->persist($page);
+        $this->_em->flush($page);
+
+        return true;
     }
 
     /**
@@ -591,7 +616,6 @@ class Page extends ContainerAbstract
             ->setParameter('pageType', $pageType)
             ->setParameter('siteId', $siteId);
 
-
         $result = $isValidQueryBuilder->getQuery()->getScalarResult();
 
         if (!empty($result)) {
@@ -726,6 +750,7 @@ class Page extends ContainerAbstract
         }
 
         $page = $this->getPageByName($siteEntity, $pageName, $pageType);
+
         return $this->saveContainer(
             $page,
             $saveData['pageContainer'],
@@ -733,4 +758,5 @@ class Page extends ContainerAbstract
             $pageRevision
         );
     }
+
 }
