@@ -75,7 +75,9 @@ angular.module('rcmAdminPageDelete', ['rcmApi', 'rcmAdminApi'])
 
                     if (!data.page.id) {
                         $scope.canDelete = false;
-                        $scope.message = 'Not a CMS page'
+                        $scope.message = 'Not a CMS page';
+                        $scope.loading = false;
+                        return;
                     }
 
                     // Prevent us from deleting a not-found page
