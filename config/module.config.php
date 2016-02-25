@@ -328,7 +328,7 @@ return [
                     ]
                 ],
             ],
-            'contentManagerBlog' => [
+            'blog' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
                     'route' => '/blog[/:page]',
