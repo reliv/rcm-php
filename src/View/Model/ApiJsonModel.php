@@ -23,7 +23,6 @@ use Zend\Stdlib\ArrayUtils;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
-
 class ApiJsonModel extends JsonModel
 {
     /**
