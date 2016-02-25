@@ -1,28 +1,12 @@
 <?php
 
-/**
- * Module Config For ZF2
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   RcmAdmin
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
-
 namespace RcmAdmin;
 
 use Zend\Console\Request;
 use Zend\Mvc\MvcEvent;
 
 /**
- * ZF2 Module Config.  Required by ZF2
+ * ZF2 Module.  Required by ZF2
  *
  * ZF2 requires a Module.php file to load up all the Module Dependencies.  This
  * file has been included as part of the ZF2 standards.

@@ -1,17 +1,4 @@
 <?php
-/**
- * availablePluginsList.php
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   RcmAdmin\View\Helper
- * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 
 namespace RcmAdmin\View\Helper;
 
@@ -34,8 +21,16 @@ use Zend\View\Helper\AbstractHelper;
  */
 class AvailablePluginsJsList extends AbstractHelper implements ServiceLocatorAwareInterface
 {
+    /**
+     * @var
+     */
     protected $serviceLocator;
 
+    /**
+     * __invoke
+     *
+     * @return void
+     */
     public function __invoke()
     {
         /** @var \Zend\View\Renderer\PhpRenderer $renderer */

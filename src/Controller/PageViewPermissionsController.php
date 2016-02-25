@@ -167,7 +167,7 @@ class PageViewPermissionsController extends AbstractRestfulController
      * @param $roles
      * @param $resourceId
      *
-     * @return void
+     * @return mixed|void
      */
     public function addPermissions($roles, $resourceId)
     {

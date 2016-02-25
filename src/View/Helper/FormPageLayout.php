@@ -1,21 +1,4 @@
 <?php
-/**
- * Form View Helper for the Page Layout Element
- *
- * This file contains the unit test for Form View Helper for the Page Layout Element
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   RcmAdmin
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace RcmAdmin\View\Helper;
 
