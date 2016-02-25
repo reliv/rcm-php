@@ -1,22 +1,4 @@
 <?php
-/**
- * Index Controller for the entire application
- *
- * This file contains the main controller used for the application.  This
- * should extend from the base class and should need no further modification.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace Rcm\Controller;
 

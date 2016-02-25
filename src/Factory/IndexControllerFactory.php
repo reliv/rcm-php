@@ -24,6 +24,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
+ * @deprecated  PLEASE USE CmsController
  * Service Factory for the Index Controller
  *
  * Factory for the Index Controller.
