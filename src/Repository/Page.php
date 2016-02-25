@@ -16,9 +16,7 @@ use Rcm\Exception\RuntimeException;
  *
  * Page Repository.  Used to get custom page results from the DB
  *
- * PHP version 5.3
- *
- * LICENSE: BSD
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Rcm\Factory;
 
 use Rcm\View\Helper\RcmHtmlIncludes;

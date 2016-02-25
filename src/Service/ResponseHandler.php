@@ -1,21 +1,4 @@
 <?php
-/**
- * Rcm Response Handler
- *
- * This file contains the class definition for the Response Handler
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace Rcm\Service;
 
@@ -44,19 +27,29 @@ use Zend\Stdlib\ResponseInterface;
  */
 class ResponseHandler
 {
-    /** @var \Zend\Http\PhpEnvironment\Request */
+    /**
+     * @var \Zend\Http\PhpEnvironment\Request
+     */
     protected $request;
 
-    /** @var \Rcm\Entity\Site */
+    /**
+     * @var \Rcm\Entity\Site
+     */
     protected $currentSite;
 
-    /** @var \Zend\Mvc\ResponseSender\HttpResponseSender */
+    /**
+     * @var \Zend\Mvc\ResponseSender\HttpResponseSender
+     */
     protected $responseSender;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $terminate = true;
 
-    /** @var RcmUserService  */
+    /**
+     * @var RcmUserService
+     */
     protected $userService;
 
     /**

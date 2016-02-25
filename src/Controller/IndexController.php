@@ -39,28 +39,49 @@ use Zend\View\Model\ViewModel;
  */
 class IndexController extends AbstractActionController
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     public $pageName;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $pageType;
 
-    /** @var integer */
+    /**
+     * @var integer
+     */
     public $pageRevisionId;
 
-    /** @var \Rcm\Entity\Site */
+    /**
+     * @var \Rcm\Entity\Site
+     */
     protected $currentSite;
 
-    /** @var integer */
+    /**
+     * @var integer
+     */
     protected $siteId;
 
-    /** @var \Rcm\Service\LayoutManager */
+    /**
+     * @var \Rcm\Service\LayoutManager
+     */
     protected $layoutManager;
 
-    /** @var  \Rcm\Repository\Page */
+    /**
+     * @var  \Rcm\Repository\Page
+     */
     protected $pageRepo;
 
+    /**
+     * @var array
+     */
     protected $pageInfo;
+
+    /**
+     * @var bool
+     */
     protected $notFound = false;
 
     /**

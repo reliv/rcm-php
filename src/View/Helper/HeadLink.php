@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Rcm\View\Helper;
 
 use Zend\View\Helper\Placeholder\Container\AbstractContainer;
 
 /**
  * Class HeadLink
- *
- * LongDescHere
  *
  * PHP version 5
  *

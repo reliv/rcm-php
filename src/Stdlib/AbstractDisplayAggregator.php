@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Rcm\Stdlib;
 
 use Rcm\Entity\DisplayInterface;

@@ -42,10 +42,10 @@ class PageSearchApiController extends AbstractRestfulController
 
         $results = $entityMgr->createQuery(
             '
-                        select page.name, page.pageTitle, page.pageType from Rcm\\Entity\\Page page
-                        join page.site site
-                        where (page.name like :query or page.pageTitle like :query) and site.siteId like :siteId
-                    '
+                select page.name, page.pageTitle, page.pageType from Rcm\\Entity\\Page page
+                join page.site site
+                where (page.name like :query or page.pageTitle like :query) and site.siteId like :siteId
+            '
         )->setParameter('query', '%' . $query . '%')
             ->setParameter('siteId', '%' . $siteId . '%')
             ->getResult();

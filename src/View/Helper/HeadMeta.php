@@ -2,7 +2,6 @@
 
 namespace Rcm\View\Helper;
 
-use Rcm\Entity\Page;
 use Zend\View\Helper\Placeholder\Container\AbstractContainer;
 
 /**

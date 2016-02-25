@@ -15,7 +15,7 @@ use Zend\Stdlib\RequestInterface;
  *
  * This route will match CMS Urls to the DB pages in the CMS
  *
- * PHP version 5.5
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm

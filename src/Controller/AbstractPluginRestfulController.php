@@ -5,7 +5,7 @@ namespace Rcm\Controller;
 use Rcm\Exception\PluginInstanceNotFoundException;
 
 /**
- * @deprecated
+ * @deprecated Use Reliv\RcmApiLib
  * Class AbstractPluginRestfulController
  *
  * Exposes instance methods for plugins with APIs

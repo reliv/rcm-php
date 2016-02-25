@@ -1,21 +1,5 @@
 <?php
-/**
- * Rcm Url View Helper
- *
- * This file contains the class definition for the Rcm Url View Helper
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;

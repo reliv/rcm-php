@@ -26,11 +26,19 @@ use Zend\Stdlib\ArrayUtils;
 
 class ApiJsonModel extends JsonModel
 {
-
+    /**
+     * @var int
+     */
     protected $code = 1;
 
+    /**
+     * @var string
+     */
     protected $message = '';
 
+    /**
+     * @var array
+     */
     protected $errors = [];
 
     /**

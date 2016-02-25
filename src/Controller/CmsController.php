@@ -37,16 +37,29 @@ use Zend\View\Model\ViewModel;
  */
 class CmsController extends AbstractActionController
 {
-    /** @var \Rcm\Entity\Site */
+    /**
+     * @var \Rcm\Entity\Site
+     */
     protected $currentSite;
 
-    /** @var \Rcm\Service\LayoutManager */
+    /**
+     * @var \Rcm\Service\LayoutManager
+     */
     protected $layoutManager;
 
-    /** @var  \Rcm\Repository\Page */
+    /**
+     * @var  \Rcm\Repository\Page
+     */
     protected $pageRepo;
 
+    /**
+     * @var array
+     */
     protected $pageInfo;
+
+    /**
+     * @var bool
+     */
     protected $notFound = false;
 
     /**

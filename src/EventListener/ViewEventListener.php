@@ -1,26 +1,9 @@
 <?php
-/**
- * RCM View Event Listener
- *
- * View Event Listener
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\EventListener;
 
 use Rcm\Http\Response as RcmResponse;
 use Rcm\Service\ResponseHandler;
-use Zend\View\Renderer\PhpRenderer;
 use Zend\View\ViewEvent;
 
 /**

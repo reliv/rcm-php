@@ -1,23 +1,5 @@
 <?php
 
-/**
- * Container Repository
- *
- * This file contains the container repository
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
-
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -30,9 +12,7 @@ use Rcm\Entity\Revision;
  *
  * Container Repository.  Used to get custom container results from the DB
  *
- * PHP version 5.3
- *
- * LICENSE: BSD
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm
@@ -44,6 +24,16 @@ use Rcm\Entity\Revision;
  */
 abstract class ContainerAbstract extends EntityRepository implements ContainerInterface
 {
+    /**
+     * saveContainer
+     *
+     * @param ContainerEntityInterface $container
+     * @param array                    $containerData
+     * @param string                   $author
+     * @param null                     $revisionNumber
+     *
+     * @return int|null
+     */
     public function saveContainer(
         ContainerEntityInterface $container,
         $containerData,

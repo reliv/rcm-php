@@ -3,7 +3,7 @@
 /**
  * Module Config For ZF2
  *
- * PHP version 5.3
+ * PHP version 5
  *
  * LICENSE: No License yet
  *

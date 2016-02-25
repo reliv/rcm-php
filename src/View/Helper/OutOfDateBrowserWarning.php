@@ -1,21 +1,4 @@
 <?php
-/**
- * Out of Date Browser Warning View Helper
- *
- * Out of Date Browser Warning View Helper
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 
 namespace Rcm\View\Helper;
 
@@ -36,6 +19,9 @@ use Zend\View\Helper\AbstractHelper;
  */
 class OutOfDateBrowserWarning extends AbstractHelper
 {
+    /**
+     * @var int
+     */
     protected $lowestIeVersion = 8;
 
     /**

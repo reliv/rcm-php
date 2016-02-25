@@ -1,21 +1,4 @@
 <?php
-/**
- * Plugin Controller Interface
- *
- * Is the contract for plugin controllers
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Rod McNew <rmcnew@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 
 namespace Rcm\Plugin;
 
@@ -28,9 +11,7 @@ use Zend\Stdlib\ResponseInterface;
  *
  * Is the contract for plugin controllers
  *
- * PHP version 5.3
- *
- * LICENSE: BSD
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm

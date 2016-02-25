@@ -1,13 +1,12 @@
 <?php
 
-
 namespace Rcm\Controller;
 
 use Rcm\View\Model\ApiJsonModel;
 use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
- * @deprecated Use rcm-api-lib controller
+ * @deprecated Use Reliv\RcmApiLib controller
  * Class AbstractRestfulJsonController
  *
  * ZF2 AbstractRestfulController returns arrays for missing methods

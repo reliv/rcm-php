@@ -1,29 +1,7 @@
 <?php
-/**
- * Cache Controller for the application
- *
- * Currently this controller just allows a person to flush the entire cache
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace Rcm\Controller;
 
-use Rcm\Entity\Revision;
-use Rcm\Entity\Site;
-use Rcm\Repository\Page as PageRepo;
-use Rcm\Entity\Page;
-use Rcm\Service\LayoutManager;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
