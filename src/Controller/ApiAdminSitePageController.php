@@ -428,6 +428,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     public function delete($id)
     {
+        $id = (int) $id;
         $siteId = $this->getRequestSiteId();
 
         //ACCESS CHECK
