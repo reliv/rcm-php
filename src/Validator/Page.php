@@ -1,21 +1,4 @@
 <?php
-/**
- * Rcm Page Validator
- *
- * This file contains the class definition for the Page Validator
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace Rcm\Validator;
 
@@ -40,15 +23,29 @@ use Rcm\Repository\Page as PageRepo;
  */
 class Page extends PageName
 {
+    /**
+     * PAGE_EXISTS
+     */
     const PAGE_EXISTS = 'pageExists';
 
+    /**
+     * @var bool
+     */
     protected $pageNameOk = false;
 
-    /** @var \Rcm\Repository\Page */
+    /**
+     * @var \Rcm\Repository\Page
+     */
     protected $pageRepo;
 
+    /**
+     * @var string
+     */
     protected $pageType = 'n';
 
+    /**
+     * @var null|int
+     */
     protected $siteId = null;
 
     /**

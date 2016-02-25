@@ -1,19 +1,5 @@
 <?php
-/**
- * PageSearchApiController
- *
- * Search through pages and return URL
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   Rcm\Controller
- * @author    author Brian Janish <bjanish@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: GIT:
- * @link      https://github.com/reliv
- */
+
 namespace Rcm\Controller;
 
 use Zend\Http\Response;

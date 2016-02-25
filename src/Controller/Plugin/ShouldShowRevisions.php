@@ -40,6 +40,11 @@ class ShouldShowRevisions extends AbstractPlugin
     /** @var \Rcm\Acl\CmsPermissionChecks  */
     public $checker;
 
+    /**
+     * ShouldShowRevisions constructor.
+     *
+     * @param CmsPermissionChecks $cmsPermissionChecks
+     */
     public function __construct(CmsPermissionChecks $cmsPermissionChecks)
     {
         $this->checker = $cmsPermissionChecks;

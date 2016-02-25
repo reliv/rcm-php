@@ -1,22 +1,5 @@
 <?php
-/**
- * Page Revision Information Entity
- *
- * This is a Doctrine 2 definition file for Page Revisions.  This file
- * is used for any module that needs to know about page revisions.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -112,10 +95,19 @@ class Revision
      **/
     protected $pluginWrappers;
 
+    /**
+     * @var bool
+     */
     public $isDirty = false;
 
+    /**
+     * @var array
+     */
     protected $wrappersSortedByPageContainer = [];
 
+    /**
+     * @var array
+     */
     protected $wrappersByRows = [];
 
     /**
@@ -127,6 +119,11 @@ class Revision
         $this->createdDate = new \DateTime();
     }
 
+    /**
+     * __clone
+     *
+     * @return void
+     */
     public function __clone()
     {
         if (!$this->revisionId) {
@@ -250,7 +247,7 @@ class Revision
     /**
      * Get Plugin Instances - Assumes we have ordered them by RenderOrder the DB join
      *
-     * @return Array
+     * @return array
      */
     public function getPluginWrappers()
     {
@@ -264,7 +261,7 @@ class Revision
     /**
      * Get Plugin Instances
      *
-     * @return Array
+     * @return array
      */
     public function getPluginWrappersByRow($refresh = false)
     {
