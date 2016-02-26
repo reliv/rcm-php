@@ -738,5 +738,4 @@ class Page extends ContainerAbstract
             $pageRevision
         );
     }
-
 }
