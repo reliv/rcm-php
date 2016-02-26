@@ -216,7 +216,7 @@ class ResourceProvider extends RcmUserResourceProvider
             return null;
         }
 
-        $return = $return = [
+        $return = [
             'resourceId' => $resourceId,
             'parentResourceId' => 'sites',
         ];
@@ -249,7 +249,8 @@ class ResourceProvider extends RcmUserResourceProvider
         $return['sites.' . $siteId] = [
             'resourceId' => 'sites.' . $siteId,
             'parentResourceId' => 'sites',
-            'name' => $primaryDomainName
+            'name' => $primaryDomainName,
+            'description' => "Resource for site '{$primaryDomainName}'"
         ];
 
         $return['sites.' . $siteId] = array_merge(
@@ -261,6 +262,7 @@ class ResourceProvider extends RcmUserResourceProvider
             'resourceId' => 'sites.' . $siteId . '.pages',
             'parentResourceId' => 'sites.' . $siteId,
             'name' => $primaryDomainName . ' - pages',
+            'description' => "Resource for pages on site '{$primaryDomainName}'"
         ];
 
         $return['sites.' . $siteId . '.pages'] = array_merge(
@@ -299,13 +301,15 @@ class ResourceProvider extends RcmUserResourceProvider
                 . $pageName,
             'parentResourceId' => 'sites.' . $siteId . '.pages',
             'name' => $primaryDomainName . ' - pages - ' . $pageName,
+            'description' => "Resource for page '{$pageName}'"
+                . " of type '{$pageType}' on site '{$primaryDomainName}'"
         ];
 
         $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
             = array_merge(
-                $this->resources['pages'],
-                $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
-            );
+            $this->resources['pages'],
+            $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
+        );
 
         return $return;
     }
