@@ -1,17 +1,4 @@
 <?php
-/**
- * PluginRenderApiController.php
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   Rcm\Controller
- * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 
 namespace Rcm\Controller;
 
@@ -35,6 +22,11 @@ use Zend\View\Helper\HeadScript;
  */
 class NewPluginInstanceApiController extends AbstractActionController
 {
+    /**
+     * getNewInstanceAction
+     *
+     * @return Response
+     */
     public function getNewInstanceAction()
     {
         $routeMatch = $this->getEvent()->getRouteMatch();

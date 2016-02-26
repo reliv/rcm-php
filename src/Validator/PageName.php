@@ -1,21 +1,4 @@
 <?php
-/**
- * Rcm Page Name Validator
- *
- * This file contains the class definition for the Page Name Validator
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace Rcm\Validator;
 
@@ -39,13 +22,22 @@ use Zend\Validator\AbstractValidator;
  */
 class PageName extends AbstractValidator
 {
+    /**
+     * PAGE_NAME
+     */
     const PAGE_NAME = 'pageName';
 
+    /**
+     * @var array
+     */
     protected $messageTemplates
         = [
             self::PAGE_NAME => "'%value%' is not a valid page name."
         ];
 
+    /**
+     * @var bool
+     */
     protected $pageNameOk = false;
 
     /**

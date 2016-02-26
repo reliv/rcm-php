@@ -1,22 +1,5 @@
 <?php
 
-/**
- * Response object for CMS responses
- *
- * Response object for CMS responses
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 namespace Rcm\Http;
 
 use Zend\Http\Response as HttpResponse;

@@ -1,20 +1,4 @@
 <?php
-/**
- * Rcm edit view helper
- *
- * This creates editable text areas in views and also ensures that their content
- * is stripped of javascript in order to prevent XSS attacks.
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   RcmInstanceConfig\ViewHelper
- * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 
 namespace Rcm\View\Helper;
 

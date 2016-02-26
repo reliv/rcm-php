@@ -1,23 +1,5 @@
 <?php
 
-/**
- * Plugin BaseController
- *
- * Extend or directly-use this plugin controller for any Rcm plugin.
- * This controller does the following for you:
- * 1) Save plugin instance configs in Json format using the Doctrine DB Conn
- * 2) Injects instance configs into the view model for plugins under name "$instanceConfig"
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @author    Rod McNew <rmcnew@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- */
 namespace Rcm\Plugin;
 
 use Zend\Mvc\Controller\AbstractActionController;
@@ -44,14 +26,27 @@ class BaseController extends AbstractActionController implements PluginInterface
      */
     protected $template;
 
+    /**
+     * @var string
+     */
     protected $pluginName;
 
+    /**
+     * @var string
+     */
     protected $nameLowerDashed;
 
+    /**
+     * @var array
+     */
     protected $config;
 
-    protected $pluginStorageMgr;
-
+    /**
+     * BaseController constructor.
+     *
+     * @param array $config
+     * @param null  $pluginName
+     */
     public function __construct(
         $config,
         $pluginName = null
@@ -100,6 +95,7 @@ class BaseController extends AbstractActionController implements PluginInterface
         );
 
         $view->setTemplate($this->template);
+
         return $view;
     }
 
@@ -117,7 +113,6 @@ class BaseController extends AbstractActionController implements PluginInterface
         return
             $this->getRequest()->getPost('rcmPluginName') == $this->pluginName;
     }
-
 
     /**
      * Converts camelCase to lower-case-hyphens

@@ -1,33 +1,14 @@
 <?php
-/**
- * Service Factory for the Index Controller
- *
- * This file contains the factory needed to generate an Index Controller.
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
+
 namespace Rcm\Factory;
 
 use Rcm\Controller\CmsController;
-use Rcm\Controller\IndexController;
 use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Service Factory for the Index Controller
- *
- * Factory for the Index Controller.
+ * Service Factory for the CmsController
  *
  * @category  Reliv
  * @package   Rcm
@@ -40,13 +21,12 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class CmsControllerFactory implements FactoryInterface
 {
-
     /**
      * Create Service
      *
-     * @param ServiceLocatorInterface $controllerManager Zend Controler Manager
+     * @param ServiceLocatorInterface $controllerManager Zend Controller Manager
      *
-     * @return IndexController
+     * @return CmsController
      */
     public function createService(ServiceLocatorInterface $controllerManager)
     {

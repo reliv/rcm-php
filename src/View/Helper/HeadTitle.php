@@ -1,12 +1,9 @@
 <?php
 
-
 namespace Rcm\View\Helper;
 
 /**
  * Class HeadTitle
- *
- * LongDescHere
  *
  * PHP version 5
  *
@@ -31,6 +28,9 @@ class HeadTitle extends \Zend\View\Helper\HeadTitle
      */
     protected $rcmPageIsSet = false;
 
+    /**
+     * HeadTitle constructor.
+     */
     public function __construct()
     {
         $this->setSeparator(' - ');

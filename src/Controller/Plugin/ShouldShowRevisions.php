@@ -1,21 +1,5 @@
 <?php
-/**
- * Redirect To Page Controller Plugin
- *
- * This file contains the Redirect To Page Controller Plugin.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Controller\Plugin;
 
 use Rcm\Acl\CmsPermissionChecks;
@@ -40,6 +24,11 @@ class ShouldShowRevisions extends AbstractPlugin
     /** @var \Rcm\Acl\CmsPermissionChecks  */
     public $checker;
 
+    /**
+     * ShouldShowRevisions constructor.
+     *
+     * @param CmsPermissionChecks $cmsPermissionChecks
+     */
     public function __construct(CmsPermissionChecks $cmsPermissionChecks)
     {
         $this->checker = $cmsPermissionChecks;

@@ -1,19 +1,4 @@
 <?php
-/**
- * TextEditFactory
- *
- * TextEditFactory
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   RcmInstanceConfig\Factory
- * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 
 namespace Rcm\Factory;
 
@@ -23,8 +8,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * TextEditFactory
- *
- * LongDescHere
  *
  * PHP version 5
  *

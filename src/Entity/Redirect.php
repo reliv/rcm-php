@@ -1,29 +1,11 @@
 <?php
-/**
- * Site redirects
- *
- * This object contains a list of urls to redirect. For use with the content
- * management system.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
 use Reliv\RcmApiLib\Model\AbstractApiModel;
 use Zend\Validator\Uri;
-use Zend\Validator\ValidatorInterface;
 
 /**
  * Site redirects

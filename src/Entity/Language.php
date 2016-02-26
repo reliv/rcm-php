@@ -1,22 +1,4 @@
 <?php
-/**
- * Language Database Entity
- *
- * This is a Doctrine 2 definition file for Language Objects.  This file is
- * used for any module that needs to know language information.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace Rcm\Entity;
 

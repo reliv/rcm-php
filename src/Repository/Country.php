@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -9,8 +8,6 @@ use Rcm\Exception\CountryNotFoundException;
 
 /**
  * Class Country
- *
- * LongDescHere
  *
  * PHP version 5
  *
@@ -24,7 +21,9 @@ use Rcm\Exception\CountryNotFoundException;
  */
 class Country extends EntityRepository
 {
-
+    /**
+     * @var array
+     */
     protected $validFormats
         = [
             'iso3',
@@ -32,6 +31,15 @@ class Country extends EntityRepository
             'countryName',
         ];
 
+    /**
+     * getCountryByString
+     *
+     * @param string $code
+     * @param string $format
+     * @param null   $default
+     *
+     * @return null|object
+     */
     public function getCountryByString(
         $code,
         $format = 'iso3',

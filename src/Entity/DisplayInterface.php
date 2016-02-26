@@ -1,12 +1,9 @@
 <?php
 
-
 namespace Rcm\Entity;
 
 /**
  * Class DisplayInterface
- *
- * LongDescHere
  *
  * PHP version 5
  *

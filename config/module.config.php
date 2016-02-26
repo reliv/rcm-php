@@ -289,10 +289,49 @@ return [
                     ]
                 ],
             ],
+            /* @deprecated */
             'contentManager' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
                     'route' => '/rcm[/:page][/:revision]',
+                    'defaults' => [
+                        'controller' => 'Rcm\Controller\IndexController',
+                        'action' => 'index',
+                    ]
+                ],
+            ],
+            /* CmsRoute Example*/
+            //'rcmCmsPageRevisionRoute' => [
+            //    'type' => 'Rcm\Route\Cms',
+            //    'options' => [
+            //        'route' => '/rcm[/:page][/:revision]',
+            //        // optional: Defaults to 'n' if left blank
+            //        'type' => 'n',
+            //        'defaults' => [
+            //            // optional: Defaults to Rcm\Controller\CmsController if blank
+            //            'controller' => 'Rcm\Controller\CmsController',
+            //            // optional: Defaults to indexAction if blank
+            //            'action' => 'index',
+            //        ],
+            //    ],
+            //],
+            'contentManagerWithPageType' => [
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => [
+                    'route' => '/rcm/:pageType/:page[/:revision]',
+                    'constraints' => [
+                        'pageType' => '[a-z]',
+                    ],
+                    'defaults' => [
+                        'controller' => 'Rcm\Controller\IndexController',
+                        'action' => 'index',
+                    ]
+                ],
+            ],
+            'blog' => [
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => [
+                    'route' => '/blog[/:page]',
                     'defaults' => [
                         'controller' => 'Rcm\Controller\IndexController',
                         'action' => 'index',
@@ -307,19 +346,6 @@ return [
                         'controller' => 'Rcm\Controller\NewPluginInstanceApiController',
                         'action' => 'getNewInstance',
                     ],
-                ],
-            ],
-            'contentManagerWithPageType' => [
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => [
-                    'route' => '/rcm/:pageType/:page[/:revision]',
-                    'constraints' => [
-                        'pageType' => '[a-z]',
-                    ],
-                    'defaults' => [
-                        'controller' => 'Rcm\Controller\IndexController',
-                        'action' => 'index',
-                    ]
                 ],
             ],
             'rcm-page-title-search' => [
@@ -349,16 +375,6 @@ return [
                     'defaults' => [
                         'controller' => 'Rcm\Controller\PageSearchApiController',
                         'action' => 'allSitePages',
-                    ]
-                ],
-            ],
-            'blog' => [
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => [
-                    'route' => '/blog[/:page]',
-                    'defaults' => [
-                        'controller' => 'Rcm\Controller\IndexController',
-                        'action' => 'index',
                     ]
                 ],
             ],
@@ -446,7 +462,7 @@ return [
             => 'Rcm\Factory\ContainerViewHelperFactory',
             'rcmTextEdit' => 'Rcm\Factory\TextEditFactory',
             'rcmRichEdit' => 'Rcm\Factory\RichEditFactory',
-            'rcmHtmlIncludes'  => 'Rcm\Factory\RcmHtmlIncludesHelperFactory',
+            'rcmHtmlIncludes' => 'Rcm\Factory\RcmHtmlIncludesHelperFactory',
         ],
         'invokables' => [
             /* <OVER-RIDE ZF2 HELPERS> */

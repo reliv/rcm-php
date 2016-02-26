@@ -1,21 +1,5 @@
 <?php
-/**
- * Container Abstract.  Contains methods shared by container classes
- *
- * Abstract for containers.  This file is used by container objects to keep code DRY
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Entity;
 
 use Rcm\Exception\InvalidArgumentException;

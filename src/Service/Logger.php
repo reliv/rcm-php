@@ -9,9 +9,7 @@ use \Zend\Log\Logger as ZendLogger;
  *
  * Rcm Logger class to be used through out the system when logging is required
  *
- * PHP version 5.3
- *
- * LICENSE: BSD
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm
@@ -28,8 +26,19 @@ class Logger
      */
     protected $logger;
 
+    /**
+     * @var bool
+     */
     protected $sendToBrowser = false;
+
+    /**
+     * @var bool
+     */
     protected $sendToCli = false;
+
+    /**
+     * @var bool
+     */
     protected $outputStarted = false;
 
     /**

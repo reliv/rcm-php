@@ -1,23 +1,5 @@
 <?php
 
-/**
- * Redirect Repository
- *
- * This file contains the redirect repository
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
-
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -31,9 +13,7 @@ use Rcm\Exception\RedirectException;
  *
  * Redirect Repository.  Used to get redirects for the CMS
  *
- * PHP version 5.3
- *
- * LICENSE: BSD
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm

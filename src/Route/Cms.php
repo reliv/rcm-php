@@ -1,19 +1,4 @@
 <?php
-/**
- * CMS Route
- *
- * This route will match CMS Urls to the DB pages in the CMS
- *
- * PHP version 5.5
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <shafer_w2002@yahoo.com>
- * @copyright 2015 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 
 namespace Rcm\Route;
 
@@ -30,7 +15,7 @@ use Zend\Stdlib\RequestInterface;
  *
  * This route will match CMS Urls to the DB pages in the CMS
  *
- * PHP version 5.5
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm

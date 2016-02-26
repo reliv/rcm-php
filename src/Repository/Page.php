@@ -1,23 +1,5 @@
 <?php
 
-/**
- * Page Repository
- *
- * This file contains the page repository
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
-
 namespace Rcm\Repository;
 
 use Doctrine\ORM\NoResultException;
@@ -34,9 +16,7 @@ use Rcm\Exception\RuntimeException;
  *
  * Page Repository.  Used to get custom page results from the DB
  *
- * PHP version 5.3
- *
- * LICENSE: BSD
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm
@@ -758,5 +738,4 @@ class Page extends ContainerAbstract
             $pageRevision
         );
     }
-
 }
