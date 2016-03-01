@@ -107,6 +107,8 @@ return [
             => 'RcmAdmin\Controller\RpcAdminCanEdit',
             'RcmAdmin\Controller\RpcAdminKeepAlive'
             => 'RcmAdmin\Controller\RpcAdminKeepAlive',
+            'RcmAdmin\Controller\ApiAdminCheckPermissionsController'
+            => 'RcmAdmin\Controller\ApiAdminCheckPermissionsController'
         ],
     ],
     /* form_elements */
@@ -578,6 +580,20 @@ return [
                     ],
                     'defaults' => [
                         'controller' => 'RcmAdmin\Controller\PageViewPermissionsController',
+                    ],
+                ],
+            ],
+            'RcmAdmin\ApiAdminCheckPermissions' => [
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => [
+                    'route' => '/api/admin/check-permissions/:resourceId/:privileges/:id',
+                    'constraints' => [
+                        'id' => '[a-zA-Z0-9_-]+',
+                        'resourceId' => '[a-zA-Z0-9_-]+',
+                        'privileges' => '[a-zA-Z0-9_-]+',
+                    ],
+                    'defaults' => [
+                        'controller' => 'RcmAdmin\Controller\ApiAdminCheckPermissionsController',
                     ],
                 ],
             ],
