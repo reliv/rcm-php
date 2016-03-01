@@ -1,22 +1,5 @@
 <?php
-/**
- * Admin Page Controller for the CMS
- *
- * This file contains the Admin Page Controller for the CMS.   This
- * should extend from the base class and should need no further modification.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   RcmAdmin
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace RcmAdmin\Controller;
 
 use Rcm\Entity\Site;

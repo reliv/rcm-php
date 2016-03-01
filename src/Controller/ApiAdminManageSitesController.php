@@ -1,17 +1,4 @@
 <?php
-/**
- * SitesApiController.php
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   Rcm\Controller\Plugin
- * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 
 namespace RcmAdmin\Controller;
 
@@ -22,10 +9,7 @@ use Rcm\Entity\Language;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use Rcm\View\Model\ApiJsonModel;
-use Rcm\View\Model\RcmJsonModel;
-use RcmAdmin\Entity\SiteApiRequest;
 use RcmAdmin\Entity\SiteApiResponse;
-use RcmAdmin\Entity\SiteResponse;
 use RcmAdmin\InputFilter\SiteInputFilter;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\JsonModel;

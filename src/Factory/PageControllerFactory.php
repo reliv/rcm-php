@@ -1,21 +1,5 @@
 <?php
-/**
- * Service Factory for the Admin Page Controller
- *
- * This file contains the factory needed to generate a Admin Page Controller.
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   RcmAdmin
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
+
 namespace RcmAdmin\Factory;
 
 use RcmAdmin\Controller\PageController;
@@ -45,7 +29,7 @@ class PageControllerFactory implements FactoryInterface
      *
      * @param ServiceLocatorInterface $controllerManager Zend Controller Manager
      *
-     * @return NewPageController
+     * @return PageController
      */
     public function createService(ServiceLocatorInterface $controllerManager)
     {
