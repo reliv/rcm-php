@@ -588,9 +588,9 @@ return [
                 'options' => [
                     'route' => '/api/admin/check-permissions/:resourceId/:privileges/:id',
                     'constraints' => [
-                        'id' => '[a-zA-Z0-9_-]+',
-                        'resourceId' => '[a-zA-Z0-9_-]+',
-                        'privileges' => '[a-zA-Z0-9_-]+',
+                        'id' => '[a-zA-Z0-9._-]+',
+                        'resourceId' => '[a-zA-Z0-9._-]+',
+                        'privileges' => '[a-zA-Z0-9._-]+',
                     ],
                     'defaults' => [
                         'controller' => 'RcmAdmin\Controller\ApiAdminCheckPermissionsController',
