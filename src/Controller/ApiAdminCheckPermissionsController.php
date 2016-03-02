@@ -5,6 +5,7 @@ namespace RcmAdmin\Controller;
 use Rcm\Http\Response;
 use Rcm\View\Model\ApiJsonModel;
 use RcmUser\Provider\RcmUserAclResourceProvider;
+use RcmUser\User\Entity\UserRoleProperty;
 
 /**
  * Class ApiAdminCheckPermisionsController
@@ -130,7 +131,8 @@ class ApiAdminCheckPermissionsController extends ApiAdminBaseController
             ),
             'resourceId' => $resourceId,
             'privileges' => $privileges,
-            'user' => $user,
+            // 'user' => $user,
+            'userRoles' => $user->getProperty(UserRoleProperty::PROPERTY_KEY)
         ];
 
         return new ApiJsonModel($apiResponse, 0, 'Success');
