@@ -1,28 +1,11 @@
 <?php
-/**
- * Admin Panel Controller for the CMS
- *
- * This file contains the Admin Panel Controller for the CMS.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   RcmAdmin
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace RcmAdmin\Controller;
 
 use Rcm\Acl\CmsPermissionChecks;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use RcmUser\Acl\Service\AclDataService;
-use RcmUser\Service\RcmUserService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -58,12 +41,12 @@ class AdminPanelController extends AbstractActionController
     /**
      * Constructor
      *
-     * @param array               $adminPanelConfig
-     * @param Site                $currentSite
+     * @param array $adminPanelConfig
+     * @param Site $currentSite
      * @param CmsPermissionChecks $cmsPermissionChecks
      */
     public function __construct(
-        Array          $adminPanelConfig,
+        array $adminPanelConfig,
         Site $currentSite,
         CmsPermissionChecks $cmsPermissionChecks
     ) {
@@ -103,6 +86,7 @@ class AdminPanelController extends AbstractActionController
 
         $view->setVariable('adminMenu', $this->adminPanelConfig);
         $view->setTemplate('rcm-admin/admin/admin');
+
         return $view;
     }
 }

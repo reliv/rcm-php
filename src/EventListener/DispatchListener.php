@@ -1,26 +1,7 @@
 <?php
-/**
- * Dispatch Listener for RcmAdmin
- *
- * This file contains the Dispatch Listener for RcmAdmin.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   RcmAdmin
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace RcmAdmin\EventListener;
 
-use Rcm\Entity\Page;
-use Rcm\Entity\Revision;
 use RcmAdmin\Controller\AdminPanelController;
 use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceLocatorInterface;

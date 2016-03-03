@@ -1,21 +1,5 @@
 <?php
-/**
- * New Page Zend Form Definition
- *
- * This file contains the New Page Zend Form Definition
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   RcmAdmin
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
+
 namespace RcmAdmin\Form;
 
 use Rcm\Entity\Site;

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace RcmAdmin\Controller;
 
 use Rcm\Controller\AbstractRestfulJsonController;
@@ -23,7 +22,6 @@ use Rcm\Controller\AbstractRestfulJsonController;
 
 class ApiAdminBaseController extends AbstractRestfulJsonController
 {
-
     /**
      * getConfig
      *

@@ -1,21 +1,5 @@
 <?php
-/**
- * Custom Zend Form Element for Main Layout
- *
- * This file contains a Custom Zend Form Element for Main Layout
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   RcmAdmin
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace RcmAdmin\Form\Element;
 
 use Zend\Form\Element\Radio;

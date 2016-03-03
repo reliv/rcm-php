@@ -24,6 +24,9 @@ use Zend\View\Model\JsonModel;
  */
 class PageViewPermissionsController extends AbstractRestfulController
 {
+    /**
+     * @var
+     */
     protected $siteId;
 
     /**
@@ -107,7 +110,7 @@ class PageViewPermissionsController extends AbstractRestfulController
         //CREATE RESOURCE ID
         $resourceId = 'sites.' . $siteId . '.pages.' . 'n' . '.' . $pageName;
         //ACCESS CHECK
-        if (!$this->rcmIsAllowed($resourceId, 'admin')) {
+        if (!$this->rcmIsAllowed($resourceId, 'edit') && !$this->isAllowed('pages', 'edit')) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
             return $this->getResponse();
         }
@@ -167,7 +170,7 @@ class PageViewPermissionsController extends AbstractRestfulController
      * @param $roles
      * @param $resourceId
      *
-     * @return void
+     * @return mixed|void
      */
     public function addPermissions($roles, $resourceId)
     {

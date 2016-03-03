@@ -1,6 +1,5 @@
 <?php
 
-
 namespace RcmAdmin\Entity;
 
 use Rcm\Entity\Page;
