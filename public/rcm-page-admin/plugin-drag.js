@@ -29,7 +29,10 @@ var RcmPluginDrag = {
                     }
                 );
                 for (var i = 0; i < extraRowCount; i++) {
-                    container.append($('<div class="row"></div>'));
+                    //do not add extra row at the bottom of GuestTopNav, causes issues
+                    if (container.attr('data-singleRowOnly') != 'Y') {
+                        container.append($('<div class="row"></div>'));
+                    }
                 }
             }
         );
