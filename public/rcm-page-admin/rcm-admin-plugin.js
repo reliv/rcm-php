@@ -249,9 +249,10 @@ var RcmAdminPlugin = function (page, id, container, rcmAdminService) {
 
     /**
      * Add a menu item with a method to be called on click
-     * @param name
+     * @param optionId
+     * @param title
      * @param method
-     * @returns {*}
+     * @returns {null|{}|*}
      */
     self.addPluginMenu = function (optionId, title, method) {
 
