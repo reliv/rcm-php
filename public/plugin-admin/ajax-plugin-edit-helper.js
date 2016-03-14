@@ -125,12 +125,11 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginHandler) {
             }
         );
 
-        pluginHandler.pluginMenu = {
-            'editproperties': {
-                title: 'Edit Properties',
-                method: showMainPropertiesCallback
-            }
-        }
+        pluginHandler.addPluginMenu(
+            'editproperties',
+            'Edit Properties',
+            showMainPropertiesCallback
+        );
     }
 };
 /* </AjaxPluginEditHelper|ajax-plugin-edit-helper> */
