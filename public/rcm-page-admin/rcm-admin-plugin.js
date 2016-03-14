@@ -248,6 +248,30 @@ var RcmAdminPlugin = function (page, id, container, rcmAdminService) {
     };
 
     /**
+     * Add a menu item with a method to be called on click
+     * @param name
+     * @param method
+     * @returns {*}
+     */
+    self.addPluginMenu = function (optionId, title, method) {
+
+        if (self.pluginMenu === null) {
+            self.pluginMenu = {};
+        }
+
+        if (self.pluginMenu[optionId]) {
+            console.warn('Duplicate pluginMenu added: ' + optionId);
+        }
+
+        self.pluginMenu[optionId] = {
+            title: title,
+            method: method
+        };
+
+        return self.pluginMenu;
+    };
+
+    /**
      * prepareEditors
      * @param onComplete
      */
