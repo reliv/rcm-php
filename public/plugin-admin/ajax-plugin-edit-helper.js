@@ -101,6 +101,10 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginHandler) {
         };
     };
 
+    /**
+     * @deprecated Use RcmAdminPlugin.addPluginMenu()
+     * @param showMainPropertiesCallback
+     */
     this.attachPropertiesDialog = function (showMainPropertiesCallback) {
         //Double clicking will show properties dialog
         container.delegate(
@@ -111,7 +115,7 @@ var AjaxPluginEditHelper = function (instanceId, container, pluginHandler) {
         );
 
         //Add right click menu
-        $.contextMenu(
+        jQuery.contextMenu(
             {
                 selector: rcm.getPluginContainerSelector(instanceId),
                 //Here are the right click menu options
