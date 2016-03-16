@@ -7,6 +7,7 @@
 }
 
 .rcm-input.image img {
+    max-height: 8em;
     /*max-width: 120px !important;*/
     /*max-height: 170px !important;*/
     /*float: left;*/
