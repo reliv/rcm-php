@@ -11,7 +11,6 @@ angular.module('rcmInput').directive(
 
                 $timeout(
                     function () {
-                        console.log(ngModelCtrl);
                         $scope.viewValue = ngModelCtrl.$viewValue;
                         $scope.$apply();
                     },
