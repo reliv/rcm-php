@@ -25,6 +25,19 @@ return [
                     'modules/rcm-admin/core/rcm-permissions.js',
                     /* </core> */
 
+                    /* <rcm-file-chooser> */
+                    'modules/rcm-admin/rcm-file-chooser/rcm-file-chooser-module.js',
+                    'modules/rcm-admin/rcm-file-chooser/rcm-file-chooser.js',
+                    'modules/rcm-admin/rcm-file-chooser/rcm-file-chooser-service.js',
+                    'modules/rcm-admin/rcm-file-chooser/elfinder-file-chooser.js',
+                    /* </rcm-file-chooser> */
+
+                    /* <rcm-input> */
+                    'modules/rcm-admin/rcm-input/rcm-input-module.js',
+                    'modules/rcm-admin/rcm-input/rcm-input-image-directive.js',
+                    'modules/rcm-admin/rcm-input/rcm-input-link-url-directive.js',
+                    /* </rcm-input> */
+
                     // general service - requires rcm-core
                     'modules/rcm-admin/rcm-page-admin-panel/rcm-admin-menu.js',
                     'modules/rcm-admin/rcm-column-resize/rcm-column-resize.js',
@@ -62,6 +75,9 @@ return [
                 'modules/rcm-admin/admin.css' => [
                     'modules/rcm-admin/core/styles.css',
                     'modules/rcm-admin/plugin-admin/admin-jquery-ui.css',
+                    /* <rcm-input> */
+                    'modules/rcm-admin/rcm-input/rcm-input.css',
+                    /* </rcm-input> */
                     'modules/rcm-admin/rcm-page-admin/layout-editor.css',
                     'modules/rcm-admin/rcm-page-admin-panel/panel.css',
                     'modules/rcm-admin/rcm-page-admin-panel/navigation.css',

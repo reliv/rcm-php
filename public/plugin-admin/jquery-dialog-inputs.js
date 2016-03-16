@@ -10,41 +10,99 @@ var inputImageEventsDelegated = false;
             {name: 'undoRedo', items: ['Undo', 'Redo']},
             {
                 name: 'basicstyles',
-                items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+                items: [
+                    'Bold',
+                    'Italic',
+                    'Underline',
+                    'Strike',
+                    'Subscript',
+                    'Superscript',
+                    '-',
+                    'RemoveFormat'
+                ]
             },
             {name: 'insert', items: ['SpecialChar']},
             {name: 'links', items: ['Link', 'Unlink', 'Anchor']}
         ],
 
         'defaults': [
-            {name: 'document', items: ['Source']},
-            {name: 'undoRedo', items: ['Undo', 'Redo']},
+            {
+                name: 'document',
+                items: ['Source']
+            },
+            {
+                name: 'undoRedo',
+                items: ['Undo', 'Redo']
+            },
             {
                 name: 'basicstyles',
-                items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+                items: [
+                    'Bold',
+                    'Italic',
+                    'Underline',
+                    'Strike',
+                    'Subscript',
+                    'Superscript',
+                    '-',
+                    'RemoveFormat'
+                ]
             },
             {
                 name: 'paragraph',
-                items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
-                    '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']
+                items: [
+                    'NumberedList',
+                    'BulletedList',
+                    '-',
+                    'Outdent',
+                    'Indent',
+                    '-',
+                    'Blockquote',
+                    'CreateDiv',
+                    '-',
+                    'JustifyLeft',
+                    'JustifyCenter',
+                    'JustifyRight',
+                    'JustifyBlock'
+                ]
             },
-            {name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord']},
-            {name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Templates']},
-            {name: 'links', items: ['Link', 'Unlink', 'Anchor']}
+            {
+                name: 'clipboard',
+                items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord']
+            },
+            {
+                name: 'insert',
+                items: [
+                    'Image',
+                    'Table',
+                    'HorizontalRule',
+                    'SpecialChar',
+                    'Templates'
+                ]
+            },
+            {
+                name: 'links',
+                items: ['Link', 'Unlink', 'Anchor']
+            }
         ]
     };
 
     var attachPageListAutoComplete = function (input) {
-        $.getJSON('/rcm-page-search/title', function (data) {
-            var pageUrls = [];
-            $.each(data, function (pageUrl) {
-                pageUrls.push(pageUrl);
-            });
-            input.autocomplete({
-                source: pageUrls,
-                minLength: 0
-            });
-        });
+        $.getJSON(
+            '/rcm-page-search/title', function (data) {
+                var pageUrls = [];
+                $.each(
+                    data, function (pageUrl) {
+                        pageUrls.push(pageUrl);
+                    }
+                );
+                input.autocomplete(
+                    {
+                        source: pageUrls,
+                        minLength: 0
+                    }
+                );
+            }
+        );
     };
 
 
@@ -114,10 +172,16 @@ var inputImageEventsDelegated = false;
         width = width || '80%';
         height = height || '70%';
 
-        if (typeof width == 'string' && width.length > 1 && width.substr(width.length - 1, 1) == '%')
+        if (typeof width == 'string' && width.length > 1 && width.substr(
+                width.length - 1,
+                1
+            ) == '%')
             width = parseInt(window.screen.width * parseInt(width, 10) / 100, 10);
 
-        if (typeof height == 'string' && height.length > 1 && height.substr(height.length - 1, 1) == '%')
+        if (typeof height == 'string' && height.length > 1 && height.substr(
+                height.length - 1,
+                1
+            ) == '%')
             height = parseInt(window.screen.height * parseInt(height, 10) / 100, 10);
 
         if (width < 640)
@@ -130,10 +194,10 @@ var inputImageEventsDelegated = false;
             left = parseInt(( window.screen.width - width ) / 2, 10);
 
         options = ( options || 'location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes' ) +
-        ',width=' + width +
-        ',height=' + height +
-        ',top=' + top +
-        ',left=' + left;
+            ',width=' + width +
+            ',height=' + height +
+            ',top=' + top +
+            ',left=' + left;
 
         var popupWindow = window.open('', null, options, true);
 
@@ -169,21 +233,26 @@ var inputImageEventsDelegated = false;
             }
 
             var p = $('<p class="dialogElement imageInput" data-dialogElementName="' + name + '" style="overflow-y:hidden"></p>');
-            p.append('<label for="' + name + '">' + description + '</label><br>' +
-            '<img style="max-width:120px !important;max-height:170px !important;float:left;margin-right:10px" src="' + src + '" onerror="this.src=\'/modules/rcm/images/no-image.png\';">');
+            p.append(
+                '<label for="' + name + '">' + description + '</label><br>' +
+                '<img style="max-width:120px !important;max-height:170px !important;float:left;margin-right:10px" src="' + src + '" onerror="this.src=\'/modules/rcm/images/no-image.png\';">'
+            );
             var urlBox = $('<input style="width:370px;margin-right:10px" name="' + name + '" value="' + src + '">');
             p.append(urlBox);
-            p.append('<button type="button" class="image-button ui-button ui-widget ' +
-            'ui-state-default ui-corner-all ui-button-text-only" role="button" ' +
-            'aria-disabled="false">' +
-            '<span class="ui-button-text">Browse</span>' +
-            '</button>');
+            p.append(
+                '<button type="button" class="image-button ui-button ui-widget ' +
+                'ui-state-default ui-corner-all ui-button-text-only" role="button" ' +
+                'aria-disabled="false">' +
+                '<span class="ui-button-text">Browse</span>' +
+                '</button>'
+            );
 
             if (!inputImageEventsDelegated) {
 
                 inputImageEventsDelegated = true;
 
-                $('body').on('click', '.imageInput button, .imageInput img',
+                $('body').on(
+                    'click', '.imageInput button, .imageInput img',
                     function () {
                         showFileBrowserForInputBox(
                             $(this).parent().children('input')
@@ -192,9 +261,11 @@ var inputImageEventsDelegated = false;
                     }
                 );
 
-                $('body').on('change', '.imageInput input', function () {
-                    $(this).parent().children('img').attr('src', $(this).val());
-                });
+                $('body').on(
+                    'change', '.imageInput input', function () {
+                        $(this).parent().children('img').attr('src', $(this).val());
+                    }
+                );
             }
 
             return p;
@@ -218,8 +289,10 @@ var inputImageEventsDelegated = false;
             //Give it a random name so labels and multi-dialogs work
             var name = $.fn.generateUUID();
 
-            var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
-            '<input type="text" name="' + name + '" value="' + value + '"></p>');
+            var p = $(
+                '<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
+                '<input type="text" name="' + name + '" value="' + value + '"></p>'
+            );
 
             return p;
         },
@@ -263,16 +336,25 @@ var inputImageEventsDelegated = false;
             var validatorId = $.fn.generateUUID();
             var name = $.fn.generateUUID();
 
-            var p = $('<p class="dialogElement ajaxTextInput" data-dialogElementName="' + name + '">' +
+            var p = $(
+                '<p class="dialogElement ajaxTextInput" data-dialogElementName="' + name + '">' +
                 '<label for="' + name + '">' + description + '</label><br>' +
                 '<span id="' + validatorId + '" style="float: right;"></span> ' +
                 '<input type="text" id="' + name + '" name="' + name + '" value="' + value + '"></p>'
             );
 
-            $('body').on('keyup', "#" + name, function () {
-                var validationContainer = $("#" + validatorId);
-                methods.validateInput(this, validationContainer, urlToValidator, disallowSpaces, successCallback);
-            });
+            $('body').on(
+                'keyup', "#" + name, function () {
+                    var validationContainer = $("#" + validatorId);
+                    methods.validateInput(
+                        this,
+                        validationContainer,
+                        urlToValidator,
+                        disallowSpaces,
+                        successCallback
+                    );
+                }
+            );
 
             return p;
         },
@@ -294,38 +376,44 @@ var inputImageEventsDelegated = false;
             //Give it a random name so labels and multi-dialogs work
             var name = $.fn.generateUUID();
 
-            var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
-            '<input type="password" id="' + name + '"  name="' + name + '" value="' + value + '"></p>');
+            var p = $(
+                '<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label><br>' +
+                '<input type="password" id="' + name + '"  name="' + name + '" value="' + value + '"></p>'
+            );
 
             //Give it a random name so labels and multi-dialogs work
             var validationName = $.fn.generateUUID();
 
-            var validationP = $('<p class="dialogElement"><label for="' + validationName + '">' + validationDescription + '</label><br>' +
-            '<input type="password" id="' + validationName + '" name="' + validationName + '" value="' + value + '"></p>');
+            var validationP = $(
+                '<p class="dialogElement"><label for="' + validationName + '">' + validationDescription + '</label><br>' +
+                '<input type="password" id="' + validationName + '" name="' + validationName + '" value="' + value + '"></p>'
+            );
 
             var divId = $.fn.generateUUID();
 
             var div = $("<div></div>").append(p).append(validationP);
 
-            $('body').on('keyup', "#" + validationName, function () {
-                var passwordField = $("#" + name);
-                var validationField = $("#" + validationName);
+            $('body').on(
+                'keyup', "#" + validationName, function () {
+                    var passwordField = $("#" + name);
+                    var validationField = $("#" + validationName);
 
-                var password = $(passwordField).val();
-                var validationPassword = $(validationField).val();
+                    var password = $(passwordField).val();
+                    var validationPassword = $(validationField).val();
 
-                if (password !== validationPassword) {
-                    $(passwordField).addClass('RcmErrorInputHightlight');
-                    $(passwordField).removeClass('RcmOkInputHightlight');
-                    $(validationField).addClass('RcmErrorInputHightlight');
-                    $(validationField).removeClass('RcmOkInputHightlight');
-                } else {
-                    $(passwordField).removeClass('RcmErrorInputHightlight');
-                    $(passwordField).addClass('RcmOkInputHightlight');
-                    $(validationField).removeClass('RcmErrorInputHightlight');
-                    $(validationField).addClass('RcmOkInputHightlight');
+                    if (password !== validationPassword) {
+                        $(passwordField).addClass('RcmErrorInputHightlight');
+                        $(passwordField).removeClass('RcmOkInputHightlight');
+                        $(validationField).addClass('RcmErrorInputHightlight');
+                        $(validationField).removeClass('RcmOkInputHightlight');
+                    } else {
+                        $(passwordField).removeClass('RcmErrorInputHightlight');
+                        $(passwordField).addClass('RcmOkInputHightlight');
+                        $(validationField).removeClass('RcmErrorInputHightlight');
+                        $(validationField).addClass('RcmOkInputHightlight');
+                    }
                 }
-            });
+            );
 
             return div;
         },
@@ -347,8 +435,10 @@ var inputImageEventsDelegated = false;
             //Give it a random name so labels and multi-dialogs work
             var name = $.fn.generateUUID();
 
-            var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label>' +
-            '<br></p>');
+            var p = $(
+                '<p class="dialogElement" data-dialogElementName="' + name + '"><label for="' + name + '">' + description + '</label>' +
+                '<br></p>'
+            );
             var input = $('<input name="' + name + '" value="' + value + '">');
             p.append(input);
             input.datepicker();
@@ -418,22 +508,26 @@ var inputImageEventsDelegated = false;
             if (allowCustomValues) {
 
                 //Hide/show the custom text box if the 'Custom Value' is modded
-                select.change(function (event) {
-                    var select = $(event.target);
-                    var textBox = select.parent().children('input');
-                    if (select.find(':selected').hasClass('custom')) {
-                        textBox.show();
-                    } else {
-                        textBox.hide();
+                select.change(
+                    function (event) {
+                        var select = $(event.target);
+                        var textBox = select.parent().children('input');
+                        if (select.find(':selected').hasClass('custom')) {
+                            textBox.show();
+                        } else {
+                            textBox.hide();
+                        }
                     }
-                });
+                );
 
                 //Move any input box input to the select key value
-                inputBox.change(function (event) {
-                    var textBox = $(event.target);
-                    textBox.parent().children('select')
-                        .children('option.custom').val(textBox.val());
-                });
+                inputBox.change(
+                    function (event) {
+                        var textBox = $(event.target);
+                        textBox.parent().children('select')
+                            .children('option.custom').val(textBox.val());
+                    }
+                );
             }
 
             return p;
@@ -491,8 +585,10 @@ var inputImageEventsDelegated = false;
             p.append('<br>');
             setTimeout(
                 function () {
-                    RcmAdminService.angularCompile(p, function () {
-                    });
+                    RcmAdminService.angularCompile(
+                        p, function () {
+                        }
+                    );
                 },
                 100
             );
@@ -510,7 +606,10 @@ var inputImageEventsDelegated = false;
 
             if (disallowSpaces) {
                 /* Get the value of the input field and filter */
-                inputValue = $(inputField).val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9\-\_]/g, "");
+                inputValue = $(inputField).val().toLowerCase().replace(
+                    /\s/g,
+                    '-'
+                ).replace(/[^A-Za-z0-9\-\_]/g, "");
                 $(inputField).val(inputValue);
             } else {
                 inputValue = $(inputField).val();
@@ -530,20 +629,24 @@ var inputImageEventsDelegated = false;
                 'checkValue': inputValue
             };
 
-            $.getJSON(ajaxPath, dataToSend, function (data) {
-                if (data.dataOk == 'Y') {
-                    methods.inputFieldOk(inputField, resultContainer);
-                    if (typeof(successCallback) === 'function') {
-                        successCallback.call(this, inputValue);
+            $.getJSON(
+                ajaxPath, dataToSend, function (data) {
+                    if (data.dataOk == 'Y') {
+                        methods.inputFieldOk(inputField, resultContainer);
+                        if (typeof(successCallback) === 'function') {
+                            successCallback.call(this, inputValue);
+                        }
+                    } else if (data.dataOk != 'Y') {
+                        methods.inputFieldError(inputField, resultContainer);
+                    } else {
+                        methods.inputFieldFatalError(inputField, resultContainer);
                     }
-                } else if (data.dataOk != 'Y') {
-                    methods.inputFieldError(inputField, resultContainer);
-                } else {
+                }
+            ).error(
+                function () {
                     methods.inputFieldFatalError(inputField, resultContainer);
                 }
-            }).error(function () {
-                methods.inputFieldFatalError(inputField, resultContainer);
-            });
+            );
 
             return dataOk;
         },
