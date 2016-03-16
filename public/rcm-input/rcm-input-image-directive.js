@@ -26,6 +26,10 @@ angular.module('rcmInput').directive(
 
                         $scope.loading = false;
 
+                        $scope.onChange = function() {
+                            ngModelCtrl.$setViewValue($scope.viewValue);
+                        };
+
                         var onUrlSelected = function (url) {
                             $scope.viewValue = url;
                             ngModelCtrl.$setViewValue($scope.viewValue);
