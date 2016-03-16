@@ -31,7 +31,6 @@ angular.module('rcmInput').directive(
 
                 $scope.onChange = function() {
                     ngModelCtrl.$setViewValue($scope.viewValue);
-                    console.log('onchange');
                 };
 
                 var buildAutoComplete = function (response) {
