@@ -1,54 +1,57 @@
 angular.module('rcmInput').directive(
     'rcmInputImage',
     [
+        '$timeout',
         'rcmFileChooserService',
-        function (rcmFileChooserService) {
+        function ($timeout, rcmFileChooserService) {
 
-            var link = function ($scope, element, attributes) {
+            var link = function ($scope, element, attributes, ngModelCtrl) {
 
-                $scope.label = 'Image';
+                $timeout(
+                    function () {
 
-                if (typeof attributes.label !== 'undefined') {
-                    $scope.label = $scope.$eval(attributes.label);
-                }
+                        $scope.viewValue = ngModelCtrl.$viewValue;
 
-                $scope.value = '';
+                        $scope.filter = {};
 
-                if (typeof attributes.value !== 'undefined') {
-                    $scope.value = $scope.$eval(attributes.value);
-                }
+                        if (typeof attributes.filter !== 'undefined') {
+                            $scope.filter = $scope.$eval(attributes.filter);
+                        }
 
-                $scope.filter = {};
+                        $scope.uid = jQuery.fn.generateUUID();
 
-                if (typeof attributes.filter !== 'undefined') {
-                    $scope.filter = $scope.$eval(attributes.filter);
-                }
+                        if (typeof attributes.uid !== 'undefined') {
+                            $scope.uid = $scope.$eval(attributes.uid);
+                        }
 
-                $scope.uid = jQuery.fn.generateUUID();
+                        $scope.loading = false;
 
-                if (typeof attributes.uid !== 'undefined') {
-                    $scope.uid = $scope.$eval(attributes.uid);
-                }
+                        var onUrlSelected = function (url) {
+                            console.log('callback', url);
+                            $scope.viewValue = url;
+                            ngModelCtrl.$setViewValue($scope.viewValue);
+                            $scope.loading = false;
+                            $scope.$apply();
+                        };
 
-                $scope.loading = false;
+                        $scope.browse = function () {
+                            $scope.loading = true;
+                            rcmFileChooserService.chooseFile(
+                                onUrlSelected,
+                                $scope.viewValue,
+                                $scope.filter
+                            );
+                        };
+                    },
+                    0
+                );
 
-                var onUrlSelected = function (url) {
-                    $scope.value = url;
-                    $scope.loading = false;
-                };
-
-                $scope.browse = function () {
-                    $scope.loading = true;
-                    rcmFileChooserService.chooseFile(
-                        onUrlSelected,
-                        $scope.value,
-                        $scope.filter
-                    );
-                };
             };
 
             return {
                 link: link,
+                scope: {},
+                require: 'ngModel',
                 templateUrl: '/modules/rcm-admin/rcm-input/rcm-input-image.html'
             };
         }

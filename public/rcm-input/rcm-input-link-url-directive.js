@@ -5,28 +5,22 @@ angular.module('rcmInput').directive(
         '$http',
         function ($timeout, $http) {
 
-            var link = function ($scope, element, attributes) {
+            var link = function ($scope, element, attributes, ngModelCtrl) {
+
+                $scope.viewValue = '';
+
+                $timeout(
+                    function () {
+                        console.log(ngModelCtrl);
+                        $scope.viewValue = ngModelCtrl.$viewValue;
+                        $scope.$apply();
+                    },
+                    0
+                );
 
                 var pageUrls = [];
 
                 var sourceUrl = '/rcm-page-search/title';
-
-                if (typeof attributes.sourceUrl !== 'undefined') {
-                    sourceUrl = $scope.$eval(attributes.sourceUrl);
-                }
-
-
-                $scope.label = 'Link URL';
-
-                if (typeof attributes.label !== 'undefined') {
-                    $scope.label = $scope.$eval(attributes.label);
-                }
-
-                $scope.value = '';
-
-                if (typeof attributes.value !== 'undefined') {
-                    $scope.value = $scope.$eval(attributes.value);
-                }
 
                 $scope.uid = jQuery.fn.generateUUID();
 
@@ -36,19 +30,21 @@ angular.module('rcmInput').directive(
 
                 $scope.loading = false;
 
-                var buildAutoComplete = function (urlList) {
+                var buildAutoComplete = function (response) {
 
-                    for (var key in urlList) {
-                        pageUrls.push(urlList[key])
+                    for (var key in response.data) {
+                        pageUrls.push(key)
                     }
 
-                    element.autocomplete(
+                    // Utilizes jQuery UI autocomplete
+                    element.find('input').autocomplete(
                         {
                             source: pageUrls,
-                            select: function () {
+                            select: function (value) {
+
                                 $timeout(
                                     function () {
-                                        element.trigger('input');
+                                        element.find('input').trigger('input');
                                     },
                                     0
                                 );
@@ -79,6 +75,8 @@ angular.module('rcmInput').directive(
 
             return {
                 link: link,
+                scope: {},
+                require: 'ngModel',
                 templateUrl: '/modules/rcm-admin/rcm-input/rcm-input-link-url.html'
             };
         }

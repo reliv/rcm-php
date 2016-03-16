@@ -43,6 +43,10 @@
     "rcm/user": "1.*",
     "rcm/user-ui": "1.*"
   },
+  "undocumented-require": {
+    "NOTE": "(03/2016) The dependencies for this package are not well defined at this time",
+    "jqueryui": "??"
+  },
   "require-dev": {
     "phpunit/phpunit": "~4.0",
     "squizlabs/php_codesniffer": "2.*"
