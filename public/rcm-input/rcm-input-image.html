@@ -1,10 +1,11 @@
 <div class="rcm-input image">
     <img class="img-responsive img-thumbnail" ng-src="{{viewValue}}"/>
     <input class="form-control"
-            id="{uid}"
-            ng-model="viewValue"
-            placeholder="Image Url"
-            type="text"
+           id="{uid}"
+           ng-change="onChange()"
+           ng-model="viewValue"
+           placeholder="Image Url"
+           type="text"
     />
     <button class="btn btn-default"
             ng-click="browse()"
