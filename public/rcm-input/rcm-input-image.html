@@ -1,0 +1,16 @@
+<div class="form-group rcm-input image">
+    <label for="{uid}">{{label}}</label>
+    <img class="img-responsive img-thumbnail" ng-src="{value}"/>
+    <input class="form-control"
+            id="{uid}"
+            ng-disabled="loading"
+            ng-model="value"
+            placeholder="Image Url"
+            type="url"
+    />
+    <button class="btn btn-default"
+            ng-click="browse()"
+            ng-disabled="loading"
+            type="button">Browse
+    </button>
+</div>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RCM Input Example</title>
+</head>
+<body>
+
+<!-- Image -->
+<div rcm-input-image
+     data-id="optionalUID"
+     data-filter="{optional: true, fileType: 'image'}"
+     data-value="//example.com/some/optional/file.type"
+>
+    rcm-input-image-directive
+</div>
+
+<input rcm-input-image
+       data-id="optionalUID"
+       data-filter="{optional: true, fileType: 'image'}"
+       ng-model="myValueModel"
+/>
+
+<!-- Url -->
+<div rcm-input-link-url
+     data-id="optionalUID"
+     data-value="/some/optional/page"
+     data-source-url="/some/optional/data/source/url"
+>
+    rcm-input-link-url-directive
+</div>
+
+
+</body>
+</html>
+
+
+<form class="simple ui-dialog-content ui-widget-content"
+      id="ui-id-1"
+      style="display: block; width: auto; min-height: 26px; max-height: none; height: auto;">
+    <p class="dialogElement imageInput"
+       data-dialogelementname="b37aa733-6b7e-44ea-85a5-f98fa0a9f483"
+       style="overflow-y:hidden">
+        <label for="b37aa733-6b7e-44ea-85a5-f98fa0a9f483">Image</label>
+        <br>
+        <img style="max-width:120px !important;max-height:170px !important;float:left;margin-right:10px"
+             src="https://reliv-static.s3-us-west-2.amazonaws.com/art/WebStuff/Homepage/Redesign/DiscoverIcon-web.png"
+             onerror="this.src='/modules/rcm/images/no-image.png';">
+        <input
+                style="width:370px;margin-right:10px"
+                name="b37aa733-6b7e-44ea-85a5-f98fa0a9f483"
+                value="https://reliv-static.s3-us-west-2.amazonaws.com/art/WebStuff/Homepage/Redesign/DiscoverIcon-web.png">
+        <button type="button"
+                class="image-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                role="button"
+                aria-disabled="false">
+            <span class="ui-button-text">Browse</span>
+        </button>
+    </p>
+
+    <p class="dialogElement"
+       data-dialogelementname="5f899a1c-15d1-424a-ba5e-bb4e75116e27">
+        <label for="5f899a1c-15d1-424a-ba5e-bb4e75116e27">Link Url</label><br>
+        <span role="status"
+              aria-live="polite"
+              class="ui-helper-hidden-accessible"></span>
+        <input type="text"
+               name="5f899a1c-15d1-424a-ba5e-bb4e75116e27"
+               value="/lunarich"
+               class="ui-autocomplete-input"
+               autocomplete="off">
+    </p>
+</form>
