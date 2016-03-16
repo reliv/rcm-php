@@ -39,11 +39,12 @@ angular.module('rcmInput').directive(
                     element.find('input').autocomplete(
                         {
                             source: pageUrls,
-                            select: function (value) {
-
+                            select: function (event) {
                                 $timeout(
                                     function () {
-                                        element.find('input').trigger('input');
+                                        //element.find('input').trigger('input');
+                                        $scope.viewValue = event.target.value;
+                                        ngModelCtrl.$setViewValue($scope.viewValue);
                                     },
                                     0
                                 );
