@@ -1,21 +1,4 @@
 <?php
-/**
- * Rcm Plugin Manager
- *
- * This file contains the class definition for the Plugin Manager
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace Rcm\Service;
 
@@ -23,7 +6,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Rcm\Entity\PluginInstance;
 use Rcm\Exception\InvalidPluginException;
 use Rcm\Exception\PluginInstanceNotFoundException;
-use Rcm\Exception\PluginReturnedResponseException;
 use Rcm\Exception\RuntimeException;
 use Rcm\Http\Response;
 use Rcm\Plugin\PluginInterface;
@@ -92,7 +74,7 @@ class PluginManager
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        Array                   $config,
+        array                   $config,
         ServiceLocatorInterface $serviceManager,
         PhpRenderer $renderer,
         RequestInterface $request,

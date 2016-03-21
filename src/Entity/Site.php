@@ -1,22 +1,5 @@
 <?php
-/**
- * Site Information Entity
- *
- * This is a Doctrine 2 definition file for Site info.  This file
- * is used for any module that needs to know site information.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -309,6 +292,14 @@ class Site implements ApiInterface
         }
     }
 
+    /**
+     * getContainerClone
+     *
+     * @param ContainerInterface $original
+     * @param array              $siteWideIdsToChange
+     *
+     * @return null|ContainerInterface
+     */
     protected function getContainerClone(ContainerInterface $original, $siteWideIdsToChange)
     {
         $clonedContainer = clone $original;

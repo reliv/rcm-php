@@ -1,21 +1,5 @@
 <?php
-/**
- * Rcm Layout Manager
- *
- * This file contains the class definition for the Layout Manager
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Service;
 
 use Rcm\Entity\Site;
@@ -42,13 +26,15 @@ use Rcm\Exception\RuntimeException;
  */
 class LayoutManager
 {
-    /** @var Array */
+    /**
+     * @var array
+     */
     protected $config;
 
     /**
      * Constructor
      *
-     * @param Array $config      Config Array
+     * @param array $config      Config Array
      */
     public function __construct($config)
     {

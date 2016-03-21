@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Rcm\Logger;
 
 use Doctrine\DBAL\Logging\SQLLogger;
@@ -29,9 +28,21 @@ use Doctrine\DBAL\Logging\SQLLogger;
  */
 class DoctrineQueryLoggerWithTime implements SQLLogger
 {
+    /**
+     * @var int
+     */
     protected $queryCount;
+    /**
+     * @var float
+     */
     protected $lastStartTime;
+    /**
+     * @var string
+     */
     protected $lastSql;
+    /**
+     * @var bool
+     */
     protected $showTimeAndCount = true;
 
     /**

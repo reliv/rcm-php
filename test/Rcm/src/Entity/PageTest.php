@@ -101,7 +101,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetPageTypeTooLong()
     {
-        $pageType = 'tooLong';
+        $pageType = 'tooLongtooLongtooLongtooLongtooLong';
 
         $this->page->setPageType($pageType);
     }
@@ -531,4 +531,3 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['parent'], $array['parent']);
     }
 }
- 

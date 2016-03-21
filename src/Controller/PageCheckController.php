@@ -1,21 +1,5 @@
 <?php
-/**
- * Page Check API Controller
- *
- * This file contains the Page Check controller used for the application.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Controller;
 
 use Zend\Mvc\Controller\AbstractRestfulController;

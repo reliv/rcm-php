@@ -1,21 +1,4 @@
 <?php
-/**
- * Container Repository Interface
- *
- * This file contains the interface used by container repositories
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 
 namespace Rcm\Repository;
 
@@ -24,9 +7,7 @@ namespace Rcm\Repository;
  *
  * Container Repository Interface.  Used by container repositories.
  *
- * PHP version 5.3
- *
- * LICENSE: BSD
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm

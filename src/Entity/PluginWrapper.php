@@ -1,21 +1,5 @@
 <?php
-/**
- * Plugin Wrapper Entity
- *
- * Plugin Wrapper Entity.  Used for positioning within containers.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

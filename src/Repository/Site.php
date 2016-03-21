@@ -1,23 +1,5 @@
 <?php
 
-/**
- * Site Repository
- *
- * This file contains the page repository
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
-
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -29,11 +11,7 @@ use Rcm\Exception\SiteNotFoundException;
 /**
  * Site Repository
  *
- * Page Repository.  Used to get custom page results from the DB
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm
@@ -45,6 +23,9 @@ use Rcm\Exception\SiteNotFoundException;
  */
 class Site extends EntityRepository
 {
+    /**
+     * @var array
+     */
     protected $activeSiteIdCache = [];
 
     /**
@@ -146,6 +127,15 @@ class Site extends EntityRepository
         return false;
     }
 
+    /**
+     * getSiteWidePluginsList
+     *
+     * @param int $siteId
+     *
+     * @return array
+     * @throws NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function getSiteWidePluginsList($siteId)
     {
         $queryBuilder = $this->_em->createQueryBuilder();

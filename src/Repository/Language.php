@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -9,8 +8,6 @@ use Rcm\Exception\LanguageNotFoundException;
 
 /**
  * Class Language
- *
- * LongDescHere
  *
  * PHP version 5
  *
@@ -25,6 +22,9 @@ use Rcm\Exception\LanguageNotFoundException;
 class Language extends EntityRepository
 {
 
+    /**
+     * @var array
+     */
     protected $validFormats
         = [
             'iso639_1',
@@ -32,6 +32,15 @@ class Language extends EntityRepository
             'iso639_2t',
         ];
 
+    /**
+     * getLanguageByString
+     *
+     * @param string $code
+     * @param string $format
+     * @param null   $default
+     *
+     * @return null|object
+     */
     public function getLanguageByString(
         $code,
         $format = 'iso639_2t',

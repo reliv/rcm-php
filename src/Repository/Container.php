@@ -1,30 +1,10 @@
 <?php
 
-/**
- * Container Repository
- *
- * This file contains the container repository
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
-
 namespace Rcm\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Rcm\Entity\Container as ContainerEntity;
-use Rcm\Entity\Revision;
 use Rcm\Entity\Site as SiteEntity;
 
 /**
@@ -32,9 +12,7 @@ use Rcm\Entity\Site as SiteEntity;
  *
  * Container Repository.  Used to get custom container results from the DB
  *
- * PHP version 5.3
- *
- * LICENSE: BSD
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm

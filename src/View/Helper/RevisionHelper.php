@@ -1,21 +1,5 @@
 <?php
-/**
- * Rcm Container View Helper
- *
- * This file contains the class definition for the Rcm Container View Helper
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\View\Helper;
 
 use Rcm\Entity\Page;
@@ -38,11 +22,24 @@ use Zend\View\Helper\AbstractHelper;
  */
 class RevisionHelper extends AbstractHelper
 {
+    /**
+     * __invoke
+     *
+     * @return $this
+     */
     public function __invoke()
     {
         return $this;
     }
 
+    /**
+     * getRevisionType
+     *
+     * @param Page           $page
+     * @param RevisionEntity $revision
+     *
+     * @return string
+     */
     public function getRevisionType(Page $page, RevisionEntity $revision)
     {
         $publishedId = $page->getPublishedRevision();
@@ -57,6 +54,14 @@ class RevisionHelper extends AbstractHelper
         return 'Draft';
     }
 
+    /**
+     * getRevisionLink
+     *
+     * @param Page           $page
+     * @param RevisionEntity $revision
+     *
+     * @return string
+     */
     public function getRevisionLink(Page $page, RevisionEntity $revision)
     {
         $view = $this->getView();

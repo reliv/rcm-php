@@ -1,19 +1,4 @@
 <?php
-/**
- * CMS Route
- *
- * This route will match CMS Urls to the DB pages in the CMS
- *
- * PHP version 5.5
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <shafer_w2002@yahoo.com>
- * @copyright 2015 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 
 namespace Rcm\Route;
 
@@ -30,7 +15,7 @@ use Zend\Stdlib\RequestInterface;
  *
  * This route will match CMS Urls to the DB pages in the CMS
  *
- * PHP version 5.5
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm
@@ -43,20 +28,49 @@ use Zend\Stdlib\RequestInterface;
 
 class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
 {
+    /**
+     * @var string
+     */
     protected $controller = 'Rcm\Controller\CmsController';
+    /**
+     * @var string
+     */
     protected $action = 'index';
-
+    /**
+     * @var
+     */
     protected $pageRepo;
+    /**
+     * @var array
+     */
     protected $assembledParams = array();
+    /**
+     * @var null
+     */
     protected $routePluginManager = null;
+    /**
+     * @var array
+     */
     protected $options = array();
 
+    /**
+     * Cms constructor.
+     *
+     * @param $options
+     */
     public function __construct($options)
     {
         $this->options = $options;
     }
 
-
+    /**
+     * match
+     *
+     * @param RequestInterface $request
+     * @param int              $pathOffset
+     *
+     * @return bool|null|RouteMatch
+     */
     public function match(RequestInterface $request, $pathOffset = 0)
     {
         if (!$request instanceof Request) {
@@ -93,6 +107,13 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         return new RouteMatch($cms_params, strlen($pageUrl));
     }
 
+    /**
+     * parseUrl
+     *
+     * @param $url
+     *
+     * @return array
+     */
     protected function parseUrl($url)
     {
         $parsed = array(
@@ -123,6 +144,13 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         );
     }
 
+    /**
+     * getController
+     *
+     * @param $type
+     *
+     * @return string
+     */
     protected function getController($type)
     {
         $options = $this->getOptions();
@@ -170,6 +198,13 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         );
     }
 
+    /**
+     * getAction
+     *
+     * @param $type
+     *
+     * @return string
+     */
     protected function getAction($type)
     {
         $options = $this->getOptions();
@@ -187,6 +222,11 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         return $this->action;
     }
 
+    /**
+     * getPageType
+     *
+     * @return string
+     */
     protected function getPageType()
     {
         $options = $this->getOptions();
@@ -198,6 +238,14 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         }
     }
 
+    /**
+     * assemble
+     *
+     * @param array $params
+     * @param array $options
+     *
+     * @return string
+     */
     public function assemble(array $params = array(), array $options = array())
     {
         $options = $this->getOptions();
@@ -215,6 +263,11 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         return $path;
     }
 
+    /**
+     * getAssembledParams
+     *
+     * @return array
+     */
     public function getAssembledParams()
     {
         return $this->assembledParams;
@@ -263,6 +316,11 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         return $this->routePluginManager->getServiceLocator();
     }
 
+    /**
+     * getOptions
+     *
+     * @return array
+     */
     protected function getOptions()
     {
         return $this->options;

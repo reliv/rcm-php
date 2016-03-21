@@ -1,17 +1,4 @@
 <?php
-/**
- * InstanceConfigApiController.php
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   Rcm\Controller\Plugin
- * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
 
 namespace Rcm\Controller;
 
@@ -34,6 +21,13 @@ use Zend\View\Model\JsonModel;
  */
 class InstanceConfigApiController extends AbstractRestfulController
 {
+    /**
+     * get
+     *
+     * @param mixed $instanceId
+     *
+     * @return array|\Zend\Stdlib\ResponseInterface|JsonModel
+     */
     public function get($instanceId)
     {
         $siteId = $this->getServiceLocator()->get('Rcm\Service\CurrentSite')

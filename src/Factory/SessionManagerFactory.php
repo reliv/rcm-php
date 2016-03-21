@@ -1,21 +1,5 @@
 <?php
-/**
- * Service Factory for the Session Manager
- *
- * This file contains the factory needed to generate a Session Manager.
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
+
 namespace Rcm\Factory;
 
 use DoctrineModule\Cache\ZendStorageCache;

@@ -1,19 +1,5 @@
 <?php
-/**
- * PageSearchApiController
- *
- * Search through pages and return URL
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   Rcm\Controller
- * @author    author Brian Janish <bjanish@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: GIT:
- * @link      https://github.com/reliv
- */
+
 namespace Rcm\Controller;
 
 use Zend\Http\Response;
@@ -56,10 +42,10 @@ class PageSearchApiController extends AbstractRestfulController
 
         $results = $entityMgr->createQuery(
             '
-                        select page.name, page.pageTitle, page.pageType from Rcm\\Entity\\Page page
-                        join page.site site
-                        where (page.name like :query or page.pageTitle like :query) and site.siteId like :siteId
-                    '
+                select page.name, page.pageTitle, page.pageType from Rcm\\Entity\\Page page
+                join page.site site
+                where (page.name like :query or page.pageTitle like :query) and site.siteId like :siteId
+            '
         )->setParameter('query', '%' . $query . '%')
             ->setParameter('siteId', '%' . $siteId . '%')
             ->getResult();

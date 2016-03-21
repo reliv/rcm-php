@@ -21,6 +21,9 @@ use Zend\View\Helper\AbstractHelper;
  */
 class RcmHtmlIncludes extends AbstractHelper
 {
+    /**
+     * @var bool
+     */
     protected $done = false;
 
     /**

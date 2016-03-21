@@ -1,12 +1,9 @@
 <?php
 
-
 namespace Rcm\Service;
 
 /**
  * Class DisplayCountService
- *
- * LongDescHere
  *
  * PHP version 5
  *

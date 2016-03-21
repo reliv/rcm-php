@@ -1,21 +1,5 @@
 <?php
-/**
- * Service Helper for the current site
- *
- * This file contains the Service Helper for the current site
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
+
 namespace Rcm\Factory;
 
 use Rcm\Entity\Site;

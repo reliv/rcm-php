@@ -1,21 +1,4 @@
 <?php
-/**
- * Rcm Main Layout Validator
- *
- * This file contains the class definition for the Main Layout Validator
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace Rcm\Validator;
 
@@ -40,17 +23,27 @@ use Zend\Validator\AbstractValidator;
  */
 class MainLayout extends AbstractValidator
 {
+    /**
+     * MAIN_LAYOUT
+     */
     const MAIN_LAYOUT = 'pageTemplate';
 
+    /**
+     * @var array
+     */
     protected $messageTemplates
         = [
             self::MAIN_LAYOUT => "'%value%' is not a valid layout."
         ];
 
-    /** @var \Rcm\Entity\Site */
+    /**
+     * @var \Rcm\Entity\Site
+     */
     protected $currentSite;
 
-    /** @var \Rcm\Service\LayoutManager */
+    /**
+     * @var \Rcm\Service\LayoutManager
+     */
     protected $layoutManager;
 
     /**

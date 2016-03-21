@@ -1,22 +1,5 @@
 <?php
-/**
- * Page Information Entity
- *
- * This is a Doctrine 2 definition file for Page info.  This file
- * is used for any module that needs to know page information.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -137,9 +120,9 @@ class Page extends ContainerAbstract implements ApiInterface
     protected $stagedRevision;
 
     /**
-     * @var string Page Type n=Normal, t=Template, z=System
+     * @var string Page Type n=Normal, t=Template, z=System, deleted-{originalPageType}
      *
-     * @ORM\Column(type="string", length=1)
+     * @ORM\Column(type="string", length=32)
      */
     protected $pageType = 'n';
 
@@ -286,9 +269,9 @@ class Page extends ContainerAbstract implements ApiInterface
      */
     public function setPageType($type)
     {
-        if (strlen($type) != 1) {
+        if (strlen($type) > 32) {
             throw new InvalidArgumentException(
-                'Page type can not exceed 1 character'
+                'Page type can not exceed 32 character'
             );
         }
 

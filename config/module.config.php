@@ -5,22 +5,112 @@
  *
  * This file contains all the configuration for the Module as defined by ZF2.
  * See the docs for ZF2 for more information.
- *
- * PHP version 5.3
- *
- * LICENSE: No License yet
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
  */
-
 return [
+    /* asset_manager */
+    'asset_manager' => [
+        'resolver_configs' => [
+            'aliases' => [
+                'modules/rcm/' => __DIR__ . '/../public/',
+                // Global JS path for dependencies
+                'vendor/' => __DIR__ . '/../../../bower-asset/',
+            ],
+            'collections' => [
+                /**
+                 * Core JS and css
+                 * (core features)
+                 */
+                'modules/rcm/rcm.js' => [
+                    'vendor/rcm-js-lib/dist/rcm-js-lib.min.js',
+                    'vendor/rcm-loading/dist/rcm-loading.min.js',
+                    'vendor/rcm-loading/dist/angular-rcm-loading.min.js',
+                    'vendor/rcm-loading/dist/jquery-loader.min.js',
 
+                    'modules/rcm/core/rcm.js',
+                    'modules/rcm/core/rcm-api.js',
+                    'modules/rcm/core/rcm-form-double-submit-protect.js',
+                    'modules/rcm/core/rcm-bootstrap-alert-confirm.js',
+                    'modules/rcm/core/rcm-popout-window.js',
+                    'vendor/angular-utils-pagination/dirPagination.js'
+                ],
+                'modules/rcm/rcm.css' => [
+                    'modules/rcm/core/rcm.css',
+                ],
+                /**
+                 * Extended JS and css
+                 * (features for modules and lower level services)
+                 */
+                'modules/rcm/modules.js' => [],
+                'modules/rcm/modules.css' => [],
+            ],
+        ],
+    ],
+    /* controller_plugins */
+    'controller_plugins' => [
+        'factories' => [
+            'shouldShowRevisions'
+            => 'Rcm\Factory\ShouldShowRevisionsPluginFactory',
+            'rcmIsAllowed' =>
+                'Rcm\Factory\RcmIsAllowedFactory',
+            'rcmIsSiteAdmin' =>
+                'Rcm\Factory\IsSiteAdminPluginFactory',
+            'rcmIsPageAllowed' =>
+                '\Rcm\Factory\RcmIsPageAllowedPluginFactory',
+        ],
+        'invokables' => [
+            'redirectToPage'
+            => 'Rcm\Controller\Plugin\RedirectToPage',
+            'urlToPage'
+            => 'Rcm\Controller\Plugin\UrlToPage',
+        ],
+    ],
+    /* controllers */
+    'controllers' => [
+        'abstract_factories' => [
+            'Rcm\Factory\AbstractPluginControllerFactory'
+        ],
+        'invokables' => [
+            'Rcm\Controller\PageCheckController'
+            => 'Rcm\Controller\PageCheckController',
+            'Rcm\Controller\InstanceConfigApiController'
+            => 'Rcm\Controller\InstanceConfigApiController',
+            'Rcm\Controller\PageSearchApiController'
+            => 'Rcm\Controller\PageSearchApiController',
+            'Rcm\Controller\NewPluginInstanceApiController'
+            => 'Rcm\Controller\NewPluginInstanceApiController',
+            'Rcm\Controller\CacheController' => '\Rcm\Controller\CacheController'
+        ],
+        'factories' => [
+            'Rcm\Controller\IndexController' => 'Rcm\Factory\IndexControllerFactory',
+            'Rcm\Controller\CmsController' => 'Rcm\Factory\CmsControllerFactory',
+        ],
+    ],
+    /* doctrine */
+    'doctrine' => [
+        'driver' => [
+
+            'relivContentManager' => [
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => [
+                    __DIR__ . '/../src/Entity'
+                ]
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    'Rcm' => 'relivContentManager'
+                ]
+            ]
+        ],
+        'configuration' => [
+            'orm_default' => [
+                'metadata_cache' => 'doctrine_cache',
+                'query_cache' => 'doctrine_cache',
+                'result_cache' => 'doctrine_cache',
+            ]
+        ],
+    ],
+    /* Rcm Config */
     'Rcm' => [
         'defaultDomain' => null,
         /**
@@ -166,6 +256,14 @@ return [
             ],
         ]
     ],
+    /* rcmCache */
+    'rcmCache' => [
+        'adapter' => 'Memory',
+        'plugins' => [],
+        'options' => [ //'namespace' => 'RcmCache'
+        ]
+    ],
+    /* RcmUser Config */
     'RcmUser' => [
         'Acl\Config' => [
             'ResourceProviders' => [
@@ -173,14 +271,13 @@ return [
             ],
         ],
     ],
-    'view_manager' => [
-        'template_path_stack' => [
-            __DIR__ . '/../view',
-        ],
-        'strategies' => [
-            'ViewJsonStrategy',
+    /* route_manager */
+    'route_manager' => [
+        'invokables' => [
+            'Rcm\Route\Cms' => 'Rcm\Route\Cms'
         ],
     ],
+    /* router */
     'router' => [
         'routes' => [
             'api-admin-instance-configs' => [
@@ -192,10 +289,49 @@ return [
                     ]
                 ],
             ],
+            /* @deprecated */
             'contentManager' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
                     'route' => '/rcm[/:page][/:revision]',
+                    'defaults' => [
+                        'controller' => 'Rcm\Controller\IndexController',
+                        'action' => 'index',
+                    ]
+                ],
+            ],
+            /* CmsRoute Example*/
+            //'rcmCmsPageRevisionRoute' => [
+            //    'type' => 'Rcm\Route\Cms',
+            //    'options' => [
+            //        'route' => '/rcm[/:page][/:revision]',
+            //        // optional: Defaults to 'n' if left blank
+            //        'type' => 'n',
+            //        'defaults' => [
+            //            // optional: Defaults to Rcm\Controller\CmsController if blank
+            //            'controller' => 'Rcm\Controller\CmsController',
+            //            // optional: Defaults to indexAction if blank
+            //            'action' => 'index',
+            //        ],
+            //    ],
+            //],
+            'contentManagerWithPageType' => [
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => [
+                    'route' => '/rcm/:pageType/:page[/:revision]',
+                    'constraints' => [
+                        'pageType' => '[a-z]',
+                    ],
+                    'defaults' => [
+                        'controller' => 'Rcm\Controller\IndexController',
+                        'action' => 'index',
+                    ]
+                ],
+            ],
+            'blog' => [
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => [
+                    'route' => '/blog[/:page]',
                     'defaults' => [
                         'controller' => 'Rcm\Controller\IndexController',
                         'action' => 'index',
@@ -210,19 +346,6 @@ return [
                         'controller' => 'Rcm\Controller\NewPluginInstanceApiController',
                         'action' => 'getNewInstance',
                     ],
-                ],
-            ],
-            'contentManagerWithPageType' => [
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => [
-                    'route' => '/rcm/:pageType/:page[/:revision]',
-                    'constraints' => [
-                        'pageType' => '[a-z]',
-                    ],
-                    'defaults' => [
-                        'controller' => 'Rcm\Controller\IndexController',
-                        'action' => 'index',
-                    ]
                 ],
             ],
             'rcm-page-title-search' => [
@@ -255,16 +378,6 @@ return [
                     ]
                 ],
             ],
-            'blog' => [
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => [
-                    'route' => '/blog[/:page]',
-                    'defaults' => [
-                        'controller' => 'Rcm\Controller\IndexController',
-                        'action' => 'index',
-                    ]
-                ],
-            ],
             'Rcm\Api\Page\Check' => [
                 'type' => 'Segment',
                 'options' => [
@@ -287,36 +400,7 @@ return [
 
         ],
     ],
-    'doctrine' => [
-        'driver' => [
-
-            'relivContentManager' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache' => 'array',
-                'paths' => [
-                    __DIR__ . '/../src/Entity'
-                ]
-            ],
-            'orm_default' => [
-                'drivers' => [
-                    'Rcm' => 'relivContentManager'
-                ]
-            ]
-        ],
-        'configuration' => [
-            'orm_default' => [
-                'metadata_cache' => 'doctrine_cache',
-                'query_cache' => 'doctrine_cache',
-                'result_cache' => 'doctrine_cache',
-            ]
-        ],
-    ],
-    'rcmCache' => [
-        'adapter' => 'Memory',
-        'plugins' => [],
-        'options' => [ //'namespace' => 'RcmCache'
-        ]
-    ],
+    /* service_manager */
     'service_manager' => [
         'factories' => [
             'doctrine.cache.doctrine_cache'
@@ -371,40 +455,14 @@ return [
             'rcmLogger' => 'Rcm\Service\Logger',
         ]
     ],
-
-    'route_manager' => [
-        'invokables' => [
-            'Rcm\Route\Cms' => 'Rcm\Route\Cms'
-        ],
-    ],
-
-    'controllers' => [
-        'abstract_factories' => [
-            'Rcm\Factory\AbstractPluginControllerFactory'
-        ],
-        'invokables' => [
-            'Rcm\Controller\PageCheckController'
-            => 'Rcm\Controller\PageCheckController',
-            'Rcm\Controller\InstanceConfigApiController'
-            => 'Rcm\Controller\InstanceConfigApiController',
-            'Rcm\Controller\PageSearchApiController'
-            => 'Rcm\Controller\PageSearchApiController',
-            'Rcm\Controller\NewPluginInstanceApiController'
-            => 'Rcm\Controller\NewPluginInstanceApiController',
-            'Rcm\Controller\CacheController' => '\Rcm\Controller\CacheController'
-        ],
-        'factories' => [
-            'Rcm\Controller\IndexController' => 'Rcm\Factory\IndexControllerFactory',
-            'Rcm\Controller\CmsController' => 'Rcm\Factory\CmsControllerFactory',
-        ],
-    ],
+    /* view_helpers */
     'view_helpers' => [
         'factories' => [
             'rcmContainer'
             => 'Rcm\Factory\ContainerViewHelperFactory',
             'rcmTextEdit' => 'Rcm\Factory\TextEditFactory',
             'rcmRichEdit' => 'Rcm\Factory\RichEditFactory',
-            'rcmHtmlIncludes'  => 'Rcm\Factory\RcmHtmlIncludesHelperFactory',
+            'rcmHtmlIncludes' => 'Rcm\Factory\RcmHtmlIncludesHelperFactory',
         ],
         'invokables' => [
             /* <OVER-RIDE ZF2 HELPERS> */
@@ -424,59 +482,13 @@ return [
 
         ],
     ],
-    'controller_plugins' => [
-        'factories' => [
-            'shouldShowRevisions'
-            => 'Rcm\Factory\ShouldShowRevisionsPluginFactory',
-            'rcmIsAllowed' =>
-                'Rcm\Factory\RcmIsAllowedFactory',
-            'rcmIsSiteAdmin' =>
-                'Rcm\Factory\IsSiteAdminPluginFactory',
-            'rcmIsPageAllowed' =>
-                '\Rcm\Factory\RcmIsPageAllowedPluginFactory',
+    /* view_manager */
+    'view_manager' => [
+        'template_path_stack' => [
+            __DIR__ . '/../view',
         ],
-        'invokables' => [
-            'redirectToPage'
-            => 'Rcm\Controller\Plugin\RedirectToPage',
-            'urlToPage'
-            => 'Rcm\Controller\Plugin\UrlToPage',
-        ],
-    ],
-    'asset_manager' => [
-        'resolver_configs' => [
-            'aliases' => [
-                'modules/rcm/' => __DIR__ . '/../public/',
-                // Global JS path for dependencies
-                'vendor/' => __DIR__ . '/../../../bower-asset/',
-            ],
-            'collections' => [
-                /**
-                 * Core JS and css
-                 * (core features)
-                 */
-                'modules/rcm/rcm.js' => [
-                    'vendor/rcm-js-lib/dist/rcm-js-lib.min.js',
-                    'vendor/rcm-loading/dist/rcm-loading.min.js',
-                    'vendor/rcm-loading/dist/angular-rcm-loading.min.js',
-                    'vendor/rcm-loading/dist/jquery-loader.min.js',
-
-                    'modules/rcm/core/rcm.js',
-                    'modules/rcm/core/rcm-api.js',
-                    'modules/rcm/core/rcm-form-double-submit-protect.js',
-                    'modules/rcm/core/rcm-bootstrap-alert-confirm.js',
-                    'modules/rcm/core/rcm-popout-window.js',
-                    'vendor/angular-utils-pagination/dirPagination.js'
-                ],
-                'modules/rcm/rcm.css' => [
-                    'modules/rcm/core/rcm.css',
-                ],
-                /**
-                 * Extended JS and css
-                 * (features for modules and lower level services)
-                 */
-                'modules/rcm/modules.js' => [],
-                'modules/rcm/modules.css' => [],
-            ],
+        'strategies' => [
+            'ViewJsonStrategy',
         ],
     ],
 ];

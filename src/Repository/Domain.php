@@ -1,30 +1,11 @@
 <?php
 
-/**
- * Domain Repository
- *
- * This file contains the domain repository
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      https://github.com/reliv
- */
-
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
-use Rcm\Entity\Language as LanguageEntity;
 use Rcm\Exception\DomainNotFoundException;
 use Rcm\Exception\DuplicateDomainException;
 
@@ -33,9 +14,7 @@ use Rcm\Exception\DuplicateDomainException;
  *
  * Domain Repository.  Used to get domains for the CMS
  *
- * PHP version 5.3
- *
- * LICENSE: BSD
+ * PHP version 5
  *
  * @category  Reliv
  * @package   Rcm
@@ -116,8 +95,8 @@ class Domain extends EntityRepository
     /**
      * getDomainByName
      *
-     * @param      $domainName
-     * @param null $default
+     * @param string $domainName
+     * @param null   $default
      *
      * @return null|object
      */
@@ -140,7 +119,7 @@ class Domain extends EntityRepository
      * Create Domain
      *
      * @param string $domainName
-     * @param mixed $primaryDomain
+     * @param mixed  $primaryDomain
      *
      * @return \Rcm\Entity\Domain
      */
