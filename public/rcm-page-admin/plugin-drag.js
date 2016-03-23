@@ -279,10 +279,10 @@ var RcmPluginDrag = {
 
             $(newItem).replaceWith($(newDiv));
 
-            if (pluginData.isSiteWide && !isPageContainer) {
-                // We were removing the plugin, but now we just warn them
-                $().alert(badMsg);
-            }
+            //if (pluginData.isSiteWide && !isPageContainer) {
+            //    // We were removing the plugin, but now we just warn them
+            //    $().alert(badMsg);
+            //}
 
         } else {
             //Existing plugin received
@@ -290,11 +290,12 @@ var RcmPluginDrag = {
 
             pluginData = RcmPluginDrag.getPluginContainerInfo(plugin);
 
-            if (pluginData.isSiteWide && !isPageContainer) {
-                $(ui.sender).sortable('cancel');
-                $().alert(badMsg);
-                return;
-            }
+            //if (pluginData.isSiteWide && !isPageContainer) {
+            //    $(ui.sender).sortable('cancel');
+            //    // We were removing the plugin, but now we just warn them
+            //    $().alert(badMsg);
+            //
+            //}
         }
 
         var page = RcmAdminService.getPage();
