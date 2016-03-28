@@ -118,10 +118,9 @@ class EventWrapper
         }
 
         /** @var \Rcm\EventListener\EventFinishListener $eventFinishListener */
-        $eventFinishListener
-            = $this->serviceLocator->get(
-            'Rcm\EventListener\EventFinishListener'
-        );
+        $eventFinishListener = $this->serviceLocator->get(
+                'Rcm\EventListener\EventFinishListener'
+            );
 
         $return = $eventFinishListener->processRcmResponses($event);
 
@@ -152,7 +151,6 @@ class EventWrapper
         }
 
         return null;
-
     }
 
     /**

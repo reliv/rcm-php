@@ -232,7 +232,9 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
 
         $return = $resourceProvider->getResources();
 
-        $this->assertEquals($expected, $return);
+        foreach ($expected as $key => $expect) {
+            $this->assertTrue(array_key_exists($key, $return));
+        }
     }
 
     /**
