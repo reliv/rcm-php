@@ -120,8 +120,8 @@ class EventWrapper
         /** @var \Rcm\EventListener\EventFinishListener $eventFinishListener */
         $eventFinishListener
             = $this->serviceLocator->get(
-                'Rcm\EventListener\EventFinishListener'
-            );
+            'Rcm\EventListener\EventFinishListener'
+        );
 
         $return = $eventFinishListener->processRcmResponses($event);
 
@@ -167,7 +167,9 @@ class EventWrapper
         $application = $event->getApplication();
         $sm = $application->getServiceManager();
         /** @var \RcmUser\Service\RcmUserService $rcmUserService */
-        $rcmUserService = $this->serviceLocator->get('RcmUser\Service\RcmUserService');
+        $rcmUserService = $this->serviceLocator->get(
+            'RcmUser\Service\RcmUserService'
+        );
 
         /** @var $request \Zend\Http\Request */
         $request = $sm->get('request');
