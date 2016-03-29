@@ -3,7 +3,6 @@
 namespace Rcm\Controller;
 
 use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
 /**

@@ -3,7 +3,6 @@
 namespace Rcm\Controller;
 
 use Rcm\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Helper\HeadLink;
 use Zend\View\Helper\HeadScript;
 

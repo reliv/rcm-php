@@ -3,7 +3,6 @@
 namespace Rcm\Controller;
 
 use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 /**

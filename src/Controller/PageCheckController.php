@@ -2,8 +2,6 @@
 
 namespace Rcm\Controller;
 
-use Zend\Mvc\Controller\AbstractRestfulController;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -22,7 +20,7 @@ use Zend\View\Model\JsonModel;
  * @version   Release: 1.0
  * @link      http://github.com/reliv
  */
-class PageCheckController extends AbstractRestfulController implements ServiceLocatorAwareInterface
+class PageCheckController extends AbstractRestfulController
 {
     /**
      * Check the page is valid and return a json response
