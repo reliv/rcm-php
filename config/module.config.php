@@ -69,16 +69,27 @@ return [
         'abstract_factories' => [
             'Rcm\Factory\AbstractPluginControllerFactory'
         ],
-        'invokables' => [
-            'Rcm\Controller\PageCheckController'
-            => 'Rcm\Controller\PageCheckController',
-            'Rcm\Controller\InstanceConfigApiController'
-            => 'Rcm\Controller\InstanceConfigApiController',
-            'Rcm\Controller\PageSearchApiController'
-            => 'Rcm\Controller\PageSearchApiController',
-            'Rcm\Controller\NewPluginInstanceApiController'
-            => 'Rcm\Controller\NewPluginInstanceApiController',
-            'Rcm\Controller\CacheController' => '\Rcm\Controller\CacheController'
+        'config_factories' => [
+            'Rcm\Controller\CacheController' => [
+                'class' => '\Rcm\Controller\CacheController',
+                'arguments' => ['ServiceManager'],
+            ],
+            'Rcm\Controller\InstanceConfigApiController' => [
+                'class' => 'Rcm\Controller\InstanceConfigApiController',
+                'arguments' => ['ServiceManager'],
+            ],
+            'Rcm\Controller\NewPluginInstanceApiController' => [
+                'class' => 'Rcm\Controller\NewPluginInstanceApiController',
+                'arguments' => ['ServiceManager'],
+            ],
+            'Rcm\Controller\PageCheckController' => [
+                'class' => 'Rcm\Controller\PageCheckController',
+                'arguments' => ['ServiceManager'],
+            ],
+            'Rcm\Controller\PageSearchApiController' => [
+                'class' => 'Rcm\Controller\PageSearchApiController',
+                'arguments' => ['ServiceManager'],
+            ],
         ],
         'factories' => [
             'Rcm\Controller\IndexController' => 'Rcm\Factory\IndexControllerFactory',
@@ -88,7 +99,6 @@ return [
     /* doctrine */
     'doctrine' => [
         'driver' => [
-
             'relivContentManager' => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'cache' => 'array',

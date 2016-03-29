@@ -118,10 +118,9 @@ class EventWrapper
         }
 
         /** @var \Rcm\EventListener\EventFinishListener $eventFinishListener */
-        $eventFinishListener
-            = $this->serviceLocator->get(
-                'Rcm\EventListener\EventFinishListener'
-            );
+        $eventFinishListener = $this->serviceLocator->get(
+            'Rcm\EventListener\EventFinishListener'
+        );
 
         $return = $eventFinishListener->processRcmResponses($event);
 
@@ -152,7 +151,6 @@ class EventWrapper
         }
 
         return null;
-
     }
 
     /**
@@ -166,12 +164,17 @@ class EventWrapper
     {
         $application = $event->getApplication();
         $sm = $application->getServiceManager();
+        /** @var \RcmUser\Service\RcmUserService $rcmUserService */
+        $rcmUserService = $this->serviceLocator->get(
+            'RcmUser\Service\RcmUserService'
+        );
 
         /** @var $request \Zend\Http\Request */
         $request = $sm->get('request');
         $logout = (bool)$request->getQuery('logout', 0);
 
         if ($logout) {
+            $rcmUserService->clearIdentity();
             session_destroy();
             $request = explode('?', $_SERVER['REQUEST_URI']);
             header('Location: //' . $_SERVER['HTTP_HOST'] . $request[0]);

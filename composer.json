@@ -38,6 +38,7 @@
     "doctrine/doctrine-orm-module": "0.*",
     "zendframework/zendframework": "2.*",
     "rwoverdijk/assetmanager": "1.*",
+    "reliv/zf-config-factories": "3.*",
     "rcm/user": "1.*",
     "rcm/api-lib": "0.*",
     "fxp/composer-asset-plugin": ">=1.0.3",

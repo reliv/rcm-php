@@ -83,8 +83,12 @@ class IndexControllerFactoryTest extends \PHPUnit_Framework_TestCase
             'Rcm\Service\CurrentSite',
             $mockCurrentSite
         );
+        
+        $configInterface = $this->getMockBuilder('Zend\ServiceManager\ConfigInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $cm = new ControllerManager();
+        $cm = new ControllerManager($configInterface);
         $cm->setServiceLocator($serviceManager);
 
         $factory = new IndexControllerFactory();

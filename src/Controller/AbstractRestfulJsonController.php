@@ -4,6 +4,7 @@ namespace Rcm\Controller;
 
 use Rcm\View\Model\ApiJsonModel;
 use Zend\Mvc\Controller\AbstractRestfulController;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @deprecated Use Reliv\RcmApiLib controller
@@ -62,17 +63,16 @@ abstract class AbstractRestfulJsonController extends AbstractRestfulController
 
     /**
      * Override default actions as they do not return valid JsonModels
-     * @todo Implement after Zend Framework 2.4 is implemented
      *
      * @param $data
      *
      * @return ApiJsonModel
      *
+     */
     public function deleteList($data)
     {
         return $this->methodNotAllowed();
     }
-     */
 
     /**
      * Override default actions as they do not return valid JsonModels

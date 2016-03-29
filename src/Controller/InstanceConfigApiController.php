@@ -3,7 +3,7 @@
 namespace Rcm\Controller;
 
 use Rcm\Exception\PluginInstanceNotFoundException;
-use Zend\Mvc\Controller\AbstractRestfulController;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -40,6 +40,7 @@ class InstanceConfigApiController extends AbstractRestfulController
             );
         if (!$allowed) {
             $this->getResponse()->setStatusCode(401);
+
             return $this->getResponse();
         }
 
@@ -60,6 +61,7 @@ class InstanceConfigApiController extends AbstractRestfulController
         } else {
             $instanceConfig = $defaultInstanceCfg;
         }
+
         return new JsonModel(
             [
                 'instanceConfig' => $instanceConfig,

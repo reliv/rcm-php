@@ -92,8 +92,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
         );
 
         /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
-        $this->controller = new PageCheckController();
-        $this->controller->setServiceLocator($serviceManager);
+        $this->controller = new PageCheckController($serviceManager);
 
         $this->request = new Request();
         $this->request->setMethod('GET');
