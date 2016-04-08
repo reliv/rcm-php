@@ -219,6 +219,7 @@ class Site extends EntityRepository
     }
 
     /**
+     * @todo Fix Me
      * createNewSite
      *
      * @param null $siteId
@@ -234,8 +235,19 @@ class Site extends EntityRepository
             return new \Rcm\Entity\Site();
         }
 
-        // clone
+        return $this->copySiteById($siteId);
+    }
 
+    /**
+     * @todo Fix Me
+     * copySite
+     *
+     * @param $siteId
+     *
+     * @return SiteEntity
+     */
+    public function copySiteById($siteId)
+    {
         /** @var \Rcm\Entity\Site $site */
         $existingSite = $this->find($siteId);
 

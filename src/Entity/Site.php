@@ -279,7 +279,10 @@ class Site implements ApiInterface
         if (!empty($containers)) {
             /** @var \Rcm\Entity\Container $container */
             foreach ($containers as $container) {
-                $clonedContainer = $this->getContainerClone($container, $siteWideIdsToChange);
+                $clonedContainer = $this->getContainerClone(
+                    $container,
+                    $siteWideIdsToChange
+                );
 
                 if (!$clonedContainer) {
                     continue;
@@ -300,12 +303,13 @@ class Site implements ApiInterface
      *
      * @return null|ContainerInterface
      */
-    protected function getContainerClone(ContainerInterface $original, $siteWideIdsToChange)
-    {
+    protected function getContainerClone(
+        ContainerInterface $original,
+        $siteWideIdsToChange
+    ) {
         $clonedContainer = clone $original;
         $clonedContainer->setSite($this);
         $clonedContainer->setName($original->getName());
-
 
         $check = $original->getPublishedRevision();
 
@@ -433,6 +437,34 @@ class Site implements ApiInterface
     }
 
     /**
+     * getDomainId
+     *
+     * @return int|null
+     */
+    public function getDomainId()
+    {
+        if ($this->domain) {
+            return $this->domain->getDomainId();
+        }
+
+        return null;
+    }
+
+    /**
+     * getDomainName
+     *
+     * @return null|string
+     */
+    public function getDomainName()
+    {
+        if ($this->domain) {
+            return $this->domain->getDomainName();
+        }
+
+        return null;
+    }
+
+    /**
      * Add a domain to the site
      *
      * @param Domain $domain Domain object to add
@@ -452,6 +484,35 @@ class Site implements ApiInterface
     public function getLanguage()
     {
         return $this->language;
+    }
+
+
+    /**
+     * getDomainId
+     *
+     * @return int|null
+     */
+    public function getLanguageId()
+    {
+        if ($this->language) {
+            return $this->language->getLanguageId();
+        }
+
+        return null;
+    }
+
+    /**
+     * getLanguageIso6392t
+     *
+     * @return null|string
+     */
+    public function getLanguageIso6392t()
+    {
+        if ($this->language) {
+            return $this->language->getIso6392t();
+        }
+
+        return null;
     }
 
     /**
@@ -474,6 +535,20 @@ class Site implements ApiInterface
     public function getCountry()
     {
         return $this->country;
+    }
+
+    /**
+     * getCountryId
+     *
+     * @return int|null
+     */
+    public function getCountryId()
+    {
+        if ($this->country) {
+            return $this->country->getIso3();
+        }
+
+        return null;
     }
 
     /**
@@ -691,7 +766,6 @@ class Site implements ApiInterface
         $plugins = $this->getSiteWidePlugins();
 
         $list = [];
-
 
         if (empty($plugins)) {
             return $list;
@@ -978,6 +1052,14 @@ class Site implements ApiInterface
      */
     public function toArray()
     {
-        return get_object_vars($this);
+        $data = get_object_vars($this);
+
+        $data['domainId'] = $this->getDomainId();
+        $data['domainName'] = $this->getDomainName();
+        $data['languageId'] = $this->getLanguageId();
+        $data['languageIso6392t'] = $this->getLanguageIso6392t();
+        $data['countryId'] = $this->getCountryId();
+
+        return $data;
     }
 }
