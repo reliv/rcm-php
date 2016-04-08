@@ -104,9 +104,9 @@ class CmsController extends AbstractActionController
     /**
      * getCmsResponse
      *
-     * @param Site   $site
-     * @param Page   $page
-     * @param null   $revisionId
+     * @param Site $site
+     * @param Page $page
+     * @param null $revisionId
      *
      * @return \Rcm\Http\Response|ViewModel
      */
@@ -259,7 +259,6 @@ class CmsController extends AbstractActionController
                 }
 
                 return;
-
             } else {
                 return $this->redirectToPage(
                     $page->getName(),
@@ -274,6 +273,7 @@ class CmsController extends AbstractActionController
 
             if (!empty($revision) || $revision instanceof Revision) {
                 $page->setCurrentRevision($revision);
+
                 return;
             }
         }
@@ -296,6 +296,7 @@ class CmsController extends AbstractActionController
     {
         $response = new \Rcm\Http\Response();
         $response->setStatusCode(401);
+
         return $response;
     }
 }

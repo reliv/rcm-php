@@ -51,7 +51,7 @@ class Language extends EntityRepository
         }
 
         if (!in_array($format, $this->validFormats)) {
-            throw new LanguageNotFoundException('Laguage Format not valid.');
+            throw new LanguageNotFoundException('Language Format not valid.');
         }
 
         try {

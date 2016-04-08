@@ -34,7 +34,7 @@ class LayoutManager
     /**
      * Constructor
      *
-     * @param array $config      Config Array
+     * @param array $config Config Array
      */
     public function __construct($config)
     {
@@ -101,7 +101,8 @@ class LayoutManager
 
         if (empty($rcmThemeConfig['layouts'])) {
             throw new RuntimeException(
-                'No theme config found for theme "'.$theme.'" and no default theme found'
+                'No theme config found for theme "' . $theme
+                . '" and no default theme found'
             );
         }
 
@@ -114,8 +115,8 @@ class LayoutManager
      * view template so that the indexAction can pass that value on to the
      * renderer.
      *
-     * @param string|null  $layout Layout to find
-     * @param Site         $site Site to lookup
+     * @param string|null $layout Layout to find
+     * @param Site        $site   Site to lookup
      *
      * @return string
      * @throws RuntimeException
@@ -133,7 +134,6 @@ class LayoutManager
             && !empty($themeLayoutConfig[$layout]['file'])
         ) {
             return $themeLayoutConfig[$layout]['file'];
-
         } elseif (!empty($themeLayoutConfig['default'])
             && !empty($themeLayoutConfig['default']['file'])
         ) {
@@ -188,7 +188,6 @@ class LayoutManager
 
         if (!empty($themePageConfig[$template])) {
             return $themePageConfig[$template];
-
         } elseif (!empty($themePageConfig['default'])) {
             return $themePageConfig['default'];
         }
@@ -203,8 +202,8 @@ class LayoutManager
      * renderer.  Default page template is set by the themes configuration and can
      * also be set per page.
      *
-     * @param Site        $site      Site to lookup
-     * @param string|null  $template Template to find
+     * @param Site        $site     Site to lookup
+     * @param string|null $template Template to find
      *
      * @return string
      * @throws RuntimeException
@@ -224,8 +223,8 @@ class LayoutManager
     /**
      * Check to see if a layout is valid and available for a theme
      *
-     * @param Site    $site      Site to lookup
-     * @param string  $layoutKey Layout name to search
+     * @param Site   $site      Site to lookup
+     * @param string $layoutKey Layout name to search
      *
      * @return boolean
      * @throws InvalidArgumentException

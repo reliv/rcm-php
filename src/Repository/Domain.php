@@ -116,16 +116,18 @@ class Domain extends EntityRepository
     }
 
     /**
-     * Create Domain
+     * createDomain
      *
      * @param string $domainName
-     * @param mixed  $primaryDomain
+     * @param null   $primaryDomain
+     * @param bool   $doFlush
      *
      * @return \Rcm\Entity\Domain
      */
     public function createDomain(
         $domainName,
-        $primaryDomain = null
+        $primaryDomain = null,
+        $doFlush = false
     ) {
         if (empty($domainName)) {
             throw new DomainNotFoundException('Domain name is required.');
@@ -148,6 +150,10 @@ class Domain extends EntityRepository
         }
 
         $this->getEntityManager()->persist($domain);
+
+        if ($doFlush) {
+            $this->getEntityManager()->flush($domain);
+        }
 
         return $domain;
     }

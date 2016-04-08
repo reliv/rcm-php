@@ -380,7 +380,6 @@ abstract class ContainerAbstract implements ContainerInterface
             if (!$found) {
                 $revision = prev($arrayCollection);
             }
-
         }
 
         return $this->lastSavedDraft = $revision;
