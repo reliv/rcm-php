@@ -39,6 +39,7 @@
   ],
   "require": {
     "php": ">=5.4.0",
+    "reliv/zf-config-factories": "3.*",
     "rcm/core": "1.*",
     "rcm/user": "1.*",
     "rcm/user-ui": "1.*"

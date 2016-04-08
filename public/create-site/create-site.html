@@ -29,18 +29,18 @@
                     </div>
 
                     <div class="form-group"
-                         ng-class="{'has-error': createResult.errors.domain}">
+                         ng-class="{'has-error': createResult.errors.domainName}">
                         <label class="col-sm-4 control-label"
                                for="site-domain">Domain</label>
 
                         <div class="col-sm-8">
                             <input class="form-control"
                                    id="site-domain"
-                                   ng-model="site.domain"
+                                   ng-model="site.domainName"
                                    ng-required
                                    type="text"/>
 
-                            <div class="help-block with-errors">{{createResult.errors.domain}}</div>
+                            <div class="help-block with-errors">{{createResult.errors.domainName}}</div>
                         </div>
                     </div>
 
@@ -80,36 +80,36 @@
                     <input ng-model="site.siteLayout" type="hidden" value="default"/>
 
                     <div class="form-group"
-                         ng-class="{'has-error': createResult.errors.country}">
+                         ng-class="{'has-error': createResult.errors.countryId}">
                         <label class="col-sm-4 control-label"
                                for="site-country-iso3">Site Country</label>
 
                         <div class="col-sm-8">
                             <select class="form-control"
                                     id="site-country-iso3"
-                                    ng-model="site.country"
+                                    ng-model="site.countryId"
                                     ng-options="v.iso3 as v.countryName for (k, v) in countries"
                                     >
                             </select>
 
-                            <div class="help-block with-errors">{{createResult.errors.country}}</div>
+                            <div class="help-block with-errors">{{createResult.errors.countryId}}</div>
                         </div>
                     </div>
 
                     <div class="form-group"
-                         ng-class="{'has-error': createResult.errors.language}">
+                         ng-class="{'has-error': createResult.errors.languageIso6392t}">
                         <label class="col-sm-4 control-label"
                                for="site-language-iso639_2t">Site Language</label>
 
                         <div class="col-sm-8">
                             <select class="form-control"
                                     id="site-language-iso639_2t"
-                                    ng-model="site.language"
+                                    ng-model="site.languageIso6392t"
                                     ng-options="v.iso639_2t as v.languageName for (k, v) in languages"
                                     >
                             </select>
 
-                            <div class="help-block with-errors">{{createResult.errors.language}}</div>
+                            <div class="help-block with-errors">{{createResult.errors.languageIso6392t}}</div>
                         </div>
                     </div>
 

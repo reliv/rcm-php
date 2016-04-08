@@ -24,7 +24,7 @@
 
                         <div class="col-sm-8">
                             <div class="form-control">
-                                <span class="site-domain">{{sourceSite.domain}}</span>
+                                <span class="site-domain">{{sourceSite.domainName}}</span>
                             </div>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                             <select class="form-control"
                                     id="destinationSite"
                                     ng-model="destinationSite"
-                                    ng-options="v as v.domain for (k, v) in destinationSites"
+                                    ng-options="v as v.domainName for (k, v) in destinationSites"
                                     >
                             </select>
                         </div>
@@ -134,8 +134,8 @@
                         <label class="col-sm-11 control-label">{{selectedPages.length}} Pages to Copy:</label>
 
                         <div class="col-sm-9">
-                            <div>From: {{sourceSite.siteTitle}} ({{sourceSite.domain}})</div>
-                            <div>To: {{destinationSite.siteTitle}} ({{destinationSite.domain}})</div>
+                            <div>From: {{sourceSite.siteTitle}} ({{sourceSite.domainName}})</div>
+                            <div>To: {{destinationSite.siteTitle}} ({{destinationSite.domainName}})</div>
                         </div>
 
                         <div class="col-sm-2">

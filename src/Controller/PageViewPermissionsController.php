@@ -85,7 +85,6 @@ class PageViewPermissionsController extends AbstractRestfulController
 
         if (is_string($data['pageName'])) {
             $pageName = $data['pageName'];
-
         } else {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
             return $this->getResponse();
@@ -93,7 +92,6 @@ class PageViewPermissionsController extends AbstractRestfulController
 
         if (is_string($data['pageType']) && strlen($data['pageType']) == '1') {
             $pageType = $data['pageType'];
-
         } else {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
             return $this->getResponse();
@@ -101,11 +99,9 @@ class PageViewPermissionsController extends AbstractRestfulController
 
         if (is_array($data['selectedRoles'])) {
             $selectedRoles = $data['selectedRoles'];
-
         } else {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
             return $this->getResponse();
-
         }
         //CREATE RESOURCE ID
         $resourceId = 'sites.' . $siteId . '.pages.' . 'n' . '.' . $pageName;

@@ -350,12 +350,8 @@ return [
         'defaultSiteSettings' => [
             'siteLayout' => "GuestSitePage",
             'siteTitle' => "My Site",
-            'language' => [
-                'iso639_2t' => "eng"
-            ],
-            'country' => [
-                'iso3' => "USA",
-            ],
+            'languageIso6392t' => "eng",
+            'countryId' => "USA",
             'status' => "A",
             'favIcon' => "/images/favicon.ico",
             'loginPage' => "/login",
@@ -617,6 +613,15 @@ return [
     ],
     /* service_manager */
     'service_manager' => [
+        'config_factories' => [
+            'RcmAdmin\Service\SiteManager' => [
+                'arguments' => [
+                    'Config',
+                    'Doctrine\ORM\EntityManager',
+                    'RcmUser\Service\RcmUserService',
+                ],
+            ],
+        ],
         'factories' => [
             'RcmAdmin\EventListener\DispatchListener'
             => 'RcmAdmin\Factory\DispatchListenerFactory',
