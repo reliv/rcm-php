@@ -120,7 +120,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         $pageName,
         $pageType
     ) {
-        return $this->getPageRepo()->hasPage(
+        return $this->getPageRepo()->sitePageExists(
             $site,
             $pageName,
             $pageType
