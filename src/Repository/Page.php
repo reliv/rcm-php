@@ -738,4 +738,57 @@ class Page extends ContainerAbstract
             $pageRevision
         );
     }
+
+    /**
+     * getPage
+     *
+     * @param SiteEntity $site
+     * @param int        $pageId
+     *
+     * @return \Rcm\Entity\Page|null
+     */
+    public function getSitePage(
+        SiteEntity $site,
+        $pageId
+    ) {
+        try {
+            $page = $this->findOneBy(
+                [
+                    'site' => $site,
+                    'pageId' => $pageId
+                ]
+            );
+        } catch (\Exception $e) {
+            $page = null;
+        }
+
+        return $page;
+    }
+
+    /**
+     * hasPage
+     *
+     * @param SiteEntity $site
+     * @param string     $pageName
+     * @param string     $pageType
+     *
+     * @return bool
+     */
+    public function sitePageExists(
+        SiteEntity $site,
+        $pageName,
+        $pageType
+    ) {
+        try {
+            $page = $this->getPageByName(
+                $site,
+                $pageName,
+                $pageType
+            );
+        } catch (\Exception $e) {
+            $page = null;
+        }
+
+        return !empty($page);
+    }
 }
