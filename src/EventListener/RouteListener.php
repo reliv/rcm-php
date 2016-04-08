@@ -89,7 +89,6 @@ class RouteListener
 
             $event->stopPropagation(true);
             return $response;
-
         }
 
         $primaryCheck = $this->currentSite->getDomain()->getPrimary();
