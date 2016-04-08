@@ -50,7 +50,6 @@ class DisplayErrors extends AbstractHelper
             foreach ($error as $errorCode => &$errorMsg) {
                 $message .= $this->errorMapper($errorCode, $errorMsg);
             }
-
         }
 
         return $message;

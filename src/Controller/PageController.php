@@ -114,7 +114,6 @@ class PageController extends AbstractActionController
                     $this->currentSite,
                     $pageData
                 );
-
             } elseif (!empty($validatedData['page-template'])) {
                 /** @var \Rcm\Entity\Page $page */
                 $page = $this->pageRepo->findOneBy(
@@ -154,7 +153,6 @@ class PageController extends AbstractActionController
             );
             $this->view->setTemplate('rcm-admin/page/success');
             return $this->view;
-
         } elseif ($request->isPost() && !$form->isValid()) {
             $this->view->setVariable(
                 'errors',

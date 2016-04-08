@@ -67,7 +67,6 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
             $domain = $domainRepo->createDomain(
                 $data['domainName']
             );
-
         } catch (\Exception $e) {
             return new ApiJsonModel(null, 1, $e->getMessage());
         }

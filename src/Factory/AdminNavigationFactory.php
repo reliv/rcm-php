@@ -235,7 +235,6 @@ class AdminNavigationFactory extends AbstractNavigationFactory
             ) {
                 return false;
             }
-
         }
 
         return true;
