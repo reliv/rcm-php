@@ -2,6 +2,7 @@
 
 namespace RcmAdmin\Controller;
 
+use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\InputFilter\SiteDuplicateInputFilter;
@@ -24,7 +25,6 @@ use Zend\View\Model\JsonModel;
  */
 class ApiAdminSitesCloneController extends ApiAdminManageSitesController
 {
-
     /**
      * create - Clone a site
      *
@@ -37,6 +37,7 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
         /* ACCESS CHECK */
         if (!$this->rcmIsAllowed('sites', 'admin')) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+
             return $this->getResponse();
         }
         /* */
@@ -54,15 +55,18 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
 
         $data = $inputFilter->getValues();
 
-        try {
-            $data = $this->prepareNewSiteData($data);
+        $siteManager = $this->getSiteManager();
 
+        try {
+            $data = $siteManager->prepareSiteData($data);
             /** @var \Rcm\Repository\Domain $domainRepo */
             $domainRepo = $this->getEntityManager()->getRepository(
                 '\Rcm\Entity\Domain'
             );
 
-            $data['domain'] = $domainRepo->createDomain($data['domain']);
+            $domain = $domainRepo->createDomain(
+                $data['domainName']
+            );
 
         } catch (\Exception $e) {
             return new ApiJsonModel(null, 1, $e->getMessage());
@@ -73,7 +77,7 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
         /** @var \Rcm\Repository\Site $siteRepo */
         $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
 
-        /** @var \Rcm\Entity\Site $site */
+        /** @var \Rcm\Entity\Site $existingSite */
         $existingSite = $siteRepo->find($data['siteId']);
 
         if (empty($existingSite)) {
@@ -81,28 +85,16 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
         }
 
         /** @var \Rcm\Entity\Site $newSite */
-        $newSite = clone($existingSite);
+        $siteData = new Site();
 
-        $newSite->populate($data);
+        $siteData->populate($data);
 
-        $author = $this->getCurrentAuthor();
+        $copySite = $siteManager->copySite(
+            $existingSite,
+            $siteData,
+            $domain
+        );
 
-        $pages = $newSite->getPages();
-
-        foreach ($pages as &$page) {
-            $page->setAuthor($author);
-        }
-
-        try {
-            $entityManager->persist($newSite);
-
-            $entityManager->flush();
-        } catch (\Exception $e) {
-            return new ApiJsonModel(null, 1, $e->getMessage());
-        }
-
-        $siteApiResponse = $this->buildSiteApiResponse($newSite);
-
-        return new ApiJsonModel($siteApiResponse, 0, 'Success');
+        return new ApiJsonModel($copySite, 0, 'Success');
     }
 }

@@ -29,7 +29,7 @@
             <tr dir-paginate="site in sites | itemsPerPage: 25" total-items="totalItems" current-page="pagination.current">
                 <td style="vertical-align: top; padding-left: 25px;">{{site.siteId}}</td>
                 <td style="vertical-align: top;">
-                    <span class="domain">{{site.domain}}</span>
+                    <span class="domain">{{site.domainName}}</span>
                 </td>
                 <td style="vertical-align: top;" ng-show="loadings[site.siteId]">
                     <div>Loading...</div>
@@ -66,33 +66,35 @@
                         <div class="container-fluid">
                             <form role="form">
                                 <div class="form-group"
-                                     ng-class="{'has-error': createResult.errors.country}">
+                                     ng-class="{'has-error': createResult.errors.domainName}">
                                     <label class="control-label"
                                            for="newDomain">
                                         <div>Enter new domain</div>
                                     </label>
                                     <input class="form-control"
                                            id="newDomain"
-                                           ng-model="tempSites[site.siteId].domain"
+                                           ng-model="tempSites[site.siteId].domainName"
                                            required="required"
                                            ng-required="true"
                                            type="text">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group"
+                                     ng-class="{'has-error': createResult.errors.countryId}">
                                     <label class="control-label"
                                            for="site-country-iso3">
                                         Site Country
                                     </label>
                                     <select class="form-control"
                                             id="site-country-iso3"
-                                            ng-model="tempSites[site.siteId].country"
+                                            ng-model="tempSites[site.siteId].countryId"
                                             ng-options="v.iso3 as v.countryName for (k, v) in countries"
                                             >
                                     </select>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group"
+                                     ng-class="{'has-error': createResult.errors.languageIso6392t}">
                                     <label class="control-label"
                                            for="site-language-iso639_2t">
                                         Site Language
@@ -100,7 +102,7 @@
 
                                     <select class="form-control"
                                             id="site-language-iso639_2t"
-                                            ng-model="tempSites[site.siteId].language"
+                                            ng-model="tempSites[site.siteId].languageIso6392t"
                                             ng-options="v.iso639_2t as v.languageName for (k, v) in languages"
                                             >
                                     </select>

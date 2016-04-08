@@ -39,7 +39,7 @@ angular.module('rcmAdmin').controller(
                     'Disable this site?<br><br>' +
                     '<ul>' +
                     '<li>Site Id: ' + site.siteId + '</li>' +
-                    '<li>Domain: ' + site.domain + '</li>' +
+                    '<li>Domain: ' + site.domainName + '</li>' +
                     '</ul>',
                     function () {
                         if (site.status == 'A') {
@@ -90,10 +90,9 @@ angular.module('rcmAdmin').controller(
                 $().confirm(
                     '<div class="confirm">' +
                     '<h2>Duplicate site ' + site.siteId + '?</h2>' +
-                    '<div><span>New Domain: </span>' + $scope.tempSites[site.siteId].domain + '</div>' +
+                    '<div><span>New Domain: </span>' + $scope.tempSites[site.siteId].domainName + '</div>' +
                     '</div>',
                     function () {
-
                         rcmApiService.post(
                             {
                                 url: rcmAdminApiUrlService.siteCopy,
@@ -149,15 +148,15 @@ angular.module('rcmAdmin').controller(
                 true
             );
 
-            $scope.search = function(){
+            $scope.search = function () {
                 getResultsPage(1);
             };
 
-            $scope.pageChanged = function(newPage) {
+            $scope.pageChanged = function (newPage) {
                 getResultsPage(newPage);
             };
 
-            $scope.getCurrentResultsPage = function() {
+            $scope.getCurrentResultsPage = function () {
                 getResultsPage($scope.pagination.current);
             };
 
@@ -168,17 +167,18 @@ angular.module('rcmAdmin').controller(
                 var queryParam = '';
 
                 if ($scope.keywords.length > 0) {
-                    queryParam = 'q=' + $scope.keywords;
+                    queryParam = 'q=' + encodeURIComponent($scope.keywords);
                 }
 
-                url = rcmAdminApiUrlService.sites;
-
+                var url = rcmAdminApiUrlService.sites;
 
                 $http.get(url + '?' + pageParam + '&' + pageSizeParam + '&' + queryParam)
-                    .then(function(result) {
-                        $scope.sites = result.data.data.items;
-                        $scope.totalItems = result.data.data.itemCount;
-                    });
+                    .then(
+                        function (result) {
+                            $scope.sites = result.data.data.items;
+                            $scope.totalItems = result.data.data.itemCount;
+                        }
+                    );
             }
         }
     ]

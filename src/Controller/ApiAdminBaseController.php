@@ -19,7 +19,6 @@ use Rcm\Controller\AbstractRestfulJsonController;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
-
 class ApiAdminBaseController extends AbstractRestfulJsonController
 {
     /**
@@ -59,7 +58,12 @@ class ApiAdminBaseController extends AbstractRestfulJsonController
      */
     protected function getCurrentUser()
     {
-        return $this->rcmUserGetCurrentUser();
+        /** @var \RcmUser\Service\RcmUserService $rcmUserService */
+        $rcmUserService = $this->serviceLocator->get(
+            'RcmUser\Service\RcmUserService'
+        );
+
+        return $rcmUserService->getCurrentUser();
     }
 
     /**

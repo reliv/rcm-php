@@ -30,24 +30,16 @@ class SiteDuplicateInputFilter extends InputFilter
                     ['name' => 'Zend\Filter\ToInt'],
                 ],
             ],
-            // These have special formats - so we custom validate
-            'domain' => [
-                'name' => 'domain',
+            'domainName' => [
+                'name' => 'domainName',
                 'required' => true,
                 'filters' => [
                     ['name' => 'Zend\Filter\StripTags'],
                     ['name' => 'StringTrim'],
                 ],
-//                'validators' => [
-//                    [
-//                        'name' => 'Hostname',
-//                        'options' => [
-//                        ],
-//                    ],
-//                ]
             ],
-            'language' => [
-                'name' => 'language',
+            'languageIso6392t' => [
+                'name' => 'languageIso6392t',
                 'required' => true,
                 'filters' => [
                     ['name' => 'Zend\Filter\StripTags'],
@@ -57,8 +49,8 @@ class SiteDuplicateInputFilter extends InputFilter
 
                 ]
             ],
-            'country' => [
-                'name' => 'country',
+            'countryId' => [
+                'name' => 'countryId',
                 'required' => true,
                 'filters' => [
                     ['name' => 'Zend\Filter\StripTags'],
