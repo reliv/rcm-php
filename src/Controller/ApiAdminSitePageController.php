@@ -103,18 +103,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     protected function getPage(Site $site, $pageId)
     {
-        try {
-            $page = $this->getPageRepo()->findOneBy(
-                [
-                    'site' => $site,
-                    'pageId' => $pageId
-                ]
-            );
-        } catch (\Exception $e) {
-            $page = null;
-        }
-
-        return $page;
+        return $this->getPageRepo()->getSitePage($site, $pageId);
     }
 
     /**
@@ -131,17 +120,11 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         $pageName,
         $pageType
     ) {
-        try {
-            $page = $this->getPageRepo()->getPageByName(
-                $site,
-                $pageName,
-                $pageType
-            );
-        } catch (\Exception $e) {
-            $page = null;
-        }
-
-        return !empty($page);
+        return $this->getPageRepo()->hasPage(
+            $site,
+            $pageName,
+            $pageType
+        );
     }
 
     /**
