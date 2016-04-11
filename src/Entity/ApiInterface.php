@@ -57,7 +57,7 @@ interface ApiInterface extends \JsonSerializable, \IteratorAggregate
     /**
      * getIterator
      *
-     * @return array|Traversable
+     * @return array|\Traversable
      */
     public function getIterator();
 }

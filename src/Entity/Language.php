@@ -4,6 +4,7 @@ namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
  * Language Database Entity
@@ -23,7 +24,7 @@ use Rcm\Exception\InvalidArgumentException;
  *
  * @SuppressWarnings("CamelCase")
  */
-class Language implements ApiInterface
+class Language extends AbstractApiModel implements \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -73,7 +74,6 @@ class Language implements ApiInterface
      * @ORM\Column(type="string", length=3)
      */
     protected $iso639_2t = 'eng';
-
 
     /**
      * @var string Old Web Language Code. Used to map old legacy code to a
@@ -297,24 +297,25 @@ class Language implements ApiInterface
      * populate
      *
      * @param array $data
+     * @param array $ignore
      *
      * @return void
      */
-    public function populate($data = [])
+    public function populate(array $data = [], array $ignore = [])
     {
-        if (!empty($data['languageId'])) {
+        if (!empty($data['languageId']) && !in_array('languageId', $ignore)) {
             $this->setLanguageId($data['languageId']);
         }
-        if (!empty($data['languageName'])) {
+        if (!empty($data['languageName']) && !in_array('languageName', $ignore)) {
             $this->setLanguageName($data['languageName']);
         }
-        if (!empty($data['iso639_1'])) {
+        if (!empty($data['iso639_1']) && !in_array('iso639_1', $ignore)) {
             $this->setIso6391($data['iso639_1']);
         }
-        if (!empty($data['iso639_2b'])) {
+        if (!empty($data['iso639_2b']) && !in_array('iso639_2b', $ignore)) {
             $this->setIso6392b($data['iso639_2b']);
         }
-        if (!empty($data['iso639_2t'])) {
+        if (!empty($data['iso639_2t']) && !in_array('iso639_2t', $ignore)) {
             $this->setIso6392t($data['iso639_2t']);
         }
     }
@@ -322,14 +323,17 @@ class Language implements ApiInterface
     /**
      * populateFromObject
      *
-     * @param Language|ApiInterface $object
+     * @param ApiPopulatableInterface $object
+     * @param array                   $ignore
      *
      * @return void
      */
-    public function populateFromObject(ApiInterface $object)
-    {
+    public function populateFromObject(
+        ApiPopulatableInterface $object,
+        array $ignore = []
+    ) {
         if ($object instanceof Language) {
-            $this->populate($object->toArray());
+            $this->populate($object->toArray(), $ignore);
         }
     }
 
@@ -346,7 +350,7 @@ class Language implements ApiInterface
     /**
      * getIterator
      *
-     * @return array|Traversable
+     * @return array|\Traversable
      */
     public function getIterator()
     {
@@ -354,18 +358,26 @@ class Language implements ApiInterface
     }
 
     /**
-     * getBasicProperties
+     * toArray
+     *
+     * @param array $ignore
      *
      * @return array
      */
-    public function toArray()
+    public function toArray($ignore = [])
     {
-        return [
-            'languageId' => $this->getLanguageId(),
-            'languageName' => $this->getLanguageName(),
-            'iso639_1' => $this->getIso6391(),
-            'iso639_2b' => $this->getIso6392b(),
-            'iso639_2t' => $this->getIso6392t(),
-        ];
+        $data = parent::toArray($ignore);
+
+        if (!in_array('iso639_1', $ignore)) {
+            $data['iso639_1'] = $this->getIso6391();
+        }
+        if (!in_array('iso639_2b', $ignore)) {
+            $data['iso639_2b'] = $this->getIso6392b();
+        }
+        if (!in_array('iso639_2t', $ignore)) {
+            $data['iso639_2t'] = $this->getIso6392t();
+        }
+
+        return $data;
     }
 }

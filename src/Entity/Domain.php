@@ -5,6 +5,7 @@ namespace Rcm\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 use Zend\Validator\Hostname;
 use Zend\Validator\ValidatorInterface;
 
@@ -28,7 +29,7 @@ use Zend\Validator\ValidatorInterface;
  *         @ORM\Index(name="domain_name", columns={"domain"})
  *     })
  */
-class Domain implements ApiInterface
+class Domain extends AbstractApiModel implements \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -120,20 +121,6 @@ class Domain implements ApiInterface
     }
 
     /**
-     * Check to see if this domain is the primary domain name.
-     *
-     * @return bool
-     */
-    public function isPrimary()
-    {
-        if (empty($this->primaryDomain)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Get the Unique ID of the Domain.
      *
      * @return int Unique Domain ID
@@ -205,6 +192,36 @@ class Domain implements ApiInterface
     }
 
     /**
+     * getSiteId
+     *
+     * @return int|null
+     */
+    public function getSiteId()
+    {
+        $site = $this->getSite();
+        if (empty($site)) {
+            return null;
+        }
+
+        return $site->getSiteId();
+    }
+
+    /**
+     * Check to see if this domain is the primary domain name.
+     *
+     * @return bool
+     */
+    public function isPrimary()
+    {
+        $primary = $this->getPrimary();
+        if (empty($primary)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Return the Primary Domain.
      *
      * @return \Rcm\Entity\Domain
@@ -224,6 +241,21 @@ class Domain implements ApiInterface
     public function setPrimary(Domain $primaryDomain)
     {
         $this->primaryDomain = $primaryDomain;
+    }
+
+    /**
+     * getPrimaryDomainId
+     *
+     * @return null
+     */
+    public function getPrimaryDomainId()
+    {
+        $primary = $this->getPrimary();
+        if (empty($primary)) {
+            return null;
+        }
+
+        $this->primaryDomain->getDomainId();
     }
 
     /**
@@ -252,10 +284,11 @@ class Domain implements ApiInterface
      * populate
      *
      * @param array $data
+     * @param array $ignore
      *
      * @return void
      */
-    public function populate($data = [])
+    public function populate(array $data = [], array $ignore = [])
     {
         if (!empty($data['domainId'])) {
             $this->setDomainId($data['domainId']);
@@ -273,14 +306,17 @@ class Domain implements ApiInterface
     /**
      * populateFromObject
      *
-     * @param \Rcm\Entity\Domain|ApiInterface $object
+     * @param ApiPopulatableInterface $object
+     * @param array                   $ignore
      *
      * @return void
      */
-    public function populateFromObject(ApiInterface $object)
-    {
+    public function populateFromObject(
+        ApiPopulatableInterface $object,
+        array $ignore = []
+    ) {
         if ($object instanceof Domain) {
-            $this->populate($object->toArray());
+            $this->populate($object->toArray(['additionalDomains']), $ignore);
         }
     }
 
@@ -291,30 +327,49 @@ class Domain implements ApiInterface
      */
     public function jsonSerialize()
     {
-        return $this->toArray();
+        return $this->toArray(['additionalDomains', 'domainValidator', 'site']);
     }
 
     /**
      * getIterator
      *
-     * @return array|Traversable
+     * @return array|\Traversable
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->toArray());
+        return new \ArrayIterator(
+            $this->toArray(['additionalDomains', 'domainValidator', 'site'])
+        );
     }
 
     /**
      * toArray
      *
+     * @param array $ignore
+     *
      * @return array
      */
-    public function toArray()
-    {
-        return [
-            'domainId' => $this->getDomainId(),
-            'domain' => $this->getDomainName(),
-            'primaryDomain' => $this->getPrimary(),
-        ];
+    public function toArray(
+        $ignore = ['additionalDomains', 'domainValidator', 'site']
+    ) {
+        $data = parent::toArray($ignore);
+
+        if (!in_array('siteId', $ignore)) {
+            $data['siteId'] = $this->getSiteId();
+        }
+
+        if (!in_array('domain', $ignore)) {
+            $data['domain'] = $this->getDomainName();
+        }
+
+        if (!in_array('primaryDomainId', $ignore)) {
+            $data['primaryDomainId'] = $this->getPrimaryDomainId();
+        }
+
+        if (!in_array('isPrimary', $ignore)) {
+            $data['isPrimary'] = $this->isPrimary();
+        }
+
+        return $data;
     }
 }

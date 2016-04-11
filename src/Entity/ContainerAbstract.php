@@ -4,6 +4,8 @@ namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Rcm\Exception\InvalidArgumentException;
+use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
+use Reliv\RcmApiLib\Model\ApiSerializableInterface;
 
 /**
  * Container Abstract.  Contains methods shared by container classes
@@ -177,6 +179,24 @@ abstract class ContainerAbstract implements ContainerInterface
     }
 
     /**
+     * getCreatedDateString
+     *
+     * @param string $format
+     *
+     * @return null|string
+     */
+    public function getCreatedDateString($format = \DateTime::ISO8601)
+    {
+        $date = $this->getCreatedDate();
+
+        if (empty($date)) {
+            return null;
+        }
+
+        return $date->format($format);
+    }
+
+    /**
      * Gets the LastPublished property
      *
      * @return \DateTime LastPublished
@@ -196,6 +216,24 @@ abstract class ContainerAbstract implements ContainerInterface
     public function setLastPublished(\DateTime $lastPublished)
     {
         $this->lastPublished = $lastPublished;
+    }
+
+    /**
+     * getLastPublishedString
+     *
+     * @param string $format
+     *
+     * @return null|string
+     */
+    public function getLastPublishedString($format = \DateTime::ISO8601)
+    {
+        $date = $this->getLastPublished();
+
+        if (empty($date)) {
+            return null;
+        }
+
+        return $date->format($format);
     }
 
     /**
@@ -246,7 +284,8 @@ abstract class ContainerAbstract implements ContainerInterface
     public function setStagedRevision(Revision $revision)
     {
         if (!empty($this->publishedRevision)
-            && $this->publishedRevision->getRevisionId() == $revision->getRevisionId()
+            && $this->publishedRevision->getRevisionId() == $revision->getRevisionId(
+            )
         ) {
             $this->publishedRevision = null;
         }
@@ -292,6 +331,21 @@ abstract class ContainerAbstract implements ContainerInterface
     public function setSite(Site $site)
     {
         $this->site = $site;
+    }
+
+    /**
+     * getSiteId
+     *
+     * @return int|null
+     */
+    public function getSiteId()
+    {
+        $site = $this->getSite();
+        if (empty($site)) {
+            return null;
+        }
+
+        return $site->getSiteId();
     }
 
     /**
@@ -367,9 +421,13 @@ abstract class ContainerAbstract implements ContainerInterface
         while (!$found) {
             if (empty($revision)) {
                 break;
-            } elseif (!empty($published) && $published->getRevisionId() == $revision->getRevisionId()) {
+            } elseif (!empty($published)
+                && $published->getRevisionId() == $revision->getRevisionId()
+            ) {
                 $found = false;
-            } elseif (!empty($staged) && $staged->getRevisionId() == $revision->getRevisionId()) {
+            } elseif (!empty($staged)
+                && $staged->getRevisionId() == $revision->getRevisionId()
+            ) {
                 $found = false;
             } elseif ($revision->wasPublished()) {
                 $found = false;
@@ -411,5 +469,128 @@ abstract class ContainerAbstract implements ContainerInterface
     public function setCurrentRevision($currentRevision)
     {
         $this->currentRevision = $currentRevision;
+    }
+
+    /**
+     * populate
+     *
+     * @param array $data
+     * @param array $ignore List of properties to skip population for
+     *
+     * @return mixed
+     */
+    public function populate(
+        array $data,
+        array $ignore = []
+    ) {
+        $prefix = 'set';
+
+        foreach ($data as $property => $value) {
+            // Check for ignore keys
+            if (in_array($property, $ignore)) {
+                continue;
+            }
+
+            $method = $prefix . ucfirst($property);
+
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            }
+        }
+    }
+
+    /**
+     * populateFromObject
+     *
+     * @param ApiPopulatableInterface $object Object of THIS type
+     * @param array                   $ignore List of properties to skip population for
+     *
+     * @return mixed
+     */
+    public function populateFromObject(
+        ApiPopulatableInterface $object,
+        array $ignore = []
+    ) {
+        if ($object instanceof ContainerInterface) {
+            $this->populate($object->toArray());
+        }
+    }
+
+    /**
+     * jsonSerialize
+     *
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray(['revisions', 'site']);
+    }
+
+    /**
+     * toArray
+     *
+     * @param array $ignore
+     *
+     * @return mixed
+     */
+    public function toArray($ignore = ['revisions', 'site'])
+    {
+        $prefix = 'get';
+        $properties = get_object_vars($this);
+        $data = [];
+
+        foreach ($properties as $property => $value) {
+            // Check for ignore keys
+            if (in_array($property, $ignore)) {
+                continue;
+            }
+
+            $method = $prefix . ucfirst($property);
+
+            if (method_exists($this, $method)) {
+                $data[$property] = $this->$method();
+            }
+        }
+
+        if (!in_array('revisions', $ignore)) {
+            $data['revisions'] = $this->modelArrayToArray(
+                $this->getRevisions()->toArray(),
+                []
+            );
+        }
+
+        if (!in_array('siteId', $ignore)) {
+            $data['siteId'] = $this->getSiteId();
+        }
+
+        if (!in_array('createdDateString', $ignore)) {
+            $data['createdDateString'] = $this->getCreatedDateString();
+        }
+
+        if (!in_array('lastPublishedString', $ignore)) {
+            $data['lastPublishedString'] = $this->getLastPublishedString();
+        }
+        
+        return $data;
+    }
+
+    /**
+     * modelArrayToArray
+     *
+     * @param array $modelArray
+     * @param array $ignore
+     *
+     * @return array
+     */
+    protected function modelArrayToArray($modelArray, $ignore = [])
+    {
+        $array = [];
+
+        /** @var ApiSerializableInterface $item */
+        foreach ($modelArray as $item) {
+            $array[] = $item->toArray($ignore);
+        }
+
+        return $array;
     }
 }

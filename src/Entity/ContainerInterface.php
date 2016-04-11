@@ -20,7 +20,7 @@ use Rcm\Exception\InvalidArgumentException;
  * @link      http://github.com/reliv
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-interface ContainerInterface
+interface ContainerInterface extends ApiModelInterface
 {
     /**
      * Clone the container

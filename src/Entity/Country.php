@@ -4,6 +4,7 @@ namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
  * Country Database Entity
@@ -23,7 +24,7 @@ use Rcm\Exception\InvalidArgumentException;
  * @ORM\Entity(repositoryClass="Rcm\Repository\Country")
  * @ORM\Table(name="rcm_countries")
  */
-class Country implements ApiInterface
+class Country extends AbstractApiModel implements \IteratorAggregate
 {
     /**
      * @var string ISO Three Digit Country Code
@@ -135,18 +136,19 @@ class Country implements ApiInterface
      * populate
      *
      * @param array $data
+     * @param array $ignore
      *
      * @return void
      */
-    public function populate($data = [])
+    public function populate(array $data = [], array $ignore = [])
     {
-        if (!empty($data['iso3'])) {
+        if (!empty($data['iso3']) && !in_array('iso3', $ignore)) {
             $this->setIso3($data['iso3']);
         }
-        if (!empty($data['iso2'])) {
+        if (!empty($data['iso2']) && !in_array('iso2', $ignore)) {
             $this->setIso2($data['iso2']);
         }
-        if (!empty($data['countryName'])) {
+        if (!empty($data['countryName']) && !in_array('countryName', $ignore)) {
             $this->setCountryName($data['countryName']);
         }
     }
@@ -154,14 +156,17 @@ class Country implements ApiInterface
     /**
      * populateFromObject
      *
-     * @param Country|ApiInterface $object
+     * @param ApiPopulatableInterface $object
+     * @param array                   $ignore
      *
      * @return void
      */
-    public function populateFromObject(ApiInterface $object)
-    {
+    public function populateFromObject(
+        ApiPopulatableInterface $object,
+        array $ignore = []
+    ) {
         if ($object instanceof Country) {
-            $this->populate($object->toArray());
+            $this->populate($object->toArray(), $ignore);
         }
     }
 
@@ -178,7 +183,7 @@ class Country implements ApiInterface
     /**
      * getIterator
      *
-     * @return array|Traversable
+     * @return array|\Traversable
      */
     public function getIterator()
     {
@@ -188,14 +193,12 @@ class Country implements ApiInterface
     /**
      * toArray
      *
+     * @param array $ignore
+     *
      * @return array
      */
-    public function toArray()
+    public function toArray($ignore = [])
     {
-        return [
-            'iso3' => $this->getIso3(),
-            'iso2' => $this->getIso2(),
-            'countryName' => $this->getCountryName()
-        ];
+        return parent::toArray($ignore);
     }
 }

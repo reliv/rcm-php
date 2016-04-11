@@ -5,6 +5,7 @@ namespace Rcm\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
  * Page Information Entity
@@ -29,7 +30,7 @@ use Rcm\Exception\InvalidArgumentException;
  *
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class Page extends ContainerAbstract implements ApiInterface
+class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -425,66 +426,97 @@ class Page extends ContainerAbstract implements ApiInterface
     }
 
     /**
+     * getParentId
+     *
+     * @return int|null
+     */
+    public function getParentPageId()
+    {
+        $parent = $this->getParent();
+        if (empty($parent)) {
+            return null;
+        }
+
+        return $parent->getPageId();
+    }
+
+    /**
      * populate
      *
      * @param array $data
+     * @param array $ignore
      *
      * @return void
      */
-    public function populate($data)
+    public function populate(array $data, array $ignore = [])
     {
-        if (isset($data['site']) && $data['site'] instanceof Site) {
+        if (isset($data['site']) && $data['site'] instanceof Site
+            && !in_array(
+                'site',
+                $ignore
+            )
+        ) {
             $this->setSite($data['site']);
         }
 
-        if (isset($data['name'])) {
+        if (isset($data['name']) && !in_array('name', $ignore)) {
             $this->setName($data['name']);
         }
 
-        if (isset($data['pageId'])) {
+        if (isset($data['pageId']) && !in_array('pageId', $ignore)) {
             $this->setPageId($data['pageId']);
         }
 
-        if (isset($data['pageTitle'])) {
+        if (isset($data['pageTitle']) && !in_array('pageTitle', $ignore)) {
             $this->setPageTitle($data['pageTitle']);
         }
 
-        if (isset($data['pageType'])) {
+        if (isset($data['pageType']) && !in_array('pageType', $ignore)) {
             $this->setPageType($data['pageType']);
         }
 
-        if (isset($data['description'])) {
+        if (isset($data['description']) && !in_array('description', $ignore)) {
             $this->setDescription($data['description']);
         }
 
-        if (isset($data['keywords'])) {
+        if (isset($data['keywords']) && !in_array('keywords', $ignore)) {
             $this->setKeywords($data['keywords']);
         }
 
-        if (isset($data['author'])) {
+        if (isset($data['author']) && !in_array('author', $ignore)) {
             $this->setAuthor($data['author']);
         }
 
-        if (isset($data['lastPublished']) && $data['lastPublished'] instanceof \DateTime) {
+        if (isset($data['lastPublished'])
+            && $data['lastPublished'] instanceof \DateTime
+            && !in_array('lastPublished', $ignore)
+        ) {
             $this->setLastPublished($data['lastPublished']);
         }
 
-        if (isset($data['createdDate']) && $data['createdDate'] instanceof \DateTime) {
+        if (isset($data['createdDate']) && $data['createdDate'] instanceof \DateTime
+            && !in_array('createdDate', $ignore)
+        ) {
             $this->setLastPublished($data['createdDate']);
         }
 
-        if (isset($data['pageLayout'])) {
+        if (isset($data['pageLayout']) && !in_array('pageLayout', $ignore)) {
             $this->setPageLayout($data['pageLayout']);
         }
 
-        if (isset($data['siteLayoutOverride'])) {
+        if (isset($data['siteLayoutOverride'])
+            && !in_array(
+                'siteLayoutOverride',
+                $ignore
+            )
+        ) {
             $this->setSiteLayoutOverride($data['siteLayoutOverride']);
         }
 
-        if (isset($data['parent'])) {
+        $parent = null;
+
+        if (isset($data['parent']) && !in_array('parent', $ignore)) {
             $parent = $data['parent'];
-        } else {
-            $parent = null;
         }
 
         if ($parent instanceof Page) {
@@ -495,14 +527,17 @@ class Page extends ContainerAbstract implements ApiInterface
     /**
      * populateFromObject
      *
-     * @param Page|ApiInterface $object
+     * @param ApiPopulatableInterface $object
+     * @param array                   $ignore
      *
      * @return void
      */
-    public function populateFromObject(ApiInterface $object)
-    {
+    public function populateFromObject(
+        ApiPopulatableInterface $object,
+        array $ignore = []
+    ) {
         if ($object instanceof Page) {
-            $this->populate($object->toArray());
+            $this->populate($object->toArray(), $ignore);
         }
     }
 
@@ -513,26 +548,42 @@ class Page extends ContainerAbstract implements ApiInterface
      */
     public function jsonSerialize()
     {
-        return $this->toArray();
+        return $this->toArray(
+            ['parent', 'site', 'revisions']
+        );
     }
 
     /**
      * getIterator
      *
-     * @return array|Traversable
+     * @return array|\Traversable
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->toArray());
+        return new \ArrayIterator($this->toArray(['parent', 'site', 'revisions']));
     }
 
     /**
      * toArray
      *
-     * @return array
+     * @param array $ignore
+     *
+     * @return mixed
      */
-    public function toArray()
-    {
-        return get_object_vars($this);
+    public function toArray(
+        $ignore
+        = [
+            'parent',
+            'site',
+            'revisions',
+        ]
+    ) {
+        $data = parent::toArray($ignore);
+
+        if (!in_array('parentPageId', $ignore)) {
+            $data['parentPageId'] = $this->getParentPageId();
+        }
+
+        return $data;
     }
 }

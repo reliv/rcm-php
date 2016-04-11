@@ -4,7 +4,6 @@ namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
-use Reliv\RcmApiLib\Model\AbstractApiModel;
 use Zend\Validator\Uri;
 
 /**
@@ -72,7 +71,11 @@ class Redirect extends AbstractApiModel
      */
     protected $siteId = null;
 
-
+    /**
+     * getUrlValidator
+     *
+     * @return Uri
+     */
     protected function getUrlValidator()
     {
         return new Uri();

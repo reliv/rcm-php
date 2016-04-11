@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Rcm\Repository\PluginInstance")
  * @ORM\Table(name="rcm_plugin_instances")
  */
-class PluginInstance implements \JsonSerializable, \IteratorAggregate
+class PluginInstance extends AbstractApiModel implements \JsonSerializable, \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -87,17 +87,36 @@ class PluginInstance implements \JsonSerializable, \IteratorAggregate
      */
     protected $renderedJs = [];
 
+    /**
+     * @var
+     */
     protected $editJs;
 
+    /**
+     * @var
+     */
     protected $editCss;
 
+    /**
+     * @var
+     */
     protected $tooltip;
 
+    /**
+     * @var
+     */
     protected $icon;
 
+    /**
+     * @var
+     */
     protected $canCache;
 
-
+    /**
+     * __clone
+     *
+     * @return void
+     */
     public function __clone()
     {
         if (!$this->pluginInstanceId) {
@@ -414,70 +433,80 @@ class PluginInstance implements \JsonSerializable, \IteratorAggregate
      * populate
      *
      * @param array $data
+     * @param array $ignore
      *
      * @return void
      */
-    public function populate($data)
+    public function populate(array $data, array $ignore = [])
     {
-        if (isset($data['plugin'])) {
+        if (isset($data['plugin']) && !in_array('plugin', $ignore)) {
             $this->setPlugin($data['plugin']);
         }
 
-        if (isset($data['siteWide']) && $data['siteWide']) {
+        if (isset($data['siteWide']) && $data['siteWide']
+            && !in_array(
+                'siteWide',
+                $ignore
+            )
+        ) {
             $this->setSiteWide();
         }
 
-        if (isset($data['displayName'])) {
+        if (isset($data['displayName']) && !in_array('displayName', $ignore)) {
             $this->setDisplayName($data['displayName']);
         }
 
-        if (isset($data['instanceConfig'])) {
+        if (isset($data['instanceConfig']) && !in_array('instanceConfig', $ignore)) {
             $this->setInstanceConfig($data['instanceConfig']);
         }
 
-        if (isset($data['md5'])) {
+        if (isset($data['md5']) && !in_array('md5', $ignore)) {
             $this->setMd5($data['md5']);
         }
 
-        if (isset($data['saveData'])) {
+        if (isset($data['saveData']) && !in_array('saveData', $ignore)) {
             $this->setSaveData($data['saveData']);
         }
 
         if (isset($data['previousInstance'])
+            && !in_array(
+                'previousInstance',
+                $ignore
+            )
             && $data['previousInstance'] instanceof PluginInstance
         ) {
             $this->setPreviousInstance($data['previousInstance']);
         }
 
-        if (isset($data['renderedCss'])) {
+        if (isset($data['renderedCss']) && !in_array('renderedCss', $ignore)) {
             $this->setRenderedCss($data['renderedCss']);
         }
 
-        if (isset($data['renderedJs'])) {
+        if (isset($data['renderedJs']) && !in_array('renderedJs', $ignore)) {
             $this->setRenderedJs($data['renderedJs']);
         }
 
-        if (isset($data['renderedHtml'])) {
+        if (isset($data['renderedHtml']) && !in_array('renderedHtml', $ignore)) {
             $this->setRenderedHtml($data['renderedHtml']);
         }
 
-        if (isset($data['canCache'])) {
+        if (isset($data['canCache']) && !in_array('canCache', $ignore)) {
             $this->setCanCache($data['canCache']);
         }
 
-        if (isset($data['editCss'])) {
+        if (isset($data['editCss']) && !in_array('editCss', $ignore)) {
             $this->setEditCss($data['editCss']);
         }
 
-        if (isset($data['editJs'])) {
+        if (isset($data['editJs']) && !in_array('editJs', $ignore)) {
             $this->setEditJs($data['editJs']);
         }
 
-        if (isset($data['icon'])) {
+        if (isset($data['icon']) && !in_array('icon', $ignore)) {
             $this->setIcon($data['icon']);
         }
 
-        if (isset($data['tooltip'])) {
+        if (isset($data['tooltip']) && !in_array('tooltip', $ignore)) {
             $this->setTooltip($data['tooltip']);
         }
     }
@@ -495,7 +524,7 @@ class PluginInstance implements \JsonSerializable, \IteratorAggregate
     /**
      * getIterator
      *
-     * @return array|Traversable
+     * @return array|\Traversable
      */
     public function getIterator()
     {
@@ -505,12 +534,12 @@ class PluginInstance implements \JsonSerializable, \IteratorAggregate
     /**
      * toArray
      *
+     * @param array $ignore
+     *
      * @return array
      */
-    public function toArray()
+    public function toArray($ignore = [])
     {
-        $data = get_object_vars($this);
-        $data['instanceConfig'] = $this->getInstanceConfig();
-        return $data;
+        return parent::toArray($ignore);
     }
 }

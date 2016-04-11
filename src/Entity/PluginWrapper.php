@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Rcm\Repository\PluginWrapper")
  * @ORM\Table(name="rcm_plugin_wrappers")
  */
-class PluginWrapper implements \JsonSerializable, \IteratorAggregate
+class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -169,7 +169,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function getRenderOrderNumber()
     {
-        return (int) $this->renderOrder;
+        return (int)$this->renderOrder;
     }
 
     /**
@@ -181,7 +181,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function setRenderOrderNumber($order)
     {
-        $this->renderOrder = (int) $order;
+        $this->renderOrder = (int)$order;
     }
 
     /**
@@ -204,6 +204,21 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     public function getInstance()
     {
         return $this->instance;
+    }
+
+    /**
+     * getInstanceId
+     *
+     * @return int|null
+     */
+    public function getInstanceId()
+    {
+        $instance = $this->getInstance();
+        if (empty($instance)) {
+            return null;
+        }
+
+        return $instance->getInstanceId();
     }
 
     /**
@@ -295,7 +310,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function setRowNumber($rowNumber)
     {
-        $this->rowNumber = (int) $rowNumber;
+        $this->rowNumber = (int)$rowNumber;
     }
 
     /**
@@ -305,7 +320,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function getRowNumber()
     {
-        return (int) $this->rowNumber;
+        return (int)$this->rowNumber;
     }
 
     /**
@@ -317,7 +332,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function setColumnClass($columnClass)
     {
-        $this->columnClass = trim((string) $columnClass);
+        $this->columnClass = trim((string)$columnClass);
     }
 
     /**
@@ -327,35 +342,43 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function getColumnClass()
     {
-        return trim((string) $this->columnClass);
+        return trim((string)$this->columnClass);
     }
 
     /**
      * populate
      *
      * @param array $data
+     * @param array $ignore
      *
      * @return void
      */
-    public function populate($data)
+    public function populate(array $data, array $ignore = [])
     {
-        if (isset($data['layoutContainer'])) {
+        if (isset($data['layoutContainer'])
+            && !in_array(
+                'layoutContainer',
+                $ignore
+            )
+        ) {
             $this->setLayoutContainer($data['layoutContainer']);
         }
 
-        if (isset($data['renderOrder'])) {
+        if (isset($data['renderOrder']) && !in_array('renderOrder', $ignore)) {
             $this->setRenderOrderNumber($data['renderOrder']);
         }
 
-        if (isset($data['rowNumber'])) {
+        if (isset($data['rowNumber']) && !in_array('rowNumber', $ignore)) {
             $this->setRowNumber($data['rowNumber']);
         }
 
-        if (isset($data['columnClass'])) {
+        if (isset($data['columnClass']) && !in_array('columnClass', $ignore)) {
             $this->setColumnClass($data['columnClass']);
         }
 
-        if (isset($data['instance']) && $data['instance'] instanceof PluginInstance) {
+        if (isset($data['instance']) && $data['instance'] instanceof PluginInstance
+            && !in_array('instance', $ignore)
+        ) {
             $this->setInstance($data['instance']);
         }
     }
@@ -373,7 +396,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     /**
      * getIterator
      *
-     * @return array|Traversable
+     * @return array|\Traversable
      */
     public function getIterator()
     {
@@ -383,10 +406,18 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     /**
      * toArray
      *
+     * @param array $ignore
+     *
      * @return array
      */
-    public function toArray()
+    public function toArray($ignore = [])
     {
-        return get_object_vars($this);
+        $data = parent::toArray($ignore);
+
+        if (!in_array('instanceId', $ignore)) {
+            $data['instanceId'] = $this->getInstanceId();
+        }
+
+        return $data;
     }
 }
