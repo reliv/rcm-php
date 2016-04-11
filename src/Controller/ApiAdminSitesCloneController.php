@@ -83,15 +83,11 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
             return new ApiJsonModel(null, 1, "Site {$data['siteId']} not found.");
         }
 
-        /** @var \Rcm\Entity\Site $newSite */
-        $siteData = new Site();
-
-        $siteData->populate($data);
-
-        $copySite = $siteManager->copySite(
+        $copySite = $siteManager->copySiteAndPopulate(
             $existingSite,
-            $siteData,
-            $domain
+            $domain,
+            $data,
+            true
         );
 
         return new ApiJsonModel($copySite, 0, 'Success');

@@ -83,7 +83,7 @@ class SiteManager
      *
      * @return string
      */
-    protected function getCurrentAuthor($default = 'Unknown Author')
+    public function getCurrentAuthor($default = 'Unknown Author')
     {
         $user = $this->getCurrentUser();
 
@@ -138,25 +138,22 @@ class SiteManager
     /**
      * copySite
      *
-     * @param Site   $site
+     * @param Site   $existingSite
      * @param Domain $domain
+     * @param bool   $doFlush
      *
      * @return Site
-     * @throws \Exception
      */
     public function copySite(
         Site $existingSite,
-        Site $newSite,
-        Domain $domain
+        Domain $domain,
+        $doFlush = false
     ) {
         $entityManager = $this->getEntityManager();
 
         $copySite = clone($existingSite);
         $copySite->setSiteId(null);
-        $newSite->setSiteId(null);
-        $copySite = $this->prepareNewSite($newSite);
         $copySite->setDomain($domain);
-        $copySite->populateFromObject($newSite);
 
         $author = $this->getCurrentAuthor();
 
@@ -167,7 +164,39 @@ class SiteManager
         }
 
         $entityManager->persist($copySite);
-        $entityManager->flush();
+
+        if ($doFlush) {
+            $entityManager->flush();
+        }
+
+        return $copySite;
+    }
+
+    /**
+     * copySiteAndPopulate
+     *
+     * @param Site   $existingSite
+     * @param Domain $domain
+     * @param array  $data
+     * @param bool   $doFlush
+     *
+     * @return Site
+     */
+    public function copySiteAndPopulate(
+        Site $existingSite,
+        Domain $domain,
+        $data = [],
+        $doFlush = false
+    ) {
+        $entityManager = $this->getEntityManager();
+
+        $copySite = $this->copySite($existingSite, $domain, false);
+
+        $copySite->populate($data);
+
+        if ($doFlush) {
+            $entityManager->flush($copySite);
+        }
 
         return $copySite;
     }
@@ -184,7 +213,9 @@ class SiteManager
     {
         $siteId = $newSite->getSiteId();
         if (!empty($siteId)) {
-            throw new \Exception("Site ID must be empty to create new site, id {$siteId} given.");
+            throw new \Exception(
+                "Site ID must be empty to create new site, id {$siteId} given."
+            );
         }
 
         if (empty($newSite->getDomain())) {
@@ -236,12 +267,16 @@ class SiteManager
 
         // Language
         if (empty($data['languageIso6392t'])) {
-            throw new \Exception('languageIso6392t default is required to create new site.');
+            throw new \Exception(
+                'languageIso6392t default is required to create new site.'
+            );
         }
 
         // Country
         if (empty($data['countryId'])) {
-            throw new \Exception('CountryId default is required to create new site.');
+            throw new \Exception(
+                'CountryId default is required to create new site.'
+            );
         }
 
         return $this->prepareSiteData($data);
