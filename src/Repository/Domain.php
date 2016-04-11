@@ -116,6 +116,20 @@ class Domain extends EntityRepository
     }
 
     /**
+     * domainExists
+     *
+     * @param string $domainName
+     *
+     * @return bool
+     */
+    public function domainExists($domainName)
+    {
+        $existingDomain = $this->getDomainByName($domainName);
+
+        return (!empty($existingDomain));
+    }
+
+    /**
      * createDomain
      *
      * @param string $domainName
@@ -134,9 +148,7 @@ class Domain extends EntityRepository
         }
 
         // Check if exists first
-        $existingDomain = $this->getDomainByName($domainName);
-
-        if (!empty($existingDomain)) {
+        if ($this->domainExists($domainName)) {
             throw new DuplicateDomainException(
                 'Duplicate domains may not be created.'
             );
