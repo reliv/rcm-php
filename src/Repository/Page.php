@@ -740,7 +740,7 @@ class Page extends ContainerAbstract
     }
 
     /**
-     * getPage
+     * get Site Page
      *
      * @param SiteEntity $site
      * @param int        $pageId
@@ -766,7 +766,7 @@ class Page extends ContainerAbstract
     }
 
     /**
-     * hasPage
+     * Site has page
      *
      * @param SiteEntity $site
      * @param string     $pageName
