@@ -23,7 +23,7 @@ class SiteApiResponse extends Site
      *
      * @return array
      */
-    public function toArray()
+    public function toArray($ignore = [])
     {
         return [
             'siteId' => $this->getSiteId(),

@@ -64,7 +64,9 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
         $createQueryBuilder = $siteRepo->createQueryBuilder('site')
             ->select('site')
-            ->leftjoin('site.domain', 'domain')
+            ->leftJoin('site.domain', 'domain')
+            ->leftJoin('site.country', 'country')
+            ->leftJoin('site.language', 'language')
             ->orderBy('domain.domain', 'ASC');
 
         $query = $createQueryBuilder->getQuery();
@@ -102,7 +104,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
 
         /** @var \Rcm\Entity\Site $site */
         foreach ($sitesObjects as $site) {
-            $sites[] = $site;
+            $sites[] = $site->toArray();
         }
 
         $list['items'] = $sites;

@@ -8,7 +8,7 @@
  */
 angular.module(
     'rcmAdmin',
-    ['rcmApi', 'rcmAdminApi', 'RcmHtmlEditor', 'angularUtils.directives.dirPagination']
+    ['rcmApi', 'rcmAdminApi', 'RcmHtmlEditor', 'angularUtils.directives.dirPagination', 'RcmLoading']
 )
 /**
  * rcmAdminService
