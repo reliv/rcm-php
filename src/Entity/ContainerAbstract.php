@@ -4,6 +4,8 @@ namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Rcm\Exception\InvalidArgumentException;
+use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
+use Reliv\RcmApiLib\Model\ApiSerializableInterface;
 
 /**
  * Container Abstract.  Contains methods shared by container classes
@@ -49,14 +51,29 @@ abstract class ContainerAbstract implements ContainerInterface
     protected $publishedRevision;
 
     /**
+     * @var int
+     */
+    protected $publishedRevisionId;
+
+    /**
      * @var \Rcm\Entity\Revision Integer Staged Revision
      */
     protected $stagedRevision;
 
     /**
+     * @var int
+     */
+    protected $stagedRevisionId;
+
+    /**
      * @var \Rcm\Entity\Site
      **/
     protected $site;
+
+    /**
+     * @var int
+     */
+    protected $siteId;
 
     /**
      * @var array|\Doctrine\Common\Collections\ArrayCollection
@@ -87,14 +104,13 @@ abstract class ContainerAbstract implements ContainerInterface
 
         if (!empty($this->publishedRevision)) {
             $revision = clone $this->publishedRevision;
-            $this->publishedRevision = null;
-            $this->revisions[] = $revision;
-            $this->stagedRevision = $revision;
-            $this->publishedRevision = null;
+            $this->removePublishedRevision();
+            $this->revisions->add($revision);
+            $this->setStagedRevision($revision);
         } elseif (!empty($this->stagedRevision)) {
             $revision = clone $this->stagedRevision;
-            $this->stagedRevision = $revision;
-            $this->revisions[] = $revision;
+            $this->setStagedRevision($revision);
+            $this->revisions->add($revision);
         }
     }
 
@@ -177,6 +193,24 @@ abstract class ContainerAbstract implements ContainerInterface
     }
 
     /**
+     * getCreatedDateString
+     *
+     * @param string $format
+     *
+     * @return null|string
+     */
+    public function getCreatedDateString($format = \DateTime::ISO8601)
+    {
+        $date = $this->getCreatedDate();
+
+        if (empty($date)) {
+            return null;
+        }
+
+        return $date->format($format);
+    }
+
+    /**
      * Gets the LastPublished property
      *
      * @return \DateTime LastPublished
@@ -199,6 +233,24 @@ abstract class ContainerAbstract implements ContainerInterface
     }
 
     /**
+     * getLastPublishedString
+     *
+     * @param string $format
+     *
+     * @return null|string
+     */
+    public function getLastPublishedString($format = \DateTime::ISO8601)
+    {
+        $date = $this->getLastPublished();
+
+        if (empty($date)) {
+            return null;
+        }
+
+        return $date->format($format);
+    }
+
+    /**
      * Get Published Revision
      *
      * @return \Rcm\Entity\Revision
@@ -218,12 +270,23 @@ abstract class ContainerAbstract implements ContainerInterface
     public function setPublishedRevision(Revision $revision)
     {
         if (!empty($this->stagedRevision)) {
-            $this->stagedRevision = null;
+            $this->removeStagedRevision();
         }
 
         $revision->publishRevision();
         $this->publishedRevision = $revision;
+        $this->publishedRevisionId = $revision->getRevisionId();
         $this->setLastPublished(new \DateTime());
+    }
+
+    /**
+     * getPublishedRevisionId
+     *
+     * @return int
+     */
+    public function getPublishedRevisionId()
+    {
+        return $this->publishedRevisionId;
     }
 
     /**
@@ -246,12 +309,24 @@ abstract class ContainerAbstract implements ContainerInterface
     public function setStagedRevision(Revision $revision)
     {
         if (!empty($this->publishedRevision)
-            && $this->publishedRevision->getRevisionId() == $revision->getRevisionId()
+            && $this->publishedRevision->getRevisionId() == $revision->getRevisionId(
+            )
         ) {
-            $this->publishedRevision = null;
+            $this->removePublishedRevision();
         }
 
         $this->stagedRevision = $revision;
+        $this->stagedRevisionId = $revision->getRevisionId();
+    }
+
+    /**
+     * getStagedRevisionId
+     *
+     * @return mixed
+     */
+    public function getStagedRevisionId()
+    {
+        return $this->stagedRevisionId;
     }
 
     /**
@@ -260,6 +335,7 @@ abstract class ContainerAbstract implements ContainerInterface
     public function removePublishedRevision()
     {
         $this->publishedRevision = null;
+        $this->publishedRevisionId = null;
     }
 
     /**
@@ -270,6 +346,7 @@ abstract class ContainerAbstract implements ContainerInterface
     public function removeStagedRevision()
     {
         $this->stagedRevision = null;
+        $this->stagedRevisionId = null;
     }
 
     /**
@@ -292,6 +369,17 @@ abstract class ContainerAbstract implements ContainerInterface
     public function setSite(Site $site)
     {
         $this->site = $site;
+        $this->siteId = $site->getSiteId();
+    }
+
+    /**
+     * getSiteId
+     *
+     * @return int|null
+     */
+    public function getSiteId()
+    {
+        return $this->siteId;
     }
 
     /**
@@ -367,9 +455,13 @@ abstract class ContainerAbstract implements ContainerInterface
         while (!$found) {
             if (empty($revision)) {
                 break;
-            } elseif (!empty($published) && $published->getRevisionId() == $revision->getRevisionId()) {
+            } elseif (!empty($published)
+                && $published->getRevisionId() == $revision->getRevisionId()
+            ) {
                 $found = false;
-            } elseif (!empty($staged) && $staged->getRevisionId() == $revision->getRevisionId()) {
+            } elseif (!empty($staged)
+                && $staged->getRevisionId() == $revision->getRevisionId()
+            ) {
                 $found = false;
             } elseif ($revision->wasPublished()) {
                 $found = false;
@@ -398,6 +490,8 @@ abstract class ContainerAbstract implements ContainerInterface
     }
 
     /**
+     * getCurrentRevision
+     *
      * @return Revision
      */
     public function getCurrentRevision()
@@ -406,10 +500,137 @@ abstract class ContainerAbstract implements ContainerInterface
     }
 
     /**
-     * @param Revision $currentRevision
+     * setCurrentRevision
+     *
+     * @param $currentRevision
+     *
+     * @return void
      */
     public function setCurrentRevision($currentRevision)
     {
         $this->currentRevision = $currentRevision;
+    }
+
+    /**
+     * populate
+     *
+     * @param array $data
+     * @param array $ignore List of properties to skip population for
+     *
+     * @return mixed
+     */
+    public function populate(
+        array $data,
+        array $ignore = []
+    ) {
+        $prefix = 'set';
+
+        foreach ($data as $property => $value) {
+            // Check for ignore keys
+            if (in_array($property, $ignore)) {
+                continue;
+            }
+
+            $method = $prefix . ucfirst($property);
+
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            }
+        }
+    }
+
+    /**
+     * populateFromObject
+     *
+     * @param ApiPopulatableInterface $object Object of THIS type
+     * @param array                   $ignore List of properties to skip population for
+     *
+     * @return mixed
+     */
+    public function populateFromObject(
+        ApiPopulatableInterface $object,
+        array $ignore = []
+    ) {
+        if ($object instanceof ContainerInterface) {
+            $this->populate($object->toArray(), $ignore);
+        }
+    }
+
+    /**
+     * jsonSerialize
+     *
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray(['revisions', 'site']);
+    }
+
+    /**
+     * toArray
+     *
+     * @param array $ignore
+     *
+     * @return mixed
+     */
+    public function toArray($ignore = ['revisions', 'site'])
+    {
+        $prefix = 'get';
+        $properties = get_object_vars($this);
+        $data = [];
+
+        foreach ($properties as $property => $value) {
+            // Check for ignore keys
+            if (in_array($property, $ignore)) {
+                continue;
+            }
+
+            $method = $prefix . ucfirst($property);
+
+            if (method_exists($this, $method)) {
+                $data[$property] = $this->$method();
+            }
+        }
+
+        if (!in_array('revisions', $ignore)) {
+            $data['revisions'] = $this->modelArrayToArray(
+                $this->getRevisions()->toArray(),
+                []
+            );
+        }
+
+        if (!in_array('siteId', $ignore)) {
+            $data['siteId'] = $this->getSiteId();
+        }
+
+        if (!in_array('createdDateString', $ignore)) {
+            $data['createdDateString'] = $this->getCreatedDateString();
+        }
+
+        if (!in_array('lastPublishedString', $ignore)) {
+            $data['lastPublishedString'] = $this->getLastPublishedString();
+        }
+        
+        return $data;
+    }
+
+    /**
+     * modelArrayToArray
+     *
+     * @param array $modelArray
+     * @param array $ignore
+     *
+     * @return array
+     */
+    protected function modelArrayToArray($modelArray, $ignore = [])
+    {
+        $array = [];
+
+        /** @var ApiSerializableInterface $item */
+        foreach ($modelArray as $item) {
+            $array[] = $item->toArray($ignore);
+        }
+
+        return $array;
     }
 }

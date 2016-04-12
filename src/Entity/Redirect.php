@@ -4,7 +4,6 @@ namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
-use Reliv\RcmApiLib\Model\AbstractApiModel;
 use Zend\Validator\Uri;
 
 /**
@@ -72,7 +71,11 @@ class Redirect extends AbstractApiModel
      */
     protected $siteId = null;
 
-
+    /**
+     * getUrlValidator
+     *
+     * @return Uri
+     */
     protected function getUrlValidator()
     {
         return new Uri();
@@ -80,24 +83,7 @@ class Redirect extends AbstractApiModel
     }
 
     /**
-     * setSiteId
-     *
-     * @param $siteId
-     * @return void
-     */
-    public function setSiteId($siteId)
-    {
-        $this->siteId = $siteId;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getSiteId()
-    {
-        return $this->siteId;
-    }
-    /**
+     * @deprecated Do NOT use
      * Set the Redirect Id.  This was added for unit testing and
      * should not be used by calling scripts.  Instead please persist the object
      * with Doctrine and allow Doctrine to set this on it's own.
@@ -206,6 +192,27 @@ class Redirect extends AbstractApiModel
     }
 
     /**
+     * setSiteId
+     *
+     * @param $siteId
+     * @return void
+     */
+    public function setSiteId($siteId)
+    {
+        $this->siteId = $siteId;
+    }
+
+    /**
+     * getSiteId
+     *
+     * @return int|null
+     */
+    public function getSiteId()
+    {
+        return $this->siteId;
+    }
+
+    /**
      * toArray
      *
      * @param array $ignore
@@ -218,10 +225,18 @@ class Redirect extends AbstractApiModel
             $array['siteId'] = $this->getSiteId();
         }
 
+        // @bc support
         if (!in_array('domain', $ignore)) {
             $site = $this->site;
             if ($site !== null) {
                 $array['domain'] = $site->getDomain()->getDomainName();
+            }
+        }
+
+        if (!in_array('domainName', $ignore)) {
+            $site = $this->site;
+            if ($site !== null) {
+                $array['domainName'] = $site->getDomain()->getDomainName();
             }
         }
 

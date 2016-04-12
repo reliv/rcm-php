@@ -84,7 +84,7 @@ class ApiBase implements ApiInterface
     /**
      * getIterator
      *
-     * @return array|Traversable
+     * @return array|\Traversable
      */
     public function getIterator()
     {

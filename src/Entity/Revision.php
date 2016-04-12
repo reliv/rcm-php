@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="rcm_revisions")
  */
-class Revision
+class Revision extends AbstractApiModel
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -69,6 +69,8 @@ class Revision
     protected $md5;
 
     /**
+     * @var ArrayCollection
+     *
      * @ORM\ManyToMany(
      *     targetEntity="PluginWrapper",
      *     fetch="EAGER",
@@ -138,12 +140,12 @@ class Revision
 
         /* Clone Plugins */
         $pluginWrappers = $this->pluginWrappers;
-        $clonedPluginWrappers = [];
+        $clonedPluginWrappers = new ArrayCollection();
 
         /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
         foreach ($pluginWrappers as $pluginWrapper) {
             $clonedPluginWrapper = clone $pluginWrapper;
-            $clonedPluginWrappers[] = $clonedPluginWrapper;
+            $clonedPluginWrappers->add($clonedPluginWrapper);
         }
 
         $this->pluginWrappers = $clonedPluginWrappers;
@@ -163,6 +165,7 @@ class Revision
     }
 
     /**
+     * @deprecated Do NOT use
      * Set the ID of the Page Revision.  This was added for unit testing and
      * should not be used by calling scripts.  Instead please persist the object
      * with Doctrine and allow Doctrine to set this on it's own.
@@ -223,6 +226,24 @@ class Revision
     }
 
     /**
+     * getCreatedDateString
+     *
+     * @param string $format
+     *
+     * @return null|string
+     */
+    public function getCreatedDateString($format = \DateTime::ISO8601)
+    {
+        $date = $this->getCreatedDate();
+
+        if (empty($date)) {
+            return null;
+        }
+
+        return $date->format($format);
+    }
+
+    /**
      * Gets the Published Date property
      *
      * @return \DateTime LastPublished
@@ -245,13 +266,31 @@ class Revision
     }
 
     /**
+     * getPublishedDateString
+     *
+     * @param string $format
+     *
+     * @return null|string
+     */
+    public function getPublishedDateString($format = \DateTime::ISO8601)
+    {
+        $date = $this->getPublishedDate();
+
+        if (empty($date)) {
+            return null;
+        }
+
+        return $date->format($format);
+    }
+
+    /**
      * Get Plugin Instances - Assumes we have ordered them by RenderOrder the DB join
      *
-     * @return array
+     * @return ArrayCollection
      */
     public function getPluginWrappers()
     {
-        if (empty($this->pluginWrappers)) {
+        if ($this->pluginWrappers->count() < 1) {
             return [];
         }
 
@@ -265,7 +304,7 @@ class Revision
      */
     public function getPluginWrappersByRow($refresh = false)
     {
-        if (empty($this->pluginWrappers)) {
+        if ($this->pluginWrappers->count() < 1) {
             return [];
         }
 
@@ -275,7 +314,7 @@ class Revision
         }
 
         $this->wrappersByRows = $this->orderPluginWrappersByRow(
-            $this->pluginWrappers
+            $this->pluginWrappers->toArray()
         );
 
         return $this->wrappersByRows;
@@ -300,13 +339,13 @@ class Revision
             return null;
         }
 
-        $this->wrappersSortedByPageContainer
-            = $this->orderPluginWrappersByContainerName($this->pluginWrappers);
+        $this->wrappersSortedByPageContainer = $this->orderPluginWrappersByContainerName(
+            $this->pluginWrappers->toArray()
+        );
 
         if (empty($this->wrappersSortedByPageContainer[$containerName])) {
             return null;
         }
-
 
         return $this->wrappersSortedByPageContainer[$containerName];
     }
@@ -320,7 +359,7 @@ class Revision
      */
     public function getPluginWrapper($instanceId)
     {
-        if (empty($this->pluginWrappers)) {
+        if ($this->pluginWrappers->count() < 1) {
             return null;
         }
 
@@ -343,7 +382,7 @@ class Revision
      */
     public function addPluginWrapper(PluginWrapper $instanceWrapper)
     {
-        $this->pluginWrappers[] = $instanceWrapper;
+        $this->pluginWrappers->add($instanceWrapper);
     }
 
     /**
@@ -458,5 +497,33 @@ class Revision
         ksort($wrappersSortedByPageContainer);
 
         return $wrappersSortedByPageContainer;
+    }
+
+    /**
+     * toArray
+     *
+     * @param array $ignore
+     *
+     * @return array
+     */
+    public function toArray($ignore = ['pluginWrappers'])
+    {
+        $data = parent::toArray($ignore);
+        if (!in_array('pluginWrappers', $ignore)) {
+            $data['pluginWrappers'] = $this->modelArrayToArray(
+                $this->getPluginWrappers()->toArray(),
+                []
+            );
+        }
+
+        if (!in_array('createdDateString', $ignore)) {
+            $data['createdDateString'] = $this->getCreatedDateString();
+        }
+
+        if (!in_array('publishedDateString', $ignore)) {
+            $data['publishedDateString'] = $this->getPublishedDateString();
+        }
+
+        return $data;
     }
 }

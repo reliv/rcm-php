@@ -20,7 +20,8 @@ namespace Rcm\Test;
 
 require_once __DIR__ . '/autoload.php';
 
-class Mocks extends \PHPUnit_Framework_TestCase  {
+class Mocks extends \PHPUnit_Framework_TestCase
+{
 
 
-} 
+}

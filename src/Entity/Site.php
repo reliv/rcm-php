@@ -5,6 +5,7 @@ namespace Rcm\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
  * Site Information Entity
@@ -25,7 +26,7 @@ use Rcm\Exception\InvalidArgumentException;
  *
  * @SuppressWarnings(PHPMD)
  */
-class Site implements ApiInterface
+class Site extends AbstractApiModel implements \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -47,6 +48,13 @@ class Site implements ApiInterface
      * )
      */
     protected $domain;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $domainId;
 
     /**
      * @var string Theme of site
@@ -82,6 +90,13 @@ class Site implements ApiInterface
     protected $language;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $languageId;
+
+    /**
      * @var \Rcm\Entity\Country country
      *
      * @ORM\ManyToOne(targetEntity="Country")
@@ -108,7 +123,7 @@ class Site implements ApiInterface
     protected $favIcon = null;
 
     /**
-     * @var array Array of pages
+     * @var ArrayCollection of pages
      *
      * @ORM\OneToMany(
      *     targetEntity="Page",
@@ -120,7 +135,7 @@ class Site implements ApiInterface
     protected $pages;
 
     /**
-     * @var array Array of containers
+     * @var ArrayCollection of containers
      *
      * @ORM\OneToMany(
      *     targetEntity="Container",
@@ -132,6 +147,8 @@ class Site implements ApiInterface
     protected $containers = null;
 
     /**
+     * @var ArrayCollection
+     *
      * @ORM\ManyToMany(
      *     targetEntity="PluginInstance"
      * )
@@ -219,7 +236,6 @@ class Site implements ApiInterface
      */
     public function __clone()
     {
-
         if (!$this->siteId) {
             return;
         }
@@ -232,67 +248,61 @@ class Site implements ApiInterface
         $clonedSiteWides = [];
         $siteWideIdsToChange = [];
 
-        if (!empty($siteWidePlugins)) {
-            /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
-            foreach ($siteWidePlugins as $siteWidePlugin) {
-                $clonedSiteWide = clone $siteWidePlugin;
-                $siteWideIdsToChange[$siteWidePlugin->getInstanceId()]
-                    = $clonedSiteWide;
-                $clonedSiteWides[] = $clonedSiteWide;
-            }
+        /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
+        foreach ($siteWidePlugins as $siteWidePlugin) {
+            $clonedSiteWide = clone $siteWidePlugin;
+            $siteWideIdsToChange[$siteWidePlugin->getInstanceId()]
+                = $clonedSiteWide;
+            $clonedSiteWides[] = $clonedSiteWide;
         }
 
         /* Get Cloned Pages */
         $pages = $this->getPages();
         $clonedPages = [];
 
-        if (!empty($pages)) {
-            /** @var \Rcm\Entity\Page $page */
-            foreach ($pages as $page) {
-                $pageType = $page->getPageType();
+        /** @var \Rcm\Entity\Page $page */
+        foreach ($pages as $page) {
+            $pageType = $page->getPageType();
 
-                // Only clone if is supported
-                if (!isset($this->supportedPageTypes[$pageType])) {
-                    continue;
-                }
-                // Only clone if is cloneable
-                if (!$this->supportedPageTypes[$pageType]['canClone']) {
-                    continue;
-                }
-
-                $clonedPage = $this->getContainerClone($page, $siteWideIdsToChange);
-
-                if (!$clonedPage) {
-                    continue;
-                }
-
-                $clonedPages[] = $clonedPage;
+            // Only clone if is supported
+            if (!isset($this->supportedPageTypes[$pageType])) {
+                continue;
+            }
+            // Only clone if is cloneable
+            if (!$this->supportedPageTypes[$pageType]['canClone']) {
+                continue;
             }
 
-            $this->pages = new ArrayCollection($clonedPages);
+            $clonedPage = $this->getContainerClone($page, $siteWideIdsToChange);
+
+            if (!$clonedPage) {
+                continue;
+            }
+
+            $clonedPages[] = $clonedPage;
         }
+
+        $this->pages = new ArrayCollection($clonedPages);
 
         /* Get Cloned Containers */
         $containers = $this->getContainers();
         $clonedContainers = [];
 
-        if (!empty($containers)) {
-            /** @var \Rcm\Entity\Container $container */
-            foreach ($containers as $container) {
-                $clonedContainer = $this->getContainerClone(
-                    $container,
-                    $siteWideIdsToChange
-                );
+        /** @var \Rcm\Entity\Container $container */
+        foreach ($containers as $container) {
+            $clonedContainer = $this->getContainerClone(
+                $container,
+                $siteWideIdsToChange
+            );
 
-                if (!$clonedContainer) {
-                    continue;
-                }
-
-                $clonedContainers[] = $clonedContainer;
+            if (!$clonedContainer) {
+                continue;
             }
 
-            $this->containers = new ArrayCollection($clonedContainers);
+            $clonedContainers[] = $clonedContainer;
         }
+
+        $this->containers = new ArrayCollection($clonedContainers);
     }
 
     /**
@@ -437,17 +447,26 @@ class Site implements ApiInterface
     }
 
     /**
+     * Add a domain to the site
+     *
+     * @param Domain $domain Domain object to add
+     *
+     * @return void
+     */
+    public function setDomain(Domain $domain)
+    {
+        $this->domain = $domain;
+        $this->domainId = $domain->getDomainId();
+    }
+
+    /**
      * getDomainId
      *
      * @return int|null
      */
     public function getDomainId()
     {
-        if ($this->domain) {
-            return $this->domain->getDomainId();
-        }
-
-        return null;
+        return $this->domainId;
     }
 
     /**
@@ -465,18 +484,6 @@ class Site implements ApiInterface
     }
 
     /**
-     * Add a domain to the site
-     *
-     * @param Domain $domain Domain object to add
-     *
-     * @return void
-     */
-    public function setDomain(Domain $domain)
-    {
-        $this->domain = $domain;
-    }
-
-    /**
      * Get Language for the site
      *
      * @return \Rcm\Entity\Language
@@ -486,19 +493,27 @@ class Site implements ApiInterface
         return $this->language;
     }
 
+    /**
+     * Sets the Language property
+     *
+     * @param Language $language Language Entity
+     *
+     * @return void
+     */
+    public function setLanguage(Language $language)
+    {
+        $this->language = $language;
+        $this->languageId = $language->getLanguageId();
+    }
 
     /**
-     * getDomainId
+     * getLanguageId
      *
      * @return int|null
      */
     public function getLanguageId()
     {
-        if ($this->language) {
-            return $this->language->getLanguageId();
-        }
-
-        return null;
+        return $this->languageId;
     }
 
     /**
@@ -513,18 +528,6 @@ class Site implements ApiInterface
         }
 
         return null;
-    }
-
-    /**
-     * Sets the Language property
-     *
-     * @param Language $language Language Entity
-     *
-     * @return void
-     */
-    public function setLanguage(Language $language)
-    {
-        $this->language = $language;
     }
 
     /**
@@ -627,7 +630,7 @@ class Site implements ApiInterface
      */
     public function getPage($pageName, $pageType = 'n')
     {
-        if (empty($this->pages)) {
+        if ($this->pages->count() < 1) {
             return null;
         }
 
@@ -652,7 +655,7 @@ class Site implements ApiInterface
      */
     public function addPage(Page $page)
     {
-        $this->pages[$page->getName()] = $page;
+        $this->pages->set($page->getName(), $page);
     }
 
     /**
@@ -920,74 +923,113 @@ class Site implements ApiInterface
      */
     public function getLocale()
     {
+        $language = $this->getLanguage();
+        $country = $this->getCountry();
+
+        if (empty($language) || empty($country)) {
+            return null;
+        }
+
         return
-            strtolower($this->getLanguage()->getIso6391())
+            strtolower($language->getIso6391())
             . '_' .
-            strtoupper($this->getCountry()->getIso2());
+            strtoupper($country->getIso2());
     }
 
     /**
      * populate @todo some properties are missing
      *
      * @param array $data
+     * @param array $ignore
      *
      * @return void
      */
-    public function populate($data)
+    public function populate(array $data, array $ignore = [])
     {
-        if (!empty($data['siteId'])) {
+        if (!empty($data['siteId']) && !in_array('siteId', $ignore)) {
             $this->setSiteId($data['siteId']);
         }
-        if (!empty($data['domain']) && $data['domain'] instanceof Domain) {
+        if (!empty($data['domain']) && $data['domain'] instanceof Domain
+            && !in_array('domain', $ignore)
+        ) {
             $this->setDomain($data['domain']);
         }
-        if (!empty($data['domain']) && is_array($data['domain'])) {
+        if (!empty($data['domain']) && is_array($data['domain'])
+            && !in_array(
+                'domain',
+                $ignore
+            )
+        ) {
             // is this right?
             $domain = new Domain();
             $domain->populate($data['domain']);
             $this->setDomain($domain);
         }
-        if (!empty($data['theme'])) {
+        if (!empty($data['theme']) && !in_array('theme', $ignore)) {
             $this->setTheme($data['theme']);
         }
-        if (!empty($data['siteLayout'])) {
+        if (!empty($data['siteLayout']) && !in_array('siteLayout', $ignore)) {
             $this->setSiteLayout($data['siteLayout']);
         }
-        if (!empty($data['siteTitle'])) {
+        if (!empty($data['siteTitle']) && !in_array('siteTitle', $ignore)) {
             $this->setSiteTitle($data['siteTitle']);
         }
-        if (!empty($data['language']) && $data['language'] instanceof Language) {
+        if (!empty($data['language']) && $data['language'] instanceof Language
+            && !in_array('language', $ignore)
+        ) {
             $this->setLanguage($data['language']);
         }
-        if (!empty($data['language']) && is_array($data['language'])) {
+        if (!empty($data['language']) && is_array($data['language'])
+            && !in_array(
+                'language',
+                $ignore
+            )
+        ) {
             $language = new Language();
             $language->populate($data['language']);
             $this->setLanguage($language);
         }
-        if (!empty($data['country']) && $data['country'] instanceof Country) {
+        if (!empty($data['country']) && $data['country'] instanceof Country
+            && !in_array('country', $ignore)
+        ) {
             $this->setCountry($data['country']);
         }
-        if (!empty($data['country']) && is_array($data['country'])) {
+        if (!empty($data['country']) && is_array($data['country'])
+            && !in_array(
+                'country',
+                $ignore
+            )
+        ) {
             $country = new Country();
             $country->populate($data['country']);
             $this->setCountry($country);
         }
-        if (!empty($data['status'])) {
+        if (!empty($data['status']) && !in_array('status', $ignore)) {
             $this->setStatus($data['status']);
         }
-        if (!empty($data['favIcon'])) {
+        if (!empty($data['favIcon']) && !in_array('favIcon', $ignore)) {
             $this->setFavIcon($data['favIcon']);
         }
-        if (!empty($data['loginPage'])) {
+        if (!empty($data['loginPage']) && !in_array('loginPage', $ignore)) {
             $this->setLoginPage($data['loginPage']);
         }
-        if (!empty($data['notAuthorizedPage'])) {
+        if (!empty($data['notAuthorizedPage'])
+            && !in_array(
+                'notAuthorizedPage',
+                $ignore
+            )
+        ) {
             $this->setNotAuthorizedPage($data['notAuthorizedPage']);
         }
-        if (!empty($data['notFoundPage'])) {
+        if (!empty($data['notFoundPage']) && !in_array('notFoundPage', $ignore)) {
             $this->setNotFoundPage($data['notFoundPage']);
         }
-        if (!empty($data['supportedPageTypes'])) {
+        if (!empty($data['supportedPageTypes'])
+            && !in_array(
+                'supportedPageTypes',
+                $ignore
+            )
+        ) {
             $this->setSupportedPageTypes($data['supportedPageTypes']);
         }
     }
@@ -995,34 +1037,57 @@ class Site implements ApiInterface
     /**
      * populateFromObject - @todo some properties are missing
      *
-     * @param Site|ApiInterface $object
+     * @param ApiPopulatableInterface $object
+     * @param array                   $ignore
      *
      * @return void
      */
-    public function populateFromObject(ApiInterface $object)
-    {
+    public function populateFromObject(
+        ApiPopulatableInterface $object,
+        array $ignore = []
+    ) {
         if (!$object instanceof Site) {
             return;
         }
-        $this->setSiteId($object->getSiteId());
-        if (is_object($object->getDomain())) {
+        if (!in_array('siteId', $ignore)) {
+            $this->setSiteId($object->getSiteId());
+        }
+        if (is_object($object->getDomain()) && !in_array('domain', $ignore)) {
             $this->setDomain($object->getDomain());
         }
-        $this->setTheme($object->getTheme());
-        $this->setSiteLayout($object->getSiteLayout());
-        $this->setSiteTitle($object->getSiteTitle());
-        if (is_object($object->getLanguage())) {
+        if (!in_array('theme', $ignore)) {
+            $this->setTheme($object->getTheme());
+        }
+        if (!in_array('siteLayout', $ignore)) {
+            $this->setSiteLayout($object->getSiteLayout());
+        }
+        if (!in_array('siteTitle', $ignore)) {
+            $this->setSiteTitle($object->getSiteTitle());
+        }
+        if (is_object($object->getLanguage()) && !in_array('language', $ignore)) {
             $this->setLanguage($object->getLanguage());
         }
-        if (is_object($object->getCountry())) {
+        if (is_object($object->getCountry()) && !in_array('country', $ignore)) {
             $this->setCountry($object->getCountry());
         }
-        $this->setStatus($object->getStatus());
-        $this->setFavIcon($object->getFavIcon());
-        $this->setLoginPage($object->getLoginPage());
-        $this->setNotAuthorizedPage($object->getNotAuthorizedPage());
-        $this->setNotFoundPage($object->getNotFoundPage());
-        $this->setSupportedPageTypes($object->getSupportedPageTypes());
+        if (!in_array('status', $ignore)) {
+            $this->setStatus($object->getStatus());
+        }
+        if (!in_array('favIcon', $ignore)) {
+            $this->setFavIcon($object->getFavIcon());
+        }
+        if (!in_array('loginPage', $ignore)) {
+            $this->setLoginPage($object->getLoginPage());
+        }
+        if (!in_array('notAuthorizedPage', $ignore)) {
+            $this->setNotAuthorizedPage($object->getNotAuthorizedPage());
+        }
+        if (!in_array('notFoundPage', $ignore)) {
+            $this->setNotFoundPage($object->getNotFoundPage());
+        }
+        if (!in_array('supportedPageTypes', $ignore)) {
+            $this->setSupportedPageTypes($object->getSupportedPageTypes());
+        }
     }
 
     /**
@@ -1032,33 +1097,64 @@ class Site implements ApiInterface
      */
     public function jsonSerialize()
     {
-        return $this->toArray();
+        return $this->toArray(['pages', 'containers', 'sitePlugins']);
     }
 
     /**
      * getIterator
      *
-     * @return array|Traversable
+     * @return array|\Traversable
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->toArray());
+        return new \ArrayIterator(
+            $this->toArray(['pages', 'containers', 'sitePlugins'])
+        );
     }
 
     /**
      * toArray
      *
-     * @return array
+     * @param array $ignore
+     *
+     * @return mixed
      */
-    public function toArray()
+    public function toArray($ignore = ['pages', 'containers', 'sitePlugins'])
     {
-        $data = get_object_vars($this);
+        $data = parent::toArray($ignore);
 
-        $data['domainId'] = $this->getDomainId();
-        $data['domainName'] = $this->getDomainName();
-        $data['languageId'] = $this->getLanguageId();
-        $data['languageIso6392t'] = $this->getLanguageIso6392t();
-        $data['countryId'] = $this->getCountryId();
+        if (!in_array('pages', $ignore)) {
+            $data['pages'] = $this->modelArrayToArray(
+                $this->getPages()->toArray(),
+                ['parent', 'site', 'revisions']
+            );
+        }
+
+        if (!in_array('containers', $ignore)) {
+            $data['containers'] = $this->modelArrayToArray(
+                $this->getContainers()->toArray(),
+                ['parent', 'site', 'revisions']
+            );
+        }
+
+        if (!in_array('domainId', $ignore)) {
+            $data['domainId'] = $this->getDomainId();
+        }
+        if (!in_array('domainName', $ignore)) {
+            $data['domainName'] = $this->getDomainName();
+        }
+        if (!in_array('languageId', $ignore)) {
+            $data['languageId'] = $this->getLanguageId();
+        }
+        if (!in_array('languageIso6392t', $ignore)) {
+            $data['languageIso6392t'] = $this->getLanguageIso6392t();
+        }
+        if (!in_array('countryId', $ignore)) {
+            $data['countryId'] = $this->getCountryId();
+        }
+        if (!in_array('locale', $ignore)) {
+            $data['locale'] = $this->getLocale();
+        }
 
         return $data;
     }

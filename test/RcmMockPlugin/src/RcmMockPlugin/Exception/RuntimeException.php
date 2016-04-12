@@ -32,9 +32,7 @@ use Rcm\Exception\ExceptionInterface;
  * @license   License.txt New BSD License
  * @version   Release: 1.0
  */
-class RuntimeException
-    extends \RuntimeException
-    implements ExceptionInterface
+class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
 
 }

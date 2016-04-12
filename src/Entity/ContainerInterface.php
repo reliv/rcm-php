@@ -20,7 +20,7 @@ use Rcm\Exception\InvalidArgumentException;
  * @link      http://github.com/reliv
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-interface ContainerInterface
+interface ContainerInterface extends ApiModelInterface
 {
     /**
      * Clone the container
@@ -159,6 +159,13 @@ interface ContainerInterface
      * @return void
      */
     public function setSite(Site $site);
+
+    /**
+     * getSiteId
+     *
+     * @return int
+     */
+    public function getSiteId();
 
     /**
      * Set Page Revision

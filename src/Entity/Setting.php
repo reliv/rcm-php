@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="rcm_setting")
  */
-class Setting
+class Setting extends AbstractApiModel
 {
     /**
      * @var string name

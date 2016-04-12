@@ -459,8 +459,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
      * @covers \Rcm\Factory\SessionManagerFactory
      * @expectedException \Rcm\Exception\InvalidArgumentException
      */
-    public function testGetSessionSaveHandlerWithInvalidClassSetInServiceManager(
-    )
+    public function testGetSessionSaveHandlerWithInvalidClassSetInServiceManager()
     {
 
         $config = [

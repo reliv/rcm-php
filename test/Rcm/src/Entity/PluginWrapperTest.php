@@ -39,7 +39,9 @@ use Rcm\Entity\PluginWrapper;
  */
 class PluginWrapperTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var \Rcm\Entity\PluginWrapper */
+    /**
+     * @var \Rcm\Entity\PluginWrapper
+     */
     protected $pluginWrapper;
 
     /**
@@ -391,4 +393,3 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['instance'], $array['instance']);
     }
 }
- 

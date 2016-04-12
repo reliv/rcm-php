@@ -20,7 +20,6 @@ require_once __DIR__ . '/../../../autoload.php';
 use Rcm\Controller\InstanceConfigApiController;
 use Zend\ServiceManager\ServiceManager;
 
-
 /**
  * InstanceConfigApiControllerTest
  *
@@ -64,4 +63,4 @@ class InstanceConfigApiControllerTest extends \PHPUnit_Framework_TestCase
             $response->getStatusCode()
         );
     }
-} 
+}

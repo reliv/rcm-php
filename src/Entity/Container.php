@@ -82,6 +82,13 @@ class Container extends ContainerAbstract
     protected $publishedRevision;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $publishedRevisionId;
+
+    /**
      * @var \Rcm\Entity\Revision Integer Staged Revision ID
      *
      * @ORM\OneToOne(targetEntity="Revision")
@@ -90,12 +97,26 @@ class Container extends ContainerAbstract
     protected $stagedRevision;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $stagedRevisionId;
+
+    /**
      * @var \Rcm\Entity\Site
      *
      * @ORM\ManyToOne(targetEntity="Site", inversedBy="containers")
      * @ORM\JoinColumn(name="siteId", referencedColumnName="siteId")
      **/
     protected $site;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $siteId;
 
     /**
      * @ORM\ManyToMany(
@@ -158,6 +179,7 @@ class Container extends ContainerAbstract
     }
 
     /**
+     * @deprecated Do NOT use
      * Set the ID of the Page.  This was added for unit testing and should
      * not be used by calling scripts.  Instead please persist the object
      * with Doctrine and allow Doctrine to set this on it's own,

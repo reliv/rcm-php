@@ -78,4 +78,4 @@ class SettingTest extends \PHPUnit_Framework_TestCase
         $this->setting->setValue($value);
         $this->assertEquals($this->setting->getValue(), $value);
     }
-} 
+}

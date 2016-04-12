@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Rcm\Repository\PluginWrapper")
  * @ORM\Table(name="rcm_plugin_wrappers")
  */
-class PluginWrapper implements \JsonSerializable, \IteratorAggregate
+class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \IteratorAggregate
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -97,6 +97,13 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     protected $instance;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $pluginInstanceId;
+
+    /**
      * __clone
      *
      * @return void
@@ -116,6 +123,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     }
 
     /**
+     * @deprecated Don NOT use this
      * Set the Plugin Wrapper ID.  This was added for unit testing and
      * should not be used by calling scripts.  Instead please persist the object
      * with Doctrine and allow Doctrine to set this on it's own.
@@ -165,14 +173,38 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     /**
      * Get Order number to render instances that have the same container
      *
+     * @return int
+     */
+    public function getRenderOrder()
+    {
+        return (int)$this->renderOrder;
+    }
+
+    /**
+     * Set the order number to render instances that have the same container.
+     *
+     * @param $renderOrder
+     *
+     * @return void
+     */
+    public function setRenderOrder($renderOrder)
+    {
+        $this->renderOrder = (int)$renderOrder;
+    }
+
+    /**
+     * @deprecated Use getRenderOrder()
+     * Get Order number to render instances that have the same container
+     *
      * @return int Order to render Plugin Instance
      */
     public function getRenderOrderNumber()
     {
-        return (int) $this->renderOrder;
+        return $this->getRenderOrder();
     }
 
     /**
+     * @deprecated Use setRenderOrder()
      * Set the order number to render instances that have the same container.
      *
      * @param int $order Order to display in.
@@ -181,7 +213,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function setRenderOrderNumber($order)
     {
-        $this->renderOrder = (int) $order;
+        $this->setRenderOrder($order);
     }
 
     /**
@@ -194,6 +226,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     public function setInstance(PluginInstance $instance)
     {
         $this->instance = $instance;
+        $this->pluginInstanceId = $instance->getInstanceId();
     }
 
     /**
@@ -204,6 +237,16 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     public function getInstance()
     {
         return $this->instance;
+    }
+
+    /**
+     * getInstanceId
+     *
+     * @return int|null
+     */
+    public function getPluginInstanceId()
+    {
+        return $this->pluginInstanceId;
     }
 
     /**
@@ -295,7 +338,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function setRowNumber($rowNumber)
     {
-        $this->rowNumber = (int) $rowNumber;
+        $this->rowNumber = (int)$rowNumber;
     }
 
     /**
@@ -305,7 +348,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function getRowNumber()
     {
-        return (int) $this->rowNumber;
+        return (int)$this->rowNumber;
     }
 
     /**
@@ -317,7 +360,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function setColumnClass($columnClass)
     {
-        $this->columnClass = trim((string) $columnClass);
+        $this->columnClass = trim((string)$columnClass);
     }
 
     /**
@@ -327,35 +370,44 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
      */
     public function getColumnClass()
     {
-        return trim((string) $this->columnClass);
+        return trim((string)$this->columnClass);
     }
 
     /**
      * populate
      *
      * @param array $data
+     * @param array $ignore
      *
      * @return void
      */
-    public function populate($data)
+    public function populate(array $data, array $ignore = [])
     {
-        if (isset($data['layoutContainer'])) {
+        if (isset($data['layoutContainer'])
+            && !in_array(
+                'layoutContainer',
+                $ignore
+            )
+        ) {
             $this->setLayoutContainer($data['layoutContainer']);
         }
 
-        if (isset($data['renderOrder'])) {
-            $this->setRenderOrderNumber($data['renderOrder']);
+        // @bc
+        if (isset($data['renderOrder']) && !in_array('renderOrder', $ignore)) {
+            $this->setRenderOrder($data['renderOrder']);
         }
 
-        if (isset($data['rowNumber'])) {
+        if (isset($data['rowNumber']) && !in_array('rowNumber', $ignore)) {
             $this->setRowNumber($data['rowNumber']);
         }
 
-        if (isset($data['columnClass'])) {
+        if (isset($data['columnClass']) && !in_array('columnClass', $ignore)) {
             $this->setColumnClass($data['columnClass']);
         }
 
-        if (isset($data['instance']) && $data['instance'] instanceof PluginInstance) {
+        if (isset($data['instance']) && $data['instance'] instanceof PluginInstance
+            && !in_array('instance', $ignore)
+        ) {
             $this->setInstance($data['instance']);
         }
     }
@@ -373,7 +425,7 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     /**
      * getIterator
      *
-     * @return array|Traversable
+     * @return array|\Traversable
      */
     public function getIterator()
     {
@@ -383,10 +435,14 @@ class PluginWrapper implements \JsonSerializable, \IteratorAggregate
     /**
      * toArray
      *
+     * @param array $ignore
+     *
      * @return array
      */
-    public function toArray()
+    public function toArray($ignore = [])
     {
-        return get_object_vars($this);
+        $data = parent::toArray($ignore);
+
+        return $data;
     }
 }

@@ -681,7 +681,8 @@ class CmsPermissionChecksTest extends Mocks
         );
 
         $this->assertEquals(
-            'sites.' . $siteId, $siteResouceId
+            'sites.' . $siteId,
+            $siteResouceId
         );
 
         $pagesResouceId = $cmsPermissionChecks->buildPagesResourceId(
@@ -689,7 +690,8 @@ class CmsPermissionChecksTest extends Mocks
         );
 
         $this->assertEquals(
-            'sites.' . $siteId . '.pages', $pagesResouceId
+            'sites.' . $siteId . '.pages',
+            $pagesResouceId
         );
 
         $pageResouceId = $cmsPermissionChecks->buildPageResourceId(
@@ -714,4 +716,3 @@ class CmsPermissionChecksTest extends Mocks
 
     }
 }
- 

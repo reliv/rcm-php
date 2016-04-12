@@ -9,9 +9,10 @@
  */
 angular.module('rcmApi', [])
     .factory(
-    'rcmApiService',
-    [
-        '$http', '$log',
+        'rcmApiService',
+        [
+        '$http',
+        '$log',
         function ($http, $log) {
 
             var self = this;
@@ -96,9 +97,7 @@ angular.module('rcmApi', [])
                 apiParams.url = self.formatUrl(apiParams.url, apiParams.urlParams);
 
                 if (cache) {
-
                     if (self.cache[apiParams.url]) {
-
                         self.apiSuccess(
                             self.cache[apiParams.url],
                             apiParams,
@@ -122,15 +121,15 @@ angular.module('rcmApi', [])
                     }
                 )
                     .success(
-                    function (data, status, headers, config) {
-                        self.apiSuccess(data, apiParams, status, headers, config)
-                    }
-                )
+                        function (data, status, headers, config) {
+                            self.apiSuccess(data, apiParams, status, headers, config)
+                        }
+                    )
                     .error(
-                    function (data, status, headers, config) {
-                        self.apiError(data, apiParams, status, headers, config)
-                    }
-                );
+                        function (data, status, headers, config) {
+                            self.apiError(data, apiParams, status, headers, config)
+                        }
+                    );
             };
 
             /**
@@ -153,15 +152,15 @@ angular.module('rcmApi', [])
                     }
                 )
                     .success(
-                    function (data, status, headers, config) {
-                        self.apiSuccess(data, apiParams, status, headers, config)
-                    }
-                )
+                        function (data, status, headers, config) {
+                            self.apiSuccess(data, apiParams, status, headers, config)
+                        }
+                    )
                     .error(
-                    function (data, status, headers, config) {
-                        self.apiError(data, apiParams, status, headers, config)
-                    }
-                );
+                        function (data, status, headers, config) {
+                            self.apiError(data, apiParams, status, headers, config)
+                        }
+                    );
             };
 
             /**
@@ -184,15 +183,15 @@ angular.module('rcmApi', [])
                     }
                 )
                     .success(
-                    function (data, status, headers, config) {
-                        self.apiSuccess(data, apiParams, status, headers, config)
-                    }
-                )
+                        function (data, status, headers, config) {
+                            self.apiSuccess(data, apiParams, status, headers, config)
+                        }
+                    )
                     .error(
-                    function (data, status, headers, config) {
-                        self.apiError(data, apiParams, status, headers, config)
-                    }
-                );
+                        function (data, status, headers, config) {
+                            self.apiError(data, apiParams, status, headers, config)
+                        }
+                    );
             };
 
             /**
@@ -215,15 +214,15 @@ angular.module('rcmApi', [])
                     }
                 )
                     .success(
-                    function (data, status, headers, config) {
-                        self.apiSuccess(data, apiParams, status, headers, config)
-                    }
-                )
+                        function (data, status, headers, config) {
+                            self.apiSuccess(data, apiParams, status, headers, config)
+                        }
+                    )
                     .error(
-                    function (data, status, headers, config) {
-                        self.apiError(data, apiParams, status, headers, config)
-                    }
-                );
+                        function (data, status, headers, config) {
+                            self.apiError(data, apiParams, status, headers, config)
+                        }
+                    );
             };
 
             /**
@@ -246,15 +245,15 @@ angular.module('rcmApi', [])
                     }
                 )
                     .success(
-                    function (data, status, headers, config) {
-                        self.apiSuccess(data, apiParams, status, headers, config)
-                    }
-                )
+                        function (data, status, headers, config) {
+                            self.apiSuccess(data, apiParams, status, headers, config)
+                        }
+                    )
                     .error(
-                    function (data, status, headers, config) {
-                        self.apiError(data, apiParams, status, headers, config)
-                    }
-                );
+                        function (data, status, headers, config) {
+                            self.apiError(data, apiParams, status, headers, config)
+                        }
+                    );
             };
 
             /**
@@ -311,7 +310,6 @@ angular.module('rcmApi', [])
                 // $log.info('An API success: ', data);
 
                 if (data.code > 0 || typeof data !== 'object') {
-
                     self.prepareErrorData(
                         data,
                         apiParams,
@@ -322,7 +320,6 @@ angular.module('rcmApi', [])
                         status
                     )
                 } else {
-
                     self.prepareData(
                         data,
                         apiParams,
@@ -403,8 +400,8 @@ angular.module('rcmApi', [])
 
             return self;
         }
-    ]
-);
+        ]
+    );
 
 
 /**
@@ -420,9 +417,9 @@ var rcmApi = {
  */
 angular.injector(['ng', 'rcmApi']).invoke(
     [
-        'rcmApiService',
-        function (rcmApiService) {
+    'rcmApiService',
+    function (rcmApiService) {
             rcmApi.rcmApiService = rcmApiService;
-        }
+    }
     ]
 );

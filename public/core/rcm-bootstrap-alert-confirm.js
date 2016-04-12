@@ -14,7 +14,7 @@
         }
 
         var message = title;
-        if(text){
+        if (text) {
             message = '<div class="modal-body"><p>' + text + '</p></div>';
         }
 
@@ -53,7 +53,7 @@
         }
 
         var message = title;
-        if(text){
+        if (text) {
             message = '<div class="modal-body"><p>' + text + '</p></div>';
         }
 
