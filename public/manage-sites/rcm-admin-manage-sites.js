@@ -1,14 +1,15 @@
 angular.module('rcmAdmin').controller(
     'rcmAdminManageSitesController',
     [
-        '$scope', '$http', 'rcmApiService', 'rcmAdminApiUrlService',
-        function ($scope, $http, rcmApiService, rcmAdminApiUrlService) {
+        '$scope', '$http', 'rcmApiService', 'rcmAdminApiUrlService', 'rcmLoading',
+        function ($scope, $http, rcmApiService, rcmAdminApiUrlService, rcmLoading) {
 
             var pageData = RcmAdminService.model.RcmPageModel.getData();
 
             $scope.currentSiteId = pageData.page.siteId;
 
             var self = this;
+            var namespace = 'rcmAdminManageSites';
 
             $scope.sites = [];
             $scope.languages = {};
@@ -23,11 +24,10 @@ angular.module('rcmAdmin').controller(
                 languages: false,
                 countries: false
             };
+            
             $scope.tempSites = {};
 
             $scope.message = '';
-
-            getResultsPage(1);
 
             $scope.pagination = {
                 current: 1
@@ -35,6 +35,7 @@ angular.module('rcmAdmin').controller(
 
             $scope.disableSite = function (site) {
                 $scope.loadings[site.siteId] = true;
+                var siteNamespace = namespace + '-' + site.siteId;
                 $().confirm(
                     'Disable this site?<br><br>' +
                     '<ul>' +
@@ -42,6 +43,8 @@ angular.module('rcmAdmin').controller(
                     '<li>Domain: ' + site.domainName + '</li>' +
                     '</ul>',
                     function () {
+                        rcmLoading.setLoading(siteNamespace, 0);
+
                         if (site.status == 'A') {
                             site.status = 'D';
                         } else {
@@ -55,6 +58,11 @@ angular.module('rcmAdmin').controller(
                                 data: site,
                                 loading: function (loading) {
                                     $scope.loadings[site.siteId] = loading;
+                                    var loadingInt = Number(!loading);
+                                    rcmLoading.setLoading(
+                                        siteNamespace,
+                                        loadingInt
+                                    );
                                 },
                                 success: function (data) {
                                     //Refresh site list
@@ -87,18 +95,26 @@ angular.module('rcmAdmin').controller(
 
             $scope.cloneSite = function (site) {
                 $scope.loadings[site.siteId] = true;
+                var siteNamespace = namespace + '-' + site.siteId;
+
                 $().confirm(
                     '<div class="confirm">' +
                     '<h2>Duplicate site ' + site.siteId + '?</h2>' +
                     '<div><span>New Domain: </span>' + $scope.tempSites[site.siteId].domainName + '</div>' +
                     '</div>',
                     function () {
+                        rcmLoading.setLoading(siteNamespace, 0);
                         rcmApiService.post(
                             {
                                 url: rcmAdminApiUrlService.siteCopy,
                                 data: $scope.tempSites[site.siteId],
                                 loading: function (loading) {
                                     $scope.loadings[site.siteId] = loading;
+                                    var loadingInt = Number(!loading);
+                                    rcmLoading.setLoading(
+                                        siteNamespace,
+                                        loadingInt
+                                    );
                                 },
                                 success: function (data) {
                                     $scope.tempSites[site.siteId] = data.data;
@@ -121,6 +137,11 @@ angular.module('rcmAdmin').controller(
                     url: rcmAdminApiUrlService.languages,
                     loading: function (loading) {
                         $scope.loadings.languages = loading;
+                        var loadingInt = Number(!loading);
+                        rcmLoading.setLoading(
+                            namespace + '-languages',
+                            loadingInt
+                        );
                     },
                     success: function (data) {
                         $scope.languages = data.data;
@@ -137,6 +158,11 @@ angular.module('rcmAdmin').controller(
                     url: rcmAdminApiUrlService.countries,
                     loading: function (loading) {
                         $scope.loadings.countries = loading;
+                        var loadingInt = Number(!loading);
+                        rcmLoading.setLoading(
+                            namespace + '-countries',
+                            loadingInt
+                        );
                     },
                     success: function (data) {
                         $scope.countries = data.data;
@@ -160,8 +186,7 @@ angular.module('rcmAdmin').controller(
                 getResultsPage($scope.pagination.current);
             };
 
-
-            function getResultsPage(pageNumber) {
+            var getResultsPage = function(pageNumber) {
                 var pageParam = 'page=' + pageNumber;
                 var pageSizeParam = 'page_size=' + $scope.resultsPerPage;
                 var queryParam = '';
@@ -172,14 +197,21 @@ angular.module('rcmAdmin').controller(
 
                 var url = rcmAdminApiUrlService.sites;
 
+                var sitePageNamespace = namespace + 'site-page';
+
+                rcmLoading.setLoading(sitePageNamespace, 0);
+
                 $http.get(url + '?' + pageParam + '&' + pageSizeParam + '&' + queryParam)
                     .then(
                         function (result) {
                             $scope.sites = result.data.data.items;
                             $scope.totalItems = result.data.data.itemCount;
+                            rcmLoading.setLoading(sitePageNamespace, 1);
                         }
                     );
-            }
+            };
+
+            getResultsPage(1);
         }
     ]
 );

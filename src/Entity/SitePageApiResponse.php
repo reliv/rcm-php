@@ -22,16 +22,22 @@ use Rcm\Entity\Page;
 
 class SitePageApiResponse extends Page
 {
-
-    public function toArray()
+    /**
+     * toArray
+     *
+     * @param array $ignore
+     *
+     * @return array
+     */
+    public function toArray($ignore = [])
     {
         return [
-            'siteId' => $this->getSite()->getSiteId(),
+            'siteId' => $this->getSiteId(),
             'pageId' => $this->getPageId(),
             'name' => $this->getName(),
             'author' => $this->getAuthor(),
-            'createdDate' => $this->getCreatedDate()->format(\DateTime::ISO8601),
-            'lastPublished' => $this->getLastPublished()->format(\DateTime::ISO8601),
+            'createdDate' => $this->getCreatedDateString(\DateTime::ISO8601),
+            'lastPublished' => $this->getLastPublishedString(\DateTime::ISO8601),
             'pageLayout' => $this->getPageLayout(),
             'siteLayoutOverride' => $this->getSiteLayoutOverride(),
             'pageTitle' => $this->getPageTitle(),

@@ -1,8 +1,8 @@
 /**
  * RcmAdminPage AKA RcmPage
- * @param document
  * @param elm
  * @param onInitted
+ * @param rcmAdminService
  * @constructor
  */
 var RcmAdminPage = function (elm, onInitted, rcmAdminService) {

@@ -1,8 +1,10 @@
 /**
  * RcmAdminPlugin - AKA RcmPlugin - AKA pluginHandler
+ * 
  * @param page
  * @param id
  * @param container
+ * @param rcmAdminService
  * @constructor
  */
 var RcmAdminPlugin = function (page, id, container, rcmAdminService) {
