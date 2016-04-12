@@ -51,14 +51,29 @@ abstract class ContainerAbstract implements ContainerInterface
     protected $publishedRevision;
 
     /**
+     * @var int
+     */
+    protected $publishedRevisionId;
+
+    /**
      * @var \Rcm\Entity\Revision Integer Staged Revision
      */
     protected $stagedRevision;
 
     /**
+     * @var int
+     */
+    protected $stagedRevisionId;
+
+    /**
      * @var \Rcm\Entity\Site
      **/
     protected $site;
+
+    /**
+     * @var int
+     */
+    protected $siteId;
 
     /**
      * @var array|\Doctrine\Common\Collections\ArrayCollection
@@ -89,14 +104,13 @@ abstract class ContainerAbstract implements ContainerInterface
 
         if (!empty($this->publishedRevision)) {
             $revision = clone $this->publishedRevision;
-            $this->publishedRevision = null;
-            $this->revisions[] = $revision;
-            $this->stagedRevision = $revision;
-            $this->publishedRevision = null;
+            $this->removePublishedRevision();
+            $this->revisions->add($revision);
+            $this->setStagedRevision($revision);
         } elseif (!empty($this->stagedRevision)) {
             $revision = clone $this->stagedRevision;
-            $this->stagedRevision = $revision;
-            $this->revisions[] = $revision;
+            $this->setStagedRevision($revision);
+            $this->revisions->add($revision);
         }
     }
 
@@ -256,12 +270,23 @@ abstract class ContainerAbstract implements ContainerInterface
     public function setPublishedRevision(Revision $revision)
     {
         if (!empty($this->stagedRevision)) {
-            $this->stagedRevision = null;
+            $this->removeStagedRevision();
         }
 
         $revision->publishRevision();
         $this->publishedRevision = $revision;
+        $this->publishedRevisionId = $revision->getRevisionId();
         $this->setLastPublished(new \DateTime());
+    }
+
+    /**
+     * getPublishedRevisionId
+     *
+     * @return int
+     */
+    public function getPublishedRevisionId()
+    {
+        return $this->publishedRevisionId;
     }
 
     /**
@@ -287,10 +312,21 @@ abstract class ContainerAbstract implements ContainerInterface
             && $this->publishedRevision->getRevisionId() == $revision->getRevisionId(
             )
         ) {
-            $this->publishedRevision = null;
+            $this->removePublishedRevision();
         }
 
         $this->stagedRevision = $revision;
+        $this->stagedRevisionId = $revision->getRevisionId();
+    }
+
+    /**
+     * getStagedRevisionId
+     *
+     * @return mixed
+     */
+    public function getStagedRevisionId()
+    {
+        return $this->stagedRevisionId;
     }
 
     /**
@@ -299,6 +335,7 @@ abstract class ContainerAbstract implements ContainerInterface
     public function removePublishedRevision()
     {
         $this->publishedRevision = null;
+        $this->publishedRevisionId = null;
     }
 
     /**
@@ -309,6 +346,7 @@ abstract class ContainerAbstract implements ContainerInterface
     public function removeStagedRevision()
     {
         $this->stagedRevision = null;
+        $this->stagedRevisionId = null;
     }
 
     /**
@@ -331,6 +369,7 @@ abstract class ContainerAbstract implements ContainerInterface
     public function setSite(Site $site)
     {
         $this->site = $site;
+        $this->siteId = $site->getSiteId();
     }
 
     /**
@@ -340,12 +379,7 @@ abstract class ContainerAbstract implements ContainerInterface
      */
     public function getSiteId()
     {
-        $site = $this->getSite();
-        if (empty($site)) {
-            return null;
-        }
-
-        return $site->getSiteId();
+        return $this->siteId;
     }
 
     /**
@@ -456,6 +490,8 @@ abstract class ContainerAbstract implements ContainerInterface
     }
 
     /**
+     * getCurrentRevision
+     *
      * @return Revision
      */
     public function getCurrentRevision()
@@ -464,7 +500,11 @@ abstract class ContainerAbstract implements ContainerInterface
     }
 
     /**
-     * @param Revision $currentRevision
+     * setCurrentRevision
+     *
+     * @param $currentRevision
+     *
+     * @return void
      */
     public function setCurrentRevision($currentRevision)
     {

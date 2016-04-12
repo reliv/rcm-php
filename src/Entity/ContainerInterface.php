@@ -161,6 +161,13 @@ interface ContainerInterface extends ApiModelInterface
     public function setSite(Site $site);
 
     /**
+     * getSiteId
+     *
+     * @return int
+     */
+    public function getSiteId();
+
+    /**
      * Set Page Revision
      *
      * @param Revision $revision Revision object to add

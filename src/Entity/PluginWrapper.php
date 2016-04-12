@@ -97,6 +97,13 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
     protected $instance;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $pluginInstanceId;
+
+    /**
      * __clone
      *
      * @return void
@@ -116,6 +123,7 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
     }
 
     /**
+     * @deprecated Don NOT use this
      * Set the Plugin Wrapper ID.  This was added for unit testing and
      * should not be used by calling scripts.  Instead please persist the object
      * with Doctrine and allow Doctrine to set this on it's own.
@@ -194,6 +202,7 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
     public function setInstance(PluginInstance $instance)
     {
         $this->instance = $instance;
+        $this->pluginInstanceId = $instance->getInstanceId();
     }
 
     /**
@@ -211,14 +220,9 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
      *
      * @return int|null
      */
-    public function getInstanceId()
+    public function getPluginInstanceId()
     {
-        $instance = $this->getInstance();
-        if (empty($instance)) {
-            return null;
-        }
-
-        return $instance->getInstanceId();
+        return $this->pluginInstanceId;
     }
 
     /**
@@ -413,10 +417,6 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
     public function toArray($ignore = [])
     {
         $data = parent::toArray($ignore);
-
-        if (!in_array('instanceId', $ignore)) {
-            $data['instanceId'] = $this->getInstanceId();
-        }
 
         return $data;
     }

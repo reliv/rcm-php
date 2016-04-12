@@ -50,6 +50,13 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     protected $domain;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $domainId;
+
+    /**
      * @var string Theme of site
      *
      * @ORM\Column(type="string", nullable=true)
@@ -81,6 +88,13 @@ class Site extends AbstractApiModel implements \IteratorAggregate
      * )
      **/
     protected $language;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $languageId;
 
     /**
      * @var \Rcm\Entity\Country country
@@ -440,17 +454,26 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     }
 
     /**
+     * Add a domain to the site
+     *
+     * @param Domain $domain Domain object to add
+     *
+     * @return void
+     */
+    public function setDomain(Domain $domain)
+    {
+        $this->domain = $domain;
+        $this->domainId = $domain->getDomainId();
+    }
+
+    /**
      * getDomainId
      *
      * @return int|null
      */
     public function getDomainId()
     {
-        if ($this->domain) {
-            return $this->domain->getDomainId();
-        }
-
-        return null;
+        return $this->domainId;
     }
 
     /**
@@ -468,18 +491,6 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     }
 
     /**
-     * Add a domain to the site
-     *
-     * @param Domain $domain Domain object to add
-     *
-     * @return void
-     */
-    public function setDomain(Domain $domain)
-    {
-        $this->domain = $domain;
-    }
-
-    /**
      * Get Language for the site
      *
      * @return \Rcm\Entity\Language
@@ -490,17 +501,26 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     }
 
     /**
-     * getDomainId
+     * Sets the Language property
+     *
+     * @param Language $language Language Entity
+     *
+     * @return void
+     */
+    public function setLanguage(Language $language)
+    {
+        $this->language = $language;
+        $this->languageId = $language->getLanguageId();
+    }
+
+    /**
+     * getLanguageId
      *
      * @return int|null
      */
     public function getLanguageId()
     {
-        if ($this->language) {
-            return $this->language->getLanguageId();
-        }
-
-        return null;
+        return $this->languageId;
     }
 
     /**
@@ -515,18 +535,6 @@ class Site extends AbstractApiModel implements \IteratorAggregate
         }
 
         return null;
-    }
-
-    /**
-     * Sets the Language property
-     *
-     * @param Language $language Language Entity
-     *
-     * @return void
-     */
-    public function setLanguage(Language $language)
-    {
-        $this->language = $language;
     }
 
     /**

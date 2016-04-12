@@ -165,6 +165,7 @@ class Revision extends AbstractApiModel
     }
 
     /**
+     * @deprecated Do NOT use
      * Set the ID of the Page Revision.  This was added for unit testing and
      * should not be used by calling scripts.  Instead please persist the object
      * with Doctrine and allow Doctrine to set this on it's own.

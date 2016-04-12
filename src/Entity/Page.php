@@ -113,12 +113,26 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     protected $publishedRevision;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $publishedRevisionId;
+
+    /**
      * @var Revision Integer Staged Revision ID
      *
      * @ORM\OneToOne(targetEntity="Revision")
      * @ORM\JoinColumn(name="stagedRevisionId", referencedColumnName="revisionId")
      */
     protected $stagedRevision;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $stagedRevisionId;
 
     /**
      * @var string Page Type n=Normal, t=Template, z=System, deleted-{originalPageType}
@@ -134,6 +148,13 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
      * @ORM\JoinColumn(name="siteId", referencedColumnName="siteId")
      **/
     protected $site;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $siteId;
 
     /**
      * @var ArrayCollection
@@ -175,6 +196,13 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
      * )
      */
     protected $parent;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $parentId;
 
     /**
      * Constructor for Page Entity.
@@ -247,6 +275,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     }
 
     /**
+     * @deprecated This should not be used
      * Set the ID of the Page.  This was added for unit testing and should
      * not be used by calling scripts.  Instead please persist the object
      * with Doctrine and allow Doctrine to set this on it's own.
@@ -413,6 +442,8 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     public function setParent(Page $parent)
     {
         $this->parent = $parent;
+
+        $this->parentId = $parent->getPageId();
     }
 
     /**
@@ -430,14 +461,9 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
      *
      * @return int|null
      */
-    public function getParentPageId()
+    public function getParentId()
     {
-        $parent = $this->getParent();
-        if (empty($parent)) {
-            return null;
-        }
-
-        return $parent->getPageId();
+        return $this->parentId;
     }
 
     /**
@@ -463,6 +489,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
             $this->setName($data['name']);
         }
 
+        // @bc support
         if (isset($data['pageId']) && !in_array('pageId', $ignore)) {
             $this->setPageId($data['pageId']);
         }
@@ -579,10 +606,6 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
         ]
     ) {
         $data = parent::toArray($ignore);
-
-        if (!in_array('parentPageId', $ignore)) {
-            $data['parentPageId'] = $this->getParentPageId();
-        }
 
         return $data;
     }

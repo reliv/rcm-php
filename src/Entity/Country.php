@@ -53,6 +53,16 @@ class Country extends AbstractApiModel implements \IteratorAggregate
     protected $countryName = 'United States';
 
     /**
+     * getId
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->getIso3();
+    }
+
+    /**
      * Sets the CountryName property
      *
      * @param string $countryName Name of the Country

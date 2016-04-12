@@ -68,6 +68,13 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
     protected $primaryDomain;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $primaryId;
+
+    /**
      * @var ArrayCollection Array of Domain Objects that represent
      *                      all the additional domains that belong
      *                      to this one
@@ -108,7 +115,6 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
      */
     public function getDomainValidator()
     {
-
         if (empty($this->domainValidator)) {
             $this->domainValidator = new Hostname(
                 [
@@ -166,6 +172,7 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
      */
     public function setDomainName($domain)
     {
+        $domain = strtolower($domain);
         if (!$this->getDomainValidator()->isValid($domain)) {
             throw new InvalidArgumentException(
                 'Domain name is invalid'
@@ -241,6 +248,7 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
     public function setPrimary(Domain $primaryDomain)
     {
         $this->primaryDomain = $primaryDomain;
+        $this->primaryId = $primaryDomain->getDomainId();
     }
 
     /**
@@ -248,14 +256,9 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
      *
      * @return null
      */
-    public function getPrimaryDomainId()
+    public function getPrimaryId()
     {
-        $primary = $this->getPrimary();
-        if (empty($primary)) {
-            return null;
-        }
-
-        $this->primaryDomain->getDomainId();
+        return $this->primaryId;
     }
 
     /**
@@ -293,13 +296,23 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
         if (!empty($data['domainId'])) {
             $this->setDomainId($data['domainId']);
         }
+        // @bc support
         if (!empty($data['domain'])) {
             $this->setDomainName($data['domain']);
         }
+        if (!empty($data['domainName'])) {
+            $this->setDomainName($data['domainName']);
+        }
+        // @bc support
         if (!empty($data['primaryDomain'])
             && $data['primaryDomain'] instanceof Domain
         ) {
             $this->setPrimary($data['primaryDomain']);
+        }
+        if (!empty($data['primary'])
+            && $data['primary'] instanceof Domain
+        ) {
+            $this->setPrimary($data['primary']);
         }
     }
 
@@ -358,12 +371,16 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
             $data['siteId'] = $this->getSiteId();
         }
 
-        if (!in_array('domain', $ignore)) {
-            $data['domain'] = $this->getDomainName();
+        if (!in_array('additionalDomains', $ignore)) {
+            $data['additionalDomains'] = $this->modelArrayToArray(
+                $this->getAdditionalDomains()->toArray(),
+                ['additionalDomains', 'domainValidator', 'site']
+            );
         }
 
-        if (!in_array('primaryDomainId', $ignore)) {
-            $data['primaryDomainId'] = $this->getPrimaryDomainId();
+        // @bc support
+        if (!in_array('domain', $ignore)) {
+            $data['domain'] = $this->getDomainName();
         }
 
         if (!in_array('isPrimary', $ignore)) {
