@@ -349,4 +349,3 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['iso639_2t'], $array['iso639_2t']);
     }
 }
- 

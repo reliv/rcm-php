@@ -69,6 +69,4 @@ class CacheFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($object instanceof StorageInterface);
     }
-
-
 }

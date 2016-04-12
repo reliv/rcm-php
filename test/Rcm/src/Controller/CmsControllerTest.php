@@ -310,8 +310,7 @@ class CmsControllerTest extends \PHPUnit_Framework_TestCase
      * @return null
      * @covers Rcm\Controller\CmsController
      */
-    public function testIndexActionHomePageRedirectWhenUserNotAllowedForRevisions(
-    )
+    public function testIndexActionHomePageRedirectWhenUserNotAllowedForRevisions()
     {
         $mockPage = $this->getMockBuilder('\Rcm\Entity\Page')
             ->disableOriginalConstructor()

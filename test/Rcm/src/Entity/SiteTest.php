@@ -248,9 +248,9 @@ class SIteTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($actual instanceof ArrayCollection);
 
-        $this->assertTrue(in_array($pageOne,$actual->toArray()));
-        $this->assertTrue(in_array($pageTwo,$actual->toArray()));
-        $this->assertTrue(in_array($pageThree,$actual->toArray()));
+        $this->assertTrue(in_array($pageOne, $actual->toArray()));
+        $this->assertTrue(in_array($pageTwo, $actual->toArray()));
+        $this->assertTrue(in_array($pageThree, $actual->toArray()));
     }
 
     /**
@@ -293,9 +293,9 @@ class SIteTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $reIndexedArray);
 
-        $this->assertFalse(in_array($pageOne,$actual->toArray()));
-        $this->assertTrue(in_array($pageTwo,$actual->toArray()));
-        $this->assertTrue(in_array($pageThree,$actual->toArray()));
+        $this->assertFalse(in_array($pageOne, $actual->toArray()));
+        $this->assertTrue(in_array($pageTwo, $actual->toArray()));
+        $this->assertTrue(in_array($pageThree, $actual->toArray()));
     }
 
     /**
@@ -358,9 +358,9 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $actual = $this->site->getContainers();
 
         $this->assertTrue($actual instanceof ArrayCollection);
-        $this->assertTrue(in_array($containerOne,$actual->toArray()));
-        $this->assertTrue(in_array($containerTwo,$actual->toArray()));
-        $this->assertTrue(in_array($containerThree,$actual->toArray()));
+        $this->assertTrue(in_array($containerOne, $actual->toArray()));
+        $this->assertTrue(in_array($containerTwo, $actual->toArray()));
+        $this->assertTrue(in_array($containerThree, $actual->toArray()));
     }
 
     /**
@@ -478,8 +478,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      * @covers \Rcm\Entity\Site
      * @expectedException \Rcm\Exception\InvalidArgumentException
      */
-    public function testAddSiteWideWithNonSiteWideMarkedInstanceThrowsException(
-    )
+    public function testAddSiteWideWithNonSiteWideMarkedInstanceThrowsException()
     {
         $pluginOne = new PluginInstance();
         $pluginOne->setInstanceId(3);
@@ -1121,7 +1120,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
             $pageEntity->setSite($this->site);
 
             foreach ($page['revisions'] as $index => $revisionData) {
-
                 $revision = $this->getRevision($revisionData);
 
                 if ($index === 0) {
@@ -1137,7 +1135,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         }
 
         foreach ($site['containers'] as $container) {
-
             $containerEntity = new Container();
             $containerEntity->setContainerId($container['containerId']);
             $containerEntity->setName($container['name']);
@@ -1199,7 +1196,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
             $clonedWrappers = $clonedRevision->getPluginWrappers();
 
             /** @var \Rcm\Entity\PluginWrapper $wrapper */
-            foreach($clonedWrappers as $wrapper) {
+            foreach ($clonedWrappers as $wrapper) {
                 $this->assertNull($wrapper->getPluginWrapperId());
                 $this->assertNull($wrapper->getInstance()->getInstanceId());
             }
@@ -1222,7 +1219,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
             $clonedWrappers = $clonedRevision->getPluginWrappers();
 
             /** @var \Rcm\Entity\PluginWrapper $wrapper */
-            foreach($clonedWrappers as $wrapper) {
+            foreach ($clonedWrappers as $wrapper) {
                 $this->assertNull($wrapper->getPluginWrapperId());
                 $this->assertNull($wrapper->getInstance()->getInstanceId());
             }
@@ -1273,6 +1270,4 @@ class SIteTest extends \PHPUnit_Framework_TestCase
 
         return $revision;
     }
-
 }
- 

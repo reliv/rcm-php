@@ -232,9 +232,10 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
      */
     public function setPrimaryDomain($primaryDomain)
     {
-        if(empty($primaryDomain)) {
+        if (empty($primaryDomain)) {
             $this->primaryDomain = null;
             $this->primaryId = null;
+
             return;
         }
 

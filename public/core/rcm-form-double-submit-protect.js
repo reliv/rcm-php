@@ -9,7 +9,7 @@ $().ready(function () {
             var form = $(this);
 
             // Ignore form without action, like angular forms
-            if(!form.attr('action')){
+            if (!form.attr('action')) {
                 return true;
             }
 

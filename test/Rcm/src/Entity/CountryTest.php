@@ -200,4 +200,3 @@ class CountryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['countryName'], $array['countryName']);
     }
 }
- 

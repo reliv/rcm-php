@@ -83,7 +83,7 @@ class Container extends ContainerAbstract
 
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $publishedRevisionId;
@@ -98,7 +98,7 @@ class Container extends ContainerAbstract
 
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $stagedRevisionId;
@@ -113,7 +113,7 @@ class Container extends ContainerAbstract
 
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $siteId;

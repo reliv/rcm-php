@@ -262,7 +262,8 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual->toArray());
     }
 
-    public function testUtilities(){
+    public function testUtilities()
+    {
 
         $data = [];
         $data['domainId'] = 123;

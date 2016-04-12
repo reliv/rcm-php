@@ -21,7 +21,7 @@ RcmPopoutWindow = function (
     data,
     successCallback,
     language
-    ) {
+) {
 
     if (windowName == undefined || windowName == null || windowName == '') {
         windowName = 'rcmAdminPagePopoutWindow'

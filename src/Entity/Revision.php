@@ -339,8 +339,7 @@ class Revision extends AbstractApiModel
             return null;
         }
 
-        $this->wrappersSortedByPageContainer
-            = $this->orderPluginWrappersByContainerName(
+        $this->wrappersSortedByPageContainer = $this->orderPluginWrappersByContainerName(
             $this->pluginWrappers->toArray()
         );
 
@@ -490,9 +489,7 @@ class Revision extends AbstractApiModel
             $wrappersSortedByPageContainer[$containerName][] = $wrapper;
         }
 
-        foreach (
-            $wrappersSortedByPageContainer as $containerName => $wrapperContainer
-        ) {
+        foreach ($wrappersSortedByPageContainer as $containerName => $wrapperContainer) {
             $wrappersSortedByPageContainer[$containerName]
                 = $this->orderPluginWrappersByRow($wrapperContainer);
         }

@@ -31,9 +31,9 @@ var RcmCore = function () {
      * @param defaultValue
      * @returns {*}
      */
-    self.getConfigValue = function(configKey, defaultValue){
+    self.getConfigValue = function (configKey, defaultValue) {
 
-        if(self.config[configKey]){
+        if (self.config[configKey]) {
             return self.config[configKey]
         }
 
@@ -52,12 +52,10 @@ var RcmCore = function () {
     self.addAngularModule = function (moduleName) {
 
         if (self.hasModule(moduleName)) {
-
             return;
         }
 
         if (!self.app) {
-
             self.pushModuleName(moduleName);
             return;
         }
@@ -76,7 +74,6 @@ var RcmCore = function () {
     self.addAngularModules = function (moduleConfigs) {
 
         for (var moduleName in moduleConfigs) {
-
             self.addAngularModule(moduleName, moduleConfigs[moduleName]);
         }
     };
@@ -88,7 +85,6 @@ var RcmCore = function () {
     self.pushModuleName = function (moduleName) {
 
         if (!self.hasModule(moduleName)) {
-
             self.moduleDepenencies.push(moduleName);
         }
     };
@@ -225,7 +221,6 @@ var RcmCore = function () {
     self.initConsole = function () {
 
         if (typeof window.console !== "undefined") {
-
             self.console = window.console;
         }
 

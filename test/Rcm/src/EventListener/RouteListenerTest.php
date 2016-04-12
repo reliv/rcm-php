@@ -267,8 +267,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
             $redirectHeader = $actual->getHeaders()->get('Location')->toString();
 
             $this->assertEquals($expectedLocation, $redirectHeader);
-        } catch(\Exception $e){
-
+        } catch (\Exception $e) {
         }
     }
 
@@ -298,6 +297,4 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($actual instanceof Response);
         $this->assertEmpty($actual);
     }
-
-
 }

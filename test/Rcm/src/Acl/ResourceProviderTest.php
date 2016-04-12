@@ -155,10 +155,10 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                             5 => 'approve',
                             6 => 'layout',
                         ],
-                    'name' => 'curr.reliv.com - pages - curr-page',
-                    'description' => 'Global resource for pages',
+                        'name' => 'curr.reliv.com - pages - curr-page',
+                        'description' => 'Global resource for pages',
                 ],
-            'sites.1' =>
+                'sites.1' =>
                 [
                     'resourceId' => 'sites.1',
                     'parentResourceId' => 'sites',
@@ -171,10 +171,10 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                             4 => 'theme',
                             5 => 'admin',
                         ],
-                    'name' => 'curr.reliv.com',
-                    'description' => 'Global resource for sites',
+                        'name' => 'curr.reliv.com',
+                        'description' => 'Global resource for sites',
                 ],
-            'sites.1.pages' =>
+                'sites.1.pages' =>
                 [
                     'resourceId' => 'sites.1.pages',
                     'parentResourceId' => 'sites.1',
@@ -188,10 +188,10 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                             5 => 'approve',
                             6 => 'layout',
                         ],
-                    'name' => 'curr.reliv.com - pages',
-                    'description' => 'Global resource for pages',
+                        'name' => 'curr.reliv.com - pages',
+                        'description' => 'Global resource for pages',
                 ],
-            'sites' =>
+                'sites' =>
                 [
                     'resourceId' => 'sites',
                     'parentResourceId' => null,
@@ -204,10 +204,10 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                             4 => 'theme',
                             5 => 'admin',
                         ],
-                    'name' => 'sites',
-                    'description' => 'Global resource for sites',
+                        'name' => 'sites',
+                        'description' => 'Global resource for sites',
                 ],
-            'pages' =>
+                'pages' =>
                 [
                     'resourceId' => 'pages',
                     'parentResourceId' => null,
@@ -221,8 +221,8 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                             5 => 'approve',
                             6 => 'layout',
                         ],
-                    'name' => 'pages',
-                    'description' => 'Global resource for pages',
+                        'name' => 'pages',
+                        'description' => 'Global resource for pages',
                 ],
         ];
 

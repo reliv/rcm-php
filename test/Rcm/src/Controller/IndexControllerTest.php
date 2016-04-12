@@ -317,8 +317,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      * @return null
      * @covers Rcm\Controller\IndexController
      */
-    public function testIndexActionHomePageRedirectWhenUserNotAllowedForRevisions(
-    )
+    public function testIndexActionHomePageRedirectWhenUserNotAllowedForRevisions()
     {
         $this->pageData = $this->getPageData(42, 'my-test', 443, 'z');
 

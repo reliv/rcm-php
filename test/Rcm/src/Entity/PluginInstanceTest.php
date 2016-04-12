@@ -318,7 +318,4 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['icon'], $array['icon']);
         $this->assertEquals($data['tooltip'], $array['tooltip']);
     }
-
-
 }
- 
