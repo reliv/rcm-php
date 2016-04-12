@@ -540,6 +540,17 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      */
     public function toArray($ignore = [])
     {
-        return parent::toArray($ignore);
+        $data =  parent::toArray($ignore);
+
+        // @bc
+        if (!in_array('siteWide', $ignore)) {
+            $data['siteWide'] = $this->isSiteWide();
+        }
+
+        if (!in_array('isSiteWide', $ignore)) {
+            $data['isSiteWide'] = $this->isSiteWide();
+        }
+
+        return $data;
     }
 }

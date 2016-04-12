@@ -518,7 +518,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\ArrayIterator', $iterator);
 
-        $array = $obj1->toArray();
+        $array = $obj1->toArray([]);
 
         $this->assertEquals($data['name'], $array['name']);
         $this->assertEquals($data['pageTitle'], $array['pageTitle']);

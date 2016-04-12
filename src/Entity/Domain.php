@@ -214,13 +214,42 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
     }
 
     /**
-     * Check to see if this domain is the primary domain name.
+     * getPrimaryDomain
+     *
+     * @return Domain
+     */
+    public function getPrimaryDomain()
+    {
+        return $this->primaryDomain;
+    }
+
+    /**
+     * Set the Primary Domain.
+     *
+     * @param Domain|null $primaryDomain
+     *
+     * @return void
+     */
+    public function setPrimaryDomain($primaryDomain)
+    {
+        if(empty($primaryDomain)) {
+            $this->primaryDomain = null;
+            $this->primaryId = null;
+            return;
+        }
+
+        $this->primaryDomain = $primaryDomain;
+        $this->primaryId = $primaryDomain->getDomainId();
+    }
+
+    /**
+     * isPrimaryDomain
      *
      * @return bool
      */
-    public function isPrimary()
+    public function isPrimaryDomain()
     {
-        $primary = $this->getPrimary();
+        $primary = $this->getPrimaryDomain();
         if (empty($primary)) {
             return true;
         }
@@ -229,16 +258,49 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
     }
 
     /**
+     * getPrimaryDomainId
+     *
+     * @return Domain
+     */
+    public function getPrimaryDomainId()
+    {
+        return $this->getPrimaryId();
+    }
+
+    /**
+     * getPrimaryId
+     *
+     * @return null
+     */
+    public function getPrimaryId()
+    {
+        return $this->primaryId;
+    }
+
+    /**
+     * @deprecated isPrimaryDomain()
+     * Check to see if this domain is the primary domain name.
+     *
+     * @return bool
+     */
+    public function isPrimary()
+    {
+        return $this->isPrimaryDomain();
+    }
+
+    /**
+     * @deprecated use getPrimaryDomain()
      * Return the Primary Domain.
      *
      * @return \Rcm\Entity\Domain
      */
     public function getPrimary()
     {
-        return $this->primaryDomain;
+        return $this->getPrimaryDomain();
     }
 
     /**
+     * @deprecated use
      * Set the Primary Domain.
      *
      * @param Domain $primaryDomain Primary Domain Entity
@@ -247,18 +309,7 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
      */
     public function setPrimary(Domain $primaryDomain)
     {
-        $this->primaryDomain = $primaryDomain;
-        $this->primaryId = $primaryDomain->getDomainId();
-    }
-
-    /**
-     * getPrimaryDomainId
-     *
-     * @return null
-     */
-    public function getPrimaryId()
-    {
-        return $this->primaryId;
+        $this->setPrimaryDomain($primaryDomain);
     }
 
     /**
@@ -303,16 +354,17 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
         if (!empty($data['domainName'])) {
             $this->setDomainName($data['domainName']);
         }
-        // @bc support
+
         if (!empty($data['primaryDomain'])
             && $data['primaryDomain'] instanceof Domain
         ) {
-            $this->setPrimary($data['primaryDomain']);
+            $this->setPrimaryDomain($data['primaryDomain']);
         }
+        // @bc support
         if (!empty($data['primary'])
             && $data['primary'] instanceof Domain
         ) {
-            $this->setPrimary($data['primary']);
+            $this->setPrimaryDomain($data['primary']);
         }
     }
 
@@ -385,6 +437,10 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
 
         if (!in_array('isPrimary', $ignore)) {
             $data['isPrimary'] = $this->isPrimary();
+        }
+
+        if (!in_array('isPrimaryDomain', $ignore)) {
+            $data['isPrimaryDomain'] = $this->isPrimaryDomain();
         }
 
         return $data;

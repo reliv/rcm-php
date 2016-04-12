@@ -157,7 +157,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetDomainNameWhenDoesNotExistYet()
     {
-        $domainName = 'thisDomainShouldNeverExistAnywhere.com';
+        $domainName = 'thisdomainshouldneverexistanywhere.com';
 
         $this->domain->setDomainName($domainName);
         $actual = $this->domain->getDomainName();
@@ -266,7 +266,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
 
         $data = [];
         $data['domainId'] = 123;
-        $data['domain'] = 'TEST';
+        $data['domain'] = 'test';
         $data['primaryDomain'] = new Domain();
 
         $objOne = new Domain();
@@ -300,4 +300,3 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['primaryDomain'], $array['primaryDomain']);
     }
 }
- 

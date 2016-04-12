@@ -173,14 +173,38 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
     /**
      * Get Order number to render instances that have the same container
      *
-     * @return int Order to render Plugin Instance
+     * @return int
      */
-    public function getRenderOrderNumber()
+    public function getRenderOrder()
     {
         return (int)$this->renderOrder;
     }
 
     /**
+     * Set the order number to render instances that have the same container.
+     *
+     * @param $renderOrder
+     *
+     * @return void
+     */
+    public function setRenderOrder($renderOrder)
+    {
+        $this->renderOrder = (int)$renderOrder;
+    }
+
+    /**
+     * @deprecated Use getRenderOrder()
+     * Get Order number to render instances that have the same container
+     *
+     * @return int Order to render Plugin Instance
+     */
+    public function getRenderOrderNumber()
+    {
+        return $this->getRenderOrder();
+    }
+
+    /**
+     * @deprecated Use setRenderOrder()
      * Set the order number to render instances that have the same container.
      *
      * @param int $order Order to display in.
@@ -189,7 +213,7 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
      */
     public function setRenderOrderNumber($order)
     {
-        $this->renderOrder = (int)$order;
+        $this->setRenderOrder($order);
     }
 
     /**
@@ -368,8 +392,9 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
             $this->setLayoutContainer($data['layoutContainer']);
         }
 
+        // @bc
         if (isset($data['renderOrder']) && !in_array('renderOrder', $ignore)) {
-            $this->setRenderOrderNumber($data['renderOrder']);
+            $this->setRenderOrder($data['renderOrder']);
         }
 
         if (isset($data['rowNumber']) && !in_array('rowNumber', $ignore)) {
