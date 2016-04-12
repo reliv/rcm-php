@@ -236,7 +236,6 @@ class Site extends AbstractApiModel implements \IteratorAggregate
      */
     public function __clone()
     {
-
         if (!$this->siteId) {
             return;
         }
@@ -249,7 +248,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
         $clonedSiteWides = [];
         $siteWideIdsToChange = [];
 
-        if (!empty($siteWidePlugins)) {
+        if ($siteWidePlugins->count() > 0) {
             /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
             foreach ($siteWidePlugins as $siteWidePlugin) {
                 $clonedSiteWide = clone $siteWidePlugin;
@@ -263,7 +262,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
         $pages = $this->getPages();
         $clonedPages = [];
 
-        if (!empty($pages)) {
+        if ($pages->count() > 0) {
             /** @var \Rcm\Entity\Page $page */
             foreach ($pages as $page) {
                 $pageType = $page->getPageType();
@@ -293,7 +292,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
         $containers = $this->getContainers();
         $clonedContainers = [];
 
-        if (!empty($containers)) {
+        if ($containers->count() > 0) {
             /** @var \Rcm\Entity\Container $container */
             foreach ($containers as $container) {
                 $clonedContainer = $this->getContainerClone(
@@ -637,7 +636,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
      */
     public function getPage($pageName, $pageType = 'n')
     {
-        if (empty($this->pages)) {
+        if ($this->pages->count() < 1) {
             return null;
         }
 
@@ -662,7 +661,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
      */
     public function addPage(Page $page)
     {
-        $this->pages[$page->getName()] = $page;
+        $this->pages->set($page->getName(), $page);
     }
 
     /**
