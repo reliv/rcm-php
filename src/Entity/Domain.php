@@ -344,24 +344,26 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
      */
     public function populate(array $data = [], array $ignore = [])
     {
-        if (!empty($data['domainId'])) {
+        if (!empty($data['domainId']) && !in_array('domainId', $ignore)) {
             $this->setDomainId($data['domainId']);
         }
         // @bc support
-        if (!empty($data['domain'])) {
+        if (!empty($data['domain']) && !in_array('domainId', $ignore)) {
             $this->setDomainName($data['domain']);
         }
-        if (!empty($data['domainName'])) {
+        if (!empty($data['domainName']) && !in_array('domainId', $ignore)) {
             $this->setDomainName($data['domainName']);
         }
 
         if (!empty($data['primaryDomain'])
+            && !in_array('domainId', $ignore)
             && $data['primaryDomain'] instanceof Domain
         ) {
             $this->setPrimaryDomain($data['primaryDomain']);
         }
         // @bc support
         if (!empty($data['primary'])
+            && !in_array('domainId', $ignore)
             && $data['primary'] instanceof Domain
         ) {
             $this->setPrimaryDomain($data['primary']);

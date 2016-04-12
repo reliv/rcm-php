@@ -552,7 +552,7 @@ abstract class ContainerAbstract implements ContainerInterface
         array $ignore = []
     ) {
         if ($object instanceof ContainerInterface) {
-            $this->populate($object->toArray());
+            $this->populate($object->toArray(), $ignore);
         }
     }
 
