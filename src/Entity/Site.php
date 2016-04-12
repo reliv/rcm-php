@@ -148,7 +148,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
 
     /**
      * @var ArrayCollection
-     * 
+     *
      * @ORM\ManyToMany(
      *     targetEntity="PluginInstance"
      * )
@@ -248,67 +248,61 @@ class Site extends AbstractApiModel implements \IteratorAggregate
         $clonedSiteWides = [];
         $siteWideIdsToChange = [];
 
-        if ($siteWidePlugins->count() > 0) {
-            /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
-            foreach ($siteWidePlugins as $siteWidePlugin) {
-                $clonedSiteWide = clone $siteWidePlugin;
-                $siteWideIdsToChange[$siteWidePlugin->getInstanceId()]
-                    = $clonedSiteWide;
-                $clonedSiteWides[] = $clonedSiteWide;
-            }
+        /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
+        foreach ($siteWidePlugins as $siteWidePlugin) {
+            $clonedSiteWide = clone $siteWidePlugin;
+            $siteWideIdsToChange[$siteWidePlugin->getInstanceId()]
+                = $clonedSiteWide;
+            $clonedSiteWides[] = $clonedSiteWide;
         }
 
         /* Get Cloned Pages */
         $pages = $this->getPages();
         $clonedPages = [];
 
-        if ($pages->count() > 0) {
-            /** @var \Rcm\Entity\Page $page */
-            foreach ($pages as $page) {
-                $pageType = $page->getPageType();
+        /** @var \Rcm\Entity\Page $page */
+        foreach ($pages as $page) {
+            $pageType = $page->getPageType();
 
-                // Only clone if is supported
-                if (!isset($this->supportedPageTypes[$pageType])) {
-                    continue;
-                }
-                // Only clone if is cloneable
-                if (!$this->supportedPageTypes[$pageType]['canClone']) {
-                    continue;
-                }
-
-                $clonedPage = $this->getContainerClone($page, $siteWideIdsToChange);
-
-                if (!$clonedPage) {
-                    continue;
-                }
-
-                $clonedPages[] = $clonedPage;
+            // Only clone if is supported
+            if (!isset($this->supportedPageTypes[$pageType])) {
+                continue;
+            }
+            // Only clone if is cloneable
+            if (!$this->supportedPageTypes[$pageType]['canClone']) {
+                continue;
             }
 
-            $this->pages = new ArrayCollection($clonedPages);
+            $clonedPage = $this->getContainerClone($page, $siteWideIdsToChange);
+
+            if (!$clonedPage) {
+                continue;
+            }
+
+            $clonedPages[] = $clonedPage;
         }
+
+        $this->pages = new ArrayCollection($clonedPages);
 
         /* Get Cloned Containers */
         $containers = $this->getContainers();
         $clonedContainers = [];
 
-        if ($containers->count() > 0) {
-            /** @var \Rcm\Entity\Container $container */
-            foreach ($containers as $container) {
-                $clonedContainer = $this->getContainerClone(
-                    $container,
-                    $siteWideIdsToChange
-                );
+        /** @var \Rcm\Entity\Container $container */
+        foreach ($containers as $container) {
+            $clonedContainer = $this->getContainerClone(
+                $container,
+                $siteWideIdsToChange
+            );
 
-                if (!$clonedContainer) {
-                    continue;
-                }
-
-                $clonedContainers[] = $clonedContainer;
+            if (!$clonedContainer) {
+                continue;
             }
 
-            $this->containers = new ArrayCollection($clonedContainers);
+            $clonedContainers[] = $clonedContainer;
         }
+
+        $this->containers = new ArrayCollection($clonedContainers);
     }
 
     /**
