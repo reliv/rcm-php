@@ -1,6 +1,10 @@
 .ui-dialog form.simple p {
     margin-bottom: 10px;
 }
+.ui-dialog form.simple p label {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
 
 .ui-dialog form.simple input {
     width: 590px;
