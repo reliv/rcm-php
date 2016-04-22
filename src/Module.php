@@ -85,10 +85,6 @@ class Module
             [$eventWrapper, 'viewResponseEvent'],
             -10000
         );
-
-        /** @var \Zend\Session\SessionManager $session */
-        $session = $serviceManager->get('Rcm\Service\SessionMgr');
-        $session->start();
     }
 
     /**
