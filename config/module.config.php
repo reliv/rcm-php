@@ -378,16 +378,6 @@ return [
                     ]
                 ],
             ],
-            'load-balancer-health-check' => [
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => [
-                    'route' => '/load-balancer-health-check',
-                    'defaults' => [
-                        'controller' => 'App\Controller\LoadBalancerHealthCheck',
-                        'action' => 'index',
-                    ]
-                ],
-            ],
             'Rcm\Api\Page\Check' => [
                 'type' => 'Segment',
                 'options' => [
