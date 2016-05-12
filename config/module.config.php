@@ -383,8 +383,8 @@ return [
                 'options' => [
                     'route' => '/load-balancer-health-check',
                     'defaults' => [
-                        'controller' => 'Rcm\Controller\PageSearchApiController',
-                        'action' => 'allSitePages',
+                        'controller' => 'App\Controller\LoadBalancerHealthCheck',
+                        'action' => 'index',
                     ]
                 ],
             ],
