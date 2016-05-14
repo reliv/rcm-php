@@ -10,5 +10,7 @@ class AvailablePluginsJsListFactory
     {
         $plugin = new AvailablePluginsJsList();
         $plugin->setServiceLocator($services);
+
+        return $plugin;
     }
 }
