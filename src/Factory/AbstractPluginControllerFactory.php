@@ -56,7 +56,8 @@ class AbstractPluginControllerFactory implements AbstractFactoryInterface
     ) {
         return new BaseController(
             $serviceLocator->getServiceLocator()->get('config'),
-            $requestedName
+            $requestedName,
+            $serviceLocator
         );
     }
 }
