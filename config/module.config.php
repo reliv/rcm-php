@@ -642,10 +642,12 @@ return [
     ],
     /* view_helpers */
     'view_helpers' => [
+        'factories' => [
+            'availablePluginsList' => \RcmAdmin\Factory\AvailablePluginsJsListFactory::class
+        ],
         'invokables' => [
             'formPageLayout' => 'RcmAdmin\View\Helper\FormPageLayout',
             'displayErrors' => 'RcmAdmin\View\Helper\DisplayErrors',
-            'availablePluginsList' => 'RcmAdmin\View\Helper\AvailablePluginsJsList',
         ]
     ],
 ];
