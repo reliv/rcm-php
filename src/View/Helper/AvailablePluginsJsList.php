@@ -2,7 +2,6 @@
 
 namespace RcmAdmin\View\Helper;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
 
@@ -19,7 +18,7 @@ use Zend\View\Helper\AbstractHelper;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
-class AvailablePluginsJsList extends AbstractHelper implements ServiceLocatorAwareInterface
+class AvailablePluginsJsList extends AbstractHelper
 {
     /**
      * @var
