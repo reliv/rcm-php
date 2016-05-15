@@ -77,7 +77,7 @@ class BaseController extends AbstractActionController implements PluginInterface
 
         $this->config = $config;
 
-        if (!empty($serviceLocator) && $serviceLocator instanceOf ServiceLocatorInterface) {
+        if ($serviceLocator instanceof ServiceLocatorInterface) {
             $this->setServiceLocator($serviceLocator);
         }
     }
