@@ -3,6 +3,7 @@
 namespace Rcm\Plugin;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
 use Zend\View\Model\ViewModel;
@@ -44,12 +45,14 @@ class BaseController extends AbstractActionController implements PluginInterface
     /**
      * BaseController constructor.
      *
-     * @param array $config
-     * @param null  $pluginName
+     * @param array                   $config
+     * @param null                    $pluginName
+     * @param ServiceLocatorInterface $serviceLocator
      */
     public function __construct(
         $config,
-        $pluginName = null
+        $pluginName = null,
+        $serviceLocator = null
     ) {
         if (empty($pluginName)) {
             /**
@@ -73,6 +76,10 @@ class BaseController extends AbstractActionController implements PluginInterface
         $this->template = $this->nameLowerDashed . '/plugin';
 
         $this->config = $config;
+
+        if ($serviceLocator instanceof ServiceLocatorInterface) {
+            $this->setServiceLocator($serviceLocator);
+        }
     }
 
     /**
@@ -164,5 +171,20 @@ class BaseController extends AbstractActionController implements PluginInterface
     public function setResponse(ResponseInterface $response)
     {
         $this->response = $response;
+    }
+
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+    }
+
+    /**
+     * Service locator is going away from the abstract controller.  Adding here.
+     *
+     * @return \Zend\ServiceManager\ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
     }
 }
