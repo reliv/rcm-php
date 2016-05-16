@@ -85,6 +85,9 @@ class Module
             [$eventWrapper, 'viewResponseEvent'],
             -10000
         );
+
+        //Use DB zend-configured session handling. Should we really boot this every request?
+        $serviceManager->get('Rcm\Service\SessionMgr')->start();
     }
 
     /**
