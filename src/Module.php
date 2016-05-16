@@ -86,7 +86,8 @@ class Module
             -10000
         );
 
-        //Use DB zend-configured session handling. Should we really boot this every request?
+        // Use the configured session handler.
+        // Should we really boot this for every request though?
         $serviceManager->get('Rcm\Service\SessionMgr')->start();
     }
 
