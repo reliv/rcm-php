@@ -85,6 +85,10 @@ class Module
             [$eventWrapper, 'viewResponseEvent'],
             -10000
         );
+
+        // Use the configured session handler.
+        // Should we really boot this for every request though?
+        $serviceManager->get('Rcm\Service\SessionMgr')->start();
     }
 
     /**

@@ -83,7 +83,8 @@ class SessionManagerFactory implements FactoryInterface
 
         Container::setDefaultManager($sessionManager);
 
-        $sessionManager->start();
+
+//        $sessionManager->start();
 
         return $sessionManager;
     }
