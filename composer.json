@@ -53,7 +53,7 @@
     "bower-asset/rcm-loading": ">=0.1.14",
     "bower-asset/rcm-dialog": ">=0.1.1",
     "bower-asset/rcm-html-editor": ">=0.2.0",
-    "bower-asset/angular-translate":"2.7.2",
+    "bower-asset/angular-translate":">=2.7.2",
     "bower-asset/angular-utils-pagination": "^0.9.1"
   },
   "require-dev": {
