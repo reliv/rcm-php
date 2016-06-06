@@ -35,9 +35,9 @@ class RouteListener
     protected $ipValidator;
 
     /**
-     * @param Site         $currentSite
+     * @param Site $currentSite
      * @param RedirectRepo $redirectRepo
-     * @param Ip           $ipValidator
+     * @param Ip $ipValidator
      * @param              $config
      */
     public function __construct(
@@ -88,6 +88,7 @@ class RouteListener
             $response->getHeaders()->addHeaderLine('Location', '//' . $this->config['Rcm']['defaultDomain']);
 
             $event->stopPropagation(true);
+
             return $response;
         }
 
@@ -162,6 +163,9 @@ class RouteListener
     /**
      * Set the system locale to Site Requirements
      *
+     * NOTE: We do NOT set LC_ALL because it causes "n tilde"
+     * chars to be not json encodable after they have been strtolower'd
+     *
      * @return null
      */
     public function addLocale()
@@ -169,9 +173,23 @@ class RouteListener
         $locale = $this->currentSite->getLocale();
 
         /* Conversion for Ubuntu and Mac local settings. */
-        if (!setlocale(LC_ALL, $locale . '.utf8')) {
-            if (!setlocale(LC_ALL, $locale . '.UTF-8')) {
-                setlocale(LC_ALL, 'en_US.UTF-8');
+        if (!setlocale(LC_MONETARY, $locale . '.utf8')) {
+            if (!setlocale(LC_MONETARY, $locale . '.UTF-8')) {
+                setlocale(LC_MONETARY, 'en_US.UTF-8');
+            }
+        }
+
+        /* Conversion for Ubuntu and Mac local settings. */
+        if (!setlocale(LC_NUMERIC, $locale . '.utf8')) {
+            if (!setlocale(LC_NUMERIC, $locale . '.UTF-8')) {
+                setlocale(LC_NUMERIC, 'en_US.UTF-8');
+            }
+        }
+
+        /* Conversion for Ubuntu and Mac local settings. */
+        if (!setlocale(LC_TIME, $locale . '.utf8')) {
+            if (!setlocale(LC_TIME, $locale . '.UTF-8')) {
+                setlocale(LC_TIME, 'en_US.UTF-8');
             }
         }
 
