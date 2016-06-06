@@ -35,9 +35,9 @@ class RouteListener
     protected $ipValidator;
 
     /**
-     * @param Site         $currentSite
+     * @param Site $currentSite
      * @param RedirectRepo $redirectRepo
-     * @param Ip           $ipValidator
+     * @param Ip $ipValidator
      * @param              $config
      */
     public function __construct(
@@ -88,6 +88,7 @@ class RouteListener
             $response->getHeaders()->addHeaderLine('Location', '//' . $this->config['Rcm']['defaultDomain']);
 
             $event->stopPropagation(true);
+
             return $response;
         }
 
@@ -161,6 +162,9 @@ class RouteListener
 
     /**
      * Set the system locale to Site Requirements
+     *
+     * NOTE: We do NOT set LC_ALL because it causes "n tilde"
+     * chars to be not json encodable after they have been strtolower'd
      *
      * @return null
      */
