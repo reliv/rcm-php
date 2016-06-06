@@ -169,9 +169,23 @@ class RouteListener
         $locale = $this->currentSite->getLocale();
 
         /* Conversion for Ubuntu and Mac local settings. */
-        if (!setlocale(LC_ALL, $locale . '.utf8')) {
-            if (!setlocale(LC_ALL, $locale . '.UTF-8')) {
-                setlocale(LC_ALL, 'en_US.UTF-8');
+        if (!setlocale(LC_MONETARY, $locale . '.utf8')) {
+            if (!setlocale(LC_MONETARY, $locale . '.UTF-8')) {
+                setlocale(LC_MONETARY, 'en_US.UTF-8');
+            }
+        }
+
+        /* Conversion for Ubuntu and Mac local settings. */
+        if (!setlocale(LC_NUMERIC, $locale . '.utf8')) {
+            if (!setlocale(LC_NUMERIC, $locale . '.UTF-8')) {
+                setlocale(LC_NUMERIC, 'en_US.UTF-8');
+            }
+        }
+
+        /* Conversion for Ubuntu and Mac local settings. */
+        if (!setlocale(LC_TIME, $locale . '.utf8')) {
+            if (!setlocale(LC_TIME, $locale . '.UTF-8')) {
+                setlocale(LC_TIME, 'en_US.UTF-8');
             }
         }
 
