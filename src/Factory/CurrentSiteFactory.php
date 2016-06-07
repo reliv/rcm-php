@@ -49,7 +49,8 @@ class CurrentSiteFactory implements FactoryInterface
         }
 
         $serverParam = $request->getServer();
-        $currentDomain = $serverParam->get('HTTP_HOST');
+        $hostParts = explode(':', $serverParam->get('HTTP_HOST'));
+        $currentDomain = $hostParts[0];
 
         //Use the default site if the requested domain name is an IP address
         $ipValidator = new Ip();
