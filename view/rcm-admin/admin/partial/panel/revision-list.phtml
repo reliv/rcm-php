@@ -3,6 +3,18 @@
 $page = $layout->page;
 
 if (!$page->getPageId()) {
+    ?>
+    <div id="rcmRevisionList">
+        <div class="dropdown">
+            <button class="btn-xs btn-default dropdown-toggle"
+                    type="button"
+                    id="revisionsList">
+                Static Content
+                <span class="caret"></span>
+            </button>
+        </div>
+    </div>
+    <?php
     return;
 }
 
