@@ -42,14 +42,24 @@ angular.module(
                     }
                 }
 
-                var dialog = RcmDialog.buildDialog(
-                    linkElm.attr('href'), //id
-                    linkElm.attr('title'),
-                    linkElm.attr('href'),
-                    strategyName,
-                    rcmDialogActions,
-                    scope
-                );
+                var id = linkElm.attr('id');
+                console.log(id);
+                if (!id) {
+                    id = linkElm.attr('href');
+                }
+
+                var dialog = RcmDialog.getDialog(id);
+
+                if(!dialog) {
+                    dialog = RcmDialog.buildDialog(
+                        id,
+                        linkElm.attr('title'),
+                        linkElm.attr('href'),
+                        strategyName,
+                        rcmDialogActions,
+                        scope
+                    );
+                }
 
                 dialog.open();
             };

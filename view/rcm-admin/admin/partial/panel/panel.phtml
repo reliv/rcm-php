@@ -1,28 +1,44 @@
 <?php
 $layout = $this->layout();
+$this->availablePluginsList()
 ?>
-<!-- <panel> -->
-<div class="rcmAdminPanelWrapper" ng-cloak>
-    <div class="rcmAdminPanelNav">
-        <?=
-        $this->render(
-            'rcm-admin/admin/partial/navigation/navigation.phtml'
-        ); ?>
-
-        <?php include 'revision-list.phtml';  ?>
-
-        <?php include 'buttons.phtml'; ?>
-    </div>
-    <div style="clear: both;"></div>
-    <div class="rcmPanelEditorToolbar">
-        <?php
-        // Requires Angular and /module/rcm/public/html-editor/html-editor.js
-        // and a parent angular controller
-        ?>
-        <div html-editor-toolbar html-editor-toolbar-toggle="false"
-             html-editor-toolbar-default-skin="lightgray"></div>
+<!-- <rcm-admin-panel> -->
+<div class="rcm-admin-panel rcmAdminPanelWrapper" ng-cloak>
+    <div class="container-fluid">
+        <div class="row rcmAdminPanelNav">
+            <div class="col-sm-7 rcm-admin-menu-col">
+                <?=
+                $this->render(
+                    'rcm-admin/admin/partial/navigation/navigation.phtml'
+                ); ?>
+            </div>
+            <div class="col-sm-2 rcm-admin-menu-col">
+                <?php include 'revision-list.phtml'; ?>
+            </div>
+            <div class="col-sm-3 rcm-admin-menu-col">
+                <?php include 'buttons.phtml'; ?>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+        <div class="row rcmPanelEditorToolbar">
+            <div class="col-sm-12 rcm-admin-menu-col nav-col">
+                <div html-editor-toolbar html-editor-toolbar-toggle="false"
+                     html-editor-toolbar-default-skin="lightgray">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<div class="rcmAdminPanelSpacer"></div>
-<?= $this->availablePluginsList() ?>
-<!-- </panel> -->
+<div class="rcm-admin-panel rcmAdminPanelSpacer">
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col-sm-7 rcm-admin-menu-col">&nbsp;</div>
+            <div class="col-sm-3 rcm-admin-menu-col">&nbsp;</div>
+            <div class="col-sm-2 rcm-admin-menu-col">&nbsp;</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 rcm-admin-menu-col nav-col">&nbsp;</div>
+        </div>
+    </div>
+</div>
+<!-- </rcm-admin-panel> -->
