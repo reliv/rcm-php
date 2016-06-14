@@ -4,11 +4,6 @@
 $page = $layout->page;
 
 if (empty($page->getPageId())) {
-    ?>
-    <div class="rcmPanelRightButtons">
-        <button class="btn btn-default btn-xs" disabled="disabled">Static Content</button>
-    </div>
-    <?php
     return;
 }
 
