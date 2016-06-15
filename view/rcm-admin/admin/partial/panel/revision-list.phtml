@@ -3,6 +3,18 @@
 $page = $layout->page;
 
 if (!$page->getPageId()) {
+    ?>
+    <div id="rcmRevisionList" class="container-fluid">
+        <div class="dropdown">
+            <button class="btn btn-xs btn-default"
+                    disabled="disabled"
+                    type="button"
+                    id="revisionsList">
+                Not an Editable Page
+            </button>
+        </div>
+    </div>
+    <?php
     return;
 }
 
@@ -45,45 +57,49 @@ if ($lastSavedDraftRevision instanceof \Rcm\Entity\Revision) {
 }
 
 ?>
-<div id="rcmRevisionList">
-    <div class="dropdown">
-        <button class="btn-xs btn-default dropdown-toggle"
-                type="button"
-                id="revisionsList"
-                data-toggle="dropdown">
-            <?= $this->headTitle()->renderTitle(); ?> - <?= $currentRevisionType; ?>
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="revisionsList">
-            <?php
-            if (!empty($publishedRevision)) {
-                ?>
-                <li role="presentation">
-                    <?= $publishedRevisionLink ?>
-                </li>
-                <?php
-            }
-            ?>
+<div id="rcmRevisionList" class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 rcm-admin-menu-col">
+            <div class="dropdown">
+                <button class="btn btn-xs btn-default"
+                        type="button"
+                        id="revisionsList"
+                        data-toggle="dropdown">
+                    <?= $currentRevisionType; ?>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="revisionsList">
+                    <?php
+                    if (!empty($publishedRevision)) {
+                        ?>
+                        <li role="presentation">
+                            <?= $publishedRevisionLink ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
 
-            <?php
-            if (!empty($stagedRevision)) {
-                ?>
-                <li role="presentation">
-                    <?= $stagedRevisionLink ?>
-                </li>
-                <?php
-            }
-            ?>
+                    <?php
+                    if (!empty($stagedRevision)) {
+                        ?>
+                        <li role="presentation">
+                            <?= $stagedRevisionLink ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
 
-            <?php
-            if (!empty($lastSavedDraftRevision)) {
-                ?>
-                <li role="presentation">
-                    <?= $lastSavedDraftRevisionLink ?>
-                </li>
-                <?php
-            }
-            ?>
-        </ul>
+                    <?php
+                    if (!empty($lastSavedDraftRevision)) {
+                        ?>
+                        <li role="presentation">
+                            <?= $lastSavedDraftRevisionLink ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>

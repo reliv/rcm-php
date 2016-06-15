@@ -1,23 +1,42 @@
-.rcmAdminPanelSpacer {
-    width: 100%;
-    z-index: 1000;
-    position: relative;
-    height: 9em;
+.rcm-admin-panel {
 }
 
-@media screen and (min-width: 666px) {
-    .rcmAdminPanelSpacer {
-        height: 7em;
-    }
+.rcm-admin-panel .container-fluid {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
-@media screen and (min-width: 1200px) {
-    .rcmAdminPanelSpacer {
-        height: 5em;
-    }
+.rcm-admin-panel .row {
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
-.rcmAdminPanelWrapper {
+.rcm-admin-panel .rcm-admin-menu-col {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-nav-col {
+
+}
+
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-button-col {
+
+}
+
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-button-col button {
+    display: inline-block;
+    margin: .1em .2em .1em .2em;
+}
+
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-toolbar {
+}
+
+.rcm-admin-panel.rcmAdminPanelSpacer {
+    visibility: hidden;
+}
+
+.rcm-admin-panel.rcmAdminPanelWrapper {
     background-color: #FFFFFF;
     position: fixed;
     left: 0;
@@ -28,34 +47,59 @@
     z-index: 1001;
 }
 
-
-.rcmAdminPanelNav {
+.rcm-admin-panel .rcmAdminPanelNav {
     background-color: #FFFFFF;
     border-bottom: 1px solid black;
     position: relative;
     z-index: 1030;
     font-size: 11px;
+    width: 100%;
 }
 
-.rcmAdminPanelNav div.rcmPanelRightButtons {
-    float: right;
-}
-
-div.rcmPanelEditorToolbar {
-    padding: 0px;
+.rcm-admin-panel div.rcmPanelEditorToolbar {
     position: relative;
     width: 100%;
     z-index: 1020;
 }
 
 .modal-body {
-    max-height: 400px;
+    max-height: 90%;
     overflow-y: auto;
 }
 
 .modal-dialog {
     width: auto !important;
-    max-width: 800px;
+    max-width: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* Bootstrap standards */
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: auto !important;
+        max-width: 100%;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+}
+
+@media (min-width: 992px) {
+    .modal-dialog {
+        width: auto !important;
+        max-width: 98%;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .modal-dialog {
+        width: auto !important;
+        max-width: 992px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
 }
 
 /* fixes the bug in bootstrap form-control input, width was wider in FF than it appears in Chrome */
@@ -65,46 +109,63 @@ div.rcmPanelEditorToolbar {
     }
 }
 
+/* <REVISION LIST> */
 #rcmRevisionList {
-    position: absolute;
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-    left: 75px;
-    right: 0;
-    text-align: center;
+    display: inline-block;
+    float: right;
+    margin: 0 .2em 0 .2em;
 }
 
 #rcmRevisionList button {
-    width: 300px;
     text-align: left;
+    min-width: 25em;
 }
 
 #rcmRevisionList button .caret {
     float: right;
-    margin-top: 7px;
+    margin-top: .5em;
 }
 
 #rcmRevisionList .dropdown-menu {
-    min-width: 300px;
-}
-.rcmPanelRightButtons .glyphicon.glyphicon-lock {
-    font-size: 1.5em;
-    padding: 3px 5px 0 5px;
-}
-.rcmPanelRightButtons .unlock {
-    padding: 3px 5px 0 5px;
+    min-width: 25em;
 }
 
-.rcmPanelRightButtons #unlockPermissionsNonEdit{
-    float:right;
+#rcmRevisionList .dropdown-menu a {
+    padding: .2em 1em;
 }
-.rcmPanelRightButtons #lockPermissionsNonEdit {
-    float:right;
+/* </REVISION LIST> */
+
+/* <BUTTONS> */
+.rcm-admin-panel div.rcmPanelRightButtons {
+    display: inline-block;
+    float: right;
+    text-align: right;
 }
-.rcmPanelRightButtons #unlockPermissionsEditMode{
-    float:right;
+
+.rcm-admin-panel .panel-button-container {
+    display: inline-block;
 }
-.rcmPanelRightButtons #lockPermissionsEditMode {
-    float:right;
+
+.rcm-admin-panel .panel-button-icon {
+    text-align: center;
+    font-size: 1em;
+    width: 1em;
+    height: 1em;
 }
+
+.rcm-admin-panel .rcmPanelRightButtons #unlockPermissionsNonEdit {
+    /*float:right;*/
+}
+
+.rcm-admin-panel .rcmPanelRightButtons #lockPermissionsNonEdit {
+    /*float:right;*/
+}
+
+.rcm-admin-panel .rcmPanelRightButtons #unlockPermissionsEditMode {
+    /*float:right;*/
+}
+
+.rcm-admin-panel .rcmPanelRightButtons #lockPermissionsEditMode {
+    /*float:right;*/
+}
+/* </BUTTONS> */
