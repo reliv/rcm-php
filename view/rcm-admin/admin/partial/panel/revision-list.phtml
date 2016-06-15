@@ -4,13 +4,13 @@ $page = $layout->page;
 
 if (!$page->getPageId()) {
     ?>
-    <div id="rcmRevisionList">
+    <div id="rcmRevisionList" class="container-fluid">
         <div class="dropdown">
-            <button class="btn-xs btn-default dropdown-toggle"
+            <button class="btn btn-xs btn-default"
+                    disabled="disabled"
                     type="button"
                     id="revisionsList">
-                Static Content
-                <span class="caret"></span>
+                Not an Editable Page
             </button>
         </div>
     </div>
@@ -57,15 +57,15 @@ if ($lastSavedDraftRevision instanceof \Rcm\Entity\Revision) {
 }
 
 ?>
-<div id="container-fluid rcmRevisionList">
+<div id="rcmRevisionList" class="container-fluid">
     <div class="row">
         <div class="col-sm-12 rcm-admin-menu-col">
             <div class="dropdown">
-                <button class="btn-xs btn-default dropdown-toggle"
+                <button class="btn btn-xs btn-default"
                         type="button"
                         id="revisionsList"
                         data-toggle="dropdown">
-                    <?= $this->headTitle()->renderTitle(); ?> - <?= $currentRevisionType; ?>
+                    <?= $currentRevisionType; ?>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="revisionsList">

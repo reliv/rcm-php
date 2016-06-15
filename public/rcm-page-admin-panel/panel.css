@@ -14,17 +14,29 @@
 .rcm-admin-panel .rcm-admin-menu-col {
     padding-right: 0px;
     padding-left: 0px;
-    height: 2.25em;
 }
 
-.rcm-admin-panel .rcm-admin-menu-col.nav-col {
-    height: 2.25em;
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-nav-col {
+
 }
 
-.rcm-admin-panel .rcmAdminPanelSpacer {
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-button-col {
+
 }
 
-.rcm-admin-panel .rcmAdminPanelWrapper {
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-button-col button {
+    display: inline-block;
+    margin: .1em .2em .1em .2em;
+}
+
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-toolbar {
+}
+
+.rcm-admin-panel.rcmAdminPanelSpacer {
+    visibility: hidden;
+}
+
+.rcm-admin-panel.rcmAdminPanelWrapper {
     background-color: #FFFFFF;
     position: fixed;
     left: 0;
@@ -42,10 +54,6 @@
     z-index: 1030;
     font-size: 11px;
     width: 100%;
-}
-
-.rcm-admin-panel .rcmAdminPanelNav div.rcmPanelRightButtons {
-    text-align: right;
 }
 
 .rcm-admin-panel div.rcmPanelEditorToolbar {
@@ -88,7 +96,7 @@
 @media (min-width: 1200px) {
     .modal-dialog {
         width: auto !important;
-        max-width: 90%;
+        max-width: 992px;
         margin-top: 30px;
         margin-bottom: 30px;
     }
@@ -101,25 +109,39 @@
     }
 }
 
+/* <REVISION LIST> */
 #rcmRevisionList {
-    width: 100%;
+    display: inline-block;
+    float: right;
+    margin: 0 .2em 0 .2em;
 }
 
 #rcmRevisionList button {
-    width: 100%;
     text-align: left;
+    min-width: 25em;
 }
 
 #rcmRevisionList button .caret {
     float: right;
-    margin-top: 7px;
+    margin-top: .5em;
 }
 
 #rcmRevisionList .dropdown-menu {
-    width: 100%;
+    min-width: 25em;
 }
 
-/* BUTTONS */
+#rcmRevisionList .dropdown-menu a {
+    padding: .2em 1em;
+}
+/* </REVISION LIST> */
+
+/* <BUTTONS> */
+.rcm-admin-panel div.rcmPanelRightButtons {
+    display: inline-block;
+    float: right;
+    text-align: right;
+}
+
 .rcm-admin-panel .panel-button-container {
     display: inline-block;
 }
@@ -127,7 +149,6 @@
 .rcm-admin-panel .panel-button-icon {
     text-align: center;
     font-size: 1em;
-    /*padding: 0 .3em 0 .3em;*/
     width: 1em;
     height: 1em;
 }
@@ -147,3 +168,4 @@
 .rcm-admin-panel .rcmPanelRightButtons #lockPermissionsEditMode {
     /*float:right;*/
 }
+/* </BUTTONS> */
