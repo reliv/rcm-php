@@ -14,6 +14,9 @@ return [
                 'modules/rcm-admin/' => __DIR__ . '/../public/',
             ],
             'collections' => [
+                'modules/rcm/rcm.js' => [
+                    'vendor/angular-utils-pagination/dirPagination.js',
+                ],
                 'modules/rcm-admin/admin.js' => [
 
                     /* <core> */
@@ -21,7 +24,6 @@ return [
                     // RcmUser services - include using ZF2
                     'modules/rcm-user/rcm-user-roles-service.js',
                     'modules/rcm-user/rcm-user-role-selector.js',
-                    'modules/rcm-angular-js/angular-multi-select/angular-multi-select.js',
                     'modules/rcm-admin/core/rcm-permissions.js',
                     /* </core> */
 
@@ -85,7 +87,6 @@ return [
                     // RcmUser services - CSS
                     'modules/rcm-user/rcm-user-role-selector.css',
                     'modules/rcm-admin/page-permissions/permissions.css',
-                    'modules/rcm-angular-js/angular-multi-select/angular-multi-select.css'
                 ],
             ],
         ],
@@ -171,7 +172,7 @@ return [
                     'New Page' => [
                         'label' => 'New Page',
                         'route' => 'RcmAdmin\Page\New',
-                        'class' => 'RcmAdminMenu RcmFormDialog',
+                        'class' => 'rcmAdminMenu RcmFormDialog',
                         'title' => 'New Page',
                     ],
                     'Edit' => [
@@ -185,13 +186,13 @@ return [
                             ],
                             'PageProperties' => [
                                 'label' => 'Page Properties',
-                                'class' => 'RcmAdminMenu RcmBlankDialog',
+                                'class' => 'rcmAdminMenu RcmBlankDialog',
                                 'title' => 'Page Properties',
                                 'uri' => '/modules/rcm-admin/page-properties/page-properties.html',
                             ],
                             'PagePermissions' => [
                                 'label' => 'Page Permissions',
-                                'class' => 'RcmAdminMenu RcmBlankDialog',
+                                'class' => 'rcmAdminMenu RcmBlankDialog',
                                 'title' => 'Page Permissions',
                                 'route' => 'RcmAdmin\Page\PagePermissions',
                                 'params' => [
@@ -209,7 +210,7 @@ return [
                             'Page' => [
                                 'label' => 'Template',
                                 'route' => 'RcmAdmin\Page\CreateTemplateFromPage',
-                                'class' => 'RcmAdminMenu RcmFormDialog',
+                                'class' => 'rcmAdminMenu RcmFormDialog',
                                 'title' => 'Copy To Template',
                                 'params' => [
                                     'rcmPageName' => ':rcmPageName',
@@ -269,7 +270,7 @@ return [
                     ],
                     'Delete' => [
                         'label' => 'Delete',
-                        'class' => 'RcmAdminMenu RcmBlankDialog',
+                        'class' => 'rcmAdminMenu RcmBlankDialog',
                         'title' => 'Delete Current Page',
                         'uri' => '/modules/rcm-admin/page-delete/page-delete.html',
                     ],
@@ -281,19 +282,19 @@ return [
                 'pages' => [
                     'Manage Sites' => [
                         'label' => 'Manage Sites',
-                        'class' => 'RcmAdminMenu rcmStandardDialog',
+                        'class' => 'rcmAdminMenu rcmStandardDialog',
                         'uri' => '/modules/rcm-admin/manage-sites/manage-sites.html',
                         'title' => 'Manage Sites',
                     ],
                     'Create Site' => [
                         'label' => 'Create Site',
-                        'class' => 'RcmAdminMenu rcmStandardDialog',
+                        'class' => 'rcmAdminMenu rcmStandardDialog',
                         'uri' => '/modules/rcm-admin/create-site/create-site.html',
                         'title' => 'Create Site',
                     ],
                     'Copy Pages' => [
                         'label' => 'Copy Pages',
-                        'class' => 'RcmAdminMenu rcmStandardDialog',
+                        'class' => 'rcmAdminMenu rcmStandardDialog',
                         'uri' => '/modules/rcm-admin/site-page-copy/site-page-copy.html',
                         'title' => 'Copy Pages',
                     ],

@@ -10,10 +10,10 @@ angular.module(
     ['RcmDialog']
 )
 /**
- * rcmAdminMenu.RcmAdminMenu
+ * rcmAdminMenu.rcmAdminMenu
  */
     .directive(
-    'RcmAdminMenu',
+    'rcmAdminMenu',
     [
         '$log',
         function ($log) {
@@ -43,7 +43,7 @@ angular.module(
                 }
 
                 var id = linkElm.attr('id');
-                console.log(id);
+
                 if (!id) {
                     id = linkElm.attr('href');
                 }

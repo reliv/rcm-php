@@ -40,10 +40,11 @@
   "require": {
     "php": ">=5.4.0",
     "reliv/zf-config-factories": "3.*",
-    "bower-asset/rcm-loading": "0.*",
     "rcm/core": ">=1.3.0",
     "rcm/user": "1.*",
-    "rcm/user-ui": "1.*"
+    "rcm/user-ui": "1.*",
+    "bower-asset/rcm-loading": "0.*",
+    "bower-asset/angular-utils-pagination": "~0.9"
   },
   "undocumented-require": {
     "NOTE": "(03/2016) The dependencies for this package are not well defined at this time",
