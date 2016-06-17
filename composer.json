@@ -53,12 +53,12 @@
     "bower-asset/rcm-loading": ">=0.1.14",
     "bower-asset/rcm-dialog": ">=0.1.1",
     "bower-asset/rcm-html-editor": ">=0.2.0",
-    "bower-asset/angular": "~1.5",
-    "bower-asset/angular-route": "~1.5",
-    "bower-asset/angular-sanitize": "~1.5",
-    "bower-asset/angular-touch": "~1.5",
-    "bower-asset/angular-bootstrap": "~1.3",
-    "bower-asset/angular-translate": "~2.11"
+    "bower-asset/angular": "~1",
+    "bower-asset/angular-route": "~1",
+    "bower-asset/angular-sanitize": "~1",
+    "bower-asset/angular-touch": "~1",
+    "bower-asset/angular-bootstrap": "~1",
+    "bower-asset/angular-translate": "~2"
   },
   "require-dev": {
     "phpunit/phpunit": "4.6.*",
