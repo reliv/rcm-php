@@ -237,7 +237,8 @@ return [
                 '/modules/rcm-jquery/jquery-ui-1.10.4.custom/js/jquery-1.10.2.min.js' => [],
                 // @todo Move this config to the modules that use it
                 '/modules/rcm-jquery/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js' => [],
-                '/modules/rcm-angular-js/angular/angular.min.js' => [],
+                '/vendor/angular/angular.min.js' => [],
+                '/vendor/angular-route/angular-route.min.js' => [],
                 '/vendor/bootbox/bootbox.js' => [],
                 '/vendor/bootstrap/dist/js/bootstrap.min.js' => [],
                 '/modules/rcm-tinymce-js/tinymce/tinymce.min.js' => [],
