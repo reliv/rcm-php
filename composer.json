@@ -42,7 +42,7 @@
     "rcm/user": "1.*",
     "rcm/api-lib": "0.*",
     "fxp/composer-asset-plugin": ">=1.0.3",
-    "bower-asset/jQuery": "2.2.4",
+    "bower-asset/jquery-2": "2.2.4",
     "bower-asset/bootstrap": ">=3.3.4",
     "bower-asset/bootbox": ">=4.3.0",
     "bower-asset/bootstrap-tabcollapse": ">=0.2.4",
