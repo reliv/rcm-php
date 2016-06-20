@@ -54,7 +54,7 @@
     "bower-asset/html5shiv": ">=3.7.2",
     "bower-asset/jquery": "3.*",
     "bower-asset/jquery-migrate": "3.*",
-    "bower-asset/jquery.ui": "^1.11",
+    "bower-asset/jquery-ui": "^1.11",
     "bower-asset/jquery-bootstrap-theme": "^1.0",
     "bower-asset/es5-shim": ">=4.1.1",
     "bower-asset/respond": ">=1.4.2",
