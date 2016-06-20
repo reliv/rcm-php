@@ -234,9 +234,10 @@ return [
                         'conditional' => 'lt IE 9'
                     ]
                 ],
-                '/modules/rcm-jquery/jquery-ui-1.10.4.custom/js/jquery-1.10.2.min.js' => [],
+                '/vendor/jquery/dist/jquery.min.js' => [],
+                '/vendor/jquery-migrate/jquery-migrate.min.js' => [],
                 // @todo Move this config to the modules that use it
-                '/modules/rcm-jquery/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js' => [],
+                '/vendor/jquery-ui/jquery-ui.min.js' => [],
                 '/vendor/angular/angular.min.js' => [],
                 '/vendor/angular-route/angular-route.min.js' => [],
                 '/vendor/bootbox/bootbox.js' => [],
@@ -260,7 +261,7 @@ return [
             'headLinkStylesheet' => [
                 '/vendor/bootstrap/dist/css/bootstrap.min.css' => [],
                 // @todo Move this config to the modules that use it
-                '/modules/rcm-jquery/jquery-ui-1.10.4.custom/css/smoothness/jquery-ui-1.10.4.custom.min.css' => [],
+                '/vendor/jquery-bootstrap-theme/css/custom-theme/jquery-ui-1.10.3.custom.css' => [],
                 '/modules/rcm/rcm.css' => [],
                 '/vendor/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.css',
                 '/modules/rcm/modules.css' => [],
