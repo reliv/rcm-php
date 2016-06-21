@@ -242,7 +242,7 @@ return [
                 '/vendor/angular-route/angular-route.min.js' => [],
                 '/vendor/bootbox/bootbox.js' => [],
                 '/vendor/bootstrap/dist/js/bootstrap.min.js' => [],
-                '/modules/rcm-tinymce-js/tinymce/tinymce.min.js' => [],
+                '/vendor/tinymce/tinymce.min.js' => [],
 
                 '/modules/rcm/rcm.js' => [],
                 '/vendor/rcm-dialog/dist/rcm-dialog.min.js' => [],
@@ -263,7 +263,7 @@ return [
                 // @todo Move this config to the modules that use it
                 '/vendor/jquery-bootstrap-theme/css/custom-theme/jquery-ui-1.10.3.custom.css' => [],
                 '/modules/rcm/rcm.css' => [],
-                '/vendor/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.css',
+                '/vendor/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.css' => [],
                 '/modules/rcm/modules.css' => [],
             ],
         ]
