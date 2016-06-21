@@ -30,6 +30,8 @@
 }
 
 .rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-toolbar {
+    min-height: 36px;
+    background-color: #eeeeee;
 }
 
 .rcm-admin-panel.rcmAdminPanelSpacer {
