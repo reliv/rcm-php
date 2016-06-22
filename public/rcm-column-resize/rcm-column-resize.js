@@ -276,9 +276,9 @@ var rcmColunmResize = new function () {
             // nothing
         }
 
-        var controlOffset = jQuery('<div class="rcm-colunm-resize-control offset"><div> </div></div>');
+        var controlOffset = jQuery('<div class="rcm-colunm-resize-control offset"><div>&nbsp;</div></div>');
 
-        var controlWidth = jQuery('<div class="rcm-colunm-resize-control width"><div> </div></div>');
+        var controlWidth = jQuery('<div class="rcm-colunm-resize-control width"><div>&nbsp;</div></div>');
 
         elm.append(controlOffset);
         elm.append(controlWidth);
