@@ -155,16 +155,8 @@ var RcmAdminViewModel = function (config, model, page) {
          * @param onComplete
          */
         disableArrange: function (elm, onComplete) {
-            //@todo - remove elements
-            var id = self.model.RcmPluginModel.getId(elm);
 
-            jQuery('[id="rcmLayoutEditHelper' + id + '"]').remove();
-
-            elm.hover(
-                function () {
-                    return false;
-                }
-            );
+            self.RcmPluginViewModel.removeLayoutHelper(elm);
 
             if (typeof onComplete === 'function') {
                 onComplete(elm);
@@ -216,6 +208,13 @@ var RcmAdminViewModel = function (config, model, page) {
          */
         createLayoutHelper: function (elm, onComplete) {
 
+            var hasLayoutHelper = elm.find('.rcmLayoutEditHelper').length;
+            if (hasLayoutHelper) {
+                if (typeof onComplete === 'function') {
+                    onComplete(elm);
+                }
+                return;
+            }
             var id = self.model.RcmPluginModel.getId(elm);
 
             var page = self.page;
@@ -361,6 +360,27 @@ var RcmAdminViewModel = function (config, model, page) {
                         self.rcmColunmResize.defaultClass
                     );
                     e.preventDefault();
+                }
+            );
+
+            if (typeof onComplete === 'function') {
+                onComplete(elm);
+            }
+        },
+
+        /**
+         * removeLayoutHelper
+         * @param elm
+         * @param onComplete
+         */
+        removeLayoutHelper: function (elm, onComplete) {
+            var id = self.model.RcmPluginModel.getId(elm);
+
+            jQuery('[id="rcmLayoutEditHelper' + id + '"]').remove();
+
+            elm.hover(
+                function () {
+                    return false;
                 }
             );
 

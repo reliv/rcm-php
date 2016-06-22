@@ -93,6 +93,8 @@ var RcmPluginDrag = {
             );
         }
         var helper = $(pluginContainer).clone(false);
+        helper.addClass('plugin-drag-helper');
+
         //Get Ajax
         RcmPluginDrag.pluginDraggableStart(helper, pluginContainer);
 
@@ -149,55 +151,55 @@ var RcmPluginDrag = {
          */
         if (placeHolder.length && !placeHolder.html().length) {
             RcmPluginDrag.pluginDragPlaceHolder($(container).find(".rcmPlugin"));
-                }
-            },
+        }
+    },
 
-            /**
-             * Fix for containers that have no current plugins.
-             *
-             * @param container
-             */
-            pluginDragPlaceHolder: function (container) {
-            var placeHolder = $('.rcmPluginSortPlaceHolder');
-            // If placeholder exists and has not yet been filled with a plugin
-            if (placeHolder.length && !placeHolder.html().length) {
-                // Copy plugin css classes
-                placeHolder.attr(
-                    'class',
-                    container.attr('class')
-                    + ' rcmPluginSortPlaceHolder'
-                );
-                // Copy plugin html
-                placeHolder.html(container.html());
-            }
-        },
+    /**
+     * Fix for containers that have no current plugins.
+     *
+     * @param container
+     */
+    pluginDragPlaceHolder: function (container) {
+        var placeHolder = $('.rcmPluginSortPlaceHolder');
+        // If placeholder exists and has not yet been filled with a plugin
+        if (placeHolder.length && !placeHolder.html().length) {
+            // Copy plugin css classes
+            placeHolder.attr(
+                'class',
+                container.attr('class')
+                + ' rcmPluginSortPlaceHolder'
+            );
+            // Copy plugin html
+            placeHolder.html(container.html());
+        }
+    },
 
-        /**
-         * Makes plugins sortable.
-         */
-        makePluginsSortable: function () {
-            try {
-                $(".rcmContainer > .row").sortable('destroy');
-            } catch (e) {
-                //No problem
-            }
-            $(".rcmContainer > .row").sortable(
-                {
-                    connectWith: '.rcmContainer > .row',
-                    dropOnEmpty: true,
-                    helper: "original",
-                    tolerance: 'pointer',
-                    placeholder: "rcmPluginSortPlaceHolder",
-                    forcePlaceholderSize: false,
-                    handle: '.rcmHandle.sortableMenu',
-                    change: function (event, ui) {
-                        RcmPluginDrag.pluginSortableChange(ui);
-                    },
-                    receive: function (event, ui) {
-                        RcmPluginDrag.pluginSortableReceive(this, ui);
-                    },
-                    start: function (event, ui) {
-                        RcmPluginDrag.pluginSortableStart(ui);
+    /**
+     * Makes plugins sortable.
+     */
+    makePluginsSortable: function () {
+        try {
+            $(".rcmContainer > .row").sortable('destroy');
+        } catch (e) {
+            //No problem
+        }
+        $(".rcmContainer > .row").sortable(
+            {
+                connectWith: '.rcmContainer > .row',
+                dropOnEmpty: true,
+                helper: "original",
+                tolerance: 'pointer',
+                placeholder: "rcmPluginSortPlaceHolder",
+                forcePlaceholderSize: false,
+                handle: '.rcmHandle.sortableMenu',
+                change: function (event, ui) {
+                    RcmPluginDrag.pluginSortableChange(ui);
+                },
+                receive: function (event, ui) {
+                    RcmPluginDrag.pluginSortableReceive(this, ui);
+                },
+                start: function (event, ui) {
+                    RcmPluginDrag.pluginSortableStart(ui);
                 },
                 stop: RcmPluginDrag.pluginSortableStop
             }
@@ -232,15 +234,15 @@ var RcmPluginDrag = {
      */
     pluginSortableStart: function (ui) {
         /* Advise the editor that we are moving it's container */
-        var richEdit = $(ui.item).find('[data-richedit]');
-        if (richEdit.length > 0) {
-            var pluginContainer = $(richEdit).closest('.rcmPlugin');
+        // var richEdit = $(ui.item).find('[data-richedit]');
+        // if (richEdit.length > 0) {
+        //     var pluginContainer = $(richEdit).closest('.rcmPlugin');
             //me.rcmPlugins.removeRichEdits(
             //    pluginContainer,
             //    RcmPluginDrag.getPluginContainerInfo(pluginContainer)
             //);
             //me.editor.startDrag(richEdit);
-        }
+        // }
     },
 
     /**
@@ -265,7 +267,7 @@ var RcmPluginDrag = {
      */
     pluginSortableReceive: function (container, ui) {
         //Get the current Item
-        var newItem = $(container).find(".rcmPluginDrag");
+        var helper = $(container).find(".plugin-drag-helper");
         //Find the actual plugin instance
         var initialInstance = $(ui.item).find(".initialState");
         var isPageContainer = $(container).attr('data-isPageContainer') == 'Y';
@@ -279,9 +281,9 @@ var RcmPluginDrag = {
 
             pluginData = RcmPluginDrag.getPluginContainerInfo(dragDiv);
 
-            var newDiv = dragDiv.clone(false);
+            var copyOfOriginal = dragDiv.clone(false);
 
-            $(newItem).replaceWith($(newDiv));
+            $(helper).replaceWith(copyOfOriginal);
 
             //if (pluginData.isSiteWide && !isPageContainer) {
             //    // We were removing the plugin, but now we just warn them
