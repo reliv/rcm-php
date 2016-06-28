@@ -312,7 +312,7 @@ var RcmAdminViewModel = function (config, model, page) {
 
             menu.append(rcmContainerMenu);
 
-            elm.prepend(menu);
+            elm.append(menu);
 
             elm.hover(
                 function () {
