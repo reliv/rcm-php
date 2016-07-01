@@ -1,19 +1,20 @@
 <?php
-
 /**
  * ZF2 Module Config file for Rcm
  *
  * This file contains all the configuration for the Module as defined by ZF2.
  * See the docs for ZF2 for more information.
  */
+$bowerComponentsDir = __DIR__ . '/../../../../public/bower_components/';
 return [
     /* asset_manager */
     'asset_manager' => [
         'resolver_configs' => [
             'aliases' => [
                 'modules/rcm/' => __DIR__ . '/../public/',
-                // Global JS path for dependencies
-                'vendor/' => __DIR__ . '/../../../bower-asset/',
+                'bower_components/' => $bowerComponentsDir,
+                // Legacy support because bower_components used to be named "vendor"
+                'vendor/' => $bowerComponentsDir
             ],
             'collections' => [
                 /**
@@ -21,17 +22,16 @@ return [
                  * (core features)
                  */
                 'modules/rcm/rcm.js' => [
-                    'vendor/rcm-js-lib/dist/rcm-js-lib.min.js',
-                    'vendor/rcm-loading/dist/rcm-loading.min.js',
-                    'vendor/rcm-loading/dist/angular-rcm-loading.min.js',
-                    'vendor/rcm-loading/dist/jquery-loader.min.js',
-
+                    'bower_components/rcm-js-lib/dist/rcm-js-lib.min.js',
+                    'bower_components/rcm-loading/dist/rcm-loading.min.js',
+                    'bower_components/rcm-loading/dist/angular-rcm-loading.min.js',
+                    'bower_components/rcm-loading/dist/jquery-loader.min.js',
                     'modules/rcm/core/rcm.js',
                     'modules/rcm/core/rcm-api.js',
                     'modules/rcm/core/rcm-form-double-submit-protect.js',
                     'modules/rcm/core/rcm-bootstrap-alert-confirm.js',
                     'modules/rcm/core/rcm-popout-window.js',
-                    'vendor/angular-utils-pagination/dirPagination.js'
+                    'bower_components/angular-utils-pagination/dirPagination.js'
                 ],
                 'modules/rcm/rcm.css' => [
                     'modules/rcm/core/rcm.css',
@@ -228,26 +228,25 @@ return [
             ],
              */
             'headScriptFile' => [
-                '/vendor/es5-shim/es5-shim.min.js' => [
+                '/bower_components/es5-shim/es5-shim.min.js' => [
                     'type' => 'text/javascript',
                     'attrs' => [
                         'conditional' => 'lt IE 9'
                     ]
                 ],
-                '/vendor/jquery/dist/jquery.min.js' => [],
-                '/vendor/jquery-migrate/jquery-migrate.min.js' => [],
+                '/bower_components/jquery/dist/jquery.min.js' => [],
+                '/bower_components/jquery-migrate/jquery-migrate.min.js' => [],
                 // @todo Move this config to the modules that use it
-                '/vendor/jquery-ui/jquery-ui.min.js' => [],
-                '/vendor/angular/angular.min.js' => [],
-                '/vendor/angular-route/angular-route.min.js' => [],
-                '/vendor/bootbox/bootbox.js' => [],
-                '/vendor/bootstrap/dist/js/bootstrap.min.js' => [],
-                '/vendor/tinymce/tinymce.min.js' => [],
-
+                '/bower_components/jquery-ui/jquery-ui.min.js' => [],
+                '/bower_components/angular/angular.min.js' => [],
+                '/bower_components/angular-route/angular-route.min.js' => [],
+                '/bower_components/bootbox/bootbox.js' => [],
+                '/bower_components/bootstrap/dist/js/bootstrap.min.js' => [],
+                '/bower_components/tinymce/tinymce.min.js' => [],
                 '/modules/rcm/rcm.js' => [],
-                '/vendor/rcm-dialog/dist/rcm-dialog.min.js' => [],
-                '/vendor/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.js' => [],
-                '/vendor/rcm-html-editor/dist/rcm-html-editor.min.js' => [],
+                '/bower_components/rcm-dialog/dist/rcm-dialog.min.js' => [],
+                '/bower_components/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.js' => [],
+                '/bower_components/rcm-html-editor/dist/rcm-html-editor.min.js' => [],
                 '/modules/rcm/modules.js' => [],
             ],
             /* Stylesheet files that will always be loaded
@@ -259,11 +258,11 @@ return [
             ],
              */
             'headLinkStylesheet' => [
-                '/vendor/bootstrap/dist/css/bootstrap.min.css' => [],
+                '/bower_components/bootstrap/dist/css/bootstrap.min.css' => [],
                 // @todo Move this config to the modules that use it
-                '/vendor/jquery-bootstrap-theme/css/custom-theme/jquery-ui-1.10.3.custom.css' => [],
+                '/bower_components/jquery-bootstrap-theme/css/custom-theme/jquery-ui-1.10.3.custom.css' => [],
                 '/modules/rcm/rcm.css' => [],
-                '/vendor/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.css' => [],
+                '/bower_components/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.css' => [],
                 '/modules/rcm/modules.css' => [],
             ],
         ]

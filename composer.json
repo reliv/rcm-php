@@ -71,5 +71,10 @@
     "psr-4": {
       "Rcm\\": "src/"
     }
+  },
+  "extra": {
+    "asset-installer-paths": {
+      "bower-asset-library": "public/bower_components"
+    }
   }
 }
