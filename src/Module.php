@@ -31,7 +31,6 @@ class Module
      */
     public function onBootstrap(MvcEvent $e)
     {
-
         $serviceManager = $e->getApplication()->getServiceManager();
 
         $config = $serviceManager->get('config');
@@ -61,7 +60,6 @@ class Module
             ],
             10001
         );
-
     }
 
     /**

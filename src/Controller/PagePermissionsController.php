@@ -111,6 +111,5 @@ class PagePermissionsController extends AbstractActionController
         );
 
         return $view;
-
     }
 }
