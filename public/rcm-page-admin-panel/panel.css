@@ -64,8 +64,12 @@
     z-index: 1020;
 }
 
+.modal {
+    overflow: auto !important;
+}
+
 .modal-body {
-    max-height: calc(100vh - 210px);
+    max-height: 90%;
     overflow-y: auto;
 }
 
@@ -135,6 +139,7 @@
 #rcmRevisionList .dropdown-menu a {
     padding: .2em 1em;
 }
+
 /* </REVISION LIST> */
 
 /* <BUTTONS> */
@@ -170,4 +175,5 @@
 .rcm-admin-panel .rcmPanelRightButtons #lockPermissionsEditMode {
     /*float:right;*/
 }
+
 /* </BUTTONS> */
