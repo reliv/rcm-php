@@ -5,7 +5,7 @@ php:
   - "5.6"
 install:
   - composer self-update
-  - composer global require fxp/composer-asset-plugin:1.1.3
+  - composer global require fxp/composer-asset-plugin --no-plugins
   - composer install
 script:
   - find . -type d \( -path ./vendor -o -path ./test \) -prune -o -name "*.php" -print0 | xargs -0 -n1 -P8 php -l -n
