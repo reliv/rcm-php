@@ -4,6 +4,8 @@ php:
 #  - "7.0"
 - "5.5"
 install:
+- php -v
+- php -d memory_limit=-1
 - composer self-update 1.1.2
 - composer --version
 - composer global require fxp/composer-asset-plugin --no-plugins
