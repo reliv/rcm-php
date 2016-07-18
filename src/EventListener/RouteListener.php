@@ -138,13 +138,7 @@ class RouteListener
         $baseUri = explode('?', $requestUri);
         $requestUrl = $baseUri[0];
 
-        $startTime = microtime(true);
-
-
         $redirect = $this->redirectRepo->getRedirect($requestUrl, $siteId);
-
-        var_dump(round((microtime(true) - $startTime) * 1000,2) . 'ms');
-        exit;
 
         if (!empty($redirect)) {
             header('Location: ' . $redirect->getRedirectUrl(), true, 302);
