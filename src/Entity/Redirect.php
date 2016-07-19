@@ -23,7 +23,7 @@ use Zend\Validator\Uri;
  * @ORM\Entity (repositoryClass="Rcm\Repository\Redirect")
  * @ORM\Table(name="rcm_redirects",
  *     indexes={
- *         @ORM\Index(name="redirect_request_url", columns={"requestUrl"})
+ *         @ORM\Index(name="redirect_request_url_siteId", columns={"requestUrl, siteId"})
  *     }
  * )
  */
@@ -174,6 +174,7 @@ class Redirect extends AbstractApiModel
         if ($site === null) {
             $this->siteId = null;
             $this->site = null;
+
             return;
         }
         $this->siteId = $site->getSiteId();

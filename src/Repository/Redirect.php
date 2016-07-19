@@ -146,8 +146,8 @@ class Redirect extends EntityRepository
             ->leftJoin('r.site', 'site')
             ->where('r.site = :siteId')
             ->orWhere('r.site is null')
-            ->orderBy('site.siteId', 'DESC')
-            ->setMaxResults(1)
+            ->orderBy('site.siteId', 'DESC')//Makes site-specific rules take priority
+            ->setMaxResults(1)//Improves speed when no match found
             ->setParameter('siteId', $siteId);
 
         if (!empty($url)) {
