@@ -5,7 +5,6 @@
  * This file contains all the configuration for the Module as defined by ZF2.
  * See the docs for ZF2 for more information.
  */
-$bowerComponentsDir = __DIR__ . '/../../../../public/bower_components/';
 return [
     /* asset_manager */
     'asset_manager' => require __DIR__ . '/asset_manager.php',
