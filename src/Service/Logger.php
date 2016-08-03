@@ -51,7 +51,6 @@ class Logger
         $this->logger = $logger;
     }
 
-
     /**
      * Log a message
      *
@@ -68,13 +67,13 @@ class Logger
         if ($this->sendToCli) {
             $this->sendMessageToCli($message);
         }
-
     }
 
     /**
      * Send message to browser
      *
      * @param string $message Message to be sent
+     *
      * @codeCoverageIgnore
      */
     public function sendMessageToBrowser($message)
@@ -96,6 +95,7 @@ class Logger
      * Send message to Cli
      *
      * @param string $message Message to be sent
+     *
      * @codeCoverageIgnore
      */
     public function sendMessageToCli($message)
@@ -116,6 +116,7 @@ class Logger
      * Set send to browser
      *
      * @param boolean $sendToBrowser
+     *
      * @codeCoverageIgnore
      */
     public function setSendToBrowser($sendToBrowser)

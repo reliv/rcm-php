@@ -236,7 +236,6 @@ class PluginManager
 
         $controller->setEvent($event);
 
-
         $viewModel = $controller->renderInstance(
             $pluginInstanceId,
             $pluginInstanceConfig
@@ -246,6 +245,7 @@ class PluginManager
             $event = new ViewEvent();
             $event->setResponse($viewModel);
             $this->eventManager->trigger(ViewEvent::EVENT_RESPONSE, $event);
+
             return null;
         }
 
@@ -284,7 +284,6 @@ class PluginManager
             'pluginInstanceId' => $pluginInstanceId,
         ];
 
-
         if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
             $return['displayName']
                 = $this->config['rcmPlugin'][$pluginName]['display'];
@@ -308,7 +307,6 @@ class PluginManager
         $headScript->setContainer($oldScriptContainer);
 
         return $return;
-
     }
 
     /**
@@ -581,6 +579,7 @@ class PluginManager
                 $default[$key] = $changes[$key];
             }
         }
+
         return $default;
     }
 
@@ -612,6 +611,7 @@ class PluginManager
                 'siteWide' => false
             ];
         }
+
         return $list;
     }
 }

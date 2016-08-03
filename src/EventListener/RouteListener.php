@@ -28,16 +28,25 @@ class RouteListener
     /** @var \Rcm\Repository\Redirect */
     protected $redirectRepo;
 
+    /**
+     * @var Site
+     */
     protected $currentSite;
 
+    /**
+     * @var array
+     */
     protected $config;
 
+    /**
+     * @var Ip
+     */
     protected $ipValidator;
 
     /**
-     * @param Site $currentSite
+     * @param Site         $currentSite
      * @param RedirectRepo $redirectRepo
-     * @param Ip $ipValidator
+     * @param Ip           $ipValidator
      * @param              $config
      */
     public function __construct(
@@ -111,7 +120,6 @@ class RouteListener
         }
 
         return null;
-
     }
 
     /**

@@ -23,7 +23,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class RcmHtmlIncludesHelperFactory implements FactoryInterface
 {
-
     /**
      * createService
      *
@@ -39,8 +38,8 @@ class RcmHtmlIncludesHelperFactory implements FactoryInterface
         /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $viewManager->getServiceLocator();
 
-        $config = $serviceLocator->get('config');
+        $htmlIncludesService = $serviceLocator->get('Rcm\Service\HtmlIncludes');
 
-        return new RcmHtmlIncludes($config['Rcm']['HtmlIncludes']);
+        return new RcmHtmlIncludes($htmlIncludesService);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Rcm\View\Helper;
 
+use Rcm\Service\HtmlIncludes;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -27,11 +28,18 @@ class RcmHtmlIncludes extends AbstractHelper
     protected $done = false;
 
     /**
-     * @param $htmlIncludesConfig
+     * @var HtmlIncludes
      */
-    public function __construct($htmlIncludesConfig)
+    protected $htmlIncludesService;
+
+    /**
+     * RcmHtmlIncludes constructor.
+     *
+     * @param HtmlIncludes $htmlIncludesService
+     */
+    public function __construct(HtmlIncludes $htmlIncludesService)
     {
-        $this->htmlIncludesConfig = $htmlIncludesConfig;
+        $this->htmlIncludesService = $htmlIncludesService;
     }
 
     /**
@@ -41,7 +49,9 @@ class RcmHtmlIncludes extends AbstractHelper
      */
     protected function getMetaConfig()
     {
-        return array_reverse($this->htmlIncludesConfig['headMetaName']);
+        $includes = $this->htmlIncludesService->getMetaConfig();
+
+        return array_reverse($includes);
     }
 
     /**
@@ -51,7 +61,9 @@ class RcmHtmlIncludes extends AbstractHelper
      */
     protected function getScriptConfig()
     {
-        return array_reverse($this->htmlIncludesConfig['headScriptFile']);
+        $includes = $this->htmlIncludesService->getDefaultScriptConfig();
+
+        return array_reverse($includes);
     }
 
     /**
@@ -61,15 +73,17 @@ class RcmHtmlIncludes extends AbstractHelper
      */
     protected function getStylesheetsConfig()
     {
-        return array_reverse($this->htmlIncludesConfig['headLinkStylesheet']);
+        $includes = $this->htmlIncludesService->getDefaultStylesheetsConfig();
+
+        return array_reverse($includes);
     }
 
     /**
      * getConfigValue
      *
-     * @param array $config
+     * @param array  $config
      * @param string $key
-     * @param null $default
+     * @param null   $default
      *
      * @return mixed
      */

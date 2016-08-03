@@ -79,7 +79,6 @@ class Redirect extends AbstractApiModel
     protected function getUrlValidator()
     {
         return new Uri();
-
     }
 
     /**

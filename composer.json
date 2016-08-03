@@ -40,28 +40,7 @@
     "rwoverdijk/assetmanager": "1.*",
     "reliv/zf-config-factories": "3.*",
     "rcm/user": "1.*",
-    "rcm/api-lib": "0.*",
-    "fxp/composer-asset-plugin": ">=1.1.3",
-    "bower-asset/angular": "~1",
-    "bower-asset/angular-route": "~1",
-    "bower-asset/angular-sanitize": "~1",
-    "bower-asset/angular-touch": "~1",
-    "bower-asset/angular-bootstrap": "~1",
-    "bower-asset/angular-translate": "~2",
-    "bower-asset/bootstrap": "^3.3",
-    "bower-asset/bootbox": ">=4.3.0",
-    "bower-asset/bootstrap-tabcollapse": ">=0.2.4",
-    "bower-asset/html5shiv": ">=3.7.2",
-    "bower-asset/jquery": "3.*",
-    "bower-asset/jquery-migrate": "3.*",
-    "bower-asset/jquery-ui": "^1.11",
-    "bower-asset/jquery-bootstrap-theme": "^1.0",
-    "bower-asset/es5-shim": ">=4.1.1",
-    "bower-asset/respond": ">=1.4.2",
-    "bower-asset/rcm-js-lib": ">=0.1.5",
-    "bower-asset/rcm-loading": ">=0.1.14",
-    "bower-asset/rcm-dialog": ">=0.1.1",
-    "bower-asset/rcm-html-editor": ">=0.4.0"
+    "rcm/api-lib": "0.*"
   },
   "require-dev": {
     "phpunit/phpunit": "4.6.*",
@@ -72,7 +51,11 @@
       "Rcm\\": "src/"
     }
   },
+  "suggest": {
+    "rcm/core-js": "Provides basic JS including jQuery, AngularJS and Bootstrap"
+  },
   "extra": {
+    "asset-pattern-skip-version": "(-patch*)",
     "asset-installer-paths": {
       "bower-asset-library": "public/bower_components"
     }
