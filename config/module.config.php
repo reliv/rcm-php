@@ -60,29 +60,7 @@ return [
         ],
     ],
     /* doctrine */
-    'doctrine' => [
-        'driver' => [
-            'relivContentManager' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache' => 'array',
-                'paths' => [
-                    __DIR__ . '/../src/Entity'
-                ]
-            ],
-            'orm_default' => [
-                'drivers' => [
-                    'Rcm' => 'relivContentManager'
-                ]
-            ]
-        ],
-        'configuration' => [
-            'orm_default' => [
-                'metadata_cache' => 'doctrine_cache',
-                'query_cache' => 'doctrine_cache',
-                'result_cache' => 'doctrine_cache',
-            ]
-        ],
-    ],
+    'doctrine' => require __DIR__ . '/doctrine.php',
     /* Rcm Config */
     'Rcm' => require __DIR__ . '/rcm-core-config.php',
     /* rcmCache */
@@ -93,13 +71,7 @@ return [
         ]
     ],
     /* RcmUser Config */
-    'RcmUser' => [
-        'Acl\Config' => [
-            'ResourceProviders' => [
-                'Rcm\Acl\ResourceProvider' => 'Rcm\Acl\ResourceProvider',
-            ],
-        ],
-    ],
+    'RcmUser' =>  require __DIR__ . '/rcm-user-config.php',
     /* route_manager */
     'route_manager' => [
         'invokables' => [
