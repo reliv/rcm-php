@@ -51,6 +51,9 @@
       "Rcm\\": "src/"
     }
   },
+  "suggest": {
+    "rcm/core-js": "Provides basic JS including jQuery, AngularJS and Bootstrap"
+  },
   "extra": {
     "asset-installer-paths": {
       "bower-asset-library": "public/bower_components"

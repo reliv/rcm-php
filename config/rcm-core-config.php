@@ -3,7 +3,11 @@
  * rcm-core-config.php
  */
 return [
+    /**
+     * defaultDomain to use if domain not found E.I. IP address is used
+     */
     'defaultDomain' => null,
+
     /**
      * Available page types
      */
@@ -24,7 +28,15 @@ return [
             'canClone' => true,
         ],
     ],
+
+    /**
+     * successfulLoginUrl
+     */
     'successfulLoginUrl' => '/',
+
+    /**
+     * Access Control config
+     */
     'Acl' => [
         'sites' => [
             'resourceId' => 'sites',
@@ -77,13 +89,18 @@ return [
             'description' => 'Global resource for Rcm Site Wide Widgets',
         ],
     ],
+
+    /**
+     * RcmCmsPageRouteNames
+     */
     'RcmCmsPageRouteNames' => [
         'contentManager' => 'contentManager',
         'contentManagerWithPageType' => 'contentManagerWithPageType',
         'blog' => 'blog',
     ],
+
     /**
-     * Scripts to be required always
+     * Scripts to be required always on every page
      */
     'HtmlIncludes' => [
 
@@ -100,7 +117,7 @@ return [
         'defaultStylesheetKey' => 'stylesheets',
 
         /**
-         * This determines the order of the head sections
+         * This determines the order of the head sections, thus, loading order of scripts and css
          */
         'sections' => [
             'libraries',
@@ -112,12 +129,13 @@ return [
             'post-modules',
         ],
 
-        /* Meta tags that will always be loaded
-        Example
-        'keyValue' => [
-            'content' => 'value',
-            'modifiers' => [],
-        ],
+        /**
+         * Meta tags that will always be loaded
+         * Example
+         * 'keyValue' => [
+         *  'content' => 'value',
+         *  'modifiers' => [],
+         * ],
          */
         'headMetaName' => [
             'X-UA-Compatible' => [
@@ -127,27 +145,28 @@ return [
                 'content' => 'width=device-width, initial-scale=1',
             ],
         ],
-        /* @deprecated Use 'scripts'
+
+        /**
+         * @deprecated Use 'scripts'
          * Script files that will always be loaded
          * Example
          * '/script/url' => [
-         * 'type' => 'text/javascript',
-         * 'attrs' => []
+         *  'type' => 'text/javascript',
+         *  'attrs' => []
          * ],
          */
         'headScriptFile' => [
         ],
 
-        /* Script files that will always be loaded
+        /**
+         * Script files that will always be loaded
          * Example:
-        [
-            'section' => [
-                '/script/url' => [
-                    'type' => 'text/javascript',
-                    'attrs' => []
-                ],
-            ],
-        ]
+         * 'section' => [
+         *  '/script/url' => [
+         *   'type' => 'text/javascript',
+         *   'attrs' => []
+         *  ],
+         * ],
          */
         'scripts' => [
             'libraries' => [],
@@ -162,6 +181,7 @@ return [
             ],
             'post-modules' => [],
         ],
+
         /**
          * @deprecated Use 'stylesheets'
          * Stylesheet files that will always be loaded
@@ -174,17 +194,16 @@ return [
          */
         'headLinkStylesheet' => [
         ],
+
         /**
          * Stylesheet files that will always be loaded
          * Example:
-         * [
          * 'section' => [
-         * '/stylesheet/url' => [
-         * 'media' => 'screen',
-         * 'conditionalStylesheet' => '',
-         * 'extras' => []
-         * ],
-         * ],
+         *  '/stylesheet/url' => [
+         *   'media' => 'screen',
+         *   'conditionalStylesheet' => '',
+         *   'extras' => []
+         *  ],
          * ],
          */
         'stylesheets' => [
