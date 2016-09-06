@@ -18,6 +18,16 @@ class ListHtmlIncludesController extends AbstractActionController
 {
     protected $includes;
 
+    /**
+     * This controls what configs this controller should read.
+     * This controller cannot simply read the default keys because
+     * they will be overwritten with the combined file built by grunt
+     */
+    protected $config = [
+        'jsKey' => 'scripts',
+        'cssKey' => 'stylesheets'
+    ];
+
     public function __construct(HtmlIncludes $includes)
     {
         $this->includes = $includes;
@@ -32,7 +42,7 @@ class ListHtmlIncludesController extends AbstractActionController
     public function listJsAction()
     {
         $responseData = array_keys(
-            $this->includes->getDefaultScriptConfig()
+            $this->includes->getDefaultScriptConfig($this->config['jsKey'])
         );
 
         return $this->getJsonResponse($responseData);
@@ -47,7 +57,7 @@ class ListHtmlIncludesController extends AbstractActionController
     public function listCssAction()
     {
         $responseData = array_keys(
-            $this->includes->getDefaultStylesheetsConfig()
+            $this->includes->getDefaultStylesheetsConfig($this->config['cssKey'])
         );
 
         return $this->getJsonResponse($responseData);
