@@ -24,8 +24,8 @@ class ListHtmlIncludesController extends AbstractActionController
      * they will be overwritten with the combined file built by grunt
      */
     protected $config = [
-        'jsKey' => 'scripts',
-        'cssKey' => 'stylesheets'
+        'scriptsKey' => 'scripts',
+        'styleSheetsKey' => 'stylesheets'
     ];
 
     public function __construct(HtmlIncludes $includes)
@@ -39,10 +39,10 @@ class ListHtmlIncludesController extends AbstractActionController
      * @TODO Deal with things like "conditional": "lt IE 9" better. Right now
      * these just get included.
      */
-    public function listJsAction()
+    public function listScriptsAction()
     {
         $responseData = array_keys(
-            $this->includes->getDefaultScriptConfig($this->config['jsKey'])
+            $this->includes->getDefaultScriptConfig($this->config['scriptsKey'])
         );
 
         return $this->getJsonResponse($responseData);
@@ -54,10 +54,10 @@ class ListHtmlIncludesController extends AbstractActionController
      * @TODO Deal with things like "conditional": "lt IE 9" better. Right now
      * these just get included.
      */
-    public function listCssAction()
+    public function listStylesheetsAction()
     {
         $responseData = array_keys(
-            $this->includes->getDefaultStylesheetsConfig($this->config['cssKey'])
+            $this->includes->getDefaultStylesheetsConfig($this->config['styleSheetsKey'])
         );
 
         return $this->getJsonResponse($responseData);

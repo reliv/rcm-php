@@ -2,21 +2,21 @@
 return [
     'router' => [
         'routes' => [
-            'list-js-includes' => [
+            'list-html-includes-scripts' => [
                 'options' => [
-                    'route' => 'list-js-includes',
+                    'route' => 'list-html-includes-scripts',
                     'defaults' => [
                         'controller' => 'Rcm\ConsoleController\ListHtmlIncludesController',
-                        'action' => 'listJs'
+                        'action' => 'listScripts'
                     ]
                 ]
             ],
-            'list-css-includes' => [
+            'list-html-includes-stylesheets' => [
                 'options' => [
-                    'route' => 'list-css-includes',
+                    'route' => 'list-html-includes-stylesheets',
                     'defaults' => [
                         'controller' => 'Rcm\ConsoleController\ListHtmlIncludesController',
-                        'action' => 'listCss'
+                        'action' => 'listStylesheets'
                     ]
                 ]
             ]
