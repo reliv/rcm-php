@@ -34,10 +34,11 @@ class ListHtmlIncludesController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Stdlib\Message
-     *
      * @TODO Deal with things like "conditional": "lt IE 9" better. Right now
      * these just get included.
+     *
+     * @return \Zend\Stdlib\Message
+     * @throws \Exception
      */
     public function listScriptsAction()
     {
@@ -45,20 +46,43 @@ class ListHtmlIncludesController extends AbstractActionController
             $this->includes->getScriptConfig($this->config['scriptsKey'])
         );
 
+//        foreach ($responseData as $file) {
+//            $file = 'public' . $file;
+//            if (!file_exists($file)) {
+//                throw new \Exception(
+//                    'The following file is not on the file system. '
+//                    . 'You must warm the asset manager cache before running this. File: '
+//                    . $file
+//                );
+//            }
+//        }
+
         return $this->getJsonResponse($responseData);
     }
 
     /**
-     * @return \Zend\Stdlib\Message
-     *
      * @TODO Deal with things like "conditional": "lt IE 9" better. Right now
      * these just get included.
+     *
+     * @return \Zend\Stdlib\Message
+     * @throws \Exception
      */
     public function listStylesheetsAction()
     {
         $responseData = array_keys(
             $this->includes->getScriptConfig($this->config['styleSheetsKey'])
         );
+
+//        foreach ($responseData as $file) {
+//            $file = 'public' . $file;
+//            if (!file_exists($file)) {
+//                throw new \Exception(
+//                    'The following file is not on the file system. '
+//                    . 'You must warm the asset manager cache before running this. File: '
+//                    . $file
+//                );
+//            }
+//        }
 
         return $this->getJsonResponse($responseData);
     }
