@@ -28,37 +28,7 @@ return [
         ],
     ],
     /* controllers */
-    'controllers' => [
-        'abstract_factories' => [
-            'Rcm\Factory\AbstractPluginControllerFactory'
-        ],
-        'config_factories' => [
-            'Rcm\Controller\CacheController' => [
-                'class' => '\Rcm\Controller\CacheController',
-                'arguments' => ['ServiceManager'],
-            ],
-            'Rcm\Controller\InstanceConfigApiController' => [
-                'class' => 'Rcm\Controller\InstanceConfigApiController',
-                'arguments' => ['ServiceManager'],
-            ],
-            'Rcm\Controller\NewPluginInstanceApiController' => [
-                'class' => 'Rcm\Controller\NewPluginInstanceApiController',
-                'arguments' => ['ServiceManager'],
-            ],
-            'Rcm\Controller\PageCheckController' => [
-                'class' => 'Rcm\Controller\PageCheckController',
-                'arguments' => ['ServiceManager'],
-            ],
-            'Rcm\Controller\PageSearchApiController' => [
-                'class' => 'Rcm\Controller\PageSearchApiController',
-                'arguments' => ['ServiceManager'],
-            ],
-        ],
-        'factories' => [
-            'Rcm\Controller\IndexController' => 'Rcm\Factory\IndexControllerFactory',
-            'Rcm\Controller\CmsController' => 'Rcm\Factory\CmsControllerFactory',
-        ],
-    ],
+    'controllers' => require __DIR__ . '/controllers.php',
     /* doctrine */
     'doctrine' => require __DIR__ . '/doctrine.php',
     /* Rcm Config */
@@ -71,7 +41,7 @@ return [
         ]
     ],
     /* RcmUser Config */
-    'RcmUser' =>  require __DIR__ . '/rcm-user-config.php',
+    'RcmUser' => require __DIR__ . '/rcm-user-config.php',
     /* route_manager */
     'route_manager' => [
         'invokables' => [
@@ -80,6 +50,7 @@ return [
     ],
     /* router */
     'router' => require __DIR__ . '/router.php',
+    'console' => require __DIR__ . '/console.php',
     /* service_manager */
     'service_manager' => require __DIR__ . '/service_manager.php',
     /* view_helpers */
