@@ -31,8 +31,6 @@ class ListHtmlIncludesController extends AbstractActionController
      */
     public function listJsAction()
     {
-        var_dump($this->htmlIncludesService->getDefaultScriptConfig());
-
         $responseData = array_keys(
             $this->htmlIncludesService->getDefaultScriptConfig()
         );
