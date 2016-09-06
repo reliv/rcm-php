@@ -42,7 +42,7 @@ class ListHtmlIncludesController extends AbstractActionController
     public function listScriptsAction()
     {
         $responseData = array_keys(
-            $this->includes->getDefaultScriptConfig($this->config['scriptsKey'])
+            $this->includes->getScriptConfig($this->config['scriptsKey'])
         );
 
         return $this->getJsonResponse($responseData);
@@ -57,7 +57,7 @@ class ListHtmlIncludesController extends AbstractActionController
     public function listStylesheetsAction()
     {
         $responseData = array_keys(
-            $this->includes->getDefaultStylesheetsConfig($this->config['styleSheetsKey'])
+            $this->includes->getScriptConfig($this->config['styleSheetsKey'])
         );
 
         return $this->getJsonResponse($responseData);
