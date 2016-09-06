@@ -16,11 +16,11 @@ use Zend\Http\Response;
  */
 class ListHtmlIncludesController extends AbstractActionController
 {
-    protected $htmlIncludesService;
+    protected $service;
 
-    public function __construct(HtmlIncludes $htmlIncludesService)
+    public function __construct(HtmlIncludes $service)
     {
-        $this->htmlIncludesService = $htmlIncludesService;
+        $this->service = $service;
     }
 
     /**
@@ -32,7 +32,7 @@ class ListHtmlIncludesController extends AbstractActionController
     public function listJsAction()
     {
         $responseData = array_keys(
-            $this->htmlIncludesService->getDefaultScriptConfig()
+            $this->service->getDefaultScriptConfig()
         );
 
         return $this->getJsonResponse($responseData);
@@ -47,7 +47,7 @@ class ListHtmlIncludesController extends AbstractActionController
     public function listCssAction()
     {
         $responseData = array_keys(
-            $this->htmlIncludesService->getDefaultStylesheetsConfig()
+            $this->service->getDefaultStylesheetsConfig()
         );
 
         return $this->getJsonResponse($responseData);
