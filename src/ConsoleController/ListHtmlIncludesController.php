@@ -59,9 +59,4 @@ class ListHtmlIncludesController extends AbstractActionController
             json_encode($responseData, JSON_PRETTY_PRINT)
         );
     }
-
-    protected function getHtmlIncludesConfig()
-    {
-        return $this->config['Rcm']['HtmlIncludes'];
-    }
 }
