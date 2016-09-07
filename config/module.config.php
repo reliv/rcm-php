@@ -50,7 +50,6 @@ return [
     ],
     /* router */
     'router' => require __DIR__ . '/router.php',
-    'console' => require __DIR__ . '/console.php',
     /* service_manager */
     'service_manager' => require __DIR__ . '/service_manager.php',
     /* view_helpers */

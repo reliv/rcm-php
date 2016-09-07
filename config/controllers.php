@@ -4,9 +4,6 @@ return [
         'Rcm\Factory\AbstractPluginControllerFactory'
     ],
     'config_factories' => [
-        'Rcm\ConsoleController\ListHtmlIncludesController' => [
-            'arguments' => ['Rcm\Service\HtmlIncludes'],
-        ],
         'Rcm\Controller\CacheController' => [
             'class' => '\Rcm\Controller\CacheController',
             'arguments' => ['ServiceManager'],
