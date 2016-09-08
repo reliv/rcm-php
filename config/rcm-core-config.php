@@ -7,7 +7,6 @@ return [
      * defaultDomain to use if domain not found E.I. IP address is used
      */
     'defaultDomain' => null,
-
     /**
      * Available page types
      */
@@ -28,12 +27,10 @@ return [
             'canClone' => true,
         ],
     ],
-
     /**
      * successfulLoginUrl
      */
     'successfulLoginUrl' => '/',
-
     /**
      * Access Control config
      */
@@ -89,7 +86,6 @@ return [
             'description' => 'Global resource for Rcm Site Wide Widgets',
         ],
     ],
-
     /**
      * RcmCmsPageRouteNames
      */
@@ -98,7 +94,6 @@ return [
         'contentManagerWithPageType' => 'contentManagerWithPageType',
         'blog' => 'blog',
     ],
-
     /**
      * Scripts to be required always on every page
      */
@@ -109,18 +104,21 @@ return [
          * Useful for setting up prebuilt (minimized and combined) files
          */
         'defaultScriptKey' => 'scripts',
-
         /**
          * Set the stylesheet key to use
          * Useful for setting up prebuilt (minimized and combined) files
          */
         'defaultStylesheetKey' => 'stylesheets',
-
         /**
          * This determines the order of the head sections, thus, loading order of scripts and css
          */
         'sections' => [
+            'pre-config',
+            'config',
+            'post-config',
+            'pre-libraries',
             'libraries',
+            'post-libraries',
             'pre-rcm',
             'rcm',
             'post-rcm',
@@ -128,7 +126,6 @@ return [
             'modules',
             'post-modules',
         ],
-
         /**
          * Meta tags that will always be loaded
          * Example
@@ -145,7 +142,6 @@ return [
                 'content' => 'width=device-width, initial-scale=1',
             ],
         ],
-
         /**
          * @deprecated Use 'scripts'
          * Script files that will always be loaded
@@ -157,7 +153,6 @@ return [
          */
         'headScriptFile' => [
         ],
-
         /**
          * Script files that will always be loaded
          * Example:
@@ -169,19 +164,23 @@ return [
          * ],
          */
         'scripts' => [
+            'pre-config' => [],
+            'config' => [],
+            'post-config' => [],
+            'pre-libraries' => [],
             'libraries' => [],
+            'post-libraries' => [],
             'pre-rcm' => [],
             'rcm' => [
-                '/modules/rcm/rcm.js'=>[],
+                '/modules/rcm/rcm.js' => [],
             ],
             'post-rcm' => [],
             'pre-modules' => [],
             'modules' => [
-                '/modules/rcm/modules.js'=>[],
+                '/modules/rcm/modules.js' => [],
             ],
             'post-modules' => [],
         ],
-
         /**
          * @deprecated Use 'stylesheets'
          * Stylesheet files that will always be loaded
@@ -194,7 +193,6 @@ return [
          */
         'headLinkStylesheet' => [
         ],
-
         /**
          * Stylesheet files that will always be loaded
          * Example:
@@ -207,7 +205,12 @@ return [
          * ],
          */
         'stylesheets' => [
+            'pre-config' => [],
+            'config' => [],
+            'post-config' => [],
+            'pre-libraries' => [],
             'libraries' => [],
+            'post-libraries' => [],
             'pre-rcm' => [],
             'rcm' => [
                 '/modules/rcm/rcm.css' => [],
