@@ -7,6 +7,12 @@ return [
      * defaultDomain to use if domain not found E.I. IP address is used
      */
     'defaultDomain' => null,
+
+    /**
+     * defaultPluginIcon - Default icon in not defined by plugin
+     */
+    'defaultPluginIcon' => '/modules/rcm/images/no-plugin-icon.png',
+
     /**
      * Available page types
      */
@@ -27,10 +33,12 @@ return [
             'canClone' => true,
         ],
     ],
+
     /**
      * successfulLoginUrl
      */
     'successfulLoginUrl' => '/',
+
     /**
      * Access Control config
      */
@@ -86,6 +94,7 @@ return [
             'description' => 'Global resource for Rcm Site Wide Widgets',
         ],
     ],
+
     /**
      * RcmCmsPageRouteNames
      */
@@ -94,6 +103,7 @@ return [
         'contentManagerWithPageType' => 'contentManagerWithPageType',
         'blog' => 'blog',
     ],
+
     /**
      * Scripts to be required always on every page
      */
@@ -104,11 +114,13 @@ return [
          * Useful for setting up prebuilt (minimized and combined) files
          */
         'defaultScriptKey' => 'scripts',
+
         /**
          * Set the stylesheet key to use
          * Useful for setting up prebuilt (minimized and combined) files
          */
         'defaultStylesheetKey' => 'stylesheets',
+
         /**
          * This determines the order of the head sections, thus, loading order of scripts and css
          */
@@ -126,6 +138,7 @@ return [
             'modules',
             'post-modules',
         ],
+
         /**
          * Meta tags that will always be loaded
          * Example
@@ -142,6 +155,7 @@ return [
                 'content' => 'width=device-width, initial-scale=1',
             ],
         ],
+
         /**
          * @deprecated Use 'scripts'
          * Script files that will always be loaded
@@ -153,6 +167,7 @@ return [
          */
         'headScriptFile' => [
         ],
+
         /**
          * Script files that will always be loaded
          * Example:
@@ -181,6 +196,7 @@ return [
             ],
             'post-modules' => [],
         ],
+
         /**
          * @deprecated Use 'stylesheets'
          * Stylesheet files that will always be loaded
@@ -193,6 +209,7 @@ return [
          */
         'headLinkStylesheet' => [
         ],
+
         /**
          * Stylesheet files that will always be loaded
          * Example:
