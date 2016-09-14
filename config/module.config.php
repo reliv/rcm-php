@@ -172,7 +172,7 @@ return [
                     'New Page' => [
                         'label' => 'New Page',
                         'route' => 'RcmAdmin\Page\New',
-                        'class' => 'rcmAdminMenu RcmFormDialog',
+                        'class' => 'rcmAdminMenu RcmFormDialog icon-after new-page',
                         'title' => 'New Page',
                     ],
                     'Edit' => [
@@ -235,7 +235,7 @@ return [
                                 'page' => [
                                     'label' => ':revisionCreatedDate - :revisionAuthor',
                                     'route' => 'contentManagerWithPageType',
-                                    'class' => 'revision',
+                                    'class' => 'icon-before revision-page',
                                     'text_domain' => 'DO_NOT_TRANSLATE',
                                     'params' => [
                                         'page' => ':rcmPageName',
@@ -257,7 +257,7 @@ return [
                                 'page' => [
                                     'label' => ':revisionPublishedDate - :revisionAuthor',
                                     'route' => 'RcmAdmin\Page\PublishPageRevision',
-                                    'class' => 'revision',
+                                    'class' => 'icon-before restore-page',
                                     'text_domain' => 'DO_NOT_TRANSLATE',
                                     'params' => [
                                         'rcmPageName' => ':rcmPageName',
@@ -270,7 +270,7 @@ return [
                     ],
                     'Delete' => [
                         'label' => 'Delete',
-                        'class' => 'rcmAdminMenu RcmBlankDialog',
+                        'class' => 'rcmAdminMenu RcmBlankDialog icon-after delete-page',
                         'title' => 'Delete Current Page',
                         'uri' => '/modules/rcm-admin/page-delete/page-delete.html',
                     ],
@@ -282,19 +282,19 @@ return [
                 'pages' => [
                     'Manage Sites' => [
                         'label' => 'Manage Sites',
-                        'class' => 'rcmAdminMenu rcmStandardDialog',
+                        'class' => 'rcmAdminMenu rcmStandardDialog icon-after manage-sites',
                         'uri' => '/modules/rcm-admin/manage-sites/manage-sites.html',
                         'title' => 'Manage Sites',
                     ],
                     'Create Site' => [
                         'label' => 'Create Site',
-                        'class' => 'rcmAdminMenu rcmStandardDialog',
+                        'class' => 'rcmAdminMenu rcmStandardDialog icon-after create-site',
                         'uri' => '/modules/rcm-admin/create-site/create-site.html',
                         'title' => 'Create Site',
                     ],
                     'Copy Pages' => [
                         'label' => 'Copy Pages',
-                        'class' => 'rcmAdminMenu rcmStandardDialog',
+                        'class' => 'rcmAdminMenu rcmStandardDialog icon-after copy-pages',
                         'uri' => '/modules/rcm-admin/site-page-copy/site-page-copy.html',
                         'title' => 'Copy Pages',
                     ],
@@ -447,7 +447,7 @@ return [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
                     'route'
-                        => '/rcm-admin/page/create-template-from-page/:rcmPageType/:rcmPageName[/[:rcmPageRevision]]',
+                    => '/rcm-admin/page/create-template-from-page/:rcmPageType/:rcmPageName[/[:rcmPageRevision]]',
                     'defaults' => [
                         'controller' => 'RcmAdmin\Controller\PageController',
                         'action' => 'createTemplateFromPage',
