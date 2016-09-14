@@ -73,12 +73,6 @@
 
 }
 
-.rcmAdminNavigation li ul a.additionalMenus {
-    background-image: url("/modules/rcm/images/icons/arrow.png");
-    background-position: center right;
-    background-repeat: no-repeat;
-}
-
 .rcmAdminNavigation li ul ul {
     margin: -30px 0 0 232px;
 }
@@ -91,14 +85,53 @@
     left: auto;
 }
 
-.rcmAdminNavigation li li.newPageIcon, .rcmAdminNavigation li li.newPageIcon:hover {
-    background-image: url("/modules/rcm/images/icons/karma/newpage.png");
-    background-repeat: no-repeat;
-    background-position: left center;
+.rcmAdminNavigation .icon-before a:before{
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding-right: .5em;
 }
 
-.rcmAdminNavigation li li.publishIcon, .rcmAdminNavigation li li.publishIcon:hover {
-    background-image: url("/modules/rcm/images/icons/karma/publish.png");
-    background-repeat: no-repeat;
-    background-position: left center;
+.rcmAdminNavigation .icon-after a:after {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    float: right;
+}
+
+.rcmAdminNavigation li li.new-page a:after {
+    content: "\e022";
+}
+
+.rcmAdminNavigation li li.delete-page a:after {
+    content: "\e020";
+}
+
+.rcmAdminNavigation li li.restore-page a:before,
+.rcmAdminNavigation li li.revision-page a:before{
+    content: "\e176";
+}
+
+.rcmAdminNavigation li li.manage-sites a:after{
+    content: "\e135";
+}
+
+.rcmAdminNavigation li li.create-site a:after{
+    content: "\e081";
+}
+
+.rcmAdminNavigation li li.copy-pages a:after{
+    content: "\e205";
 }

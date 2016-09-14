@@ -28,7 +28,6 @@ use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\Http\RouteMatch;
 use Zend\View\Model\ViewModel;
 
-
 /**
  * Unit Test for the Admin Panel Controller
  *
@@ -118,52 +117,41 @@ class AdminPanelControllerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'Page' => [
-                'display' => 'Page',
-                'aclGroups' => 'admin',
-                'cssClass' => '',
-                'href' => '#',
-                'links' => [
-                    'New' => [
-                        'display' => 'New',
-                        'aclGroups' => 'admin',
-                        'cssClass' => 'newPageIcon',
-                        'href' => '#',
-                        'links' => [
-                            'Page' => [
-                                'display' => 'Page',
-                                'aclResource' => 'admin',
-                                'aclPermissions' => 'page.new',
-                                'cssClass' => 'rcmNewPageIcon rcmNewPage',
-                                'href' => '#',
-                                'data-title' => 'New Page',
-                            ],
-                        ]
+                'label' => 'Page',
+                'uri' => '#',
+                'pages' => [
+                    'New Page' => [
+                        'label' => 'New Page',
+                        'route' => 'RcmAdmin\Page\New',
+                        'class' => 'rcmAdminMenu RcmFormDialog icon-after new-page',
+                        'title' => 'New Page',
                     ],
                     'Edit' => [
-                        'display' => 'Edit',
-                        'aclGroups' => 'admin',
-                        'cssClass' => 'draftsIcon',
-                        'href' => '#',
-                        'links' => [
-                            'Page' => [
-                                'display' => 'Edit Content',
-                                'aclGroups' => 'admin',
-                                'cssClass' => 'rcmEditPageIcon rcmEditPage',
-                                'href' => '#',
+                        'label' => 'Edit',
+                        'uri' => '#',
+                        'pages' => [
+                            'AddRemoveArrangePlugins' => [
+                                'label' => 'Add/Remove/Arrange Plugins',
+                                'class' => 'rcmAdminEditButton',
+                                'uri' => "javascript:RcmAdminService.rcmAdminEditButtonAction('arrange');",
                             ],
-                            'Page Layout' => [
-                                'display' => 'Add/Remove Plugins on Page',
-                                'aclGroups' => 'admin',
-                                'cssClass' => 'rcmLayoutIcon rcmShowLayoutEditor',
-                                'href' => '#',
+                            'PageProperties' => [
+                                'label' => 'Page Properties',
+                                'class' => 'rcmAdminMenu RcmBlankDialog',
+                                'title' => 'Page Properties',
+                                'uri' => '/modules/rcm-admin/page-properties/page-properties.html',
                             ],
-                            'Page Properties' => [
-                                'display' => 'Page Properties',
-                                'aclGroups' => 'admin',
-                                'cssClass' => 'PagePropertiesIcon rcmPageProperties',
-                                'href' => '#',
+                            'PagePermissions' => [
+                                'label' => 'Page Permissions',
+                                'class' => 'rcmAdminMenu RcmBlankDialog',
+                                'title' => 'Page Permissions',
+                                'route' => 'RcmAdmin\Page\PagePermissions',
+                                'params' => [
+                                    'rcmPageName' => ':rcmPageName',
+                                    'rcmPageType' => ':rcmPageType',
+                                ],
                             ],
-                        ],
+                        ]
                     ],
                 ],
             ],
@@ -174,19 +162,18 @@ class AdminPanelControllerTest extends \PHPUnit_Framework_TestCase
      * Test the constructor is working
      *
      * @return void
-     * @covers RcmAdmin\Controller\AdminPanelController::__construct
+     * @covers \RcmAdmin\Controller\AdminPanelController::__construct
      */
     public function testConstructor()
     {
         $this->assertTrue($this->controller instanceof AdminPanelController);
     }
 
-
     /**
      * Test getAdminWrapperAction
      *
      * @return void
-     * @covers RcmAdmin\Controller\AdminPanelController::getAdminWrapperAction
+     * @covers \RcmAdmin\Controller\AdminPanelController::getAdminWrapperAction
      */
     public function testGetAdminWrapperAction()
     {
