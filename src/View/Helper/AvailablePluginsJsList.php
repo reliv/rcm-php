@@ -12,7 +12,6 @@ use Zend\View\Helper\AbstractHelper;
  *
  * @category  Reliv
  * @package   RcmAdmin\View\Helper
- * @author    Rod Mcnew <rmcnew@relivinc.com>
  * @copyright 2014 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: <package_version>
@@ -44,9 +43,27 @@ class AvailablePluginsJsList extends AbstractHelper
             ->get('Rcm\Service\CurrentSite')
             ->listAvailableSiteWidePlugins();
 
+        foreach ($plugins['Site Wide'] as $key => $value) {
+            if (empty($plugins['Site Wide'][$key]['icon'])) {
+                $plugins['Site Wide'][$key]['icon'] = $this->getDefaultPluginIcon();
+            }
+        }
+
         $headScript->appendScript(
             'var rcmAvailablePlugins=' . json_encode($plugins)
         );
+    }
+
+    /**
+     * getDefaultPluginIcon
+     *
+     * @return string
+     */
+    public function getDefaultPluginIcon()
+    {
+        $config = $this->getServiceLocator()->get('Config');
+
+        return $config['Rcm']['defaultPluginIcon'];
     }
 
     /**
