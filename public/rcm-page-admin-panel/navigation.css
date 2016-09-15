@@ -50,7 +50,8 @@
     position: absolute;
     left: -999em;
     height: auto;
-    width: 250px;
+    /*width: 250px;*/
+    width: 22.5em;
     font-weight: normal;
     border-width: 0.25em;
     margin: 0;
