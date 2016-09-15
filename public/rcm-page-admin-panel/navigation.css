@@ -67,10 +67,9 @@
 }
 
 .rcmAdminNavigation li ul a {
-    width: 16em;
+    width: 20em;
     padding-top: 5px;
     padding-bottom: 5px;
-
 }
 
 .rcmAdminNavigation li ul ul {
