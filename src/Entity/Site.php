@@ -778,7 +778,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
         foreach ($plugins as $plugin) {
             $list[$plugin->getDisplayName()] = [
                 'displayName' => $plugin->getDisplayName(),
-                'icon' => '/modules/rcm/images/GenericIcon.png',
+                'icon' => $plugin->getIcon(),
                 'siteWide' => true,
                 'name' => $plugin->getPlugin(),
                 'instanceId' => $plugin->getInstanceId()
