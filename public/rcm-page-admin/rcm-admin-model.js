@@ -370,6 +370,28 @@ var RcmAdminModel = function () {
 
             return value;
         },
+
+        /**
+         * getDisplayName
+         * @param pluginElm
+         * @param onComplete
+         * @returns {*}
+         */
+        getDisplayName: function (pluginElm, onComplete) {
+
+            var value = self.RcmPluginModel.getSitewideName(pluginElm);
+
+            if (!value) {
+                value = self.RcmPluginModel.getName(pluginElm);
+            }
+
+            if (typeof onComplete === 'function') {
+                onComplete(value)
+            }
+
+            return value;
+        },
+
         /**
          * getName
          * @param pluginElm

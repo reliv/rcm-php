@@ -221,6 +221,8 @@ var RcmAdminViewModel = function (config, model, page) {
 
             var isSitewide = self.model.RcmPluginModel.isSitewide(elm);
 
+            var displayName = self.model.RcmPluginModel.getDisplayName(elm);
+
             var sitewideOption = '';
 
             if (!isSitewide) {
@@ -245,6 +247,7 @@ var RcmAdminViewModel = function (config, model, page) {
             );
 
             var rcmContainerMenuList = jQuery(
+                '  <div class="rcm-plugin-title">' + displayName + '</div>' +
                 '  <ul>' +
                 '   ' + sitewideOption +
                 '   <li><a href="#" class="rcmDeletePluginMenuItem">Delete Plugin</a> </li>' +
@@ -268,7 +271,7 @@ var RcmAdminViewModel = function (config, model, page) {
                         );
                         menuOptionsElm = jQuery('<li></li>');
                         menuOptionsAElm.click(
-                            function() {
+                            function () {
                                 rcmContainerMenu.hide();
                                 value.method();
                             }

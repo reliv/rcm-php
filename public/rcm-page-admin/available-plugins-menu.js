@@ -13,6 +13,12 @@ var RcmAvailablePluginsMenu = {
                     plugins, function (handlerId) {
                         if (handlerId == wrapperId) {
                             pluginDragWrapper.addClass('siteWideAlreadyOnPage');
+                            pluginDragWrapper.removeClass('rcmPluginDrag');
+                            try {
+                                pluginDragWrapper.draggable('destroy');
+                            } catch (e) {
+                                //No problem
+                            }
                             return false;
                         }
                         return true;
@@ -90,7 +96,8 @@ var RcmAvailablePluginsMenu = {
                     collapse.append(collapseBody);
 
                     $.each(
-                        plugins, function (displayNameStr, pluginInfo) {
+                        plugins,
+                        function (displayNameStr, pluginInfo) {
                             newInstanceId--;
                             var instanceId = newInstanceId;
                             var plugin = $('<div class="rcmPluginDrag panel-inner"></div>');
@@ -162,7 +169,8 @@ var RcmAvailablePluginsMenu = {
             );
 
             page.events.on(
-                'registerObjects', RcmAvailablePluginsMenu.hideShowSiteWides
+                'registerObjects',
+                RcmAvailablePluginsMenu.hideShowSiteWides
             );
         } else {
 
