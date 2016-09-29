@@ -35,10 +35,10 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "doctrine/doctrine-orm-module": "0.*",
+    "doctrine/doctrine-orm-module": "0.* || 1.*",
     "zendframework/zendframework": "2.*",
     "rwoverdijk/assetmanager": "1.*",
-    "reliv/zf-config-factories": "3.*",
+    "reliv/zf-config-factories": "3.* || 4.*",
     "rcm/user": "1.*",
     "rcm/api-lib": "0.*"
   },
