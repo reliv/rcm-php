@@ -39,7 +39,7 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "reliv/zf-config-factories": "3.*",
+    "reliv/zf-config-factories": "3.* || 4.*",
     "fxp/composer-asset-plugin": "^1.2.0",
     "rcm/core": "^1.7.0",
     "rcm/core-js": "^1.0.0",
