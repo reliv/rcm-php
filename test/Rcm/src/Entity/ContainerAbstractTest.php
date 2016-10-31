@@ -124,19 +124,6 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Created Date Only Accepts a DateTime object
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
-     */
-    public function testSetCreatedDateOnlyAcceptsDateTime()
-    {
-        $this->container->setCreatedDate(time());
-    }
-
-    /**
      * Test Get and Set Last Published Date
      *
      * @return void
