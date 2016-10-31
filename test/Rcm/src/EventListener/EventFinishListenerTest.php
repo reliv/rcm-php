@@ -71,7 +71,7 @@ class EventFinishListenerTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\EventListener\EventFinishListener::__construct
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testConstructorOnlyAcceptsAEventFinishListenerObject()
     {

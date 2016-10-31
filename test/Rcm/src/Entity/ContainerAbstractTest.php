@@ -147,7 +147,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testSetLastPublishedOnlyAcceptsDateTime()
     {
@@ -179,7 +179,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testSetPublishedRevisionOnlyAcceptsDateTime()
     {
@@ -211,7 +211,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testAliasSetCurrentRevisionOnlyAcceptsDateTime()
     {
@@ -268,7 +268,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testSetStagedRevisionOnlyAcceptsDateTime()
     {
@@ -325,7 +325,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testSetSiteOnlyAcceptsSiteEntity()
     {

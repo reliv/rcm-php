@@ -221,7 +221,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Domain
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testSetPrimaryDomainNameAcceptsOnlyDomains()
     {

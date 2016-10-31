@@ -114,7 +114,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Revision
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testSetCreatedDateOnlyAcceptsDateTime()
     {
@@ -145,7 +145,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Revision
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testSetPublishDateOnlyAcceptsDateTime()
     {
@@ -186,7 +186,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Revision
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testAddPluginWrapperOnlyAcceptsPluginWrapper()
     {

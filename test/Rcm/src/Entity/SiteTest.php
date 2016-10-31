@@ -104,7 +104,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Site
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testSetDomainOnlyAcceptsDomainObject()
     {
@@ -137,7 +137,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Site
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testSetLanguageOnlyAcceptsLanguageObject()
     {
@@ -170,7 +170,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Site
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testSetCountryOnlyAcceptsCountryObject()
     {
@@ -304,7 +304,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Site
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testAddPageOnlyAcceptsPageObject()
     {
@@ -317,7 +317,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Site
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testRemovePageOnlyAcceptsPageObject()
     {
@@ -410,7 +410,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Site
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testAddContainerOnlyAcceptsContainerObject()
     {
@@ -423,7 +423,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Site
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testRemoveContainerOnlyAcceptsContainerObject()
     {
@@ -554,7 +554,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Site
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testAddSiteWidePluginOnlyAcceptsPluginInstanceObject()
     {
@@ -567,7 +567,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Site
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
     public function testRemoveSiteWidePluginOnlyAcceptsPluginInstanceObject()
     {
