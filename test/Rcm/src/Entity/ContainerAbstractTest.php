@@ -168,10 +168,10 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @covers \Rcm\Entity\ContainerAbstract
      * @expectedException \TypeError
      */
-    public function testSetPublishedRevisionOnlyAcceptsDateTime()
-    {
-        $this->container->setLastPublished(time());
-    }
+//    public function testSetPublishedRevisionOnlyAcceptsDateTime()
+//    {
+//        $this->container->setLastPublished(time());
+//    }
 
     /**
      * Test Get and Set Current Revision
@@ -200,10 +200,10 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @covers \Rcm\Entity\ContainerAbstract
      * @expectedException \TypeError
      */
-    public function testAliasSetCurrentRevisionOnlyAcceptsDateTime()
-    {
-        $this->container->setPublishedRevision(time());
-    }
+//    public function testAliasSetCurrentRevisionOnlyAcceptsDateTime()
+//    {
+//        $this->container->setPublishedRevision(time());
+//    }
 
     /**
      * Test Remove Current Revision
@@ -257,10 +257,10 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @covers \Rcm\Entity\ContainerAbstract
      * @expectedException \TypeError
      */
-    public function testSetStagedRevisionOnlyAcceptsDateTime()
-    {
-        $this->container->setStagedRevision(time());
-    }
+//    public function testSetStagedRevisionOnlyAcceptsDateTime()
+//    {
+//        $this->container->setStagedRevision(time());
+//    }
 
     /**
      * Test Remove Current Revision
@@ -314,10 +314,10 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @covers \Rcm\Entity\ContainerAbstract
      * @expectedException \TypeError
      */
-    public function testSetSiteOnlyAcceptsSiteEntity()
-    {
-        $this->container->setSite(time());
-    }
+//    public function testSetSiteOnlyAcceptsSiteEntity()
+//    {
+//        $this->container->setSite(time());
+//    }
 
     /**
      * Test Add Revision
