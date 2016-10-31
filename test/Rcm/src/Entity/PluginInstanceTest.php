@@ -157,19 +157,6 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Set Previous Instance Only Accepts a PluginInstance object
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\PluginInstance
-     * @expectedException \PHPUnit_Framework_Error
-     */
-    public function testSetSetPreviousInstanceOnlyAcceptsPluginInstanceObject()
-    {
-        $this->pluginInstance->setPreviousInstance(time());
-    }
-
-    /**
      * Test Get and Set Instance Config
      *
      * @return void
