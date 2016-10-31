@@ -23,7 +23,7 @@ use Zend\Validator\Uri;
  * @ORM\Entity (repositoryClass="Rcm\Repository\Redirect")
  * @ORM\Table(name="rcm_redirects",
  *     indexes={
- *         @ORM\Index(name="redirect_request_url_siteId", columns={"requestUrl, siteId"})
+ *         @ORM\Index(name="redirect_request_url_siteId", columns={"requestUrl", "siteId"})
  *     }
  * )
  */
