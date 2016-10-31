@@ -142,19 +142,6 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Set Last Published Only Accepts a DateTime object
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \TypeError
-     */
-    public function testSetLastPublishedOnlyAcceptsDateTime()
-    {
-        $this->container->setLastPublished(time());
-    }
-
-    /**
      * Test Get and Set Published Revision
      *
      * @return void
