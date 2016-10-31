@@ -73,17 +73,17 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
      * @covers \Rcm\EventListener\ViewEventListener::__construct
      * @expectedException \TypeError
      */
-    public function testConstructorOnlyAcceptsAEventFinishListenerObject()
-    {
-        $mockResponseHandler = $this->getMockBuilder('Rcm\Entity\Site')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        /** @var \Rcm\Service\ResponseHandler $mockResponseHandler */
-        new ViewEventListener(
-            $mockResponseHandler
-        );
-    }
+//    public function testConstructorOnlyAcceptsAEventFinishListenerObject()
+//    {
+//        $mockResponseHandler = $this->getMockBuilder('Rcm\Entity\Site')
+//            ->disableOriginalConstructor()
+//            ->getMock();
+//
+//        /** @var \Rcm\Service\ResponseHandler $mockResponseHandler */
+//        new ViewEventListener(
+//            $mockResponseHandler
+//        );
+//    }
 
     /**
      * Test Process Rcm Responses
