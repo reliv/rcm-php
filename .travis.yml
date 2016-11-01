@@ -1,9 +1,7 @@
 sudo: false
 language: php
 php:
-#  - "7.0"
-  - "5.6"
-  - "5.5"
+  - "7.0"
 install:
 - composer self-update 1.1.2 #Travis is on the "dev" channel of composer. We want to be on stable.
 - composer --version
@@ -20,5 +18,3 @@ cache:
   - node_modules
 matrix:
   fast_finish: true
-  allow_failures:
-    - php: '7.0'

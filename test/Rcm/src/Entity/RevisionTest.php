@@ -114,12 +114,12 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Revision
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
-    public function testSetCreatedDateOnlyAcceptsDateTime()
-    {
-        $this->revision->setCreatedDate(time());
-    }
+//    public function testSetCreatedDateOnlyAcceptsDateTime()
+//    {
+//        $this->revision->setCreatedDate(time());
+//    }
 
     /**
      * Test Get and Set Published Date
@@ -145,12 +145,12 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Revision
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
-    public function testSetPublishDateOnlyAcceptsDateTime()
-    {
-        $this->revision->setCreatedDate(time());
-    }
+//    public function testSetPublishDateOnlyAcceptsDateTime()
+//    {
+//        $this->revision->setCreatedDate(time());
+//    }
 
     /**
      * Test Get and Add Plugin Wrappers
@@ -186,12 +186,12 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\Revision
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
-    public function testAddPluginWrapperOnlyAcceptsPluginWrapper()
-    {
-        $this->revision->addPluginWrapper(time());
-    }
+//    public function testAddPluginWrapperOnlyAcceptsPluginWrapper()
+//    {
+//        $this->revision->addPluginWrapper(time());
+//    }
 
 
     /**

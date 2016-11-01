@@ -124,19 +124,6 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Created Date Only Accepts a DateTime object
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
-     */
-    public function testSetCreatedDateOnlyAcceptsDateTime()
-    {
-        $this->container->setCreatedDate(time());
-    }
-
-    /**
      * Test Get and Set Last Published Date
      *
      * @return void
@@ -152,19 +139,6 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
         $actual = $this->container->getLastPublished();
 
         $this->assertEquals($lastPublished, $actual);
-    }
-
-    /**
-     * Test Set Last Published Only Accepts a DateTime object
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
-     */
-    public function testSetLastPublishedOnlyAcceptsDateTime()
-    {
-        $this->container->setLastPublished(time());
     }
 
     /**
@@ -192,12 +166,12 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
-    public function testSetPublishedRevisionOnlyAcceptsDateTime()
-    {
-        $this->container->setLastPublished(time());
-    }
+//    public function testSetPublishedRevisionOnlyAcceptsDateTime()
+//    {
+//        $this->container->setLastPublished(time());
+//    }
 
     /**
      * Test Get and Set Current Revision
@@ -224,12 +198,12 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
-    public function testAliasSetCurrentRevisionOnlyAcceptsDateTime()
-    {
-        $this->container->setPublishedRevision(time());
-    }
+//    public function testAliasSetCurrentRevisionOnlyAcceptsDateTime()
+//    {
+//        $this->container->setPublishedRevision(time());
+//    }
 
     /**
      * Test Remove Current Revision
@@ -281,12 +255,12 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
-    public function testSetStagedRevisionOnlyAcceptsDateTime()
-    {
-        $this->container->setStagedRevision(time());
-    }
+//    public function testSetStagedRevisionOnlyAcceptsDateTime()
+//    {
+//        $this->container->setStagedRevision(time());
+//    }
 
     /**
      * Test Remove Current Revision
@@ -338,12 +312,12 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      * @return void
      *
      * @covers \Rcm\Entity\ContainerAbstract
-     * @expectedException \PHPUnit_Framework_Error
+     * @expectedException \TypeError
      */
-    public function testSetSiteOnlyAcceptsSiteEntity()
-    {
-        $this->container->setSite(time());
-    }
+//    public function testSetSiteOnlyAcceptsSiteEntity()
+//    {
+//        $this->container->setSite(time());
+//    }
 
     /**
      * Test Add Revision
