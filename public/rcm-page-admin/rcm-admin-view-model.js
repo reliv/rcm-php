@@ -219,15 +219,7 @@ var RcmAdminViewModel = function (config, model, page) {
 
             var page = self.page;
 
-            var isSitewide = self.model.RcmPluginModel.isSitewide(elm);
-
             var displayName = self.model.RcmPluginModel.getDisplayName(elm);
-
-            var sitewideOption = '';
-
-            if (!isSitewide) {
-                sitewideOption = '<li><a href="#" class="rcmSiteWidePluginMenuItem">Mark as site-wide</a></li>';
-            }
 
             var menu = jQuery(
                 '<div id="rcmLayoutEditHelper' + id + '" class="rcmLayoutEditHelper">' +
@@ -249,7 +241,6 @@ var RcmAdminViewModel = function (config, model, page) {
             var rcmContainerMenuList = jQuery(
                 '  <div class="rcm-plugin-title">' + displayName + '</div>' +
                 '  <ul>' +
-                '   ' + sitewideOption +
                 '   <li><a href="#" class="rcmDeletePluginMenuItem">Delete Plugin</a> </li>' +
                 '   <li><a href="#" class="rcmResetSizePluginMenuItem">Reset Size</a> </li>' +
                 '  </ul>'

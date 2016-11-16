@@ -2,32 +2,6 @@ var RcmAvailablePluginsMenu = {
 
     menu: null,
 
-    hideShowSiteWides: function (plugins) {
-        //Ensures site-wides that are already on the page are hidden in list
-        $.each(
-            $('.availablePluginsMenu .rcmPluginDrag.siteWide'), function () {
-                var pluginDragWrapper = $(this);
-                pluginDragWrapper.removeClass('siteWideAlreadyOnPage');
-                var wrapperId = pluginDragWrapper.attr('data-instanceId');
-                $.each(
-                    plugins, function (handlerId) {
-                        if (handlerId == wrapperId) {
-                            pluginDragWrapper.addClass('siteWideAlreadyOnPage');
-                            pluginDragWrapper.removeClass('rcmPluginDrag');
-                            try {
-                                pluginDragWrapper.draggable('destroy');
-                            } catch (e) {
-                                //No problem
-                            }
-                            return false;
-                        }
-                        return true;
-                    }
-                );
-            }
-        );
-    },
-
     build: function (callback) {
         if (!RcmAvailablePluginsMenu.menu) {
 
@@ -103,11 +77,6 @@ var RcmAvailablePluginsMenu = {
                             var plugin = $('<div class="rcmPluginDrag panel-inner"></div>');
                             plugin.appendTo(collapseBody);
                             plugin.data('pluginName', pluginInfo.name);
-                            if (pluginInfo.siteWide) {
-                                instanceId = pluginInfo.instanceId;
-                                plugin.addClass('siteWide');
-                                plugin.attr('data-instanceId', instanceId);
-                            }
 
                             var icon = $('<img>');
                             icon.attr('src', pluginInfo.icon);
@@ -148,10 +117,6 @@ var RcmAvailablePluginsMenu = {
                                 'data-rcmpluginrownumber',
                                 '0'
                             );
-                            outerContainer.attr(
-                                'data-rcmSiteWidePlugin',
-                                pluginInfo.siteWide ? 1 : 0
-                            );
                             outerContainer.appendTo(initialState);
 
                             var innerContainer = $('<div class="rcmPluginContainer">');
@@ -162,16 +127,6 @@ var RcmAvailablePluginsMenu = {
                 }
             );
 
-            var page = RcmAdminService.getPage(
-                function (page) {
-                    RcmAvailablePluginsMenu.hideShowSiteWides(page.plugins);
-                }
-            );
-
-            page.events.on(
-                'registerObjects',
-                RcmAvailablePluginsMenu.hideShowSiteWides
-            );
         } else {
 
             RcmAvailablePluginsMenu.menu.remove();
