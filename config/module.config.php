@@ -357,7 +357,7 @@ return [
             'favIcon' => "/images/favicon.ico",
             'loginPage' => "/login",
             'notAuthorizedPage' => "/not-authorized",
-            'notFoundPage' => "/not-found",
+            'notFoundPage' => "not-found",
             'containers' => [
                 'guestTopNavigation',
                 'guestMainNavigation',
