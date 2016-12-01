@@ -5,6 +5,8 @@ namespace Rcm\Middleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Rcm\Service\LocaleService;
+use Rcm\Service\PhpServer;
+use Rcm\Service\SiteService;
 
 /**
  * Class LocaleSetter
@@ -17,6 +19,11 @@ use Rcm\Service\LocaleService;
 class LocaleSetter
 {
     /**
+     * @var SiteService
+     */
+    protected $siteService;
+
+    /**
      * @var LocaleService
      */
     protected $localeService;
@@ -24,12 +31,33 @@ class LocaleSetter
     /**
      * LocaleSetter constructor.
      *
+     * @param SiteService   $siteService
      * @param LocaleService $localeService
      */
     public function __construct(
+        SiteService $siteService,
         LocaleService $localeService
     ) {
+        $this->siteService = $siteService;
         $this->localeService = $localeService;
+    }
+
+    /**
+     * getSiteFromRequest
+     *
+     * @param RequestInterface $request
+     *
+     * @return void
+     */
+    public function getSiteFromRequest(RequestInterface $request)
+    {
+        $domain = PhpServer::getDomainFormHost(
+            $request->getUri()->getHost()
+        );
+
+        $this->siteService->getSite(
+            $domain
+        );
     }
 
     /**
@@ -43,9 +71,9 @@ class LocaleSetter
      */
     public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null)
     {
-        // Set default locale
-        // @todo Set from request site
-        $this->localeService->setLocale(null);
+        $locale = $this->siteService->getCurrentSite()->getLocale();
+        // @todo Set from $request site getSiteFromRequest($request)
+        $this->localeService->setLocale($locale);
 
         return $next($request, $response);
     }

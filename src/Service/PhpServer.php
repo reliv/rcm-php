@@ -43,7 +43,21 @@ class PhpServer
     public static function getRequestDomain()
     {
         $host = self::getRequestHttpHost();
+
+        return self::getDomainFormHost($host);
+    }
+
+    /**
+     * getDomainFormHost
+     *
+     * @param string $host
+     *
+     * @return mixed
+     */
+    public static function getDomainFormHost($host)
+    {
         $hostParts = explode(':', $host);
+
         return $hostParts[0];
     }
 

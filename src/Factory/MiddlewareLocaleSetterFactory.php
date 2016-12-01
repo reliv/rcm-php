@@ -5,6 +5,7 @@ namespace Rcm\Factory;
 use Interop\Container\ContainerInterface;
 use Rcm\Middleware\LocaleSetter;
 use Rcm\Service\LocaleService;
+use Rcm\Service\SiteService;
 
 /**
  * Class MiddlewareLocaleSetterFactory
@@ -26,6 +27,7 @@ class MiddlewareLocaleSetterFactory
     public function __invoke($container)
     {
         return new LocaleSetter(
+            $container->get(SiteService::class),
             $container->get(LocaleService::class)
         );
     }
