@@ -2,11 +2,12 @@
 
 namespace Rcm\EventListener;
 
-use Rcm\Entity\Site;
-use Rcm\Repository\Redirect as RedirectRepo;
+use Rcm\Service\DomainRedirectService;
+use Rcm\Service\LocaleService;
+use Rcm\Service\RedirectService;
+use Rcm\Service\SiteService;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
-use Zend\Validator\Ip;
 
 /**
  * RCM Route Listener
@@ -25,40 +26,49 @@ use Zend\Validator\Ip;
  */
 class RouteListener
 {
-    /** @var \Rcm\Repository\Redirect */
-    protected $redirectRepo;
-
     /**
-     * @var Site
+     * @var SiteService
      */
-    protected $currentSite;
+    protected $siteService;
 
     /**
-     * @var array
+     * @var RedirectService
      */
-    protected $config;
+    protected $redirectService;
 
     /**
-     * @var Ip
+     * @var LocaleService
      */
-    protected $ipValidator;
+    protected $localeService;
 
     /**
-     * @param Site         $currentSite
-     * @param RedirectRepo $redirectRepo
-     * @param Ip           $ipValidator
-     * @param              $config
+     * RouteListener constructor.
+     *
+     * @param SiteService           $siteService
+     * @param RedirectService       $redirectService
+     * @param DomainRedirectService $domainRedirectService
+     * @param LocaleService         $localeService
      */
     public function __construct(
-        Site $currentSite,
-        RedirectRepo $redirectRepo,
-        Ip $ipValidator,
-        $config
+        SiteService $siteService,
+        RedirectService $redirectService,
+        DomainRedirectService $domainRedirectService,
+        LocaleService $localeService
     ) {
-        $this->currentSite = $currentSite;
-        $this->redirectRepo = $redirectRepo;
-        $this->config = $config;
-        $this->ipValidator = $ipValidator;
+        $this->siteService = $siteService;
+        $this->redirectService = $redirectService;
+        $this->domainRedirectService = $domainRedirectService;
+        $this->localeService = $localeService;
+    }
+
+    /**
+     * isConsoleRequest
+     *
+     * @return bool
+     */
+    protected function isConsoleRequest()
+    {
+        return $this->siteService->isConsoleRequest();
     }
 
     /**
@@ -71,48 +81,40 @@ class RouteListener
      */
     public function checkDomain(MvcEvent $event)
     {
-        /** @var \Zend\Http\PhpEnvironment\Request $request */
-        $request = $event->getRequest();
-        $serverParam = $request->getServer();
-        $currentDomain = $serverParam->get('HTTP_HOST');
-
-        if (empty($currentDomain)) {
-            // We are on CLI
+        if ($this->isConsoleRequest()) {
             return null;
         }
 
-        if (!$this->currentSite->getSiteId() || $this->currentSite->getStatus() != 'A') {
-            if (empty($this->config['Rcm']['defaultDomain'])
-                || $this->config['Rcm']['defaultDomain'] == $this->currentSite->getDomain()->getDomainName()
-            ) {
-                $response = new Response();
-                $response->setStatusCode(404);
-                $event->stopPropagation(true);
+        $currentDomain = $this->siteService->getCurrentDomain();
 
-                return $response;
-            }
+        $site = $this->siteService->getCurrentSite($currentDomain);
 
+        $redirectUrl = $this->domainRedirectService->getSiteNotAvailableRedirectUrl($site);
+
+        if (!$site->isSiteAvailable() && empty($redirectUrl)) {
+            $response = new Response();
+            $response->setStatusCode(404);
+            $event->stopPropagation(true);
+
+            return $response;
+        }
+
+        if ($redirectUrl) {
             $response = new Response();
             $response->setStatusCode(302);
-            $response->getHeaders()->addHeaderLine('Location', '//' . $this->config['Rcm']['defaultDomain']);
+            $response->getHeaders()->addHeaderLine('Location', '//' . $redirectUrl);
 
             $event->stopPropagation(true);
 
             return $response;
         }
 
-        $primaryCheck = $this->currentSite->getDomain()->getPrimary();
+        $redirectUrl = $this->domainRedirectService->getPrimaryRedirectUrl($site);
 
-        /**
-         * If the IP is not a domain and is not the primary, redirect to primary
-         */
-        if (!$this->ipValidator->isValid($currentDomain)
-            && !empty($primaryCheck)
-            && $primaryCheck->getDomainName() != $currentDomain
-        ) {
+        if ($redirectUrl) {
             $response = new Response();
             $response->setStatusCode(302);
-            $response->getHeaders()->addHeaderLine('Location', '//' . $primaryCheck->getDomainName());
+            $response->getHeaders()->addHeaderLine('Location', '//' . $redirectUrl);
 
             $event->stopPropagation(true);
 
@@ -132,76 +134,44 @@ class RouteListener
      */
     public function checkRedirect(MvcEvent $event)
     {
-        $siteId = $this->currentSite->getSiteId();
-
-        if (empty($siteId)) {
+        if ($this->isConsoleRequest()) {
             return null;
         }
 
-        /** @var \Zend\Http\PhpEnvironment\Request $request */
-        $request = $event->getRequest();
+        // User defaults
+        $redirectUrl = $this->redirectService->getRedirectUrl();
 
-        $serverParam = $request->getServer();
-        $requestUri = $serverParam->get('REQUEST_URI');
-        $baseUri = explode('?', $requestUri);
-        $requestUrl = $baseUri[0];
-
-        $redirect = $this->redirectRepo->getRedirect($requestUrl, $siteId);
-
-        if (!empty($redirect)) {
-            header('Location: ' . $redirect->getRedirectUrl(), true, 302);
-            exit;
-
-            /* Below is the ZF2 way but Response is not short-circuiting the event like it should */
-//            $response = new Response();
-//            $response->setStatusCode(302);
-//            $response->getHeaders()
-//                ->addHeaderLine(
-//                    'Location',
-//                    $redirect->getRedirectUrl()
-//                );
-//            $event->stopPropagation(true);
-//
-//            return $response;
+        if (empty($redirectUrl)) {
+            return null;
         }
 
-        return null;
+        header('Location: ' . $redirectUrl, true, 302);
+        exit;
+
+        /* Below is the ZF2 way but Response is not short-circuiting the event like it should *
+        $response = new Response();
+        $response->setStatusCode(302);
+        $response->getHeaders()
+            ->addHeaderLine(
+                'Location',
+                $redirect->getRedirectUrl()
+            );
+        $event->stopPropagation(true);
+
+        return $response;
+        */
     }
 
     /**
      * Set the system locale to Site Requirements
      *
-     * NOTE: We do NOT set LC_ALL because it causes "n tilde"
-     * chars to be not json encodable after they have been strtolower'd
-     *
      * @return null
      */
     public function addLocale()
     {
-        $locale = $this->currentSite->getLocale();
+        $locale = $this->siteService->getCurrentSite()->getLocale();
 
-        /* Conversion for Ubuntu and Mac local settings. */
-        if (!setlocale(LC_MONETARY, $locale . '.utf8')) {
-            if (!setlocale(LC_MONETARY, $locale . '.UTF-8')) {
-                setlocale(LC_MONETARY, 'en_US.UTF-8');
-            }
-        }
-
-        /* Conversion for Ubuntu and Mac local settings. */
-        if (!setlocale(LC_NUMERIC, $locale . '.utf8')) {
-            if (!setlocale(LC_NUMERIC, $locale . '.UTF-8')) {
-                setlocale(LC_NUMERIC, 'en_US.UTF-8');
-            }
-        }
-
-        /* Conversion for Ubuntu and Mac local settings. */
-        if (!setlocale(LC_TIME, $locale . '.utf8')) {
-            if (!setlocale(LC_TIME, $locale . '.UTF-8')) {
-                setlocale(LC_TIME, 'en_US.UTF-8');
-            }
-        }
-
-        \Locale::setDefault($locale);
+        $this->localeService->setLocale($locale);
 
         return null;
     }

@@ -28,6 +28,8 @@ use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
  */
 class Site extends AbstractApiModel implements \IteratorAggregate
 {
+    const STATUS_ACTIVE = 'A';
+
     /**
      * @var int Auto-Incremented Primary Key
      *
@@ -611,6 +613,30 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     }
 
     /**
+     * isActive
+     *
+     * @return string
+     */
+    public function isActive()
+    {
+        $status = $this->getStatus();
+
+        return $status === self::STATUS_ACTIVE;
+    }
+
+    /**
+     * isSiteAvailable
+     *
+     * @return bool
+     */
+    public function isSiteAvailable()
+    {
+        $siteId = $this->getSiteId();
+
+        return (!empty($siteId) && $this->isActive());
+    }
+
+    /**
      * Get all the page entities for the site.
      *
      * @return ArrayCollection
@@ -918,6 +944,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
 
     /**
      * getLocale
+     *
      *
      * @return string
      */
