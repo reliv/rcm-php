@@ -34,7 +34,7 @@ class Module
     {
         $serviceManager = $event->getApplication()->getServiceManager();
 
-        $config = $serviceManager->get('config');
+        $config = $serviceManager->get('Config');
 
         if (empty($config['Rcm']['installed']) && empty($config['Rcm']['defaultDomain'])) {
             return;

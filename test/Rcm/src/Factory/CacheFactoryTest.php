@@ -62,7 +62,7 @@ class CacheFactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $sm = new ServiceManager();
-        $sm->setService('config', $config);
+        $sm->setService('Config', $config);
 
         $factory = new CacheFactory();
         $object = $factory->createService($sm);

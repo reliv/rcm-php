@@ -32,7 +32,7 @@ class LayoutManagerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('config');
+        $config = $serviceLocator->get('Config');
         return new LayoutManager($config);
     }
 }

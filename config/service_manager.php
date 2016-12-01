@@ -20,26 +20,42 @@ return [
         => 'Rcm\Factory\EventFinishListenerFactory',
         'Rcm\EventListener\ViewEventListener'
         => 'Rcm\Factory\ViewEventListenerFactory',
+        \Rcm\Middleware\DomainCheck::class
+        => \Rcm\Factory\MiddlewareDomainCheckFactory::class,
+        \Rcm\Middleware\LocaleSetter::class
+        => \Rcm\Factory\MiddlewareLocaleSetterFactory::class,
+        \Rcm\Middleware\RedirectCheck::class
+        => \Rcm\Factory\MiddlewareRedirectCheckFactory::class,
         'Rcm\Service\AssetManagerCache'
         => 'Rcm\Factory\AssetManagerCacheFactory',
         'Rcm\Service\Cache'
         => 'Rcm\Factory\CacheFactory',
         'Rcm\Service\CurrentSite'
         => '\Rcm\Factory\CurrentSiteFactory',
+        \Rcm\Service\DomainRedirectService::class
+        => \Rcm\Factory\ServiceDomainRedirectServiceFactory::class,
+        \Rcm\Service\DomainService::class
+        => \Rcm\Factory\ServiceDomainServiceFactory::class,
         'Rcm\Service\HtmlIncludes'
         => 'Rcm\Factory\RcmHtmlIncludesServiceFactory',
         'Rcm\Service\LayoutManager'
         => 'Rcm\Factory\LayoutManagerFactory',
+        \Rcm\Service\LocaleService::class
+        => \Rcm\Factory\ServiceLocaleServiceFactory::class,
         'Rcm\Service\Logger'
         => 'Rcm\Factory\LoggerFactory',
         'Rcm\Service\PluginManager'
         => 'Rcm\Factory\PluginManagerFactory',
         'Rcm\Service\RcmUser'
         => 'Rcm\Factory\RcmUserFactory',
+        \Rcm\Service\RedirectService::class
+        => \Rcm\Factory\ServiceRedirectServiceFactory::class,
         'Rcm\Service\ResponseHandler'
         => 'Rcm\Factory\ResponseHandlerFactory',
         'Rcm\Service\SessionMgr'
         => 'Rcm\Factory\SessionManagerFactory',
+        \Rcm\Service\SiteService::class
+        => \Rcm\Factory\ServiceSiteServiceFactory::class,
         'Rcm\Service\ZendLogger'
         => '\Rcm\Factory\ZendLogFactory',
         'Rcm\Service\ZendLogWriter'

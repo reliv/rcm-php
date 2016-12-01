@@ -6,14 +6,14 @@ use Interop\Container\ContainerInterface;
 use Rcm\Service\LocaleService;
 
 /**
- * Class ServiceLocale
+ * Class ServiceLocaleServiceFactory
  *
  * @author    James Jervis <jjervis@relivinc.com>
  * @copyright 2016 Reliv International
  * @license   License.txt
  * @link      https://github.com/reliv
  */
-class ServiceLocaleFactory
+class ServiceLocaleServiceFactory
 {
     /**
      * __invoke
@@ -25,7 +25,7 @@ class ServiceLocaleFactory
     public function __invoke($container)
     {
         return new LocaleService(
-            $container->get(LocaleService::class)
+            $container->get('Config')
         );
     }
 }

@@ -13,45 +13,43 @@ namespace Rcm\Service;
 class LocaleService
 {
     /**
-     *
+     * @var string|null
      */
-    const LOCALE_DEFAULT = 'en_US';
+    protected $defaultLocale = null;
 
     /**
-     * @var SiteService
-     */
-    protected $siteService;
-
-    /**
-     * Locale constructor.
+     * LocaleService constructor.
      *
-     * @param SiteService $siteService
+     * @param array $config
      */
     public function __construct(
-        SiteService $siteService
+        $config
     ) {
-        $this->siteService = $siteService;
+        $this->defaultLocale = $config;
     }
 
     /**
-     * buildLocale
+     * setDefaultDomainName
      *
-     * @param string|null $locale
+     * @param array $config
      *
-     * @return string
+     * @return void
      */
-    public function buildLocale(
-        $locale = null
-    ) {
-        if (empty($locale)) {
-            $locale = $this->siteService->getCurrentSite()->getLocale();
+    protected function setDefaultDomainName($config)
+    {
+        if (!empty($config['Rcm']['defaultLocale'])) {
+            $this->defaultLocale = $config['Rcm']['defaultLocale'];
         }
+    }
 
-        if (empty($locale)) {
-            $locale = self::LOCALE_DEFAULT;
-        }
-
-        return $locale;
+    /**
+     * getDefaultLocale
+     *
+     * @return null|string
+     */
+    public function getDefaultLocale()
+    {
+        return $this->defaultLocale;
     }
 
     /**
@@ -66,7 +64,9 @@ class LocaleService
     public function setLocale(
         $locale = null
     ) {
-        $locale = $this->buildLocale($locale);
+        if (empty($locale)) {
+            $locale = $this->getDefaultLocale();
+        }
 
         if (empty($locale)) {
             // @todo warning or error

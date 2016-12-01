@@ -8,6 +8,8 @@ return [
      */
     'defaultDomain' => null,
 
+    'defaultLocale' => 'en_US',
+
     /**
      * defaultPluginIcon - Default icon in not defined by plugin
      */

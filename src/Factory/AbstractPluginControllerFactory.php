@@ -35,7 +35,7 @@ class AbstractPluginControllerFactory implements AbstractFactoryInterface
         $name,
         $requestedName
     ) {
-        $config = $serviceLocator->getServiceLocator()->get('config');
+        $config = $serviceLocator->getServiceLocator()->get('Config');
 
         return isset($config['rcmPlugin'][$requestedName]);
     }
@@ -55,7 +55,7 @@ class AbstractPluginControllerFactory implements AbstractFactoryInterface
         $requestedName
     ) {
         return new BaseController(
-            $serviceLocator->getServiceLocator()->get('config'),
+            $serviceLocator->getServiceLocator()->get('Config'),
             $requestedName,
             $serviceLocator
         );

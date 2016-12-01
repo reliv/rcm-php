@@ -55,7 +55,7 @@ class CurrentSiteFactory implements FactoryInterface
         //Use the default site if the requested domain name is an IP address
         $ipValidator = new Ip();
         if ($ipValidator->isValid($currentDomain)) {
-            $config = $serviceLocator->get('config');
+            $config = $serviceLocator->get('Config');
             $currentDomain = $config['Rcm']['defaultDomain'];
         }
 
