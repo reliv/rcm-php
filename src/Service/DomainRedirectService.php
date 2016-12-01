@@ -70,12 +70,14 @@ class DomainRedirectService
         $currentDomain = $site->getDomain()->getDomainName();
 
         $ipValidator = new Ip();
-        $isIp = !$ipValidator->isValid($currentDomain);
+        $isIp = $ipValidator->isValid($currentDomain);
+
         if ($isIp) {
             return null;
         }
 
         $primaryDomain = $site->getDomain()->getPrimary();
+
         if (empty($primaryDomain)) {
             return null;
         }
