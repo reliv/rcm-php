@@ -165,9 +165,11 @@ class RouteListener
     /**
      * Set the system locale to Site Requirements
      *
+     * @param MvcEvent $event
+     *
      * @return null
      */
-    public function addLocale()
+    public function addLocale(MvcEvent $event)
     {
         $locale = $this->siteService->getCurrentSite()->getLocale();
 
