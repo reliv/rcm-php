@@ -80,7 +80,7 @@ class Site extends EntityRepository
         $repo = $this->_em
             ->getRepository('\Rcm\Entity\Site');
         if ($mustBeActive) {
-            return $repo->findBy(['status' => 'A']);
+            return $repo->findBy(['status' => \Rcm\Entity\Site::STATUS_ACTIVE]);
         } else {
             return $repo->findAll();
         }
@@ -112,7 +112,7 @@ class Site extends EntityRepository
 
         if ($checkActive) {
             $queryBuilder->andWhere('site.status = :status');
-            $queryBuilder->setParameter('status', 'A');
+            $queryBuilder->setParameter('status', \Rcm\Entity\Site::STATUS_ACTIVE);
         }
 
         $result = $queryBuilder->getQuery()->getScalarResult();

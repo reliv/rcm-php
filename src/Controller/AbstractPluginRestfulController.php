@@ -47,7 +47,7 @@ abstract class AbstractPluginRestfulController extends AbstractRestfulJsonContro
     public function getRcmPluginConfig()
     {
         $config = $this->getServiceLocator()->get(
-            'config'
+            'Config'
         );
 
         $rcmPluginName = $this->getRcmPluginName();

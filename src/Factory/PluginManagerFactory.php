@@ -44,7 +44,7 @@ class PluginManagerFactory implements FactoryInterface
         /** @var \Zend\Cache\Storage\StorageInterface $cache */
         $cache = $serviceLocator->get('Rcm\Service\Cache');
 
-        $config = $serviceLocator->get('config');
+        $config = $serviceLocator->get('Config');
 
         $viewEventManager = $serviceLocator->get('ViewManager')
             ->getView()

@@ -41,7 +41,6 @@ class ViewEventListener
      *
      * @return null
      */
-
     public function processRcmResponses(ViewEvent $event)
     {
         $response = $event->getResponse();

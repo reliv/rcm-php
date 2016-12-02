@@ -159,7 +159,7 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
             return $options['defaults']['controller'];
         }
 
-        $config = $this->getServiceLocator()->get('config');
+        $config = $this->getServiceLocator()->get('Config');
 
         if (!empty($config['rcm']['pageTypes'][$type]['controller'])) {
             return $config['rcm']['pageTypes'][$type]['controller'];
@@ -213,7 +213,7 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
             return $options['defaults']['action'];
         }
 
-        $config = $this->getServiceLocator()->get('config');
+        $config = $this->getServiceLocator()->get('Config');
 
         if (!empty($config['rcm']['pageTypes'][$type]['action'])) {
             return $config['rcm']['pageTypes'][$type]['action'];

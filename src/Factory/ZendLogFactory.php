@@ -33,7 +33,7 @@ class ZendLogFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('config');
+        $config = $serviceLocator->get('Config');
 
         if (empty($config['rcmLogger']['writer'])) {
             $writer = new Noop();

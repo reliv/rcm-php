@@ -35,6 +35,7 @@
   ],
   "require": {
     "php": ">=5.4.0",
+    "container-interop/container-interop": "^1",
     "doctrine/doctrine-orm-module": "0.* || 1.*",
     "zendframework/zendframework": "2.*",
     "rwoverdijk/assetmanager": "1.*",

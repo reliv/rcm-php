@@ -1,21 +1,4 @@
 <?php
-/**
- * Unit Test for the Route Listener Event
- *
- * This file contains the unit test for Route Listener Event
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace RcmTest\EventListener;
 
@@ -25,14 +8,16 @@ use Rcm\Entity\Domain;
 use Rcm\Entity\Redirect;
 use Rcm\Entity\Site;
 use Rcm\EventListener\RouteListener;
+use Rcm\Service\DomainRedirectService;
+use Rcm\Service\LocaleService;
+use Rcm\Service\RedirectService;
+use Rcm\Service\SiteService;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\Parameters;
 
 /**
- * Unit Test for Route Listener Event
- *
  * Unit Test for Route Listener Event
  *
  * @category  Reliv
@@ -57,6 +42,11 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
 
     /** @var \Rcm\Entity\Site */
     protected $currentSite;
+
+    protected $siteServiceMock;
+    protected $redirectServiceMock;
+    protected $domainRedirectServiceMock;
+    protected $localeServiceMock;
 
     /**
      * Setup for tests
@@ -97,7 +87,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->currentSite = new Site();
         $this->currentSite->setSiteId(1);
-        $this->currentSite->setStatus('A');
+        $this->currentSite->setStatus(Site::STATUS_ACTIVE);
 
         $domain = new Domain();
         $domain->setDomainId(1);
@@ -123,12 +113,41 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         $this->redirectRepo->expects($this->any())
             ->method('getRedirect')
             ->will($this->returnValueMap($map));
+        //////////////
+
+        $this->siteServiceMock = $this
+            ->getMockBuilder(SiteService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->siteServiceMock->expects($this->any())
+            ->method('getCurrentSite')
+            ->will($this->returnValue($this->currentSite));
+
+        $this->siteServiceMock->expects($this->any())
+            ->method('isConsoleRequest')
+            ->will($this->returnValue(false));
+
+        $this->redirectServiceMock = $this
+            ->getMockBuilder(RedirectService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->domainRedirectServiceMock = $this
+            ->getMockBuilder(DomainRedirectService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->localeServiceMock = $this
+            ->getMockBuilder(LocaleService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->routeListener = new RouteListener(
-            $this->currentSite,
-            $this->redirectRepo,
-            new \Zend\Validator\Ip(),
-            $config
+            $this->siteServiceMock,
+            $this->redirectServiceMock,
+            $this->domainRedirectServiceMock,
+            $this->localeServiceMock
         );
     }
 
@@ -181,6 +200,10 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->currentSite->setDomain($domain);
 
+        $this->domainRedirectServiceMock->expects($this->any())
+            ->method('getPrimaryRedirectUrl')
+            ->will($this->returnValue($primary->getDomainName()));
+
         $request = new Request();
         $request->setServer($serverParams);
         $event = new MvcEvent();
@@ -192,7 +215,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(302, $actual->getStatusCode());
 
         $this->assertEquals(
-            '//'.$this->currentSite->getDomain()->getPrimary()->getDomainName(),
+            '//' . $this->currentSite->getDomain()->getPrimary()->getDomainName(),
             $actual->getHeaders()->get('Location')->getFieldValue()
         );
     }

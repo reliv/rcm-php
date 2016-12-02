@@ -43,7 +43,7 @@ class SessionManagerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('config');
+        $config = $serviceLocator->get('Config');
 
         if (!isset($config['session'])) {
             $sessionManager = new SessionManager();

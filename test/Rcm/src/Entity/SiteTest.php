@@ -204,7 +204,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetStatus()
     {
-        $status = 'A';
+        $status = Site::STATUS_ACTIVE;
 
         $this->site->setStatus($status);
 
@@ -654,7 +654,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
             'siteLayout' => 'layoutOne',
             'siteTitle' => 'My Title',
             'language' => $language,
-            'status' => 'A',
+            'status' => Site::STATUS_ACTIVE,
             'favicon' => 'icon.jpg',
             'loginRequired' => true,
             'loginPage' => 'login.html',

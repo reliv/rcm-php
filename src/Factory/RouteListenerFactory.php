@@ -2,10 +2,13 @@
 
 namespace Rcm\Factory;
 
+use Interop\Container\ContainerInterface;
 use Rcm\EventListener\RouteListener;
-use Zend\ServiceManager\FactoryInterface;
+use Rcm\Service\DomainRedirectService;
+use Rcm\Service\LocaleService;
+use Rcm\Service\RedirectService;
+use Rcm\Service\SiteService;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Validator\Ip;
 
 /**
  * Service Factory for the Route Listener
@@ -21,33 +24,22 @@ use Zend\Validator\Ip;
  * @link      https://github.com/reliv
  *
  */
-class RouteListenerFactory implements FactoryInterface
+class RouteListenerFactory
 {
     /**
      * Create Service
      *
-     * @param ServiceLocatorInterface $serviceLocator Zend Service Manager
+     * @param ContainerInterface|ServiceLocatorInterface $container Zend Service Manager
      *
      * @return RouteListener
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($container)
     {
-        /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
-
-        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
-        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
-
-        /** @var \Rcm\Repository\Redirect $redirectRepo */
-        $redirectRepo = $entityManager->getRepository('\Rcm\Entity\Redirect');
-
-        $config = $serviceLocator->get('config');
-
         return new RouteListener(
-            $currentSite,
-            $redirectRepo,
-            new Ip(),
-            $config
+            $container->get(SiteService::class),
+            $container->get(RedirectService::class),
+            $container->get(DomainRedirectService::class),
+            $container->get(LocaleService::class)
         );
     }
 }
