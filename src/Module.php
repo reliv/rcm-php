@@ -33,12 +33,6 @@ class Module
     {
         $serviceManager = $e->getApplication()->getServiceManager();
 
-        $config = $serviceManager->get('config');
-
-        if (empty($config['Rcm']['installed']) && empty($config['Rcm']['defaultDomain'])) {
-            return;
-        }
-
         // Don't break console routes
         if ($e->getRequest() instanceof Request) {
             return;
