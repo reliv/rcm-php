@@ -19,9 +19,7 @@ class PhpServer
      */
     public static function isCliRequest()
     {
-        $name = substr(php_sapi_name(), 0, 3);
-
-        return ($name == "cli");
+        return empty($_SERVER['REQUEST_URI']);
     }
 
     /**
