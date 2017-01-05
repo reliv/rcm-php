@@ -22,6 +22,10 @@ use RcmUser\Acl\Provider\ResourceProvider as RcmUserResourceProvider;
  */
 class ResourceProvider extends RcmUserResourceProvider
 {
+    const RESOURCE_SITES = 'site';
+
+    const RESOURCE_PAGES = 'pages';
+
     /** @var string */
     protected $providerId = 'Rcm\Acl\ResourceProvider';
 
@@ -34,12 +38,12 @@ class ResourceProvider extends RcmUserResourceProvider
     /**
      * ResourceProvider constructor.
      *
-     * @param array    $resources
+     * @param array $resources
      * @param SiteRepo $siteRepo
-     * @param Site     $currentSite
+     * @param Site $currentSite
      */
     public function __construct(
-        array         $resources,
+        array $resources,
         SiteRepo $siteRepo,
         Site $currentSite
     ) {
@@ -115,7 +119,7 @@ class ResourceProvider extends RcmUserResourceProvider
             return true;
         }
 
-        if (!$this->startsWith($resourceId, 'sites.')) {
+        if (!$this->startsWith($resourceId, self::RESOURCE_SITES . '.')) {
             return false;
         }
 
@@ -178,24 +182,24 @@ class ResourceProvider extends RcmUserResourceProvider
     protected function pageResourceMapper($resourceId, $resources)
     {
         if (empty($resources[2])
-            || $resources[2] != 'pages'
+            || $resources[2] != self::RESOURCE_PAGES
         ) {
             return null;
         }
 
         $return = [
             'resourceId' => $resourceId,
-            'parentResourceId' => 'sites.' . $resources[1],
+            'parentResourceId' => self::RESOURCE_SITES . '.' . $resources[1],
         ];
 
         if (!empty($resources[3])
             && !empty($resources[4])
         ) {
-            $return['parentResourceId'] = 'sites.' . $resources[1] . '.pages';
+            $return['parentResourceId'] = self::RESOURCE_SITES . '.' . $resources[1] . '.' . self::RESOURCE_PAGES;
         }
 
         return array_merge(
-            $this->resources['pages'],
+            $this->resources[self::RESOURCE_PAGES],
             $return
         );
     }
@@ -211,18 +215,18 @@ class ResourceProvider extends RcmUserResourceProvider
     protected function siteResourceMapper($resourceId, $resources)
     {
         if (empty($resources[0])
-            || $resources[0] != 'sites'
+            || $resources[0] != self::RESOURCE_SITES
         ) {
             return null;
         }
 
         $return = [
             'resourceId' => $resourceId,
-            'parentResourceId' => 'sites',
+            'parentResourceId' => self::RESOURCE_SITES,
         ];
 
         return array_merge(
-            $this->resources['sites'],
+            $this->resources[self::RESOURCE_SITES],
             $return
         );
     }
@@ -246,28 +250,28 @@ class ResourceProvider extends RcmUserResourceProvider
         $primaryDomainName = $primaryDomain->getDomainName();
         $siteId = $site->getSiteId();
 
-        $return['sites.' . $siteId] = [
-            'resourceId' => 'sites.' . $siteId,
-            'parentResourceId' => 'sites',
+        $return[self::RESOURCE_SITES . '.' . $siteId] = [
+            'resourceId' => self::RESOURCE_SITES . '.' . $siteId,
+            'parentResourceId' => self::RESOURCE_SITES,
             'name' => $primaryDomainName,
             'description' => "Resource for site '{$primaryDomainName}'"
         ];
 
         $return['sites.' . $siteId] = array_merge(
-            $this->resources['sites'],
-            $return['sites.' . $siteId]
+            $this->resources[self::RESOURCE_SITES],
+            $return[self::RESOURCE_SITES . '.' . $siteId]
         );
 
-        $return['sites.' . $siteId . '.pages'] = [
-            'resourceId' => 'sites.' . $siteId . '.pages',
-            'parentResourceId' => 'sites.' . $siteId,
+        $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES] = [
+            'resourceId' => self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES,
+            'parentResourceId' => self::RESOURCE_SITES . '.' . $siteId,
             'name' => $primaryDomainName . ' - pages',
             'description' => "Resource for pages on site '{$primaryDomainName}'"
         ];
 
-        $return['sites.' . $siteId . '.pages'] = array_merge(
-            $this->resources['pages'],
-            $return['sites.' . $siteId . '.pages']
+        $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES] = array_merge(
+            $this->resources[self::RESOURCE_PAGES],
+            $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES]
         );
 
         $pages = $site->getpages();
@@ -296,20 +300,22 @@ class ResourceProvider extends RcmUserResourceProvider
         $pageName = $page->getName();
         $pageType = $page->getPageType();
 
-        $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName] = [
-            'resourceId' => 'sites.' . $siteId . '.pages.' . $pageType . '.'
+        $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES . '.' . $pageType . '.' . $pageName]
+            = [
+            'resourceId' => self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES . '.' . $pageType . '.'
                 . $pageName,
-            'parentResourceId' => 'sites.' . $siteId . '.pages',
+            'parentResourceId' => self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES,
             'name' => $primaryDomainName . ' - pages - ' . $pageName,
             'description' => "Resource for page '{$pageName}'"
                 . " of type '{$pageType}' on site '{$primaryDomainName}'"
         ];
 
-        $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
+        $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES . '.' . $pageType . '.' . $pageName]
             = array_merge(
-                $this->resources['pages'],
-                $return['sites.' . $siteId . '.pages.' . $pageType . '.' . $pageName]
-            );
+            $this->resources[self::RESOURCE_PAGES],
+            $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES . '.' . $pageType . '.'
+            . $pageName]
+        );
 
         return $return;
     }
