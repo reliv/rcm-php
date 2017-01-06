@@ -22,7 +22,7 @@ use RcmUser\Acl\Provider\ResourceProvider as RcmUserResourceProvider;
  */
 class ResourceProvider extends RcmUserResourceProvider
 {
-    const RESOURCE_SITES = 'site';
+    const RESOURCE_SITES = 'sites';
 
     const RESOURCE_PAGES = 'pages';
 
