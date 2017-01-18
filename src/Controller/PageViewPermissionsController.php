@@ -55,11 +55,11 @@ class PageViewPermissionsController extends AbstractRestfulController
     public function update($id, $data)
     {
         $this->aclDataService = $this->getServiceLocator()->get(
-            'RcmUser\Acl\AclDataService'
+            \RcmUser\Acl\Service\AclDataService::class
         );
 
         $this->resourceProvider = $this->getServiceLocator()->get(
-            'Rcm\Acl\ResourceProvider'
+            \Rcm\Acl\ResourceProvider::class
         );
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');

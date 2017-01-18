@@ -64,7 +64,7 @@ class PagePermissionsController extends AbstractActionController
             . $sourcePageName;
         /** @var \RcmUser\Acl\Service\AclDataService $aclDataService */
         $aclDataService = $this->getServiceLocator()->get(
-            'RcmUser\Acl\AclDataService'
+            \RcmUser\Acl\Service\AclDataService::class
         );
 
         //getting all set rules by resource Id
