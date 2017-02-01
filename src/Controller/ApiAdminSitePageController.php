@@ -3,6 +3,7 @@
 namespace RcmAdmin\Controller;
 
 use Interop\Container\ContainerInterface;
+use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use Rcm\View\Model\ApiJsonModel;
