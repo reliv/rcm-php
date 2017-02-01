@@ -8,6 +8,7 @@ use Rcm\Entity\Page as PageEntity;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Exception\PageException;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Exception\RuntimeException;
 
@@ -41,9 +42,35 @@ class Page extends ContainerAbstract
      * @param string     $pageType Page Type
      *
      * @return null|PageEntity
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getPageByName(
+        SiteEntity $site,
+        $pageName,
+        $pageType = 'n'
+    ) {
+        $results = $this->getPagesByName(
+            $site,
+            $pageName,
+            $pageType
+        );
+
+        if (empty($results)) {
+            return null;
+        }
+
+        return $results[0];
+    }
+
+    /**
+     * getPagesByName
+     *
+     * @param SiteEntity $site
+     * @param string     $pageName
+     * @param string     $pageType
+     *
+     * @return array
+     */
+    public function getPagesByName(
         SiteEntity $site,
         $pageName,
         $pageType = 'n'
@@ -59,8 +86,7 @@ class Page extends ContainerAbstract
             ->setParameter('pageName', $pageName)
             ->setParameter('pageType', $pageType);
 
-        /** @var \Rcm\Entity\Page $result */
-        return $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
+        return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
     }
 
     /**
@@ -228,7 +254,7 @@ class Page extends ContainerAbstract
      * @param bool       $doFlush
      *
      * @return PageEntity
-     * @throws \Exception
+     * @throws PageException
      */
     public function createPage(
         SiteEntity $site,
@@ -237,7 +263,7 @@ class Page extends ContainerAbstract
         $doFlush = true
     ) {
         if (empty($pageData['author'])) {
-            throw new \Exception('Author is required to create a page.');
+            throw new PageException('Author is required to create a page.');
         }
         $revision = new Revision();
         $revision->setAuthor($pageData['author']);
@@ -251,6 +277,12 @@ class Page extends ContainerAbstract
         $page->setCreatedDate(new \DateTime());
 
         $page->setSite($site);
+
+        $this->assertCanCreateSitePage(
+            $page->getSite(),
+            $page->getName(),
+            $page->getPageType()
+        );
 
         if (!$publishPage) {
             $page->setStagedRevision($revision);
@@ -354,6 +386,10 @@ class Page extends ContainerAbstract
 
         $page->populate($pageData);
 
+        $this->assertCanUpdateSitePage(
+            $page
+        );
+
         $this->getEntityManager()->persist($page);
         if ($doFlush) {
             $this->getEntityManager()->flush();
@@ -401,6 +437,13 @@ class Page extends ContainerAbstract
 
         $clonedPage = clone $pageToCopy;
         $clonedPage->populate($pageData);
+
+        $this->assertCanCreateSitePage(
+            $clonedPage->getSite(),
+            $clonedPage->getName(),
+            $clonedPage->getPageType()
+        );
+
         $revisionToUse = $clonedPage->getStagedRevision();
 
         if (!empty($pageRevisionId)) {
@@ -472,7 +515,7 @@ class Page extends ContainerAbstract
      * @param string  $pageType   Page Type
      * @param integer $revisionId Revision Id to search for
      *
-     * @return Page
+     * @return \Rcm\Entity\Page
      * @throws PageNotFoundException
      * @throws RuntimeException
      */
@@ -576,10 +619,10 @@ class Page extends ContainerAbstract
     }
 
     /**
-     * isValid
+     * isValid - @todo This is the same as exists?
      *
-     * @param        $siteId
-     * @param        $pageName
+     * @param int    $siteId
+     * @param string $pageName
      * @param string $pageType
      *
      * @return bool
@@ -608,8 +651,8 @@ class Page extends ContainerAbstract
     /**
      * getRevisionList
      *
-     * @param        $siteId
-     * @param        $pageName
+     * @param int    $siteId
+     * @param string $pageName
      * @param string $pageType
      * @param bool   $published
      * @param int    $limit
@@ -752,6 +795,7 @@ class Page extends ContainerAbstract
         $pageId
     ) {
         try {
+            /** @var \Rcm\Entity\Page $page */
             $page = $this->findOneBy(
                 [
                     'site' => $site,
@@ -790,5 +834,165 @@ class Page extends ContainerAbstract
         }
 
         return !empty($page);
+    }
+
+    /**
+     * duplicateSitePageExist
+     *
+     * @param PageEntity $page
+     *
+     * @return bool
+     */
+    public function duplicateSitePageExist(
+        \Rcm\Entity\Page $page
+    ) {
+        // @todo This could be a query for speed
+        $pages = $this->getPagesByName(
+            $page->getSite(),
+            $page->getName(),
+            $page->getPageType()
+        );
+
+        /** @var \Rcm\Entity\Page $otherPage */
+        foreach ($pages as $otherPage) {
+            if ($otherPage->getPageId() !== $page->getPageId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * allowDuplicates
+     *
+     * @param string $pageType
+     *
+     * @return bool
+     */
+    public function allowDuplicates($pageType)
+    {
+        return (strpos($pageType, self::PAGE_TYPE_DELETED) !== false);
+    }
+
+    /**
+     * canCreateSitePage
+     *
+     * @param SiteEntity $site
+     * @param string     $pageName
+     * @param string     $pageType
+     *
+     * @return bool
+     */
+    public function canCreateSitePage(
+        SiteEntity $site,
+        $pageName,
+        $pageType
+    ) {
+        try {
+            $this->assertCanCreateSitePage(
+                $site,
+                $pageName,
+                $pageType
+            );
+        } catch (PageException $exception) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * canUpdateSitePage
+     *
+     * @param PageEntity $page
+     *
+     * @return bool
+     */
+    public function canUpdateSitePage(
+        \Rcm\Entity\Page $page
+    ) {
+        try {
+            $this->assertCanUpdateSitePage(
+                $page
+            );
+        } catch (PageException $exception) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * assertCanCreateSitePage
+     *
+     * @param SiteEntity $site
+     * @param string     $pageName
+     * @param string     $pageType
+     *
+     * @return void
+     * @throws PageException
+     */
+    public function assertCanCreateSitePage(
+        SiteEntity $site,
+        $pageName,
+        $pageType
+    ) {
+        $allowDuplicates = $this->allowDuplicates($pageType);
+
+        if ($allowDuplicates) {
+            return;
+        }
+
+        $pageExists = $this->sitePageExists(
+            $site,
+            $pageName,
+            $pageType
+        );
+
+        if (!$pageExists) {
+            return;
+        }
+
+        throw new PageException(
+            "Cannot create page: ({$pageName}). " .
+            "Duplicate page names not allowed for name: ({$pageName}) type: ({$pageType}) siteId: " .
+            '(' . $site->getSiteId() . ')'
+        );
+    }
+
+    /**
+     * assertCanUpdateSitePage
+     *
+     * @param \Rcm\Entity\Page $page
+     *
+     * @return void
+     * @throws PageException
+     */
+    public function assertCanUpdateSitePage(
+        \Rcm\Entity\Page $page
+    ) {
+        $pageId = $page->getPageId();
+        $pageName = $page->getName();
+        $pageType = $page->getPageType();
+        $site = $page->getSite();
+
+        $allowDuplicates = $this->allowDuplicates($pageType);
+
+        if ($allowDuplicates) {
+            return;
+        }
+
+        $pageExists = $this->duplicateSitePageExist($page);
+
+        if (!$pageExists) {
+            return;
+        }
+
+        throw new PageException(
+            "Cannot update page: ({$pageId}). " .
+            "Duplicate page names not allowed for name: ({$pageName}) type: ({$pageType}) siteId: " .
+            '(' . $site->getSiteId() . ')'
+        );
     }
 }
