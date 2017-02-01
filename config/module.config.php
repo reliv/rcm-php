@@ -96,6 +96,8 @@ return [
         'factories' => [
             'RcmAdmin\Controller\PageController'
             => 'RcmAdmin\Factory\PageControllerFactory',
+            RcmAdmin\Controller\ApiAdminSitePageController::class
+            => RcmAdmin\Factory\ApiAdminSitePageControllerFactory::class
         ],
         'invokables' => [
             'RcmAdmin\Controller\PagePermissionsController'
@@ -114,8 +116,6 @@ return [
             => 'RcmAdmin\Controller\ApiAdminThemeController',
             'RcmAdmin\Controller\ApiAdminCountryController'
             => 'RcmAdmin\Controller\ApiAdminCountryController',
-            'RcmAdmin\Controller\ApiAdminSitePageController'
-            => 'RcmAdmin\Controller\ApiAdminSitePageController',
             'RcmAdmin\Controller\ApiAdminSitePageCloneController'
             => 'RcmAdmin\Controller\ApiAdminSitePageCloneController',
             'RcmAdmin\Controller\ApiAdminPageTypesController'
@@ -524,7 +524,7 @@ return [
                 'options' => [
                     'route' => '/api/admin/sites/:siteId/pages[/:id]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\ApiAdminSitePageController',
+                        'controller' => RcmAdmin\Controller\ApiAdminSitePageController::class,
                     ]
                 ],
             ],

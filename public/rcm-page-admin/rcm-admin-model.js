@@ -85,6 +85,33 @@ var RcmAdminModel = function () {
         },
 
         /**
+         * isEditable
+         * @returns {boolean}
+         */
+        isEditable: function () {
+
+            var data = self.RcmPageModel.getData();
+
+            if (!data.page) {
+                return false;
+            }
+
+            if (!data.page.id) {
+                return false;
+            }
+
+            if (!data.requestedPage) {
+                return false;
+            }
+
+            if (data.page.name !== data.requestedPage.name) {
+                return false;
+            }
+
+            return true;
+        },
+
+        /**
          * buildPageMeta
          * @param data
          * @param onComplete
@@ -134,7 +161,8 @@ var RcmAdminModel = function () {
 
             return data;
         }
-    };
+    }
+    ;
 
     /**
      * RcmContainerModel

@@ -2,12 +2,15 @@
 
 namespace RcmAdmin\Controller;
 
+use Interop\Container\ContainerInterface;
+use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\Entity\SitePageApiResponse;
 use RcmAdmin\InputFilter\SitePageCreateInputFilter;
 use RcmAdmin\InputFilter\SitePageUpdateInputFilter;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class ApiAdminSitePageController
@@ -24,6 +27,17 @@ use RcmAdmin\InputFilter\SitePageUpdateInputFilter;
  */
 class ApiAdminSitePageController extends ApiAdminBaseController
 {
+    /**
+     * Constructor.
+     *
+     * @param ContainerInterface|ServiceLocatorInterface $serviceLocator
+     */
+    public function __construct(
+        $serviceLocator
+    ) {
+        $this->serviceLocator = $serviceLocator;
+    }
+
     /**
      * isAllowed
      *
@@ -86,6 +100,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
     protected function getSite($siteId)
     {
         try {
+            /** @var Site $site */
             $site = $this->getSiteRepo()->findOneBy(['siteId' => $siteId]);
         } catch (\Exception $e) {
             $site = null;
@@ -109,7 +124,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
     /**
      * hasPage
      *
-     * @param Site $site
+     * @param Site   $site
      * @param string $pageName
      * @param string $pageType
      *
@@ -411,7 +426,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     public function delete($id)
     {
-        $id = (int) $id;
+        $id = (int)$id;
         $siteId = $this->getRequestSiteId();
 
         //ACCESS CHECK

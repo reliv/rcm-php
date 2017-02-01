@@ -1,6 +1,5 @@
 var rcmShowPermissions = function (selectedRoles, onOkCallback)
 {
-
     var me = this;
 
     me.nameSpace = $.generateUUID();
