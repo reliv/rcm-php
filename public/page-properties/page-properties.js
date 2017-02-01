@@ -82,8 +82,6 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                  */
                 var updatePageData = function (data) {
 
-                    console.log(data, pageData.page);
-
                     if (data.name !== pageData.page.name) {
                         $window.alert(
                             'Page name has been changed, you will be redirect to the new URL.'
