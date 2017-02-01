@@ -6,9 +6,22 @@ rcm.addAngularModule('pagePermissions');
 angular.module('pagePermissions', ['rcmUserRoleSelector'])
     .directive(
         'rcmPagePermissions', [
-            '$log', '$http', 'rcmUserRolesService',
-            function ($log, $http, rcmUserRolesService) {
+            '$log',
+            '$http',
+            'rcmUserRolesService',
+            function (
+                $log,
+                $http,
+                rcmUserRolesService
+            ) {
                 var thisLink = function (scope, element, attrs) {
+
+                    scope.isEditable = RcmAdminService.model.RcmPageModel.isEditable();
+
+                    if (!scope.isEditable) {
+                        // This page can not be edited
+                        return;
+                    }
 
                     var data = JSON.parse(attrs.rcmPagePermissionsData);
 
@@ -107,12 +120,11 @@ angular.module('pagePermissions', ['rcmUserRoleSelector'])
                                 url: '/api/admin/page/permissions/' + data.pageName,
                                 data: data
                             }
-                        ).
-                            success(
-                                function (data, status, headers, config) {
-                                    self.setLockDisplay();
-                                }
-                            )
+                        ).success(
+                            function (data, status, headers, config) {
+                                self.setLockDisplay();
+                            }
+                        )
                             .error(
                                 function (data, status, headers, config) {
                                     jQuery().alert(

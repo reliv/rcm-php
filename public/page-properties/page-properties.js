@@ -21,60 +21,123 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                 rcmApiService,
                 rcmAdminApiUrlService
             ) {
-
-                var data = RcmAdminService.model.RcmPageModel.getData();
-
                 $scope.loading = false;
 
                 $scope.saveOk = false;
                 $scope.saveFail = false;
                 $scope.message = '';
 
+                $scope.isEditable = RcmAdminService.model.RcmPageModel.isEditable();
+
+                if (!$scope.isEditable) {
+                    $scope.message = 'This page can not be edited';
+                    return;
+                }
+
                 //getting title, description and keywords from dom to our form
-                $scope.title = data.page.title;
-                $scope.description = data.page.description;
-                $scope.keywords = data.page.keywords;
+                var pageData = RcmAdminService.model.RcmPageModel.getData();
+
+                /**
+                 *
+                 * @param data
+                 */
+                var syncPageDataToScope = function (data) {
+                    $scope.title = data.title;
+                    $scope.description = data.description;
+                    $scope.keywords = data.keywords;
+                    $scope.name = data.name;
+                };
+
+                /**
+                 *
+                 * @param data
+                 */
+                var syncDataFromApi = function (data) {
+                    $scope.title = data.pageTitle;
+                    $scope.description = data.description;
+                    $scope.keywords = data.keywords;
+                    $scope.name = data.name;
+                    pageData.page.title = data.pageTitle;
+                    pageData.page.description = data.description;
+                    pageData.page.keywords = data.keywords;
+                    pageData.page.name = data.name;
+                };
+
+                /**
+                 *
+                 * @param loading
+                 */
+                var loading = function (loading) {
+                    $scope.loading = loading;
+                    var loadingInt = Number(!loading);
+                    rcmLoading.setLoading(
+                        'rcmAdminPage.PageProperties.loading',
+                        loadingInt
+                    );
+                };
+
+                /**
+                 * updatePageData
+                 * @param data
+                 */
+                var updatePageData = function (data) {
+
+                    console.log(data, pageData.page);
+
+                    if (data.name !== pageData.page.name) {
+                        $window.alert(
+                            'Page name has been changed, you will be redirect to the new URL.'
+                        );
+                        loading(true);
+                        $window.location = '/' + data.name;
+                        return;
+                    }
+
+                    syncDataFromApi(data);
+
+                    RcmAdminService.model.RcmPageModel.setData(pageData);
+                };
 
                 //save function
                 $scope.save = function () {
+                    loading(true);
 
                     $scope.saveOk = false;
                     $scope.saveFail = false;
                     $scope.message = '';
 
-
-                    data.page.title = $scope.title;
-                    data.page.description = $scope.description;
-                    data.page.keywords = $scope.keywords;
-
                     var requestData = {
-                        pageTitle: data.page.title,
-                        description: data.page.description,
-                        keywords: data.page.keywords,
+                        pageTitle: $scope.title,
+                        description: $scope.description,
+                        keywords: $scope.keywords,
                         name: $scope.name
                     };
 
-                    RcmAdminService.model.RcmPageModel.setData(data);
+                    var confirmNameChange = true;
+
+                    if (requestData.name !== pageData.page.name) {
+                        confirmNameChange = $window.confirm(
+                            'Changing the name of the page will break any existing links ' +
+                            'and any unsaved changes will be lost. ' +
+                            'are you sure you wish to continue?'
+                        );
+                    }
+
+                    if (!confirmNameChange) {
+                        loading(false);
+                        return;
+                    }
 
                     var apiParams = {
                         url: rcmAdminApiUrlService.sitePage,
                         urlParams: {
-                            siteId: data.page.siteId,
-                            pageId: data.page.id
+                            siteId: pageData.page.siteId,
+                            pageId: pageData.page.id
                         },
                         data: requestData,
-                        loading: function (loading) {
-                            $scope.loading = loading;
-                            var loadingInt = Number(!loading);
-                            rcmLoading.setLoading(
-                                'rcmAdminPage.PageProperties.loading',
-                                loadingInt
-                            );
-                        },
+                        loading: loading,
                         success: function (data) {
-                            if(data.data.name !== requestData.name) {
-
-                            }
+                            updatePageData(data.data);
                             $scope.saveOk = true
                         },
                         error: function (data) {
@@ -86,34 +149,8 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                     rcmApiService.put(apiParams);
                 };
 
-                var getPage = function () {
-                    var apiParams = {
-                        url: rcmAdminApiUrlService.sitePage,
-                        urlParams: {
-                            siteId: data.page.siteId,
-                            pageId: data.page.id
-                        },
-                        loading: function (loading) {
-                            $scope.loading = loading;
-                            var loadingInt = Number(!loading);
-                            rcmLoading.setLoading(
-                                'rcmAdminPage.PageProperties.loading',
-                                loadingInt
-                            );
-                        },
-                        success: function (data) {
-                            console.log(data);
-                        },
-                        error: function (data) {
-                            $scope.message = 'An error occurred while loading data: ' + data.message
-                        }
-                    };
-                    // this service the put acts as a patch
-                    rcmApiService.put(apiParams);
-                };
-
                 var init = function () {
-
+                    syncPageDataToScope(pageData.page);
                 };
 
                 init();
