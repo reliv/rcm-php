@@ -175,7 +175,7 @@ class ResourceProvider extends RcmUserResourceProvider
      * Page Resource Mapper
      *
      * @param string $resourceId Resource Id to search
-     * @param array  $resources  Resources parsed from Resource Id
+     * @param array $resources Resources parsed from Resource Id
      *
      * @return array|null
      */
@@ -208,7 +208,7 @@ class ResourceProvider extends RcmUserResourceProvider
      * Site Resource Mapper
      *
      * @param string $resourceId Resource Id to search
-     * @param array  $resources  Resources parsed from Resource Id
+     * @param array $resources Resources parsed from Resource Id
      *
      * @return array|null
      */
@@ -308,14 +308,14 @@ class ResourceProvider extends RcmUserResourceProvider
             'name' => $primaryDomainName . ' - pages - ' . $pageName,
             'description' => "Resource for page '{$pageName}'"
                 . " of type '{$pageType}' on site '{$primaryDomainName}'"
-        ];
+            ];
 
         $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES . '.' . $pageType . '.' . $pageName]
             = array_merge(
-            $this->resources[self::RESOURCE_PAGES],
-            $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES . '.' . $pageType . '.'
-            . $pageName]
-        );
+                $this->resources[self::RESOURCE_PAGES],
+                $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES . '.' . $pageType . '.'
+                . $pageName]
+            );
 
         return $return;
     }
