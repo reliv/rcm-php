@@ -83,16 +83,13 @@ class PageSearchApiController extends AbstractRestfulController
                 'siteId' => $siteId
             ]
         );
-        /**
-         * @var \Rcm\Entity\Site $site
-         */
+
         $pages = $site->getPages();
 
         $uriFormat = $this->params()->fromQuery('format', null);
 
         $return = [];
 
-        /** @var \Rcm\Entity\Page $page */
         foreach ($pages as $page) {
 
             $pageName = $page->getName();
@@ -112,6 +109,6 @@ class PageSearchApiController extends AbstractRestfulController
 
         }
         asort($return);
-        return new JsonModel(null);
+        return new JsonModel($return);
     }
 }
