@@ -2,6 +2,7 @@
 
 namespace Rcm\Controller;
 
+use Rcm\Entity\Page;
 use Zend\Http\Response;
 use Zend\View\Model\JsonModel;
 
@@ -19,6 +20,7 @@ use Zend\View\Model\JsonModel;
  * @license   License.txt New BSD License
  * @version   Release: GIT:
  * @link      https://github.com/reliv
+ * @method    \Rcm\View\Helper\UrlToPage urlToPage($pageName, $pageType = 'n', $pageRevision = null)
  */
 class PageSearchApiController extends AbstractRestfulController
 {
@@ -82,17 +84,24 @@ class PageSearchApiController extends AbstractRestfulController
             ]
         );
         /**
-         * @var \Rcm\Entity\Page $pages
+         * @var \Rcm\Entity\Site $site
          */
         $pages = $site->getPages();
 
-        /**@var \Rcm\Entity\Page $page */
+        $uriFormat = $this->params()->fromQuery('format', null);
+
+        $return = [];
+
+        /** @var \Rcm\Entity\Page $page */
         foreach ($pages as $page) {
+
             $pageName = $page->getName();
             $pageUrl = $this->urlToPage($pageName, $page->getPageType());
-            if (isset($_GET['format'])
-                && $_GET['format'] == 'tinyMceLinkList'
+
+            if (!empty($uriFormat)
+                && $uriFormat == 'tinyMceLinkList'
             ) {
+
                 $return[] = [
                     'title' => $pageUrl,
                     'value' => $pageUrl
@@ -100,8 +109,9 @@ class PageSearchApiController extends AbstractRestfulController
             } else {
                 $return[$pageUrl] = $pageName;
             }
+
         }
         asort($return);
-        return new JsonModel($return);
+        return new JsonModel(null);
     }
 }
