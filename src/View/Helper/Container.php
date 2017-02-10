@@ -215,6 +215,9 @@ class Container extends AbstractHelper
         if ($pageContainer) {
             $html .= ' data-isPageContainer="Y"';
         }
+        if ($containerName == 'guestTopNavigation') {
+            $html .= 'data-singleRowOnly="Y"';
+        }
 
         $html .= ' id="' . $containerName . '">';
 
