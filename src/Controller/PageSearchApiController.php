@@ -91,14 +91,12 @@ class PageSearchApiController extends AbstractRestfulController
         $return = [];
 
         foreach ($pages as $page) {
-
             $pageName = $page->getName();
             $pageUrl = $this->urlToPage($pageName, $page->getPageType());
 
             if (!empty($uriFormat)
                 && $uriFormat == 'tinyMceLinkList'
             ) {
-
                 $return[] = [
                     'title' => $pageUrl,
                     'value' => $pageUrl
