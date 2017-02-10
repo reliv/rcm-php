@@ -104,7 +104,6 @@ class PageSearchApiController extends AbstractRestfulController
             } else {
                 $return[$pageUrl] = $pageName;
             }
-
         }
         asort($return);
         return new JsonModel($return);
