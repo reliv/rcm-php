@@ -51,7 +51,7 @@ class CmsController extends AbstractActionController
      */
     protected function getPageRenderer()
     {
-        return $this->getServiceLocator()->get(PageRenderer::class);
+        return $this->pageRenderer;
     }
 
     /**

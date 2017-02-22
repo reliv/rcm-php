@@ -42,6 +42,16 @@ class IndexController extends AbstractActionController
     }
 
     /**
+     * getPageRenderer
+     *
+     * @return PageRenderer
+     */
+    protected function getPageRenderer()
+    {
+        return $this->pageRenderer;
+    }
+
+    /**
      * Index Action.  Main action for page in the CMS.
      *
      * @return ViewModel
@@ -66,16 +76,6 @@ class IndexController extends AbstractActionController
             $pageType,
             $pageRevisionId
         );
-    }
-
-    /**
-     * getPageRenderer
-     *
-     * @return PageRenderer
-     */
-    protected function getPageRenderer()
-    {
-        return $this->getServiceLocator()->get(PageRenderer::class);
     }
 
     /**
