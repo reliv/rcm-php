@@ -100,7 +100,7 @@ class IndexController extends AbstractActionController
         $layoutView = $this->layout();
         $viewModel = new ViewModel();
 
-        return $pageRenderer->renderByName(
+        return $pageRenderer->renderZf2ByName(
             $response,
             $layoutView,
             $viewModel,

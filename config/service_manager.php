@@ -29,8 +29,6 @@ return [
 
         \Rcm\Renderer\PageRenderer::class
         => \Rcm\Renderer\PageRendererFactory::class,
-        \Rcm\Renderer\PageStatus::class
-        => \Rcm\Renderer\PageStatusFactory::class,
 
         'Rcm\Service\AssetManagerCache'
         => 'Rcm\Factory\AssetManagerCacheFactory',
@@ -50,6 +48,10 @@ return [
         => \Rcm\Factory\ServiceLocaleServiceFactory::class,
         'Rcm\Service\Logger'
         => 'Rcm\Factory\LoggerFactory',
+        \Rcm\Service\PageRenderDataService::class
+        => \Rcm\Service\PageRenderDataServiceFactory::class,
+        \Rcm\Service\PageStatus::class
+        => \Rcm\Service\PageStatusFactory::class,
         'Rcm\Service\PluginManager'
         => 'Rcm\Factory\PluginManagerFactory',
         'Rcm\Service\RcmUser'

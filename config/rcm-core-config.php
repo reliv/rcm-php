@@ -52,10 +52,10 @@ return [
      * so page will return with status 404 on substitution
      */
     'pageNameStatusMap' => [
-        'not-found' => \Rcm\Renderer\PageStatus::STATUS_NOT_FOUND,
-        '404' => \Rcm\Renderer\PageStatus::STATUS_NOT_FOUND,
-        'not-authorized' => \Rcm\Renderer\PageStatus::STATUS_NOT_AUTHORIZED,
-        '401' => \Rcm\Renderer\PageStatus::STATUS_NOT_AUTHORIZED,
+        'not-found' => \Rcm\Service\PageStatus::STATUS_NOT_FOUND,
+        '404' => \Rcm\Service\PageStatus::STATUS_NOT_FOUND,
+        'not-authorized' => \Rcm\Service\PageStatus::STATUS_NOT_AUTHORIZED,
+        '401' => \Rcm\Service\PageStatus::STATUS_NOT_AUTHORIZED,
     ],
 
     /**

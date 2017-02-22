@@ -96,7 +96,7 @@ class CmsController extends AbstractActionController
         $layoutView = $this->layout();
         $viewModel = new ViewModel();
 
-        return $pageRenderer->render(
+        return $pageRenderer->renderZf2(
             $response,
             $layoutView,
             $viewModel,

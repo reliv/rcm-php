@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Renderer;
+namespace Rcm\Service;
 
 use Interop\Container\ContainerInterface;
 

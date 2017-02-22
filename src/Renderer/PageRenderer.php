@@ -6,9 +6,10 @@ use Doctrine\ORM\EntityManager;
 use Rcm\Acl\CmsPermissionChecks;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
-use Rcm\Exception\PageNotFoundException;
 use Rcm\Http\Response;
 use Rcm\Service\LayoutManager;
+use Rcm\Service\PageRenderDataService;
+use Rcm\Service\PageStatus;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
 
@@ -44,20 +45,23 @@ class PageRenderer
     /**
      * Constructor.
      *
-     * @param EntityManager       $entityManager
-     * @param LayoutManager       $layoutManager
-     * @param CmsPermissionChecks $cmsPermissionChecks
-     * @param PageStatus          $pageStatus
+     * @param EntityManager         $entityManager
+     * @param LayoutManager         $layoutManager
+     * @param CmsPermissionChecks   $cmsPermissionChecks
+     * @param PageRenderDataService $pageRenderDataService
+     * @param PageStatus            $pageStatus
      */
     public function __construct(
         EntityManager $entityManager,
         LayoutManager $layoutManager,
         CmsPermissionChecks $cmsPermissionChecks,
+        PageRenderDataService $pageRenderDataService,
         PageStatus $pageStatus
     ) {
         $this->entityManager = $entityManager;
         $this->layoutManager = $layoutManager;
         $this->cmsPermissionChecks = $cmsPermissionChecks;
+        $this->pageRenderDataService = $pageRenderDataService;
         $this->pageStatus = $pageStatus;
     }
 
@@ -94,7 +98,7 @@ class PageRenderer
     }
 
     /**
-     * render
+     * renderZf2
      *
      * @param Response       $response
      * @param ModelInterface $layoutView
@@ -103,9 +107,9 @@ class PageRenderer
      * @param Page           $page
      * @param null           $revisionId
      *
-     * @return ViewModel
+     * @return ViewModel|Response
      */
-    public function render(
+    public function renderZf2(
         Response $response,
         ModelInterface $layoutView,
         ViewModel $viewModel,
@@ -113,36 +117,33 @@ class PageRenderer
         Page $page,
         $revisionId = null
     ) {
-        $requestPageName = $page->getName();
-        $requestPageType = $page->getPageType();
-
-        $page = $this->preparePage(
+        $pageRenderData = $this->pageRenderDataService->getData(
             $site,
             $page,
             $revisionId
         );
 
-        if (empty($page)) {
-            $response = $this->responseWithNotFound($response);
+        if (empty($pageRenderData->getPage())) {
             $response->setStatusCode($this->pageStatus->getNotFoundStatus());
 
             return $response;
         }
 
-        $allowed = $this->cmsPermissionChecks->isPageAllowedForReading($page);
+        $httpStatus = $pageRenderData->getHttpStatus();
 
-        if (!$allowed) {
-            $response = $this->responseWithUnauthorized($response);
+        if ($httpStatus == $this->pageStatus->getNotAuthorizedStatus()) {
             $response->setStatusCode($this->pageStatus->getNotAuthorizedStatus());
 
             return $response;
         }
 
-        $httpStatus = $this->getStatus($requestPageName, $page->getName());
-
         $response->setStatusCode(
             $httpStatus
         );
+
+        $site = $pageRenderData->getSite();
+        $page = $pageRenderData->getPage();
+        $requestedPageData = $pageRenderData->getRequestedPage();
 
         $layoutView = $this->prepareLayoutView(
             $layoutView,
@@ -150,20 +151,34 @@ class PageRenderer
             $page
         );
 
-        $layoutView->setVariable('page', $page);
-        $layoutView->setVariable('site', $site);
-        $layoutView->setVariable('httpStatus', $httpStatus);
+        $layoutView->setVariable(
+            'page',
+            $page
+        );
 
-        /* This is for client, so it can tell if the rendered page is not the requested page */
-        $requestedPageData = [
-            'name' => strtolower($requestPageName),
-            'type' => strtolower($requestPageType),
-            'revision' => $revisionId,
-        ];
-        $layoutView->setVariable('requestedPageData', $requestedPageData);
+        $layoutView->setVariable(
+            'site',
+            $site
+        );
 
-        $viewModel->setVariable('page', $page);
-        $viewModel->setVariable('httpStatus', $httpStatus);
+        $layoutView->setVariable(
+            'httpStatus',
+            $httpStatus
+        );
+
+        $layoutView->setVariable(
+            'requestedPageData',
+            $requestedPageData
+        );
+
+        $viewModel->setVariable(
+            'page',
+            $page
+        );
+        $viewModel->setVariable(
+            'httpStatus',
+            $httpStatus
+        );
 
         $viewModel->setTemplate(
             'pages/'
@@ -177,7 +192,7 @@ class PageRenderer
     }
 
     /**
-     * renderByName
+     * renderZf2ByName
      *
      * @param Response       $response
      * @param ModelInterface $layoutView
@@ -189,7 +204,7 @@ class PageRenderer
      *
      * @return Response|ViewModel
      */
-    public function renderByName(
+    public function renderZf2ByName(
         Response $response,
         ModelInterface $layoutView,
         ViewModel $viewModel,
@@ -204,7 +219,7 @@ class PageRenderer
             $pageType
         );
 
-        return $this->render(
+        return $this->renderZf2(
             $response,
             $layoutView,
             $viewModel,
@@ -243,86 +258,6 @@ class PageRenderer
     }
 
     /**
-     * getStatus
-     *
-     * @param string $requestPageName
-     * @param string $responsePageName
-     *
-     * @return int
-     */
-    protected function getStatus($requestPageName, $responsePageName)
-    {
-        if (!$this->isRequestedPage($requestPageName, $responsePageName)) {
-            return $this->pageStatus->getStatus($responsePageName);
-        }
-
-        return $this->pageStatus->getOkStatus();
-    }
-
-    /**
-     * isRequestedPage
-     *
-     * @param $requestPageName
-     * @param $responsePageName
-     *
-     * @return bool
-     */
-    protected function isRequestedPage($requestPageName, $responsePageName)
-    {
-        return ($requestPageName == $responsePageName);
-    }
-
-    /**
-     * getRevision
-     *
-     * @param Site $site
-     * @param Page $page
-     * @param null $pageRevisionId
-     *
-     * @return null|\Rcm\Entity\Revision
-     */
-    protected function getRevision(
-        Site $site,
-        Page $page,
-        $pageRevisionId = null
-    ) {
-        $hasRevisionId = !empty($pageRevisionId);
-
-        $hasAccess = false;
-
-        if ($hasRevisionId) {
-            $hasAccess = $this->cmsPermissionChecks->shouldShowRevisions(
-                $site->getSiteId(),
-                $page->getName(),
-                $page->getPageType()
-            );
-        }
-
-        if ($hasAccess) {
-            return $page->getRevisionById($pageRevisionId);
-        }
-
-        // Check for staging
-        $hasAccess = $this->cmsPermissionChecks->siteAdminCheck(
-            $site
-        );
-
-        $revision = null;
-
-        if ($hasAccess) {
-            // @todo is this right, This means admins can never see published revisions
-            $revision = $page->getStagedRevision();
-        }
-
-        if (!empty($revision)) {
-            return $revision;
-        }
-
-        // Finally look for published revision
-        return $page->getPublishedRevision();
-    }
-
-    /**
      * getPage
      *
      * @param Site $site
@@ -351,112 +286,5 @@ class PageRenderer
         );
 
         return $page;
-    }
-
-    /**
-     * preparePage
-     *
-     * @param Site      $site
-     * @param Page|null $page
-     * @param int|null  $revisionId
-     *
-     * @return null|Page
-     */
-    protected function preparePage(
-        Site $site,
-        $page,
-        $revisionId = null
-    ) {
-        if (empty($page)) {
-            $page = $this->getNotFoundPage($site);
-        }
-
-        $revision = $this->getRevision($site, $page, $revisionId);
-
-        if (empty($revision)) {
-            $revision = $page->getCurrentRevision();
-        }
-
-        if (empty($revision)) {
-            $page = $this->getNotFoundPage($site);
-            $revision = $page->getCurrentRevision();//$this->getRevision($site, $page);
-        }
-
-        if (empty($page)) {
-            return null;
-        }
-
-        if (empty($revision)) {
-            throw new PageNotFoundException(
-                'No revision found for page name: ' .
-                json_encode($page->getName()) . ' id: ' .
-                json_encode($page->getPageId()) . ' type: ' .
-                json_encode($page->getPageType())
-            );
-        }
-
-        $page->setCurrentRevision($revision);
-
-        return $page;
-    }
-
-    /**
-     * getNotFoundPage
-     *
-     * @param Site $site
-     *
-     * @return mixed
-     */
-    protected function getNotFoundPage(
-        Site $site
-    ) {
-        /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $this->getPageRepository();
-
-        $page = $pageRepo->getPageByName(
-            $site,
-            $site->getNotFoundPage(),
-            'n'
-        );
-
-        if (empty($page)) {
-            throw new PageNotFoundException(
-                'No default page defined for 404 not found error'
-            );
-        }
-
-        return $page;
-    }
-
-    /**
-     * responseWithUnauthorized
-     *
-     * @param Response $response
-     *
-     * @return Response
-     */
-    protected function responseWithUnauthorized(Response $response)
-    {
-        $response->setStatusCode(
-            $this->pageStatus->getNotAuthorizedStatus()
-        );
-
-        return $response;
-    }
-
-    /**
-     * responseWithNotFound
-     *
-     * @param Response $response
-     *
-     * @return Response
-     */
-    protected function responseWithNotFound(Response $response)
-    {
-        $response->setStatusCode(
-            $this->pageStatus->getNotFoundStatus()
-        );
-
-        return $response;
     }
 }
