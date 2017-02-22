@@ -4,6 +4,7 @@ namespace Rcm\Controller;
 
 use Rcm\Entity\Site;
 use Rcm\Renderer\PageRenderer;
+use Rcm\Service\PageTypes;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -91,7 +92,7 @@ class IndexController extends AbstractActionController
     public function getCmsResponse(
         Site $site,
         $pageName,
-        $pageType = 'n',
+        $pageType = PageTypes::NORMAL,
         $revisionId = null
     ) {
         $pageRenderer = $this->getPageRenderer();

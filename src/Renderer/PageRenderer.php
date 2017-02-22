@@ -2,9 +2,8 @@
 
 namespace Rcm\Renderer;
 
-use Doctrine\ORM\EntityManager;
-use Rcm\Acl\CmsPermissionChecks;
 use Rcm\Entity\Page;
+use Rcm\Entity\PageRenderData;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use Rcm\Service\LayoutManager;
@@ -23,19 +22,9 @@ use Zend\View\Model\ViewModel;
 class PageRenderer
 {
     /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
      * @var LayoutManager
      */
     protected $layoutManager;
-
-    /**
-     * @var CmsPermissionChecks
-     */
-    protected $cmsPermissionChecks;
 
     /**
      * @var PageStatus
@@ -45,34 +34,18 @@ class PageRenderer
     /**
      * Constructor.
      *
-     * @param EntityManager         $entityManager
      * @param LayoutManager         $layoutManager
-     * @param CmsPermissionChecks   $cmsPermissionChecks
      * @param PageRenderDataService $pageRenderDataService
      * @param PageStatus            $pageStatus
      */
     public function __construct(
-        EntityManager $entityManager,
         LayoutManager $layoutManager,
-        CmsPermissionChecks $cmsPermissionChecks,
         PageRenderDataService $pageRenderDataService,
         PageStatus $pageStatus
     ) {
-        $this->entityManager = $entityManager;
         $this->layoutManager = $layoutManager;
-        $this->cmsPermissionChecks = $cmsPermissionChecks;
         $this->pageRenderDataService = $pageRenderDataService;
         $this->pageStatus = $pageStatus;
-    }
-
-    /**
-     * getEntityManager
-     *
-     * @return EntityManager
-     */
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
     }
 
     /**
@@ -86,43 +59,21 @@ class PageRenderer
     }
 
     /**
-     * getPageRepository
-     *
-     * @return \Rcm\Repository\Page
-     */
-    protected function getPageRepository()
-    {
-        $entityManager = $this->getEntityManager();
-
-        return $entityManager->getRepository(Page::class);
-    }
-
-    /**
      * renderZf2
      *
      * @param Response       $response
      * @param ModelInterface $layoutView
      * @param ViewModel      $viewModel
-     * @param Site           $site
-     * @param Page           $page
-     * @param null           $revisionId
+     * @param PageRenderData $pageRenderData
      *
-     * @return ViewModel|Response
+     * @return Response|ViewModel
      */
     public function renderZf2(
         Response $response,
         ModelInterface $layoutView,
         ViewModel $viewModel,
-        Site $site,
-        Page $page,
-        $revisionId = null
+        PageRenderData $pageRenderData
     ) {
-        $pageRenderData = $this->pageRenderDataService->getData(
-            $site,
-            $page,
-            $revisionId
-        );
-
         if (empty($pageRenderData->getPage())) {
             $response->setStatusCode($this->pageStatus->getNotFoundStatus());
 
@@ -213,19 +164,18 @@ class PageRenderer
         $pageType = 'n',
         $revisionId = null
     ) {
-        $page = $this->getPage(
+        $pageRenderData = $this->pageRenderDataService->getData(
             $site,
             $pageName,
-            $pageType
+            $pageType,
+            $revisionId
         );
 
         return $this->renderZf2(
             $response,
             $layoutView,
             $viewModel,
-            $site,
-            $page,
-            $revisionId
+            $pageRenderData
         );
     }
 
@@ -255,36 +205,5 @@ class PageRenderer
         }
 
         return $layoutView;
-    }
-
-    /**
-     * getPage
-     *
-     * @param Site $site
-     * @param      $pageName
-     * @param      $type
-     *
-     * @return null|Page
-     */
-    protected function getPage(
-        Site $site,
-        $pageName,
-        $type
-    ) {
-        if (empty($site) || !$site->getSiteId()) {
-            return null;
-        }
-
-        /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $this->getPageRepository();
-
-        /* Get the Page for display */
-        $page = $pageRepo->getPageByName(
-            $site,
-            $pageName,
-            $type
-        );
-
-        return $page;
     }
 }

@@ -8,6 +8,7 @@ use Rcm\Entity\Page;
 use Rcm\Entity\PageRenderData;
 use Rcm\Entity\Site;
 use Rcm\Exception\PageNotFoundException;
+use Rcm\Exception\RevisionNotFoundException;
 
 /**
  * Class PageRenderDataService
@@ -85,30 +86,38 @@ class PageRenderDataService
     /**
      * getData
      *
-     * @param Site $site
-     * @param Page $page
-     * @param null $revisionId
+     * @param Site   $site
+     * @param        $pageName
+     * @param string $pageType
+     * @param null   $revisionId
      *
      * @return PageRenderData
      */
     public function getData(
         Site $site,
-        Page $page,
+        $pageName,
+        $pageType = PageTypes::NORMAL,
         $revisionId = null
     ) {
         $pageRenderData = $this->getNew();
         $pageRenderData->setSite($site);
         $pageRenderData->setRequestedPage(
             [
-                'name' => strtolower($page->getName()),
-                'type' => strtolower($page->getPageType()),
+                'name' => strtolower($pageName),
+                'type' => strtolower($pageType),
                 'revision' => $revisionId,
             ]
         );
 
+        $requestPage = $this->getPage(
+            $site,
+            $pageName,
+            $pageType
+        );
+
         $page = $this->preparePage(
             $site,
-            $page,
+            $requestPage,
             $revisionId
         );
 
@@ -143,6 +152,37 @@ class PageRenderDataService
         );
 
         return $pageRenderData;
+    }
+
+    /**
+     * getPage
+     *
+     * @param Site $site
+     * @param      $pageName
+     * @param      $type
+     *
+     * @return null|Page
+     */
+    protected function getPage(
+        Site $site,
+        $pageName,
+        $type
+    ) {
+        if (empty($site) || !$site->getSiteId()) {
+            return null;
+        }
+
+        /** @var \Rcm\Repository\Page $pageRepo */
+        $pageRepo = $this->getPageRepository();
+
+        /* Get the Page for display */
+        $page = $pageRepo->getPageByName(
+            $site,
+            $pageName,
+            $type
+        );
+
+        return $page;
     }
 
     /**
@@ -217,6 +257,8 @@ class PageRenderDataService
             $revision = $page->getStagedRevision();
         }
 
+        // There might be cases where there is no staged revision
+        // so this check is required
         if (!empty($revision)) {
             return $revision;
         }
@@ -230,9 +272,10 @@ class PageRenderDataService
      *
      * @param Site      $site
      * @param Page|null $page
-     * @param int|null  $revisionId
+     * @param null      $revisionId
      *
-     * @return null|Page
+     * @return mixed|null
+     * @throws RevisionNotFoundException
      */
     protected function preparePage(
         Site $site,
@@ -241,30 +284,18 @@ class PageRenderDataService
     ) {
         if (empty($page)) {
             $page = $this->getNotFoundPage($site);
+            $page->setCurrentRevision($page->getPublishedRevision());
+
+            return $page;
         }
 
         $revision = $this->getRevision($site, $page, $revisionId);
 
         if (empty($revision)) {
-            $revision = $page->getCurrentRevision();
-        }
-
-        if (empty($revision)) {
             $page = $this->getNotFoundPage($site);
-            $revision = $page->getCurrentRevision();//$this->getRevision($site, $page);
-        }
+            $page->setCurrentRevision($page->getPublishedRevision());
 
-        if (empty($page)) {
-            return null;
-        }
-
-        if (empty($revision)) {
-            throw new PageNotFoundException(
-                'No revision found for page name: ' .
-                json_encode($page->getName()) . ' id: ' .
-                json_encode($page->getPageId()) . ' type: ' .
-                json_encode($page->getPageType())
-            );
+            return $page;
         }
 
         $page->setCurrentRevision($revision);
@@ -277,7 +308,7 @@ class PageRenderDataService
      *
      * @param Site $site
      *
-     * @return mixed
+     * @return Page
      */
     protected function getNotFoundPage(
         Site $site
