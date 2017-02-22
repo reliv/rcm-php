@@ -26,6 +26,12 @@ return [
         => \Rcm\Factory\MiddlewareLocaleSetterFactory::class,
         \Rcm\Middleware\RedirectCheck::class
         => \Rcm\Factory\MiddlewareRedirectCheckFactory::class,
+
+        \Rcm\Renderer\PageRender::class
+        => \Rcm\Renderer\PageRenderFactory::class,
+        \Rcm\Renderer\PageStatus::class
+        => \Rcm\Renderer\PageStatusFactory::class,
+
         'Rcm\Service\AssetManagerCache'
         => 'Rcm\Factory\AssetManagerCacheFactory',
         'Rcm\Service\Cache'

@@ -205,7 +205,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      * Test the constructor is working
      *
      * @return void
-     * @covers Rcm\Controller\IndexController
+     * @covers \Rcm\Controller\IndexController
      */
     public function testConstructor()
     {
@@ -237,7 +237,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
      * Test the index controller for normal functionality
      *
      * @return null
-     * @covers Rcm\Controller\IndexController
+     * @covers \Rcm\Controller\IndexController
      */
     public function testIndexAction()
     {

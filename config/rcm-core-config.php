@@ -37,6 +37,28 @@ return [
     ],
 
     /**
+     * NOTE: this only works the the PageRender
+     *
+     * If a page (substitutePage) is rendered instead of the page requested (requestedPage)
+     * and the name of the substitutePage can be tied to a status
+     *
+     * for example:
+     * requestedPageName='home' but does not exist
+     * substitutePageName='not-found'
+     *
+     * status map has
+     * ['not-found' => 404]
+     *
+     * so page will return with status 404 on substitution
+     */
+    'pageNameStatusMap' => [
+        'not-found' => \Rcm\Renderer\PageStatus::STATUS_NOT_FOUND,
+        '404' => \Rcm\Renderer\PageStatus::STATUS_NOT_FOUND,
+        'not-authorized' => \Rcm\Renderer\PageStatus::STATUS_NOT_AUTHORIZED,
+        '401' => \Rcm\Renderer\PageStatus::STATUS_NOT_AUTHORIZED,
+    ],
+
+    /**
      * successfulLoginUrl
      */
     'successfulLoginUrl' => '/',

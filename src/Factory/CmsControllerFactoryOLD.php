@@ -19,7 +19,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class CmsControllerFactory implements FactoryInterface
+class CmsControllerFactoryOLD implements FactoryInterface
 {
     /**
      * Create Service
@@ -49,8 +49,9 @@ class CmsControllerFactory implements FactoryInterface
         $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
 
         return new CmsController(
-            $serviceLocator->get(PageRender::class),
-            $currentSite
+            $layoutManager,
+            $currentSite,
+            $pageRepo
         );
     }
 }

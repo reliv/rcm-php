@@ -6,7 +6,6 @@ use Rcm\Entity\Page;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
 use Rcm\Exception\PageNotFoundException;
-use Rcm\Renderer\PageRender;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Service\LayoutManager;
 use Zend\Http\Response;
@@ -36,7 +35,7 @@ use Zend\View\Model\ViewModel;
  * @method boolean rcmIsSiteAdmin() Is user a CMS admin
  * @method boolean rcmIsPageAllowed(Page $page) Is user allowed to view a page
  */
-class CmsController extends AbstractActionController
+class CmsControllerOLD extends AbstractActionController
 {
     /**
      * @var \Rcm\Entity\Site
@@ -44,22 +43,40 @@ class CmsController extends AbstractActionController
     protected $currentSite;
 
     /**
-     * @var PageRender
+     * @var \Rcm\Service\LayoutManager
      */
-    protected $pageRender;
+    protected $layoutManager;
 
     /**
-     * Constructor.
+     * @var  \Rcm\Repository\Page
+     */
+    protected $pageRepo;
+
+    /**
+     * @var array
+     */
+    protected $pageInfo;
+
+    /**
+     * @var bool
+     */
+    protected $notFound = false;
+
+    /**
+     * Constructor
      *
-     * @param PageRender $pageRender
-     * @param Site       $currentSite
+     * @param LayoutManager $layoutManager Layout Manager to get layouts.
+     * @param Site          $currentSite   Current Site Entity
+     * @param PageRepo      $pageRepo      Rcm Page Repository
      */
     public function __construct(
-        PageRender $pageRender,
-        Site $currentSite
+        LayoutManager $layoutManager,
+        Site $currentSite,
+        PageRepo $pageRepo
     ) {
-        $this->pageRender = $pageRender;
+        $this->layoutManager = $layoutManager;
         $this->currentSite = $currentSite;
+        $this->pageRepo = $pageRepo;
     }
 
     /**

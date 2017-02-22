@@ -2,13 +2,17 @@
 
 namespace Rcm\Factory;
 
-use Rcm\Controller\CmsController;
+use Rcm\Controller\IndexController;
+use Rcm\Controller\IndexControllerOLD;
 use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Service Factory for the CmsController
+ * @deprecated  PLEASE USE CmsController
+ * Service Factory for the Index Controller
+ *
+ * Factory for the Index Controller.
  *
  * @category  Reliv
  * @package   Rcm
@@ -19,14 +23,15 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class CmsControllerFactory implements FactoryInterface
+class IndexControllerFactoryOLD implements FactoryInterface
 {
+
     /**
      * Create Service
      *
-     * @param ServiceLocatorInterface $controllerManager Zend Controller Manager
+     * @param ServiceLocatorInterface $controllerManager Zend Controler Manager
      *
-     * @return CmsController
+     * @return IndexControllerOLD
      */
     public function createService(ServiceLocatorInterface $controllerManager)
     {
@@ -48,9 +53,10 @@ class CmsControllerFactory implements FactoryInterface
         /** @var \Rcm\Repository\Page $pageRepo */
         $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
 
-        return new CmsController(
-            $serviceLocator->get(PageRender::class),
-            $currentSite
+        return new IndexControllerOLD(
+            $layoutManager,
+            $currentSite,
+            $pageRepo
         );
     }
 }

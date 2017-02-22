@@ -6,7 +6,6 @@ use Rcm\Entity\Page;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
 use Rcm\Exception\PageNotFoundException;
-use Rcm\Renderer\PageRender;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Service\LayoutManager;
 use Zend\Http\Response;
@@ -14,6 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 /**
+ * @deprecated  PLEASE USE CmsController Instead
  * Index Controller for the entire application
  *
  * This is main controller used for the application.  This should extend from
@@ -35,31 +35,70 @@ use Zend\View\Model\ViewModel;
  * @method boolean shouldShowRevisions($siteId, $pageName, $pageType = 'n') Should Show Revisions for pages
  * @method boolean rcmIsSiteAdmin() Is user a CMS admin
  * @method boolean rcmIsPageAllowed(Page $page) Is user allowed to view a page
+ * @deprecated
  */
-class CmsController extends AbstractActionController
+class IndexControllerOLD extends AbstractActionController
 {
+    /**
+     * @var string
+     */
+    public $pageName;
+
+    /**
+     * @var string
+     */
+    public $pageType;
+
+    /**
+     * @var integer
+     */
+    public $pageRevisionId;
+
     /**
      * @var \Rcm\Entity\Site
      */
     protected $currentSite;
 
     /**
-     * @var PageRender
+     * @var integer
      */
-    protected $pageRender;
+    protected $siteId;
 
     /**
-     * Constructor.
+     * @var \Rcm\Service\LayoutManager
+     */
+    protected $layoutManager;
+
+    /**
+     * @var  \Rcm\Repository\Page
+     */
+    protected $pageRepo;
+
+    /**
+     * @var array
+     */
+    protected $pageInfo;
+
+    /**
+     * @var bool
+     */
+    protected $notFound = false;
+
+    /**
+     * Constructor
      *
-     * @param PageRender $pageRender
-     * @param Site       $currentSite
+     * @param LayoutManager $layoutManager Layout Manager to get layouts.
+     * @param Site          $currentSite   Current Site Entity
+     * @param PageRepo      $pageRepo      Rcm Page Repository
      */
     public function __construct(
-        PageRender $pageRender,
-        Site $currentSite
+        LayoutManager $layoutManager,
+        Site $currentSite,
+        PageRepo $pageRepo
     ) {
-        $this->pageRender = $pageRender;
+        $this->layoutManager = $layoutManager;
         $this->currentSite = $currentSite;
+        $this->pageRepo = $pageRepo;
     }
 
     /**
@@ -69,33 +108,40 @@ class CmsController extends AbstractActionController
      */
     public function indexAction()
     {
-        $page = $this->getEvent()
+        $this->pageName = $this->getEvent()
             ->getRouteMatch()
-            ->getParam('page');
+            ->getParam('page', 'index');
 
-        $revision = $this->getEvent()
+        $this->pageType = $this->getEvent()
+            ->getRouteMatch()
+            ->getParam('pageType', 'n');
+
+        $this->pageRevisionId = $this->getEvent()
             ->getRouteMatch()
             ->getParam('revision', null);
 
         return $this->getCmsResponse(
             $this->currentSite,
-            $page,
-            $revision
+            $this->pageName,
+            $this->pageType,
+            $this->pageRevisionId
         );
     }
 
     /**
      * getCmsResponse
      *
-     * @param Site $site
-     * @param Page $page
-     * @param null $revisionId
+     * @param Site   $site
+     * @param        $pageName
+     * @param string $pageType
+     * @param null   $revisionId
      *
      * @return \Rcm\Http\Response|ViewModel
      */
     public function getCmsResponse(
         Site $site,
-        Page $page,
+        $pageName,
+        $pageType = 'n',
         $revisionId = null
     ) {
         /**
@@ -103,10 +149,17 @@ class CmsController extends AbstractActionController
          * This is for client, so it can tell if this is an error page
          */
         $requestedPageData = [
-            'name' => strtolower($page->getName()),
-            'type' => strtolower($page->getPageType()),
+            'name' => strtolower($pageName),
+            'type' => strtolower($pageType),
             'revision' => $revisionId,
         ];
+
+        /* Get the Page for display */
+        $page = $this->pageRepo->getPageByName(
+            $site,
+            $pageName,
+            $pageType
+        );
 
         $viewModel = new ViewModel();
 
@@ -151,12 +204,16 @@ class CmsController extends AbstractActionController
     /**
      * renderNotFoundPage
      *
-     * @param Site $site
+     * @param $site
      *
      * @return null|Page
      */
     public function renderNotFoundPage($site)
     {
+        $this->pageName = $site->getNotFoundPage();
+        $this->pageType = 'n';
+        $this->pageRevisionId = null;
+
         $page = $this->pageRepo->getPageByName(
             $site,
             $site->getNotFoundPage(),
@@ -196,7 +253,7 @@ class CmsController extends AbstractActionController
 
         if (!empty($layoutOverRide)) {
             $layoutTemplatePath = $this->layoutManager->getSiteLayout(
-                $this->currentSite,
+                $page->getSite(),
                 $layoutOverRide
             );
 
@@ -229,7 +286,7 @@ class CmsController extends AbstractActionController
         //  First Check for a page Revision
         if (!empty($pageRevisionId)) {
             $userCanSeeRevisions = $this->shouldShowRevisions(
-                $this->currentSite->getSiteId(),
+                $page->getSite()->getSiteId(),
                 $page->getName(),
                 $page->getPageType()
             );
@@ -251,12 +308,11 @@ class CmsController extends AbstractActionController
         }
 
         // Check for staging
-        if ($this->rcmIsSiteAdmin($this->currentSite)) {
+        if ($this->rcmIsSiteAdmin($page->getSite())) {
             $revision = $page->getStagedRevision();
 
             if (!empty($revision) || $revision instanceof Revision) {
                 $page->setCurrentRevision($revision);
-
                 return;
             }
         }
@@ -279,7 +335,6 @@ class CmsController extends AbstractActionController
     {
         $response = new \Rcm\Http\Response();
         $response->setStatusCode(401);
-
         return $response;
     }
 }
