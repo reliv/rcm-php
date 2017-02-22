@@ -13,13 +13,13 @@ use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class PageRender
+ * Class PageRenderer
  *
  * @author    James Jervis
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class PageRender
+class PageRenderer
 {
     /**
      * @var EntityManager
@@ -138,6 +138,12 @@ class PageRender
             return $response;
         }
 
+        $httpStatus = $this->getStatus($requestPageName, $page->getName());
+
+        $response->setStatusCode(
+            $httpStatus
+        );
+
         $layoutView = $this->prepareLayoutView(
             $layoutView,
             $site,
@@ -146,6 +152,7 @@ class PageRender
 
         $layoutView->setVariable('page', $page);
         $layoutView->setVariable('site', $site);
+        $layoutView->setVariable('httpStatus', $httpStatus);
 
         /* This is for client, so it can tell if the rendered page is not the requested page */
         $requestedPageData = [
@@ -156,6 +163,7 @@ class PageRender
         $layoutView->setVariable('requestedPageData', $requestedPageData);
 
         $viewModel->setVariable('page', $page);
+        $viewModel->setVariable('httpStatus', $httpStatus);
 
         $viewModel->setTemplate(
             'pages/'
@@ -237,14 +245,14 @@ class PageRender
     /**
      * getStatus
      *
-     * @param string $requestedPageName
+     * @param string $requestPageName
      * @param string $responsePageName
      *
      * @return int
      */
-    protected function getStatus($requestedPageName, $responsePageName)
+    protected function getStatus($requestPageName, $responsePageName)
     {
-        if (!$this->isRequestedPage($requestedPageName, $responsePageName)) {
+        if (!$this->isRequestedPage($requestPageName, $responsePageName)) {
             return $this->pageStatus->getStatus($responsePageName);
         }
 
@@ -254,14 +262,14 @@ class PageRender
     /**
      * isRequestedPage
      *
-     * @param $requestedPageName
+     * @param $requestPageName
      * @param $responsePageName
      *
      * @return bool
      */
-    protected function isRequestedPage($requestedPageName, $responsePageName)
+    protected function isRequestedPage($requestPageName, $responsePageName)
     {
-        return ($requestedPageName == $responsePageName);
+        return ($requestPageName == $responsePageName);
     }
 
     /**

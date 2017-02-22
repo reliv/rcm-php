@@ -6,24 +6,24 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 
 /**
- * Class PageRenderFactory
+ * Class PageRendererFactory
  *
  * @author    James Jervis
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class PageRenderFactory
+class PageRendererFactory
 {
     /**
      * __invoke
      *
      * @param ContainerInterface $container
      *
-     * @return PageRender
+     * @return PageRenderer
      */
     public function __invoke($container)
     {
-        return new PageRender(
+        return new PageRenderer(
             $container->get('Doctrine\ORM\EntityManager'),
             $container->get('Rcm\Service\LayoutManager'),
             $container->get('Rcm\Acl\CmsPermissionsChecks'),

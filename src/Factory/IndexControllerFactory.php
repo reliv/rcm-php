@@ -3,7 +3,7 @@
 namespace Rcm\Factory;
 
 use Rcm\Controller\IndexController;
-use Rcm\Renderer\PageRender;
+use Rcm\Renderer\PageRenderer;
 use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -41,14 +41,14 @@ class IndexControllerFactory implements FactoryInterface
         /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $controllerMgr->getServiceLocator();
 
-        /** @var PageRender $pageRenderer */
-        $pageRenderer = $serviceLocator->get(PageRender::class);
+        /** @var PageRenderer $pageRendererer */
+        $pageRendererer = $serviceLocator->get(PageRenderer::class);
 
         /** @var \Rcm\Entity\Site $currentSite */
         $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
 
         return new IndexController(
-            $pageRenderer,
+            $pageRendererer,
             $currentSite
         );
     }

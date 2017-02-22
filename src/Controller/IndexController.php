@@ -4,7 +4,7 @@ namespace Rcm\Controller;
 
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
-use Rcm\Renderer\PageRender;
+use Rcm\Renderer\PageRenderer;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -27,19 +27,19 @@ class IndexController extends AbstractActionController
     /**
      * @var \Rcm\Service\LayoutManager
      */
-    protected $pageRender;
+    protected $pageRenderer;
 
     /**
      * Constructor.
      *
-     * @param PageRender $pageRender
+     * @param PageRenderer $pageRenderer
      * @param Site       $currentSite
      */
     public function __construct(
-        PageRender $pageRender,
+        PageRenderer $pageRenderer,
         Site $currentSite
     ) {
-        $this->pageRender = $pageRender;
+        $this->pageRenderer = $pageRenderer;
         $this->currentSite = $currentSite;
     }
 
@@ -71,13 +71,13 @@ class IndexController extends AbstractActionController
     }
 
     /**
-     * getPageRender
+     * getPageRenderer
      *
-     * @return PageRender
+     * @return PageRenderer
      */
-    protected function getPageRender()
+    protected function getPageRenderer()
     {
-        return $this->getServiceLocator()->get(PageRender::class);
+        return $this->getServiceLocator()->get(PageRenderer::class);
     }
 
     /**
@@ -96,13 +96,13 @@ class IndexController extends AbstractActionController
         $pageType = 'n',
         $revisionId = null
     ) {
-        $pageRender = $this->getPageRender();
+        $pageRenderer = $this->getPageRenderer();
 
         $response = new \Rcm\Http\Response();
         $layoutView = $this->layout();
         $viewModel = new ViewModel();
 
-        return $pageRender->renderByName(
+        return $pageRenderer->renderByName(
             $response,
             $layoutView,
             $viewModel,

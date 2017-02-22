@@ -37,7 +37,7 @@ return [
     ],
 
     /**
-     * NOTE: this only works the the PageRender
+     * NOTE: this only works the the PageRenderer
      *
      * If a page (substitutePage) is rendered instead of the page requested (requestedPage)
      * and the name of the substitutePage can be tied to a status
