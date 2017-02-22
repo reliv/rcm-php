@@ -2,10 +2,8 @@
 
 namespace Rcm\Controller;
 
-use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use Rcm\Renderer\PageRenderer;
-use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
