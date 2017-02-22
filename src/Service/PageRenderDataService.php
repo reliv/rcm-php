@@ -141,7 +141,7 @@ class PageRenderDataService
 
         $pageRenderData->setPage($page);
 
-        // @todo Insert Block data (plugin data)
+        // @todo FUTURE Insert Block data (plugin data)
         // $pageRenderData->setBlocks([]);
 
         $pageRenderData->setHttpStatus(
@@ -319,7 +319,7 @@ class PageRenderDataService
         $page = $pageRepo->getPageByName(
             $site,
             $site->getNotFoundPage(),
-            'n'
+            PageTypes::NORMAL
         );
 
         if (empty($page)) {
