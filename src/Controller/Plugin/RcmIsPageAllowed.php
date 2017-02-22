@@ -22,9 +22,16 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
  */
 class RcmIsPageAllowed extends AbstractPlugin
 {
-    /** @var \Rcm\Acl\CmsPermissionChecks  */
+    /**
+     * @var \Rcm\Acl\CmsPermissionChecks
+     */
     public $checker;
 
+    /**
+     * Constructor.
+     *
+     * @param CmsPermissionChecks $cmsPermissionChecks
+     */
     public function __construct(CmsPermissionChecks $cmsPermissionChecks)
     {
         $this->checker = $cmsPermissionChecks;

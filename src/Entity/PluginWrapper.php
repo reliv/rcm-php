@@ -232,7 +232,7 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
     /**
      * Get the Wrapped Plugin Instance
      *
-     * @return \Rcm\Entity\PluginInstance
+     * @return PluginInstance
      */
     public function getInstance()
     {

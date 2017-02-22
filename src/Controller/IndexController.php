@@ -2,103 +2,53 @@
 
 namespace Rcm\Controller;
 
-use Rcm\Entity\Page;
-use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
-use Rcm\Exception\PageNotFoundException;
-use Rcm\Repository\Page as PageRepo;
-use Rcm\Service\LayoutManager;
-use Zend\Http\Response;
+use Rcm\Renderer\PageRenderer;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 /**
+ * Class IndexController
  * @deprecated  PLEASE USE CmsController Instead
- * Index Controller for the entire application
  *
- * This is main controller used for the application.  This should extend from
- * the base class located in Rcm and should need no further
- * modification.
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: 1.0
- * @link      http://github.com/reliv
- *
- * @method Response redirectToPage($pageName, $pageType) Redirect to CMS
- *                                                                  Page
- *
- * @method boolean rcmIsAllowed($resource, $action) Is User Allowed
- * @method boolean shouldShowRevisions($siteId, $pageName, $pageType = 'n') Should Show Revisions for pages
- * @method boolean rcmIsSiteAdmin() Is user a CMS admin
- * @method boolean rcmIsPageAllowed(Page $page) Is user allowed to view a page
- * @deprecated
+ * @author    James Jervis
+ * @license   License.txt
+ * @link      https://github.com/jerv13
  */
 class IndexController extends AbstractActionController
 {
-    /**
-     * @var string
-     */
-    public $pageName;
-
-    /**
-     * @var string
-     */
-    public $pageType;
-
-    /**
-     * @var integer
-     */
-    public $pageRevisionId;
-
     /**
      * @var \Rcm\Entity\Site
      */
     protected $currentSite;
 
     /**
-     * @var integer
-     */
-    protected $siteId;
-
-    /**
      * @var \Rcm\Service\LayoutManager
      */
-    protected $layoutManager;
+    protected $pageRenderer;
 
     /**
-     * @var  \Rcm\Repository\Page
-     */
-    protected $pageRepo;
-
-    /**
-     * @var array
-     */
-    protected $pageInfo;
-
-    /**
-     * @var bool
-     */
-    protected $notFound = false;
-
-    /**
-     * Constructor
+     * Constructor.
      *
-     * @param LayoutManager $layoutManager Layout Manager to get layouts.
-     * @param Site          $currentSite   Current Site Entity
-     * @param PageRepo      $pageRepo      Rcm Page Repository
+     * @param PageRenderer $pageRenderer
+     * @param Site       $currentSite
      */
     public function __construct(
-        LayoutManager $layoutManager,
-        Site $currentSite,
-        PageRepo $pageRepo
+        PageRenderer $pageRenderer,
+        Site $currentSite
     ) {
-        $this->layoutManager = $layoutManager;
+        $this->pageRenderer = $pageRenderer;
         $this->currentSite = $currentSite;
-        $this->pageRepo = $pageRepo;
+    }
+
+    /**
+     * getPageRenderer
+     *
+     * @return PageRenderer
+     */
+    protected function getPageRenderer()
+    {
+        return $this->pageRenderer;
     }
 
     /**
@@ -108,23 +58,23 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        $this->pageName = $this->getEvent()
+        $pageName = $this->getEvent()
             ->getRouteMatch()
             ->getParam('page', 'index');
 
-        $this->pageType = $this->getEvent()
+        $pageType = $this->getEvent()
             ->getRouteMatch()
             ->getParam('pageType', 'n');
 
-        $this->pageRevisionId = $this->getEvent()
+        $pageRevisionId = $this->getEvent()
             ->getRouteMatch()
             ->getParam('revision', null);
 
         return $this->getCmsResponse(
             $this->currentSite,
-            $this->pageName,
-            $this->pageType,
-            $this->pageRevisionId
+            $pageName,
+            $pageType,
+            $pageRevisionId
         );
     }
 
@@ -144,197 +94,20 @@ class IndexController extends AbstractActionController
         $pageType = 'n',
         $revisionId = null
     ) {
-        /**
-         * @todo This should be handled better
-         * This is for client, so it can tell if this is an error page
-         */
-        $requestedPageData = [
-            'name' => strtolower($pageName),
-            'type' => strtolower($pageType),
-            'revision' => $revisionId,
-        ];
+        $pageRenderer = $this->getPageRenderer();
 
-        /* Get the Page for display */
-        $page = $this->pageRepo->getPageByName(
-            $site,
-            $pageName,
-            $pageType
-        );
-
+        $response = new \Rcm\Http\Response();
+        $layoutView = $this->layout();
         $viewModel = new ViewModel();
 
-        if (!$page) {
-            $page = $this->renderNotFoundPage($site);
-        }
-
-        $allowed = $this->rcmIsPageAllowed($page);
-
-        if (!$allowed) {
-            return $this->getUnauthorizedResponse();
-        }
-
-        $this->prepPageRevisionForDisplay($page, $revisionId);
-
-        // if we have no revision, page is not found
-        if (!$page->getCurrentRevision()) {
-            $page = $this->renderNotFoundPage($site);
-            $this->prepPageRevisionForDisplay($page);
-        }
-
-        $this->prepLayoutView(
+        return $pageRenderer->renderZf2ByName(
+            $response,
+            $layoutView,
+            $viewModel,
             $site,
-            $page,
-            $requestedPageData,
-            $page->getSiteLayoutOverride()
+            $pageName,
+            $pageType,
+            $revisionId
         );
-
-        $viewModel->setVariable('page', $page);
-
-        $viewModel->setTemplate(
-            'pages/'
-            . $this->layoutManager->getSitePageTemplate(
-                $site,
-                $page->getPageLayout()
-            )
-        );
-
-        return $viewModel;
-    }
-
-    /**
-     * renderNotFoundPage
-     *
-     * @param $site
-     *
-     * @return null|Page
-     */
-    public function renderNotFoundPage($site)
-    {
-        $this->pageName = $site->getNotFoundPage();
-        $this->pageType = 'n';
-        $this->pageRevisionId = null;
-
-        $page = $this->pageRepo->getPageByName(
-            $site,
-            $site->getNotFoundPage(),
-            'n'
-        );
-
-        if (empty($page)) {
-            throw new PageNotFoundException(
-                'No default page defined for 404 not found error'
-            );
-        }
-
-        $response = $this->getResponse();
-        $response->setStatusCode(410);
-
-        return $page;
-    }
-
-    /**
-     * prepLayoutView
-     *
-     * @param Site $site
-     * @param Page $page
-     * @param      $requestedPageData
-     * @param      $layoutOverRide
-     *
-     * @return void
-     */
-    protected function prepLayoutView(
-        Site $site,
-        Page $page,
-        $requestedPageData,
-        $layoutOverRide
-    ) {
-        /** @var ViewModel $layoutView */
-        $layoutView = $this->layout();
-
-        if (!empty($layoutOverRide)) {
-            $layoutTemplatePath = $this->layoutManager->getSiteLayout(
-                $page->getSite(),
-                $layoutOverRide
-            );
-
-            $layoutView->setTemplate('layout/' . $layoutTemplatePath);
-        }
-
-        if ($this->pageInfo['currentRevisionId']
-            != $this->pageInfo['revision']['revisionId']
-        ) {
-            $layoutView->setVariable('rcmDraft', true);
-        }
-
-        $layoutView->setVariable('page', $page);
-        $layoutView->setVariable('site', $site);
-        $layoutView->setVariable('requestedPageData', $requestedPageData);
-    }
-
-    /**
-     * prepPageRevisionForDisplay
-     *
-     * @param Page $page
-     * @param null $pageRevisionId
-     *
-     * @return void|Response
-     */
-    public function prepPageRevisionForDisplay(
-        Page $page,
-        $pageRevisionId = null
-    ) {
-        //  First Check for a page Revision
-        if (!empty($pageRevisionId)) {
-            $userCanSeeRevisions = $this->shouldShowRevisions(
-                $page->getSite()->getSiteId(),
-                $page->getName(),
-                $page->getPageType()
-            );
-
-            if ($userCanSeeRevisions) {
-                $revision = $page->getRevisionById($pageRevisionId);
-
-                if (!empty($revision) || $revision instanceof Revision) {
-                    $page->setCurrentRevision($revision);
-                }
-
-                return;
-            } else {
-                return $this->redirectToPage(
-                    $page->getName(),
-                    $page->getPageType()
-                );
-            }
-        }
-
-        // Check for staging
-        if ($this->rcmIsSiteAdmin($page->getSite())) {
-            $revision = $page->getStagedRevision();
-
-            if (!empty($revision) || $revision instanceof Revision) {
-                $page->setCurrentRevision($revision);
-                return;
-            }
-        }
-
-        // Finally look for published revision
-        $revision = $page->getPublishedRevision();
-        if (!empty($revision) || $revision instanceof Revision) {
-            $page->setCurrentRevision($revision);
-        }
-
-        return;
-    }
-
-    /**
-     * getUnauthorizedResponse
-     *
-     * @return \Rcm\Http\Response
-     */
-    protected function getUnauthorizedResponse()
-    {
-        $response = new \Rcm\Http\Response();
-        $response->setStatusCode(401);
-        return $response;
     }
 }

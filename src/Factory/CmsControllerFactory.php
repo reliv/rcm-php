@@ -49,9 +49,8 @@ class CmsControllerFactory implements FactoryInterface
         $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
 
         return new CmsController(
-            $layoutManager,
-            $currentSite,
-            $pageRepo
+            $serviceLocator->get(PageRenderer::class),
+            $currentSite
         );
     }
 }
