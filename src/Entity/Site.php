@@ -199,6 +199,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     /**
      * @var array Supported page types - these should be populated at object creation
      * @todo This should be part of the DB schema, so each site can have a list on creation
+     * @todo Get these from PageTypes service
      */
     protected $supportedPageTypes
         = [
