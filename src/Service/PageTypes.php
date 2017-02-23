@@ -61,7 +61,10 @@ class PageTypes
      */
     public function __construct($pageTypes = [])
     {
-        $this->pageTypesAvailable = array_replace_recursive(self::$defaultTypesAvailable, $pageTypes);;
+        $this->pageTypesAvailable = array_replace_recursive(
+            self::$defaultTypesAvailable,
+            $pageTypes
+        );
     }
 
     /**
