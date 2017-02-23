@@ -14,12 +14,12 @@ use Rcm\Service\PageStatus;
 class PageRenderData extends AbstractApiModel implements ApiModelInterface
 {
     /**
-     * @var null
+     * @var Site|null
      */
     protected $site = null;
 
     /**
-     * @var null
+     * @var Page|null
      */
     protected $page = null;
 

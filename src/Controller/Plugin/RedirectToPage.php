@@ -2,6 +2,7 @@
 
 namespace Rcm\Controller\Plugin;
 
+use Rcm\Service\PageTypes;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
@@ -28,7 +29,7 @@ class RedirectToPage extends AbstractPlugin
      *
      * @return \Zend\Http\Response
      */
-    public function __invoke($pageName, $pageType = 'n')
+    public function __invoke($pageName, $pageType = PageTypes::NORMAL)
     {
         return $this->redirect($pageName, $pageType);
     }
@@ -46,11 +47,11 @@ class RedirectToPage extends AbstractPlugin
         /** @var \Zend\Mvc\Controller\AbstractActionController $controller * */
         $controller = $this->getController();
 
-        if ($pageType == 'n' && $pageName == 'index') {
+        if ($pageType == PageTypes::NORMAL && $pageName == 'index') {
             return $controller->redirect()->toUrl(
                 '/'
             );
-        } elseif ($pageType == 'n') {
+        } elseif ($pageType == PageTypes::NORMAL) {
             return $controller->redirect()->toRoute(
                 'contentManager',
                 ['page' => $pageName]

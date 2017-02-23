@@ -26,6 +26,7 @@ use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
+use Rcm\Service\PageTypes;
 
 /**
  * Unit Test for Page Entity
@@ -82,7 +83,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetPageType()
     {
-        $pageType = 'z';
+        $pageType = PageTypes::SYSTEM;
 
         $this->page->setPageType($pageType);
 
@@ -479,7 +480,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $data = [];
         $data['name'] = 'testname';
         $data['pageTitle'] = 'TESTTITLE';
-        $data['pageType'] = 'n';
+        $data['pageType'] = PageTypes::NORMAL;
         $data['description'] = 'TESTDESC';
         $data['keywords'] = 'KEY,WORD';
         $data['author'] = 'TESTAUTHOR';

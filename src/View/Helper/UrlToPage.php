@@ -2,6 +2,7 @@
 
 namespace Rcm\View\Helper;
 
+use Rcm\Service\PageTypes;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -28,7 +29,7 @@ class UrlToPage extends AbstractHelper
      *
      * @return \Zend\Http\Response
      */
-    public function __invoke($pageName, $pageType = 'n', $pageRevision = null)
+    public function __invoke($pageName, $pageType = PageTypes::NORMAL, $pageRevision = null)
     {
         return $this->url($pageName, $pageType, $pageRevision);
     }
@@ -43,19 +44,19 @@ class UrlToPage extends AbstractHelper
      * @return string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function url($pageName, $pageType = 'n', $pageRevision = null)
+    public function url($pageName, $pageType = PageTypes::NORMAL, $pageRevision = null)
     {
         /** @var \Zend\Mvc\Controller\AbstractActionController $controller */
         $view = $this->getView();
 
-        if ($pageType == 'n' && $pageName == 'index' && empty($pageRevision)) {
+        if ($pageType == PageTypes::NORMAL && $pageName == 'index' && empty($pageRevision)) {
             return '/';
-        } elseif ($pageType == 'n' && empty($pageRevision)) {
+        } elseif ($pageType == PageTypes::NORMAL && empty($pageRevision)) {
             return $view->url(
                 'contentManager',
                 ['page' => $pageName]
             );
-        } elseif ($pageType == 'n' && !empty($pageRevision)) {
+        } elseif ($pageType == PageTypes::NORMAL && !empty($pageRevision)) {
             return $view->url(
                 'contentManager',
                 [
@@ -63,7 +64,7 @@ class UrlToPage extends AbstractHelper
                     'page' => $pageName,
                 ]
             );
-        } elseif ($pageType != 'n' && !empty($pageRevision)) {
+        } elseif ($pageType != PageTypes::NORMAL && !empty($pageRevision)) {
             return $view->url(
                 'contentManagerWithPageType',
                 [

@@ -21,6 +21,7 @@ namespace RcmTest\Controller\Plugin;
 require_once __DIR__ . '/../../../../autoload.php';
 
 use Rcm\Controller\Plugin\UrlToPage;
+use Rcm\Service\PageTypes;
 use Zend\Http\Response;
 
 /**
@@ -48,7 +49,7 @@ class UrlToPageTest extends \PHPUnit_Framework_TestCase
     public function testInvoke()
     {
         $pageName = 'my-test';
-        $pageType = 'z';
+        $pageType = PageTypes::SYSTEM;
 
         $mockPlugin = $this->getMockBuilder('\Rcm\Controller\Plugin\UrlToPage')
             ->disableOriginalConstructor()
@@ -73,7 +74,7 @@ class UrlToPageTest extends \PHPUnit_Framework_TestCase
     public function testUrlToIndexPage()
     {
         $pageName = 'index';
-        $pageType = 'n';
+        $pageType = PageTypes::NORMAL;
 
         $controller = $this->getMockBuilder('\Rcm\Controller\IndexController')
             ->disableOriginalConstructor()
@@ -96,7 +97,7 @@ class UrlToPageTest extends \PHPUnit_Framework_TestCase
     public function testUrlToNormalTypePage()
     {
         $pageName = 'my-test';
-        $pageType = 'n';
+        $pageType = PageTypes::NORMAL;
 
         $mockRedirect = $this->getMockBuilder('\Zend\Mvc\Controller\Plugin\Url')
             ->disableOriginalConstructor()
@@ -132,7 +133,7 @@ class UrlToPageTest extends \PHPUnit_Framework_TestCase
     public function testUrlToCustomTypePage()
     {
         $pageName = 'my-test';
-        $pageType = 'z';
+        $pageType = PageTypes::SYSTEM;
 
         $mockRedirect = $this->getMockBuilder('\Zend\Mvc\Controller\Plugin\Url')
             ->disableOriginalConstructor()

@@ -2,6 +2,7 @@
 
 namespace Rcm\Controller;
 
+use Rcm\Service\PageTypes;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -29,7 +30,7 @@ class PageCheckController extends AbstractRestfulController
      */
     public function getList()
     {
-        $pageType = $this->params('pageType', 'n');
+        $pageType = $this->params('pageType', PageTypes::NORMAL);
         $pageId = $this->params('pageId', null);
 
         /** @var \Rcm\Validator\Page $validator */

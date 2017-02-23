@@ -9,6 +9,7 @@ use Rcm\Http\Response;
 use Rcm\Service\LayoutManager;
 use Rcm\Service\PageRenderDataService;
 use Rcm\Service\PageStatus;
+use Rcm\Service\PageTypes;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
 
@@ -161,7 +162,7 @@ class PageRenderer
         ViewModel $viewModel,
         Site $site,
         $pageName,
-        $pageType = 'n',
+        $pageType = PageTypes::NORMAL,
         $revisionId = null
     ) {
         $pageRenderData = $this->pageRenderDataService->getData(

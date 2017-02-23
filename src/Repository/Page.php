@@ -11,6 +11,7 @@ use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\PageException;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Exception\RuntimeException;
+use Rcm\Service\PageTypes;
 
 /**
  * Page Repository
@@ -46,7 +47,7 @@ class Page extends ContainerAbstract
     public function getPageByName(
         SiteEntity $site,
         $pageName,
-        $pageType = 'n'
+        $pageType = PageTypes::NORMAL
     ) {
         $results = $this->getPagesByName(
             $site,
@@ -73,7 +74,7 @@ class Page extends ContainerAbstract
     public function getPagesByName(
         SiteEntity $site,
         $pageName,
-        $pageType = 'n'
+        $pageType = PageTypes::NORMAL
     ) {
         $queryBuilder = $this->createQueryBuilder('page')
             ->leftJoin('page.publishedRevision', 'publishedRevision')
@@ -99,7 +100,7 @@ class Page extends ContainerAbstract
      *
      * @return mixed
      */
-    public function getPublishedRevisionId($siteId, $name, $type = 'n')
+    public function getPublishedRevisionId($siteId, $name, $type = PageTypes::NORMAL)
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -130,7 +131,7 @@ class Page extends ContainerAbstract
      *
      * @return null|integer
      */
-    public function getStagedRevisionId($siteId, $name, $type = 'n')
+    public function getStagedRevisionId($siteId, $name, $type = PageTypes::NORMAL)
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -162,7 +163,7 @@ class Page extends ContainerAbstract
      *
      * @return null|array Database Result Set
      */
-    public function getRevisionDbInfo($siteId, $name, $revisionId, $type = 'n')
+    public function getRevisionDbInfo($siteId, $name, $revisionId, $type = PageTypes::NORMAL)
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -492,7 +493,7 @@ class Page extends ContainerAbstract
      *
      * @return mixed
      */
-    public function getOnlyPageIdByName($siteId, $name, $pageType = 'n')
+    public function getOnlyPageIdByName($siteId, $name, $pageType = PageTypes::NORMAL)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('page.pageId')
@@ -627,7 +628,7 @@ class Page extends ContainerAbstract
      *
      * @return bool
      */
-    public function isValid($siteId, $pageName, $pageType = 'n')
+    public function isValid($siteId, $pageName, $pageType = PageTypes::NORMAL)
     {
         $isValidQueryBuilder = $this->_em->createQueryBuilder();
         $isValidQueryBuilder->select('page.pageId')
@@ -663,7 +664,7 @@ class Page extends ContainerAbstract
     public function getRevisionList(
         $siteId,
         $pageName,
-        $pageType = 'n',
+        $pageType = PageTypes::NORMAL,
         $published = false,
         $limit = 10
     ) {
@@ -748,7 +749,7 @@ class Page extends ContainerAbstract
         $author
     ) {
         if (empty($pageType)) {
-            $pageType = 'n';
+            $pageType = PageTypes::NORMAL;
         }
 
         if (!empty($saveData['containers'])) {

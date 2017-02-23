@@ -5,6 +5,7 @@ namespace Rcm\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Service\PageTypes;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
@@ -139,7 +140,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
      *
      * @ORM\Column(type="string", length=32)
      */
-    protected $pageType = 'n';
+    protected $pageType = PageTypes::NORMAL;
 
     /**
      * @var Site

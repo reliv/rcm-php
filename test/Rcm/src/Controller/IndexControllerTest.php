@@ -24,6 +24,7 @@ use Rcm\Controller\IndexController;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use Rcm\Renderer\PageRenderer;
+use Rcm\Service\PageTypes;
 
 /**
  * Unit Test for the IndexController
@@ -77,7 +78,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         $result = $unit->getCmsResponse(
             $this->site,
             'test',
-            'n'
+            PageTypes::NORMAL
         );
 
         $this->assertEquals(

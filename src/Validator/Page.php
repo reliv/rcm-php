@@ -3,6 +3,7 @@
 namespace Rcm\Validator;
 
 use Rcm\Repository\Page as PageRepo;
+use Rcm\Service\PageTypes;
 
 /**
  * Rcm Page Validator
@@ -41,7 +42,7 @@ class Page extends PageName
     /**
      * @var string
      */
-    protected $pageType = 'n';
+    protected $pageType = PageTypes::NORMAL;
 
     /**
      * @var null|int

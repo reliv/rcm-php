@@ -65,7 +65,7 @@ class IndexController extends AbstractActionController
 
         $pageType = $this->getEvent()
             ->getRouteMatch()
-            ->getParam('pageType', 'n');
+            ->getParam('pageType', PageTypes::NORMAL);
 
         $pageRevisionId = $this->getEvent()
             ->getRouteMatch()

@@ -67,7 +67,7 @@ class CmsControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->pageRenderer->expects($this->any())
-            ->method('renderZf2')
+            ->method('renderZf2ByName')
             ->will($this->returnValue($this->response));
 
         $this->site = $this
@@ -94,7 +94,8 @@ class CmsControllerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            $result, $this->response
+            $result,
+            $this->response
         );
     }
 }
