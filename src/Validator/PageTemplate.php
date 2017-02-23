@@ -4,6 +4,7 @@ namespace Rcm\Validator;
 
 use Rcm\Entity\Site;
 use Rcm\Repository\Page as PageRepo;
+use Rcm\Service\PageTypes;
 use Zend\Validator\AbstractValidator;
 
 /**
@@ -44,7 +45,7 @@ class PageTemplate extends AbstractValidator
     /**
      * @var string
      */
-    protected $pageType = 't';
+    protected $pageType = PageTypes::TEMPLATE;
 
     /**
      * @var  \Rcm\Entity\Site

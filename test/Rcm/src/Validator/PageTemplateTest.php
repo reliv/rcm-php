@@ -20,6 +20,7 @@
 namespace RcmTest\Validator;
 
 use Rcm\Entity\Site;
+use Rcm\Service\PageTypes;
 use Rcm\Validator\PageTemplate;
 
 require_once __DIR__ . '/../../../autoload.php';
@@ -94,13 +95,13 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
         $reflectedProp->setAccessible(true);
         $defaultValue = $reflectedProp->getValue($this->validator);
 
-        $this->assertEquals('t', $defaultValue);
+        $this->assertEquals(PageTypes::TEMPLATE, $defaultValue);
 
-        $this->validator->setPageType('z');
+        $this->validator->setPageType(PageTypes::SYSTEM);
 
         $result = $reflectedProp->getValue($this->validator);
 
-        $this->assertEquals('z', $result);
+        $this->assertEquals(PageTypes::SYSTEM, $result);
     }
 
     /**
@@ -138,7 +139,7 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
     public function testIsValid()
     {
         $templateId = 44;
-        $pageType = 'z';
+        $pageType = PageTypes::SYSTEM;
 
         $this->pageRepo->expects($this->once())
             ->method('findOneBy')
@@ -169,7 +170,7 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
     public function testIsValidWhenPageTemplateIdInvalid()
     {
         $templateId = 44;
-        $pageType = 'z';
+        $pageType = PageTypes::SYSTEM;
 
         $this->pageRepo->expects($this->once())
             ->method('findOneBy')

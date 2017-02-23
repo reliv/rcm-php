@@ -96,12 +96,13 @@ class CmsController extends AbstractActionController
         $layoutView = $this->layout();
         $viewModel = new ViewModel();
 
-        return $pageRenderer->renderZf2(
+        return $pageRenderer->renderZf2ByName(
             $response,
             $layoutView,
             $viewModel,
             $site,
-            $page,
+            $page->getName(),
+            $page->getPageType(),
             $revisionId
         );
     }

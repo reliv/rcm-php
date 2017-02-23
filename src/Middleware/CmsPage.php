@@ -25,6 +25,6 @@ class CmsPage
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
     {
-        // @todo Future
+        // @todo FUTURE
     }
 }

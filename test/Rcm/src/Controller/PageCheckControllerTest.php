@@ -21,6 +21,7 @@ namespace RcmTest\Controller;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Controller\PageCheckController;
+use Rcm\Service\PageTypes;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
@@ -122,7 +123,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $this->routeMatch->setParam('pageId', 'my-test-page');
-        $this->routeMatch->setParam('pageType', 'z');
+        $this->routeMatch->setParam('pageType', PageTypes::SYSTEM);
 
         $result = $this->controller->dispatch($this->request);
 

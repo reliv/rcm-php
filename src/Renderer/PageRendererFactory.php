@@ -25,9 +25,7 @@ class PageRendererFactory
     public function __invoke($container)
     {
         return new PageRenderer(
-            $container->get('Doctrine\ORM\EntityManager'),
             $container->get('Rcm\Service\LayoutManager'),
-            $container->get('Rcm\Acl\CmsPermissionsChecks'),
             $container->get(PageRenderDataService::class),
             $container->get(PageStatus::class)
         );

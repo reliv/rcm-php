@@ -2,6 +2,7 @@
 
 namespace Rcm\Controller\Plugin;
 
+use Rcm\Service\PageTypes;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
@@ -30,7 +31,7 @@ class UrlToPage extends AbstractPlugin
      *
      * @return \Zend\Http\Response
      */
-    public function __invoke($pageName, $pageType = 'n', $pageRevision = null)
+    public function __invoke($pageName, $pageType = PageTypes::NORMAL, $pageRevision = null)
     {
         return $this->url($pageName, $pageType, $pageRevision);
     }
@@ -45,19 +46,19 @@ class UrlToPage extends AbstractPlugin
      * @return string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function url($pageName, $pageType = 'n', $pageRevision = null)
+    public function url($pageName, $pageType = PageTypes::NORMAL, $pageRevision = null)
     {
         /** @var \Zend\Mvc\Controller\AbstractActionController $controller */
         $controller = $this->getController();
 
-        if ($pageType == 'n' && $pageName == 'index' && empty($pageRevision)) {
+        if ($pageType == PageTypes::NORMAL && $pageName == 'index' && empty($pageRevision)) {
             return '/';
-        } elseif ($pageType == 'n' && empty($pageRevision)) {
+        } elseif ($pageType == PageTypes::NORMAL && empty($pageRevision)) {
             return $controller->url()->fromRoute(
                 'contentManager',
                 ['page' => $pageName]
             );
-        } elseif ($pageType == 'n' && !empty($pageRevision)) {
+        } elseif ($pageType == PageTypes::NORMAL && !empty($pageRevision)) {
             return $controller->url()->fromRoute(
                 'contentManager',
                 [
@@ -65,7 +66,7 @@ class UrlToPage extends AbstractPlugin
                     'page' => $pageName,
                 ]
             );
-        } elseif ($pageType != 'n' && !empty($pageRevision)) {
+        } elseif ($pageType != PageTypes::NORMAL && !empty($pageRevision)) {
             return $controller->url()->fromRoute(
                 'contentManagerWithPageType',
                 [

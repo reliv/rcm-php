@@ -19,18 +19,18 @@ return [
      * Available page types
      */
     'pageTypes' => [
-        'n' => [
-            'type' => 'n',
+        \Rcm\Service\PageTypes::NORMAL => [
+            'type' => \Rcm\Service\PageTypes::NORMAL,
             'title' => 'Normal Page',
             'canClone' => true,
         ],
-        't' => [
-            'type' => 't',
+        \Rcm\Service\PageTypes::TEMPLATE => [
+            'type' => \Rcm\Service\PageTypes::TEMPLATE,
             'title' => 'Template Page',
             'canClone' => true,
         ],
-        'z' => [
-            'type' => 'z',
+        \Rcm\Service\PageTypes::SYSTEM => [
+            'type' => \Rcm\Service\PageTypes::SYSTEM,
             'title' => 'System Page',
             'canClone' => true,
         ],

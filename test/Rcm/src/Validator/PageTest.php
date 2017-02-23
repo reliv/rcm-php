@@ -19,6 +19,7 @@
 
 namespace RcmTest\Validator;
 
+use Rcm\Service\PageTypes;
 use Rcm\Validator\Page;
 
 require_once __DIR__ . '/../../../autoload.php';
@@ -88,13 +89,13 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $reflectedProp->setAccessible(true);
         $defaultValue = $reflectedProp->getValue($this->validator);
 
-        $this->assertEquals('n', $defaultValue);
+        $this->assertEquals(PageTypes::NORMAL, $defaultValue);
 
-        $this->validator->setPageType('z');
+        $this->validator->setPageType(PageTypes::SYSTEM);
 
         $result = $reflectedProp->getValue($this->validator);
 
-        $this->assertEquals('z', $result);
+        $this->assertEquals(PageTypes::SYSTEM, $result);
     }
 
     /**
@@ -130,7 +131,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testIsValid()
     {
         $pageName = 'test-page';
-        $pageType = 'z';
+        $pageType = PageTypes::SYSTEM;
 
         $this->pageRepo->expects($this->once())
             ->method('findOneBy')
@@ -162,7 +163,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testIsValidWhenPageExists()
     {
         $pageName = 'test-page';
-        $pageType = 'z';
+        $pageType = PageTypes::SYSTEM;
 
         $this->pageRepo->expects($this->once())
             ->method('findOneBy')
@@ -200,7 +201,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testIsValidWhenPageNameInvalid()
     {
         $pageName = 'test page';
-        $pageType = 'z';
+        $pageType = PageTypes::SYSTEM;
 
         $this->pageRepo->expects($this->never())
             ->method('findOneBy');

@@ -52,6 +52,8 @@ return [
         => \Rcm\Service\PageRenderDataServiceFactory::class,
         \Rcm\Service\PageStatus::class
         => \Rcm\Service\PageStatusFactory::class,
+        \Rcm\Service\PageTypes::class
+        => \Rcm\Service\PageTypesFactory::class,
         'Rcm\Service\PluginManager'
         => 'Rcm\Factory\PluginManagerFactory',
         'Rcm\Service\RcmUser'

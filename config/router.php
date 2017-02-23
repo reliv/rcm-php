@@ -29,8 +29,8 @@ return [
         //    'type' => 'Rcm\Route\Cms',
         //    'options' => [
         //        'route' => '/rcm[/:page][/:revision]',
-        //        // optional: Defaults to 'n' if left blank
-        //        'type' => 'n',
+        //        // optional: Defaults to PageTypes::NORMAL if left blank
+        //        'type' => PageTypes::NORMAL,
         //        'defaults' => [
         //            // optional: Defaults to Rcm\Controller\CmsController if blank
         //            'controller' => 'Rcm\Controller\CmsController',

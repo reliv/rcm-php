@@ -3,6 +3,7 @@
 namespace Rcm\Controller\Plugin;
 
 use Rcm\Acl\CmsPermissionChecks;
+use Rcm\Service\PageTypes;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
@@ -43,7 +44,7 @@ class ShouldShowRevisions extends AbstractPlugin
      *
      * @return \Zend\Http\Response
      */
-    public function __invoke($siteId, $pageName, $pageType = 'n')
+    public function __invoke($siteId, $pageName, $pageType = PageTypes::NORMAL)
     {
         return $this->checker->shouldShowRevisions($siteId, $pageName, $pageType);
     }

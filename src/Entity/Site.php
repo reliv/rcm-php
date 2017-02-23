@@ -5,6 +5,7 @@ namespace Rcm\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Service\PageTypes;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
@@ -198,21 +199,22 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     /**
      * @var array Supported page types - these should be populated at object creation
      * @todo This should be part of the DB schema, so each site can have a list on creation
+     * @todo Get these from PageTypes service
      */
     protected $supportedPageTypes
         = [
-            'n' => [
-                'type' => 'n',
+            PageTypes::NORMAL => [
+                'type' => PageTypes::NORMAL,
                 'title' => 'Normal Page',
                 'canClone' => true,
             ],
-            't' => [
-                'type' => 't',
+            PageTypes::TEMPLATE => [
+                'type' => PageTypes::TEMPLATE,
                 'title' => 'Template Page',
                 'canClone' => true,
             ],
-            'z' => [
-                'type' => 'z',
+            PageTypes::SYSTEM => [
+                'type' => PageTypes::SYSTEM,
                 'title' => 'System Page',
                 'canClone' => true,
             ],
@@ -654,7 +656,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
      *
      * @return null|Page
      */
-    public function getPage($pageName, $pageType = 'n')
+    public function getPage($pageName, $pageType = PageTypes::NORMAL)
     {
         if ($this->pages->count() < 1) {
             return null;

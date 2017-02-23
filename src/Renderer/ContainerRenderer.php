@@ -12,7 +12,7 @@ use Rcm\Service\PluginManager;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * @todo Future
+ * @todo FUTURE
  * Class ContainerRenderer
  *
  * @author    James Jervis

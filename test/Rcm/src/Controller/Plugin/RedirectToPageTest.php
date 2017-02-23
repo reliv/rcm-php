@@ -21,6 +21,7 @@ namespace RcmTest\Controller\Plugin;
 require_once __DIR__ . '/../../../../autoload.php';
 
 use Rcm\Controller\Plugin\RedirectToPage;
+use Rcm\Service\PageTypes;
 use Zend\Http\Response;
 
 /**
@@ -48,7 +49,7 @@ class RedirectToPageTest extends \PHPUnit_Framework_TestCase
     public function testInvoke()
     {
         $pageName = 'my-test';
-        $pageType = 'z';
+        $pageType = PageTypes::SYSTEM;
 
         $mockPlugin = $this->getMockBuilder(
             '\Rcm\Controller\Plugin\RedirectToPage'
@@ -75,7 +76,7 @@ class RedirectToPageTest extends \PHPUnit_Framework_TestCase
     public function testRedirectToIndexPage()
     {
         $pageName = 'index';
-        $pageType = 'n';
+        $pageType = PageTypes::NORMAL;
 
         $mockRedirect = $this->getMockBuilder(
             '\Zend\Mvc\Controller\Plugin\Redirect'
@@ -110,7 +111,7 @@ class RedirectToPageTest extends \PHPUnit_Framework_TestCase
     public function testRedirectToNormalTypePage()
     {
         $pageName = 'my-test';
-        $pageType = 'n';
+        $pageType = PageTypes::NORMAL;
 
         $mockRedirect = $this->getMockBuilder(
             '\Zend\Mvc\Controller\Plugin\Redirect'
@@ -148,7 +149,7 @@ class RedirectToPageTest extends \PHPUnit_Framework_TestCase
     public function testRedirectToCustomTypePage()
     {
         $pageName = 'my-test';
-        $pageType = 'z';
+        $pageType = PageTypes::SYSTEM;
 
         $mockRedirect = $this->getMockBuilder(
             '\Zend\Mvc\Controller\Plugin\Redirect'

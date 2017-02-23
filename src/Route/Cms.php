@@ -3,6 +3,7 @@
 namespace Rcm\Route;
 
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
+use Rcm\Service\PageTypes;
 use Zend\Http\Request;
 use Zend\Mvc\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -234,7 +235,7 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         if (!empty($options['type'])) {
             return $options['type'];
         } else {
-            return 'n';
+            return PageTypes::NORMAL;
         }
     }
 
