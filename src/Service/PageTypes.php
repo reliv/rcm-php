@@ -17,11 +17,12 @@ class PageTypes
     const SYSTEM = 'z';
     const DELETED = 'deleted-{originalPageType}';
 
-    protected $pageTypes = [
-        self::NORMAL,
-        self::TEMPLATE,
-        self::SYSTEM,
-    ];
+    protected $pageTypes
+        = [
+            self::NORMAL,
+            self::TEMPLATE,
+            self::SYSTEM,
+        ];
 
     /**
      * getDeletedType
@@ -32,6 +33,6 @@ class PageTypes
      */
     public static function getDeletedType($type = self::NORMAL)
     {
-        return str_replace(self::DELETED,$type,'{originalPageType}');
+        return str_replace(self::DELETED, $type, '{originalPageType}');
     }
 }
