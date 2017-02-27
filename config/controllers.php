@@ -16,6 +16,10 @@ return [
             'class' => 'Rcm\Controller\NewPluginInstanceApiController',
             'arguments' => ['ServiceManager'],
         ],
+        'Rcm\Controller\RenderPluginInstancePreviewApiController' => [
+            'class' => 'Rcm\Controller\RenderPluginInstancePreviewApiController',
+            'arguments' => ['Rcm\Service\PluginManager'],
+        ],
         'Rcm\Controller\PageCheckController' => [
             'class' => 'Rcm\Controller\PageCheckController',
             'arguments' => ['ServiceManager'],
