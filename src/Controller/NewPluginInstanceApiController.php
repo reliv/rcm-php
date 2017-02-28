@@ -40,16 +40,6 @@ class NewPluginInstanceApiController extends AbstractActionController
             $instanceConfig = $pluginManager->getInstanceConfig($instanceId);
         }
 
-        //Allow plugins to preview with an unsaved instance configuration
-        $instanceConfigPreview = $this->params()
-            ->fromPost('previewInstanceConfig');
-        if ($instanceConfigPreview) {
-            $instanceConfig = array_merge(
-                $instanceConfig,
-                $instanceConfigPreview
-            );
-        }
-
         $viewData = $pluginManager->getPluginViewData(
             $pluginType,
             $instanceId,
