@@ -7,12 +7,10 @@
  * @param rcmAdminService
  * @constructor
  */
-var RcmAdminPlugin = function (
-    page,
-    id,
-    container,
-    rcmAdminService
-) {
+var RcmAdminPlugin = function (page,
+                               id,
+                               container,
+                               rcmAdminService) {
     var self = this;
 
     self.model = rcmAdminService.model.RcmPluginModel;
@@ -50,6 +48,15 @@ var RcmAdminPlugin = function (
 
         return self.container.getData().type;
     };
+
+    self.getInstanceId = function () {
+        return self.getId();
+    }
+
+    //@TODO doesn't work seems to get wrong element
+    // self.getContainerElement = function () {
+    //     return self.containerModel.getElm()
+    // }
 
     /**
      * getElm
@@ -446,12 +453,14 @@ var RcmAdminPlugin = function (
         self.instanceConfig = self.getSaveData().saveData;
         // @todo This should be in a model
         $.post(
-            '/rcm-admin-get-instance/' + name + '/' + id,
+            '/rcm/core/rpc/render-plugin-instance-preview',
             {
-                previewInstanceConfig: self.instanceConfig
+                pluginType: name,
+                instanceId: id,
+                instanceConfig: self.instanceConfig
             },
             function (data) {
-                pluginContainer.html(data);
+                pluginContainer.html(data.html);
                 self.updateView(
                     pluginContainer, function () {
                         self.initEdit(onComplete, true);
