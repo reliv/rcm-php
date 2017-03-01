@@ -10,7 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * Interface BlockInstance
  * @package     Rcm\Entity
  */
-interface Provider
+interface DataProvider
 {
     /**
      * Plugins automatically get their instance configs when rendering. A data service like this

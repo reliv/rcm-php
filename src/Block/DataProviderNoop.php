@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class ProviderNoop implements Provider
+class DataProviderNoop implements DataProvider
 {
     /**
      * Plugins automatically get their instance configs when rendering. A data service like this

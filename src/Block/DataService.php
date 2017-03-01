@@ -11,19 +11,19 @@ use Psr\Http\Message\ServerRequestInterface;
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class DataService implements Provider
+class DataService implements DataProvider
 {
     /**
-     * @var ProviderRepository
+     * @var DataProviderRepository
      */
     protected $providerRepository;
 
     /**
      * Constructor.
      *
-     * @param ProviderRepository $providerRepository
+     * @param DataProviderRepository $providerRepository
      */
-    public function __construct(ProviderRepository $providerRepository)
+    public function __construct(DataProviderRepository $providerRepository)
     {
         $this->providerRepository = $providerRepository;
     }
@@ -33,8 +33,9 @@ class DataService implements Provider
      * is used to return any custom data in addition to the instance config to the plugin
      * template for rendering.
      *
-     * @param Instance $instance
+     * @param Instance               $instance
      * @param ServerRequestInterface $request
+     *
      * @return array
      */
     public function __invoke(Instance $instance, ServerRequestInterface $request) : array

@@ -5,13 +5,13 @@ namespace Rcm\Block;
 use Interop\Container\ContainerInterface;
 
 /**
- * Interface BlockDataProviderRepository
+ * Interface DataProviderRepository
  *
  * @author    James Jervis
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class ProviderRepository
+class DataProviderRepository
 {
     /**
      * @var array
@@ -37,12 +37,12 @@ class ProviderRepository
      *
      * @param string $pluginName
      *
-     * @return Provider
+     * @return DataProvider
      */
     protected function getProviderService($pluginName)
     {
         if (!array_key_exists($pluginName, $this->config)) {
-            return new ProviderNoop();
+            return new DataProviderNoop();
         }
 
         return $this->container->get($this->config[$pluginName]);
@@ -53,7 +53,7 @@ class ProviderRepository
      *
      * @param $pluginName
      *
-     * @return Provider
+     * @return DataProvider
      */
     public function findById($pluginName)
     {
