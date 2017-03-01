@@ -72,6 +72,16 @@ return [
                 ],
             ],
         ],
+        '/rcm/core/rpc/render-plugin-instance-preview' => [
+            'type' => 'Zend\Mvc\Router\Http\Segment',
+            'options' => [
+                'route' => '/rcm/core/rpc/render-plugin-instance-preview',
+                'defaults' => [
+                    'controller' => 'Rcm\Controller\RenderPluginInstancePreviewApiController',
+                    'action' => 'index',
+                ],
+            ],
+        ],
         'rcm-page-title-search' => [
             'type' => 'Zend\Mvc\Router\Http\Segment',
             'options' => [
