@@ -5,21 +5,25 @@ namespace Rcm\Block;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @depreicated - THIS IS A DRAFT. DO NOT USE IT YET.
+ * Class BlockDataProviderNoop
  *
- * Interface BlockInstance
- * @package Rcm\Entity
+ * @author    James Jervis
+ * @license   License.txt
+ * @link      https://github.com/jerv13
  */
-interface BlockDataService
+class ProviderNoop implements Provider
 {
     /**
      * Plugins automatically get their instance configs when rendering. A data service like this
      * is used to return any custom data in addition to the instance config to the plugin
      * template for rendering.
      *
-     * @param BlockInstance $instance
+     * @param Instance $instance
      * @param ServerRequestInterface $request
-     * @return array - the block custom data
+     * @return array
      */
-    public function __invoke(BlockInstance $instance, ServerRequestInterface $request);
+    public function __invoke(Instance $instance, ServerRequestInterface $request) : array
+    {
+        return [];
+    }
 }

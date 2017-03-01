@@ -8,18 +8,8 @@ namespace Rcm\Block;
  * Interface BlockInstance
  * @package Rcm\Entity
  */
-interface BlockInstance
+interface Data extends Instance
 {
-    /**
-     * @return integer The instance id
-     */
-    public function getId();
-
-    /**
-     * @return array The instance config for this block instance. This is what admins can edit in the CMS
-     */
-    public function getConfig();
-
     /**
      * @return array Any custom data that was delivered by a registered block data service. this is optional
      */

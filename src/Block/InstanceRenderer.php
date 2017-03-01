@@ -8,17 +8,17 @@ use Psr\Http\Message\ServerRequestInterface;
  * @depreicated - THIS IS A DRAFT. DO NOT USE IT YET.
  *
  * Interface BlockInstance
- * @package Rcm\Entity
+ * @package     Rcm\Entity
  */
-interface BlockRenderer
+interface InstanceRenderer
 {
     /**
      * __invoke
      *
-     * @param BlockInstance          $instance
+     * @param Instance               $instance
      * @param ServerRequestInterface $request
      *
      * @return string Rendered Html
      */
-    public function __invoke(BlockInstance $instance, ServerRequestInterface $request);
+    public function __invoke(Instance $instance, ServerRequestInterface $request);
 }
