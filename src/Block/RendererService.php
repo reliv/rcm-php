@@ -2,8 +2,6 @@
 
 namespace Rcm\Block;
 
-use Psr\Http\Message\ServerRequestInterface;
-
 /**
  * Class RendererService
  *
@@ -32,7 +30,7 @@ class RendererService implements Renderer
     /**
      * __invoke
      *
-     * @param Data                   $instance
+     * @param Data $instance
      *
      * @return string Rendered Html
      */
