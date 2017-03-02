@@ -49,7 +49,7 @@ class ConfigMap
     public function getFieldBc($field)
     {
         if (array_key_exists($field, $this->fieldsBc)) {
-            return $this->fieldsBc[$field]
+            return $this->fieldsBc[$field];
         }
 
         return null;
