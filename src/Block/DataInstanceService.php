@@ -43,13 +43,14 @@ class DataInstanceService
      * is used to return any custom data in addition to the instance config to the plugin
      * template for rendering.
      *
-     * @param                        BlockInstance
+     * @param string                 $instanceId
      * @param ServerRequestInterface $request
      *
-     * @return Data
+     * @return null|DataBasic
      */
     public function __invoke($instanceId, ServerRequestInterface $request)
     {
+        /** @var Instance $instance */
         $instance = $this->instanceRepository->findById($instanceId);
 
         if (empty($instance)) {

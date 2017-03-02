@@ -5,24 +5,24 @@ namespace Rcm\Block;
 use Interop\Container\ContainerInterface;
 
 /**
- * Class DataProviderRepositoryFactory
+ * Class DataProviderRepositoryBasicFactory
  *
  * @author    James Jervis
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class DataProviderRepositoryFactory
+class DataProviderRepositoryBasicFactory
 {
     /**
      * __invoke
      *
      * @param ContainerInterface $container
      *
-     * @return DataProviderRepository
+     * @return DataProviderRepositoryBasic
      */
     public function __invoke($container)
     {
-        return new DataProviderRepository(
+        return new DataProviderRepositoryBasic(
             $container->get(ConfigRepository::class),
             $container
         );

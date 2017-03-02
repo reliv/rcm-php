@@ -39,7 +39,7 @@ class InstanceRepositoryBc extends AbstractRepository implements InstanceReposit
      * @param $config
      * @param $data
      *
-     * @return InstanceBasic
+     * @return Instance
      */
     public function getNew($id, $config, $data)
     {
@@ -51,7 +51,7 @@ class InstanceRepositoryBc extends AbstractRepository implements InstanceReposit
      *
      * @param $id
      *
-     * @return null|InstanceBasic
+     * @return null|Instance
      */
     public function findById($id)
     {

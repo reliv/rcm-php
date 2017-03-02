@@ -10,6 +10,26 @@ return [
         => '\Rcm\Factory\CmsPermissionsChecksFactory',
         'Rcm\Acl\ResourceProvider'
         => 'Rcm\Factory\AclResourceProviderFactory',
+
+        /* @GammaRelease */
+        \Rcm\Block\ConfigFields::class
+        => \Rcm\Block\ConfigFieldsFactory::class,
+        /* @GammaRelease */
+        \Rcm\Block\ConfigRepository::class
+        => \Rcm\Block\ConfigRepositoryJsonFactory::class,
+        /* @GammaRelease */
+        \Rcm\Block\DataInstanceService::class
+        => \Rcm\Block\DataInstanceServiceFactory::class,
+        /* @GammaRelease */
+        \Rcm\Block\DataProviderRepository::class
+        => \Rcm\Block\DataProviderRepositoryBasicFactory::class,
+        /* @GammaRelease */
+        \Rcm\Block\InstanceRepository::class
+        => \Rcm\Block\InstanceRepositoryBcFactory::class,
+        /* @GammaRelease */
+        \Rcm\Block\RendererProviderRepository::class
+        => \Rcm\Block\RendererProviderRepositoryBasicFactory::class,
+
         'Rcm\EventListener\EventWrapper'
         => 'Rcm\Factory\EventWrapperFactory',
         'Rcm\EventListener\RouteListener'
