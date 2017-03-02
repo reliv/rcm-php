@@ -32,8 +32,8 @@ return [
 
         'Rcm\Service\AssetManagerCache'
         => 'Rcm\Factory\AssetManagerCacheFactory',
-        'Rcm\Service\Cache'
-        => 'Rcm\Factory\CacheFactory',
+        Rcm\Service\Cache::class
+        => Rcm\Factory\CacheFactory::class,
         'Rcm\Service\CurrentSite'
         => '\Rcm\Factory\CurrentSiteFactory',
         \Rcm\Service\DomainRedirectService::class

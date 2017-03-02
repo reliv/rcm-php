@@ -5,6 +5,7 @@ namespace Rcm\Block;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
+ * @GammaRelease
  * Class DataService
  *
  * @author    James Jervis

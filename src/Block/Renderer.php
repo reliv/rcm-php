@@ -3,7 +3,7 @@
 namespace Rcm\Block;
 
 /**
- * @depreicated - THIS IS A DRAFT. DO NOT USE IT YET.
+ * @GammaRelease
  *
  * Interface Renderer
  * @package     Rcm\Entity

@@ -3,15 +3,18 @@
 namespace Rcm\Block;
 
 use Interop\Container\ContainerInterface;
+use Rcm\Core\Repository\AbstractRepository;
+use Rcm\Core\Repository\Repository;
 
 /**
+ * @GammaRelease
  * Interface RendererProviderRepository
  *
  * @author    James Jervis
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class RendererProviderRepository
+class RendererProviderRepository extends AbstractRepository implements Repository
 {
     /**
      * @var array

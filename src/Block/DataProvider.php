@@ -5,7 +5,7 @@ namespace Rcm\Block;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @depreicated - THIS IS A DRAFT. DO NOT USE IT YET.
+ * @GammaRelease
  *
  * Interface BlockInstance
  * @package     Rcm\Entity

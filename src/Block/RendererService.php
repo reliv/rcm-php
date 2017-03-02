@@ -3,6 +3,7 @@
 namespace Rcm\Block;
 
 /**
+ * @GammaRelease
  * Class RendererService
  *
  * @author    James Jervis

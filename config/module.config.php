@@ -33,11 +33,14 @@ return [
     'doctrine' => require __DIR__ . '/doctrine.php',
     /* Rcm Config */
     'Rcm' => require __DIR__ . '/rcm-core-config.php',
+    /* Blocks */
+    'rcmPlugin' => [],
     /* rcmCache */
     'rcmCache' => [
         'adapter' => 'Memory',
         'plugins' => [],
-        'options' => [ //'namespace' => 'RcmCache'
+        'options' => [
+            //'namespace' => 'RcmCache'
         ]
     ],
     /* RcmUser Config */

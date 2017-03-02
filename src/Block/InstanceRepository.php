@@ -3,16 +3,19 @@
 namespace Rcm\Block;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\Core\Repository\AbstractRepository;
+use Rcm\Core\Repository\Repository;
 use Rcm\Entity\PluginInstance;
 
 /**
+ * @GammaRelease
  * Class BlockRepository
  *
  * @author    James Jervis
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class InstanceRepository
+class InstanceRepository extends AbstractRepository implements Repository
 {
     /**
      * @var \Doctrine\ORM\EntityRepository
