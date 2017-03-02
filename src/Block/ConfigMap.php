@@ -39,8 +39,19 @@ class ConfigMap
             'config' => []
         ];
 
+    /**
+     * getFieldBc
+     *
+     * @param $field
+     *
+     * @return mixed|null
+     */
     public function getFieldBc($field)
     {
+        if (array_key_exists($field, $this->fieldsBc)) {
+            return $this->fieldsBc[$field]
+        }
 
+        return null;
     }
 }
