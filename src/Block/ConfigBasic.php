@@ -52,6 +52,17 @@ class ConfigBasic implements Config
     }
 
     /**
+     * getDirectory
+     *
+     * @return string
+     */
+    public function getDirectory()
+    {
+        return $this->get('directory');
+    }
+
+
+    /**
      * getCategory
      *
      * @return string

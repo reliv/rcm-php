@@ -5,13 +5,13 @@ namespace Rcm\Block;
 use Rcm\Core\Repository\Repository;
 
 /**
- * Interface RendererProviderRepository
+ * Interface ConfigRepository
  *
  * @author    James Jervis
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-interface RendererProviderRepository extends Repository
+interface ConfigRepository extends Repository
 {
 
 }

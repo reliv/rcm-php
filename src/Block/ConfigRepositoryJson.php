@@ -2,9 +2,9 @@
 
 namespace Rcm\Block;
 
+use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Rcm\Core\Cache\Cache;
 use Rcm\Core\Repository\AbstractRepository;
-use Rcm\Core\Repository\Repository;
 
 /**
  * @GammaRelease
@@ -14,8 +14,9 @@ use Rcm\Core\Repository\Repository;
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class ConfigRepositoryJson extends AbstractRepository implements Repository
+class ConfigRepositoryJson extends AbstractRepository implements ConfigRepository
 {
+    const CACHE_KEY = 'ConfigRepositoryJson';
     /**
      * @var array
      */
@@ -27,70 +28,102 @@ class ConfigRepositoryJson extends AbstractRepository implements Repository
     protected $cache;
 
     /**
+     * @var ConfigFields
+     */
+    protected $configFields;
+
+    /**
+     * @var array
+     */
+    protected $configs = [];
+
+    /**
      * Constructor.
      *
-     * @param       $registryConfig
-     * @param Cache $cache
+     * @param array        $registryConfig
+     * @param Cache        $cache
+     * @param ConfigFields $configFields
      */
     public function __construct(
         $registryConfig,
-        Cache $cache
+        Cache $cache,
+        ConfigFields $configFields
     ) {
         $this->registryConfig = $registryConfig;
         $this->cache = $cache;
+        $this->configFields = $configFields;
     }
 
-    protected function getArray()
+    /**
+     * hasCache
+     *
+     * @return bool
+     */
+    protected function hasCache()
     {
-
+        return ($this->cache->hasItem(self::CACHE_KEY));
     }
 
-    public function getConfig()
+    /**
+     * getCache
+     *
+     * @return mixed
+     */
+    protected function getCache()
     {
+        return $this->cache->getItem(self::CACHE_KEY);
+    }
+
+    /**
+     * setCache
+     *
+     * @param array $configs
+     *
+     * @return void
+     */
+    protected function setCache($configs)
+    {
+        $this->cache->setItem(self::CACHE_KEY, $configs);
+    }
+
+    /**
+     * getConfigs
+     *
+     * @return array|mixed
+     */
+    protected function getConfigs()
+    {
+        if ($this->hasCache()) {
+            return $this->getCache();
+        }
+
         $pluginConfigs = $this->readConfigs(
             $this->registryConfig
         );
 
-        $zfConfig['omega-block-adaptor']['plugins'] = [];
+        $configs = [];
+
         foreach ($pluginConfigs as $pluginConfig) {
-            $zfConfig['omega-block-adaptor']['plugins'][$pluginConfig['name']] = $pluginConfig;
-            $zfConfig = array_merge_recursive($zfConfig, $this->omegaSinglePluginConfigToZfConfig($pluginConfig));
+            $config = $this->configFields->prepare(
+                $pluginConfig
+            );
+
+            $configs[] = new ConfigBasic($config);
         }
 
-        return $zfConfig;
+        $this->setCache($configs);
+
+        return $configs;
     }
 
-    public static function omegaSinglePluginConfigToZfConfig($pluginConfig)
-    {
-        $config = [
-            'rcmPlugin' => [],
-            'service_manager' => []
-        ];
-        $config['rcmPlugin'][$pluginConfig['name']] = [
-            'type' => $pluginConfig['category'],
-            'display' => $pluginConfig['label'],
-            'tooltip' => $pluginConfig['description'],
-            'canCache' => $pluginConfig['cache'],
-            'defaultInstanceConfig'
-            => self::fieldsToConfig($pluginConfig['fields'])
-        ];
-        $config['service_manager']['factories'][$pluginConfig['name']]
-            = OmegaAdaptorPluginControllerFactory::class;
-
-        return $config;
-    }
-
-    public static function fieldsToConfig($instanceConfigFields)
-    {
-        $instanceConfig = [];
-        foreach ($instanceConfigFields as $field) {
-            $instanceConfig[$field['name']] = $field['default'];
-        }
-
-        return $instanceConfig;
-    }
-
-    public static function readConfigs($blockPaths)
+    /**
+     * readConfigs
+     *
+     * @param array $blockPaths
+     *
+     * @return array
+     */
+    protected function readConfigs(array $blockPaths)
     {
         $pluginConfigs = [];
 
@@ -99,7 +132,7 @@ class ConfigRepositoryJson extends AbstractRepository implements Repository
             $configFileName = $pluginDir . '/block.json';
             $configFileContents = file_get_contents($configFileName);
             $config = json_decode($configFileContents, true, 512, JSON_BIGINT_AS_STRING);
-            $config['dir'] = $pluginDir;
+            $config['directory'] = $pluginDir;
             $config['template']['path'] = 'template';
             $pluginConfigs[$config['name']] = $config;
         }
@@ -107,10 +140,86 @@ class ConfigRepositoryJson extends AbstractRepository implements Repository
         return $pluginConfigs;
     }
 
+    /**
+     * search
+     *
+     * @param array $criteria
+     *
+     * @return array
+     */
+    protected function search(array $criteria = [])
+    {
+        $configs = $this->getConfigs();
+
+        $result = [];
+
+        foreach ($configs as $config) {
+            if ($this->filter($config, $criteria)) {
+                $result[] = $config;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * filter
+     *
+     * @param Config $config
+     * @param array  $criteria
+     *
+     * @return bool
+     */
+    protected function filter(Config $config, array $criteria = [])
+    {
+        $count = count($criteria);
+        $default = new stdClass();
+        $countResult = 0;
+        foreach ($criteria as $key => $value) {
+            $configValue = $config->get($key, $default);
+            if ($configValue === $value) {
+                $countResult++;
+            }
+        }
+
+        return ($countResult === $count);
+    }
+
+    /**
+     * find
+     *
+     * @param array      $criteria
+     * @param array|null $orderBy
+     * @param null       $limit
+     * @param null       $offset
+     *
+     * @return array|mixed
+     */
     public function find(array $criteria = [], array $orderBy = null, $limit = null, $offset = null)
     {
-        // @todo Honor criteria
+        if (empty($criteria)) {
+            return $this->getConfigs();
+        }
 
-
+        return $this->search($criteria);
     }
+
+    /**
+     * findOne
+     *
+     * @param array $criteria
+     *
+     * @return Config|null
+     */
+    public function findOne(array $criteria = [])
+    {
+        $result = $this->search($criteria);
+
+        if (count($result) > 0) {
+            return $result[0];
+        }
+
+        return null;
+    }
+
 }

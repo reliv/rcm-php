@@ -10,6 +10,11 @@ return [
     'blocks' => [
         // 'module/path/', to block.json
     ],
+
+    /**
+     * @GammaRelease
+     */
+    'block-default-render' => \Rcm\Block\Renderer::class,
     /**
      * @GammaRelease
      */

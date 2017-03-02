@@ -13,31 +13,9 @@ use Rcm\Core\Repository\Repository;
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class ConfigRepositoryBc extends AbstractRepository implements Repository
+class ConfigRepositoryBc extends AbstractRepository implements ConfigRepository
 {
-    /**
-     * @var ConfigProviderJson
-     */
-    protected $configProviderJson;
-
-    /**
-     * @var ConfigProviderOld
-     */
-    protected $configProviderOld;
-
-    /**
-     * Constructor.
-     *
-     * @param ConfigProviderJson $configProviderJson
-     * @param ConfigProviderOld  $configProviderOld
-     */
-    public function __construct(
-        ConfigProviderJson $configProviderJson,
-        ConfigProviderOld $configProviderOld
-    ) {
-        $this->configProviderJson = $configProviderJson;
-        $this->configProviderOld = $configProviderOld;
-    }
+    const CACHE_KEY = 'ConfigRepositoryBc';
 
     /**
      * __invoke
@@ -46,9 +24,6 @@ class ConfigRepositoryBc extends AbstractRepository implements Repository
      */
     public function __invoke()
     {
-        $configsJson = $this->configProviderJson->__invoke();
-        $configsOld = $this->configProviderOld->__invoke();
-
-        return array_merge($configsOld, $configsJson);
+        return [];
     }
 }

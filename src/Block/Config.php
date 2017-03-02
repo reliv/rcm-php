@@ -30,6 +30,13 @@ interface Config
     public function getName();
 
     /**
+     * getDirectory
+     *
+     * @return string
+     */
+    public function getDirectory();
+
+    /**
      * getCategory
      *
      * @return string

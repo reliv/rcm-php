@@ -8,18 +8,23 @@ use Rcm\Core\Repository\Repository;
 
 /**
  * @GammaRelease
- * Interface DataProviderRepository
+ * Interface RendererProviderRepositoryBasic
  *
  * @author    James Jervis
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class DataProviderRepository extends AbstractRepository implements Repository
+class RendererProviderRepositoryBasic extends AbstractRepository implements RendererProviderRepository
 {
     /**
      * @var array
      */
     protected $configRepository;
+
+    /**
+     * @var string
+     */
+    protected $defaultRenderServiceName;
 
     /**
      * @var ContainerInterface
@@ -29,14 +34,19 @@ class DataProviderRepository extends AbstractRepository implements Repository
     /**
      * Constructor.
      *
-     * @param ConfigRepository   $configRepository
-     * @param ContainerInterface $container
+     * @param ConfigRepository $configRepository
+     * @param                  $defaultRenderServiceName
+     * @param                  $container
      */
     public function __construct(
         ConfigRepository $configRepository,
+        $defaultRenderServiceName,
         $container
     ) {
         $this->configRepository = $configRepository;
+
+        $this->defaultRenderServiceName = $defaultRenderServiceName;
+
         $this->container = $container;
     }
 
@@ -45,7 +55,7 @@ class DataProviderRepository extends AbstractRepository implements Repository
      *
      * @param string $blockName
      *
-     * @return DataProvider
+     * @return Renderer
      */
     protected function getProviderService($blockName)
     {
@@ -53,12 +63,13 @@ class DataProviderRepository extends AbstractRepository implements Repository
         $config = $this->configRepository->findOne(['name' => $blockName]);
 
         if (empty($config)) {
-            return new DataProviderNoop();
+            return $this->container->get($this->defaultRenderServiceName);
         }
-        $serviceName = $config->getDataProvider();
+
+        $serviceName = $config->getRenderer();
 
         if (empty($serviceName)) {
-            return new DataProviderNoop();
+            return $this->container->get($this->defaultRenderServiceName);
         }
 
         return $this->container->get($serviceName);
@@ -69,7 +80,7 @@ class DataProviderRepository extends AbstractRepository implements Repository
      *
      * @param $blockName
      *
-     * @return DataProvider
+     * @return Renderer
      */
     public function findById($blockName)
     {
