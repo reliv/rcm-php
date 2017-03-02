@@ -60,6 +60,18 @@ class PageRenderer
     }
 
     /**
+     * __invoke
+     *
+     * @param PageRenderData $pageRenderData
+     *
+     * @return array [{containerName} => {string(HTML)}]
+     */
+    public function __invoke(PageRenderData $pageRenderData)
+    {
+        // @todo Build renderer that returns a list of containers with rendered HTML
+    }
+
+    /**
      * renderZf2
      *
      * @param Response       $response

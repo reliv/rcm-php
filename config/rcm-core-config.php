@@ -3,6 +3,24 @@
  * rcm-core-config.php
  */
 return [
+
+    /**
+     * @GammaRelease
+     */
+    'blocks' => [
+        // 'module/path/', to block.json
+    ],
+
+    /**
+     * @GammaRelease
+     */
+    'block-default-render' => \Rcm\Block\Renderer::class,
+    /**
+     * @GammaRelease
+     */
+    'blocks-json' => [
+        // 'module/path/', to block.json
+    ],
     /**
      * defaultDomain to use if domain not found E.I. IP address is used
      */
