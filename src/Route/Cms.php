@@ -3,7 +3,7 @@
 namespace Rcm\Route;
 
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 use Zend\Http\Request;
 use Zend\Mvc\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;

@@ -4,7 +4,7 @@ namespace Rcm\Controller;
 
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 use Zend\View\Model\JsonModel;
 
 /**

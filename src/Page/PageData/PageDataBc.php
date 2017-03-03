@@ -1,27 +1,58 @@
 <?php
 
-namespace Rcm\Entity;
+namespace Rcm\Page\PageData;
 
-use Rcm\Service\PageStatus;
+use Rcm\Core\Model\ApiModel;
+use Rcm\Core\Model\ApiModelAbstract;
+use Rcm\Entity\Page;
+use Rcm\Entity\Site;
+use Rcm\Page\PageStatus\PageStatus;
 
 /**
- * Class PageRenderData
+ * Class PageDataBc
  *
  * @author    James Jervis
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class PageRenderData extends AbstractApiModel implements ApiModelInterface
+class PageDataBc extends ApiModelAbstract implements ApiModel, PageData
 {
     /**
+     * @BC
      * @var Site|null
      */
     protected $site = null;
 
     /**
+     * @BC
      * @var Page|null
      */
     protected $page = null;
+
+    /**
+     * @var int
+     */
+    protected $siteId;
+
+    /**
+     * @var $pageId
+     */
+    protected $pageId;
+
+    /**
+     * @var int
+     */
+    protected $revisionId;
+
+    /**
+     * @var string
+     */
+    protected $title;
+
+    /**
+     * @var string
+     */
+    protected $theme;
 
     /**
      * @var int
@@ -62,6 +93,7 @@ class PageRenderData extends AbstractApiModel implements ApiModelInterface
     }
 
     /**
+     * @BC
      * @return Site|null
      */
     public function getSite()
@@ -70,14 +102,19 @@ class PageRenderData extends AbstractApiModel implements ApiModelInterface
     }
 
     /**
+     * @BC
+     *
      * @param Site $site
      */
     public function setSite(Site $site)
     {
         $this->site = $site;
+        $this->setSiteId($site->getSiteId());
+        $this->setTheme($site->getTheme());
     }
 
     /**
+     * @BC
      * @return Page|null
      */
     public function getPage()
@@ -86,11 +123,101 @@ class PageRenderData extends AbstractApiModel implements ApiModelInterface
     }
 
     /**
+     * @BC
+     *
      * @param Page $page
      */
     public function setPage(Page $page)
     {
         $this->page = $page;
+        $revision = $page->getCurrentRevision();
+        if (empty($revision)) {
+            $revision = $page->getPublishedRevision();
+        }
+        $revisionId = $revision->getRevisionId();
+        $this->setRevisionId($revisionId);
+        $this->setTitle($page->getPageTitle());
+        $this->setPageId($page->getPageId());
+    }
+
+    /**
+     * @return int
+     */
+    public function getSiteId()
+    {
+        return $this->siteId;
+    }
+
+    /**
+     * @param int $siteId
+     */
+    public function setSiteId($siteId)
+    {
+        $this->siteId = $siteId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPageId()
+    {
+        return $this->pageId;
+    }
+
+    /**
+     * @param mixed $pageId
+     */
+    public function setPageId($pageId)
+    {
+        $this->pageId = $pageId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRevisionId()
+    {
+        return $this->revisionId;
+    }
+
+    /**
+     * @param int $revisionId
+     */
+    public function setRevisionId($revisionId)
+    {
+        $this->revisionId = $revisionId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    /**
+     * @param string $theme
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
     }
 
     /**

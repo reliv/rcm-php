@@ -2,7 +2,7 @@
 
 namespace Rcm\Controller;
 
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 use Zend\View\Model\JsonModel;
 
 /**

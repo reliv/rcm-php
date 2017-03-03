@@ -1,10 +1,10 @@
 <?php
 
-namespace Rcm\Service;
+namespace Rcm\Page\PageTypes;
 
 /**
+ * @GammaRelease
  * Class PageTypes
- * n=Normal, t=Template, z=System, deleted-{originalPageType}
  *
  * @author    James Jervis
  * @license   License.txt
@@ -12,9 +12,21 @@ namespace Rcm\Service;
  */
 class PageTypes
 {
+    /**
+     * n=Normal
+     */
     const NORMAL = 'n';
+    /**
+     * t=Template,
+     */
     const TEMPLATE = 't';
+    /**
+     * z=System
+     */
     const SYSTEM = 'z';
+    /*
+     * deleted-{originalPageType}
+     */
     const DELETED = 'deleted-{originalPageType}';
 
     /**

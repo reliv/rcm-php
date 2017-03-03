@@ -3,7 +3,7 @@
 namespace Rcm\Controller\Plugin;
 
 use Rcm\Acl\CmsPermissionChecks;
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**

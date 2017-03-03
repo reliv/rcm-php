@@ -11,7 +11,7 @@ use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\PageException;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Exception\RuntimeException;
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 
 /**
  * Page Repository

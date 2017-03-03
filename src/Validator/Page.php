@@ -2,8 +2,8 @@
 
 namespace Rcm\Validator;
 
+use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Repository\Page as PageRepo;
-use Rcm\Service\PageTypes;
 
 /**
  * Rcm Page Validator

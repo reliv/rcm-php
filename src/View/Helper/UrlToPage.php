@@ -2,7 +2,7 @@
 
 namespace Rcm\View\Helper;
 
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 use Zend\View\Helper\AbstractHelper;
 
 /**

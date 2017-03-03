@@ -2,6 +2,8 @@
 
 namespace Rcm\Entity;
 
+use Rcm\Core\Model\ApiModel;
+
 /**
  * interface ApiModelInterface
  *
@@ -10,7 +12,7 @@ namespace Rcm\Entity;
  * @license   License.txt
  * @link      https://github.com/reliv
  */
-interface ApiModelInterface extends \Reliv\RcmApiLib\Model\ApiModelInterface
+interface ApiModelInterface extends ApiModel
 {
 
 }

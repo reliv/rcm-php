@@ -1,4 +1,4 @@
-Gamma Release
+@GammaRelease
 =============
 
 Folder Structure Guidelines (proposed)

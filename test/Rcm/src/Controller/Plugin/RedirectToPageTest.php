@@ -21,7 +21,7 @@ namespace RcmTest\Controller\Plugin;
 require_once __DIR__ . '/../../../../autoload.php';
 
 use Rcm\Controller\Plugin\RedirectToPage;
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 use Zend\Http\Response;
 
 /**

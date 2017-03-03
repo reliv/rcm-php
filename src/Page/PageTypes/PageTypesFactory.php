@@ -1,10 +1,11 @@
 <?php
 
-namespace Rcm\Service;
+namespace Rcm\Page\PageTypes;
 
 use Interop\Container\ContainerInterface;
 
 /**
+ * @GammaRelease
  * Class PageTypesFactory
  *
  * @author    James Jervis

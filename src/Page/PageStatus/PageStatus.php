@@ -1,8 +1,9 @@
 <?php
 
-namespace Rcm\Service;
+namespace Rcm\Page\PageStatus;
 
 /**
+ * @GammaRelease
  * Class PageStatus
  *
  * @author    James Jervis
