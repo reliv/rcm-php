@@ -3,6 +3,7 @@
 namespace Rcm\Factory;
 
 use Rcm\Controller\CmsController;
+use Rcm\Page\Renderer\PageRendererBc;
 use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -49,7 +50,7 @@ class CmsControllerFactory implements FactoryInterface
         $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
 
         return new CmsController(
-            $serviceLocator->get(PageRenderer::class),
+            $serviceLocator->get(PageRendererBc::class),
             $currentSite
         );
     }

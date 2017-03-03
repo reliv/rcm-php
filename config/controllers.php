@@ -30,7 +30,7 @@ return [
         ],
     ],
     'factories' => [
-        'Rcm\Controller\IndexController' => 'Rcm\Factory\IndexControllerFactory',
-        'Rcm\Controller\CmsController' => 'Rcm\Factory\CmsControllerFactory',
+        Rcm\Controller\IndexController::class => Rcm\Factory\IndexControllerFactory::class,
+        Rcm\Controller\CmsController::class => Rcm\Factory\CmsControllerFactory::class,
     ],
 ];

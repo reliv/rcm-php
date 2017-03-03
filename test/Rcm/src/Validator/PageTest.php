@@ -19,7 +19,7 @@
 
 namespace RcmTest\Validator;
 
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Validator\Page;
 
 require_once __DIR__ . '/../../../autoload.php';
@@ -136,11 +136,13 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->pageRepo->expects($this->once())
             ->method('findOneBy')
             ->with(
-                $this->equalTo([
+                $this->equalTo(
+                    [
                         'name' => $pageName,
                         'pageType' => $pageType,
                         'site' => 1
-                    ])
+                    ]
+                )
             )
             ->will($this->returnValue(false));
 
@@ -168,11 +170,13 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->pageRepo->expects($this->once())
             ->method('findOneBy')
             ->with(
-                $this->equalTo([
+                $this->equalTo(
+                    [
                         'name' => $pageName,
                         'pageType' => $pageType,
                         'site' => 1
-                    ])
+                    ]
+                )
             )
             ->will($this->returnValue(true));
 

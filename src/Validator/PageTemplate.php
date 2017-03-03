@@ -3,8 +3,8 @@
 namespace Rcm\Validator;
 
 use Rcm\Entity\Site;
+use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Repository\Page as PageRepo;
-use Rcm\Service\PageTypes;
 use Zend\Validator\AbstractValidator;
 
 /**

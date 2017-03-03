@@ -30,18 +30,18 @@ return [
      * Available page types
      */
     'pageTypes' => [
-        \Rcm\Service\PageTypes::NORMAL => [
-            'type' => \Rcm\Service\PageTypes::NORMAL,
+        \Rcm\Page\PageTypes\PageTypes::NORMAL => [
+            'type' => \Rcm\Page\PageTypes\PageTypes::NORMAL,
             'title' => 'Normal Page',
             'canClone' => true,
         ],
-        \Rcm\Service\PageTypes::TEMPLATE => [
-            'type' => \Rcm\Service\PageTypes::TEMPLATE,
+        \Rcm\Page\PageTypes\PageTypes::TEMPLATE => [
+            'type' => \Rcm\Page\PageTypes\PageTypes::TEMPLATE,
             'title' => 'Template Page',
             'canClone' => true,
         ],
-        \Rcm\Service\PageTypes::SYSTEM => [
-            'type' => \Rcm\Service\PageTypes::SYSTEM,
+        \Rcm\Page\PageTypes\PageTypes::SYSTEM => [
+            'type' => \Rcm\Page\PageTypes\PageTypes::SYSTEM,
             'title' => 'System Page',
             'canClone' => true,
         ],
@@ -63,10 +63,10 @@ return [
      * so page will return with status 404 on substitution
      */
     'pageNameStatusMap' => [
-        'not-found' => \Rcm\Service\PageStatus::STATUS_NOT_FOUND,
-        '404' => \Rcm\Service\PageStatus::STATUS_NOT_FOUND,
-        'not-authorized' => \Rcm\Service\PageStatus::STATUS_NOT_AUTHORIZED,
-        '401' => \Rcm\Service\PageStatus::STATUS_NOT_AUTHORIZED,
+        'not-found' => \Rcm\Page\PageStatus\PageStatus::STATUS_NOT_FOUND,
+        '404' => \Rcm\Page\PageStatus\PageStatus::STATUS_NOT_FOUND,
+        'not-authorized' => \Rcm\Page\PageStatus\PageStatus::STATUS_NOT_AUTHORIZED,
+        '401' => \Rcm\Page\PageStatus\PageStatus::STATUS_NOT_AUTHORIZED,
     ],
 
     /**

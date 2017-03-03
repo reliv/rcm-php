@@ -20,7 +20,7 @@
 namespace RcmTest\Validator;
 
 use Rcm\Entity\Site;
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Validator\PageTemplate;
 
 require_once __DIR__ . '/../../../autoload.php';

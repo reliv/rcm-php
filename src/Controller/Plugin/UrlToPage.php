@@ -2,7 +2,7 @@
 
 namespace Rcm\Controller\Plugin;
 
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**

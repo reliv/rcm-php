@@ -1,21 +1,5 @@
 <?php
-/**
- * Unit Test for the IndexController
- *
- * This file contains the unit test for the IndexController
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
+
 namespace RcmTest\Controller;
 
 require_once __DIR__ . '/../../../autoload.php';
@@ -23,8 +7,8 @@ require_once __DIR__ . '/../../../autoload.php';
 use Rcm\Controller\IndexController;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
-use Rcm\Renderer\PageRenderer;
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
+use Rcm\Page\Renderer\PageRendererBc;
 
 /**
  * Unit Test for the IndexController
@@ -42,6 +26,11 @@ use Rcm\Service\PageTypes;
 class IndexControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var PageRendererBc
+     */
+    protected $pageRenderer;
+
+    /**
      * Setup for tests
      *
      * @return null
@@ -49,7 +38,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->pageRenderer = $this
-            ->getMockBuilder(PageRenderer::class)
+            ->getMockBuilder(PageRendererBc::class)
             ->disableOriginalConstructor()
             ->getMock();
 

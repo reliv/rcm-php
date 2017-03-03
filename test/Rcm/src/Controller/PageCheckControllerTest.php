@@ -21,7 +21,7 @@ namespace RcmTest\Controller;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Controller\PageCheckController;
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;

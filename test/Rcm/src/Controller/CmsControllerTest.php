@@ -21,18 +21,11 @@ namespace RcmTest\Controller;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\Controller\CmsController;
-use Rcm\Entity\Country;
-use Rcm\Entity\Domain;
-use Rcm\Entity\Language;
 use Rcm\Entity\Page;
-use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
+use Rcm\Page\Renderer\PageRendererBc;
 use Rcm\Renderer\PageRenderer;
-use Zend\Http\Request;
 use Zend\Http\Response;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Zend\Mvc\Router\RouteMatch;
 
 /**
  * Unit Test for the CmsController
@@ -50,14 +43,20 @@ use Zend\Mvc\Router\RouteMatch;
 class CmsControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var PageRendererBc
+     */
+    protected $pageRenderer;
+
+    /**
      * Setup for tests
      *
      * @return null
      */
     public function setUp()
     {
+        /** @var PageRendererBc pageRenderer */
         $this->pageRenderer = $this
-            ->getMockBuilder(PageRenderer::class)
+            ->getMockBuilder(PageRendererBc::class)
             ->disableOriginalConstructor()
             ->getMock();
 

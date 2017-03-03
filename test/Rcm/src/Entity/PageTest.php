@@ -26,7 +26,7 @@ use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 
 /**
  * Unit Test for Page Entity

@@ -54,14 +54,17 @@ return [
         \Rcm\Middleware\RedirectCheck::class
         => \Rcm\Factory\MiddlewareRedirectCheckFactory::class,
 
-        /* PAGE */
-
-        \Rcm\Page\Renderer\Renderer::class
+        /* PAGE *
+        /* @GammaRelease */
+        \Rcm\Page\Renderer\PageRendererBc::class
         => \Rcm\Page\Renderer\PageRendererBcFactory::class,
+        /* @GammaRelease */
         \Rcm\Page\PageData\PageDataService::class
         => \Rcm\Page\PageData\PageDataServiceFactory::class,
+        /* @GammaRelease */
         \Rcm\Page\PageStatus\PageStatus::class
         => \Rcm\Page\PageStatus\PageStatusFactory::class,
+        /* @GammaRelease */
         \Rcm\Page\PageTypes\PageTypes::class
         => \Rcm\Page\PageTypes\PageTypesFactory::class,
 

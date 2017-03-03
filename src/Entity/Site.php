@@ -5,7 +5,7 @@ namespace Rcm\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
