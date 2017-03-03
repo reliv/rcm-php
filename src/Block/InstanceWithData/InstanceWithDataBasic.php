@@ -10,7 +10,7 @@ use Rcm\Block\Instance\InstanceBasic;
  * Interface BlockInstance
  * @package     Rcm\Entity
  */
-class DataBasic extends InstanceBasic implements InstanceWithData
+class InstanceWithDataBasic extends InstanceBasic implements InstanceWithData
 {
     /**
      * @var array
@@ -25,10 +25,10 @@ class DataBasic extends InstanceBasic implements InstanceWithData
      * @param array  $name
      * @param array  $data
      */
-    public function __construct($id, $config, $name, $data = [])
+    public function __construct($id, $name, $config, $data = [])
     {
         $this->data = $data;
-        parent::__construct($id, $config, $name);
+        parent::__construct($id, $name, $config);
     }
 
     /**

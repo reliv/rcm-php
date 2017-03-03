@@ -2,6 +2,8 @@
 
 namespace Rcm\Factory;
 
+use Rcm\Block\Renderer\RendererBc;
+use Rcm\Page\Renderer\PageRendererBc;
 use Rcm\Service\PluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -58,7 +60,8 @@ class PluginManagerFactory implements FactoryInterface
             $viewRenderer,
             $request,
             $cache,
-            $viewEventManager
+            $viewEventManager,
+            $serviceLocator->get(RendererBc::class)
         );
     }
 }

@@ -37,7 +37,7 @@ return [
         \Rcm\Block\Renderer\RendererService::class
         => \Rcm\Block\Renderer\RendererServiceFactory::class,
 
-        \PluginBc\PluginRenderer::class => \PluginBc\PluginRenderFactory::class,
+        \Rcm\Block\Renderer\RendererBc::class=>\Rcm\Block\Renderer\RendererBcFactory::class,
 
         'Rcm\EventListener\EventWrapper'
         => 'Rcm\Factory\EventWrapperFactory',
