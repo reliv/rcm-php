@@ -3,22 +3,15 @@
  * rcm-core-config.php
  */
 return [
+    /**
+     * @GammaRelease
+     */
+    'block-default-render' => \Rcm\Block\Renderer\Renderer::class,
 
     /**
      * @GammaRelease
      */
     'blocks' => [
-        // 'module/path/', to block.json
-    ],
-
-    /**
-     * @GammaRelease
-     */
-    'block-default-render' => \Rcm\Block\Renderer::class,
-    /**
-     * @GammaRelease
-     */
-    'blocks-json' => [
         // 'module/path/', to block.json
     ],
     /**
