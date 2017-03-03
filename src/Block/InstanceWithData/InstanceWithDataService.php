@@ -31,7 +31,7 @@ class InstanceWithDataService
      * Constructor.
      *
      * @param InstanceRepository $instanceRepository
-     * @param DataService        $dataService
+     * @param DataService $dataService
      */
     public function __construct(
         InstanceRepository $instanceRepository,
@@ -46,7 +46,7 @@ class InstanceWithDataService
      * is used to return any custom data in addition to the instance config to the plugin
      * template for rendering.
      *
-     * @param string                 $instanceId
+     * @param string $instanceId
      * @param ServerRequestInterface $request
      *
      * @return null|DataBasic
@@ -62,8 +62,9 @@ class InstanceWithDataService
 
         $data = $this->dataService->__invoke($instance, $request);
 
-        $dataInstance = new DataBasic(
+        $dataInstance = new InstanceWithDataBasic(
             $instance->getId(),
+            $instance->getName(),
             $instance->getConfig(),
             $data
         );
