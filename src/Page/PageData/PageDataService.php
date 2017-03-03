@@ -1,23 +1,25 @@
 <?php
 
-namespace Rcm\Service;
+namespace Rcm\Page\PageData;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Acl\CmsPermissionChecks;
 use Rcm\Entity\Page;
-use Rcm\Entity\PageRenderData;
 use Rcm\Entity\Site;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Exception\RevisionNotFoundException;
+use Rcm\Page\PageStatus\PageStatus;
+use Rcm\Page\PageTypes\PageTypes;
 
 /**
- * Class PageRenderDataService
+ * @GammaRelease
+ * Class PageDataService
  *
  * @author    James Jervis
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class PageRenderDataService
+class PageDataService
 {
     /**
      * @var EntityManager
@@ -76,11 +78,11 @@ class PageRenderDataService
     /**
      * getNew
      *
-     * @return PageRenderData
+     * @return PageDataBc
      */
     public function getNew()
     {
-        return new PageRenderData();
+        return new PageDataBc();
     }
 
     /**
@@ -91,7 +93,7 @@ class PageRenderDataService
      * @param string $pageType
      * @param null   $revisionId
      *
-     * @return PageRenderData
+     * @return PageData
      */
     public function getData(
         Site $site,
@@ -99,9 +101,9 @@ class PageRenderDataService
         $pageType = PageTypes::NORMAL,
         $revisionId = null
     ) {
-        $pageRenderData = $this->getNew();
-        $pageRenderData->setSite($site);
-        $pageRenderData->setRequestedPage(
+        $pageData = $this->getNew();
+        $pageData->setSite($site);
+        $pageData->setRequestedPage(
             [
                 'name' => strtolower($pageName),
                 'type' => strtolower($pageType),
@@ -122,36 +124,36 @@ class PageRenderDataService
         );
 
         if (empty($page)) {
-            $pageRenderData->setHttpStatus(
+            $pageData->setHttpStatus(
                 $this->pageStatus->getNotFoundStatus()
             );
 
-            return $pageRenderData;
+            return $pageData;
         }
 
         $allowed = $this->cmsPermissionChecks->isPageAllowedForReading($page);
 
         if (!$allowed) {
-            $pageRenderData->setHttpStatus(
+            $pageData->setHttpStatus(
                 $this->pageStatus->getNotAuthorizedStatus()
             );
 
-            return $pageRenderData;
+            return $pageData;
         }
 
-        $pageRenderData->setPage($page);
+        $pageData->setPage($page);
 
         // @todo FUTURE Insert Block data (plugin data)
-        // $pageRenderData->setBlocks([]);
+        // $pageData->setBlocks([]);
 
-        $pageRenderData->setHttpStatus(
+        $pageData->setHttpStatus(
             $this->getStatus(
-                $pageRenderData->getRequestedPageName(),
+                $pageData->getRequestedPageName(),
                 $page->getName()
             )
         );
 
-        return $pageRenderData;
+        return $pageData;
     }
 
     /**

@@ -1,32 +1,32 @@
 <?php
 
-namespace Rcm\Renderer;
+namespace Rcm\Page\PageData;
 
 use Interop\Container\ContainerInterface;
-use Rcm\Service\PageRenderDataService;
-use Rcm\Service\PageStatus;
+use Rcm\Page\PageStatus\PageStatus;
 
 /**
- * Class PageRendererFactory
+ * @GammaRelease
+ * Class PageDataServiceFactory
  *
  * @author    James Jervis
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class PageRendererFactory
+class PageDataServiceFactory
 {
     /**
      * __invoke
      *
      * @param ContainerInterface $container
      *
-     * @return PageRenderer
+     * @return PageDataService
      */
     public function __invoke($container)
     {
-        return new PageRenderer(
-            $container->get('Rcm\Service\LayoutManager'),
-            $container->get(PageRenderDataService::class),
+        return new PageDataService(
+            $container->get('Doctrine\ORM\EntityManager'),
+            $container->get('Rcm\Acl\CmsPermissionsChecks'),
             $container->get(PageStatus::class)
         );
     }

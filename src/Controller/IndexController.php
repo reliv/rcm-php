@@ -3,8 +3,8 @@
 namespace Rcm\Controller;
 
 use Rcm\Entity\Site;
-use Rcm\Renderer\PageRenderer;
-use Rcm\Service\PageTypes;
+use Rcm\Page\PageTypes\PageTypes;
+use Rcm\Page\Renderer\PageRendererBc;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -31,11 +31,11 @@ class IndexController extends AbstractActionController
     /**
      * Constructor.
      *
-     * @param PageRenderer $pageRenderer
+     * @param PageRendererBc $pageRenderer
      * @param Site       $currentSite
      */
     public function __construct(
-        PageRenderer $pageRenderer,
+        PageRendererBc $pageRenderer,
         Site $currentSite
     ) {
         $this->pageRenderer = $pageRenderer;
@@ -45,7 +45,7 @@ class IndexController extends AbstractActionController
     /**
      * getPageRenderer
      *
-     * @return PageRenderer
+     * @return PageRendererBc
      */
     protected function getPageRenderer()
     {

@@ -11,6 +11,7 @@ return [
         'Rcm\Acl\ResourceProvider'
         => 'Rcm\Factory\AclResourceProviderFactory',
 
+        /* BLOCK */
         /* @GammaRelease */
         \Rcm\Block\Config\ConfigFields::class
         => \Rcm\Block\Config\ConfigFieldsFactory::class,
@@ -53,8 +54,16 @@ return [
         \Rcm\Middleware\RedirectCheck::class
         => \Rcm\Factory\MiddlewareRedirectCheckFactory::class,
 
-        \Rcm\Renderer\PageRenderer::class
-        => \Rcm\Renderer\PageRendererFactory::class,
+        /* PAGE */
+
+        \Rcm\Page\Renderer\Renderer::class
+        => \Rcm\Page\Renderer\PageRendererBcFactory::class,
+        \Rcm\Page\PageData\PageDataService::class
+        => \Rcm\Page\PageData\PageDataServiceFactory::class,
+        \Rcm\Page\PageStatus\PageStatus::class
+        => \Rcm\Page\PageStatus\PageStatusFactory::class,
+        \Rcm\Page\PageTypes\PageTypes::class
+        => \Rcm\Page\PageTypes\PageTypesFactory::class,
 
         'Rcm\Service\AssetManagerCache'
         => 'Rcm\Factory\AssetManagerCacheFactory',
@@ -74,12 +83,6 @@ return [
         => \Rcm\Factory\ServiceLocaleServiceFactory::class,
         'Rcm\Service\Logger'
         => 'Rcm\Factory\LoggerFactory',
-        \Rcm\Service\PageRenderDataService::class
-        => \Rcm\Service\PageRenderDataServiceFactory::class,
-        \Rcm\Service\PageStatus::class
-        => \Rcm\Service\PageStatusFactory::class,
-        \Rcm\Service\PageTypes::class
-        => \Rcm\Service\PageTypesFactory::class,
         'Rcm\Service\PluginManager'
         => 'Rcm\Factory\PluginManagerFactory',
         'Rcm\Service\RcmUser'

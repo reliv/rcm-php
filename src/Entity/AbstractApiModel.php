@@ -2,6 +2,8 @@
 
 namespace Rcm\Entity;
 
+use Rcm\Core\Model\ApiModelAbstract;
+
 /**
  * Class AbstractApiModel
  *
@@ -10,7 +12,7 @@ namespace Rcm\Entity;
  * @license   License.txt
  * @link      https://github.com/reliv
  */
-abstract class AbstractApiModel extends \Reliv\RcmApiLib\Model\AbstractApiModel implements ApiModelInterface
+abstract class AbstractApiModel extends ApiModelAbstract implements ApiModelInterface
 {
 
 }

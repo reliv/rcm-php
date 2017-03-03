@@ -1,15 +1,15 @@
 <?php
 
-namespace Rcm\Renderer;
+namespace Rcm\Page\Renderer;
 
 use Rcm\Entity\Page;
-use Rcm\Entity\PageRenderData;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
+use Rcm\Page\PageData\PageData;
+use Rcm\Page\PageData\PageDataBc;
+use Rcm\Page\PageData\PageDataService;
+use Rcm\Page\PageStatus\PageStatus;
 use Rcm\Service\LayoutManager;
-use Rcm\Service\PageRenderDataService;
-use Rcm\Service\PageStatus;
-use Rcm\Service\PageTypes;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
 
@@ -20,7 +20,7 @@ use Zend\View\Model\ViewModel;
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class PageRenderer
+class PageRendererBc
 {
     /**
      * @var LayoutManager
@@ -36,16 +36,16 @@ class PageRenderer
      * Constructor.
      *
      * @param LayoutManager         $layoutManager
-     * @param PageRenderDataService $pageRenderDataService
+     * @param PageDataService $pageDataService
      * @param PageStatus            $pageStatus
      */
     public function __construct(
         LayoutManager $layoutManager,
-        PageRenderDataService $pageRenderDataService,
+        PageDataService $pageDataService,
         PageStatus $pageStatus
     ) {
         $this->layoutManager = $layoutManager;
-        $this->pageRenderDataService = $pageRenderDataService;
+        $this->pageDataService = $pageDataService;
         $this->pageStatus = $pageStatus;
     }
 
@@ -60,24 +60,12 @@ class PageRenderer
     }
 
     /**
-     * __invoke
-     *
-     * @param PageRenderData $pageRenderData
-     *
-     * @return array [{containerName} => {string(HTML)}]
-     */
-    public function __invoke(PageRenderData $pageRenderData)
-    {
-        // @todo Build renderer that returns a list of containers with rendered HTML
-    }
-
-    /**
      * renderZf2
      *
      * @param Response       $response
      * @param ModelInterface $layoutView
      * @param ViewModel      $viewModel
-     * @param PageRenderData $pageRenderData
+     * @param PageDataBc       $pageData
      *
      * @return Response|ViewModel
      */
@@ -85,15 +73,15 @@ class PageRenderer
         Response $response,
         ModelInterface $layoutView,
         ViewModel $viewModel,
-        PageRenderData $pageRenderData
+        PageDataBc $pageData
     ) {
-        if (empty($pageRenderData->getPage())) {
+        if (empty($pageData->getPage())) {
             $response->setStatusCode($this->pageStatus->getNotFoundStatus());
 
             return $response;
         }
 
-        $httpStatus = $pageRenderData->getHttpStatus();
+        $httpStatus = $pageData->getHttpStatus();
 
         if ($httpStatus == $this->pageStatus->getNotAuthorizedStatus()) {
             $response->setStatusCode($this->pageStatus->getNotAuthorizedStatus());
@@ -105,9 +93,9 @@ class PageRenderer
             $httpStatus
         );
 
-        $site = $pageRenderData->getSite();
-        $page = $pageRenderData->getPage();
-        $requestedPageData = $pageRenderData->getRequestedPage();
+        $site = $pageData->getSite();
+        $page = $pageData->getPage();
+        $requestedPageData = $pageData->getRequestedPage();
 
         $layoutView = $this->prepareLayoutView(
             $layoutView,
@@ -177,7 +165,7 @@ class PageRenderer
         $pageType = PageTypes::NORMAL,
         $revisionId = null
     ) {
-        $pageRenderData = $this->pageRenderDataService->getData(
+        $pageData = $this->pageDataService->getData(
             $site,
             $pageName,
             $pageType,
@@ -188,7 +176,7 @@ class PageRenderer
             $response,
             $layoutView,
             $viewModel,
-            $pageRenderData
+            $pageData
         );
     }
 

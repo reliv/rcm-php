@@ -3,11 +3,8 @@
 namespace Rcm\Controller;
 
 use Rcm\Entity\Page;
-use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
-use Rcm\Exception\PageNotFoundException;
-use Rcm\Renderer\PageRenderer;
-use Zend\Http\Response;
+use Rcm\Page\Renderer\PageRendererBc;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -26,18 +23,18 @@ class CmsController extends AbstractActionController
     protected $currentSite;
 
     /**
-     * @var PageRenderer
+     * @var PageRendererBc
      */
     protected $pageRenderer;
 
     /**
      * Constructor.
      *
-     * @param PageRenderer $pageRenderer
-     * @param Site       $currentSite
+     * @param PageRendererBc $pageRenderer
+     * @param Site           $currentSite
      */
     public function __construct(
-        PageRenderer $pageRenderer,
+        PageRendererBc $pageRenderer,
         Site $currentSite
     ) {
         $this->pageRenderer = $pageRenderer;
@@ -47,7 +44,7 @@ class CmsController extends AbstractActionController
     /**
      * getPageRenderer
      *
-     * @return PageRenderer
+     * @return PageRendererBc
      */
     protected function getPageRenderer()
     {

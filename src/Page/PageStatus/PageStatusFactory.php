@@ -1,10 +1,11 @@
 <?php
 
-namespace Rcm\Service;
+namespace Rcm\Page\PageStatus;
 
 use Interop\Container\ContainerInterface;
 
 /**
+ * @GammaRelease
  * Class PageStatusFactory
  *
  * @author    James Jervis
