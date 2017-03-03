@@ -53,11 +53,6 @@ class PluginRenderer implements Renderer
                 'Returning responses from plugin controllers is no longer supported.
                  The following plugin attempted this: ' . $blockInstance->getName()
             );
-//            $event = new ViewEvent();
-//            $event->setResponse($viewModel);
-//            $this->eventManager->trigger(ViewEvent::EVENT_RESPONSE, $event);
-//
-//            return null;
         }
 
         /** @var \Zend\View\Helper\Headlink $headlink */
