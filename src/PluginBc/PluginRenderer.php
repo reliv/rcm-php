@@ -78,7 +78,8 @@ class PluginRenderer implements Renderer
             $headHtml .= '<script type="' . $scriptTag->type . '" source="' . $scriptTag->source . '"/>;';
         }
         foreach ($css as $headLinkTag) {
-            $headHtml .= '<script type="' . $headLinkTag->type . '" href="' . $headLinkTag->href . ' media="' . $headLinkTag->media . '"/>;';
+            $headHtml .= '<script type="' . $headLinkTag->type . '" href="' .
+                $headLinkTag->href . ' media="' . $headLinkTag->media . '"/>;';
         }
 
         //Put the old things back in the PhpRenderer so we don't damage whatever is was doing before us. (seems hacky)
