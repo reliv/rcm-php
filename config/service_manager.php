@@ -12,23 +12,29 @@ return [
         => 'Rcm\Factory\AclResourceProviderFactory',
 
         /* @GammaRelease */
-        \Rcm\Block\ConfigFields::class
-        => \Rcm\Block\ConfigFieldsFactory::class,
+        \Rcm\Block\Config\ConfigFields::class
+        => \Rcm\Block\Config\ConfigFieldsFactory::class,
         /* @GammaRelease */
-        \Rcm\Block\ConfigRepository::class
-        => \Rcm\Block\ConfigRepositoryJsonFactory::class,
+        \Rcm\Block\Config\ConfigRepository::class
+        => \Rcm\Block\Config\ConfigRepositoryJsonFactory::class,
         /* @GammaRelease */
-        \Rcm\Block\DataInstanceService::class
-        => \Rcm\Block\DataInstanceServiceFactory::class,
+        \Rcm\Block\DataProvider\DataProviderRepository::class
+        => \Rcm\Block\DataProvider\DataProviderRepositoryBasicFactory::class,
         /* @GammaRelease */
-        \Rcm\Block\DataProviderRepository::class
-        => \Rcm\Block\DataProviderRepositoryBasicFactory::class,
+        \Rcm\Block\DataProvider\DataService::class
+        => \Rcm\Block\DataProvider\DataServiceFactory::class,
         /* @GammaRelease */
-        \Rcm\Block\InstanceRepository::class
-        => \Rcm\Block\InstanceRepositoryBcFactory::class,
+        \Rcm\Block\InstanceWithData\InstanceWithDataService::class
+        => \Rcm\Block\InstanceWithData\InstanceWithDataServiceFactory::class,
         /* @GammaRelease */
-        \Rcm\Block\RendererProviderRepository::class
-        => \Rcm\Block\RendererProviderRepositoryBasicFactory::class,
+        \Rcm\Block\Instance\InstanceRepository::class
+        => \Rcm\Block\Instance\InstanceRepositoryBcFactory::class,
+        /* @GammaRelease */
+        \Rcm\Block\Renderer\RendererRepository::class
+        => \Rcm\Block\Renderer\RendererRepositoryBasicFactory::class,
+        /* @GammaRelease */
+        \Rcm\Block\Renderer\RendererService::class
+        =>\Rcm\Block\Renderer\RendererServiceFactory::class,
 
         'Rcm\EventListener\EventWrapper'
         => 'Rcm\Factory\EventWrapperFactory',
