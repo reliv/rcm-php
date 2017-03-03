@@ -17,6 +17,9 @@ return [
         => \Rcm\Block\Config\ConfigFieldsFactory::class,
         /* @GammaRelease */
         \Rcm\Block\Config\ConfigRepository::class
+        => \Rcm\Block\Config\ConfigRepositoryBcFactory::class,
+        /* @GammaRelease */
+        \Rcm\Block\Config\ConfigRepositoryJson::class
         => \Rcm\Block\Config\ConfigRepositoryJsonFactory::class,
         /* @GammaRelease */
         \Rcm\Block\DataProvider\DataProviderRepository::class
