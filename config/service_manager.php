@@ -34,7 +34,9 @@ return [
         => \Rcm\Block\Renderer\RendererRepositoryBasicFactory::class,
         /* @GammaRelease */
         \Rcm\Block\Renderer\RendererService::class
-        =>\Rcm\Block\Renderer\RendererServiceFactory::class,
+        => \Rcm\Block\Renderer\RendererServiceFactory::class,
+
+        \PluginBc\PluginRenderer::class => \PluginBc\PluginRenderFactory::class,
 
         'Rcm\EventListener\EventWrapper'
         => 'Rcm\Factory\EventWrapperFactory',
@@ -104,9 +106,9 @@ return [
         => 'Rcm\Factory\MainLayoutValidatorFactory',
     ],
     'invokables' => [
-        'Rcm\Service\DisplayCountService' => 'Rcm\Service\DisplayCountService'
-    ],
+    'Rcm\Service\DisplayCountService' => 'Rcm\Service\DisplayCountService'
+],
     'aliases' => [
-        'rcmLogger' => 'Rcm\Service\Logger',
-    ]
+    'rcmLogger' => 'Rcm\Service\Logger',
+]
 ];

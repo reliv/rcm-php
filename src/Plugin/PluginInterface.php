@@ -60,8 +60,7 @@ interface PluginInterface
     public function getEvent();
 
     /**
-     * @param \Zend\EventManager\Event $event
-     *
+     * @param Event $event
      * @return void
      */
     public function setEvent(Event $event);
