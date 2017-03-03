@@ -2,9 +2,7 @@
 
 namespace Rcm\Block\Config;
 
-use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Rcm\Core\Cache\Cache;
-use Rcm\Core\Repository\AbstractRepository;
 
 /**
  * @GammaRelease
@@ -14,7 +12,7 @@ use Rcm\Core\Repository\AbstractRepository;
  * @license   License.txt
  * @link      https://github.com/jerv13
  */
-class ConfigRepositoryJson extends AbstractRepository implements ConfigRepository
+class ConfigRepositoryJson extends ConfigRepositoryArray implements ConfigRepository
 {
     const CACHE_KEY = 'ConfigRepositoryJson';
     /**
@@ -139,87 +137,4 @@ class ConfigRepositoryJson extends AbstractRepository implements ConfigRepositor
 
         return $pluginConfigs;
     }
-
-    /**
-     * search
-     *
-     * @param array $criteria
-     *
-     * @return array
-     */
-    protected function search(array $criteria = [])
-    {
-        $configs = $this->getConfigs();
-
-        $result = [];
-
-        foreach ($configs as $config) {
-            if ($this->filter($config, $criteria)) {
-                $result[] = $config;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * filter
-     *
-     * @param Config $config
-     * @param array  $criteria
-     *
-     * @return bool
-     */
-    protected function filter(Config $config, array $criteria = [])
-    {
-        $count = count($criteria);
-        $default = new stdClass();
-        $countResult = 0;
-        foreach ($criteria as $key => $value) {
-            $configValue = $config->get($key, $default);
-            if ($configValue === $value) {
-                $countResult++;
-            }
-        }
-
-        return ($countResult === $count);
-    }
-
-    /**
-     * find
-     *
-     * @param array      $criteria
-     * @param array|null $orderBy
-     * @param null       $limit
-     * @param null       $offset
-     *
-     * @return array|mixed
-     */
-    public function find(array $criteria = [], array $orderBy = null, $limit = null, $offset = null)
-    {
-        if (empty($criteria)) {
-            return $this->getConfigs();
-        }
-
-        return $this->search($criteria);
-    }
-
-    /**
-     * findOne
-     *
-     * @param array $criteria
-     *
-     * @return Config|null
-     */
-    public function findOne(array $criteria = [])
-    {
-        $result = $this->search($criteria);
-
-        if (count($result) > 0) {
-            return $result[0];
-        }
-
-        return null;
-    }
-
 }
