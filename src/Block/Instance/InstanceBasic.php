@@ -35,7 +35,7 @@ class InstanceBasic implements Instance
     public function __construct($id, $name, $config)
     {
         $this->id = $id;
-        $this->name;
+        $this->name = $name;
         $this->config = $config;
     }
 

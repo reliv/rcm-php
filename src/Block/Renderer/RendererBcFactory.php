@@ -1,14 +1,14 @@
 <?php
 
-namespace PluginBc;
+namespace Rcm\Block\Renderer;
 
 use Interop\Container\ContainerInterface;
 
-class PluginRenderFactory
+class RendererBcFactory
 {
     public function __invoke(ContainerInterface $container)
     {
-        return new PluginRenderer(
+        return new RendererBc(
             $container,
             $container->get('ViewRenderer')
         );

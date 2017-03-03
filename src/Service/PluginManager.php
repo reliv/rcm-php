@@ -3,6 +3,8 @@
 namespace Rcm\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Rcm\Block\InstanceWithData\InstanceWithDataBasic;
+use Rcm\Block\Renderer\Renderer;
 use Rcm\Entity\PluginInstance;
 use Rcm\Exception\InvalidPluginException;
 use Rcm\Exception\PluginInstanceNotFoundException;
@@ -62,24 +64,27 @@ class PluginManager
     /** @var  \Zend\EventManager\EventManager */
     protected $eventManager;
 
+    protected $blockRendererService;
+
     /**
      * Constructor
      *
-     * @param EntityManagerInterface  $entityManager  Doctrine Entity Manager
-     * @param array                   $config         Config Array
+     * @param EntityManagerInterface $entityManager Doctrine Entity Manager
+     * @param array $config Config Array
      * @param ServiceLocatorInterface $serviceManager Zend Service Manager
-     * @param PhpRenderer             $renderer       Zend Renderer
-     * @param RequestInterface        $request        Zend Request Object
-     * @param StorageInterface        $cache          Zend Cache Manager
+     * @param PhpRenderer $renderer Zend Renderer
+     * @param RequestInterface $request Zend Request Object
+     * @param StorageInterface $cache Zend Cache Manager
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        array                   $config,
+        array $config,
         ServiceLocatorInterface $serviceManager,
         PhpRenderer $renderer,
         RequestInterface $request,
         StorageInterface $cache,
-        EventManagerInterface $eventManager
+        EventManagerInterface $eventManager,
+        Renderer $blockRendererService
     ) {
         $this->serviceManager = $serviceManager;
         $this->request = $request;
@@ -88,6 +93,7 @@ class PluginManager
         $this->config = $config;
         $this->cache = $cache;
         $this->eventManager = $eventManager;
+        $this->blockRendererService = $blockRendererService;
     }
 
     /**
@@ -201,9 +207,9 @@ class PluginManager
     /**
      * Get a plugin instance rendered view.
      *
-     * @param string  $pluginName           Plugin name
-     * @param integer $pluginInstanceId     Plugin Instance Id
-     * @param array   $pluginInstanceConfig Plugin Instance Config
+     * @param string $pluginName Plugin name
+     * @param integer $pluginInstanceId Plugin Instance Id
+     * @param array $pluginInstanceConfig Plugin Instance Config
      *
      * @return array
      * @throws \Rcm\Exception\InvalidPluginException
@@ -214,63 +220,65 @@ class PluginManager
         $pluginInstanceId,
         $pluginInstanceConfig
     ) {
+        $instanceWithData = new InstanceWithDataBasic($pluginInstanceId, $pluginName, $pluginInstanceConfig, []);
+        $html = $this->blockRendererService->__invoke($instanceWithData);
 
-        /** @var \Rcm\Plugin\PluginInterface $controller */
-        $controller = $this->getPluginController($pluginName);
-
-        if (!is_a($controller, '\Rcm\Plugin\PluginInterface')) {
-            throw new InvalidPluginException(
-                'Plugin ' . $controller . ' must implement the PluginInterface'
-            );
-        }
-
-        $controller->setRequest($this->request);
-
-        $response = new Response();
-        $controller->setResponse($response);
-
-        /** @var \Zend\Mvc\MvcEvent $event */
-        $event = $controller->getEvent();
-        $event->setRequest($this->request);
-        $event->setResponse($response);
-
-        $controller->setEvent($event);
-
-        $viewModel = $controller->renderInstance(
-            $pluginInstanceId,
-            $pluginInstanceConfig
-        );
-
-        if ($viewModel instanceof ResponseInterface) {
-            $event = new ViewEvent();
-            $event->setResponse($viewModel);
-            $this->eventManager->trigger(ViewEvent::EVENT_RESPONSE, $event);
-
-            return null;
-        }
-
-        /** @var \Zend\View\Helper\Headlink $headlink */
-        $headlink = $this->renderer->plugin('headlink');
-
-        /** @var \Zend\View\Helper\HeadScript $headScript */
-        $headScript = $this->renderer->plugin('headscript');
-
-        $oldContainer = $headlink->getContainer();
-        $linkContainer = new Container();
-        $headlink->setContainer($linkContainer);
-
-        $oldScriptContainer = $headScript->getContainer();
-        $headScriptContainer = new Container();
-        $headScript->setContainer($headScriptContainer);
-
-        $html = $this->renderer->render($viewModel);
-        $css = $headlink->getContainer()->getArrayCopy();
-        $script = $headScript->getContainer()->getArrayCopy();
+//        /** @var \Rcm\Plugin\PluginInterface $controller */
+//        $controller = $this->getPluginController($pluginName);
+//
+//        if (!is_a($controller, '\Rcm\Plugin\PluginInterface')) {
+//            throw new InvalidPluginException(
+//                'Plugin ' . $controller . ' must implement the PluginInterface'
+//            );
+//        }
+//
+//        $controller->setRequest($this->request);
+//
+//        $response = new Response();
+//        $controller->setResponse($response);
+//
+//        /** @var \Zend\Mvc\MvcEvent $event */
+//        $event = $controller->getEvent();
+//        $event->setRequest($this->request);
+//        $event->setResponse($response);
+//
+//        $controller->setEvent($event);
+//
+//        $viewModel = $controller->renderInstance(
+//            $pluginInstanceId,
+//            $pluginInstanceConfig
+//        );
+//
+//        if ($viewModel instanceof ResponseInterface) {
+//            $event = new ViewEvent();
+//            $event->setResponse($viewModel);
+//            $this->eventManager->trigger(ViewEvent::EVENT_RESPONSE, $event);
+//
+//            return null;
+//        }
+//
+//        /** @var \Zend\View\Helper\Headlink $headlink */
+//        $headlink = $this->renderer->plugin('headlink');
+//
+//        /** @var \Zend\View\Helper\HeadScript $headScript */
+//        $headScript = $this->renderer->plugin('headscript');
+//
+//        $oldContainer = $headlink->getContainer();
+//        $linkContainer = new Container();
+//        $headlink->setContainer($linkContainer);
+//
+//        $oldScriptContainer = $headScript->getContainer();
+//        $headScriptContainer = new Container();
+//        $headScript->setContainer($headScriptContainer);
+//
+//        $html = $this->renderer->render($viewModel);
+//        $css = $headlink->getContainer()->getArrayCopy();
+//        $script = $headScript->getContainer()->getArrayCopy();
 
         $return = [
             'html' => $html,
-            'css' => $this->getContainerSrc($css),
-            'js' => $this->getContainerSrc($script),
+            'css' => [],//$this->getContainerSrc($css),
+            'js' => [],//$this->getContainerSrc($script),
             'editJs' => '',
             'editCss' => '',
             'displayName' => '',
@@ -283,28 +291,28 @@ class PluginManager
             'pluginName' => $pluginName,
             'pluginInstanceId' => $pluginInstanceId,
         ];
-
-        if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
-            $return['displayName']
-                = $this->config['rcmPlugin'][$pluginName]['display'];
-        }
-
-        if (isset($this->config['rcmPlugin'][$pluginName]['tooltip'])) {
-            $return['tooltip']
-                = $this->config['rcmPlugin'][$pluginName]['tooltip'];
-        }
-
-        if (isset($this->config['rcmPlugin'][$pluginName]['icon'])) {
-            $return['icon'] = $this->config['rcmPlugin'][$pluginName]['icon'];
-        }
-
-        if (isset($this->config['rcmPlugin'][$pluginName]['canCache'])) {
-            $return['canCache']
-                = $this->config['rcmPlugin'][$pluginName]['canCache'];
-        }
-
-        $headlink->setContainer($oldContainer);
-        $headScript->setContainer($oldScriptContainer);
+//
+//        if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
+//            $return['displayName']
+//                = $this->config['rcmPlugin'][$pluginName]['display'];
+//        }
+//
+//        if (isset($this->config['rcmPlugin'][$pluginName]['tooltip'])) {
+//            $return['tooltip']
+//                = $this->config['rcmPlugin'][$pluginName]['tooltip'];
+//        }
+//
+//        if (isset($this->config['rcmPlugin'][$pluginName]['icon'])) {
+//            $return['icon'] = $this->config['rcmPlugin'][$pluginName]['icon'];
+//        }
+//
+//        if (isset($this->config['rcmPlugin'][$pluginName]['canCache'])) {
+//            $return['canCache']
+//                = $this->config['rcmPlugin'][$pluginName]['canCache'];
+//        }
+//
+//        $headlink->setContainer($oldContainer);
+//        $headScript->setContainer($oldScriptContainer);
 
         return $return;
     }

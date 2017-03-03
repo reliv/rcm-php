@@ -1,6 +1,6 @@
 <?php
 
-namespace PluginBc;
+namespace Rcm\Block\Renderer;
 
 use Interop\Container\ContainerInterface;
 use Rcm\Block\InstanceWithData\InstanceWithData;
@@ -14,7 +14,7 @@ use Zend\View\Renderer\PhpRenderer;
 use Rcm\Block\Renderer\Renderer;
 use Zend\View\Helper\Placeholder\Container;
 
-class PluginRenderer implements Renderer
+class RendererBc implements Renderer
 {
     protected $serviceManager;
     protected $renderer;
@@ -49,44 +49,48 @@ class PluginRenderer implements Renderer
         );
 
         if ($viewModel instanceof ResponseInterface) {
-            throw new \Exception(
+            trigger_error( //@TODO remove all this and throw exception
                 'Returning responses from plugin controllers is no longer supported.
-                 The following plugin attempted this: ' . $blockInstance->getName()
+                 The following plugin attempted this: ' . $blockInstance->getName() .
+                ' Post to your own route to avoid this problem.',
+                E_USER_WARNING
             );
+            /**
+             * @var $response \Rcm\Http\Response
+             */
+            $response = $viewModel;
+            foreach ($response->getHeaders() as $header) {
+                header($header->toString());
+            }
+            echo $response->getContent();
+            exit;
         }
 
-        /** @var \Zend\View\Helper\Headlink $headlink */
-        $headlink = $this->renderer->plugin('headlink');
+        /** @var \Zend\View\Helper\Headlink $headLink */
+        $headLink = $this->renderer->plugin('headlink');
 
         /** @var \Zend\View\Helper\HeadScript $headScript */
         $headScript = $this->renderer->plugin('headscript');
 
-        $oldContainer = $headlink->getContainer();
+        $oldContainer = $headLink->getContainer();
         $linkContainer = new Container();
-        $headlink->setContainer($linkContainer);
+        $headLink->setContainer($linkContainer);
 
         $oldScriptContainer = $headScript->getContainer();
         $headScriptContainer = new Container();
         $headScript->setContainer($headScriptContainer);
 
         $html = $this->renderer->render($viewModel);
-        $css = $headlink->getContainer()->getArrayCopy();
+        $css = $headLink->getContainer()->getArrayCopy();
         $script = $headScript->getContainer()->getArrayCopy();
 
-        $headHtml = '';
-        foreach ($script as $scriptTag) {
-            $headHtml .= '<script type="' . $scriptTag->type . '" source="' . $scriptTag->source . '"/>;';
-        }
-        foreach ($css as $headLinkTag) {
-            $headHtml .= '<script type="' . $headLinkTag->type . '" href="' .
-                $headLinkTag->href . ' media="' . $headLinkTag->media . '"/>;';
-        }
+        $html = $headLink->toString() . $headScript->toString() . $html;
 
         //Put the old things back in the PhpRenderer so we don't damage whatever is was doing before us. (seems hacky)
-        $headlink->setContainer($oldContainer);
+        $headLink->setContainer($oldContainer);
         $headScript->setContainer($oldScriptContainer);
 
-        return $headHtml . $html;
+        return $html;
     }
 
     /**
