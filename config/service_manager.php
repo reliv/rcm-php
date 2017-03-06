@@ -40,7 +40,9 @@ return [
         \Rcm\Block\Renderer\RendererService::class
         => \Rcm\Block\Renderer\RendererServiceFactory::class,
 
-        \Rcm\Block\Renderer\RendererBc::class=>\Rcm\Block\Renderer\RendererBcFactory::class,
+        \Rcm\Block\Renderer\RendererBc::class => \Rcm\Block\Renderer\RendererBcFactory::class,
+
+        'mustache' => \Rcm\Block\Renderer\RendererMustacheFactory::class, //@TODO decouple service name from renderer name
 
         'Rcm\EventListener\EventWrapper'
         => 'Rcm\Factory\EventWrapperFactory',

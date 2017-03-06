@@ -26,7 +26,7 @@ class ConfigRepositoryBcFactory
         $config = $container->get('config');
 
         return new ConfigRepositoryBc(
-            $config['cmPlugins'],
+            $config['rcmPlugin'],
             $container->get(Cache::class),
             $container->get(ConfigFields::class),
             $container->get(ConfigRepositoryJson::class)

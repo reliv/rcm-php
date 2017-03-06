@@ -41,9 +41,9 @@ class InstanceRepositoryBc extends AbstractRepository implements InstanceReposit
      *
      * @return Instance
      */
-    public function getNew($id, $config, $data)
+    public function getNew($id, $name, $config, $data)
     {
-        return new InstanceBasic($id, $config, $data);
+        return new InstanceBasic($id, $name, $config, $data);
     }
 
     /**
@@ -66,6 +66,7 @@ class InstanceRepositoryBc extends AbstractRepository implements InstanceReposit
 
         $blockInstance = $this->getNew(
             $id,
+            $pluginInstance->getPlugin(),
             $config,
             []
         );
