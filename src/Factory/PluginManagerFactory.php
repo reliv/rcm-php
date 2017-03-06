@@ -2,7 +2,9 @@
 
 namespace Rcm\Factory;
 
-use Rcm\Block\Renderer\RendererBc;
+use Rcm\Block\Config\ConfigRepository;
+use Rcm\Block\InstanceWithData\InstanceWithDataService;
+use Rcm\Block\Renderer\RendererService;
 use Rcm\Page\Renderer\PageRendererBc;
 use Rcm\Service\PluginManager;
 use Zend\ServiceManager\FactoryInterface;
@@ -61,7 +63,9 @@ class PluginManagerFactory implements FactoryInterface
             $request,
             $cache,
             $viewEventManager,
-            $serviceLocator->get(RendererBc::class)
+            $serviceLocator->get(RendererService::class),
+            $serviceLocator->get(InstanceWithDataService::class),
+            $serviceLocator->get(ConfigRepository::class)
         );
     }
 }

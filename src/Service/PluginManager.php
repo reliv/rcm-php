@@ -3,7 +3,11 @@
 namespace Rcm\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Rcm\Block\Config\Config;
+use Rcm\Block\Config\ConfigRepository;
+use Rcm\Block\InstanceWithData\InstanceWithData;
 use Rcm\Block\InstanceWithData\InstanceWithDataBasic;
+use Rcm\Block\InstanceWithData\InstanceWithDataService;
 use Rcm\Block\Renderer\Renderer;
 use Rcm\Entity\PluginInstance;
 use Rcm\Exception\InvalidPluginException;
@@ -19,6 +23,7 @@ use Zend\Stdlib\ResponseInterface;
 use Zend\View\Helper\Placeholder\Container;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\ViewEvent;
+use Zend\Diactoros\ServerRequestFactory;
 
 /**
  * Rcm Plugin Manager
@@ -66,6 +71,10 @@ class PluginManager
 
     protected $blockRendererService;
 
+    protected $instanceWithDataService;
+
+    protected $blockConfigRepository;
+
     /**
      * Constructor
      *
@@ -84,7 +93,9 @@ class PluginManager
         RequestInterface $request,
         StorageInterface $cache,
         EventManagerInterface $eventManager,
-        Renderer $blockRendererService
+        Renderer $blockRendererService,
+        InstanceWithDataService $instanceWithDataService,
+        ConfigRepository $blockConfigRepository
     ) {
         $this->serviceManager = $serviceManager;
         $this->request = $request;
@@ -94,6 +105,8 @@ class PluginManager
         $this->cache = $cache;
         $this->eventManager = $eventManager;
         $this->blockRendererService = $blockRendererService;
+        $this->instanceWithDataService = $instanceWithDataService;
+        $this->blockConfigRepository = $blockConfigRepository;
     }
 
     /**
@@ -220,8 +233,15 @@ class PluginManager
         $pluginInstanceId,
         $pluginInstanceConfig
     ) {
-        $instanceWithData = new InstanceWithDataBasic($pluginInstanceId, $pluginName, $pluginInstanceConfig, []);
+        //@GammaRelease
+        $request = ServerRequestFactory::fromGlobals();
+        $instanceWithData = $this->instanceWithDataService->__invoke($pluginInstanceId, $request);
         $html = $this->blockRendererService->__invoke($instanceWithData);
+
+        /**
+         * @var $blockConfig Config
+         */
+        $blockConfig = $this->blockConfigRepository->findOne(['name' => $instanceWithData->getName()]);
 
 //        /** @var \Rcm\Plugin\PluginInterface $controller */
 //        $controller = $this->getPluginController($pluginName);
@@ -275,20 +295,21 @@ class PluginManager
 //        $css = $headlink->getContainer()->getArrayCopy();
 //        $script = $headScript->getContainer()->getArrayCopy();
 
+        //@GammaRelease
         $return = [
             'html' => $html,
             'css' => [],//$this->getContainerSrc($css),
             'js' => [],//$this->getContainerSrc($script),
             'editJs' => '',
             'editCss' => '',
-            'displayName' => '',
-            'tooltip' => '',
-            'icon' => '',
+            'displayName' => $blockConfig->getLabel(),
+            'tooltip' => $blockConfig->getDescription(),
+            'icon' => $blockConfig->getIcon(),
             'siteWide' => false,
             'md5' => '',
             'fromCache' => false,
-            'canCache' => false,
-            'pluginName' => $pluginName,
+            'canCache' => $blockConfig->getCache(),
+            'pluginName' => $blockConfig->getName(),
             'pluginInstanceId' => $pluginInstanceId,
         ];
 //
@@ -530,20 +551,23 @@ class PluginManager
      */
     public function getDefaultInstanceConfig($pluginName)
     {
-        $pluginConfigs = $this->config['rcmPlugin'];
+        //@GammaRelease
+        $blockConfig = $this->blockConfigRepository->findOne(['name' => $pluginName]);
 
-        $defaultInstanceConfig = [];
+//        $pluginConfigs = $this->config['rcmPlugin'];
+//
+//        $defaultInstanceConfig = [];
+//
+//        if (array_key_exists(
+//            'defaultInstanceConfig',
+//            $pluginConfigs[$pluginName]
+//        )
+//        ) {
+//            $defaultInstanceConfig
+//                = $pluginConfigs[$pluginName]['defaultInstanceConfig'];
+//        }
 
-        if (array_key_exists(
-            'defaultInstanceConfig',
-            $pluginConfigs[$pluginName]
-        )
-        ) {
-            $defaultInstanceConfig
-                = $pluginConfigs[$pluginName]['defaultInstanceConfig'];
-        }
-
-        return $defaultInstanceConfig;
+        return $blockConfig->getDefaultConfig();
     }
 
     /**

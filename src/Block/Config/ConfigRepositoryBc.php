@@ -51,7 +51,7 @@ class ConfigRepositoryBc extends ConfigRepositoryArray implements ConfigReposito
      */
     public function __construct(
         $pluginConfig,
-        Cache $cache,
+        $cache,
         ConfigFields $configFields,
         ConfigRepositoryJson $configRepositoryJson
     ) {

@@ -6,7 +6,7 @@ return [
     /**
      * @GammaRelease
      */
-    'block-default-render' => \Rcm\Block\Renderer\Renderer::class,
+    'block-default-render' => \Rcm\Block\Renderer\RendererBc::class,
 
     /**
      * @GammaRelease

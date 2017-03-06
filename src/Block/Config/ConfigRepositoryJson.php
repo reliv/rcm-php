@@ -44,7 +44,7 @@ class ConfigRepositoryJson extends ConfigRepositoryArray implements ConfigReposi
      */
     public function __construct(
         $registryConfig,
-        Cache $cache,
+        $cache,
         ConfigFields $configFields
     ) {
         $this->registryConfig = $registryConfig;
