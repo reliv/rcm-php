@@ -21,6 +21,9 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
+use Rcm\Block\Config\ConfigRepository;
+use Rcm\Block\InstanceWithData\InstanceWithDataService;
+use Rcm\Block\Renderer\RendererService;
 use Rcm\Factory\PluginManagerFactory;
 use Rcm\Service\PluginManager;
 use Zend\ServiceManager\ServiceManager;
@@ -94,6 +97,26 @@ class PluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getView')
             ->will($this->returnValue($mockView));
 
+        //Rcm\Block\Renderer\RendererService
+        $mockRenderService = $this->getMockBuilder(
+            RendererService::class
+        )
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockInstanceWithDataService = $this->getMockBuilder(
+            InstanceWithDataService::class
+        )
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockConfigRepository = $this->getMockBuilder(
+            ConfigRepository::class
+        )
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
             'Doctrine\ORM\EntityManager',
@@ -105,6 +128,9 @@ class PluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('Rcm\Service\Cache', $mockCache);
         $serviceManager->setService('Config', []);
         $serviceManager->setService('ViewManager', $mockViewManager);
+        $serviceManager->setService(RendererService::class, $mockRenderService);
+        $serviceManager->setService(InstanceWithDataService::class, $mockInstanceWithDataService);
+        $serviceManager->setService(ConfigRepository::class, $mockConfigRepository);
 
         $factory = new PluginManagerFactory();
         $object = $factory->createService($serviceManager);
