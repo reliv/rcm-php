@@ -246,7 +246,13 @@ class PluginManager
      */
     public function getDefaultInstanceConfig($pluginName)
     {
-        return $this->blockConfigRepository->findById($pluginName)->getDefaultConfig();
+        $blockConfig = $this->blockConfigRepository->findById($pluginName);
+
+        if (empty($blockConfig)) {
+            throw new \Exception('Block config not found for ' . $pluginName); //@TODO throw custom exception class
+        }
+
+        return $blockConfig->getDefaultConfig();
     }
 
     /**
