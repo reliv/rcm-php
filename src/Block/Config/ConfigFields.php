@@ -2,6 +2,8 @@
 
 namespace Rcm\Block\Config;
 
+use Rcm\Block\Renderer\RendererBc;
+
 /**
  * Class ConfigFields
  *
@@ -132,8 +134,14 @@ class ConfigFields
             $newFieldName = $this->getFieldBc($fieldName);
             $new[$newFieldName] = $value;
         }
-        // @todo set default renderer
-        // @todo set default data-provider
+
+        if (empty($new[self::RENDERER])) {
+            $new[self::RENDERER] = RendererBc::class;
+        }
+
+        if (empty($new[self::EDITOR])) {
+            $new[self::EDITOR] = 'name-as-js-class';
+        }
 
         return $new;
     }

@@ -24,10 +24,10 @@ class RendererRepositoryBasicFactory
     public function __invoke($container)
     {
         $config = $container->get('config');
-        $defaultRenderServiceName = $config['Rcm']['block-default-render'];
+        $rendererAliases = $config['Rcm']['block-render'];
         return new RendererRepositoryBasic(
             $container->get(ConfigRepository::class),
-            $defaultRenderServiceName,
+            $rendererAliases,
             $container
         );
     }
