@@ -17,17 +17,17 @@ class RendererService implements Renderer
     /**
      * @var RendererRepository
      */
-    protected $rendererProviderRepository;
+    protected $rendererRepository;
 
     /**
      * Constructor.
      *
-     * @param RendererRepository $rendererProviderRepository
+     * @param RendererRepository $rendererRepository
      */
     public function __construct(
-        RendererRepository $rendererProviderRepository
+        RendererRepository $rendererRepository
     ) {
-        $this->rendererProviderRepository = $rendererProviderRepository;
+        $this->rendererRepository = $rendererRepository;
     }
 
     /**
@@ -39,7 +39,11 @@ class RendererService implements Renderer
      */
     public function __invoke(InstanceWithData $instance)
     {
-        $renderer = $this->rendererProviderRepository->findByName($instance->getName());
+        $renderer = $this->rendererRepository->findByName($instance->getName());
+
+        if (!$renderer) {
+            throw new \Exception('No renderer found for block ' . $instance->getName());
+        }
 
         return $renderer->__invoke($instance);
     }
