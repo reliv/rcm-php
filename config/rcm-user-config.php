@@ -5,7 +5,7 @@
 return [
     'Acl\Config' => [
         'ResourceProviders' => [
-            'Rcm\Acl\ResourceProvider' => 'Rcm\Acl\ResourceProvider',
+            Rcm\Acl\ResourceProvider::class => \Rcm\Acl\ResourceProvider::class,
         ],
     ],
 ];

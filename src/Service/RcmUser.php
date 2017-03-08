@@ -45,7 +45,7 @@ class RcmUser
     public function isAllowed(
         $resourceId,
         $privilege = null,
-        $providerId = 'Rcm\Acl\ResourceProvider'
+        $providerId = \Rcm\Acl\ResourceProvider::class
     ) {
         return $this->rcmUserService->isAllowed(
             $resourceId,

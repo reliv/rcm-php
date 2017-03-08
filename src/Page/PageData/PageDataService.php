@@ -131,6 +131,8 @@ class PageDataService
             return $pageData;
         }
 
+        $pageData->setPage($page);
+
         $allowed = $this->cmsPermissionChecks->isPageAllowedForReading($page);
 
         if (!$allowed) {
@@ -140,8 +142,6 @@ class PageDataService
 
             return $pageData;
         }
-
-        $pageData->setPage($page);
 
         // @todo FUTURE Insert Block data (plugin data)
         // $pageData->setBlocks([]);

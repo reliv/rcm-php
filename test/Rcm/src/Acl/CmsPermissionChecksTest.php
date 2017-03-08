@@ -24,43 +24,43 @@ class CmsPermissionChecksTest extends Mocks
                         [
                             'sites.123.pages.PAGE_TYPE.PAGE_NAME',
                             'read',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123',
                             'admin',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.PAGE_NAME',
                             'edit',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.PAGE_NAME',
                             'approve',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.PAGE_NAME',
                             'revisions',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123.pages',
                             'create',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'NOPE',
                             'NOPE',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                     ]
@@ -97,43 +97,43 @@ class CmsPermissionChecksTest extends Mocks
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'read',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123',
                             'admin',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'edit',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'approve',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'revisions',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123.pages',
                             'create',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'NOPE',
                             'NOPE',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                     ]
@@ -167,43 +167,43 @@ class CmsPermissionChecksTest extends Mocks
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'read',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123',
                             'admin',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'edit',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'approve',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'revisions',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123.pages',
                             'create',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'NOPE',
                             'NOPE',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                     ]
@@ -237,43 +237,43 @@ class CmsPermissionChecksTest extends Mocks
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'read',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123',
                             'admin',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'edit',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'approve',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'revisions',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                         [
                             'sites.123.pages',
                             'create',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'NOPE',
                             'NOPE',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                     ]
@@ -307,43 +307,43 @@ class CmsPermissionChecksTest extends Mocks
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'read',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123',
                             'admin',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             true
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'edit',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'approve',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                         [
                             'sites.123.pages.PAGE_TYPE.NOT_FOUND_PAGE',
                             'revisions',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                         [
                             'sites.123.pages',
                             'create',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                         [
                             'NOPE',
                             'NOPE',
-                            'Rcm\Acl\ResourceProvider',
+                            \Rcm\Acl\ResourceProvider::class,
                             false
                         ],
                     ]
