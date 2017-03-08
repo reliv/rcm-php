@@ -27,7 +27,7 @@ class ResourceProvider extends RcmUserResourceProvider
     const RESOURCE_PAGES = 'pages';
 
     /** @var string */
-    protected $providerId = 'Rcm\Acl\ResourceProvider';
+    protected $providerId = \Rcm\Acl\ResourceProvider::class;
 
     /** @var \Rcm\Repository\Site */
     protected $siteRepo;

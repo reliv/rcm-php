@@ -50,7 +50,7 @@ class RcmIsAllowed extends AbstractPlugin
     public function __invoke(
         $resourceId,
         $privilege = null,
-        $providerId = 'Rcm\Acl\ResourceProvider'
+        $providerId = \Rcm\Acl\ResourceProvider::class
     ) {
         return $this->rcmUserService->isAllowed(
             $resourceId,
