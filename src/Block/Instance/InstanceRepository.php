@@ -13,5 +13,9 @@ use Rcm\Core\Repository\Repository;
  */
 interface InstanceRepository extends Repository
 {
-
+    /**
+     * @param int $id
+     * @return Instance|null
+     */
+    public function findById($id);
 }

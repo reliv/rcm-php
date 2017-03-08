@@ -30,10 +30,7 @@ class RenderPluginInstancePreviewApiController extends AbstractActionController
         $viewData = $this->pluginManager->getPluginViewData(
             $pluginType,
             $instanceId,
-            array_merge(
-                $this->pluginManager->getDefaultInstanceConfig($pluginType),
-                $instanceConfig
-            )
+            $instanceConfig
         );
 
         $html = $viewData['html'];

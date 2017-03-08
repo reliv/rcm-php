@@ -5,6 +5,7 @@ namespace Rcm\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Rcm\Block\Config\Config;
 use Rcm\Block\Config\ConfigRepository;
+use Rcm\Block\Instance\InstanceRepository;
 use Rcm\Block\InstanceWithData\InstanceWithData;
 use Rcm\Block\InstanceWithData\InstanceWithDataBasic;
 use Rcm\Block\InstanceWithData\InstanceWithDataService;
@@ -75,6 +76,8 @@ class PluginManager
 
     protected $blockConfigRepository;
 
+    protected $instanceRepository;
+
     /**
      * Constructor
      *
@@ -95,6 +98,7 @@ class PluginManager
         EventManagerInterface $eventManager,
         Renderer $blockRendererService,
         InstanceWithDataService $instanceWithDataService,
+        InstanceRepository $instanceRepository,
         ConfigRepository $blockConfigRepository
     ) {
         $this->serviceManager = $serviceManager;
@@ -107,6 +111,7 @@ class PluginManager
         $this->blockRendererService = $blockRendererService;
         $this->instanceWithDataService = $instanceWithDataService;
         $this->blockConfigRepository = $blockConfigRepository;
+        $this->instanceRepository = $instanceRepository;
     }
 
     /**
@@ -120,7 +125,7 @@ class PluginManager
     {
         $instanceConfig = $this->getDefaultInstanceConfig($pluginName);
 
-        $viewData = $this->getPluginViewData($pluginName, -1, $instanceConfig);
+        $viewData = $this->getPluginViewData($pluginName, -1);
 
         return $viewData;
     }
@@ -141,8 +146,7 @@ class PluginManager
         } else {
             $viewData = $this->getPluginViewData(
                 $instance->getPlugin(),
-                $instance->getInstanceId(),
-                $this->getInstanceConfigFromEntity($instance)
+                $instance->getInstanceId()
             );
 
             if ($viewData['canCache']) {
@@ -190,12 +194,9 @@ class PluginManager
             );
         }
 
-        $instanceConfig = $this->getInstanceConfigFromEntity($pluginInstance);
-
         $return = $this->getPluginViewData(
             $pluginInstance->getPlugin(),
-            $pluginInstanceId,
-            $instanceConfig
+            $pluginInstanceId
         );
 
         if ($pluginInstance->isSiteWide()) {
@@ -222,7 +223,7 @@ class PluginManager
      *
      * @param string $pluginName Plugin name
      * @param integer $pluginInstanceId Plugin Instance Id
-     * @param array $pluginInstanceConfig Plugin Instance Config
+     * @param null $forcedAlternativeInstanceConfig Not normally used. Useful for previewing changes
      *
      * @return array
      * @throws \Rcm\Exception\InvalidPluginException
@@ -231,75 +232,43 @@ class PluginManager
     public function getPluginViewData(
         $pluginName,
         $pluginInstanceId,
-        $pluginInstanceConfig
+        $forcedAlternativeInstanceConfig = null
     ) {
-        //@GammaRelease
         $request = ServerRequestFactory::fromGlobals();
-        $instanceWithData = $this->instanceWithDataService->__invoke($pluginInstanceId, $request);
+
+        $blockConfig = $this->blockConfigRepository->findById($pluginName);
+
+        if ($pluginInstanceId < 0) {
+            $instanceWithData = new InstanceWithDataBasic(
+                $pluginInstanceId,
+                $pluginName,
+                $blockConfig->getDefaultConfig(),
+                [] //@TODO run the dataprovider here instead of returning empty array
+            );
+        } else {
+            $instanceWithData = $this->instanceWithDataService->__invoke($pluginInstanceId, $request);
+        }
+
+        if ($forcedAlternativeInstanceConfig !== null) {
+            $instanceWithData = new InstanceWithDataBasic(
+                $instanceWithData->getId(),
+                $instanceWithData->getName(),
+                $forcedAlternativeInstanceConfig,
+                //@TODO we should have got the data from the data provider with the forced instance config as an input
+                $instanceWithData->getData()
+            );
+        }
+
         $html = $this->blockRendererService->__invoke($instanceWithData);
 
         /**
          * @var $blockConfig Config
          */
-        $blockConfig = $this->blockConfigRepository->findOne(['name' => $instanceWithData->getName()]);
 
-//        /** @var \Rcm\Plugin\PluginInterface $controller */
-//        $controller = $this->getPluginController($pluginName);
-//
-//        if (!is_a($controller, '\Rcm\Plugin\PluginInterface')) {
-//            throw new InvalidPluginException(
-//                'Plugin ' . $controller . ' must implement the PluginInterface'
-//            );
-//        }
-//
-//        $controller->setRequest($this->request);
-//
-//        $response = new Response();
-//        $controller->setResponse($response);
-//
-//        /** @var \Zend\Mvc\MvcEvent $event */
-//        $event = $controller->getEvent();
-//        $event->setRequest($this->request);
-//        $event->setResponse($response);
-//
-//        $controller->setEvent($event);
-//
-//        $viewModel = $controller->renderInstance(
-//            $pluginInstanceId,
-//            $pluginInstanceConfig
-//        );
-//
-//        if ($viewModel instanceof ResponseInterface) {
-//            $event = new ViewEvent();
-//            $event->setResponse($viewModel);
-//            $this->eventManager->trigger(ViewEvent::EVENT_RESPONSE, $event);
-//
-//            return null;
-//        }
-//
-//        /** @var \Zend\View\Helper\Headlink $headlink */
-//        $headlink = $this->renderer->plugin('headlink');
-//
-//        /** @var \Zend\View\Helper\HeadScript $headScript */
-//        $headScript = $this->renderer->plugin('headscript');
-//
-//        $oldContainer = $headlink->getContainer();
-//        $linkContainer = new Container();
-//        $headlink->setContainer($linkContainer);
-//
-//        $oldScriptContainer = $headScript->getContainer();
-//        $headScriptContainer = new Container();
-//        $headScript->setContainer($headScriptContainer);
-//
-//        $html = $this->renderer->render($viewModel);
-//        $css = $headlink->getContainer()->getArrayCopy();
-//        $script = $headScript->getContainer()->getArrayCopy();
-
-        //@GammaRelease
         $return = [
             'html' => $html,
-            'css' => [],//$this->getContainerSrc($css),
-            'js' => [],//$this->getContainerSrc($script),
+            'css' => [], //used to be $this->getContainerSrc($css) but this is incompatible with blocks
+            'js' => [], //used to be $this->getContainerSrc($script) but this is incompatible with blocks
             'editJs' => '',
             'editCss' => '',
             'displayName' => $blockConfig->getLabel(),
@@ -312,61 +281,8 @@ class PluginManager
             'pluginName' => $blockConfig->getName(),
             'pluginInstanceId' => $pluginInstanceId,
         ];
-//
-//        if (isset($this->config['rcmPlugin'][$pluginName]['display'])) {
-//            $return['displayName']
-//                = $this->config['rcmPlugin'][$pluginName]['display'];
-//        }
-//
-//        if (isset($this->config['rcmPlugin'][$pluginName]['tooltip'])) {
-//            $return['tooltip']
-//                = $this->config['rcmPlugin'][$pluginName]['tooltip'];
-//        }
-//
-//        if (isset($this->config['rcmPlugin'][$pluginName]['icon'])) {
-//            $return['icon'] = $this->config['rcmPlugin'][$pluginName]['icon'];
-//        }
-//
-//        if (isset($this->config['rcmPlugin'][$pluginName]['canCache'])) {
-//            $return['canCache']
-//                = $this->config['rcmPlugin'][$pluginName]['canCache'];
-//        }
-//
-//        $headlink->setContainer($oldContainer);
-//        $headScript->setContainer($oldScriptContainer);
 
         return $return;
-    }
-
-    /**
-     * Delete a plugin instance.  This should generally never be used unless the
-     * container, page, or site is being deleted.  And only if the plugin instance
-     * does not belong to a site wide plugin unless you are deleting the entire
-     * site.
-     *
-     * @param integer $pluginInstanceId Instance Id
-     *
-     * @return void
-     * @throws \Rcm\Exception\PluginInstanceNotFoundException
-     */
-    public function deletePluginInstance($pluginInstanceId)
-    {
-        $pluginInstanceEntity = $this->getInstanceEntity($pluginInstanceId);
-
-        if (empty($pluginInstanceEntity)) {
-            throw new PluginInstanceNotFoundException(
-                'No plugin found to delete'
-            );
-        }
-
-        /** @var \Rcm\Plugin\PluginInterface $controller */
-        $controller = $this->getPluginController(
-            $pluginInstanceEntity->getPlugin()
-        );
-        $controller->deleteInstance($pluginInstanceEntity->getInstanceId());
-
-        $this->entityManager->remove($pluginInstanceEntity);
-        $this->entityManager->flush();
     }
 
     /**
@@ -493,21 +409,21 @@ class PluginManager
      */
     public function getInstanceConfigForPlugin($pluginInstanceId, $pluginName)
     {
-        $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
+        $blockInstance = $this->instanceRepository->findById($pluginInstanceId);
 
-        if (empty($pluginInstance)) {
+        if (empty($blockInstance)) {
             throw new PluginInstanceNotFoundException(
-                'Plugin for instance id ' . $pluginInstanceId . ' not found.'
+                'Block for instance id ' . $pluginInstanceId . ' not found.'
             );
         }
 
-        if ($pluginInstance->getPlugin() !== $pluginName) {
+        if ($blockInstance->getName() !== $pluginName) {
             throw new PluginInstanceNotFoundException(
-                'Plugin for instance id ' . $pluginInstanceId . ' is not a ' . $pluginName
+                'Block for instance id ' . $pluginInstanceId . ' is not a ' . $pluginName
             );
         }
 
-        return $this->getInstanceConfigFromEntity($pluginInstance);
+        return $instanceConfig = $blockInstance->getConfig();
     }
 
     /**
@@ -551,23 +467,7 @@ class PluginManager
      */
     public function getDefaultInstanceConfig($pluginName)
     {
-        //@GammaRelease
-        $blockConfig = $this->blockConfigRepository->findOne(['name' => $pluginName]);
-
-//        $pluginConfigs = $this->config['rcmPlugin'];
-//
-//        $defaultInstanceConfig = [];
-//
-//        if (array_key_exists(
-//            'defaultInstanceConfig',
-//            $pluginConfigs[$pluginName]
-//        )
-//        ) {
-//            $defaultInstanceConfig
-//                = $pluginConfigs[$pluginName]['defaultInstanceConfig'];
-//        }
-
-        return $blockConfig->getDefaultConfig();
+        return $this->blockConfigRepository->findById($pluginName)->getDefaultConfig();
     }
 
     /**

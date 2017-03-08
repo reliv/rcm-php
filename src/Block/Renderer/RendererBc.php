@@ -49,21 +49,10 @@ class RendererBc implements Renderer
         );
 
         if ($viewModel instanceof ResponseInterface) {
-            trigger_error( //@TODO remove all this and throw exception
-                'Returning responses from plugin controllers is no longer supported.
-                 The following plugin attempted this: ' . $blockInstance->getName() .
-                ' Post to your own route to avoid this problem.',
-                E_USER_WARNING
-            );
-            /**
-             * @var $response \Rcm\Http\Response
-             */
-            $response = $viewModel;
-            foreach ($response->getHeaders() as $header) {
-                header($header->toString());
-            }
-            echo $response->getContent();
-            exit;
+            //Contains exit() call!
+            $this->handleResponseFromPluginController($viewModel, $blockInstance->getName());
+
+            return '';
         }
 
         /** @var \Zend\View\Helper\Headlink $headLink */
@@ -135,5 +124,33 @@ class RendererBc implements Renderer
         }
 
         return $pluginController;
+    }
+
+    /**
+     * Handles the legacy support for the odd case where plugin controllers return
+     * zf2 responses instead of view models
+     */
+    public function handleResponseFromPluginController(ResponseInterface $response, $blockInstanceName)
+    {
+//        trigger_error( //@TODO remove all this and throw exception
+//            'Returning responses from plugin controllers is no longer supported.
+//                 The following plugin attempted this: ' . $blockInstanceName .
+//            ' Post to your own route to avoid this problem.',
+//            E_USER_WARNING
+//        );
+
+        foreach ($response->getHeaders() as $header) {
+            header($header->toString());
+        }
+
+        //Some plugins used to return responses like this to signal a redirect to the login page
+        if ($response->getStatusCode() == 401) {
+            $href = '/login?redirect=' . urlencode($request->getUri()->getPath());;
+            echo "You are not authorized to view this page. Try <a href=\"{$href}\">logging in</a> first.";
+            exit;
+        }
+
+        echo $response->getContent();
+        exit;
     }
 }

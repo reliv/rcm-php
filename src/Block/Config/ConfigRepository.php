@@ -13,5 +13,9 @@ use Rcm\Core\Repository\Repository;
  */
 interface ConfigRepository extends Repository
 {
-
+    /**
+     * @param int $name
+     * @return Config|null
+     */
+    public function findById($id);
 }

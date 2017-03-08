@@ -3,6 +3,7 @@
 namespace Rcm\Controller;
 
 use Rcm\Exception\PluginInstanceNotFoundException;
+use Rcm\Service\PluginManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Model\JsonModel;
 
@@ -46,6 +47,9 @@ class InstanceConfigApiController extends AbstractRestfulController
 
         $routeMatch = $this->getEvent()->getRouteMatch();
         $pluginType = $routeMatch->getParam('pluginType');
+        /**
+         * @var $pluginMgr PluginManager
+         */
         $pluginMgr = $this->getServiceLocator()
             ->get('Rcm\Service\PluginManager');
         $defaultInstanceCfg = $pluginMgr->getDefaultInstanceConfig($pluginType);

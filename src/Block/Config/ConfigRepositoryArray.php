@@ -46,7 +46,7 @@ abstract class ConfigRepositoryArray extends AbstractRepository
      * filter
      *
      * @param Config $config
-     * @param array  $criteria
+     * @param array $criteria
      *
      * @return bool
      */
@@ -68,10 +68,10 @@ abstract class ConfigRepositoryArray extends AbstractRepository
     /**
      * find
      *
-     * @param array      $criteria
+     * @param array $criteria
      * @param array|null $orderBy
-     * @param null       $limit
-     * @param null       $offset
+     * @param null $limit
+     * @param null $offset
      *
      * @return array
      * @throws \Exception
@@ -106,5 +106,14 @@ abstract class ConfigRepositoryArray extends AbstractRepository
         }
 
         return null;
+    }
+
+    /**
+     * @param int $name
+     * @return Config|null
+     */
+    public function findById($id)
+    {
+        return $this->findOne(['name' => $id]);
     }
 }

@@ -13,7 +13,7 @@ namespace Rcm\Page\PageStatus;
 class PageStatus
 {
     const STATUS_OK = 200;
-    const STATUS_NOT_FOUND = 410; // 404
+    const STATUS_NOT_FOUND = 404;
     const STATUS_NOT_AUTHORIZED = 401;
 
     /**
