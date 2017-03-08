@@ -98,10 +98,7 @@ abstract class AbstractPluginRestfulController extends AbstractRestfulJsonContro
 
         if ($instanceId > 0) {
             try {
-                $instanceConfig = $pluginManager->getInstanceConfigForPlugin(
-                    $instanceId,
-                    $pluginName
-                );
+                $instanceConfig = $pluginManager->getInstanceConfig($instanceId);
             } catch (PluginInstanceNotFoundException $e) {
                 // ignore error
             }
@@ -139,7 +136,7 @@ abstract class AbstractPluginRestfulController extends AbstractRestfulJsonContro
      * getInstanceIdParam from route param
      *
      * @param string $paramName
-     * @param int    $default
+     * @param int $default
      *
      * @return mixed
      */

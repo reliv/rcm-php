@@ -143,12 +143,12 @@ class RendererBc implements Renderer
             header($header->toString());
         }
 
-        //Some plugins used to return responses like this to signal a redirect to the login page
-        if ($response->getStatusCode() == 401) {
-            $href = '/login?redirect=' . urlencode($request->getUri()->getPath());;
-            echo "You are not authorized to view this page. Try <a href=\"{$href}\">logging in</a> first.";
-            exit;
-        }
+//        //Some plugins used to return responses like this to signal a redirect to the login page
+//        if ($response->getStatusCode() == 401) {
+//            $href = '/login?redirect=' . urlencode($request->getUri()->getPath());;
+//            echo "You are not authorized to view this page. Try <a href=\"{$href}\">logging in</a> first.";
+//            exit;
+//        }
 
         echo $response->getContent();
         exit;

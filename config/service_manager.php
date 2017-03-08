@@ -117,7 +117,8 @@ return [
         => 'Rcm\Factory\MainLayoutValidatorFactory',
     ],
     'invokables' => [
-        'Rcm\Service\DisplayCountService' => 'Rcm\Service\DisplayCountService'
+        'Rcm\Service\DisplayCountService' => 'Rcm\Service\DisplayCountService',
+        \Rcm\Block\Instance\InstanceConfigMerger::class => \Rcm\Block\Instance\InstanceConfigMerger::class
     ],
     'aliases' => [
         'rcmLogger' => 'Rcm\Service\Logger',

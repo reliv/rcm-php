@@ -115,22 +115,6 @@ class PluginManager
     }
 
     /**
-     * Get a new plugin instance.
-     *
-     * @param string $pluginName Plugin Name
-     *
-     * @return array
-     */
-    public function getNewEntity($pluginName)
-    {
-        $instanceConfig = $this->getDefaultInstanceConfig($pluginName);
-
-        $viewData = $this->getPluginViewData($pluginName, -1);
-
-        return $viewData;
-    }
-
-    /**
      * prepPluginForDisplay
      *
      * @param PluginInstance $instance
@@ -215,8 +199,8 @@ class PluginManager
 
         $return = [
             'html' => $html,
-            'css' => [], //used to be $this->getContainerSrc($css) but this is incompatible with blocks
-            'js' => [], //used to be $this->getContainerSrc($script) but this is incompatible with blocks
+            'css' => [],
+            'js' => [],
             'editJs' => '',
             'editCss' => '',
             'displayName' => $blockConfig->getLabel(),
@@ -229,33 +213,6 @@ class PluginManager
             'pluginName' => $blockConfig->getName(),
             'pluginInstanceId' => $pluginInstanceId,
         ];
-
-        return $return;
-    }
-
-    /**
-     * Get a plugin containers CSS and Javascript from either the headlink or
-     * head script
-     *
-     * @param array $container Zend Framework View Helper array copy to serialize
-     *
-     * @return array
-     */
-    public function getContainerSrc($container)
-    {
-        if (empty($container) || !is_array($container)) {
-            return [];
-        }
-
-        $return = [];
-
-        foreach ($container as &$item) {
-            if ($item->type == 'text/css') {
-                $return[] = serialize($item);
-            } elseif ($item->type == 'text/javascript') {
-                $return[] = serialize($item);
-            }
-        }
 
         return $return;
     }
@@ -314,48 +271,13 @@ class PluginManager
     }
 
     /**
-     * Get an Plugin Instance Entity by Instance Id
-     *
-     * @param integer $pluginInstanceId Plugin Instance Id
-     *
-     * @return \Rcm\Entity\PluginInstance
-     */
-    protected function getInstanceEntity($pluginInstanceId)
-    {
-        return $this->entityManager
-            ->getRepository('\Rcm\Entity\PluginInstance')
-            ->findOneBy(['pluginInstanceId' => $pluginInstanceId]);
-    }
-
-    /**
-     * getInstanceConfig
+     * getInstanceConfigForPlugin
      *
      * @param $pluginInstanceId
      *
      * @return array
      */
     public function getInstanceConfig($pluginInstanceId)
-    {
-        $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
-
-        if (empty($pluginInstance)) {
-            throw new PluginInstanceNotFoundException(
-                'Plugin for instance id ' . $pluginInstanceId . ' not found.'
-            );
-        }
-
-        return $this->getInstanceConfigFromEntity($pluginInstance);
-    }
-
-    /**
-     * getInstanceConfigForPlugin
-     *
-     * @param $pluginInstanceId
-     * @param $pluginName
-     *
-     * @return array
-     */
-    public function getInstanceConfigForPlugin($pluginInstanceId, $pluginName)
     {
         $blockInstance = $this->instanceRepository->findById($pluginInstanceId);
 
@@ -365,45 +287,7 @@ class PluginManager
             );
         }
 
-        if ($blockInstance->getName() !== $pluginName) {
-            throw new PluginInstanceNotFoundException(
-                'Block for instance id ' . $pluginInstanceId . ' is not a ' . $pluginName
-            );
-        }
-
         return $instanceConfig = $blockInstance->getConfig();
-    }
-
-    /**
-     * Get Instance Config From Entity
-     *
-     * @param PluginInstance $pluginInstance
-     *
-     * @return array
-     */
-    protected function getInstanceConfigFromEntity(
-        PluginInstance $pluginInstance
-    ) {
-        //Instance configs less than 0 are default instanc configs
-        if ($pluginInstance->getInstanceId() < 0) {
-            return $this->getDefaultInstanceConfig(
-                $pluginInstance->getPlugin()
-            );
-        } else {
-            $instanceConfig = $pluginInstance->getInstanceConfig();
-
-            if (!is_array($instanceConfig)) {
-                $instanceConfig = [];
-            }
-
-            //Merge the default and db instance configs. Db overwrites.
-            $instanceConfig = $this->mergeConfigArrays(
-                $this->getDefaultInstanceConfig($pluginInstance->getPlugin()),
-                $instanceConfig
-            );
-        }
-
-        return $instanceConfig;
     }
 
     /**
@@ -416,51 +300,6 @@ class PluginManager
     public function getDefaultInstanceConfig($pluginName)
     {
         return $this->blockConfigRepository->findById($pluginName)->getDefaultConfig();
-    }
-
-    /**
-     * Merge Config Arrays
-     *
-     * @param $default
-     * @param $changes
-     *
-     * @return mixed
-     */
-    protected function mergeConfigArrays($default, $changes)
-    {
-
-        if (empty($default)) {
-            return $changes;
-        }
-
-        if (empty($changes)) {
-            return $default;
-        }
-
-        foreach ($changes as $key => &$value) {
-            if (is_array($value)) {
-                if (isset($value['0'])) {
-                    /*
-                     * Numeric arrays ignore default values because of the
-                     * "more in default that on production" issue
-                     */
-                    $default[$key] = $changes[$key];
-                } else {
-                    if (isset($default[$key])) {
-                        $default[$key] = self::mergeConfigArrays(
-                            $default[$key],
-                            $changes[$key]
-                        );
-                    } else {
-                        $default[$key] = $changes[$key];
-                    }
-                }
-            } else {
-                $default[$key] = $changes[$key];
-            }
-        }
-
-        return $default;
     }
 
     /**
