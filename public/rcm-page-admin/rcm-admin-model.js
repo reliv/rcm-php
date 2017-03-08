@@ -437,6 +437,11 @@ var RcmAdminModel = function () {
             return name;
         },
 
+        getEditor: function (pluginElm) {
+
+            return pluginElm.attr('data-block-editor');
+        },
+
         /**
          * setRowNumber
          * @param pluginElm

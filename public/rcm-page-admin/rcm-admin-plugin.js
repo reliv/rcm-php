@@ -1,16 +1,20 @@
 /**
  * RcmAdminPlugin - AKA RcmPlugin - AKA pluginHandler
  *
- * @param page
+ * @param {RcmAdminPage} page
  * @param id
- * @param container
- * @param rcmAdminService
+ * @param {RcmAdminContainer} container
+ * @param {RcmAdminService} rcmAdminService
+ * @param {RcmAdminBlockEditorRegistry} rcmAdminBlockEditorRegistry
  * @constructor
  */
-var RcmAdminPlugin = function (page,
-                               id,
-                               container,
-                               rcmAdminService) {
+var RcmAdminPlugin = function (
+    page,
+    id,
+    container,
+    rcmAdminService,
+    rcmAdminBlockEditorRegistry
+) {
     var self = this;
 
     self.model = rcmAdminService.model.RcmPluginModel;
@@ -51,12 +55,7 @@ var RcmAdminPlugin = function (page,
 
     self.getInstanceId = function () {
         return self.getId();
-    }
-
-    //@TODO doesn't work seems to get wrong element
-    // self.getContainerElement = function () {
-    //     return self.containerModel.getElm()
-    // }
+    };
 
     /**
      * getElm
@@ -64,9 +63,7 @@ var RcmAdminPlugin = function (page,
      */
     self.getElm = function () {
 
-        var elm = self.model.getElm(self.container.id, self.id);
-
-        return elm;
+        return self.model.getElm(self.container.id, self.id);
     };
 
     /**
@@ -98,6 +95,26 @@ var RcmAdminPlugin = function (page,
         var pluginElm = self.getElm();
 
         return self.model.getOrder(pluginElm);
+    };
+
+    /**
+     * getPluginContainer
+     * @returns {*}
+     */
+    self.getPluginContainer = function () {
+        var pluginElm = self.getElm();
+
+        return self.model.getPluginContainer(pluginElm);
+    };
+
+    /**
+     * getEditor
+     * @returns {*}
+     */
+    self.getEditor = function () {
+        var pluginElm = self.getElm();
+
+        return self.model.getEditor(pluginElm);
     };
 
     /**
@@ -199,34 +216,20 @@ var RcmAdminPlugin = function (page,
     self.getPluginObject = function () {
 
         if (self.pluginObject) {
-
             return self.pluginObject;
         }
 
-        var pluginElm = self.getElm();
-
-        var name = self.model.getName(pluginElm);
-
-        var id = self.model.getId(pluginElm);
-        var pluginContainer = self.model.getPluginContainer(pluginElm);
-
-        if (name && id && pluginContainer) {
-
-            var className = name + 'Edit';
-            var editClass = window[className];
-
-            if (editClass) {
-                // first child of plugin
-                self.pluginObject = new editClass(id, pluginContainer, self);
-                return self.pluginObject;
-            }
-        }
-
-        self.pluginObject = new RcmAdminPluginEditJs(
-            id,
-            pluginContainer,
+        self.pluginObject = rcmAdminBlockEditorRegistry.buildEditor(
+            self.getEditor(),
             self
         );
+
+        if (self.pluginObject) {
+            return self.pluginObject;
+        }
+
+        /* NOOP pluginObject */
+        self.pluginObject = rcmBlockEditorNoopFactory(self);
 
         return self.pluginObject;
     };
@@ -339,7 +342,8 @@ var RcmAdminPlugin = function (page,
 
     /**
      * initEdit
-     * @param onInitted
+     * @param onInitted function
+     * @param refresh bool
      */
     self.initEdit = function (onInitted, refresh) {
 

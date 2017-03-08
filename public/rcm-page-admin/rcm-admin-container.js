@@ -5,6 +5,14 @@
  * @param elm
  * @constructor
  */
+/**
+ *
+ * @param page
+ * @param id
+ * @param rcmContainerModel
+ * @param onInitted
+ * @constructor
+ */
 var RcmAdminContainer = function (page, id, rcmContainerModel, onInitted) {
 
     var self = this;
