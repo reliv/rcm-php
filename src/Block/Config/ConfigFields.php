@@ -136,7 +136,7 @@ class ConfigFields
         }
 
         if (empty($new[self::RENDERER])) {
-            $new[self::RENDERER] = RendererBc::class;
+            $new[self::RENDERER] = 'rcm-plugin-bc';
         }
 
         if (empty($new[self::EDITOR])) {
