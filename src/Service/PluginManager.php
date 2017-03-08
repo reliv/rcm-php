@@ -218,59 +218,6 @@ class PluginManager
     }
 
     /**
-     * Get an instantiated plugin controller
-     *
-     * @param string $pluginName Plugin Name
-     *
-     * @return PluginInterface
-     * @throws \Rcm\Exception\InvalidPluginException
-     * @throws \Rcm\Exception\RuntimeException
-     */
-    public function getPluginController($pluginName)
-    {
-        /*
-         * Deprecated.  All controllers should come from the controller manager
-         * now and not the service manager.
-         *
-         * @todo Remove if statement once plugins have been converted.
-         */
-        if ($this->serviceManager->has($pluginName)) {
-            $serviceManager = $this->serviceManager;
-        } else {
-            $serviceManager = $this->serviceManager->get('ControllerLoader');
-        }
-
-        if (!$serviceManager->has($pluginName)) {
-            throw new InvalidPluginException(
-                "Plugin $pluginName is not loaded or configured. Check
-            config/application.config.php"
-            );
-        }
-
-        //Load the plugin controller
-        try {
-            $pluginController = $serviceManager->get($pluginName);
-        } catch (\Exception $e) {
-            throw new RuntimeException(
-                'Unable to get instance of plugin: ' . $pluginName,
-                1,
-                $e
-            );
-        }
-
-        //Plugin controllers must implement this interface
-        if (!$pluginController instanceof PluginInterface) {
-            throw new InvalidPluginException(
-                'Class "' . get_class($pluginController) . '" for plugin "'
-                . $pluginName . '" does not implement '
-                . '\Rcm\Plugin\PluginInterface'
-            );
-        }
-
-        return $pluginController;
-    }
-
-    /**
      * getInstanceConfigForPlugin
      *
      * @param $pluginInstanceId
@@ -299,7 +246,13 @@ class PluginManager
      */
     public function getDefaultInstanceConfig($pluginName)
     {
-        return $this->blockConfigRepository->findById($pluginName)->getDefaultConfig();
+        $blockConfig = $this->blockConfigRepository->findById($pluginName);
+
+        if (empty($blockConfig)) {
+            throw new \Exception('Block config not found for ' . $pluginName); //@TODO throw custom exception class
+        }
+
+        return $blockConfig->getDefaultConfig();
     }
 
     /**
