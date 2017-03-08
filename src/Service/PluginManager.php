@@ -167,58 +167,6 @@ class PluginManager
     }
 
     /**
-     * Get a plugin by instance Id
-     *
-     * @param integer $pluginInstanceId Plugin Instance Id
-     *
-     * @return array|mixed
-     * @throws \Rcm\Exception\PluginInstanceNotFoundException
-     * @deprecated
-     */
-    public function getPluginByInstanceId($pluginInstanceId)
-    {
-        $cacheId = 'rcmPluginInstance_' . $pluginInstanceId;
-
-        if ($this->cache->hasItem($cacheId)) {
-            $return = $this->cache->getItem($cacheId);
-            $return['fromCache'] = true;
-
-            return $return;
-        }
-
-        $pluginInstance = $this->getInstanceEntity($pluginInstanceId);
-
-        if (empty($pluginInstance)) {
-            throw new PluginInstanceNotFoundException(
-                'Plugin for instance id ' . $pluginInstanceId . ' not found.'
-            );
-        }
-
-        $return = $this->getPluginViewData(
-            $pluginInstance->getPlugin(),
-            $pluginInstanceId
-        );
-
-        if ($pluginInstance->isSiteWide()) {
-            $return['siteWide'] = true;
-
-            $displayName = $pluginInstance->getDisplayName();
-
-            if (!empty($displayName)) {
-                $return['displayName'] = $displayName;
-            }
-        }
-
-        $return['md5'] = $pluginInstance->getMd5();
-
-        if ($return['canCache']) {
-            $this->cache->setItem($cacheId, $return);
-        }
-
-        return $return;
-    }
-
-    /**
      * Get a plugin instance rendered view.
      *
      * @param string $pluginName Plugin name
