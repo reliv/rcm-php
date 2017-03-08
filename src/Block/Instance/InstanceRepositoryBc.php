@@ -3,6 +3,7 @@
 namespace Rcm\Block\Instance;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\Block\Config\ConfigRepository;
 use Rcm\Core\Repository\AbstractRepository;
 use Rcm\Entity\PluginInstance;
 
@@ -21,15 +22,23 @@ class InstanceRepositoryBc extends AbstractRepository implements InstanceReposit
      */
     protected $pluginInstanceRepository;
 
+    protected $blockConfigRepository;
+
+    protected $instanceConfigMerger;
+
     /**
      * Constructor.
      *
      * @param EntityManager $entityManager
      */
     public function __construct(
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        ConfigRepository $blockConfigRepository,
+        InstanceConfigMerger $instanceConfigMerger
     ) {
         $this->pluginInstanceRepository = $entityManager->getRepository(PluginInstance::class);
+        $this->blockConfigRepository = $blockConfigRepository;
+        $this->instanceConfigMerger = $instanceConfigMerger;
     }
 
     /**
@@ -62,12 +71,14 @@ class InstanceRepositoryBc extends AbstractRepository implements InstanceReposit
             return null;
         }
 
-        $config = $pluginInstance->getInstanceConfig();
+        $configFromDb = $pluginInstance->getInstanceConfig();
+        $defaultConfig = $this->blockConfigRepository->findById($pluginInstance->getPlugin())->getDefaultConfig();
+        $mergedConfig = $this->instanceConfigMerger->__invoke($defaultConfig, $configFromDb);
 
         $blockInstance = $this->getNew(
             $id,
             $pluginInstance->getPlugin(),
-            $config,
+            $mergedConfig,
             []
         );
 

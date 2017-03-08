@@ -4,6 +4,7 @@ namespace Rcm\Block\Instance;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Rcm\Block\Config\ConfigRepository;
 
 /**
  * Class InstanceRepositoryBcFactory
@@ -24,7 +25,9 @@ class InstanceRepositoryBcFactory
     public function __invoke($container)
     {
         return new InstanceRepositoryBc(
-            $container->get(EntityManager::class)
+            $container->get(EntityManager::class),
+            $container->get(ConfigRepository::class),
+            $container->get(InstanceConfigMerger::class)
         );
     }
 }

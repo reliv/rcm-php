@@ -13,7 +13,7 @@ namespace Rcm\Page\PageStatus;
 class PageStatus
 {
     const STATUS_OK = 200;
-    const STATUS_NOT_FOUND = 404; // 404
+    const STATUS_NOT_FOUND = 404;
     const STATUS_NOT_AUTHORIZED = 401;
 
     /**
@@ -66,7 +66,6 @@ class PageStatus
      */
     public function getNotFoundStatus()
     {
-        throw new \Exception('test');
         return self::STATUS_NOT_FOUND;
     }
 

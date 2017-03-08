@@ -22,7 +22,7 @@ class RendererMustache implements Renderer
         /**
          * @var $blockConfig Config
          */
-        $blockConfig = $this->blockConfigRepository->findOne(['name' => $instance->getName()]);
+        $blockConfig = $this->blockConfigRepository->findById($instance->getName());
 
         $resolver = new DefaultResolver();
         $resolver->addTemplatePath($blockConfig->getDirectory());

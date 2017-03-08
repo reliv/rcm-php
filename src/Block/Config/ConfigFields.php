@@ -22,7 +22,7 @@ class ConfigFields
     const EDITOR = 'editor';
     const CACHE = 'cache';
     const FIELDS = 'fields';
-    const CONFIG = 'config';
+    const CONFIG = 'defaultInstanceConfig';
 
     protected $fields
         = [

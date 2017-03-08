@@ -33,17 +33,10 @@ class NewPluginInstanceApiController extends AbstractActionController
         $instanceId = $routeMatch->getParam('instanceId');
         $pluginManager = $this->getServiceLocator()
             ->get('Rcm\Service\PluginManager');
-        if ($instanceId < 0) {
-            $instanceConfig = $pluginManager
-                ->getDefaultInstanceConfig($pluginType);
-        } else {
-            $instanceConfig = $pluginManager->getInstanceConfig($instanceId);
-        }
 
         $viewData = $pluginManager->getPluginViewData(
             $pluginType,
-            $instanceId,
-            $instanceConfig
+            $instanceId
         );
         $html = $viewData['html'];
         $headLink = new HeadLink();

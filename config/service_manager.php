@@ -42,7 +42,8 @@ return [
 
         \Rcm\Block\Renderer\RendererBc::class => \Rcm\Block\Renderer\RendererBcFactory::class,
 
-        'mustache' => \Rcm\Block\Renderer\RendererMustacheFactory::class, //@TODO decouple service name from renderer name
+        'mustache' => \Rcm\Block\Renderer\RendererMustacheFactory::class,
+        //@TODO decouple service name from renderer name
 
         'Rcm\EventListener\EventWrapper'
         => 'Rcm\Factory\EventWrapperFactory',
@@ -93,8 +94,7 @@ return [
         => \Rcm\Factory\ServiceLocaleServiceFactory::class,
         'Rcm\Service\Logger'
         => 'Rcm\Factory\LoggerFactory',
-        'Rcm\Service\PluginManager'
-        => 'Rcm\Factory\PluginManagerFactory',
+        \Rcm\Service\PluginManager::class => \Rcm\Service\PluginManagerFactory::class,
         'Rcm\Service\RcmUser'
         => 'Rcm\Factory\RcmUserFactory',
         \Rcm\Service\RedirectService::class
@@ -117,9 +117,10 @@ return [
         => 'Rcm\Factory\MainLayoutValidatorFactory',
     ],
     'invokables' => [
-    'Rcm\Service\DisplayCountService' => 'Rcm\Service\DisplayCountService'
-],
+        'Rcm\Service\DisplayCountService' => 'Rcm\Service\DisplayCountService',
+        \Rcm\Block\Instance\InstanceConfigMerger::class => \Rcm\Block\Instance\InstanceConfigMerger::class
+    ],
     'aliases' => [
-    'rcmLogger' => 'Rcm\Service\Logger',
-]
+        'rcmLogger' => 'Rcm\Service\Logger',
+    ]
 ];

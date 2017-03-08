@@ -60,7 +60,7 @@ class RendererRepositoryBasic implements RendererRepository
     protected function getProviderService($blockName)
     {
         /** @var Config $config */
-        $config = $this->configRepository->findOne(['name' => $blockName]);
+        $config = $this->configRepository->findById($blockName);
 
         if (empty($config)) {
             return $this->container->get($this->defaultRenderServiceName);
