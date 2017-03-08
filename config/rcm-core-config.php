@@ -6,11 +6,6 @@ return [
     /**
      * @GammaRelease
      */
-    'block-default-render' => \Rcm\Block\Renderer\RendererBc::class,
-
-    /**
-     * @GammaRelease
-     */
     'blocks' => [
         // 'module/path/', to block.json
     ],
@@ -19,12 +14,30 @@ return [
      */
     'defaultDomain' => null,
 
+    /**
+     * defaultLocale
+     */
     'defaultLocale' => 'en_US',
 
     /**
      * defaultPluginIcon - Default icon in not defined by plugin
      */
     'defaultPluginIcon' => '/modules/rcm/images/no-plugin-icon.png',
+
+    /**
+     * Renderer aliases
+     */
+    'block-render' => [
+        'rcm-plugin-bc' => \Rcm\Block\Renderer\RendererBc::class,
+        'mustache' => \Rcm\Block\Renderer\RendererMustache::class,
+    ],
+
+    'block-editor-strategy' => [
+        // @todo Document this
+        'name-as-js-class',
+        // @todo Document this
+        'field-dialog',
+    ],
 
     /**
      * Available page types

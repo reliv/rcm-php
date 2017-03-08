@@ -22,9 +22,9 @@ class RendererRepositoryBasic implements RendererRepository
     protected $configRepository;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $defaultRenderServiceName;
+    protected $rendererAliases;
 
     /**
      * @var ContainerInterface
@@ -34,18 +34,18 @@ class RendererRepositoryBasic implements RendererRepository
     /**
      * Constructor.
      *
-     * @param ConfigRepository $configRepository
-     * @param                  $defaultRenderServiceName
-     * @param                  $container
+     * @param ConfigRepository   $configRepository
+     * @param array              $rendererAliases
+     * @param ContainerInterface $container
      */
     public function __construct(
         ConfigRepository $configRepository,
-        $defaultRenderServiceName,
+        $rendererAliases,
         $container
     ) {
         $this->configRepository = $configRepository;
 
-        $this->defaultRenderServiceName = $defaultRenderServiceName;
+        $this->rendererAliases = $rendererAliases;
 
         $this->container = $container;
     }
@@ -55,7 +55,7 @@ class RendererRepositoryBasic implements RendererRepository
      *
      * @param string $blockName
      *
-     * @return Renderer
+     * @return Renderer|null
      */
     protected function getProviderService($blockName)
     {
@@ -63,13 +63,19 @@ class RendererRepositoryBasic implements RendererRepository
         $config = $this->configRepository->findById($blockName);
 
         if (empty($config)) {
-            return $this->container->get($this->defaultRenderServiceName);
+            return null;
         }
 
-        $serviceName = $config->getRenderer();
+        $alias = $config->getRenderer();
+
+        if (empty($this->rendererAliases[$alias])) {
+            return null;
+        }
+
+        $serviceName = $this->rendererAliases[$alias];
 
         if (empty($serviceName)) {
-            return $this->container->get($this->defaultRenderServiceName);
+            return null;
         }
 
         return $this->container->get($serviceName);
