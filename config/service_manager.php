@@ -8,7 +8,7 @@ return [
         => 'Rcm\Factory\DoctrineCacheFactory',
         'Rcm\Acl\CmsPermissionsChecks'
         => '\Rcm\Factory\CmsPermissionsChecksFactory',
-        'Rcm\Acl\ResourceProvider'
+        \Rcm\Acl\ResourceProvider::class
         => 'Rcm\Factory\AclResourceProviderFactory',
 
         /* BLOCK */

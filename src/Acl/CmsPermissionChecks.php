@@ -58,7 +58,7 @@ class CmsPermissionChecks
                 $page->getName()
             ),
             'read',
-            'Rcm\Acl\ResourceProvider'
+            \Rcm\Acl\ResourceProvider::class
         );
 
         /* ltrim added for BC */
@@ -91,7 +91,7 @@ class CmsPermissionChecks
                 $site->getSiteId()
             ),
             'admin',
-            'Rcm\Acl\ResourceProvider'
+            \Rcm\Acl\ResourceProvider::class
         );
     }
 
@@ -131,7 +131,7 @@ class CmsPermissionChecks
                 $pageName
             ),
             'edit',
-            'Rcm\Acl\ResourceProvider'
+            \Rcm\Acl\ResourceProvider::class
         );
 
         if ($allowedRevisions) {
@@ -145,7 +145,7 @@ class CmsPermissionChecks
                 $pageName
             ),
             'approve',
-            'Rcm\Acl\ResourceProvider'
+            \Rcm\Acl\ResourceProvider::class
         );
 
         if ($allowedRevisions) {
@@ -159,7 +159,7 @@ class CmsPermissionChecks
                 $pageName
             ),
             'revisions',
-            'Rcm\Acl\ResourceProvider'
+            \Rcm\Acl\ResourceProvider::class
         );
 
         if ($allowedRevisions) {
@@ -171,7 +171,7 @@ class CmsPermissionChecks
                 $siteId
             ),
             'create',
-            'Rcm\Acl\ResourceProvider'
+            \Rcm\Acl\ResourceProvider::class
         );
 
         if ($allowedRevisions) {

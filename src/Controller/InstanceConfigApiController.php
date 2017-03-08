@@ -37,7 +37,7 @@ class InstanceConfigApiController extends AbstractRestfulController
             ->get('RcmUser\Service\RcmUserService')->isAllowed(
                 'sites.' . $siteId,
                 'admin',
-                'Rcm\Acl\ResourceProvider'
+                \Rcm\Acl\ResourceProvider::class
             );
         if (!$allowed) {
             $this->getResponse()->setStatusCode(401);
