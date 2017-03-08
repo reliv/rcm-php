@@ -17,6 +17,13 @@ class RendererMustache implements Renderer
         $this->blockConfigRepository = $blockConfigRepository;
     }
 
+    /**
+     * __invoke
+     *
+     * @param InstanceWithData $instance
+     *
+     * @return string
+     */
     public function __invoke(InstanceWithData $instance)
     {
         /**

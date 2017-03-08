@@ -131,7 +131,6 @@ class ConfigRepositoryJson extends ConfigRepositoryArray implements ConfigReposi
             $configFileContents = file_get_contents($configFileName);
             $config = json_decode($configFileContents, true, 512, JSON_BIGINT_AS_STRING);
             $config['directory'] = realpath($pluginDir);
-            $config['template']['path'] = 'template';
             $pluginConfigs[$config['name']] = $config;
         }
 

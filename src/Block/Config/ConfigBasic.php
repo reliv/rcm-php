@@ -164,4 +164,14 @@ class ConfigBasic implements Config
     {
         return $this->get(ConfigFields::CONFIG);
     }
+
+    /**
+     * toArray
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->config;
+    }
 }
