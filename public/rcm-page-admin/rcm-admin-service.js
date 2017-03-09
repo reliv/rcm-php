@@ -1,11 +1,14 @@
 /**
  * RcmAdminService
- * REQUIRES:
- * RcmEventManager
- * rcmAdminServiceConfig
- * RcmAdminModel
- * RcmAdminViewModel
- * RcmAdminPage
+ * @param {jQuery} jQuery
+ * @param {angular} angular
+ * @param {rcmAdminServiceConfig} rcmAdminServiceConfig
+ * @param {RcmEventManager} rcmEventManager
+ * @param {rcmBlockConfigs} rcmBlockConfigs
+ * @param {RcmAdminModel} RcmAdminModel
+ * @param {RcmAdminViewModel} RcmAdminViewModel
+ * @param {RcmAdminPage} RcmAdminPage
+ * @constructor
  */
 var RcmAdminService = function (
     jQuery,
