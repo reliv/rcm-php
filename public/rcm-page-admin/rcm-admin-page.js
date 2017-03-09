@@ -202,7 +202,7 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
     /**
      * getPlugin
      * @param pluginId
-     * @returns {*}
+     * @returns {RcmAdminPlugin}|null
      */
     self.getPlugin = function (pluginId) {
         if (self.plugins[pluginId]) {

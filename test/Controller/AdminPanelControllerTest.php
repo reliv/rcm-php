@@ -133,7 +133,7 @@ class AdminPanelControllerTest extends \PHPUnit_Framework_TestCase
                             'AddRemoveArrangePlugins' => [
                                 'label' => 'Add/Remove/Arrange Plugins',
                                 'class' => 'rcmAdminEditButton',
-                                'uri' => "javascript:RcmAdminService.rcmAdminEditButtonAction('arrange');",
+                                'uri' => "javascript:rcmAdminService.rcmAdminEditButtonAction('arrange');",
                             ],
                             'PageProperties' => [
                                 'label' => 'Page Properties',

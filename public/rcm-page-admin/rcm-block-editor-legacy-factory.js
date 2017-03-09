@@ -7,6 +7,7 @@
 var rcmBlockEditorLegacyFactory = function (pluginHandler) {
 
     var className = pluginHandler.getName() + 'Edit';
+
     var editClass = window[className];
 
     if (editClass) {

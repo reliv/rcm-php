@@ -71,7 +71,7 @@ angular.module('rcmAdminPageDelete', ['rcmApi', 'rcmAdminApi'])
                  */
                 var init = function () {
 
-                    data = RcmAdminService.model.RcmPageModel.getData();
+                    data = rcmAdminService.model.RcmPageModel.getData();
 
                     if (!data.page.id) {
                         $scope.canDelete = false;

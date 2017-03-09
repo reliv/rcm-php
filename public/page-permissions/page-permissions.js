@@ -16,7 +16,7 @@ angular.module('pagePermissions', ['rcmUserRoleSelector'])
             ) {
                 var thisLink = function (scope, element, attrs) {
 
-                    scope.isEditable = RcmAdminService.model.RcmPageModel.isEditable();
+                    scope.isEditable = rcmAdminService.model.RcmPageModel.isEditable();
 
                     if (!scope.isEditable) {
                         // This page can not be edited

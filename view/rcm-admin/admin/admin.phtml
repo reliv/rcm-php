@@ -2,6 +2,10 @@
 
 $this->rcmHtmlIncludes();
 
+$this->headScript()->appendFile(
+    $this->basePath() . '/rcm-admin/available-block.js'
+);
+
 // RcmUser JS
 $this->headScript()->appendFile(
     $this->basePath()

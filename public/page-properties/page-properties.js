@@ -27,7 +27,7 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                 $scope.saveFail = false;
                 $scope.message = '';
 
-                $scope.isEditable = RcmAdminService.model.RcmPageModel.isEditable();
+                $scope.isEditable = rcmAdminService.model.RcmPageModel.isEditable();
 
                 if (!$scope.isEditable) {
                     $scope.message = 'This page can not be edited';
@@ -35,7 +35,7 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                 }
 
                 //getting title, description and keywords from dom to our form
-                var pageData = RcmAdminService.model.RcmPageModel.getData();
+                var pageData = rcmAdminService.model.RcmPageModel.getData();
 
                 /**
                  *
@@ -93,7 +93,7 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
 
                     syncDataFromApi(data);
 
-                    RcmAdminService.model.RcmPageModel.setData(pageData);
+                    rcmAdminService.model.RcmPageModel.setData(pageData);
                 };
 
                 //save function

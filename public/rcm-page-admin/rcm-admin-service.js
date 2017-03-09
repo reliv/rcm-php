@@ -1,13 +1,25 @@
 /**
  * RcmAdminService
- * REQUIRES:
- * RcmEventManager
- * rcmAdminServiceConfig
- * RcmAdminModel
- * RcmAdminViewModel
- * RcmAdminPage
+ * @param {jQuery} jQuery
+ * @param {angular} angular
+ * @param {rcmAdminServiceConfig} rcmAdminServiceConfig
+ * @param {RcmEventManager} rcmEventManager
+ * @param {rcmBlockConfigs} rcmBlockConfigs
+ * @param {RcmAdminModel} RcmAdminModel
+ * @param {RcmAdminViewModel} RcmAdminViewModel
+ * @param {RcmAdminPage} RcmAdminPage
+ * @constructor
  */
-var RcmAdminService = new function () {
+var RcmAdminService = function (
+    jQuery,
+    angular,
+    rcmAdminServiceConfig,
+    rcmEventManager,
+    rcmBlockConfigs,
+    RcmAdminModel,
+    RcmAdminViewModel,
+    RcmAdminPage
+) {
 
     var self = this;
 
@@ -25,7 +37,7 @@ var RcmAdminService = new function () {
      * RcmEventManager
      * @constructor
      */
-    self.rcmEventManager = new RcmEventManager();
+    self.rcmEventManager = rcmEventManager;
 
     /**
      * canEdit - server check if use can edit
@@ -41,29 +53,31 @@ var RcmAdminService = new function () {
             }
         )
             .done(
-            function (data) {
-                /** {bool} */
-                var canEdit = data.data.canEdit;
-                self.rcmEventManager.trigger('rcmAdminService.editCheck', canEdit);
-                if(typeof callback === 'function') {
-                    callback(canEdit);
+                function (data) {
+                    /** {bool} */
+                    var canEdit = data.data.canEdit;
+                    self.rcmEventManager.trigger('rcmAdminService.editCheck', canEdit);
+                    if (typeof callback === 'function') {
+                        callback(canEdit);
+                    }
                 }
-            }
-        )
+            )
             .fail(
-            function () {
-                self.rcmEventManager.trigger('rcmAdminService.editCheck', false);
-                if(typeof callback === 'function') {
-                    callback(false);
+                function () {
+                    self.rcmEventManager.trigger('rcmAdminService.editCheck', false);
+                    if (typeof callback === 'function') {
+                        callback(false);
+                    }
                 }
-            }
-        );
+            );
     };
 
     /**
      * model
      */
-    self.model = new RcmAdminModel();
+    self.model = new RcmAdminModel(
+        rcmBlockConfigs
+    );
 
     /**
      * viewModel
@@ -86,7 +100,7 @@ var RcmAdminService = new function () {
     /**
      * getPage
      * @param onBuilt
-     * @returns {null}
+     * @returns {RcmAdminPage}|null
      */
     self.getPage = function (onBuilt) {
 
@@ -119,7 +133,7 @@ var RcmAdminService = new function () {
      * getPlugin
      * @param id
      * @param onComplete
-     * @returns {RcmPlugin}
+     * @returns {RcmAdminPlugin}
      */
     self.getPlugin = function (id, onComplete) {
 
@@ -158,3 +172,14 @@ var RcmAdminService = new function () {
         }
     };
 };
+
+var rcmAdminService = new RcmAdminService(
+    window.jQuery,
+    window.angular,
+    window.rcmAdminServiceConfig,
+    new RcmEventManager(),
+    window.rcmBlockConfigs,
+    window.RcmAdminModel,
+    window.RcmAdminViewModel,
+    window.RcmAdminPage
+);

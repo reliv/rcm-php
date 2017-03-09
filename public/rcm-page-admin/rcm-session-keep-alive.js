@@ -5,7 +5,7 @@
 (function () {
 
     var sessionKeepAlive = null;
-    RcmAdminService.rcmEventManager.on(
+    rcmAdminService.rcmEventManager.on(
         'editingStateChange',
         function (page) {
             // Set interval if edit mode and no current interval
@@ -17,7 +17,7 @@
                         $.post(
                             '/api/rpc/rcm-admin/keep-alive',
                             {'requestTime': timestamp},
-                            function(data){
+                            function (data) {
                                 // console.log('keep-alive',data);
                             }
                         );
