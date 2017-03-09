@@ -1,3 +1,21 @@
+/**
+ * Takes a block configs associative-array and returns a map of them sorted into smaller associative-arrays
+ * by their category
+ * @param blockConfigs
+ * @returns {{}|*}
+ */
+function rcmAdminSortBlockConfigsByCategory(blockConfigs) {
+    blockConfigsByCategory = {};
+    for (blockName in blockConfigs) {
+        blockConfig = blockConfigs[blockName];
+        if (!blockConfigsByCategory[blockConfig.category]) {
+            blockConfigsByCategory[blockConfig.category] = {};
+        }
+        blockConfigsByCategory[blockConfig.category][blockConfig.name] = blockConfig;
+    }
+    return blockConfigsByCategory;
+}
+
 var RcmAvailablePluginsMenu = {
 
     menu: null,
@@ -40,8 +58,10 @@ var RcmAvailablePluginsMenu = {
             menu.draggable({cancel: '.panel-group'});
             var categoryIndex = 0;
             var newInstanceId = 0;
+
+
             $.each(
-                window.rcmAvailablePlugins,
+                rcmAdminSortBlockConfigsByCategory(window.rcmBlockConfigs),
                 function (category, plugins) {
 
                     var collapseId = 'availablePluginsCollapse' + categoryIndex;
@@ -79,11 +99,15 @@ var RcmAvailablePluginsMenu = {
                             plugin.data('pluginName', pluginInfo.name);
 
                             var icon = $('<img>');
-                            icon.attr('src', pluginInfo.icon);
+                            var iconSrc = pluginInfo.icon;
+                            if (!iconSrc) {
+                                iconSrc = '/modules/rcm/images/no-plugin-icon.png';
+                            }
+                            icon.attr('src', iconSrc);
                             icon.appendTo(plugin);
                             var displayName = $('<span></span>');
                             displayName.appendTo(plugin);
-                            displayName.html(pluginInfo.displayName);
+                            displayName.html(pluginInfo.label);
 
                             var initialState = $('<div class="initialState"></div>');
                             initialState.css('display', 'none');

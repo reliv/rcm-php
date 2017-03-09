@@ -38,21 +38,6 @@ class AvailablePluginsJsList extends AbstractHelper
         $view = $this->getView();
         $headScript = $view->headScript();
 
-        /** @var PluginManager $plugins */
-        $plugins = $this->getServiceLocator()
-            ->get('Rcm\Service\PluginManager')
-            ->listAvailablePluginsByType();
-
-        $plugins['Site Wide'] = $this->getServiceLocator()
-            ->get('Rcm\Service\CurrentSite')
-            ->listAvailableSiteWidePlugins();
-
-        foreach ($plugins['Site Wide'] as $key => $value) {
-            if (empty($plugins['Site Wide'][$key]['icon'])) {
-                $plugins['Site Wide'][$key]['icon'] = $this->getDefaultPluginIcon();
-            }
-        }
-
         // @GammaRelease
         /** @var ConfigRepository $blockConfigRepository */
         $blockConfigRepository = $this->getServiceLocator()
@@ -69,12 +54,8 @@ class AvailablePluginsJsList extends AbstractHelper
             $blockConfigArray[$blockConfig->getName()] = $blockConfig->toArray();
         }
 
-        $script = 'var rcmAvailablePlugins=' . json_encode($plugins) . ";\n\n";
-        // @GammaRelease
-        $script .= 'var rcmBlockConfigs=' . json_encode($blockConfigArray) . ";";
-
         $headScript->appendScript(
-            $script
+            'var rcmBlockConfigs=' . json_encode($blockConfigArray) . ";"
         );
     }
 
