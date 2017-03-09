@@ -301,8 +301,7 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
                 ' getInstanceConfig received invalid JSON value: ' .
                 '"' . var_export($this->instanceConfig, true) . '"' .
                 ' with error ' . json_last_error_msg();
-            var_dump($message);
-            //throw new \Exception($message);
+            throw new \Exception($message);
         }
 
         if (!is_array($value)) {
