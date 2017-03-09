@@ -1,5 +1,5 @@
 var RcmPluginDrag = {
-
+    
     /**
      * Sets up everything to do with plugin dragging
      */

@@ -7,7 +7,16 @@
  * RcmAdminViewModel
  * RcmAdminPage
  */
-var RcmAdminService = function () {
+var RcmAdminService = function (
+    jQuery,
+    angular,
+    rcmAdminServiceConfig,
+    rcmEventManager,
+    rcmBlockConfigs,
+    RcmAdminModel,
+    RcmAdminViewModel,
+    RcmAdminPage
+) {
 
     var self = this;
 
@@ -25,7 +34,7 @@ var RcmAdminService = function () {
      * RcmEventManager
      * @constructor
      */
-    self.rcmEventManager = new RcmEventManager();
+    self.rcmEventManager = rcmEventManager;
 
     /**
      * canEdit - server check if use can edit
@@ -64,7 +73,7 @@ var RcmAdminService = function () {
      * model
      */
     self.model = new RcmAdminModel(
-        window.rcmBlockConfigs
+        rcmBlockConfigs
     );
 
     /**
@@ -161,4 +170,13 @@ var RcmAdminService = function () {
     };
 };
 
-var rcmAdminService = new RcmAdminService();
+var rcmAdminService = new RcmAdminService(
+    window.jQuery,
+    window.angular,
+    window.rcmAdminServiceConfig,
+    new RcmEventManager(),
+    window.rcmBlockConfigs,
+    window.RcmAdminModel,
+    window.RcmAdminViewModel,
+    window.RcmAdminPage
+);
