@@ -21,6 +21,7 @@ namespace RcmTest\Factory;
 
 require_once __DIR__ . '/../../../autoload.php';
 
+use Rcm\Block\Config\ConfigRepository;
 use Rcm\Entity\Site;
 use Rcm\Factory\ContainerViewHelperFactory;
 use Rcm\View\Helper\Container;
@@ -70,6 +71,11 @@ class ContainerViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($mockContainerRepo));
 
+        $mockConfigRepository = $this
+            ->getMockBuilder(ConfigRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $site = new Site();
         $site->setSiteId(1);
 
@@ -77,6 +83,7 @@ class ContainerViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
         $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
         $sm->setService('Rcm\Service\PluginManager', $mockPluginManager);
         $sm->setService('Rcm\Service\CurrentSite', $site);
+        $sm->setService(ConfigRepository::class, $mockConfigRepository);
 
         $helperManager = new HelperPluginManager();
         $helperManager->setServiceLocator($sm);
