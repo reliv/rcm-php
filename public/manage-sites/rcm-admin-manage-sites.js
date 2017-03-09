@@ -4,7 +4,7 @@ angular.module('rcmAdmin').controller(
         '$scope', '$http', 'rcmApiService', 'rcmAdminApiUrlService', 'rcmLoading',
         function ($scope, $http, rcmApiService, rcmAdminApiUrlService, rcmLoading) {
 
-            var pageData = RcmAdminService.model.RcmPageModel.getData();
+            var pageData = rcmAdminService.model.RcmPageModel.getData();
 
             $scope.currentSiteId = pageData.page.siteId;
 

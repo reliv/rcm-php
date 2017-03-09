@@ -112,9 +112,7 @@ var RcmAdminPlugin = function (
      * @returns {*}
      */
     self.getEditor = function () {
-        var pluginElm = self.getElm();
-
-        return self.model.getEditor(pluginElm);
+        return self.model.getEditor(self.getName());
     };
 
     /**
@@ -346,7 +344,6 @@ var RcmAdminPlugin = function (
      * @param refresh bool
      */
     self.initEdit = function (onInitted, refresh) {
-
         var elm = self.getElm();
         self.viewModel.enableEdit(
             elm,

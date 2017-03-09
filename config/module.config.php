@@ -103,7 +103,9 @@ return [
             'RcmAdmin\Controller\PageController'
             => 'RcmAdmin\Factory\PageControllerFactory',
             RcmAdmin\Controller\ApiAdminSitePageController::class
-            => RcmAdmin\Factory\ApiAdminSitePageControllerFactory::class
+            => RcmAdmin\Factory\ApiAdminSitePageControllerFactory::class,
+            RcmAdmin\Controller\AvailableBlocksJsController::class
+            => RcmAdmin\Factory\AvailableBlocksJsControllerFactory::class,
         ],
         'invokables' => [
             'RcmAdmin\Controller\PagePermissionsController'
@@ -188,7 +190,7 @@ return [
                             'AddRemoveArrangePlugins' => [
                                 'label' => 'Add/Remove/Arrange Plugins',
                                 'class' => 'rcmAdminEditButton',
-                                'uri' => "javascript:RcmAdminService.rcmAdminEditButtonAction('arrange');",
+                                'uri' => "javascript:rcmAdminService.rcmAdminEditButtonAction('arrange');",
                             ],
                             'PageProperties' => [
                                 'label' => 'Page Properties',
@@ -616,6 +618,16 @@ return [
                     ],
                 ],
             ],
+            'rcm-admin.available-block.js' => [
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => [
+                    'route' => '/rcm-admin/available-block.js',
+                    'defaults' => [
+                        'controller' => RcmAdmin\Controller\AvailableBlocksJsController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     /* service_manager */
@@ -636,6 +648,8 @@ return [
             => 'RcmAdmin\Factory\AdminPanelControllerFactory',
             'RcmAdminNavigation'
             => 'RcmAdmin\Factory\AdminNavigationFactory',
+            \RcmAdmin\Service\RendererAvailableBlocksJs::class
+            => \RcmAdmin\Service\RendererAvailableBlocksJsFactory::class,
         ],
     ],
     /* view_manager */
@@ -649,9 +663,9 @@ return [
     ],
     /* view_helpers */
     'view_helpers' => [
-        'factories' => [
-            'availablePluginsList' => \RcmAdmin\Factory\AvailablePluginsJsListFactory::class
-        ],
+        //'factories' => [
+        //    'availablePluginsList' => \RcmAdmin\Factory\AvailablePluginsJsListFactory::class
+        //],
         'invokables' => [
             'formPageLayout' => 'RcmAdmin\View\Helper\FormPageLayout',
             'displayErrors' => 'RcmAdmin\View\Helper\DisplayErrors',

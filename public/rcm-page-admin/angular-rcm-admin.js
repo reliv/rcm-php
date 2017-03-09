@@ -17,7 +17,7 @@ angular.module(
     'rcmAdminService',
     [
         function () {
-            return RcmAdminService;
+            return rcmAdminService;
         }
     ]
 )

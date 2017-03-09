@@ -236,8 +236,7 @@ var RcmPluginDrag = {
      * @param ui
      */
     pluginSortableStop: function (event, ui) {
-
-        RcmAdminService.getPage().registerObjects();
+        rcmAdminService.getPage().registerObjects();
         setTimeout(
             function () {
                 RcmPluginDrag.refresh();//Fix Rows
@@ -290,7 +289,7 @@ var RcmPluginDrag = {
             //}
         }
 
-        var page = RcmAdminService.getPage();
+        var page = rcmAdminService.getPage();
 
         page.registerObjects(
             function () {
@@ -314,7 +313,7 @@ var RcmPluginDrag = {
         }
         var pluginData = {
             pluginName: $(pluginContainer).attr('data-rcmPluginName'),
-            isSiteWide: RcmAdminService.model.RcmPluginModel.isSitewide($(pluginContainer)),
+            isSiteWide: rcmAdminService.model.RcmPluginModel.isSitewide($(pluginContainer)),
             instanceId: $(pluginContainer).attr('data-rcmPluginInstanceId'),
             displayName: $(pluginContainer).attr('data-rcmPluginDisplayName')
         };

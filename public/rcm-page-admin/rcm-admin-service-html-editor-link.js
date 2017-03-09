@@ -4,11 +4,11 @@
  * @param rcmHtmlEditorDestroy
  * @returns {Function}
  */
-RcmAdminService.getHtmlEditorLink = function (rcmHtmlEditorInit, rcmHtmlEditorDestroy, directiveId) {
+rcmAdminService.getHtmlEditorLink = function (rcmHtmlEditorInit, rcmHtmlEditorDestroy, directiveId) {
 
     return function (tElem) {
 
-        var page = RcmAdminService.getPage();
+        var page = rcmAdminService.getPage();
 
         return function (scope, elm, attrs, ngModel) {
 

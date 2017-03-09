@@ -1,4 +1,4 @@
-RcmAdminService.editCheckWarning = function () {
+rcmAdminService.editCheckWarning = function () {
 
     var showWarning = function () {
         bootbox.dialog(
@@ -41,12 +41,12 @@ RcmAdminService.editCheckWarning = function () {
     var checkPageEditMode = function (page) {
 
         if (page.editMode) {
-            RcmAdminService.canEdit(); // will trigger rcmAdminService.editCheck event
+            rcmAdminService.canEdit(); // will trigger rcmAdminService.editCheck event
         }
     };
 
-    RcmAdminService.rcmEventManager.on('editingStateChange', checkPageEditMode);
-    RcmAdminService.rcmEventManager.on('rcmAdminService.editCheck', checkCanEdit);
+    rcmAdminService.rcmEventManager.on('editingStateChange', checkPageEditMode);
+    rcmAdminService.rcmEventManager.on('rcmAdminService.editCheck', checkCanEdit);
 };
 
-RcmAdminService.editCheckWarning();
+rcmAdminService.editCheckWarning();

@@ -7,7 +7,7 @@
  * RcmAdminViewModel
  * RcmAdminPage
  */
-var RcmAdminService = new function () {
+var RcmAdminService = function () {
 
     var self = this;
 
@@ -41,29 +41,31 @@ var RcmAdminService = new function () {
             }
         )
             .done(
-            function (data) {
-                /** {bool} */
-                var canEdit = data.data.canEdit;
-                self.rcmEventManager.trigger('rcmAdminService.editCheck', canEdit);
-                if(typeof callback === 'function') {
-                    callback(canEdit);
+                function (data) {
+                    /** {bool} */
+                    var canEdit = data.data.canEdit;
+                    self.rcmEventManager.trigger('rcmAdminService.editCheck', canEdit);
+                    if (typeof callback === 'function') {
+                        callback(canEdit);
+                    }
                 }
-            }
-        )
+            )
             .fail(
-            function () {
-                self.rcmEventManager.trigger('rcmAdminService.editCheck', false);
-                if(typeof callback === 'function') {
-                    callback(false);
+                function () {
+                    self.rcmEventManager.trigger('rcmAdminService.editCheck', false);
+                    if (typeof callback === 'function') {
+                        callback(false);
+                    }
                 }
-            }
-        );
+            );
     };
 
     /**
      * model
      */
-    self.model = new RcmAdminModel();
+    self.model = new RcmAdminModel(
+        window.rcmBlockConfigs
+    );
 
     /**
      * viewModel
@@ -86,7 +88,7 @@ var RcmAdminService = new function () {
     /**
      * getPage
      * @param onBuilt
-     * @returns {null}
+     * @returns {RcmAdminPage}|null
      */
     self.getPage = function (onBuilt) {
 
@@ -119,7 +121,7 @@ var RcmAdminService = new function () {
      * getPlugin
      * @param id
      * @param onComplete
-     * @returns {RcmPlugin}
+     * @returns {RcmAdminPlugin}
      */
     self.getPlugin = function (id, onComplete) {
 
@@ -158,3 +160,5 @@ var RcmAdminService = new function () {
         }
     };
 };
+
+var rcmAdminService = new RcmAdminService();

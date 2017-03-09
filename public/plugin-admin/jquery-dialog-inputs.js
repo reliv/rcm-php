@@ -610,7 +610,7 @@ var inputImageEventsDelegated = false;
             p.append('<br>');
             setTimeout(
                 function () {
-                    RcmAdminService.angularCompile(
+                    rcmAdminService.angularCompile(
                         p, function () {
                         }
                     );

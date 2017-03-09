@@ -416,7 +416,7 @@ var rcmColunmResize = new function () {
      */
     self.getCurrentClass = function (elm) {
 
-        return RcmAdminService.model.RcmPluginModel.getColumnClass(elm);
+        return rcmAdminService.model.RcmPluginModel.getColumnClass(elm);
     };
 
     /**
@@ -425,7 +425,7 @@ var rcmColunmResize = new function () {
      * @param newClass
      */
     self.setClass = function (elm, newClass) {
-        RcmAdminService.model.RcmPluginModel.setColumnClass(elm, newClass);
+        rcmAdminService.model.RcmPluginModel.setColumnClass(elm, newClass);
         jQuery(window).trigger('resize');
     };
 

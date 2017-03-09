@@ -4,9 +4,9 @@
  * @param editingState
  * @param onComplete
  */
-RcmAdminService.rcmAdminEditButtonAction = function (editingState, onComplete) {
+rcmAdminService.rcmAdminEditButtonAction = function (editingState, onComplete) {
 
-    var page = RcmAdminService.getPage();
+    var page = rcmAdminService.getPage();
     page.refresh(
         function (page) {
 

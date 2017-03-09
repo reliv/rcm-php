@@ -2,7 +2,9 @@
  * RcmAdminModel
  * @constructor
  */
-var RcmAdminModel = function () {
+var RcmAdminModel = function (
+    rcmBlockConfigs
+) {
 
     var self = this;
 
@@ -437,9 +439,17 @@ var RcmAdminModel = function () {
             return name;
         },
 
-        getEditor: function (pluginElm) {
+        /**
+         * getEditor
+         * @param name
+         * @returns {*}
+         */
+        getEditor: function (name) {
 
-            return pluginElm.attr('data-block-editor');
+            if(rcmBlockConfigs[name]) {
+                return rcmBlockConfigs[name]['editor']
+            }
+            return null;
         },
 
         /**
