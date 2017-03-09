@@ -89,52 +89,38 @@ var RcmPluginDrag = {
         if (pluginData.instanceId < 0) {
             $(pluginContainer).attr(
                 'data-rcmPluginInstanceId',
-                pluginData.instanceId * 10
+                pluginData.instanceId - 1
             );
         }
-        var helper = $(pluginContainer).clone(false);
-        helper.addClass('plugin-drag-helper');
+        var helperJqueryElm = $(pluginContainer).clone(false);
+        helperJqueryElm.addClass('plugin-drag-helper');
 
-        //Get Ajax
-        RcmPluginDrag.pluginDraggableStart(helper, pluginContainer);
+        var helperClassId = 'rcmAdminBlockDragHelper' + Math.floor((Math.random() * 10000000) + 1);
+        helperJqueryElm.addClass(helperClassId);
 
-        return $(helper);
-    },
-
-    /**
-     * Callback for Draggable - Start. Preforms Ajax Request for new
-     * Plugin instance to add to page.
-     */
-    pluginDraggableStart: function (helper, pluginContainer) {
-        var pluginInstanceContainer = $(pluginContainer).find('.rcmPluginContainer');
-        if ($(pluginInstanceContainer).html() != '') {
-            return;
-        }
-        var pluginData = RcmPluginDrag.getPluginContainerInfo(pluginContainer);
-        var url = '/rcm-admin-get-instance/' + pluginData.pluginName + '/' + pluginData.instanceId;
-        //        var url = '/fakePluginInhstanceTrash';
-        $.get(
-            url,
+        //Get inner html via Ajax
+        RcmPluginDrag.getNewInstanceHtml(
+            pluginData.pluginName,
+            pluginData.instanceId,
             function (data) {
-                RcmPluginDrag.getInstanceSuccessCallback(
-                    data,
-                    helper,
-                    pluginContainer
-                )
+                /*
+                 * Must re-find helper like by id rather than just using the element from above to prevent a
+                 * race condition that happens when people drag slow-to-load plugins on the page too quickly
+                 */
+                var helperElement = $('.' + helperClassId);
+                helperElement.html(data);
+                $(pluginContainer).find(".rcmPluginContainer").html(data);
             }
         );
+
+        return helperJqueryElm;
     },
 
-    /**
-     * Runs after a successful ajax request for a new plugin.
-     *
-     * @param data
-     * @param helper
-     * @param pluginContainer
-     */
-    getInstanceSuccessCallback: function (data, helper, pluginContainer) {
-        $(helper).html(data);
-        $(pluginContainer).find(".rcmPluginContainer").html(data);
+    getNewInstanceHtml: function (blockName, blockInstanceId, callback) {
+        $.get(
+            '/rcm-admin-get-instance/' + blockName + '/' + blockInstanceId,
+            callback
+        );
     },
 
     /**
@@ -237,11 +223,11 @@ var RcmPluginDrag = {
         // var richEdit = $(ui.item).find('[data-richedit]');
         // if (richEdit.length > 0) {
         //     var pluginContainer = $(richEdit).closest('.rcmPlugin');
-            //me.rcmPlugins.removeRichEdits(
-            //    pluginContainer,
-            //    RcmPluginDrag.getPluginContainerInfo(pluginContainer)
-            //);
-            //me.editor.startDrag(richEdit);
+        //me.rcmPlugins.removeRichEdits(
+        //    pluginContainer,
+        //    RcmPluginDrag.getPluginContainerInfo(pluginContainer)
+        //);
+        //me.editor.startDrag(richEdit);
         // }
     },
 
