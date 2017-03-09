@@ -116,10 +116,6 @@ var RcmAvailablePluginsMenu = {
                             initialState.css('display', 'none');
                             initialState.appendTo(plugin);
 
-                            // RcmPluginDrag.getNewInstanceHtml(pluginInfo.name, -1, function (data) {
-                            //     initialState.html(data);
-                            // })
-
                             var colClass = 'col-sm-12';
                             var outerContainer = $('<div class="rcmPlugin">');
                             outerContainer.addClass(pluginInfo.name);
