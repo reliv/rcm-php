@@ -2,6 +2,9 @@
 
 namespace RcmAdmin\View\Helper;
 
+use Rcm\Block\Config\Config;
+use Rcm\Block\Config\ConfigRepository;
+use Rcm\Service\PluginManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
 
@@ -35,6 +38,7 @@ class AvailablePluginsJsList extends AbstractHelper
         $view = $this->getView();
         $headScript = $view->headScript();
 
+        /** @var PluginManager $plugins */
         $plugins = $this->getServiceLocator()
             ->get('Rcm\Service\PluginManager')
             ->listAvailablePluginsByType();
@@ -49,8 +53,28 @@ class AvailablePluginsJsList extends AbstractHelper
             }
         }
 
+        // @GammaRelease
+        /** @var ConfigRepository $blockConfigRepository */
+        $blockConfigRepository = $this->getServiceLocator()
+            ->get(ConfigRepository::class);
+
+        $blockConfigs = $blockConfigRepository->find();
+
+        $blockConfigArray = [];
+
+        /**
+         * @var Config $blockConfig
+         */
+        foreach ($blockConfigs as $blockConfig) {
+            $blockConfigArray[$blockConfig->getName()] = $blockConfig->toArray();
+        }
+
+        $script = 'var rcmAvailablePlugins=' . json_encode($plugins) . ";\n\n";
+        // @GammaRelease
+        $script .= 'var rcmBlockConfigs=' . json_encode($blockConfigArray) . ";";
+
         $headScript->appendScript(
-            'var rcmAvailablePlugins=' . json_encode($plugins)
+            $script
         );
     }
 

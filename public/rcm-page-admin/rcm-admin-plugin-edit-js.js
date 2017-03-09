@@ -1,14 +1,11 @@
 /**
  * RcmAdminPluginEditJs AKA RcmPluginEditJs - Default Edit JS - does nothing - interface
- * @param id
- * @param pluginContainer
  * @param {RcmAdminPlugin} pluginHandler
  * @constructor
  */
-var RcmAdminPluginEditJs = function (id, pluginContainer, pluginHandler) {
-
+var RcmAdminPluginEditJs = function (pluginHandler) {
     var self = this;
-    self.id = id;
+    self.id = pluginHandler.getId();
     //self.pluginContainer = pluginContainer;
 
     self.initEdit = function () {

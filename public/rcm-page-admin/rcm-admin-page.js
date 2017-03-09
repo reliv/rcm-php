@@ -225,7 +225,8 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
                 self,
                 pluginId,
                 self.containers[containerId],
-                rcmAdminService
+                rcmAdminService,
+                rcmAdminBlockEditorRegistry
             );
 
             self.plugins[pluginId].init();

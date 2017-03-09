@@ -44,6 +44,12 @@ return [
                     'modules/rcm-admin/rcm-page-admin-panel/rcm-admin-menu.js',
                     'modules/rcm-admin/rcm-column-resize/rcm-column-resize.js',
                     /* <rcm-page-admin> */
+                    'modules/rcm-admin/rcm-page-admin/rcm-block-editor-field-dialog-factory.js',
+                    'modules/rcm-admin/rcm-page-admin/rcm-block-editor-field-dialog.js',
+                    'modules/rcm-admin/rcm-page-admin/rcm-block-editor-legacy-factory.js',
+                    'modules/rcm-admin/rcm-page-admin/rcm-block-editor-noop-factory.js',
+                    'modules/rcm-admin/rcm-page-admin/rcm-admin-block-editor-registry.js',
+
                     'modules/rcm-admin/rcm-page-admin/rcm-admin-service-config.js',
                     'modules/rcm-admin/rcm-page-admin/rcm-admin-model.js',
                     'modules/rcm-admin/rcm-page-admin/rcm-admin-view-model.js',
