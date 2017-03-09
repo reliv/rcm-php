@@ -2,6 +2,7 @@
 
 namespace Rcm\Factory;
 
+use Rcm\Block\Config\ConfigRepository;
 use Rcm\View\Helper\Container;
 use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\FactoryInterface;
@@ -49,9 +50,15 @@ class ContainerViewHelperFactory implements FactoryInterface
             'Rcm\Service\CurrentSite'
         );
 
+        // @GammaRelease
+        $blockConfigRepository = $serviceLocator->get(
+            ConfigRepository::class
+        );
+
         return new Container(
             $currentSite,
-            $pluginManager
+            $pluginManager,
+            $blockConfigRepository
         );
     }
 }

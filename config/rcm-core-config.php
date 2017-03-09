@@ -32,13 +32,6 @@ return [
         'mustache' => \Rcm\Block\Renderer\RendererMustache::class,
     ],
 
-    'block-editor-strategy' => [
-        // @todo Document this
-        'name-as-js-class',
-        // @todo Document this
-        'field-dialog',
-    ],
-
     /**
      * Available page types
      */

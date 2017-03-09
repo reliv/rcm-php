@@ -2,6 +2,7 @@
 
 namespace Rcm\View\Helper;
 
+use Rcm\Block\Config\ConfigRepository;
 use Rcm\Entity\Page;
 use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
@@ -38,6 +39,12 @@ class Container extends AbstractHelper
     protected $currentSite;
 
     /**
+     * @GammaRelease
+     * @var ConfigRepository
+     */
+    protected $blockConfigRepository;
+
+    /**
      * @var  \Zend\Stdlib\ResponseInterface
      */
     protected $response;
@@ -48,17 +55,21 @@ class Container extends AbstractHelper
     protected $defaultContainerName = 'body';
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param Site          $currentSite   Rcm Site
-     * @param PluginManager $pluginManager Rcm Plugin Manager
+     * @param Site             $currentSite
+     * @param PluginManager    $pluginManager
+     * @param ConfigRepository $blockConfigRepository
      */
     public function __construct(
         Site $currentSite,
-        PluginManager $pluginManager
+        PluginManager $pluginManager,
+        ConfigRepository $blockConfigRepository
     ) {
         $this->pluginManager = $pluginManager;
         $this->currentSite = $currentSite;
+        // @GammaRelease
+        $this->blockConfigRepository = $blockConfigRepository;
     }
 
     /**
@@ -284,6 +295,11 @@ class Container extends AbstractHelper
 
         $plugin = $pluginWrapper->getInstance();
 
+        // @GammaRelease
+        $blockConfig = $this->blockConfigRepository->findById(
+            $plugin->getPlugin()
+        );
+
         $displayName = str_replace(' ', '', $plugin->getDisplayName());
 
         if ($displayName !== '') {
@@ -307,6 +323,8 @@ class Container extends AbstractHelper
             . '"'
             . ' data-rcmSiteWidePlugin="' . $plugin->isSiteWide() . '"'
             . ' data-rcmPluginDisplayName="' . $plugin->getDisplayName() . '"'
+            // @GammaRelease
+            . ' data-block-editor="' . $blockConfig->getEditor() . '"'
             . '>';
 
         $html .= '<div class="rcmPluginContainer">';

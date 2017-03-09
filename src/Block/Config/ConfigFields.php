@@ -2,9 +2,8 @@
 
 namespace Rcm\Block\Config;
 
-use Rcm\Block\Renderer\RendererBc;
-
 /**
+ * @GammaRelease
  * Class ConfigFields
  *
  * @author    James Jervis
@@ -24,7 +23,7 @@ class ConfigFields
     const EDITOR = 'editor';
     const CACHE = 'cache';
     const FIELDS = 'fields';
-    const CONFIG = 'defaultInstanceConfig';
+    const CONFIG = 'defaultConfig';
 
     protected $fields
         = [
@@ -39,18 +38,6 @@ class ConfigFields
             self::CACHE => false,
             self::FIELDS => [],
             self::CONFIG => [],
-        ];
-
-    protected $fieldsBc
-        = [
-            self::NAME => 'name',
-            self::DIRECTORY => 'directory',
-            self::CATEGORY => 'type',
-            self::LABEL => 'display',
-            self::DESCRIPTION => 'tooltip',
-            self::ICON => 'icon',
-            self::CACHE => 'canCache',
-            self::CONFIG => 'defaultInstanceConfig'
         ];
 
     protected $bcFields
@@ -109,8 +96,8 @@ class ConfigFields
      */
     public function getFieldBc($fieldName)
     {
-        if (array_key_exists($fieldName, $this->fieldsBc)) {
-            return $this->fieldsBc[$fieldName];
+        if (array_key_exists($fieldName, $this->bcFields)) {
+            return $this->bcFields[$fieldName];
         }
 
         return $fieldName;
@@ -140,7 +127,7 @@ class ConfigFields
         }
 
         if (empty($new[self::EDITOR])) {
-            $new[self::EDITOR] = 'name-as-js-class';
+            $new[self::EDITOR] = 'rcm-plugin-bc';
         }
 
         return $new;

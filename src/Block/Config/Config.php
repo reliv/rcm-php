@@ -105,4 +105,11 @@ interface Config
      * @return array
      */
     public function getDefaultConfig();
+
+    /**
+     * toArray
+     *
+     * @return array
+     */
+    public function toArray();
 }
