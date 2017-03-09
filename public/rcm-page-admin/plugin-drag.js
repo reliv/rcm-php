@@ -85,23 +85,26 @@ var RcmPluginDrag = {
         var pluginContainer = $(container).find(".rcmPlugin");
         var pluginData = RcmPluginDrag.getPluginContainerInfo(pluginContainer);
 
+        //@TODO if more than 1000 different types of blocks are available, this could break.
+        var newInstanceId = pluginData.instanceId * 1000
+
         // greater than 0 not sitewide instance
         if (pluginData.instanceId < 0) {
             $(pluginContainer).attr(
                 'data-rcmPluginInstanceId',
-                pluginData.instanceId - 1
+                newInstanceId
             );
         }
         var helperJqueryElm = $(pluginContainer).clone(false);
         helperJqueryElm.addClass('plugin-drag-helper');
 
-        var helperClassId = 'rcmAdminBlockDragHelper' + Math.floor((Math.random() * 10000000) + 1);
+        var helperClassId = 'rcmAdminBlockDragHelper' + newInstanceId;
         helperJqueryElm.addClass(helperClassId);
 
         //Get inner html via Ajax
         RcmPluginDrag.getNewInstanceHtml(
             pluginData.pluginName,
-            pluginData.instanceId,
+            newInstanceId,
             function (data) {
                 /*
                  * Must re-find helper like by id rather than just using the element from above to prevent a
