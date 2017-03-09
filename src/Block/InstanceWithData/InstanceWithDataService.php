@@ -49,7 +49,7 @@ class InstanceWithDataService
      * @param string $instanceId
      * @param ServerRequestInterface $request
      *
-     * @return null|DataBasic
+     * @return null|InstanceWithData
      */
     public function __invoke($instanceId, ServerRequestInterface $request)
     {
