@@ -108,6 +108,9 @@ var RcmAvailablePluginsMenu = {
                             var displayName = $('<span></span>');
                             displayName.appendTo(plugin);
                             displayName.html(pluginInfo.label);
+                            displayName.attr('data-toggle', 'tooltip')
+                            displayName.attr('title', pluginInfo.description)
+                            displayName.tooltip();
 
                             var initialState = $('<div class="initialState"></div>');
                             initialState.css('display', 'none');
