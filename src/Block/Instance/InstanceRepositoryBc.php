@@ -22,8 +22,14 @@ class InstanceRepositoryBc extends AbstractRepository implements InstanceReposit
      */
     protected $pluginInstanceRepository;
 
+    /**
+     * @var ConfigRepository
+     */
     protected $blockConfigRepository;
 
+    /**
+     * @var InstanceConfigMerger
+     */
     protected $instanceConfigMerger;
 
     /**

@@ -144,7 +144,7 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      *
      * @param int $pluginInstanceId Unique Plugin Instance ID
      *
-     * @return null
+     * @return void
      */
     public function setInstanceId($pluginInstanceId)
     {
@@ -168,7 +168,7 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      *
      * @param string $plugin Module Name
      *
-     * @return null
+     * @return void
      */
     public function setPlugin($plugin)
     {
@@ -178,7 +178,7 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
     /**
      * Set this instance as a site wide plugin instance
      *
-     * @return null
+     * @return void
      */
     public function setSiteWide()
     {
@@ -210,7 +210,7 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      *
      * @param string $name Name to use for the Site wide plugin
      *
-     * @return null
+     * @return void
      */
     public function setDisplayName($name)
     {
@@ -282,10 +282,34 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      * @return array
      *
      */
-
+    /**
+     * getInstanceConfig
+     *
+     * @return array|mixed
+     * @throws \Exception
+     */
     public function getInstanceConfig()
     {
-        return json_decode($this->instanceConfig, true);
+        if (empty($this->instanceConfig)) {
+            return [];
+        }
+
+        $value = json_decode($this->instanceConfig, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $message = 'plugin: ' . $this->getPlugin() . ' id: ' . $this->getInstanceId() .
+                ' getInstanceConfig received invalid JSON value: ' .
+                '"' . var_export($this->instanceConfig, true) . '"' .
+                ' with error ' . json_last_error_msg();
+            var_dump($message);
+            //throw new \Exception($message);
+        }
+
+        if (!is_array($value)) {
+            return [];
+        }
+
+        return $value;
     }
 
     /**
@@ -540,7 +564,7 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      */
     public function toArray($ignore = [])
     {
-        $data =  parent::toArray($ignore);
+        $data = parent::toArray($ignore);
 
         // @bc
         if (!in_array('siteWide', $ignore)) {

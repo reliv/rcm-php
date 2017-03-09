@@ -16,15 +16,35 @@ use Zend\View\Helper\Placeholder\Container;
 
 class RendererBc implements Renderer
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $serviceManager;
+
+    /**
+     * @var PhpRenderer
+     */
     protected $renderer;
 
+    /**
+     * Constructor.
+     *
+     * @param ContainerInterface $serviceManager
+     * @param PhpRenderer        $renderer
+     */
     public function __construct(ContainerInterface $serviceManager, PhpRenderer $renderer)
     {
         $this->serviceManager = $serviceManager;
         $this->renderer = $renderer;
     }
 
+    /**
+     * __invoke
+     *
+     * @param InstanceWithData $blockInstance
+     *
+     * @return string HTML
+     */
     public function __invoke(InstanceWithData $blockInstance)
     {
         /** @var \Rcm\Plugin\PluginInterface $controller */
