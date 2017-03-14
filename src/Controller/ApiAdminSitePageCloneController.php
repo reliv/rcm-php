@@ -24,6 +24,16 @@ use RcmAdmin\InputFilter\SitePageDuplicateInputFilter;
 class ApiAdminSitePageCloneController extends ApiAdminSitePageController
 {
     /**
+     * Constructor.
+     *
+     * @param \Interop\Container\ContainerInterface|\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     */
+    public function __construct($serviceLocator)
+    {
+        parent::__construct($serviceLocator);
+    }
+
+    /**
      * create
      *
      * @param mixed $data
