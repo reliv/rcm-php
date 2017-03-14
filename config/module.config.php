@@ -104,6 +104,8 @@ return [
             => 'RcmAdmin\Factory\PageControllerFactory',
             RcmAdmin\Controller\ApiAdminSitePageController::class
             => RcmAdmin\Factory\ApiAdminSitePageControllerFactory::class,
+            RcmAdmin\Controller\ApiAdminSitePageCloneController::class
+            => RcmAdmin\Factory\ApiAdminSitePageCloneControllerFactory::class,
             RcmAdmin\Controller\AvailableBlocksJsController::class
             => RcmAdmin\Factory\AvailableBlocksJsControllerFactory::class,
         ],
@@ -124,8 +126,6 @@ return [
             => 'RcmAdmin\Controller\ApiAdminThemeController',
             'RcmAdmin\Controller\ApiAdminCountryController'
             => 'RcmAdmin\Controller\ApiAdminCountryController',
-            'RcmAdmin\Controller\ApiAdminSitePageCloneController'
-            => 'RcmAdmin\Controller\ApiAdminSitePageCloneController',
             'RcmAdmin\Controller\ApiAdminPageTypesController'
             => 'RcmAdmin\Controller\ApiAdminPageTypesController',
             'RcmAdmin\Controller\RpcAdminCanEdit'
