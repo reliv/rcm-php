@@ -70,7 +70,7 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $instanceConfig;
+    protected $instanceConfig = "[]";
 
     /**
      * @var string Place holder for rendered HTML
@@ -316,12 +316,16 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      *
      * @param array $instanceConfig new value test
      *
-     * @return null
-     *
+     * @return void
+     * @throws \Exception
      */
     public function setInstanceConfig($instanceConfig)
     {
         $this->instanceConfig = json_encode($instanceConfig);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \Exception(json_last_error_msg());
+        }
     }
 
     /**
