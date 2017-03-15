@@ -70,7 +70,7 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $instanceConfig = [];
+    protected $instanceConfig = "[]";
 
     /**
      * @var string Place holder for rendered HTML
