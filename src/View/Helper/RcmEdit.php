@@ -58,14 +58,15 @@ class RcmEdit extends AbstractHelper
         $elementType = 'div',
         $elementAttributes = []
     ) {
-        if (empty($this->view->instanceConfig)) {
-            $this->view->instanceConfig = [];
+        $instanceConfig = $this->view->instanceConfig;
+        if (empty($instanceConfig)) {
+            $instanceConfig = [];
         }
         /**
          * Use whats saved in the instance config if its available
          */
-        if (array_key_exists($name, $this->view->instanceConfig)) {
-            $defaultContent = $this->view->instanceConfig[$name];
+        if (array_key_exists($name, $instanceConfig)) {
+            $defaultContent = $instanceConfig[$name];
         }
 
         /**
