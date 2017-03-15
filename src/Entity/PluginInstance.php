@@ -316,12 +316,17 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      *
      * @param array $instanceConfig new value test
      *
-     * @return null
+     * @return void
      *
      */
     public function setInstanceConfig($instanceConfig)
     {
         $this->instanceConfig = json_encode($instanceConfig);
+
+        if (!is_array($this->instanceConfig)) {
+            // @todo Throw exception?
+            $this->instanceConfig = [];
+        }
     }
 
     /**
