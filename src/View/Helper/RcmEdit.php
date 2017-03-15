@@ -58,6 +58,9 @@ class RcmEdit extends AbstractHelper
         $elementType = 'div',
         $elementAttributes = []
     ) {
+        if (empty($this->view->instanceConfig)) {
+            $this->view->instanceConfig = [];
+        }
         /**
          * Use whats saved in the instance config if its available
          */
@@ -79,6 +82,7 @@ class RcmEdit extends AbstractHelper
          * Return element's html
          */
         $elementType = htmlentities($elementType, ENT_QUOTES);
+
         return '<' . $elementType . $attributes . '>'
         // @todo This is a hole and is temporary
         // . $this->htmlPurifier->purify($defaultContent)
