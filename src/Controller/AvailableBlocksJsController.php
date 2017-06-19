@@ -5,7 +5,6 @@ namespace RcmAdmin\Controller;
 use Rcm\Acl\CmsPermissionChecks;
 use Rcm\Service\SiteService;
 use RcmAdmin\Service\RendererAvailableBlocksJs;
-use RcmUser\Service\RcmUserService;
 use Zend\Http\Headers;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -76,13 +75,12 @@ class AvailableBlocksJsController extends AbstractActionController
         );
 
         $isAllowed = $this->cmsPermissionChecks->siteAdminCheck($this->siteService->getCurrentSite());
-        /**
-         *
-         */
-        if(!$isAllowed) {
+
+        if (!$isAllowed) {
             $response->setContent(
                 '// rcmBlockConfigs not available'
             );
+
             return $response;
         }
 
