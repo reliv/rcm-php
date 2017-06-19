@@ -1,7 +1,6 @@
-.rcm-admin-dialog .input-group-addon {
-    top: 4px;
-}
-.rcm-admin-dialog .modal-body input[type="text"] {
+.rcm-admin-dialog .modal-body input[type="text"],
+.rcm-admin-dialog .modal-body input[type="url"],
+.rcm-admin-dialog .modal-body input[type="date"]{
     min-width: 75%;
 }
 
