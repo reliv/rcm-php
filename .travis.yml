@@ -6,7 +6,7 @@ before_install:
   - phpenv config-rm xdebug.ini #Turn off xdebug to speed up composer
 install:
 - php -v
-- composer self-update 1.1.2
+- composer self-update
 - composer --version
 - composer global require fxp/composer-asset-plugin --no-plugins
 - composer install --prefer-dist
