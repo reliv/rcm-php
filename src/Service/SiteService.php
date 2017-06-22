@@ -4,6 +4,8 @@ namespace Rcm\Service;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Site;
+use Rcm\Tracking\Model\Tracking;
+use RcmUser\Service\RcmUserService;
 use Zend\Validator\Ip;
 
 /**
@@ -32,10 +34,8 @@ class SiteService
     protected $cache = [];
 
     /**
-     * SiteService constructor.
-     *
-     * @param DomainService $domainService
-     * @param EntityManager $entityManager
+     * @param DomainService  $domainService
+     * @param EntityManager  $entityManager
      */
     public function __construct(
         DomainService $domainService,
@@ -107,7 +107,10 @@ class SiteService
         $site = $this->siteRepo->getSiteByDomain($domain);
 
         if (empty($site)) {
-            $site = new Site();
+            $site = new Site(
+                Tracking::UNKNOWN_USER_ID,
+                'Fake site due to site domain not found ' . static::class
+            );
         }
 
         return $site;
@@ -170,7 +173,10 @@ class SiteService
     {
         if ($this->isConsoleRequest()) {
             // Fake Site for console
-            return new Site();
+            return new Site(
+                Tracking::UNKNOWN_USER_ID,
+                'Fake site for console in ' . static::class
+            );
         }
 
         if (empty($currentDomain)) {

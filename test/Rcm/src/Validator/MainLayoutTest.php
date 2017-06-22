@@ -58,7 +58,7 @@ class MainLayoutTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->currentSite = new Site();
+        $this->currentSite = new Site('user123');
         $this->currentSite->setSiteId(1);
 
         $this->layoutManager = $layoutManager;

@@ -4,6 +4,9 @@ namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Tracking\Exception\TrackingException;
+use Rcm\Tracking\Model\Tracking;
+use Rcm\Tracking\Model\TrackingAbstract;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 use Reliv\RcmApiLib\Model\ApiSerializableInterface;
 
@@ -23,7 +26,7 @@ use Reliv\RcmApiLib\Model\ApiSerializableInterface;
  * @link      http://github.com/reliv
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-abstract class ContainerAbstract implements ContainerInterface
+abstract class ContainerAbstract extends TrackingAbstract implements ContainerInterface, Tracking
 {
     /**
      * @var string Container name
@@ -34,11 +37,6 @@ abstract class ContainerAbstract implements ContainerInterface
      * @var string Authors name
      */
     protected $author;
-
-    /**
-     * @var \DateTime Date page was first created
-     */
-    protected $createdDate;
 
     /**
      * @var \DateTime Date page was last published
@@ -91,13 +89,23 @@ abstract class ContainerAbstract implements ContainerInterface
     protected $lastSavedDraft;
 
     /**
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
+     */
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        parent::__construct($createdByUserId, $createdReason);
+    }
+
+    /**
      * Clone the container
      *
      * @return void
      */
     public function __clone()
     {
-        $this->createdDate = new \DateTime();
         $this->lastPublished = new \DateTime();
 
         $this->revisions = new ArrayCollection();
@@ -112,6 +120,8 @@ abstract class ContainerAbstract implements ContainerInterface
             $this->setStagedRevision($revision);
             $this->revisions->add($revision);
         }
+
+        parent::__clone();
     }
 
     /**
@@ -131,7 +141,7 @@ abstract class ContainerAbstract implements ContainerInterface
      * @param string $name Name of Page.  Should be URL friendly and should not
      *                     included spaces.
      *
-     * @return null
+     * @return void
      *
      * @throws InvalidArgumentException Exception thrown if name contains spaces.
      */
@@ -162,7 +172,7 @@ abstract class ContainerAbstract implements ContainerInterface
      *
      * @param string $author ID of Author.
      *
-     * @return null
+     * @return void
      */
     public function setAuthor($author)
     {
@@ -175,20 +185,24 @@ abstract class ContainerAbstract implements ContainerInterface
      * @return \DateTime CreatedDate
      *
      */
-    public function getCreatedDate()
+    public function getCreatedDate(): \DateTime
     {
         return $this->createdDate;
     }
 
     /**
+     * @deprecated This should be set on construct
+     * <tracking>
      * Sets the CreatedDate property
      *
      * @param \DateTime $createdDate Date the page was initially created.
      *
-     * @return null
+     * @return void
+     * @throws TrackingException
      */
     public function setCreatedDate(\DateTime $createdDate)
     {
+        throw new TrackingException('Created data can only be set on construct');
         $this->createdDate = $createdDate;
     }
 
@@ -309,8 +323,7 @@ abstract class ContainerAbstract implements ContainerInterface
     public function setStagedRevision(Revision $revision)
     {
         if (!empty($this->publishedRevision)
-            && $this->publishedRevision->getRevisionId() == $revision->getRevisionId(
-            )
+            && $this->publishedRevision->getRevisionId() == $revision->getRevisionId()
         ) {
             $this->removePublishedRevision();
         }
@@ -610,7 +623,7 @@ abstract class ContainerAbstract implements ContainerInterface
         if (!in_array('lastPublishedString', $ignore)) {
             $data['lastPublishedString'] = $this->getLastPublishedString();
         }
-        
+
         return $data;
     }
 

@@ -3,32 +3,21 @@
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Rcm\Entity\ContainerInterface as ContainerEntityInterface;
 use Rcm\Entity\Revision;
 
 /**
- * Container Repository
- *
  * Container Repository.  Used to get custom container results from the DB
  *
- * PHP version 5
- *
- * @category  Reliv
- * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: 1.0
- * @link      https://github.com/reliv
  */
 abstract class ContainerAbstract extends EntityRepository implements ContainerInterface
 {
     /**
-     * saveContainer
-     *
      * @param ContainerEntityInterface $container
-     * @param array                    $containerData
+     * @param                          $containerData
+     * @param string                   $createdByUserId
+     * @param string                   $createdReason
      * @param string                   $author
      * @param null                     $revisionNumber
      *
@@ -37,7 +26,9 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
     public function saveContainer(
         ContainerEntityInterface $container,
         $containerData,
-        $author,
+        $createdByUserId,
+        $createdReason = 'unknown',
+        $author = 'unknown',
         $revisionNumber = null
     ) {
         $revision = null;
@@ -60,7 +51,10 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
 
         $site = $container->getSite();
 
-        $newRevision = new Revision();
+        $newRevision = new Revision(
+            $createdByUserId,
+            $createdReason
+        );
         $newRevision->setAuthor($author);
         $newRevision->setMd5($md5);
 

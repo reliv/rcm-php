@@ -121,6 +121,7 @@ class Site extends EntityRepository
             if ($checkActive) {
                 $this->activeSiteIdCache[] = $siteId;
             }
+
             return true;
         }
 
@@ -222,32 +223,49 @@ class Site extends EntityRepository
      * @todo Fix Me
      * createNewSite
      *
-     * @param null $siteId
+     * @param null|int $siteId
+     * @param string   $createdByUserId
+     * @param string   $createdReason
      *
      * @return SiteEntity
      * @throws SiteNotFoundException
      */
-    public function createNewSite($siteId = null)
-    {
+    public function createNewSite(
+        $siteId = null,
+        string $createdByUserId,
+        string $createdReason = 'unknown'
+    ) {
         if (empty($siteId)) {
             // new site
             /** @var \Rcm\Entity\Site $newSite */
-            return new \Rcm\Entity\Site();
+            return new \Rcm\Entity\Site(
+                $createdByUserId,
+                $createdReason
+            );
         }
 
-        return $this->copySiteById($siteId);
+        return $this->copySiteById(
+            $siteId,
+            $createdByUserId,
+            $createdReason
+        );
     }
 
     /**
      * @todo Fix Me
      * copySite
      *
-     * @param $siteId
+     * @param int    $siteId
+     * @param string $createdByUserId
+     * @param string $createdReason
      *
      * @return SiteEntity
      */
-    public function copySiteById($siteId)
-    {
+    public function copySiteById(
+        $siteId,
+        string $createdByUserId,
+        string $createdReason = 'unknown'
+    ) {
         /** @var \Rcm\Entity\Site $site */
         $existingSite = $this->find($siteId);
 
@@ -255,7 +273,12 @@ class Site extends EntityRepository
             throw new SiteNotFoundException("Site {$siteId} not found.");
         }
 
+        // @rcmEntityCloning
         $site = clone($existingSite);
+        $site->setCreatedByUserId(
+            $createdByUserId,
+            $createdReason
+        );
 
         return $site;
     }

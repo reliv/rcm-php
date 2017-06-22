@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Page\PageTypes\PageTypes;
+use Rcm\Tracking\Model\Tracking;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
@@ -23,6 +24,7 @@ use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity (repositoryClass="Rcm\Repository\Page")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="rcm_pages",
  *     indexes={
  *         @ORM\Index(name="page_name", columns={"name"})
@@ -31,7 +33,7 @@ use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
  *
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggregate
+class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggregate, Tracking
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -55,13 +57,6 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
      * @ORM\Column(type="string")
      */
     protected $author;
-
-    /**
-     * @var \DateTime Date page was first created
-     *
-     * @ORM\Column(type="datetime")
-     */
-    protected $createdDate;
 
     /**
      * @var \DateTime Date page was last published
@@ -206,12 +201,64 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     protected $parentId;
 
     /**
-     * Constructor for Page Entity.
+     * <tracking>
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
      */
-    public function __construct()
-    {
+    protected $createdDate;
+
+    /**
+     * <tracking>
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * <tracking>
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * <tracking>
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * <tracking>
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * <tracking>
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
+     */
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         $this->revisions = new ArrayCollection();
         $this->createdDate = new \DateTime();
+        parent::__construct($createdByUserId, $createdReason);
     }
 
     /**
@@ -246,7 +293,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
      * @param string $name Name of Page.  Should be URL friendly and should not
      *                     included spaces.
      *
-     * @return null
+     * @return void
      *
      * @throws InvalidArgumentException Exception thrown if name contains spaces.
      */
@@ -368,7 +415,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
      *
      * @param string $keywords Comma Separated List of Keywords
      *
-     * @return string
+     * @return void
      */
     public function setKeywords($keywords)
     {
@@ -609,5 +656,27 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
         $data = parent::toArray($ignore);
 
         return $data;
+    }
+
+    /**
+     * <tracking>
+     * @return void
+     *
+     * @ORM\PrePersist
+     */
+    public function assertHasTrackingData()
+    {
+        parent::assertHasTrackingData();
+    }
+
+    /**
+     * <tracking>
+     * @return void
+     *
+     * @ORM\PreUpdate
+     */
+    public function assertHasNewModifiedData()
+    {
+        parent::assertHasNewModifiedData();
     }
 }

@@ -244,7 +244,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testClone()
     {
-        $site = new Site();
+        $site = new Site('user123');
         $site->setSiteId(55);
 
         $container = [
@@ -364,7 +364,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->page->setSite($site);
 
         foreach ($container['revisions'] as $index => $revisionData) {
-            $revision = new Revision();
+            $revision = new Revision('userId123');
             $revision->setRevisionId($revisionData['revisionId']);
             $revision->setAuthor($revisionData['author']);
             $revision->setCreatedDate($revisionData['createdDate']);
@@ -373,7 +373,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
             $revision->setMd5($revisionData['md5']);
 
             foreach ($revisionData['instances'] as $instance) {
-                $plugin = new PluginInstance();
+                $plugin = new PluginInstance('userId123');
                 $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
                 $plugin->setPlugin($instance['instance']['plugin']);
 

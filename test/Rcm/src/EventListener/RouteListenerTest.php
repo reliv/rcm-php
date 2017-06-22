@@ -85,11 +85,11 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
 
         $config = [];
 
-        $this->currentSite = new Site();
+        $this->currentSite = new Site('user123');
         $this->currentSite->setSiteId(1);
         $this->currentSite->setStatus(Site::STATUS_ACTIVE);
 
-        $domain = new Domain();
+        $domain = new Domain('user123');
         $domain->setDomainId(1);
         $domain->setDomainName('reliv.com');
 
@@ -103,7 +103,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         $map = [];
 
         foreach ($this->redirects as $key => $redirect) {
-            $redirectEntity = new Redirect();
+            $redirectEntity = new Redirect('user123');
             $redirectEntity->setRedirectUrl($redirect['requestUrl']);
             $redirectEntity->setRedirectUrl($redirect['redirectUrl']);
 

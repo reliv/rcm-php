@@ -76,7 +76,7 @@ class ContainerViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $site = new Site();
+        $site = new Site('user123');
         $site->setSiteId(1);
 
         $sm = new ServiceManager();

@@ -3,6 +3,7 @@
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Plugin Instances Entity
@@ -19,9 +20,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity(repositoryClass="Rcm\Repository\PluginInstance")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="rcm_plugin_instances")
  */
-class PluginInstance extends AbstractApiModel implements \JsonSerializable, \IteratorAggregate
+class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializable, \IteratorAggregate, Tracking
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -73,6 +75,54 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
     protected $instanceConfig = "[]";
 
     /**
+     * <tracking>
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdDate;
+
+    /**
+     * <tracking>
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * <tracking>
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * <tracking>
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * <tracking>
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * <tracking>
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
+
+    /**
      * @var string Place holder for rendered HTML
      */
     protected $renderedHtml;
@@ -113,6 +163,17 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
     protected $canCache;
 
     /**
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
+     */
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        parent::__construct($createdByUserId, $createdReason);
+    }
+
+    /**
      * __clone
      *
      * @return void
@@ -125,6 +186,8 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
 
         $this->pluginInstanceId = null;
         $this->previousEntity = null;
+
+        parent::__clone();
     }
 
     /**
@@ -267,9 +330,9 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
     }
 
     /**
-     * Get Previous Plugin Instance.  This is used to keep a record of changes.
+     * Get Previous Plugin Instance ID.  This is used to keep a record of changes.
      *
-     * @return PluginInstance
+     * @return int
      */
     public function getPreviousInstance()
     {
@@ -579,5 +642,27 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
         }
 
         return $data;
+    }
+
+    /**
+     * <tracking>
+     * @return void
+     *
+     * @ORM\PrePersist
+     */
+    public function assertHasTrackingData()
+    {
+        parent::assertHasTrackingData();
+    }
+
+    /**
+     * <tracking>
+     * @return void
+     *
+     * @ORM\PreUpdate
+     */
+    public function assertHasNewModifiedData()
+    {
+        parent::assertHasNewModifiedData();
     }
 }

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Page\PageTypes\PageTypes;
+use Rcm\Tracking\Model\Tracking;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
@@ -23,11 +24,12 @@ use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity (repositoryClass="Rcm\Repository\Site")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="rcm_sites")
  *
  * @SuppressWarnings(PHPMD)
  */
-class Site extends AbstractApiModel implements \IteratorAggregate
+class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Tracking
 {
     const STATUS_ACTIVE = 'A';
 
@@ -197,6 +199,48 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     protected $notFoundPage = 'not-found';
 
     /**
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdDate;
+
+    /**
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
+
+    /**
      * @var array Supported page types - these should be populated at object creation
      * @todo This should be part of the DB schema, so each site can have a list on creation
      * @todo Get these from PageTypes service
@@ -221,16 +265,21 @@ class Site extends AbstractApiModel implements \IteratorAggregate
         ];
 
     /**
-     * Constructor for site
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
      */
-    public function __construct()
-    {
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         $this->pages = new ArrayCollection();
         $this->sitePlugins = new ArrayCollection();
         $this->containers = new ArrayCollection();
-        $this->domain = new Domain();
-        $this->country = new Country();
-        $this->language = new Language();
+        $this->domain = new Domain($createdByUserId);
+        $this->country = new Country($createdByUserId);
+        $this->language = new Language($createdByUserId);
+
+        parent::__construct($createdByUserId, $createdReason);
     }
 
     /**
@@ -307,6 +356,8 @@ class Site extends AbstractApiModel implements \IteratorAggregate
         }
 
         $this->containers = new ArrayCollection($clonedContainers);
+
+        parent::__clone();
     }
 
     /**

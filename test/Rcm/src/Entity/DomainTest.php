@@ -140,7 +140,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAndSetSite()
     {
-        $site = new Site();
+        $site = new Site('user123');
 
         $this->domain->setSite($site);
         $actual = $this->domain->getSite();

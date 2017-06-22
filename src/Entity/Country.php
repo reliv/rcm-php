@@ -4,6 +4,7 @@ namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Tracking\Model\Tracking;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
@@ -22,9 +23,10 @@ use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity(repositoryClass="Rcm\Repository\Country")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="rcm_countries")
  */
-class Country extends AbstractApiModel implements \IteratorAggregate
+class Country extends ApiModelTrackingAbstract implements \IteratorAggregate, Tracking
 {
     /**
      * @var string ISO Three Digit Country Code
@@ -51,6 +53,73 @@ class Country extends AbstractApiModel implements \IteratorAggregate
      * @ORM\Column(type="string", unique = true)
      */
     protected $countryName = 'United States';
+
+    /**
+     * <tracking>
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdDate;
+
+    /**
+     * <tracking>
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * <tracking>
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * <tracking>
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * <tracking>
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * <tracking>
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
+     */
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        parent::__construct($createdByUserId, $createdReason);
+    }
+
+    /**
+     * @return void
+     */
+    public function __clone()
+    {
+        parent::__clone();
+    }
 
     /**
      * getId
@@ -119,7 +188,7 @@ class Country extends AbstractApiModel implements \IteratorAggregate
      *
      * @param string $iso3 ISO3 Country Code
      *
-     * @return null
+     * @return void
      * @throws InvalidArgumentException
      */
     public function setIso3($iso3)
@@ -210,5 +279,25 @@ class Country extends AbstractApiModel implements \IteratorAggregate
     public function toArray($ignore = [])
     {
         return parent::toArray($ignore);
+    }
+
+    /**
+     * @return void
+     *
+     * @ORM\PrePersist
+     */
+    public function assertHasTrackingData()
+    {
+        parent::assertHasTrackingData();
+    }
+
+    /**
+     * @return void
+     *
+     * @ORM\PreUpdate
+     */
+    public function assertHasNewModifiedData()
+    {
+        parent::assertHasNewModifiedData();
     }
 }

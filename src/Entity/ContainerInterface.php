@@ -3,6 +3,7 @@
 namespace Rcm\Entity;
 
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Container Abstract.  Contains methods shared by container classes
@@ -20,7 +21,7 @@ use Rcm\Exception\InvalidArgumentException;
  * @link      http://github.com/reliv
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-interface ContainerInterface extends ApiModelInterface
+interface ContainerInterface extends ApiModelInterface, Tracking
 {
     /**
      * Clone the container
@@ -64,23 +65,6 @@ interface ContainerInterface extends ApiModelInterface
      * @return null
      */
     public function setAuthor($author);
-
-    /**
-     * Gets the CreatedDate property
-     *
-     * @return \DateTime CreatedDate
-     *
-     */
-    public function getCreatedDate();
-
-    /**
-     * Sets the CreatedDate property
-     *
-     * @param \DateTime $createdDate Date the page was initially created.
-     *
-     * @return null
-     */
-    public function setCreatedDate(\DateTime $createdDate);
 
     /**
      * Gets the LastPublished property

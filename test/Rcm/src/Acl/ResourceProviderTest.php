@@ -88,25 +88,27 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $mockReturn = [];
 
-        $currdomain = new Domain();
+        $userId = 'user123';
+
+        $currdomain = new Domain($userId);
         $currdomain->setDomainName('curr.reliv.com');
 
-        $currpage = new Page();
+        $currpage = new Page($userId);
         $currpage->setName('curr-page');
 
-        $currsite = new Site();
+        $currsite = new Site($userId);
         $currsite->setDomain($currdomain);
         $currsite->setSiteId(1);
         $currsite->addPage($currpage);
 
         if (!$skipSite) {
-            $domain = new Domain();
+            $domain = new Domain($userId);
             $domain->setDomainName('test.reliv.com');
 
-            $page = new Page();
+            $page = new Page($userId);
             $page->setName('test-page');
 
-            $site = new Site();
+            $site = new Site($userId);
             $site->setDomain($domain);
             $site->setSiteId(10);
             $site->addPage($page);

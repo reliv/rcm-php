@@ -1,21 +1,4 @@
 <?php
-/**
- * Unit Test for the Setting Entity
- *
- * This file contains the unit test for the Setting Entity
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace RcmTest\Entity;
 
@@ -48,7 +31,9 @@ class SettingTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->setting = new Setting();
+        $this->setting = new Setting(
+            'userId123'
+        );
     }
 
     /**
@@ -68,7 +53,7 @@ class SettingTest extends \PHPUnit_Framework_TestCase
     /**
      * Test Get and Set Value
      *
-     * @return string
+     * @return void
      *
      * @covers \Rcm\Entity\Setting
      */

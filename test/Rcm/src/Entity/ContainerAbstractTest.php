@@ -150,7 +150,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetPublishedRevision()
     {
-        $publishedRevision = new Revision();
+        $publishedRevision = new Revision('userId123');
         $publishedRevision->setRevisionId(6);
 
         $this->container->setPublishedRevision($publishedRevision);
@@ -182,7 +182,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testAliasGetAndSetCurrentRevisionRevision()
     {
-        $publishedRevision = new Revision();
+        $publishedRevision = new Revision('userId123');
         $publishedRevision->setRevisionId(6);
 
         $this->container->setPublishedRevision($publishedRevision);
@@ -214,7 +214,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveCurrentRevisionRevision()
     {
-        $publishedRevision = new Revision();
+        $publishedRevision = new Revision('userId123');
         $publishedRevision->setRevisionId(6);
 
         $this->container->setPublishedRevision($publishedRevision);
@@ -239,7 +239,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetStagedRevisionRevision()
     {
-        $publishedRevision = new Revision();
+        $publishedRevision = new Revision('userId123');
         $publishedRevision->setRevisionId(6);
 
         $this->container->setStagedRevision($publishedRevision);
@@ -271,7 +271,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveStagedRevisionRevision()
     {
-        $publishedRevision = new Revision();
+        $publishedRevision = new Revision('userId123');
         $publishedRevision->setRevisionId(6);
 
         $this->container->setStagedRevision($publishedRevision);
@@ -296,7 +296,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetSite()
     {
-        $site = new Site();
+        $site = new Site('user123');
         $site->setSiteId(3);
 
         $this->container->setSite($site);
@@ -328,10 +328,10 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndAddRevisions()
     {
-        $revisionFive = new Revision();
+        $revisionFive = new Revision('userId123');
         $revisionFive->setRevisionId(5);
 
-        $revisionSix = new Revision();
+        $revisionSix = new Revision('userId123');
         $revisionSix->setRevisionId(6);
 
         $expected = [
@@ -357,10 +357,10 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRevisionByRevisionId()
     {
-        $revisionFive = new Revision();
+        $revisionFive = new Revision('userId123');
         $revisionFive->setRevisionId(5);
 
-        $revisionSix = new Revision();
+        $revisionSix = new Revision('userId123');
         $revisionSix->setRevisionId(6);
 
         $this->container->addRevision($revisionFive);
@@ -382,21 +382,21 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLastSavedRevision()
     {
-        $revisionFour = new Revision();
+        $revisionFour = new Revision('userId123');
         $revisionFour->setRevisionId(4);
         $revisionFour->publishRevision();
 
-        $revisionFive = new Revision();
+        $revisionFive = new Revision('userId123');
         $revisionFive->setRevisionId(5);
         $revisionFour->publishRevision();
 
-        $revisionSix = new Revision();
+        $revisionSix = new Revision('userId123');
         $revisionSix->setRevisionId(6);
 
-        $revisionSeven = new Revision();
+        $revisionSeven = new Revision('userId123');
         $revisionSeven->setRevisionId(7);
 
-        $revisionEight = new Revision();
+        $revisionEight = new Revision('userId123');
         $revisionEight->setRevisionId(8);
 
         $this->container->addRevision($revisionFour);
@@ -421,22 +421,22 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLastSavedRevisionNoUnPublishedRevisions()
     {
-        $revisionFour = new Revision();
+        $revisionFour = new Revision('userId123');
         $revisionFour->setRevisionId(4);
         $revisionFour->publishRevision();
 
-        $revisionFive = new Revision();
+        $revisionFive = new Revision('userId123');
         $revisionFive->setRevisionId(5);
         $revisionFour->publishRevision();
 
-        $revisionSix = new Revision();
+        $revisionSix = new Revision('userId123');
         $revisionSix->setRevisionId(6);
 
-        $revisionSeven = new Revision();
+        $revisionSeven = new Revision('userId123');
         $revisionSeven->setRevisionId(7);
         $revisionSeven->publishRevision();
 
-        $revisionEight = new Revision();
+        $revisionEight = new Revision('userId123');
         $revisionEight->setRevisionId(8);
         $revisionEight->publishRevision();
 
@@ -462,7 +462,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testClone()
     {
-        $site = new Site();
+        $site = new Site('user123');
         $site->setSiteId(55);
 
         $container = [
@@ -582,7 +582,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
         $this->container->setSite($site);
 
         foreach ($container['revisions'] as $index => $revisionData) {
-            $revision = new Revision();
+            $revision = new Revision('userId123');
             $revision->setRevisionId($revisionData['revisionId']);
             $revision->setAuthor($revisionData['author']);
             $revision->setCreatedDate($revisionData['createdDate']);
@@ -591,7 +591,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
             $revision->setMd5($revisionData['md5']);
 
             foreach ($revisionData['instances'] as $instance) {
-                $plugin = new PluginInstance();
+                $plugin = new PluginInstance('userId123');
                 $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
                 $plugin->setPlugin($instance['instance']['plugin']);
 

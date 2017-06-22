@@ -51,7 +51,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->revision = new Revision();
+        $this->revision = new Revision('userId123');
     }
 
     /**

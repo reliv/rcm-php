@@ -12,6 +12,7 @@ use Rcm\Exception\PageException;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Exception\RuntimeException;
 use Rcm\Page\PageTypes\PageTypes;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Page Repository
@@ -263,19 +264,33 @@ class Page extends ContainerAbstract
         $publishPage = false,
         $doFlush = true
     ) {
+        if (empty($pageData['createdByUserId'])) {
+            throw new PageException('CreatedByUserId is required to create a page.');
+        }
+        if (empty($pageData['createdReason'])) {
+            $pageData['createdReason'] = Tracking::UNKNOWN_REASON;
+        }
         if (empty($pageData['author'])) {
             throw new PageException('Author is required to create a page.');
         }
-        $revision = new Revision();
+        $revision = new Revision(
+            $pageData['createdByUserId'],
+            $pageData['createdReason']
+        );
         $revision->setAuthor($pageData['author']);
-        $revision->setCreatedDate(new \DateTime());
 
         // we should not have an Id on page create
         unset($pageData['pageId']);
 
-        $page = new PageEntity();
+        $page = new PageEntity(
+            $pageData['createdByUserId'],
+            $pageData['createdReason']
+        );
         $page->populate($pageData);
-        $page->setCreatedDate(new \DateTime());
+        $page->setCreatedByUserId(
+            $pageData['createdByUserId'],
+            $pageData['createdReason']
+        );
 
         $page->setSite($site);
 
@@ -312,11 +327,15 @@ class Page extends ContainerAbstract
      * setPageDeleted - A way of making pages appear deleted without deleting the DB entries
      *
      * @param PageEntity $page
+     * @param string     $modifiedByUserId
+     * @param string     $modifiedReason
      *
      * @return bool
      */
     public function setPageDeleted(
-        PageEntity $page
+        PageEntity $page,
+        string $modifiedByUserId,
+        string $modifiedReason = Tracking::UNKNOWN_REASON
     ) {
         $pageType = $page->getPageType();
 
@@ -326,6 +345,10 @@ class Page extends ContainerAbstract
         }
 
         $page->setPageType(self::PAGE_TYPE_DELETED . $pageType);
+        $page->setModifiedByUserId(
+            $modifiedByUserId,
+            $modifiedReason
+        );
 
         $this->_em->persist($page);
         $this->_em->flush($page);
@@ -729,14 +752,14 @@ class Page extends ContainerAbstract
     }
 
     /**
-     * savePage
-     *
      * @param SiteEntity $siteEntity
      * @param            $pageName
      * @param            $pageRevision
-     * @param string     $pageType
+     * @param            $pageType
      * @param            $saveData
-     * @param            $author
+     * @param            $createdByUserId
+     * @param string     $createdReason
+     * @param string     $author
      *
      * @return int|null
      */
@@ -746,7 +769,9 @@ class Page extends ContainerAbstract
         $pageRevision,
         $pageType,
         $saveData,
-        $author
+        $createdByUserId,
+        $createdReason = 'unknown',
+        $author = 'unknown'
     ) {
         if (empty($pageType)) {
             $pageType = PageTypes::NORMAL;
@@ -769,7 +794,13 @@ class Page extends ContainerAbstract
                     );
                 }
 
-                $this->saveContainer($container, $containerData, $author);
+                $this->saveContainer(
+                    $container,
+                    $containerData,
+                    $createdByUserId,
+                    $createdReason,
+                    $author
+                );
             }
         }
 
@@ -778,6 +809,8 @@ class Page extends ContainerAbstract
         return $this->saveContainer(
             $page,
             $saveData['pageContainer'],
+            $createdByUserId,
+            $createdReason,
             $author,
             $pageRevision
         );

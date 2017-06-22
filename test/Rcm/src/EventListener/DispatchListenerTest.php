@@ -69,7 +69,7 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getSiteLayout')
             ->will($this->returnValue($layout));
 
-        $currentSite = new Site();
+        $currentSite = new Site('user123');
         $currentSite->setSiteId(1);
         $currentSite->setFavIcon($favicon);
         $currentSite->setSiteTitle($title);

@@ -57,7 +57,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->site = new Site();
+        $this->site = new Site('user123');
     }
 
     /**
@@ -1235,7 +1235,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     private function getRevision($revisionData)
     {
-        $revision = new Revision();
+        $revision = new Revision('userId123');
         $revision->setRevisionId($revisionData['revisionId']);
         $revision->setAuthor($revisionData['author']);
         $revision->setCreatedDate($revisionData['createdDate']);
@@ -1244,7 +1244,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $revision->setMd5($revisionData['md5']);
 
         foreach ($revisionData['instances'] as $instance) {
-            $plugin = new PluginInstance();
+            $plugin = new PluginInstance('userId123');
             $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
             $plugin->setPlugin($instance['instance']['plugin']);
             $plugin->setDisplayName($instance['instance']['displayName']);
