@@ -3,25 +3,21 @@
 namespace RcmAdmin\Factory;
 
 use Interop\Container\ContainerInterface;
-use RcmAdmin\Controller\ApiAdminSitePageController;
+use RcmAdmin\Controller\ApiAdminManageSitesController;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class ApiAdminSitePageControllerFactory
- *
- * @author    James Jervis
- * @license   License.txt
- * @link      https://github.com/jerv13
+ * @author James Jervis - https://github.com/jerv13
  */
-class ApiAdminSitePageControllerFactory
+class ApiAdminManageSitesControllerFactory
 {
     /**
      * __invoke
      *
      * @param ContainerInterface|ServiceLocatorInterface $container
      *
-     * @return ApiAdminSitePageController
+     * @return ApiAdminManageSitesController
      */
     public function __invoke($container)
     {
@@ -29,6 +25,6 @@ class ApiAdminSitePageControllerFactory
             $container = $container->getServiceLocator();
         }
 
-        return new ApiAdminSitePageController($container);
+        return new ApiAdminManageSitesController($container);
     }
 }

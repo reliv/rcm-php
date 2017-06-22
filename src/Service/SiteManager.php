@@ -7,7 +7,9 @@ use Rcm\Entity\Country;
 use Rcm\Entity\Domain;
 use Rcm\Entity\Language;
 use Rcm\Entity\Site;
+use Rcm\Tracking\Exception\TrackingException;
 use RcmUser\Service\RcmUserService;
+use RcmUser\User\Entity\User;
 
 /**
  * Class ManageSites
@@ -77,6 +79,22 @@ class SiteManager
     }
 
     /**
+     * @return \RcmUser\User\Entity\User
+     * @throws TrackingException
+     */
+    protected function getCurrentUserTracking()
+    {
+        $user = $this->getCurrentUser();
+
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . static::class);
+        }
+
+        return $user;
+    }
+
+    /**
+     * @deprecated
      * getCurrentAuthor
      *
      * @param string $default
@@ -111,11 +129,11 @@ class SiteManager
         /** @var \Rcm\Repository\Page $pageRepo */
         $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
 
-        $author = $this->getCurrentAuthor();
+        $user = $this->getCurrentUserTracking();
 
         $pageRepo->createPages(
             $newSite,
-            $this->getDefaultSitePageSettings($author),
+            $this->getDefaultSitePageSettings($user),
             true,
             false
         );
@@ -126,7 +144,7 @@ class SiteManager
 
         $this->createPagePlugins(
             $newSite,
-            $this->getDefaultSitePageSettings($author),
+            $this->getDefaultSitePageSettings($user),
             false
         );
 
@@ -397,11 +415,11 @@ class SiteManager
     }
 
     /**
-     * getDefaultSitePageSettings
+     * @param User $createdByUser
      *
-     * @return array
+     * @return mixed
      */
-    public function getDefaultSitePageSettings($author)
+    public function getDefaultSitePageSettings(User $createdByUser)
     {
         $myConfig = $this->getDefaultSiteSettings();
 
@@ -409,7 +427,9 @@ class SiteManager
 
         // Set the author for each
         foreach ($pagesData as $key => $pageData) {
-            $pagesData[$key]['author'] = $author;
+            $pagesData[$key]['createdByUserId'] = $createdByUser->getId();
+            $pagesData[$key]['createdReason'] = 'Default page creation in ' . static::class;
+            $pagesData[$key]['author'] = $createdByUser->getName();
         }
 
         return $pagesData;
@@ -433,16 +453,18 @@ class SiteManager
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
+        $pageRepo = $entityManager->getRepository(
+            \Rcm\Entity\Page::class
+        );
 
         /** @var \Rcm\Repository\PluginInstance $pluginInstanceRepo */
         $pluginInstanceRepo = $entityManager->getRepository(
-            '\Rcm\Entity\PluginInstance'
+            \Rcm\Entity\PluginInstance::class
         );
 
         /** @var \Rcm\Repository\PluginWrapper $pluginWrapperRepo */
         $pluginWrapperRepo = $entityManager->getRepository(
-            '\Rcm\Entity\PluginWrapper'
+            \Rcm\Entity\PluginWrapper::class
         );
 
         foreach ($pagesData as $pageName => $pageData) {

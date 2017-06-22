@@ -4,10 +4,13 @@ namespace RcmAdmin\Controller;
 
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
+use Interop\Container\ContainerInterface;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
+use Rcm\Tracking\Exception\TrackingException;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\InputFilter\SiteInputFilter;
+use RcmUser\Service\RcmUserService;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\JsonModel;
 
@@ -28,6 +31,14 @@ use Zend\View\Model\JsonModel;
  */
 class ApiAdminManageSitesController extends ApiAdminBaseController
 {
+    /**
+     * @param ContainerInterface $serviceLocator
+     */
+    public function __construct(
+        $serviceLocator
+    ) {
+        $this->serviceLocator = $serviceLocator;
+    }
 
     /**
      * getSiteManager
@@ -37,6 +48,32 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     protected function getSiteManager()
     {
         return $this->serviceLocator->get('RcmAdmin\Service\SiteManager');
+    }
+
+    /**
+     * @return RcmUserService
+     */
+    protected function getRcmUserService()
+    {
+        return $this->serviceLocator->get(RcmUserService::class);
+    }
+
+    /**
+     * @return string
+     * @throws TrackingException
+     */
+    protected function getCurrentUserId()
+    {
+        /** @var RcmUserService $service */
+        $service = $this->getRcmUserService();
+
+        $user = $service->getCurrentUser();
+
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . static::class);
+        }
+
+        return (string)$user->getId();
     }
 
     /**
@@ -134,10 +171,13 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         // get default site data - kinda hacky, but keeps us to one controller
         if ($id == 'default') {
             $siteManager = $this->getSiteManager();
-            
+
             $data = $siteManager->getDefaultSiteValues();
 
-            $site = new Site();
+            $site = new Site(
+                $this->getCurrentUserId(),
+                'Get default site values in ' . static::class
+            );
 
             $site->populate($data);
 
@@ -277,7 +317,10 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         }
 
         /** @var \Rcm\Entity\Site $newSite */
-        $newSite = new Site();
+        $newSite = new Site(
+            $this->getCurrentUserId(),
+            'Create new site in ' . static::class
+        );
 
         $newSite->populate($data);
         // make sure we don't have a siteId

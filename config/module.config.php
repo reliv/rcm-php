@@ -102,12 +102,15 @@ return [
         'factories' => [
             'RcmAdmin\Controller\PageController'
             => 'RcmAdmin\Factory\PageControllerFactory',
+            RcmAdmin\Controller\ApiAdminManageSitesController::class
+            => RcmAdmin\Factory\ApiAdminManageSitesControllerFactory::class,
             RcmAdmin\Controller\ApiAdminSitePageController::class
             => RcmAdmin\Factory\ApiAdminSitePageControllerFactory::class,
             RcmAdmin\Controller\ApiAdminSitePageCloneController::class
             => RcmAdmin\Factory\ApiAdminSitePageCloneControllerFactory::class,
             RcmAdmin\Controller\AvailableBlocksJsController::class
             => RcmAdmin\Factory\AvailableBlocksJsControllerFactory::class,
+
         ],
         'invokables' => [
             'RcmAdmin\Controller\PagePermissionsController'
@@ -116,8 +119,6 @@ return [
                 'RcmAdmin\Controller\PageViewPermissionsController',
             'RcmAdmin\Controller\ApiAdminCurrentSiteController' =>
                 'RcmAdmin\Controller\ApiAdminCurrentSiteController',
-            'RcmAdmin\Controller\ApiAdminManageSitesController'
-            => 'RcmAdmin\Controller\ApiAdminManageSitesController',
             'RcmAdmin\Controller\ApiAdminSitesCloneController'
             => 'RcmAdmin\Controller\ApiAdminSitesCloneController',
             'RcmAdmin\Controller\ApiAdminLanguageController'
@@ -487,7 +488,7 @@ return [
                 'options' => [
                     'route' => '/api/admin/manage-sites[/:id]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\ApiAdminManageSitesController',
+                        'controller' => RcmAdmin\Controller\ApiAdminManageSitesController::class,
                     ]
                 ],
             ],

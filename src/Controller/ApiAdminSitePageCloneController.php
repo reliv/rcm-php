@@ -45,6 +45,7 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
         //ACCESS CHECK
         if (!$this->rcmIsAllowed('sites', 'admin')) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+
             return $this->getResponse();
         }
 
@@ -87,8 +88,12 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
         }
 
         $page = $this->getPage($site, $data['pageId']);
+        $user = $this->getCurrentUserTracking();
 
-        $newPage = new Page();
+        $newPage = new Page(
+            $user->getId(),
+            'New page in ' . static::class
+        );
 
         $newPage->populate($data);
 
@@ -108,8 +113,7 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
             );
         }
 
-        // force author to current user
-        $newPage->setAuthor($this->getCurrentAuthor());
+        $newPage->setAuthor($user->getName());
 
         try {
             $newPage = $this->getPageRepo()->copyPage(
@@ -127,7 +131,7 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
             );
         }
 
-        $apiResponse = new SitePageApiResponse();
+        $apiResponse = new SitePageApiResponse($newPage);
 
         $apiResponse->populate($newPage->toArray());
 

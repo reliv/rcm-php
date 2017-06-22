@@ -3,6 +3,7 @@
 
 namespace RcmAdmin\Entity;
 
+use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 
 require_once __DIR__ . '/../autoload.php';
@@ -44,9 +45,10 @@ class SitePageApiResponseTest extends \PHPUnit_Framework_TestCase
             'pageType' => 'string',
         ];
 
-        $unit = new SitePageApiResponse();
-        $unit->setSite(new Site());
-        $unit->setCreatedDate(new \DateTime());
+        $unit = new SitePageApiResponse(
+            new Page('user123')
+        );
+        $unit->setSite(new Site('user123'));
         $unit->setLastPublished(new \DateTime());
 
         $data = $unit->toArray();

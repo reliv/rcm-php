@@ -7,6 +7,8 @@ use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Http\Response;
 use Rcm\Repository\Page as PageRepo;
+use Rcm\Tracking\Exception\TrackingException;
+use RcmUser\Service\RcmUserService;
 use RcmUser\User\Entity\User;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
@@ -35,27 +37,39 @@ use Zend\View\Model\ViewModel;
  */
 class PageController extends AbstractActionController
 {
-    /** @var \Rcm\Entity\Site */
+    /**
+     * @var \Rcm\Entity\Site
+     */
     protected $currentSite;
 
-    /** @var \Rcm\Repository\Page */
+    /**
+     * @var \Rcm\Repository\Page
+     */
     protected $pageRepo;
 
-    /** @var \Zend\View\Model\ViewModel */
+    /**
+     * @var \Zend\View\Model\ViewModel
+     */
     protected $view;
 
     /**
-     * Constructor
-     *
-     * @param Site $currentSite  Current Site
-     * @param PageRepo $pageRepo Page Repository
+     * @var RcmUserService
+     */
+    protected $rcmUserService;
+
+    /**
+     * @param Site           $currentSite
+     * @param RcmUserService $rcmUserService
+     * @param PageRepo       $pageRepo
      */
     public function __construct(
         Site $currentSite,
+        RcmUserService $rcmUserService,
         PageRepo $pageRepo
     ) {
         $this->currentSite = $currentSite;
         $this->pageRepo = $pageRepo;
+        $this->rcmUserService = $rcmUserService;
 
         $this->view = new ViewModel();
         $this->view->setTerminal(true);
@@ -64,7 +78,7 @@ class PageController extends AbstractActionController
     /**
      * Creates a new CMS page
      *
-     * @return ViewModel
+     * @return ViewModel|Response
      */
     public function newAction()
     {
@@ -96,6 +110,8 @@ class PageController extends AbstractActionController
         $form->setValidationGroup('url');
         $form->setData($data);
 
+        $user = $this->getCurrentUser();
+
         if ($request->isPost() && $form->isValid()) {
             $validatedData = $form->getData();
 
@@ -107,7 +123,9 @@ class PageController extends AbstractActionController
                     'name' => $validatedData['url'],
                     'pageTitle' => $validatedData['title'],
                     'siteLayoutOverride' => $validatedData['main-layout'],
-                    'author' => $this->rcmUserGetCurrentUser()->getName(),
+                    'createdByUserId' => $user->getId(),
+                    'createdReason' => 'New page in ' . static::class,
+                    'author' => $user->getName(),
                 ];
 
                 $this->pageRepo->createPage(
@@ -131,10 +149,12 @@ class PageController extends AbstractActionController
                 }
 
                 $pageData = [
-                    'author' => $this->rcmUserGetCurrentUser()->getName(),
                     'name' => $validatedData['url'],
                     'pageTitle' => $validatedData['title'],
-                    'pageType' => 'n'
+                    'pageType' => 'n',
+                    'createdByUserId' => $user->getId(),
+                    'createdReason' => 'New page from template in ' . static::class,
+                    'author' => $user->getName(),
                 ];
 
                 $this->pageRepo->copyPage(
@@ -152,6 +172,7 @@ class PageController extends AbstractActionController
                 )
             );
             $this->view->setTemplate('rcm-admin/page/success');
+
             return $this->view;
         } elseif ($request->isPost() && !$form->isValid()) {
             $this->view->setVariable(
@@ -164,6 +185,7 @@ class PageController extends AbstractActionController
             'form',
             $form
         );
+
         return $this->view;
     }
 
@@ -206,7 +228,6 @@ class PageController extends AbstractActionController
                 'rcmPageType',
                 'n'
             );
-
 
         /** @var \RcmAdmin\Form\CreateTemplateFromPageForm $form */
         $form = $this->getServiceLocator()
@@ -260,6 +281,7 @@ class PageController extends AbstractActionController
                 )
             );
             $this->view->setTemplate('rcm-admin/page/success');
+
             return $this->view;
         }
 
@@ -279,6 +301,7 @@ class PageController extends AbstractActionController
             'rcmPageType',
             $sourcePageType
         );
+
         return $this->view;
     }
 
@@ -481,7 +504,6 @@ class PageController extends AbstractActionController
                 $plugin['isSitewide'] = 0;
             }
 
-
             if (empty($plugin['sitewideName'])) {
                 $plugin['sitewideName'] = null;
             }
@@ -536,5 +558,31 @@ class PageController extends AbstractActionController
         }
 
         return;
+    }
+
+    /**
+     * @return RcmUserService
+     */
+    protected function getRcmUserService()
+    {
+        return $this->rcmUserService;
+    }
+
+    /**
+     * @return User
+     * @throws TrackingException
+     */
+    protected function getCurrentUser()
+    {
+        /** @var RcmUserService $service */
+        $service = $this->getRcmUserService();
+
+        $user = $service->getCurrentUser();
+
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . static::class);
+        }
+
+        return $user;
     }
 }

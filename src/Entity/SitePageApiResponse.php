@@ -19,9 +19,30 @@ use Rcm\Entity\Page;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
-
 class SitePageApiResponse extends Page
 {
+    /**
+     * @param Page $page
+     */
+    public function __construct(Page $page)
+    {
+        $this->populate(
+            $page->toArray(),
+            [
+                'createdDate',
+                'createdByUserId',
+                'modifiedByUserId'
+            ]
+        );
+
+        $this->createdDate = $page->getCreatedDate();
+        $this->createdByUserId = $page->getCreatedByUserId();
+        $this->createdReason = $page->getCreatedReason();
+        $this->modifiedDate = $page->getModifiedDate();
+        $this->modifiedByUserId = $page->getModifiedByUserId();
+        $this->modifiedReason = $page->getModifiedReason();
+    }
+
     /**
      * toArray
      *
