@@ -13,6 +13,19 @@ interface Tracking
     const UNKNOWN_REASON = 'unknown';
 
     /**
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
+     */
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    );
+
+    /**
      * @return \DateTime
      * @throws TrackingException
      */

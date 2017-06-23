@@ -32,7 +32,7 @@ class SettingTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->setting = new Setting(
-            'userId123'
+            'user123'
         );
     }
 

@@ -193,7 +193,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
         );
 
         $primary = $this->currentSite->getDomain();
-        $domain = new Domain();
+        $domain = new Domain('user123');
         $domain->setDomainId(1);
         $domain->setDomainName('www.reliv.com');
         $domain->setPrimary($primary);
@@ -235,7 +235,7 @@ class RouteListenerTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $this->currentSite->setDomain(new Domain());
+        $this->currentSite->setDomain(new Domain('user123'));
         $this->currentSite->setSiteId(null);
 
         $request = new Request();

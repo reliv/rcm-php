@@ -19,18 +19,4 @@ abstract class TrackingAbstract implements Tracking
     ) {
         $this->setCreatedByUserId($createdByUserId, $createdReason);
     }
-
-    /**
-     * @return void
-     */
-    public function __clone()
-    {
-        // <tracking>
-        $this->createdByUserId = null;
-        $this->createdDate = null;
-        $this->createdReason = Tracking::UNKNOWN_REASON;
-        $this->modifiedByUserId = null;
-        $this->modifiedDate = null;
-        $this->modifiedReason = Tracking::UNKNOWN_REASON;
-    }
 }

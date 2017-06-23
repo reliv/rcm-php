@@ -92,6 +92,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
 
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was first created
      *
      * @ORM\Column(type="datetime")
@@ -100,6 +101,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
 
     /**
      * <tracking>
+     *
      * @var string User ID of creator
      *
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -108,6 +110,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      *
      * @ORM\Column(type="string", length=512, nullable=false)
@@ -116,6 +119,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
 
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was modified
      *
      * @ORM\Column(type="datetime")
@@ -124,6 +128,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
 
     /**
      * <tracking>
+     *
      * @var string User ID of modifier
      *
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -132,6 +137,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      *
      * @ORM\Column(type="string", length=512, nullable=false)
@@ -151,11 +157,24 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     }
 
     /**
-     * @return void
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
      */
-    public function __clone()
-    {
-        parent::__clone();
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+
+        return $new;
     }
 
     /**

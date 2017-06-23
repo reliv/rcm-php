@@ -48,7 +48,7 @@ class CountryTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->country = new Country();
+        $this->country = new Country('user123');
     }
 
     /**
@@ -169,7 +169,7 @@ class CountryTest extends \PHPUnit_Framework_TestCase
         $data['iso2'] = 'TS';
         $data['countryName'] = 'TEST';
 
-        $newCountry = new Country();
+        $newCountry = new Country('user123');
 
         $newCountry->populate($data);
 
@@ -177,7 +177,7 @@ class CountryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['iso2'], $newCountry->getIso2());
         $this->assertEquals($data['countryName'], $newCountry->getCountryName());
 
-        $secCountry = new Country();
+        $secCountry = new Country('user123');
 
         $secCountry->populateFromObject($newCountry);
 

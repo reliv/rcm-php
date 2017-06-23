@@ -2,6 +2,7 @@
 
 namespace Rcm\Tracking\Model;
 
+use Rcm\Exception\CloneNotAllowedException;
 use Rcm\Tracking\Exception\TrackingException;
 
 /**
@@ -56,6 +57,36 @@ trait TrackingTrait
      * @var bool Tracking that this value has been updated
      */
     protected $modifiedByUserIdUpdated = false;
+
+    /**
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
+     */
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        $new = clone($this);
+        $new->setCreatedByUserId(
+            $createdByUserId,
+            $createdReason
+        );
+
+        return $new;
+    }
+
+    /**
+     * @return void
+     * @throws CloneNotAllowedException
+     */
+    public function __clone()
+    {
+        throw new CloneNotAllowedException();
+    }
 
     /**
      * <tracking>

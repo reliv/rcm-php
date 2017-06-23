@@ -53,7 +53,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->page = new Page();
+        $this->page = new Page('user123');
     }
 
     /**
@@ -212,7 +212,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetParentPage()
     {
-        $page = new Page();
+        $page = new Page('user123');
         $page->setPageId(55);
 
         $this->page->setParent($page);
@@ -364,7 +364,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->page->setSite($site);
 
         foreach ($container['revisions'] as $index => $revisionData) {
-            $revision = new Revision('userId123');
+            $revision = new Revision('user123');
             $revision->setRevisionId($revisionData['revisionId']);
             $revision->setAuthor($revisionData['author']);
             $revision->setCreatedDate($revisionData['createdDate']);
@@ -373,7 +373,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
             $revision->setMd5($revisionData['md5']);
 
             foreach ($revisionData['instances'] as $instance) {
-                $plugin = new PluginInstance('userId123');
+                $plugin = new PluginInstance('user123');
                 $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
                 $plugin->setPlugin($instance['instance']['plugin']);
 
@@ -385,7 +385,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 $plugin->setInstanceConfig($instance['instance']['instanceConfig']);
                 $plugin->setMd5($instance['instance']['md5']);
 
-                $wrapper = new PluginWrapper();
+                $wrapper = new PluginWrapper('user123');
                 $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
                 $wrapper->setLayoutContainer($instance['layoutContainer']);
                 $wrapper->setRenderOrderNumber($instance['renderOrder']);
@@ -408,7 +408,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(2, $this->page->getRevisions());
 
-        $clonedContainer = clone $this->page;
+        $clonedContainer = $this->page->newInstance();
 
         /* Test Container */
         $this->assertNotEquals(
@@ -468,9 +468,9 @@ class PageTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        $page = new Page();
+        $page = new Page('user123');
 
-        $clone = clone($page);
+        $clone = $page->newInstance();
 
         $this->assertInstanceOf('\Rcm\Entity\Page', $clone);
     }
@@ -489,7 +489,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $data['parent'] = null;
 
 
-        $obj1 = new Page();
+        $obj1 = new Page('user123');
 
         $obj1->populate($data);
 
@@ -503,7 +503,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['siteLayoutOverride'], $obj1->getSiteLayoutOverride());
         $this->assertEquals($data['parent'], $obj1->getParent());
 
-        $data['parent'] = new Page();
+        $data['parent'] = new Page('user123');
 
         $obj1->populate($data);
 

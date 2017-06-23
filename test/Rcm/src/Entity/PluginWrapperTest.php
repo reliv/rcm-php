@@ -51,7 +51,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->pluginWrapper = new PluginWrapper();
+        $this->pluginWrapper = new PluginWrapper('user123');
     }
 
     /**
@@ -117,7 +117,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetInstance()
     {
-        $plugin = new PluginInstance();
+        $plugin = new PluginInstance('user123');
         $plugin->setInstanceId(44);
 
         $this->pluginWrapper->setInstance($plugin);
@@ -247,7 +247,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
         ];
 
         foreach ($instances as $instance) {
-            $plugin = new PluginInstance();
+            $plugin = new PluginInstance('user123');
             $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
             $plugin->setPlugin($instance['instance']['plugin']);
 
@@ -259,7 +259,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
             $plugin->setInstanceConfig($instance['instance']['instanceConfig']);
             $plugin->setMd5($instance['instance']['md5']);
 
-            $wrapper = new PluginWrapper();
+            $wrapper = new PluginWrapper('user123');
             $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
             $wrapper->setLayoutContainer($instance['layoutContainer']);
             $wrapper->setRenderOrderNumber($instance['renderOrder']);
@@ -268,7 +268,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
             $wrapper->setDivFloat($instance['divFloat']);
             $wrapper->setInstance($plugin);
 
-            $clonedWrapper = clone $wrapper;
+            $clonedWrapper = $wrapper->newInstance();
 
             $this->assertNotEquals(
                 $wrapper->getPluginWrapperId(),
@@ -345,9 +345,9 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
             );
         }
 
-        $wrapper = new PluginWrapper();
+        $wrapper = new PluginWrapper('user123');
 
-        $clone = clone($wrapper);
+        $clone = $wrapper->newInstance();
 
         $this->assertInstanceOf('Rcm\Entity\PluginWrapper', $clone);
     }
@@ -360,9 +360,9 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
         $data['height'] = 123;
         $data['width'] = 321;
         $data['divFloat'] = 'left';
-        $data['instance'] = new PluginInstance();
+        $data['instance'] = new PluginInstance('user123');
 
-        $obj1 = new PluginWrapper();
+        $obj1 = new PluginWrapper('user123');
 
         $obj1->populate($data);
 

@@ -3,6 +3,7 @@
 namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Rcm\Exception\CloneNotAllowedException;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\Tracking\Model\Tracking;
@@ -100,28 +101,54 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
-     * Clone the container
+     * Get a clone with special logic
      *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return ContainerInterface|ContainerAbstract
+     */
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        /** @var ContainerInterface|ContainerAbstract $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+
+        $new->lastPublished = new \DateTime();
+
+        $new->revisions = new ArrayCollection();
+
+        if (!empty($new->publishedRevision)) {
+            $revision = $new->publishedRevision->newInstance(
+                $createdByUserId,
+                $createdReason
+            );
+            $new->removePublishedRevision();
+            $new->revisions->add($revision);
+            $new->setStagedRevision($revision);
+        } elseif (!empty($new->stagedRevision)) {
+            $revision = $new->stagedRevision->newInstance(
+                $createdByUserId,
+                $createdReason
+            );
+            $new->setStagedRevision($revision);
+            $new->revisions->add($revision);
+        }
+
+        return $new;
+    }
+
+    /**
      * @return void
+     * @throws CloneNotAllowedException
      */
     public function __clone()
     {
-        $this->lastPublished = new \DateTime();
-
-        $this->revisions = new ArrayCollection();
-
-        if (!empty($this->publishedRevision)) {
-            $revision = clone $this->publishedRevision;
-            $this->removePublishedRevision();
-            $this->revisions->add($revision);
-            $this->setStagedRevision($revision);
-        } elseif (!empty($this->stagedRevision)) {
-            $revision = clone $this->stagedRevision;
-            $this->setStagedRevision($revision);
-            $this->revisions->add($revision);
-        }
-
-        parent::__clone();
+        throw new CloneNotAllowedException();
     }
 
     /**
@@ -203,7 +230,7 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     public function setCreatedDate(\DateTime $createdDate)
     {
         throw new TrackingException('Created data can only be set on construct');
-        $this->createdDate = $createdDate;
+        //$this->createdDate = $createdDate;
     }
 
     /**
@@ -239,7 +266,7 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
      *
      * @param \DateTime $lastPublished Date the page was last published.
      *
-     * @return null
+     * @return void
      */
     public function setLastPublished(\DateTime $lastPublished)
     {
@@ -279,7 +306,7 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
      *
      * @param Revision $revision Revision object to add
      *
-     * @return null
+     * @return void
      */
     public function setPublishedRevision(Revision $revision)
     {
@@ -318,7 +345,7 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
      *
      * @param Revision $revision Revision object to add
      *
-     * @return null
+     * @return void
      */
     public function setStagedRevision(Revision $revision)
     {
@@ -530,11 +557,11 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
      * @param array $data
      * @param array $ignore List of properties to skip population for
      *
-     * @return mixed
+     * @return void
      */
     public function populate(
         array $data,
-        array $ignore = []
+        array $ignore = ['createdByUserId', 'createdDate', 'createdReason']
     ) {
         $prefix = 'set';
 
@@ -558,11 +585,11 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
      * @param ApiPopulatableInterface $object Object of THIS type
      * @param array                   $ignore List of properties to skip population for
      *
-     * @return mixed
+     * @return void
      */
     public function populateFromObject(
         ApiPopulatableInterface $object,
-        array $ignore = []
+        array $ignore = ['createdByUserId', 'createdDate', 'createdReason']
     ) {
         if ($object instanceof ContainerInterface) {
             $this->populate($object->toArray(), $ignore);

@@ -76,6 +76,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
 
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was first created
      *
      * @ORM\Column(type="datetime")
@@ -84,6 +85,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
 
     /**
      * <tracking>
+     *
      * @var string User ID of creator
      *
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -92,6 +94,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      *
      * @ORM\Column(type="string", length=512, nullable=false)
@@ -100,6 +103,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
 
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was modified
      *
      * @ORM\Column(type="datetime")
@@ -108,6 +112,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
 
     /**
      * <tracking>
+     *
      * @var string User ID of modifier
      *
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -116,6 +121,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      *
      * @ORM\Column(type="string", length=512, nullable=false)
@@ -174,20 +180,30 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
     }
 
     /**
-     * __clone
+     * Get a clone with special logic
      *
-     * @return void
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
      */
-    public function __clone()
-    {
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         if (!$this->pluginInstanceId) {
-            return;
+            return clone($this);
         }
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
 
-        $this->pluginInstanceId = null;
-        $this->previousEntity = null;
+        $new->pluginInstanceId = null;
+        $new->previousEntity = null;
 
-        parent::__clone();
+        return $new;
     }
 
     /**
@@ -646,6 +662,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
 
     /**
      * <tracking>
+     *
      * @return void
      *
      * @ORM\PrePersist
@@ -657,6 +674,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
 
     /**
      * <tracking>
+     *
      * @return void
      *
      * @ORM\PreUpdate

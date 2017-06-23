@@ -402,6 +402,12 @@ class Page extends ContainerAbstract
         $doFlush = true
     ) {
 
+        if (empty($pageData['modifiedByUserId'])) {
+            throw new InvalidArgumentException(
+                'Missing needed information (modifiedByUserId) to create page copy.'
+            );
+        }
+
         // Values cannot be changed
         unset($pageData['pageId']);
         unset($pageData['author']);
@@ -409,6 +415,10 @@ class Page extends ContainerAbstract
         unset($pageData['lastPublished']);
 
         $page->populate($pageData);
+        $page->setModifiedByUserId(
+            $pageData['modifiedByUserId'],
+            'Update page in ' . self::class
+        );
 
         $this->assertCanUpdateSitePage(
             $page
@@ -446,6 +456,13 @@ class Page extends ContainerAbstract
                 'Missing needed information (name) to create page copy.'
             );
         }
+
+        if (empty($pageData['createdByUserId'])) {
+            throw new InvalidArgumentException(
+                'Missing needed information (createdByUserId) to create page copy.'
+            );
+        }
+
         if (empty($pageData['author'])) {
             throw new InvalidArgumentException(
                 'Missing needed information (author) to create page copy.'
@@ -459,7 +476,10 @@ class Page extends ContainerAbstract
 
         $pageData['site'] = $destinationSite;
 
-        $clonedPage = clone $pageToCopy;
+        $clonedPage = $pageToCopy->newInstance(
+            $pageData['createdByUserId'],
+            'Copy page in ' . self::class
+        );
         $clonedPage->populate($pageData);
 
         $this->assertCanCreateSitePage(
@@ -479,7 +499,10 @@ class Page extends ContainerAbstract
                 );
             }
 
-            $revisionToUse = clone $sourceRevision;
+            $revisionToUse = $sourceRevision->newInstance(
+                $pageData['createdByUserId'],
+                'Copy page in ' . self::class
+            );
             $clonedPage->setRevisions([]);
             $clonedPage->addRevision($revisionToUse);
         }

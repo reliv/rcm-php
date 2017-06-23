@@ -87,7 +87,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetDomain()
     {
-        $domain = new Domain();
+        $domain = new Domain('user123');
         $domain->setDomainId('102');
 
         $this->site->setDomain($domain);
@@ -120,7 +120,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetLanguage()
     {
-        $language = new Language();
+        $language = new Language('user123');
         $language->setLanguageId('102');
 
         $this->site->setLanguage($language);
@@ -132,19 +132,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Set Language Only Accepts a Language object
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Site
-     * @expectedException \TypeError
-     */
-//    public function testSetLanguageOnlyAcceptsLanguageObject()
-//    {
-//        $this->site->setLanguage(time());
-//    }
-
-    /**
      * Test Get and Set the Country Object
      *
      * @return void
@@ -153,7 +140,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetCountry()
     {
-        $country = new Country();
+        $country = new Country('user123');
         $country->setIso3('USA');
 
         $this->site->setCountry($country);
@@ -222,15 +209,15 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndAddPages()
     {
-        $pageOne = new Page();
+        $pageOne = new Page('user123');
         $pageOne->setPageId(12);
         $pageOne->setName('t1');
 
-        $pageTwo = new Page();
+        $pageTwo = new Page('user123');
         $pageTwo->setPageId(13);
         $pageTwo->setName('t2');
 
-        $pageThree = new Page();
+        $pageThree = new Page('user123');
         $pageThree->setPageId(14);
         $pageThree->setName('t3');
 
@@ -262,15 +249,15 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemovePage()
     {
-        $pageOne = new Page();
+        $pageOne = new Page('user123');
         $pageOne->setPageId(12);
         $pageOne->setName('t12');
 
-        $pageTwo = new Page();
+        $pageTwo = new Page('user123');
         $pageTwo->setPageId(13);
         $pageTwo->setName('t13');
 
-        $pageThree = new Page();
+        $pageThree = new Page('user123');
         $pageThree->setPageId(14);
         $pageThree->setName('t14');
 
@@ -333,15 +320,15 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndAddContainers()
     {
-        $containerOne = new Container();
+        $containerOne = new Container('user123');
         $containerOne->setContainerId(49);
         $containerOne->setName('t49');
 
-        $containerTwo = new Container();
+        $containerTwo = new Container('user123');
         $containerTwo->setContainerId(50);
         $containerTwo->setName('t50');
 
-        $containerThree = new Container();
+        $containerThree = new Container('user123');
         $containerThree->setContainerId(51);
         $containerThree->setName('t51');
 
@@ -372,15 +359,15 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveContainer()
     {
-        $containerOne = new Container();
+        $containerOne = new Container('user123');
         $containerOne->setContainerId(49);
         $containerOne->setName('t49');
 
-        $containerTwo = new Container();
+        $containerTwo = new Container('user123');
         $containerTwo->setContainerId(50);
         $containerTwo->setName('t50');
 
-        $containerThree = new Container();
+        $containerThree = new Container('user123');
         $containerThree->setContainerId(51);
         $containerThree->setName('t51');
 
@@ -439,17 +426,17 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndAddSiteWidePlugins()
     {
-        $pluginOne = new PluginInstance();
+        $pluginOne = new PluginInstance('user123');
         $pluginOne->setInstanceId(3);
         $pluginOne->setSiteWide();
         $pluginOne->setDisplayName('Plugin One');
 
-        $pluginTwo = new PluginInstance();
+        $pluginTwo = new PluginInstance('user123');
         $pluginTwo->setInstanceId(33);
         $pluginTwo->setSiteWide();
         $pluginTwo->setDisplayName('Plugin Two');
 
-        $pluginThree = new PluginInstance();
+        $pluginThree = new PluginInstance('user123');
         $pluginThree->setInstanceId(33);
         $pluginThree->setSiteWide();
         $pluginThree->setDisplayName('Plugin Three');
@@ -480,7 +467,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddSiteWideWithNonSiteWideMarkedInstanceThrowsException()
     {
-        $pluginOne = new PluginInstance();
+        $pluginOne = new PluginInstance('user123');
         $pluginOne->setInstanceId(3);
         $pluginOne->setDisplayName('Plugin One');
 
@@ -497,7 +484,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddSiteWideWithNoNameThrowsException()
     {
-        $pluginOne = new PluginInstance();
+        $pluginOne = new PluginInstance('user123');
         $pluginOne->setInstanceId(3);
         $pluginOne->setSiteWide();
 
@@ -513,17 +500,17 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveSiteWidePlugin()
     {
-        $pluginOne = new PluginInstance();
+        $pluginOne = new PluginInstance('user123');
         $pluginOne->setInstanceId(3);
         $pluginOne->setSiteWide();
         $pluginOne->setDisplayName('Plugin One');
 
-        $pluginTwo = new PluginInstance();
+        $pluginTwo = new PluginInstance('user123');
         $pluginTwo->setInstanceId(33);
         $pluginTwo->setSiteWide();
         $pluginTwo->setDisplayName('Plugin Two');
 
-        $pluginThree = new PluginInstance();
+        $pluginThree = new PluginInstance('user123');
         $pluginThree->setInstanceId(33);
         $pluginThree->setSiteWide();
         $pluginThree->setDisplayName('Plugin Three');
@@ -637,13 +624,13 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     public function testClone()
     {
-        $domain = new Domain();
+        $domain = new Domain('user123');
         $domain->setDomainId(23);
 
-        $language = new Language();
+        $language = new Language('user123');
         $language->setLanguageId(55);
 
-        $country = new Country();
+        $country = new Country('user123');
         $country->setIso3('USA');
 
         $site = [
@@ -1111,7 +1098,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $this->site->setLoginPage($site['loginPage']);
 
         foreach ($site['pages'] as $page) {
-            $pageEntity = new Page();
+            $pageEntity = new Page('user123');
             $pageEntity->setPageId($page['pageId']);
             $pageEntity->setName($page['name']);
             $pageEntity->setAuthor($page['author']);
@@ -1135,7 +1122,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         }
 
         foreach ($site['containers'] as $container) {
-            $containerEntity = new Container();
+            $containerEntity = new Container('user123');
             $containerEntity->setContainerId($container['containerId']);
             $containerEntity->setName($container['name']);
             $containerEntity->setAuthor($container['author']);
@@ -1165,7 +1152,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->site->getContainers());
 
         $original = $this->site;
-        $cloned = clone $this->site;
+        $cloned = $this->site->newInstance();
 
         $this->assertNotEquals($original->getSiteId(), $cloned->getSiteId());
         $this->assertNull($cloned->getSiteId());
@@ -1235,7 +1222,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
      */
     private function getRevision($revisionData)
     {
-        $revision = new Revision('userId123');
+        $revision = new Revision('user123');
         $revision->setRevisionId($revisionData['revisionId']);
         $revision->setAuthor($revisionData['author']);
         $revision->setCreatedDate($revisionData['createdDate']);
@@ -1244,7 +1231,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $revision->setMd5($revisionData['md5']);
 
         foreach ($revisionData['instances'] as $instance) {
-            $plugin = new PluginInstance('userId123');
+            $plugin = new PluginInstance('user123');
             $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
             $plugin->setPlugin($instance['instance']['plugin']);
             $plugin->setDisplayName($instance['instance']['displayName']);
@@ -1256,7 +1243,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                 $this->site->addSiteWidePlugin($plugin);
             }
 
-            $wrapper = new PluginWrapper();
+            $wrapper = new PluginWrapper('user123');
             $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
             $wrapper->setLayoutContainer($instance['layoutContainer']);
             $wrapper->setRenderOrderNumber($instance['renderOrder']);

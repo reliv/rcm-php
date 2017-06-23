@@ -75,6 +75,7 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was first created
      *
      * @ORM\Column(type="datetime")
@@ -83,6 +84,7 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string User ID of creator
      *
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -91,6 +93,7 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      *
      * @ORM\Column(type="string", length=512, nullable=false)
@@ -99,6 +102,7 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was modified
      *
      * @ORM\Column(type="datetime")
@@ -107,6 +111,7 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string User ID of modifier
      *
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -115,6 +120,7 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      *
      * @ORM\Column(type="string", length=512, nullable=false)
@@ -133,11 +139,24 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
     }
 
     /**
-     * @return void
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
      */
-    public function __clone()
-    {
-        parent::__clone();
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+
+        return $new;
     }
 
     /**
@@ -264,6 +283,7 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
      * setSiteId
      *
      * @param $siteId
+     *
      * @return void
      */
     public function setSiteId($siteId)
@@ -285,6 +305,7 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
      * toArray
      *
      * @param array $ignore
+     *
      * @return array
      */
     public function toArray($ignore = ['site'])
@@ -314,6 +335,7 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @return void
      *
      * @ORM\PrePersist
@@ -325,6 +347,7 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @return void
      *
      * @ORM\PreUpdate

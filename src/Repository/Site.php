@@ -274,7 +274,7 @@ class Site extends EntityRepository
         }
 
         // @rcmEntityCloning
-        $site = clone($existingSite);
+        $site = $existingSite->newInstance();
         $site->setCreatedByUserId(
             $createdByUserId,
             $createdReason

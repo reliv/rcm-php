@@ -18,7 +18,7 @@ abstract class ApiModelTrackingAbstract extends ApiModelAbstract implements ApiM
 
     /**
      * @param string $createdByUserId <tracking>
-     * @param string $createdReason    <tracking>
+     * @param string $createdReason   <tracking>
      */
     public function __construct(
         string $createdByUserId,
@@ -28,16 +28,15 @@ abstract class ApiModelTrackingAbstract extends ApiModelAbstract implements ApiM
     }
 
     /**
+     * @param array $data
+     * @param array $ignore
+     *
      * @return void
      */
-    public function __clone()
-    {
-        // <tracking>
-        $this->createdByUserId = null;
-        $this->createdDate = null;
-        $this->createdReason = Tracking::UNKNOWN_REASON;
-        $this->modifiedByUserId = null;
-        $this->modifiedDate = null;
-        $this->modifiedReason = Tracking::UNKNOWN_REASON;
+    public function populate(
+        array $data,
+        array $ignore = ['createdByUserId', 'createdDate', 'createdReason']
+    ) {
+        parent::populate($data, $ignore);
     }
 }

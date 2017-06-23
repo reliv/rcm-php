@@ -51,7 +51,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->revision = new Revision('userId123');
+        $this->revision = new Revision('user123');
     }
 
     /**
@@ -161,10 +161,10 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndAddPluginWrappers()
     {
-        $wrapperOne = new PluginWrapper();
+        $wrapperOne = new PluginWrapper('user123');
         $wrapperOne->setPluginWrapperId(44);
 
-        $wrapperTwo = new PluginWrapper();
+        $wrapperTwo = new PluginWrapper('user123');
         $wrapperTwo->setPluginWrapperId(45);
 
         $expected = [
@@ -203,13 +203,13 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemovePluginWrapper()
     {
-        $wrapperOne = new PluginWrapper();
+        $wrapperOne = new PluginWrapper('user123');
         $wrapperOne->setPluginWrapperId(44);
 
-        $wrapperTwo = new PluginWrapper();
+        $wrapperTwo = new PluginWrapper('user123');
         $wrapperTwo->setPluginWrapperId(45);
 
-        $wrapperThree = new PluginWrapper();
+        $wrapperThree = new PluginWrapper('user123');
         $wrapperThree->setPluginWrapperId(46);
 
         $expected = [
@@ -343,7 +343,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
         $this->revision->setMd5($revision['md5']);
 
         foreach ($revision['instances'] as $instance) {
-            $plugin = new PluginInstance();
+            $plugin = new PluginInstance('user123');
             $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
             $plugin->setPlugin($instance['instance']['plugin']);
 
@@ -355,7 +355,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
             $plugin->setInstanceConfig($instance['instance']['instanceConfig']);
             $plugin->setMd5($instance['instance']['md5']);
 
-            $wrapper = new PluginWrapper();
+            $wrapper = new PluginWrapper('user123');
             $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
             $wrapper->setLayoutContainer($instance['layoutContainer']);
             $wrapper->setRenderOrderNumber($instance['renderOrder']);
@@ -367,7 +367,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
             $this->revision->addPluginWrapper($wrapper);
         }
 
-        $clonedRevision = clone $this->revision;
+        $clonedRevision = $this->revision->newInstance();
 
         /* Test Revision */
         $this->assertNotEquals(

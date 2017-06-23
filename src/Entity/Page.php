@@ -262,18 +262,31 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     }
 
     /**
-     * Clone the page
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
      */
-    public function __clone()
-    {
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         if (!$this->pageId) {
-            return;
+            return clone($this);
         }
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
 
-        $this->pageId = null;
-        $this->name = null;
-        $this->parent = null;
-        parent::__clone();
+        $new->pageId = null;
+        $new->name = null;
+        $new->parent = null;
+
+        return $new;
     }
 
     /**

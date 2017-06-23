@@ -146,11 +146,24 @@ class Language extends ApiModelTrackingAbstract implements \IteratorAggregate, T
     }
 
     /**
-     * @return void
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
      */
-    public function __clone()
-    {
-        parent::__clone();
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+
+        return $new;
     }
 
     /**

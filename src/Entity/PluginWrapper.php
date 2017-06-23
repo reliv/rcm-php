@@ -165,24 +165,37 @@ class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializabl
     }
 
     /**
-     * __clone
+     * Get a clone with special logic
      *
-     * @return void
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return PluginWrapper
      */
-    public function __clone()
-    {
-        if (!$this->pluginWrapperId) {
-            return;
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        if (!$this->pluginInstanceId) {
+            return clone($this);
+        }
+        /** @var PluginWrapper $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+
+        $new->pluginWrapperId = null;
+
+        if (!$new->instance->isSiteWide()) {
+            $pluginInstance = $new->instance->newInstance(
+                $createdByUserId,
+                $createdReason
+            );
+            $new->instance = $pluginInstance;
         }
 
-        $this->pluginWrapperId = null;
-
-        if (!$this->instance->isSiteWide()) {
-            $pluginInstance = clone $this->instance;
-            $this->instance = $pluginInstance;
-        }
-
-        parent::__clone();
+        return $new;
     }
 
     /**

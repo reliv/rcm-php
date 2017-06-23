@@ -95,6 +95,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was first created
      *
      * @ORM\Column(type="datetime")
@@ -103,6 +104,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string User ID of creator
      *
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -111,6 +113,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      *
      * @ORM\Column(type="string", length=512, nullable=false)
@@ -119,6 +122,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was modified
      *
      * @ORM\Column(type="datetime")
@@ -127,6 +131,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string User ID of modifier
      *
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -135,6 +140,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      *
      * @ORM\Column(type="string", length=512, nullable=false)
@@ -168,35 +174,48 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
     }
 
     /**
-     * __clone
+     * Get a clone with special logic
      *
-     * @return void
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
      */
-    public function __clone()
-    {
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         if (!$this->revisionId) {
-            return;
+            return clone($this);
         }
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
 
-        $this->revisionId = null;
-        $this->createdDate = new \DateTime();
+        $new->revisionId = null;
+        $new->createdDate = new \DateTime();
 
-        $this->published = false;
-        $this->publishedDate = null;
+        $new->published = false;
+        $new->publishedDate = null;
 
         /* Clone Plugins */
-        $pluginWrappers = $this->pluginWrappers;
+        $pluginWrappers = $new->pluginWrappers;
         $clonedPluginWrappers = new ArrayCollection();
 
         /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
         foreach ($pluginWrappers as $pluginWrapper) {
-            $clonedPluginWrapper = clone $pluginWrapper;
+            $clonedPluginWrapper = $pluginWrapper->newInstance(
+                $createdByUserId,
+                $createdReason
+            );
             $clonedPluginWrappers->add($clonedPluginWrapper);
         }
 
-        $this->pluginWrappers = $clonedPluginWrappers;
+        $new->pluginWrappers = $clonedPluginWrappers;
 
-        parent::__clone();
+        return $new;
     }
 
     /**
@@ -568,6 +587,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @return void
      *
      * @ORM\PrePersist
@@ -579,6 +599,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @return void
      *
      * @ORM\PreUpdate

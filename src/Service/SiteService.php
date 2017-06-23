@@ -109,7 +109,7 @@ class SiteService
         if (empty($site)) {
             $site = new Site(
                 Tracking::UNKNOWN_USER_ID,
-                'Fake site due to site domain not found ' . static::class
+                'Fake site due to site domain not found ' . self::class
             );
         }
 
@@ -175,7 +175,7 @@ class SiteService
             // Fake Site for console
             return new Site(
                 Tracking::UNKNOWN_USER_ID,
-                'Fake site for console in ' . static::class
+                'Fake site for console in ' . self::class
             );
         }
 

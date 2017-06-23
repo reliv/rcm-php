@@ -48,7 +48,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->pluginInstance = new PluginInstance();
+        $this->pluginInstance = new PluginInstance('user123');
     }
 
     /**
@@ -146,7 +146,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetPreviousInstance()
     {
-        $previous = new PluginInstance();
+        $previous = new PluginInstance('user123');
         $previous->setInstanceId(987);
 
         $this->pluginInstance->setPreviousInstance($previous);
@@ -203,7 +203,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
         $this->pluginInstance->setPlugin($plugin);
         $this->pluginInstance->setSiteWide(true);
 
-        $cloned = clone $this->pluginInstance;
+        $cloned = $this->pluginInstance->newInstance();
 
         $this->assertEquals($instanceConfig, $cloned->getInstanceConfig());
         $this->assertEquals($displayName, $cloned->getDisplayName());
@@ -213,9 +213,9 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($instanceId, $cloned->getInstanceId());
         $this->assertNull($cloned->getInstanceId());
 
-        $pluginInstance = new PluginInstance();
+        $pluginInstance = new PluginInstance('user123');
 
-        $clone = clone($pluginInstance);
+        $clone = $pluginInstance->newInstance();
 
         $this->assertInstanceOf('Rcm\Entity\PluginInstance', $clone);
     }
@@ -229,7 +229,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
         $data['instanceConfig'] = ['test' => 'insconf'];
         $data['md5'] = 'MD5';
         //
-        $data['previousInstance'] = new PluginInstance();
+        $data['previousInstance'] = new PluginInstance('user123');
         $data['previousInstance']->setInstanceId(123);
         $data['renderedCss'] = 'RENDCSS';
         $data['renderedJs'] = 'RENDJS';
@@ -247,7 +247,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
     {
         $data = $this->getTestData();
 
-        $obj1 = new PluginInstance();
+        $obj1 = new PluginInstance('user123');
 
         $obj1->populate($data);
 

@@ -52,7 +52,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->container = new Container();
+        $this->container = new Container('user123');
     }
 
     /**
@@ -202,7 +202,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->container->setSite($site);
 
         foreach ($container['revisions'] as $index => $revisionData) {
-            $revision = new Revision('userId123');
+            $revision = new Revision('user123');
             $revision->setRevisionId($revisionData['revisionId']);
             $revision->setAuthor($revisionData['author']);
             $revision->setCreatedDate($revisionData['createdDate']);
@@ -211,7 +211,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             $revision->setMd5($revisionData['md5']);
 
             foreach ($revisionData['instances'] as $instance) {
-                $plugin = new PluginInstance('userId123');
+                $plugin = new PluginInstance('user123');
                 $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
                 $plugin->setPlugin($instance['instance']['plugin']);
 
@@ -223,7 +223,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
                 $plugin->setInstanceConfig($instance['instance']['instanceConfig']);
                 $plugin->setMd5($instance['instance']['md5']);
 
-                $wrapper = new PluginWrapper();
+                $wrapper = new PluginWrapper('user123');
                 $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
                 $wrapper->setLayoutContainer($instance['layoutContainer']);
                 $wrapper->setRenderOrderNumber($instance['renderOrder']);
@@ -246,7 +246,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(2, $this->container->getRevisions());
 
-        $clonedContainer = clone $this->container;
+        $clonedContainer = $this->container->newInstance();
 
         /* Test Container */
         $this->assertNotEquals(
@@ -303,6 +303,6 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
         $this->container->setContainerId(null);
 
-        $noContainerClone = clone($this->container);
+        $noContainerClone = $this->container->newInstance();
     }
 }
