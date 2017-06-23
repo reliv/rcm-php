@@ -70,7 +70,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $user = $service->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . static::class);
+            throw new TrackingException('A valid user is required in ' . self::class);
         }
 
         return (string)$user->getId();
@@ -176,7 +176,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
 
             $site = new Site(
                 $this->getCurrentUserId(),
-                'Get default site values in ' . static::class
+                'Get default site values in ' . self::class
             );
 
             $site->populate($data);
@@ -301,6 +301,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $data = $inputFilter->getValues();
 
         $siteManager = $this->getSiteManager();
+        $userId = $this->getCurrentUserId();
 
         try {
             $data = $siteManager->prepareSiteData($data);
@@ -310,7 +311,9 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
             );
 
             $data['domain'] = $domainRepo->createDomain(
-                $data['domainName']
+                $data['domainName'],
+                $userId,
+                'Create new domain in ' . self::class
             );
         } catch (\Exception $e) {
             return new ApiJsonModel(null, 1, $e->getMessage());
@@ -318,8 +321,8 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
 
         /** @var \Rcm\Entity\Site $newSite */
         $newSite = new Site(
-            $this->getCurrentUserId(),
-            'Create new site in ' . static::class
+            $userId,
+            'Create new site in ' . self::class
         );
 
         $newSite->populate($data);

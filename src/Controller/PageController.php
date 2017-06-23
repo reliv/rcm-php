@@ -124,7 +124,7 @@ class PageController extends AbstractActionController
                     'pageTitle' => $validatedData['title'],
                     'siteLayoutOverride' => $validatedData['main-layout'],
                     'createdByUserId' => $user->getId(),
-                    'createdReason' => 'New page in ' . static::class,
+                    'createdReason' => 'New page in ' . self::class,
                     'author' => $user->getName(),
                 ];
 
@@ -153,7 +153,7 @@ class PageController extends AbstractActionController
                     'pageTitle' => $validatedData['title'],
                     'pageType' => 'n',
                     'createdByUserId' => $user->getId(),
-                    'createdReason' => 'New page from template in ' . static::class,
+                    'createdReason' => 'New page from template in ' . self::class,
                     'author' => $user->getName(),
                 ];
 
@@ -580,7 +580,7 @@ class PageController extends AbstractActionController
         $user = $service->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . static::class);
+            throw new TrackingException('A valid user is required in ' . self::class);
         }
 
         return $user;

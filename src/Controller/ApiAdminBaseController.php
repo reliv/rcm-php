@@ -76,7 +76,7 @@ class ApiAdminBaseController extends AbstractRestfulJsonController
         $user = $this->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . static::class);
+            throw new TrackingException('A valid user is required in ' . self::class);
         }
 
         return $user;

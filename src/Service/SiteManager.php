@@ -87,7 +87,7 @@ class SiteManager
         $user = $this->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . static::class);
+            throw new TrackingException('A valid user is required in ' . self::class);
         }
 
         return $user;
@@ -169,16 +169,19 @@ class SiteManager
     ) {
         $entityManager = $this->getEntityManager();
 
-        $copySite = clone($existingSite);
+        $user = $this->getCurrentUserTracking();
+
+        $copySite = $existingSite->newInstance(
+            $user->getId(),
+            'Copy site in ' . self::class
+        );
         $copySite->setSiteId(null);
         $copySite->setDomain($domain);
-
-        $author = $this->getCurrentAuthor();
 
         $pages = $copySite->getPages();
 
         foreach ($pages as &$page) {
-            $page->setAuthor($author);
+            $page->setAuthor($user->getName());
         }
 
         $entityManager->persist($copySite);
@@ -428,7 +431,7 @@ class SiteManager
         // Set the author for each
         foreach ($pagesData as $key => $pageData) {
             $pagesData[$key]['createdByUserId'] = $createdByUser->getId();
-            $pagesData[$key]['createdReason'] = 'Default page creation in ' . static::class;
+            $pagesData[$key]['createdReason'] = 'Default page creation in ' . self::class;
             $pagesData[$key]['author'] = $createdByUser->getName();
         }
 

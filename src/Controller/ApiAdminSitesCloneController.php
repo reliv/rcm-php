@@ -4,8 +4,10 @@ namespace RcmAdmin\Controller;
 
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
+use Rcm\Tracking\Exception\TrackingException;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\InputFilter\SiteDuplicateInputFilter;
+use RcmUser\Service\RcmUserService;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -65,7 +67,9 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
             );
 
             $domain = $domainRepo->createDomain(
-                $data['domainName']
+                $data['domainName'],
+                $this->getCurrentUserId(),
+                'Create new domain in ' . self::class
             );
         } catch (\Exception $e) {
             return new ApiJsonModel(null, 1, $e->getMessage());

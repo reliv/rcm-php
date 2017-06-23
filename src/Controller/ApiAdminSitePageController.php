@@ -142,7 +142,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         $user = $service->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . static::class);
+            throw new TrackingException('A valid user is required in ' . self::class);
         }
 
         return (string)$user->getId();
@@ -419,7 +419,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         $user = $this->getCurrentUserTracking();
 
         $data['createdByUserId'] = $user->getId();
-        $data['createdReason'] = 'New page in ' . static::class;
+        $data['createdReason'] = 'New page in ' . self::class;
         $data['author'] = $user->getName();
 
         try {
@@ -494,7 +494,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         $result = $pageRepo->setPageDeleted(
             $page,
             $this->getCurrentUserId(),
-            'Delete page in ' . static::class
+            'Delete page in ' . self::class
         );
 
         if (!$result) {

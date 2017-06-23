@@ -92,7 +92,7 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
 
         $newPage = new Page(
             $user->getId(),
-            'New page in ' . static::class
+            'New page in ' . self::class
         );
 
         $newPage->populate($data);
