@@ -367,7 +367,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
             $this->revision->addPluginWrapper($wrapper);
         }
 
-        $clonedRevision = $this->revision->newInstance();
+        $clonedRevision = $this->revision->newInstance('user123');
 
         /* Test Revision */
         $this->assertNotEquals(

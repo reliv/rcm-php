@@ -268,7 +268,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
             $wrapper->setDivFloat($instance['divFloat']);
             $wrapper->setInstance($plugin);
 
-            $clonedWrapper = $wrapper->newInstance();
+            $clonedWrapper = $wrapper->newInstance('user123');
 
             $this->assertNotEquals(
                 $wrapper->getPluginWrapperId(),
@@ -347,7 +347,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
 
         $wrapper = new PluginWrapper('user123');
 
-        $clone = $wrapper->newInstance();
+        $clone = $wrapper->newInstance('user123');
 
         $this->assertInstanceOf('Rcm\Entity\PluginWrapper', $clone);
     }

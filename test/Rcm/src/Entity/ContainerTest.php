@@ -246,7 +246,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(2, $this->container->getRevisions());
 
-        $clonedContainer = $this->container->newInstance();
+        $clonedContainer = $this->container->newInstance('user123');
 
         /* Test Container */
         $this->assertNotEquals(
@@ -303,6 +303,6 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
         $this->container->setContainerId(null);
 
-        $noContainerClone = $this->container->newInstance();
+        $noContainerClone = $this->container->newInstance('user123');
     }
 }

@@ -203,7 +203,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
         $this->pluginInstance->setPlugin($plugin);
         $this->pluginInstance->setSiteWide(true);
 
-        $cloned = $this->pluginInstance->newInstance();
+        $cloned = $this->pluginInstance->newInstance('user123');
 
         $this->assertEquals($instanceConfig, $cloned->getInstanceConfig());
         $this->assertEquals($displayName, $cloned->getDisplayName());
@@ -215,7 +215,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
 
         $pluginInstance = new PluginInstance('user123');
 
-        $clone = $pluginInstance->newInstance();
+        $clone = $pluginInstance->newInstance('user123');
 
         $this->assertInstanceOf('Rcm\Entity\PluginInstance', $clone);
     }

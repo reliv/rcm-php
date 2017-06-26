@@ -128,6 +128,7 @@ trait TrackingTrait
     }
 
     /**
+     * @todo this should be protected
      * <tracking> WARNING: this should only be used on creation
      *
      * @param string $createdByUserId

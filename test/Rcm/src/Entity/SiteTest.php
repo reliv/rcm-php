@@ -1152,7 +1152,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->site->getContainers());
 
         $original = $this->site;
-        $cloned = $this->site->newInstance();
+        $cloned = $this->site->newInstance('user123');
 
         $this->assertNotEquals($original->getSiteId(), $cloned->getSiteId());
         $this->assertNull($cloned->getSiteId());

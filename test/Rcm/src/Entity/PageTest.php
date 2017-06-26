@@ -408,7 +408,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(2, $this->page->getRevisions());
 
-        $clonedContainer = $this->page->newInstance();
+        $clonedContainer = $this->page->newInstance('user123');
 
         /* Test Container */
         $this->assertNotEquals(
@@ -470,7 +470,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $page = new Page('user123');
 
-        $clone = $page->newInstance();
+        $clone = $page->newInstance('user123');
 
         $this->assertInstanceOf('\Rcm\Entity\Page', $clone);
     }
