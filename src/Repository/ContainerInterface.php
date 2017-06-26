@@ -2,6 +2,8 @@
 
 namespace Rcm\Repository;
 
+use Rcm\Tracking\Model\Tracking;
+
 /**
  * Container Repository Interface
  *
@@ -17,7 +19,6 @@ namespace Rcm\Repository;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-
 interface ContainerInterface
 {
     /**
@@ -66,8 +67,8 @@ interface ContainerInterface
         \Rcm\Entity\ContainerInterface $container,
         $containerData,
         $createdByUserId,
-        $createdReason = 'unknown',
-        $author = 'unknown',
+        $createdReason = Tracking::UNKNOWN_REASON,
+        $author = Tracking::UNKNOWN_AUTHOR,
         $revisionNumber = null
     );
 }

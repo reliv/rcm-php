@@ -97,7 +97,7 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($mockSiteRepo));
 
-        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
+        $mockCurrentSite = $this->getMockBuilder(\Rcm\Entity\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -134,7 +134,7 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($mockSiteRepo));
 
-        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
+        $mockCurrentSite = $this->getMockBuilder(\Rcm\Entity\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 

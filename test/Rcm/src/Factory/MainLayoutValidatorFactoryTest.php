@@ -50,7 +50,7 @@ class MainLayoutValidatorFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateService()
     {
 
-        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
+        $mockCurrentSite = $this->getMockBuilder(\Rcm\Entity\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 

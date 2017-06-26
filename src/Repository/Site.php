@@ -7,6 +7,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\SiteNotFoundException;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Site Repository
@@ -53,7 +54,7 @@ class Site extends EntityRepository
             },
             language,
             country'
-        )->from('\Rcm\Entity\Site', 'site')
+        )->from(\Rcm\Entity\Site::class, 'site')
             ->join('site.country', 'country')
             ->join('site.language', 'language')
             ->where('site.siteId = :siteId')
@@ -78,7 +79,7 @@ class Site extends EntityRepository
     public function getSites($mustBeActive = false)
     {
         $repo = $this->_em
-            ->getRepository('\Rcm\Entity\Site');
+            ->getRepository(\Rcm\Entity\Site::class);
         if ($mustBeActive) {
             return $repo->findBy(['status' => \Rcm\Entity\Site::STATUS_ACTIVE]);
         } else {
@@ -106,7 +107,7 @@ class Site extends EntityRepository
 
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('site.siteId')
-            ->from('\Rcm\Entity\Site', 'site')
+            ->from(\Rcm\Entity\Site::class, 'site')
             ->where('site.siteId = :siteId')
             ->setParameter('siteId', $siteId);
 
@@ -141,7 +142,7 @@ class Site extends EntityRepository
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('partial site.{siteId}, plugins')
-            ->from('\Rcm\Entity\Site', 'site')
+            ->from(\Rcm\Entity\Site::class, 'site')
             ->join('site.sitePlugins', 'plugins')
             ->where('site.siteId = :siteId')
             ->setParameter('siteId', $siteId);
@@ -168,7 +169,7 @@ class Site extends EntityRepository
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('domain, site, primaryDomain')
-            ->from('\Rcm\Entity\Domain', 'domain')
+            ->from(\Rcm\Entity\Domain::class, 'domain')
             ->leftJoin('domain.site', 'site')
             ->leftJoin('domain.primaryDomain', 'primaryDomain')
             ->where('domain.domain = :domainName')
@@ -203,7 +204,7 @@ class Site extends EntityRepository
     protected function getPrimaryDomain($domain)
     {
         /** @var \Rcm\Entity\Domain $domain */
-        $domain = $this->_em->getRepository('\Rcm\Entity\Domain')
+        $domain = $this->_em->getRepository(\Rcm\Entity\Domain::class)
             ->findOneBy(['domain' => $domain]);
 
         if (empty($domain)) {
@@ -233,7 +234,7 @@ class Site extends EntityRepository
     public function createNewSite(
         $siteId = null,
         string $createdByUserId,
-        string $createdReason = 'unknown'
+        string $createdReason = Tracking::UNKNOWN_REASON
     ) {
         if (empty($siteId)) {
             // new site
@@ -264,7 +265,7 @@ class Site extends EntityRepository
     public function copySiteById(
         $siteId,
         string $createdByUserId,
-        string $createdReason = 'unknown'
+        string $createdReason = Tracking::UNKNOWN_REASON
     ) {
         /** @var \Rcm\Entity\Site $site */
         $existingSite = $this->find($siteId);
@@ -273,9 +274,7 @@ class Site extends EntityRepository
             throw new SiteNotFoundException("Site {$siteId} not found.");
         }
 
-        // @rcmEntityCloning
-        $site = $existingSite->newInstance();
-        $site->setCreatedByUserId(
+        $site = $existingSite->newInstance(
             $createdByUserId,
             $createdReason
         );

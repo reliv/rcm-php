@@ -472,7 +472,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $clone = $page->newInstance('user123');
 
-        $this->assertInstanceOf('\Rcm\Entity\Page', $clone);
+        $this->assertInstanceOf(\Rcm\Entity\Page::class, $clone);
     }
 
     public function testUtilities()

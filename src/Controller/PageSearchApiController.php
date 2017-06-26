@@ -80,7 +80,7 @@ class PageSearchApiController extends AbstractRestfulController
 
         /** @var Site $site */
         $site = $entityMgr->getRepository(
-            '\Rcm\Entity\Site'
+            Site::class
         )->findOneBy(
             [
                 'siteId' => $siteId

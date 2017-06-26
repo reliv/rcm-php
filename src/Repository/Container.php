@@ -6,6 +6,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Rcm\Entity\Container as ContainerEntity;
 use Rcm\Entity\Site as SiteEntity;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Container Repository
@@ -36,7 +37,7 @@ class Container extends ContainerAbstract
     {
         $queryBuilder = $this->_em->createQueryBuilder()
             ->select('publishedRevision.revisionId')
-            ->from('\Rcm\Entity\Container', 'container')
+            ->from(\Rcm\Entity\Container::class, 'container')
             ->join('container.publishedRevision', 'publishedRevision')
             ->join('container.site', 'site')
             ->where('site.siteId = :siteId')
@@ -85,7 +86,7 @@ class Container extends ContainerAbstract
                 . 'pluginWrappers,'
                 . 'pluginInstances'
             )
-            ->from('\Rcm\Entity\Container', 'container')
+            ->from(\Rcm\Entity\Container::class, 'container')
             ->leftJoin('container.publishedRevision', 'publishedRevision')
             ->leftJoin('container.site', 'site')
             ->leftJoin('container.revisions', 'revision')
@@ -115,17 +116,25 @@ class Container extends ContainerAbstract
     }
 
     /**
-     * createContainer
-     *
      * @param SiteEntity $site
-     * @param            $name
-     * @param            $author
+     * @param string     $name
+     * @param string     $createdByUserId
+     * @param string     $createdReason
+     * @param string     $author
      *
      * @return ContainerEntity
      */
-    public function createContainer(SiteEntity $site, $name, $author)
-    {
-        $container = new ContainerEntity();
+    public function createContainer(
+        SiteEntity $site,
+        string $name,
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON,
+        $author = Tracking::UNKNOWN_AUTHOR
+    ) {
+        $container = new ContainerEntity(
+            $createdByUserId,
+            $createdReason
+        );
         $container->setName($name);
         $container->setSite($site);
         $container->setAuthor($author);

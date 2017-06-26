@@ -11,6 +11,7 @@ interface Tracking
 {
     const UNKNOWN_USER_ID = 'unknown';
     const UNKNOWN_REASON = 'unknown';
+    const UNKNOWN_AUTHOR = 'unknown';
 
     /**
      * Get a clone with special logic

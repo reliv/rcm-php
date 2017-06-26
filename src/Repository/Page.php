@@ -106,7 +106,7 @@ class Page extends ContainerAbstract
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('publishedRevision.revisionId')
-            ->from('\Rcm\Entity\Page', 'page')
+            ->from(\Rcm\Entity\Page::class, 'page')
             ->join('page.publishedRevision', 'publishedRevision')
             ->join('page.site', 'site')
             ->where('site.siteId = :siteId')
@@ -137,7 +137,7 @@ class Page extends ContainerAbstract
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('stagedRevision.revisionId')
-            ->from('\Rcm\Entity\Page', 'page')
+            ->from(\Rcm\Entity\Page::class, 'page')
             ->join('page.stagedRevision', 'stagedRevision')
             ->join('page.site', 'site')
             ->where('site.siteId = :siteId')
@@ -176,7 +176,7 @@ class Page extends ContainerAbstract
             revision,
             pluginWrappers,
             pluginInstances'
-        )->from('\Rcm\Entity\Page', 'page')
+        )->from(\Rcm\Entity\Page::class, 'page')
             ->leftJoin('page.site', 'site')
             ->leftJoin('page.revisions', 'revision')
             ->leftJoin('page.publishedRevision', 'publishedRevision')
@@ -225,7 +225,7 @@ class Page extends ContainerAbstract
         $queryBuilder = $this->_em->createQueryBuilder();
 
         $queryBuilder->select('page.name, page.pageId')
-            ->from('\Rcm\Entity\Page', 'page')
+            ->from(\Rcm\Entity\Page::class, 'page')
             ->join('page.site', 'site')
             ->where('page.pageType = :pageType')
             ->andWhere('site.siteId = :siteId')
@@ -408,6 +408,10 @@ class Page extends ContainerAbstract
             );
         }
 
+        if (empty($pageData['modifiedReason'])) {
+            $pageData['modifiedReason'] = 'Update page in ' . self::class;
+        }
+
         // Values cannot be changed
         unset($pageData['pageId']);
         unset($pageData['author']);
@@ -417,7 +421,7 @@ class Page extends ContainerAbstract
         $page->populate($pageData);
         $page->setModifiedByUserId(
             $pageData['modifiedByUserId'],
-            'Update page in ' . self::class
+            $pageData['modifiedReason']
         );
 
         $this->assertCanUpdateSitePage(
@@ -463,6 +467,10 @@ class Page extends ContainerAbstract
             );
         }
 
+        if (empty($pageData['createdReason'])) {
+            $pageData['createdReason'] = 'Copy page in ' . self::class;
+        }
+
         if (empty($pageData['author'])) {
             throw new InvalidArgumentException(
                 'Missing needed information (author) to create page copy.'
@@ -478,7 +486,7 @@ class Page extends ContainerAbstract
 
         $clonedPage = $pageToCopy->newInstance(
             $pageData['createdByUserId'],
-            'Copy page in ' . self::class
+            $pageData['createdReason']
         );
         $clonedPage->populate($pageData);
 
@@ -501,7 +509,7 @@ class Page extends ContainerAbstract
 
             $revisionToUse = $sourceRevision->newInstance(
                 $pageData['createdByUserId'],
-                'Copy page in ' . self::class
+                $pageData['createdReason']
             );
             $clonedPage->setRevisions([]);
             $clonedPage->addRevision($revisionToUse);
@@ -543,7 +551,7 @@ class Page extends ContainerAbstract
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('page.pageId')
-            ->from('\Rcm\Entity\Page', 'page')
+            ->from(\Rcm\Entity\Page::class, 'page')
             ->where('page.name = :pageName')
             ->andWhere('page.pageType = :pageType')
             ->andWhere('page.site = :siteId')
@@ -571,7 +579,7 @@ class Page extends ContainerAbstract
         //Query is needed to ensure revision belongs to the page in question
         $pageQueryBuilder = $this->_em->createQueryBuilder();
         $pageQueryBuilder->select('page, revision')
-            ->from('\Rcm\Entity\Page', 'page')
+            ->from(\Rcm\Entity\Page::class, 'page')
             ->join('page.revisions', 'revision')
             ->where('page.name = :pageName')
             ->andWhere('page.pageType = :pageType')
@@ -625,7 +633,7 @@ class Page extends ContainerAbstract
         $publishedQueryBuilder = $this->_em->createQueryBuilder();
 
         $publishedQueryBuilder->select('PARTIAL page.{pageId}, published, staged ')
-            ->from('\Rcm\Entity\Page', 'page')
+            ->from(\Rcm\Entity\Page::class, 'page')
             ->leftjoin('page.publishedRevision', 'published')
             ->leftjoin('page.stagedRevision', 'staged')
             ->where('page.site = :siteId')
@@ -678,7 +686,7 @@ class Page extends ContainerAbstract
     {
         $isValidQueryBuilder = $this->_em->createQueryBuilder();
         $isValidQueryBuilder->select('page.pageId')
-            ->from('\Rcm\Entity\Page', 'page')
+            ->from(\Rcm\Entity\Page::class, 'page')
             ->where('page.name = :pageName')
             ->andWhere('page.pageType = :pageType')
             ->andWhere('page.site = :siteId')
@@ -755,7 +763,7 @@ class Page extends ContainerAbstract
         $revisionQueryBuilder = $this->_em->createQueryBuilder();
         $revisionQueryBuilder->select('page.pageId, revisions')
             ->select('PARTIAL page.{pageId}, revisions ')
-            ->from('\Rcm\Entity\Page', 'page')
+            ->from(\Rcm\Entity\Page::class, 'page')
             ->join('page.revisions', 'revisions')
             ->where('page.site = :siteId')
             ->andWhere('page.name = :pageName')
@@ -793,8 +801,8 @@ class Page extends ContainerAbstract
         $pageType,
         $saveData,
         $createdByUserId,
-        $createdReason = 'unknown',
-        $author = 'unknown'
+        $createdReason = Tracking::UNKNOWN_REASON,
+        $author = Tracking::UNKNOWN_AUTHOR
     ) {
         if (empty($pageType)) {
             $pageType = PageTypes::NORMAL;
@@ -808,11 +816,13 @@ class Page extends ContainerAbstract
                 if (empty($container)) {
                     /** @var \Rcm\Repository\Container $containerRepo */
                     $containerRepo = $this->_em->getRepository(
-                        '\Rcm\Entity\Container'
+                        \Rcm\Entity\Container::class
                     );
                     $container = $containerRepo->createContainer(
                         $siteEntity,
                         $containerName,
+                        $createdByUserId,
+                        $createdReason,
                         $author
                     );
                 }

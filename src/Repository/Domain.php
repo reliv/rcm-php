@@ -74,11 +74,11 @@ class Domain extends EntityRepository
             site.siteId,
             country.iso3 countryId'
         )
-            ->from('\Rcm\Entity\Domain', 'domain', 'domain.domain')
+            ->from(\Rcm\Entity\Domain::class, 'domain', 'domain.domain')
             ->leftJoin('domain.primaryDomain', 'primary')
             ->leftJoin('domain.defaultLanguage', 'language')
             ->leftJoin(
-                '\Rcm\Entity\Site',
+                \Rcm\Entity\Site::class,
                 'site',
                 Join::WITH,
                 'site.domain = domain.domainId'

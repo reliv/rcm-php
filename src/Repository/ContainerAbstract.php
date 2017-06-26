@@ -5,6 +5,7 @@ namespace Rcm\Repository;
 use Doctrine\ORM\EntityRepository;
 use Rcm\Entity\ContainerInterface as ContainerEntityInterface;
 use Rcm\Entity\Revision;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Container Repository.  Used to get custom container results from the DB
@@ -27,8 +28,8 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
         ContainerEntityInterface $container,
         $containerData,
         $createdByUserId,
-        $createdReason = 'unknown',
-        $author = 'unknown',
+        $createdReason = Tracking::UNKNOWN_REASON,
+        $author = Tracking::UNKNOWN_AUTHOR,
         $revisionNumber = null
     ) {
         $revision = null;
@@ -62,7 +63,7 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
 
         /** @var \Rcm\Repository\PluginWrapper $pluginWrapperRepo */
         $pluginWrapperRepo = $this->_em->getRepository(
-            '\Rcm\Entity\PluginWrapper'
+            \Rcm\Entity\PluginWrapper::class
         );
 
         //Make a list of original wrappers so we can see if one was removed
@@ -99,6 +100,8 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
                 $newPluginWrapper = $pluginWrapperRepo->savePluginWrapper(
                     $pluginData,
                     $site,
+                    $createdByUserId,
+                    $createdReason,
                     $pluginWrapper
                 );
 

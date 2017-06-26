@@ -3,10 +3,10 @@
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Rcm\Entity\PluginWrapper as PluginWrapperEntity;
 use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\RuntimeException;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * PluginWrapper Repository
@@ -26,20 +26,22 @@ use Rcm\Exception\RuntimeException;
 class PluginWrapper extends EntityRepository
 {
     /**
-     * savePluginWrapper Save a plugin wrapper
-     *
-     * @param array $pluginData
-     * @param SiteEntity $site
-     * @param null $oldWrapper
+     * @param array                          $pluginData
+     * @param SiteEntity                     $site
+     * @param string                         $modifiedByUserId
+     * @param string                         $modifiedReason
+     * @param null|\Rcm\Entity\PluginWrapper $oldWrapper
      *
      * @return null|PluginWrapperEntity
      */
     public function savePluginWrapper(
         $pluginData,
         SiteEntity $site,
+        string $modifiedByUserId,
+        string $modifiedReason = Tracking::UNKNOWN_REASON,
         $oldWrapper = null
     ) {
-        if (!empty($oldWrapper) && !is_a($oldWrapper, '\Rcm\Entity\PluginWrapper')) {
+        if (!empty($oldWrapper) && !is_a($oldWrapper, \Rcm\Entity\PluginWrapper::class)) {
             throw new RuntimeException(
                 'Wrapper passed in is not a valid plugin wrapper.'
             );
@@ -47,14 +49,16 @@ class PluginWrapper extends EntityRepository
 
         /** @var \Rcm\Repository\PluginInstance $pluginInstanceRepo */
         $pluginInstanceRepo = $this->_em->getRepository(
-            '\Rcm\Entity\PluginInstance'
+            \Rcm\Entity\PluginInstance::class
         );
 
         $pluginData = $this->prepareData($pluginData);
 
         $pluginInstance = $pluginInstanceRepo->updatePlugin(
             $pluginData,
-            $site
+            $site,
+            $modifiedByUserId,
+            $modifiedReason
         );
 
         if (!empty($oldWrapper)
@@ -63,7 +67,7 @@ class PluginWrapper extends EntityRepository
                 ->getInstanceId()
         ) {
             $queryBuilder = $this->_em->createQueryBuilder();
-            $queryBuilder->update('\Rcm\Entity\PluginWrapper', 'wrapper')
+            $queryBuilder->update(\Rcm\Entity\PluginWrapper::class, 'wrapper')
                 ->set('wrapper.instance', $pluginInstance->getInstanceId())
                 ->where('wrapper.instance = :oldInstance')
                 ->setParameter('oldInstance', $oldWrapper->getInstance());
@@ -83,12 +87,16 @@ class PluginWrapper extends EntityRepository
             return $oldWrapper;
         }
 
-        $pluginWrapper = new PluginWrapperEntity();
+        $pluginWrapper = new PluginWrapperEntity(
+            $modifiedByUserId,
+            $modifiedReason
+        );
         $pluginWrapper->populate($pluginData);
         $pluginWrapper->setInstance($pluginInstance);
 
         $this->_em->persist($pluginWrapper);
         $this->_em->flush($pluginWrapper);
+
         return $pluginWrapper;
     }
 
@@ -135,7 +143,7 @@ class PluginWrapper extends EntityRepository
 
         /** @var \Rcm\Repository\PluginInstance $pluginInstanceRepo */
         $pluginInstanceRepo = $this->_em->getRepository(
-            '\Rcm\Entity\PluginInstance'
+            \Rcm\Entity\PluginInstance::class
         );
 
         return $pluginInstanceRepo->prepareData($pluginData);
