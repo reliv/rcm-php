@@ -8,6 +8,7 @@ use Rcm\Entity\Domain;
 use Rcm\Entity\Language;
 use Rcm\Entity\Site;
 use Rcm\Tracking\Exception\TrackingException;
+use Rcm\Tracking\Model\Tracking;
 use RcmUser\Service\RcmUserService;
 use RcmUser\User\Entity\User;
 
@@ -120,14 +121,15 @@ class SiteManager
      * @return Site
      * @throws \Exception
      */
-    public function createSite(Site $newSite)
-    {
+    public function createSite(
+        Site $newSite
+    ) {
         $newSite = $this->prepareNewSite($newSite);
 
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
+        $pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
 
         $user = $this->getCurrentUserTracking();
 
@@ -144,6 +146,8 @@ class SiteManager
 
         $this->createPagePlugins(
             $newSite,
+            $user->getId(),
+            'New site creation in ' . self::class,
             $this->getDefaultSitePageSettings($user),
             false
         );
@@ -439,17 +443,19 @@ class SiteManager
     }
 
     /**
-     * createPagePlugins
-     *
-     * @param Site  $site
-     * @param array $pagesData
-     * @param bool  $doFlush
+     * @param Site   $site
+     * @param string $createdByUserId
+     * @param string $createdReason
+     * @param array  $pagesData
+     * @param bool   $doFlush
      *
      * @return void
      * @throws \Exception
      */
     protected function createPagePlugins(
         Site $site,
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON,
         $pagesData = [],
         $doFlush = true
     ) {
@@ -490,7 +496,9 @@ class SiteManager
                     $pluginInstance = $pluginInstanceRepo->createPluginInstance(
                         $pluginData,
                         $site,
-                        false
+                        $createdByUserId,
+                        $createdReason,
+                        null
                     );
 
                     $pluginData['pluginInstanceId']
@@ -498,7 +506,10 @@ class SiteManager
 
                     $wrapper = $pluginWrapperRepo->savePluginWrapper(
                         $pluginData,
-                        $site
+                        $site,
+                        $createdByUserId,
+                        $createdReason,
+                        null
                     );
 
                     $pageRevision->addPluginWrapper($wrapper);

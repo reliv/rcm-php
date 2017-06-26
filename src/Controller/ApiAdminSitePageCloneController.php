@@ -2,11 +2,13 @@
 
 namespace RcmAdmin\Controller;
 
+use Interop\Container\ContainerInterface;
 use Rcm\Entity\Page;
 use Rcm\Http\Response;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\Entity\SitePageApiResponse;
 use RcmAdmin\InputFilter\SitePageDuplicateInputFilter;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class ApiAdminSitePageCloneController
@@ -26,7 +28,7 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
     /**
      * Constructor.
      *
-     * @param \Interop\Container\ContainerInterface|\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface|ServiceLocatorInterface $serviceLocator
      */
     public function __construct($serviceLocator)
     {
@@ -36,14 +38,14 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
     /**
      * create
      *
-     * @param mixed $data
+     * @param array $data
      *
      * @return mixed|ApiJsonModel|\Zend\Stdlib\ResponseInterface
      */
     public function create($data)
     {
         //ACCESS CHECK
-        if (!$this->rcmIsAllowed('sites', 'admin')) {
+        if (!$this->getRcmUserService()->isAllowed('sites', 'admin')) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();

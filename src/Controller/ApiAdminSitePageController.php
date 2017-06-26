@@ -328,6 +328,10 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         $data = $inputFilter->getValues();
 
+        // <tracking>
+        $data['modifiedByUserId'] = $this->getCurrentUserId();
+        $data['modifiedReason'] = 'Update site in ' . self::class;
+
         $site = $this->getSite($siteId);
 
         if (empty($site)) {

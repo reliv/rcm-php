@@ -11,6 +11,7 @@ use Rcm\Tracking\Exception\TrackingException;
 use RcmUser\Service\RcmUserService;
 use RcmUser\User\Entity\User;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Stdlib\ResponseInterface;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
@@ -32,7 +33,6 @@ use Zend\View\Model\ViewModel;
  *                                                                  Page
  *
  * @method boolean rcmIsAllowed($resource, $action) Is User Allowed
- * @method User rcmUserGetCurrentUser() Get Current User Object
  * @method string urlToPage($pageName, $pageType = 'n', $pageRevision = null) Get Url To a Page
  */
 class PageController extends AbstractActionController
@@ -110,7 +110,11 @@ class PageController extends AbstractActionController
         $form->setValidationGroup('url');
         $form->setData($data);
 
-        $user = $this->getCurrentUser();
+        $user = $this->rcmUserService->getCurrentUser();
+
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . self::class);
+        }
 
         if ($request->isPost() && $form->isValid()) {
             $validatedData = $form->getData();
@@ -259,8 +263,16 @@ class PageController extends AbstractActionController
 
             $pageId = $page->getPageId();
 
+            $user = $this->rcmUserService->getCurrentUser();
+
+            if (empty($user)) {
+                throw new TrackingException('A valid user is required in ' . self::class);
+            }
+
             $pageData = [
-                'author' => $this->rcmUserGetCurrentUser()->getName(),
+                'createdByUserId' => $user->getId(),
+                'createdReason' => 'New page in ' . self::class,
+                'author' => $user->getName(),
                 'name' => $validatedData['template-name'],
                 'pageTitle' => null,
                 'pageType' => 't',
@@ -369,7 +381,7 @@ class PageController extends AbstractActionController
     /**
      * savePageAction
      *
-     * @return Response|\Zend\Http\Response
+     * @return Response|ResponseInterface
      */
     public function savePageAction()
     {
@@ -409,6 +421,12 @@ class PageController extends AbstractActionController
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
 
+        $user = $this->rcmUserService->getCurrentUser();
+
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . self::class);
+        }
+
         if ($request->isPost()) {
             /** @var \Zend\Stdlib\Parameters $data */
             $data = $request->getPost()->toArray();
@@ -421,7 +439,9 @@ class PageController extends AbstractActionController
                 $pageRevision,
                 $pageType,
                 $data,
-                $this->rcmUserGetCurrentUser()->getName()
+                $user->getId(),
+                'Save existing page in ' . self::class,
+                $user->getName()
             );
 
             if (empty($result)) {
