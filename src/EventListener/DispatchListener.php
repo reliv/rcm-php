@@ -26,7 +26,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class DispatchListener
 {
-    /** @var ServiceLocatorInterface */
+    /**
+     * @var ServiceLocatorInterface
+     */
     protected $serviceLocator;
 
     /**

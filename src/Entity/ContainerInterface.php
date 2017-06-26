@@ -24,13 +24,6 @@ use Rcm\Tracking\Model\Tracking;
 interface ContainerInterface extends ApiModelInterface, Tracking
 {
     /**
-     * Clone the container
-     *
-     * @return void
-     */
-    public function __clone();
-
-    /**
      * Gets the Name property
      *
      * @return string Name

@@ -71,21 +71,17 @@ trait TrackingTrait
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
         $new = clone($this);
+        // Reset the clone
+        $new->createdByUserId = null;
+        $new->createdDate = null;
+        $new->createdReason = Tracking::UNKNOWN_REASON;
+
         $new->setCreatedByUserId(
             $createdByUserId,
             $createdReason
         );
 
         return $new;
-    }
-
-    /**
-     * @return void
-     * @throws CloneNotAllowedException
-     */
-    public function __clone()
-    {
-        throw new CloneNotAllowedException();
     }
 
     /**

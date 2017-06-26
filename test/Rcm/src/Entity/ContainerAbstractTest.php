@@ -1,21 +1,4 @@
 <?php
-/**
- * Unit Test for the Container Abstract
- *
- * This file contains the unit test for the Container Abstract
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace RcmTest\Entity;
 

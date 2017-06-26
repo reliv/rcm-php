@@ -143,15 +143,6 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
-     * @return void
-     * @throws CloneNotAllowedException
-     */
-    public function __clone()
-    {
-        throw new CloneNotAllowedException();
-    }
-
-    /**
      * Gets the Name property
      *
      * @return string Name

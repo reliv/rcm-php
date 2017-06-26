@@ -257,7 +257,6 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
         $this->revisions = new ArrayCollection();
-        $this->createdDate = new \DateTime();
         parent::__construct($createdByUserId, $createdReason);
     }
 
