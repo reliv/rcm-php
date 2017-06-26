@@ -44,6 +44,7 @@ class Setting extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was first created
      *
      * @ORM\Column(type="datetime")
@@ -52,6 +53,7 @@ class Setting extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string User ID of creator
      *
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -60,6 +62,7 @@ class Setting extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      *
      * @ORM\Column(type="string", length=512, nullable=false)
@@ -68,6 +71,7 @@ class Setting extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was modified
      *
      * @ORM\Column(type="datetime")
@@ -76,6 +80,7 @@ class Setting extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string User ID of modifier
      *
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -84,6 +89,7 @@ class Setting extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      *
      * @ORM\Column(type="string", length=512, nullable=false)
@@ -168,6 +174,7 @@ class Setting extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @return void
      *
      * @ORM\PrePersist
@@ -179,6 +186,7 @@ class Setting extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * <tracking>
+     *
      * @return void
      *
      * @ORM\PreUpdate

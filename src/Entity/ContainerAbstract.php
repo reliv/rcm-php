@@ -3,7 +3,6 @@
 namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Rcm\Exception\CloneNotAllowedException;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\Tracking\Model\Tracking;

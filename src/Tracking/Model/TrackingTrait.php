@@ -2,7 +2,6 @@
 
 namespace Rcm\Tracking\Model;
 
-use Rcm\Exception\CloneNotAllowedException;
 use Rcm\Tracking\Exception\TrackingException;
 
 /**
@@ -12,48 +11,56 @@ trait TrackingTrait
 {
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was first created
      */
     protected $createdDate;
 
     /**
      * <tracking>
+     *
      * @var string User ID of creator
      */
     protected $createdByUserId;
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      */
     protected $createdReason = Tracking::UNKNOWN_REASON;
 
     /**
      * <tracking>
+     *
      * @var \DateTime Date object was modified
      */
     protected $modifiedDate;
 
     /**
      * <tracking>
+     *
      * @var string User ID of modifier
      */
     protected $modifiedByUserId;
 
     /**
      * <tracking>
+     *
      * @var string Short description of create reason
      */
     protected $modifiedReason = Tracking::UNKNOWN_REASON;
 
     /**
      * <tracking>
+     *
      * @var bool Tracking that this value has been updated
      */
     protected $modifiedDateUpdated = false;
 
     /**
      * <tracking>
+     *
      * @var bool Tracking that this value has been updated
      */
     protected $modifiedByUserIdUpdated = false;
@@ -86,6 +93,7 @@ trait TrackingTrait
 
     /**
      * <tracking>
+     *
      * @return \DateTime
      * @throws TrackingException
      */
@@ -101,6 +109,7 @@ trait TrackingTrait
 
     /**
      * <tracking>
+     *
      * @return string
      * @throws TrackingException
      */
@@ -116,6 +125,7 @@ trait TrackingTrait
 
     /**
      * <tracking>
+     *
      * @return string
      */
     public function getCreatedReason(): string
@@ -165,6 +175,7 @@ trait TrackingTrait
 
     /**
      * <tracking>
+     *
      * @return \DateTime
      * @throws TrackingException
      */
@@ -180,6 +191,7 @@ trait TrackingTrait
 
     /**
      * <tracking>
+     *
      * @return string
      * @throws TrackingException
      */
@@ -195,6 +207,7 @@ trait TrackingTrait
 
     /**
      * <tracking>
+     *
      * @return string
      */
     public function getModifiedReason(): string
@@ -230,6 +243,7 @@ trait TrackingTrait
 
     /**
      * <tracking>
+     *
      * @return void
      * @throws TrackingException
      */
@@ -254,6 +268,7 @@ trait TrackingTrait
 
     /**
      * <tracking>
+     *
      * @return void
      * @throws TrackingException
      */
