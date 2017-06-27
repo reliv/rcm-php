@@ -35,12 +35,10 @@ class SitePageApiResponse extends Page
             ]
         );
 
-        $this->createdDate = $page->getCreatedDate();
-        $this->createdByUserId = $page->getCreatedByUserId();
-        $this->createdReason = $page->getCreatedReason();
-        $this->modifiedDate = $page->getModifiedDate();
-        $this->modifiedByUserId = $page->getModifiedByUserId();
-        $this->modifiedReason = $page->getModifiedReason();
+        parent::__construct(
+            $page->getCreatedByUserId(),
+            self::class
+        );
     }
 
     /**
