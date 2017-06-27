@@ -38,7 +38,7 @@ class InstanceConfigApiControllerTest extends \PHPUnit_Framework_TestCase
     public function testUnauthorized()
     {
         $siteMgr = $this
-            ->getMockBuilder('Rcm\Entity\Site')
+            ->getMockBuilder(\Rcm\Entity\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 

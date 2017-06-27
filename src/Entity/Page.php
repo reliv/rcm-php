@@ -540,7 +540,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
      *
      * @return void
      */
-    public function populate(array $data, array $ignore = [])
+    public function populate(array $data, array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (isset($data['site']) && $data['site'] instanceof Site
             && !in_array(

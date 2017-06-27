@@ -389,7 +389,7 @@ class Language extends ApiModelTrackingAbstract implements \IteratorAggregate, T
      *
      * @return void
      */
-    public function populate(array $data = [], array $ignore = [])
+    public function populate(array $data = [], array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (!empty($data['languageId']) && !in_array('languageId', $ignore)) {
             $this->setLanguageId($data['languageId']);

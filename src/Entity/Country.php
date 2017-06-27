@@ -155,7 +155,7 @@ class Country extends ApiModelTrackingAbstract implements \IteratorAggregate, Tr
      *
      * @param string $countryName Name of the Country
      *
-     * @return null
+     * @return void
      *
      */
     public function setCountryName($countryName)
@@ -179,7 +179,7 @@ class Country extends ApiModelTrackingAbstract implements \IteratorAggregate, Tr
      *
      * @param string $iso2 ISO2 Country Code
      *
-     * @return null
+     * @return void
      * @throws InvalidArgumentException
      */
     public function setIso2($iso2)
@@ -238,7 +238,7 @@ class Country extends ApiModelTrackingAbstract implements \IteratorAggregate, Tr
      *
      * @return void
      */
-    public function populate(array $data = [], array $ignore = [])
+    public function populate(array $data = [], array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (!empty($data['iso3']) && !in_array('iso3', $ignore)) {
             $this->setIso3($data['iso3']);

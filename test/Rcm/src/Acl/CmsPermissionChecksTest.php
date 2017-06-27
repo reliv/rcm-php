@@ -465,7 +465,7 @@ class CmsPermissionChecksTest extends Mocks
         $testCase = $this->getTestCase($testCaseKey);
 
         $page = $this->getMockBuilder(
-            'Rcm\Entity\Page'
+            \Rcm\Entity\Page::class
         )
             ->disableOriginalConstructor()
             ->getMock();
@@ -496,7 +496,7 @@ class CmsPermissionChecksTest extends Mocks
         $testCase = $this->getTestCase($testCaseKey);
 
         $site = $this->getMockBuilder(
-            'Rcm\Entity\Site'
+            \Rcm\Entity\Site::class
         )
             ->disableOriginalConstructor()
             ->getMock();

@@ -217,7 +217,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
 
         $clone = $pluginInstance->newInstance('user123');
 
-        $this->assertInstanceOf('Rcm\Entity\PluginInstance', $clone);
+        $this->assertInstanceOf(\Rcm\Entity\PluginInstance::class, $clone);
     }
 
     public function getTestData()

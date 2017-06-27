@@ -342,7 +342,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     /**
      * getPrimaryDomainId
      *
-     * @return Domain
+     * @return int|null
      */
     public function getPrimaryDomainId()
     {
@@ -352,7 +352,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     /**
      * getPrimaryId
      *
-     * @return null
+     * @return int|null
      */
     public function getPrimaryId()
     {
@@ -424,7 +424,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
      *
      * @return void
      */
-    public function populate(array $data = [], array $ignore = [])
+    public function populate(array $data = [], array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (!empty($data['domainId']) && !in_array('domainId', $ignore)) {
             $this->setDomainId($data['domainId']);

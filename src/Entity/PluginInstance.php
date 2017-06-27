@@ -543,7 +543,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
      *
      * @return void
      */
-    public function populate(array $data, array $ignore = [])
+    public function populate(array $data, array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (isset($data['plugin']) && !in_array('plugin', $ignore)) {
             $this->setPlugin($data['plugin']);

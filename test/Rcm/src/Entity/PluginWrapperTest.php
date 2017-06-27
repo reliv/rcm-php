@@ -349,7 +349,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
 
         $clone = $wrapper->newInstance('user123');
 
-        $this->assertInstanceOf('Rcm\Entity\PluginWrapper', $clone);
+        $this->assertInstanceOf(\Rcm\Entity\PluginWrapper::class, $clone);
     }
 
     public function testUtilities()

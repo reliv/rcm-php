@@ -37,7 +37,7 @@ interface ContainerInterface extends ApiModelInterface, Tracking
      * @param string $name Name of Page.  Should be URL friendly and should not
      *                     included spaces.
      *
-     * @return null
+     * @return void
      *
      * @throws InvalidArgumentException Exception thrown if name contains spaces.
      */
@@ -55,7 +55,7 @@ interface ContainerInterface extends ApiModelInterface, Tracking
      *
      * @param string $author ID of Author.
      *
-     * @return null
+     * @return void
      */
     public function setAuthor($author);
 
@@ -71,7 +71,7 @@ interface ContainerInterface extends ApiModelInterface, Tracking
      *
      * @param \DateTime $lastPublished Date the page was last published.
      *
-     * @return null
+     * @return void
      */
     public function setLastPublished(\DateTime $lastPublished);
 
@@ -87,7 +87,7 @@ interface ContainerInterface extends ApiModelInterface, Tracking
      *
      * @param Revision $revision Revision object to add
      *
-     * @return null
+     * @return void
      */
     public function setPublishedRevision(Revision $revision);
 
@@ -103,7 +103,7 @@ interface ContainerInterface extends ApiModelInterface, Tracking
      *
      * @param Revision $revision Revision object to add
      *
-     * @return null
+     * @return void
      */
     public function setStagedRevision(Revision $revision);
 

@@ -75,7 +75,7 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
      */
 //    public function testConstructorOnlyAcceptsAEventFinishListenerObject()
 //    {
-//        $mockResponseHandler = $this->getMockBuilder('Rcm\Entity\Site')
+//        $mockResponseHandler = $this->getMockBuilder(\Rcm\Entity\Site::class)
 //            ->disableOriginalConstructor()
 //            ->getMock();
 //

@@ -269,16 +269,41 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
      * @param string $createdByUserId <tracking>
      * @param string $createdReason   <tracking>
      */
+    /**
+     * @param string        $createdByUserId
+     * @param string        $createdReason
+     * @param Domain|null   $domain
+     * @param Country|null  $country
+     * @param Language|null $language
+     */
     public function __construct(
         string $createdByUserId,
-        string $createdReason = Tracking::UNKNOWN_REASON
+        string $createdReason = Tracking::UNKNOWN_REASON,
+        $domain = null,
+        $country = null,
+        $language = null
     ) {
         $this->pages = new ArrayCollection();
         $this->sitePlugins = new ArrayCollection();
         $this->containers = new ArrayCollection();
-        $this->domain = new Domain($createdByUserId, 'New site ' . $createdReason);
-        $this->country = new Country($createdByUserId, $createdReason);
-        $this->language = new Language($createdByUserId, $createdReason);
+
+        // Removed this because it is dangerous
+        // $this->domain = new Domain($createdByUserId, $createdReason . ' (new site construction)');
+        if ($domain instanceof Domain) {
+            $this->setDomain($domain);
+        }
+
+        // Removed this because it is dangerous
+        // $this->country = new Country($createdByUserId, $createdReason . ' (new site construction)');
+        if ($country instanceof Country) {
+            $this->setCountry($country);
+        }
+
+        // Removed this because it is dangerous
+        // $this->language = new Language($createdByUserId, $createdReason . ' (new site construction)');
+        if ($language instanceof Language) {
+            $this->setLanguage($language);
+        }
 
         parent::__construct($createdByUserId, $createdReason);
     }
@@ -641,7 +666,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
      *
      * @param \Rcm\Entity\Country $country Country Entity
      *
-     * @return null
+     * @return void
      */
     public function setCountry(Country $country)
     {
@@ -843,7 +868,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
      *
      * @param PluginInstance $plugin Site wide plugin.
      *
-     * @return null
+     * @return void
      * @throws InvalidArgumentException
      */
     public function addSiteWidePlugin(PluginInstance $plugin)
@@ -1055,7 +1080,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
      * @return void
      * @throws TrackingException
      */
-    public function populate(array $data, array $ignore = [])
+    public function populate(array $data, array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (!empty($data['siteId']) && !in_array('siteId', $ignore)) {
             $this->setSiteId($data['siteId']);
@@ -1076,7 +1101,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
         if (!empty($data['domain']) && is_array($data['domain'])
             && !in_array('domain', $ignore)
         ) {
-            // is this right?
+            // @todo This is dangerous
             $domain = new Domain(
                 $data['createdByUserId'],
                 'New domain on populate in ' . self::class
@@ -1113,6 +1138,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
                 $ignore
             )
         ) {
+            // @todo This is dangerous
             $language = new Language(
                 $data['createdByUserId'],
                 'New language on populate in ' . self::class
@@ -1139,6 +1165,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
                 $ignore
             )
         ) {
+            // @todo This is dangerous
             $country = new Country(
                 $data['createdByUserId'],
                 'New country on populate in ' . self::class

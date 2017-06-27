@@ -69,7 +69,7 @@ class Redirect extends EntityRepository
 
         if ($redirect->getSiteId() !== null) {
             $siteRepo = $this->getEntityManager()->getRepository(
-                'Rcm\Entity\Site'
+                \Rcm\Entity\Site::class
             );
 
             $site = $siteRepo->find($redirect->getSiteId());

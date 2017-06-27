@@ -275,12 +275,12 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
      * @param \DateTime $createdDate DateTime Object when revision was created
      *
      * @return void
-     *
+     * @throws TrackingException
      */
     public function setCreatedDate(\DateTime $createdDate)
     {
         throw new TrackingException('Created data can only be set on construct');
-        $this->createdDate = $createdDate;
+        // $this->createdDate = $createdDate;
     }
 
     /**
@@ -383,7 +383,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
      *
      * @param string $containerName
      *
-     * @return null
+     * @return array
      */
     public function getPluginWrappersByPageContainerName($containerName)
     {

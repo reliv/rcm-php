@@ -463,7 +463,7 @@ class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializabl
      *
      * @return void
      */
-    public function populate(array $data, array $ignore = [])
+    public function populate(array $data, array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (isset($data['layoutContainer'])
             && !in_array(

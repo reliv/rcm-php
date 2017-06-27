@@ -287,10 +287,6 @@ class Page extends ContainerAbstract
             $pageData['createdReason']
         );
         $page->populate($pageData);
-        $page->setCreatedByUserId(
-            $pageData['createdByUserId'],
-            $pageData['createdReason']
-        );
 
         $page->setSite($site);
 
