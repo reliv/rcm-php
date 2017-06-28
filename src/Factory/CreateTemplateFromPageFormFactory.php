@@ -2,10 +2,9 @@
 
 namespace RcmAdmin\Factory;
 
+use Interop\Container\ContainerInterface;
 use RcmAdmin\Form\CreateTemplateFromPageForm;
-use RcmAdmin\Form\NewPageForm;
-use Zend\Di\ServiceLocator;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\Form\FormElementManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -22,32 +21,30 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class CreateTemplateFromPageFormFactory implements FactoryInterface
+class CreateTemplateFromPageFormFactory
 {
-
     /**
-     * Create Service
+     * __invoke
      *
-     * @param ServiceLocatorInterface $formElementManager Zend Controler Manager
+     * @param $container ContainerInterface|ServiceLocatorInterface|FormElementManager
      *
-     * @return NewPageForm
+     * @return CreateTemplateFromPageForm
      */
-    public function createService(ServiceLocatorInterface $formElementManager)
+    public function __invoke($container)
     {
-        /** @var \Zend\Form\FormElementManager $formElementMgr For IDE */
-        $formElementMgr = $formElementManager;
-
-        /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
-        $serviceLocator = $formElementMgr->getServiceLocator();
+        // @BC for ZendFramework
+        if ($container instanceof FormElementManager) {
+            $container = $container->getServiceLocator();
+        }
 
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
-        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
+        $entityManager = $container->get('Doctrine\ORM\EntityManager');
 
         /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
+        $pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
 
         /** @var \Rcm\Validator\Page $pageValidator */
-        $pageValidator = $serviceLocator->get('Rcm\Validator\Page');
+        $pageValidator = $container->get(\Rcm\Validator\Page::class);
 
         return new CreateTemplateFromPageForm(
             $pageRepo,

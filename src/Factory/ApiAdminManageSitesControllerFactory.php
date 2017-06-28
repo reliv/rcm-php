@@ -21,6 +21,7 @@ class ApiAdminManageSitesControllerFactory
      */
     public function __invoke($container)
     {
+        // @BC for ZendFramework
         if ($container instanceof ControllerManager) {
             $container = $container->getServiceLocator();
         }

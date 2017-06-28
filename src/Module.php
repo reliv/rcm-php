@@ -40,7 +40,7 @@ class Module
 
         //Add Domain Checker
         $onDispatchListener = $serviceManager->get(
-            'RcmAdmin\EventListener\DispatchListener'
+            \RcmAdmin\EventListener\DispatchListener::class
         );
 
         /** @var \Zend\EventManager\EventManager $eventManager */

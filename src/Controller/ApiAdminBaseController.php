@@ -49,7 +49,7 @@ class ApiAdminBaseController extends AbstractRestfulJsonController
      */
     protected function getCurrentSite()
     {
-        return $this->serviceLocator->get('Rcm\Service\CurrentSite');
+        return $this->serviceLocator->get(\Rcm\Service\CurrentSite::class);
     }
 
     /**

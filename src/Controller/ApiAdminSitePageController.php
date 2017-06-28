@@ -78,7 +78,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     protected function getPageRepo()
     {
-        return $this->getEntityManager()->getRepository('\Rcm\Entity\Page');
+        return $this->getEntityManager()->getRepository(\Rcm\Entity\Page::class);
     }
 
     /**
@@ -88,7 +88,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     protected function getSiteRepo()
     {
-        return $this->getEntityManager()->getRepository('\Rcm\Entity\Site');
+        return $this->getEntityManager()->getRepository(\Rcm\Entity\Site::class);
     }
 
     /**

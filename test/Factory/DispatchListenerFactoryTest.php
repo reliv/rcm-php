@@ -44,20 +44,20 @@ class DispatchListenerFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * Generic test for the constructor
      *
-     * @return null
+     * @return void
      * @covers \RcmAdmin\Factory\DispatchListenerFactory
      */
     public function testCreateService()
     {
         $mockController = $this
-            ->getMockBuilder('\RcmAdmin\Controller\AdminPanelController')
+            ->getMockBuilder(\RcmAdmin\Controller\AdminPanelController::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $serviceManager = new ServiceManager();
 
         $serviceManager->setService(
-            'RcmAdmin\Controller\AdminPanelController',
+            \RcmAdmin\Controller\AdminPanelController::class,
             $mockController
         );
 

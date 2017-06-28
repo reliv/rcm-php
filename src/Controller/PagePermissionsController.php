@@ -41,7 +41,7 @@ class PagePermissionsController extends AbstractActionController
 
         /** @var \Rcm\Entity\Site $currentSite */
         $currentSite = $this->getServiceLocator()->get(
-            'Rcm\Service\CurrentSite'
+            \Rcm\Service\CurrentSite::class
         );
 
         $currentSiteId = $currentSite->getSiteId();

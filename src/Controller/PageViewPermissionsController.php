@@ -64,7 +64,7 @@ class PageViewPermissionsController extends AbstractRestfulController
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        $this->pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
+        $this->pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
 
         if (!is_array($data)) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
@@ -73,7 +73,7 @@ class PageViewPermissionsController extends AbstractRestfulController
 
         /** @var \Rcm\Entity\Site $currentSite */
         $currentSite = $this->getServiceLocator()->get(
-            'Rcm\Service\CurrentSite'
+            \Rcm\Service\CurrentSite::class
         );
 
         if (is_numeric($data['siteId']) && ($currentSite->getSiteId() == $data['siteId'])) {

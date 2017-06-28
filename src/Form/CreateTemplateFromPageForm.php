@@ -31,19 +31,37 @@ class CreateTemplateFromPageForm extends Form implements ElementInterface
     protected $pageValidator;
 
     /**
+     * @var array
+     */
+    protected $safeValidatorServices = [
+        'pageValidator' => null,
+    ];
+
+
+    /**
      * Constructor
      *
-     * @param Page $pageRepo Rcm Page Repository
-     * @param PageValidator $pageValidator     Zend Page Validator
+     * @param Page          $pageRepo      Rcm Page Repository
+     * @param PageValidator $pageValidator Zend Page Validator
      */
     public function __construct(
         Page $pageRepo,
         PageValidator $pageValidator
     ) {
-        $this->pageRepo      = $pageRepo;
+        $this->pageRepo = $pageRepo;
         $this->pageValidator = $pageValidator;
 
+        $this->buildSafeValidators();
+
         parent::__construct();
+    }
+
+    /**
+     * @return void
+     */
+    protected function buildSafeValidators()
+    {
+        $this->safeValidatorServices['pageValidator'] = clone($this->pageValidator);
     }
 
     /**
@@ -72,16 +90,16 @@ class CreateTemplateFromPageForm extends Form implements ElementInterface
                 'name' => 'template-name',
                 'required' => true,
                 'filters' => [
-                    ['name' => 'StripTags'],
+                    ['name' => \Zend\Filter\StripTags::class],
                     [
-                        'name' => 'StringTrim',
+                        'name' => \Zend\Filter\StringTrim::class,
                         'options' => [
                             'charlist' => '-_',
                         ]
                     ],
                 ],
                 'validators' => [
-                    $this->pageValidator,
+                    $this->safeValidatorServices['pageValidator'],
                 ],
             ]
         );
@@ -95,7 +113,6 @@ class CreateTemplateFromPageForm extends Form implements ElementInterface
      */
     public function isValid()
     {
-
         $this->setValidationGroup(
             [
                 'template-name'

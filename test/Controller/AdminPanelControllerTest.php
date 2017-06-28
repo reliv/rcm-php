@@ -208,7 +208,7 @@ class AdminPanelControllerTest extends \PHPUnit_Framework_TestCase
 //            ->with(
 //                $this->equalTo('sites.1'),
 //                $this->equalTo('admin'),
-//                $this->equalTo('Rcm\Acl\ResourceProvider')
+//                $this->equalTo(\Rcm\Acl\ResourceProvider::class)
 //            )->will($this->returnValue(false));
 //
 //        $result = $this->controller->getAdminWrapperAction();

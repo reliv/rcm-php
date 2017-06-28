@@ -10,6 +10,7 @@ use Rcm\Http\Response;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\InputFilter\SiteInputFilter;
+use RcmAdmin\Service\SiteManager;
 use RcmUser\Service\RcmUserService;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\JsonModel;
@@ -27,7 +28,7 @@ use Zend\View\Model\JsonModel;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  *
- * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = 'Rcm\Acl\ResourceProvider')
+ * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = \Rcm\Acl\ResourceProvider::class)
  */
 class ApiAdminManageSitesController extends ApiAdminBaseController
 {
@@ -43,11 +44,11 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     /**
      * getSiteManager
      *
-     * @return \RcmAdmin\Service\SiteManager
+     * @return SiteManager
      */
     protected function getSiteManager()
     {
-        return $this->serviceLocator->get('RcmAdmin\Service\SiteManager');
+        return $this->serviceLocator->get(SiteManager::class);
     }
 
     /**
@@ -98,7 +99,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Site $siteRepo */
-        $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
+        $siteRepo = $entityManager->getRepository(\Rcm\Entity\Site::class);
         $createQueryBuilder = $siteRepo->createQueryBuilder('site')
             ->select('site')
             ->leftJoin('site.domain', 'domain')
@@ -193,7 +194,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
 
         /** @var \Rcm\Repository\Site $siteRepo */
         $siteRepo = $this->getEntityManager()->getRepository(
-            '\Rcm\Entity\Site'
+            \Rcm\Entity\Site::class
         );
 
         try {
@@ -245,7 +246,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Site $siteRepo */
-        $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
+        $siteRepo = $entityManager->getRepository(\Rcm\Entity\Site::class);
 
         if (!$siteRepo->isValidSiteId($siteId)) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
@@ -307,7 +308,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
             $data = $siteManager->prepareSiteData($data);
             /** @var \Rcm\Repository\Domain $domainRepo */
             $domainRepo = $this->getEntityManager()->getRepository(
-                '\Rcm\Entity\Domain'
+                \Rcm\Entity\Domain::class
             );
 
             $data['domain'] = $domainRepo->createDomain(

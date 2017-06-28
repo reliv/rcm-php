@@ -23,7 +23,7 @@ use Zend\View\Model\JsonModel;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  *
- * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = 'Rcm\Acl\ResourceProvider')
+ * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = \Rcm\Acl\ResourceProvider::class)
  */
 class ApiAdminSitesCloneController extends ApiAdminManageSitesController
 {
@@ -63,7 +63,7 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
             $data = $siteManager->prepareSiteData($data);
             /** @var \Rcm\Repository\Domain $domainRepo */
             $domainRepo = $this->getEntityManager()->getRepository(
-                '\Rcm\Entity\Domain'
+                \Rcm\Entity\Domain::class
             );
 
             $domain = $domainRepo->createDomain(
@@ -78,7 +78,7 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Site $siteRepo */
-        $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
+        $siteRepo = $entityManager->getRepository(\Rcm\Entity\Site::class);
 
         /** @var \Rcm\Entity\Site $existingSite */
         $existingSite = $siteRepo->find($data['siteId']);

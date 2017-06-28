@@ -53,8 +53,9 @@ class DispatchListener
         }
 
         /** @var \RcmAdmin\Controller\AdminPanelController $adminPanelController */
-        $adminPanelController
-            = $this->serviceLocator->get('RcmAdmin\Controller\AdminPanelController');
+        $adminPanelController = $this->serviceLocator->get(
+            \RcmAdmin\Controller\AdminPanelController::class
+        );
 
         $adminPanelController->setEvent($event);
 

@@ -42,7 +42,7 @@ class ApiAdminCountryController extends ApiAdminBaseController
         }
 
         /** @var \Rcm\Repository\Country $repo */
-        $repo = $this->getEntityManager()->getRepository('\Rcm\Entity\Country');
+        $repo = $this->getEntityManager()->getRepository(\Rcm\Entity\Country::class);
 
         try {
             $results = $repo->findBy([], ['countryName' => 'ASC']);

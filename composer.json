@@ -49,7 +49,19 @@
     "bower-asset/angular-utils-pagination": "~0.9",
     "bower-asset/rcm-loading": ">=0.1.14",
     "bower-asset/rcm-html-editor": ">=0.4.0",
-    "bower-asset/rcm-dialog": ">=0.2.0"
+    "bower-asset/rcm-dialog": ">=0.2.0",
+    "zendframework/zend-form": "2.*",
+    "zendframework/zend-filter": "2.*",
+    "zendframework/zend-http": "2.*",
+    "zendframework/zend-i18n": "2.*",
+    "zendframework/zend-inputfilter": "2.*",
+    "zendframework/zend-mvc": "2.*",
+    "zendframework/zend-navigation": "2.*",
+    "zendframework/zend-paginator": "2.*",
+    "zendframework/zend-servicemanager": "2.*",
+    "zendframework/zend-stdlib": "2.*",
+    "zendframework/zend-validator": "2.*",
+    "zendframework/zend-view": "2.*"
   },
   "undocumented-require": {
     "NOTE": "(03/2016) The dependencies for this package are not well defined at this time",

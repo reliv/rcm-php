@@ -56,7 +56,7 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
     public function setup()
     {
         $this->mockController = $this
-            ->getMockBuilder('\RcmAdmin\Controller\AdminPanelController')
+            ->getMockBuilder(\RcmAdmin\Controller\AdminPanelController::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -65,7 +65,7 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager = new ServiceManager();
 
-        $serviceManager->setService('RcmAdmin\Controller\AdminPanelController', $mockController);
+        $serviceManager->setService(\RcmAdmin\Controller\AdminPanelController::class, $mockController);
 
         $this->listener = new DispatchListener($serviceManager);
     }

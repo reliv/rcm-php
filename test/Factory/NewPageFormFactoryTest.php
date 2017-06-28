@@ -51,7 +51,7 @@ class NewPageFormFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateService()
     {
         $mockCurrentSite = $this
-            ->getMockBuilder('\Rcm\Entity\Site')
+            ->getMockBuilder(\Rcm\Entity\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -91,22 +91,22 @@ class NewPageFormFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
 
         $serviceManager->setService(
-            'Rcm\Validator\PageTemplate',
+            \Rcm\Validator\PageTemplate::class,
             $mockPageTemplateValidator
         );
 
         $serviceManager->setService(
-            'Rcm\Validator\Page',
+            \Rcm\Validator\Page::class,
             $mockPageValidator
         );
 
         $serviceManager->setService(
-            'Rcm\Validator\MainLayout',
+            \Rcm\Validator\MainLayout::class,
             $mockMainLayoutValidator
         );
 
         $serviceManager->setService(
-            'Rcm\Service\CurrentSite',
+            \Rcm\Service\CurrentSite::class,
             $mockCurrentSite
         );
 
@@ -116,7 +116,7 @@ class NewPageFormFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $serviceManager->setService(
-            'Rcm\Service\LayoutManager',
+            \Rcm\Service\LayoutManager::class,
             $mockLayoutManager
         );
 

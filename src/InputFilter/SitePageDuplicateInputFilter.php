@@ -30,14 +30,14 @@ class SitePageDuplicateInputFilter extends InputFilter
                 'name' => 'destinationSiteId',
                 'required' => true,
                 'filters' => [
-                    ['name' => 'Zend\Filter\ToInt'],
+                    ['name' => \Zend\Filter\ToInt::class],
                 ],
             ],
             'pageId' => [
                 'name' => 'pageId',
                 'required' => true,
                 'filters' => [
-                    ['name' => 'Zend\Filter\ToInt'],
+                    ['name' => \Zend\Filter\ToInt::class],
                 ],
             ],
             //
@@ -45,16 +45,16 @@ class SitePageDuplicateInputFilter extends InputFilter
                 'name' => 'name',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
             ],
             'pageLayout' => [
                 'name' => 'pageLayout',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
                 ]
@@ -63,8 +63,8 @@ class SitePageDuplicateInputFilter extends InputFilter
                 'name' => 'siteLayoutOverride',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
 
@@ -74,8 +74,8 @@ class SitePageDuplicateInputFilter extends InputFilter
                 'name' => 'pageTitle',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
 
@@ -85,8 +85,8 @@ class SitePageDuplicateInputFilter extends InputFilter
                 'name' => 'description',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
 
@@ -96,8 +96,8 @@ class SitePageDuplicateInputFilter extends InputFilter
                 'name' => 'keywords',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
 
@@ -107,12 +107,12 @@ class SitePageDuplicateInputFilter extends InputFilter
                 'name' => 'pageType',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
                     [
-                        'name' => 'StringLength',
+                        'name' => \Zend\Validator\StringLength::class,
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min' => 1,

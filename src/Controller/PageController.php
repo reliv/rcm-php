@@ -76,9 +76,8 @@ class PageController extends AbstractActionController
     }
 
     /**
-     * Creates a new CMS page
-     *
-     * @return ViewModel|Response
+     * @return Response|ViewModel
+     * @throws TrackingException
      */
     public function newAction()
     {
@@ -96,7 +95,7 @@ class PageController extends AbstractActionController
         /** @var \RcmAdmin\Form\NewPageForm $form */
         $form = $this->getServiceLocator()
             ->get('FormElementManager')
-            ->get('RcmAdmin\Form\NewPageForm');
+            ->get(\RcmAdmin\Form\NewPageForm::class);
 
         /** @var \Zend\Http\Request $request */
         $request = $this->request;
@@ -236,7 +235,7 @@ class PageController extends AbstractActionController
         /** @var \RcmAdmin\Form\CreateTemplateFromPageForm $form */
         $form = $this->getServiceLocator()
             ->get('FormElementManager')
-            ->get('RcmAdmin\Form\CreateTemplateFromPageForm');
+            ->get(\RcmAdmin\Form\CreateTemplateFromPageForm::class);
 
         /** @var \Zend\Http\Request $request */
         $request = $this->request;

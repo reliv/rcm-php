@@ -341,7 +341,7 @@ class SiteManager
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Country $countryRepo */
-        $countryRepo = $entityManager->getRepository('\Rcm\Entity\Country');
+        $countryRepo = $entityManager->getRepository(\Rcm\Entity\Country::class);
 
         $country = $countryRepo->find(
             $countryId
@@ -368,7 +368,7 @@ class SiteManager
 
         /** @var \Rcm\Repository\Language $languageRepo */
         $languageRepo = $entityManager->getRepository(
-            '\Rcm\Entity\Language'
+            \Rcm\Entity\Language::class
         );
 
         $language = $languageRepo->getLanguageByString(
@@ -397,7 +397,7 @@ class SiteManager
 
         /** @var \Rcm\Repository\Domain $domainRepo */
         $domainRepo = $entityManager->getRepository(
-            '\Rcm\Entity\Domain'
+            \Rcm\Entity\Domain::class
         );
 
         $domain = $domainRepo->getDomainByName($domainName);
