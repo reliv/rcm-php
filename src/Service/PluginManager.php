@@ -206,7 +206,7 @@ class PluginManager
             'displayName' => $blockConfig->getLabel(),
             'tooltip' => $blockConfig->getDescription(),
             'icon' => $blockConfig->getIcon(),
-            'siteWide' => false,
+            'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
             'md5' => '',
             'fromCache' => false,
             'canCache' => $blockConfig->getCache(),
@@ -280,7 +280,7 @@ class PluginManager
                 'name' => $name,
                 'displayName' => $displayName,
                 'icon' => $icon,
-                'siteWide' => false
+                'siteWide' => false // @deprecated <deprecated-site-wide-plugin>
             ];
         }
 

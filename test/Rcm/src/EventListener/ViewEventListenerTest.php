@@ -152,14 +152,14 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($response));
 
         $mockRenderer = $this->getMockBuilder(
-            '\Zend\View\Renderer\JsonRenderer'
+            \Zend\View\Renderer\JsonRenderer::class
         )
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockRenderer->expects($this->any())
-            ->method('plugin')
-            ->will($this->returnValue($mockContainerPlugin));
+        //$mockRenderer->expects($this->any())
+        //    ->method('plugin')
+        //    ->will($this->returnValue($mockContainerPlugin));
 
         /** @var \Zend\View\Renderer\PhpRenderer $mockRenderer */
         $event->setRenderer($mockRenderer);

@@ -418,6 +418,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
 //    }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Test Get and Add Site Wide Plugins
      *
      * @return void
@@ -458,6 +459,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Test adding non site wide instances throws exception
      *
      * @return void
@@ -475,6 +477,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Test adding site wide instances with no name throws exception
      *
      * @return void
@@ -502,17 +505,17 @@ class SIteTest extends \PHPUnit_Framework_TestCase
     {
         $pluginOne = new PluginInstance('user123');
         $pluginOne->setInstanceId(3);
-        $pluginOne->setSiteWide();
+        $pluginOne->setSiteWide(); // @deprecated <deprecated-site-wide-plugin>
         $pluginOne->setDisplayName('Plugin One');
 
         $pluginTwo = new PluginInstance('user123');
         $pluginTwo->setInstanceId(33);
-        $pluginTwo->setSiteWide();
+        $pluginTwo->setSiteWide(); // @deprecated <deprecated-site-wide-plugin>
         $pluginTwo->setDisplayName('Plugin Two');
 
         $pluginThree = new PluginInstance('user123');
         $pluginThree->setInstanceId(33);
-        $pluginThree->setSiteWide();
+        $pluginThree->setSiteWide(); // @deprecated <deprecated-site-wide-plugin>
         $pluginThree->setDisplayName('Plugin Three');
 
         $expected = [
@@ -520,6 +523,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
             $pluginThree
         ];
 
+        // @deprecated <deprecated-site-wide-plugin>
         $this->site->addSiteWidePlugin($pluginOne);
         $this->site->addSiteWidePlugin($pluginTwo);
         $this->site->addSiteWidePlugin($pluginThree);
@@ -651,13 +655,11 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                     'pageId' => '200',
                     'name' => 'pageOne',
                     'author' => 'Westin Shafer',
-                    'createdDate' => new \DateTime('yesterday'),
                     'lastPublished' => new \DateTime('yesterday'),
                     'revisions' => [
                         0 => [
                             'revisionId' => 100,
                             'author' => 'Westin Shafer',
-                            'createdDate' => new \DateTime('yesterday'),
                             'publishedDate' => new \DateTime('yesterday'),
                             'published' => true,
                             'md5' => 'revisionMD5',
@@ -672,7 +674,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 80,
                                         'plugin' => 'MockPlugin',
-                                        'siteWide' => false,
+                                        'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => null,
                                         'instanceConfig' => [
                                             'var1' => 1,
@@ -692,7 +694,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 81,
                                         'plugin' => 'MockPlugin2',
-                                        'siteWide' => true,
+                                        'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => 'TestSiteWide',
                                         'instanceConfig' => [
                                             'var3' => 3,
@@ -707,7 +709,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                         1 => [
                             'revisionId' => 101,
                             'author' => 'Westin Shafer',
-                            'createdDate' => new \DateTime('-1 month'),
                             'publishedDate' => new \DateTime('-1 month'),
                             'published' => false,
                             'md5' => 'revision2MD5',
@@ -722,7 +723,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 82,
                                         'plugin' => 'MockPlugin3',
-                                        'siteWide' => false,
+                                        'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => null,
                                         'instanceConfig' => [
                                             'var1' => 1,
@@ -742,7 +743,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 83,
                                         'plugin' => 'MockPlugin4',
-                                        'siteWide' => true,
+                                        'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => 'TestSiteWide2',
                                         'instanceConfig' => [
                                             'var3' => 3,
@@ -760,13 +761,11 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                     'pageId' => '200',
                     'name' => 'pageOne',
                     'author' => 'Westin Shafer',
-                    'createdDate' => new \DateTime('yesterday'),
                     'lastPublished' => new \DateTime('yesterday'),
                     'revisions' => [
                         0 => [
                             'revisionId' => 100,
                             'author' => 'Westin Shafer',
-                            'createdDate' => new \DateTime('yesterday'),
                             'publishedDate' => new \DateTime('yesterday'),
                             'published' => true,
                             'md5' => 'revisionMD5',
@@ -781,7 +780,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 84,
                                         'plugin' => 'MockPlugin',
-                                        'siteWide' => false,
+                                        'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => null,
                                         'instanceConfig' => [
                                             'var1' => 1,
@@ -801,7 +800,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 85,
                                         'plugin' => 'MockPlugin2',
-                                        'siteWide' => true,
+                                        'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => 'TestSiteWide',
                                         'instanceConfig' => [
                                             'var3' => 3,
@@ -816,7 +815,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                         1 => [
                             'revisionId' => 101,
                             'author' => 'Westin Shafer',
-                            'createdDate' => new \DateTime('-1 month'),
                             'publishedDate' => new \DateTime('-1 month'),
                             'published' => false,
                             'md5' => 'revision2MD5',
@@ -831,7 +829,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 86,
                                         'plugin' => 'MockPlugin3',
-                                        'siteWide' => false,
+                                        'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => null,
                                         'instanceConfig' => [
                                             'var1' => 1,
@@ -851,7 +849,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 87,
                                         'plugin' => 'MockPlugin4',
-                                        'siteWide' => true,
+                                        'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => 'TestSiteWide2',
                                         'instanceConfig' => [
                                             'var3' => 3,
@@ -871,13 +869,11 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                     'containerId' => '200',
                     'name' => 'containerOne',
                     'author' => 'Westin Shafer',
-                    'createdDate' => new \DateTime('yesterday'),
                     'lastPublished' => new \DateTime('yesterday'),
                     'revisions' => [
                         0 => [
                             'revisionId' => 100,
                             'author' => 'Westin Shafer',
-                            'createdDate' => new \DateTime('yesterday'),
                             'publishedDate' => new \DateTime('yesterday'),
                             'published' => true,
                             'md5' => 'revisionMD5',
@@ -892,7 +888,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 998,
                                         'plugin' => 'MockPlugin',
-                                        'siteWide' => false,
+                                        'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => null,
                                         'instanceConfig' => [
                                             'var1' => 1,
@@ -912,7 +908,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 88,
                                         'plugin' => 'MockPlugin2',
-                                        'siteWide' => true,
+                                        'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => 'TestSiteWide',
                                         'instanceConfig' => [
                                             'var3' => 3,
@@ -927,7 +923,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                         1 => [
                             'revisionId' => 101,
                             'author' => 'Westin Shafer',
-                            'createdDate' => new \DateTime('-1 month'),
                             'publishedDate' => new \DateTime('-1 month'),
                             'published' => false,
                             'md5' => 'revision2MD5',
@@ -942,7 +937,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 89,
                                         'plugin' => 'MockPlugin3',
-                                        'siteWide' => false,
+                                        'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => null,
                                         'instanceConfig' => [
                                             'var1' => 1,
@@ -962,7 +957,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 90,
                                         'plugin' => 'MockPlugin4',
-                                        'siteWide' => true,
+                                        'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => 'TestSiteWide2',
                                         'instanceConfig' => [
                                             'var3' => 3,
@@ -980,13 +975,11 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                     'containerId' => '200',
                     'name' => 'containerOne',
                     'author' => 'Westin Shafer',
-                    'createdDate' => new \DateTime('yesterday'),
                     'lastPublished' => new \DateTime('yesterday'),
                     'revisions' => [
                         0 => [
                             'revisionId' => 100,
                             'author' => 'Westin Shafer',
-                            'createdDate' => new \DateTime('yesterday'),
                             'publishedDate' => new \DateTime('yesterday'),
                             'published' => true,
                             'md5' => 'revisionMD5',
@@ -1001,7 +994,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 91,
                                         'plugin' => 'MockPlugin',
-                                        'siteWide' => false,
+                                        'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => null,
                                         'instanceConfig' => [
                                             'var1' => 1,
@@ -1021,7 +1014,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 92,
                                         'plugin' => 'MockPlugin2',
-                                        'siteWide' => true,
+                                        'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => 'TestSiteWide',
                                         'instanceConfig' => [
                                             'var3' => 3,
@@ -1036,7 +1029,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                         1 => [
                             'revisionId' => 101,
                             'author' => 'Westin Shafer',
-                            'createdDate' => new \DateTime('-1 month'),
                             'publishedDate' => new \DateTime('-1 month'),
                             'published' => false,
                             'md5' => 'revision2MD5',
@@ -1051,7 +1043,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 93,
                                         'plugin' => 'MockPlugin3',
-                                        'siteWide' => false,
+                                        'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => null,
                                         'instanceConfig' => [
                                             'var1' => 1,
@@ -1071,7 +1063,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
                                     'instance' => [
                                         'pluginInstanceId' => 94,
                                         'plugin' => 'MockPlugin4',
-                                        'siteWide' => true,
+                                        'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                                         'displayName' => 'TestSiteWide2',
                                         'instanceConfig' => [
                                             'var3' => 3,
@@ -1102,7 +1094,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
             $pageEntity->setPageId($page['pageId']);
             $pageEntity->setName($page['name']);
             $pageEntity->setAuthor($page['author']);
-            $pageEntity->setCreatedDate($page['createdDate']);
             $pageEntity->setLastPublished($page['lastPublished']);
             $pageEntity->setSite($this->site);
 
@@ -1126,7 +1117,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
             $containerEntity->setContainerId($container['containerId']);
             $containerEntity->setName($container['name']);
             $containerEntity->setAuthor($container['author']);
-            $containerEntity->setCreatedDate($container['createdDate']);
             $containerEntity->setLastPublished($container['lastPublished']);
             $containerEntity->setSite($this->site);
 
@@ -1225,7 +1215,6 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $revision = new Revision('user123');
         $revision->setRevisionId($revisionData['revisionId']);
         $revision->setAuthor($revisionData['author']);
-        $revision->setCreatedDate($revisionData['createdDate']);
         $revision->publishRevision();
         $revision->setPublishedDate($revisionData['publishedDate']);
         $revision->setMd5($revisionData['md5']);
@@ -1238,6 +1227,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
             $plugin->setInstanceConfig($instance['instance']['instanceConfig']);
             $plugin->setMd5($instance['instance']['md5']);
 
+            // @deprecated <deprecated-site-wide-plugin>
             if ($instance['instance']['siteWide']) {
                 $plugin->setSiteWide();
                 $this->site->addSiteWidePlugin($plugin);

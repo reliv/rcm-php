@@ -89,13 +89,11 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             'containerId' => '200',
             'name' => 'containerOne',
             'author' => 'Westin Shafer',
-            'createdDate' => new \DateTime('yesterday'),
             'lastPublished' => new \DateTime('yesterday'),
             'revisions' => [
                 0 => [
                     'revisionId' => 100,
                     'author' => 'Westin Shafer',
-                    'createdDate' => new \DateTime('yesterday'),
                     'publishedDate' => new \DateTime('yesterday'),
                     'published' => true,
                     'md5' => 'revisionMD5',
@@ -110,7 +108,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 44,
                                 'plugin' => 'MockPlugin',
-                                'siteWide' => false,
+                                'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                 'displayName' => null,
                                 'instanceConfig' => [
                                     'var1' => 1,
@@ -130,8 +128,8 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 46,
                                 'plugin' => 'MockPlugin2',
-                                'siteWide' => true,
-                                'displayName' => 'TestSiteWide',
+                                'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
+                                'displayName' => 'TestSiteWide', // @deprecated <deprecated-site-wide-plugin>
                                 'instanceConfig' => [
                                     'var3' => 3,
                                     'var4' => 4
@@ -145,7 +143,6 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
                 1 => [
                     'revisionId' => 101,
                     'author' => 'Westin Shafer',
-                    'createdDate' => new \DateTime('-1 month'),
                     'publishedDate' => new \DateTime('-1 month'),
                     'published' => false,
                     'md5' => 'revision2MD5',
@@ -160,7 +157,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 48,
                                 'plugin' => 'MockPlugin3',
-                                'siteWide' => false,
+                                'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                 'displayName' => null,
                                 'instanceConfig' => [
                                     'var1' => 1,
@@ -180,7 +177,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 50,
                                 'plugin' => 'MockPlugin4',
-                                'siteWide' => true,
+                                'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                                 'displayName' => 'TestSiteWide2',
                                 'instanceConfig' => [
                                     'var3' => 3,
@@ -197,7 +194,6 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->container->setContainerId($container['containerId']);
         $this->container->setName($container['name']);
         $this->container->setAuthor($container['author']);
-        $this->container->setCreatedDate($container['createdDate']);
         $this->container->setLastPublished($container['lastPublished']);
         $this->container->setSite($site);
 
@@ -205,7 +201,6 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             $revision = new Revision('user123');
             $revision->setRevisionId($revisionData['revisionId']);
             $revision->setAuthor($revisionData['author']);
-            $revision->setCreatedDate($revisionData['createdDate']);
             $revision->publishRevision();
             $revision->setPublishedDate($revisionData['publishedDate']);
             $revision->setMd5($revisionData['md5']);
@@ -215,6 +210,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
                 $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
                 $plugin->setPlugin($instance['instance']['plugin']);
 
+                // @deprecated <deprecated-site-wide-plugin>
                 if ($instance['instance']['siteWide']) {
                     $plugin->setSiteWide();
                 }
@@ -274,10 +270,11 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             $clonedCurrentRev->getAuthor()
         );
 
-        $this->assertNotEquals(
-            $currentRevision->getCreatedDate(),
-            $clonedCurrentRev->getCreatedDate()
-        );
+        // @todo Is this a valid test? should cloning a container create revision clones?
+        //$this->assertNotEquals(
+        //    $currentRevision->getCreatedDate(),
+        //    $clonedCurrentRev->getCreatedDate()
+        //);
 
         $this->assertFalse($clonedCurrentRev->wasPublished());
 

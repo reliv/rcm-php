@@ -112,7 +112,7 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
                     == $newPluginWrapper->getPluginWrapperId()
                     && ($pluginWrapper->getInstance()->getInstanceId()
                         == $newPluginWrapper->getInstance()->getInstanceId()
-                        || $pluginWrapper->getInstance()->isSiteWide())
+                        || $pluginWrapper->getInstance()->isSiteWide()) //@deprecated <deprecated-site-wide-plugin>
                 ) {
                     continue;
                 }

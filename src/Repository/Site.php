@@ -130,6 +130,7 @@ class Site extends EntityRepository
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * getSiteWidePluginsList
      *
      * @param int $siteId

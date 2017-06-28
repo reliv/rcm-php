@@ -1,21 +1,4 @@
 <?php
-/**
- * Unit Test for the Page Entity
- *
- * This file contains the unit test for the Page Entity
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace RcmTest\Entity;
 
@@ -251,13 +234,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
             'pageId' => '200',
             'name' => 'pageOne',
             'author' => 'Westin Shafer',
-            'createdDate' => new \DateTime('yesterday'),
             'lastPublished' => new \DateTime('yesterday'),
             'revisions' => [
                 0 => [
                     'revisionId' => 100,
                     'author' => 'Westin Shafer',
-                    'createdDate' => new \DateTime('yesterday'),
                     'publishedDate' => new \DateTime('yesterday'),
                     'published' => true,
                     'md5' => 'revisionMD5',
@@ -272,7 +253,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 44,
                                 'plugin' => 'MockPlugin',
-                                'siteWide' => false,
+                                'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                 'displayName' => null,
                                 'instanceConfig' => [
                                     'var1' => 1,
@@ -292,7 +273,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 46,
                                 'plugin' => 'MockPlugin2',
-                                'siteWide' => true,
+                                'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                                 'displayName' => 'TestSiteWide',
                                 'instanceConfig' => [
                                     'var3' => 3,
@@ -307,7 +288,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 1 => [
                     'revisionId' => 101,
                     'author' => 'Westin Shafer',
-                    'createdDate' => new \DateTime('-1 month'),
                     'publishedDate' => new \DateTime('-1 month'),
                     'published' => false,
                     'md5' => 'revision2MD5',
@@ -322,7 +302,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 48,
                                 'plugin' => 'MockPlugin3',
-                                'siteWide' => false,
+                                'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                 'displayName' => null,
                                 'instanceConfig' => [
                                     'var1' => 1,
@@ -342,7 +322,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 50,
                                 'plugin' => 'MockPlugin4',
-                                'siteWide' => true,
+                                'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                                 'displayName' => 'TestSiteWide2',
                                 'instanceConfig' => [
                                     'var3' => 3,
@@ -359,7 +339,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->page->setPageId($container['pageId']);
         $this->page->setName($container['name']);
         $this->page->setAuthor($container['author']);
-        $this->page->setCreatedDate($container['createdDate']);
         $this->page->setLastPublished($container['lastPublished']);
         $this->page->setSite($site);
 
@@ -367,7 +346,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
             $revision = new Revision('user123');
             $revision->setRevisionId($revisionData['revisionId']);
             $revision->setAuthor($revisionData['author']);
-            $revision->setCreatedDate($revisionData['createdDate']);
             $revision->publishRevision();
             $revision->setPublishedDate($revisionData['publishedDate']);
             $revision->setMd5($revisionData['md5']);
@@ -377,6 +355,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
                 $plugin->setPlugin($instance['instance']['plugin']);
 
+                // @deprecated <deprecated-site-wide-plugin>
                 if ($instance['instance']['siteWide']) {
                     $plugin->setSiteWide();
                 }
@@ -441,10 +420,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
             $clonedCurrentRev->getAuthor()
         );
 
-        $this->assertNotEquals(
-            $currentRevision->getCreatedDate(),
-            $clonedCurrentRev->getCreatedDate()
-        );
+        // @todo Is this a valid test? should cloning a container create revision clones?
+        //$this->assertNotEquals(
+        //    $currentRevision->getCreatedDate(),
+        //    $clonedCurrentRev->getCreatedDate()
+        //);
 
         $this->assertFalse($clonedCurrentRev->wasPublished());
 
@@ -456,11 +436,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $revisionWrappers = $currentRevision->getPluginWrappers();
         $clonedWrappers = $clonedCurrentRev->getPluginWrappers();
 
-
         $this->assertNotEquals($revisionWrappers, $clonedWrappers);
 
         /** @var \Rcm\Entity\PluginWrapper $clonedWrapper */
         foreach ($clonedWrappers as $clonedWrapper) {
+            // @deprecated <deprecated-site-wide-plugin>
             if (!$clonedWrapper->getInstance()->isSiteWide()) {
                 $this->assertNull($clonedWrapper->getInstance()->getInstanceId());
             } else {
@@ -487,7 +467,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $data['pageLayout'] = 'TESTPAGELAYOUT';
         $data['siteLayoutOverride'] = 'TESTLAYOUTOVERRIDE';
         $data['parent'] = null;
-
 
         $obj1 = new Page('user123');
 

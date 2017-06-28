@@ -24,6 +24,28 @@ use Rcm\Tracking\Model\Tracking;
 interface ContainerInterface extends ApiModelInterface, Tracking
 {
     /**
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return ContainerInterface
+     */
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    );
+
+    /**
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return ContainerInterface|null
+     */
+    public function newInstanceIfHasRevision(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    );
+
+    /**
      * Gets the Name property
      *
      * @return string Name

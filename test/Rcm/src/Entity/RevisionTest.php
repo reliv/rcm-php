@@ -1,27 +1,9 @@
 <?php
-/**
- * Unit Test for the Revision Entity
- *
- * This file contains the unit test for the Revision Entity
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace RcmTest\Entity;
 
 require_once __DIR__ . '/../../../autoload.php';
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Revision;
@@ -91,35 +73,18 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Get and Set Created Date
+     * Test Get Created Date
      *
      * @return void
      *
      * @covers \Rcm\Entity\Revision
      */
-    public function testGetAndSetCreatedDate()
+    public function testGetCreatedDate()
     {
-        $createdDate = new \DateTime('2014-Apr-20');
-
-        $this->revision->setCreatedDate($createdDate);
-
         $actual = $this->revision->getCreatedDate();
 
-        $this->assertEquals($createdDate, $actual);
+        $this->assertInstanceOf(\DateTime::class, $actual);
     }
-
-    /**
-     * Test Created Date Only Accepts a DateTime object
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Revision
-     * @expectedException \TypeError
-     */
-//    public function testSetCreatedDateOnlyAcceptsDateTime()
-//    {
-//        $this->revision->setCreatedDate(time());
-//    }
 
     /**
      * Test Get and Set Published Date
@@ -130,27 +95,14 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetPublishedDate()
     {
-        $createdDate = new \DateTime('2014-Apr-20');
+        $date = new \DateTime('2014-Apr-20');
 
-        $this->revision->setPublishedDate($createdDate);
+        $this->revision->setPublishedDate($date);
 
         $actual = $this->revision->getPublishedDate();
 
-        $this->assertEquals($createdDate, $actual);
+        $this->assertEquals($date, $actual);
     }
-
-    /**
-     * Test Created Date Only Accepts a DateTime object
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\Revision
-     * @expectedException \TypeError
-     */
-//    public function testSetPublishDateOnlyAcceptsDateTime()
-//    {
-//        $this->revision->setCreatedDate(time());
-//    }
 
     /**
      * Test Get and Add Plugin Wrappers
@@ -192,7 +144,6 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
 //    {
 //        $this->revision->addPluginWrapper(time());
 //    }
-
 
     /**
      * Test Remove Plugin Wrapper
@@ -288,7 +239,6 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
         $revision = [
             'revisionId' => 100,
             'author' => 'Westin Shafer',
-            'createdDate' => new \DateTime('yesterday'),
             'publishedDate' => new \DateTime('yesterday'),
             'published' => true,
             'md5' => 'revisionMD5',
@@ -303,7 +253,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
                     'instance' => [
                         'pluginInstanceId' => 44,
                         'plugin' => 'MockPlugin',
-                        'siteWide' => false,
+                        'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                         'displayName' => null,
                         'instanceConfig' => [
                             'var1' => 1,
@@ -323,7 +273,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
                     'instance' => [
                         'pluginInstanceId' => 46,
                         'plugin' => 'MockPlugin2',
-                        'siteWide' => true,
+                        'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                         'displayName' => 'TestSiteWide',
                         'instanceConfig' => [
                             'var3' => 3,
@@ -337,7 +287,6 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
 
         $this->revision->setRevisionId($revision['revisionId']);
         $this->revision->setAuthor($revision['author']);
-        $this->revision->setCreatedDate($revision['createdDate']);
         $this->revision->publishRevision();
         $this->revision->setPublishedDate($revision['publishedDate']);
         $this->revision->setMd5($revision['md5']);
@@ -347,6 +296,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
             $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
             $plugin->setPlugin($instance['instance']['plugin']);
 
+            // @deprecated <deprecated-site-wide-plugin>
             if ($instance['instance']['siteWide']) {
                 $plugin->setSiteWide();
             }
@@ -382,10 +332,11 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
             $clonedRevision->getAuthor()
         );
 
-        $this->assertNotEquals(
-            $this->revision->getCreatedDate(),
-            $clonedRevision->getCreatedDate()
-        );
+        // @todo Is this a valid test? should cloning a container create revision clones?
+        //$this->assertNotEquals(
+        //    $currentRevision->getCreatedDate(),
+        //    $clonedCurrentRev->getCreatedDate()
+        //);
 
         $this->assertNotEquals(
             $this->revision->getPublishedDate(),
@@ -406,6 +357,7 @@ class RevisionTest extends \PHPUnit_Framework_TestCase
 
         /** @var \Rcm\Entity\PluginWrapper $clonedWrapper */
         foreach ($clonedWrappers as $clonedWrapper) {
+            // @deprecated <deprecated-site-wide-plugin>
             if (!$clonedWrapper->getInstance()->isSiteWide()) {
                 $this->assertNull($clonedWrapper->getInstance()->getInstanceId());
             } else {

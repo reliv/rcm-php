@@ -142,6 +142,40 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return null|ContainerAbstract|ContainerInterface
+     */
+    public function newInstanceIfHasRevision(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        $newInstance = $this->newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+        // @todo Is this needed?
+        $newInstance->setName($this->getName());
+
+        $publishedRevision = $newInstance->getPublishedRevision();
+
+        if (empty($publishedRevision)) {
+            return null;
+        }
+
+        $stagedRevision = $newInstance->getStagedRevision();
+
+        if (empty($stagedRevision)) {
+            return null;
+        }
+
+        $newInstance->setPublishedRevision($stagedRevision);
+
+        return $newInstance;
+    }
+
+    /**
      * Gets the Name property
      *
      * @return string Name
@@ -205,22 +239,6 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     public function getCreatedDate(): \DateTime
     {
         return $this->createdDate;
-    }
-
-    /**
-     * @deprecated This should be set on construct
-     * <tracking>
-     * Sets the CreatedDate property
-     *
-     * @param \DateTime $createdDate Date the page was initially created.
-     *
-     * @return void
-     * @throws TrackingException
-     */
-    public function setCreatedDate(\DateTime $createdDate)
-    {
-        throw new TrackingException('Created data can only be set on construct');
-        //$this->createdDate = $createdDate;
     }
 
     /**

@@ -95,15 +95,11 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Rcm\Entity\ContainerAbstract
      */
-    public function testGetAndSetCreatedDate()
+    public function testGetCreatedDate()
     {
-        $createdDate = new \DateTime('2014-Apr-20');
-
-        $this->container->setCreatedDate($createdDate);
-
         $actual = $this->container->getCreatedDate();
 
-        $this->assertEquals($createdDate, $actual);
+        $this->assertInstanceOf(\DateTime::class, $actual);
     }
 
     /**
@@ -452,7 +448,6 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
             'containerId' => '200',
             'name' => 'containerOne',
             'author' => 'Westin Shafer',
-            'createdDate' => new \DateTime('yesterday'),
             'lastPublished' => new \DateTime('yesterday'),
             'revisions' => [
                 0 => [
@@ -473,7 +468,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 44,
                                 'plugin' => 'MockPlugin',
-                                'siteWide' => false,
+                                'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                 'displayName' => null,
                                 'instanceConfig' => [
                                     'var1' => 1,
@@ -493,8 +488,8 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 46,
                                 'plugin' => 'MockPlugin2',
-                                'siteWide' => true,
-                                'displayName' => 'TestSiteWide',
+                                'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
+                                'displayName' => 'TestSiteWide', // @deprecated <deprecated-site-wide-plugin>
                                 'instanceConfig' => [
                                     'var3' => 3,
                                     'var4' => 4
@@ -523,7 +518,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 48,
                                 'plugin' => 'MockPlugin3',
-                                'siteWide' => false,
+                                'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                 'displayName' => null,
                                 'instanceConfig' => [
                                     'var1' => 1,
@@ -543,8 +538,8 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 50,
                                 'plugin' => 'MockPlugin4',
-                                'siteWide' => true,
-                                'displayName' => 'TestSiteWide2',
+                                'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
+                                'displayName' => 'TestSiteWide2', // @deprecated <deprecated-site-wide-plugin>
                                 'instanceConfig' => [
                                     'var3' => 3,
                                     'var4' => 4
@@ -560,7 +555,6 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
         $this->container->setContainerId($container['containerId']);
         $this->container->setName($container['name']);
         $this->container->setAuthor($container['author']);
-        $this->container->setCreatedDate($container['createdDate']);
         $this->container->setLastPublished($container['lastPublished']);
         $this->container->setSite($site);
 
@@ -568,7 +562,6 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
             $revision = new Revision('user123');
             $revision->setRevisionId($revisionData['revisionId']);
             $revision->setAuthor($revisionData['author']);
-            $revision->setCreatedDate($revisionData['createdDate']);
             $revision->publishRevision();
             $revision->setPublishedDate($revisionData['publishedDate']);
             $revision->setMd5($revisionData['md5']);
@@ -578,6 +571,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                 $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
                 $plugin->setPlugin($instance['instance']['plugin']);
 
+                // @deprecated <deprecated-site-wide-plugin>
                 if ($instance['instance']['siteWide']) {
                     $plugin->setSiteWide();
                 }
@@ -590,9 +584,9 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                 $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
                 $wrapper->setLayoutContainer($instance['layoutContainer']);
                 $wrapper->setRenderOrderNumber($instance['renderOrder']);
-//                $wrapper->setHeight($instance['height']);
-//                $wrapper->setWidth($instance['width']);
-//                $wrapper->setDivFloat($instance['divFloat']);
+                //$wrapper->setHeight($instance['height']);
+                //$wrapper->setWidth($instance['width']);
+                //$wrapper->setDivFloat($instance['divFloat']);
                 $wrapper->setInstance($plugin);
 
                 $revision->addPluginWrapper($wrapper);
@@ -637,10 +631,11 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
             $clonedCurrentRev->getAuthor()
         );
 
-        $this->assertNotEquals(
-            $currentRevision->getCreatedDate(),
-            $clonedCurrentRev->getCreatedDate()
-        );
+        // @todo Is this a valid test? should cloning a container create revision clones?
+        //$this->assertNotEquals(
+        //    $currentRevision->getCreatedDate(),
+        //    $clonedCurrentRev->getCreatedDate()
+        //);
 
         $this->assertFalse($clonedCurrentRev->wasPublished());
 

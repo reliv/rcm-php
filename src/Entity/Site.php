@@ -288,19 +288,16 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
         $this->containers = new ArrayCollection();
 
         // Removed this because it is dangerous
-        // $this->domain = new Domain($createdByUserId, $createdReason . ' (new site construction)');
         if ($domain instanceof Domain) {
             $this->setDomain($domain);
         }
 
         // Removed this because it is dangerous
-        // $this->country = new Country($createdByUserId, $createdReason . ' (new site construction)');
         if ($country instanceof Country) {
             $this->setCountry($country);
         }
 
         // Removed this because it is dangerous
-        // $this->language = new Language($createdByUserId, $createdReason . ' (new site construction)');
         if ($language instanceof Language) {
             $this->setLanguage($language);
         }
@@ -333,21 +330,22 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
         $new->siteId = null;
         $new->domain = null;
 
-        /* Clone Site Wide Plugins */
-        $siteWidePlugins = $new->sitePlugins;
-        $clonedSiteWides = [];
-        $siteWideIdsToChange = [];
-
-        /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
-        foreach ($siteWidePlugins as $siteWidePlugin) {
-            $clonedSiteWide = $siteWidePlugin->newInstance(
-                $createdByUserId,
-                $createdReason
-            );
-            $siteWideIdsToChange[$siteWidePlugin->getInstanceId()]
-                = $clonedSiteWide;
-            $clonedSiteWides[] = $clonedSiteWide;
-        }
+        /* @deprecated Clone Site Wide Plugins
+         * $siteWidePlugins = $new->sitePlugins;
+         * $clonedSiteWides = [];
+         * $siteWideIdsToChange = [];
+         *
+         * /** @var \Rcm\Entity\PluginInstance $siteWidePlugin *
+         * foreach ($siteWidePlugins as $siteWidePlugin) {
+         * $clonedSiteWide = $siteWidePlugin->newInstance(
+         * $createdByUserId,
+         * $createdReason
+         * );
+         * $siteWideIdsToChange[$siteWidePlugin->getInstanceId()]
+         * = $clonedSiteWide;
+         * $clonedSiteWides[] = $clonedSiteWide;
+         * }
+         */
 
         /* Get Cloned Pages */
         $pages = $new->getPages();
@@ -366,9 +364,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
                 continue;
             }
 
-            $clonedPage = $new->getContainerClone(
-                $page,
-                $siteWideIdsToChange,
+            $clonedPage = $page->newInstanceIfHasRevision(
                 $createdByUserId,
                 $createdReason
             );
@@ -377,20 +373,20 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
                 continue;
             }
 
+            $clonedPage->setSite($new);
+
             $clonedPages[] = $clonedPage;
         }
 
         $new->pages = new ArrayCollection($clonedPages);
 
         /* Get Cloned Containers */
-        $containers = $new->getContainers();
+        $containers = $this->getContainers();
         $clonedContainers = [];
 
         /** @var \Rcm\Entity\Container $container */
         foreach ($containers as $container) {
-            $clonedContainer = $new->getContainerClone(
-                $container,
-                $siteWideIdsToChange,
+            $clonedContainer = $container->newInstanceIfHasRevision(
                 $createdByUserId,
                 $createdReason
             );
@@ -398,6 +394,8 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
             if (!$clonedContainer) {
                 continue;
             }
+
+            $clonedContainer->setSite($new);
 
             $clonedContainers[] = $clonedContainer;
         }
@@ -408,46 +406,45 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
     }
 
     /**
-     * @param ContainerInterface $original
-     * @param array              $siteWideIdsToChange
-     * @param string             $createdByUserId
-     * @param string             $createdReason
+     * @deprecated use ContainerInterface::newInstanceIfRevisionExists
+     * @param Page   $originalPage
+     * @param string $createdByUserId
+     * @param string $createdReason
      *
-     * @return Container|ContainerInterface
+     * @return Page
      */
-    protected function getContainerClone(
-        ContainerInterface $original,
-        $siteWideIdsToChange,
+    protected function getPageClone(
+        Page $originalPage,
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
-        $clonedContainer = $original->newInstance(
+        $clonedPage = $originalPage->newInstance(
             $createdByUserId,
             $createdReason
         );
-        $clonedContainer->setSite($this);
-        $clonedContainer->setName($original->getName());
 
-        $check = $original->getPublishedRevision();
+        $clonedPage->setSite($this);
+        $clonedPage->setName($originalPage->getName());
 
-        if (empty($check)) {
+        $publishedRevision = $originalPage->getPublishedRevision();
+
+        if (empty($publishedRevision)) {
             return null;
         }
 
-        $revision = $clonedContainer->getStagedRevision();
+        $stagedRevision = $clonedPage->getStagedRevision();
 
-        if (empty($revision)) {
+        if (empty($stagedRevision)) {
             return null;
         }
 
-        $clonedContainer->setPublishedRevision($revision);
+        $clonedPage->setPublishedRevision($stagedRevision);
 
-        $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
-
-        return $clonedContainer;
+        return $clonedPage;
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * fixRevisionSiteWides
      *
      * @param Revision $revision
@@ -854,6 +851,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Get Site wide plugins
      *
      * @return ArrayCollection Returns an array collection of PluginInstance Entities
@@ -864,6 +862,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Add a plugin to the site.
      *
      * @param PluginInstance $plugin Site wide plugin.
@@ -891,6 +890,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * listAvailableSiteWidePlugins
      *
      * @return array
@@ -910,7 +910,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
             $list[$plugin->getDisplayName()] = [
                 'displayName' => $plugin->getDisplayName(),
                 'icon' => $plugin->getIcon(),
-                'siteWide' => true,
+                'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                 'name' => $plugin->getPlugin(),
                 'instanceId' => $plugin->getInstanceId()
             ];
@@ -920,6 +920,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Remove a Site Wide Plugin Instance from the entity
      *
      * @param PluginInstance $plugin Site wide plugin.

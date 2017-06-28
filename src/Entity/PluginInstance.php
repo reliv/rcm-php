@@ -40,6 +40,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
     protected $plugin;
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * @var Boolean Site wide instance
      *
      * @ORM\Column(type="boolean")
@@ -255,6 +256,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Set this instance as a site wide plugin instance
      *
      * @return void
@@ -265,6 +267,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Is this a site wide plugin
      *
      * @return bool
@@ -549,6 +552,7 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
             $this->setPlugin($data['plugin']);
         }
 
+        // @deprecated <deprecated-site-wide-plugin>
         if (isset($data['siteWide']) && $data['siteWide']
             && !in_array(
                 'siteWide',
@@ -649,10 +653,12 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
         $data = parent::toArray($ignore);
 
         // @bc
+        // @deprecated <deprecated-site-wide-plugin>
         if (!in_array('siteWide', $ignore)) {
             $data['siteWide'] = $this->isSiteWide();
         }
 
+        // @deprecated <deprecated-site-wide-plugin>
         if (!in_array('isSiteWide', $ignore)) {
             $data['isSiteWide'] = $this->isSiteWide();
         }

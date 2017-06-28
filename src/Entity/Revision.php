@@ -4,7 +4,6 @@ namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Rcm\Tracking\Exception\TrackingException;
 use Rcm\Tracking\Model\Tracking;
 
 /**
@@ -170,6 +169,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
+        $this->pluginWrappers = new ArrayCollection();
         parent::__construct($createdByUserId, $createdReason);
     }
 
@@ -265,22 +265,6 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
     public function setAuthor($author)
     {
         $this->author = $author;
-    }
-
-    /**
-     * @deprecated This should be set on construct
-     * <tracking>
-     * Sets the CreatedDate property
-     *
-     * @param \DateTime $createdDate DateTime Object when revision was created
-     *
-     * @return void
-     * @throws TrackingException
-     */
-    public function setCreatedDate(\DateTime $createdDate)
-    {
-        throw new TrackingException('Created data can only be set on construct');
-        // $this->createdDate = $createdDate;
     }
 
     /**

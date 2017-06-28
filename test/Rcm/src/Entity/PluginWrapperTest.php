@@ -1,21 +1,4 @@
 <?php
-/**
- * Unit Test for the Plugin Wrapper
- *
- * This file contains the unit test for the Plugin Wrapper
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace RcmTest\Entity;
 
@@ -129,19 +112,6 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Set Plugin Instance Only Accepts a Plugin Instance object
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\PluginWrapper
-     * @expectedException \TypeError
-     */
-//    public function testSetCreatedDateOnlyAcceptsDateTime()
-//    {
-//        $this->pluginWrapper->setInstance(time());
-//    }
-
-    /**
      * Test Get and Set Height
      *
      * @return void
@@ -215,7 +185,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
                 'instance' => [
                     'pluginInstanceId' => 44,
                     'plugin' => 'MockPlugin',
-                    'siteWide' => false,
+                    'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                     'displayName' => null,
                     'instanceConfig' => [
                         'var1' => 1,
@@ -235,7 +205,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
                 'instance' => [
                     'pluginInstanceId' => 46,
                     'plugin' => 'MockPlugin2',
-                    'siteWide' => true,
+                    'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                     'displayName' => 'TestSiteWide',
                     'instanceConfig' => [
                         'var3' => 3,
@@ -251,6 +221,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
             $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
             $plugin->setPlugin($instance['instance']['plugin']);
 
+            // @deprecated <deprecated-site-wide-plugin>
             if ($instance['instance']['siteWide']) {
                 $plugin->setSiteWide();
             }
@@ -305,6 +276,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
             $preInstance = $wrapper->getInstance();
             $clonedInstance = $clonedWrapper->getInstance();
 
+            // @deprecated <deprecated-site-wide-plugin>
             if (!$instance['instance']['siteWide']) {
                 $this->assertNotEquals(
                     $preInstance->getInstanceId(),
@@ -324,6 +296,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
                 $clonedInstance->getPlugin()
             );
 
+            // @deprecated <deprecated-site-wide-plugin>
             $this->assertEquals(
                 $preInstance->isSiteWide(),
                 $clonedInstance->isSiteWide()

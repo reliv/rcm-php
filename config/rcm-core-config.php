@@ -123,6 +123,7 @@ return [
             'name' => 'Widgets',
             'description' => 'Global resource for Rcm Widgets',
         ],
+        // @deprecated <deprecated-site-wide-plugin>
         'widgets.siteWide' => [
             'resourceId' => 'widgets.siteWide',
             'parentResourceId' => 'widgets',

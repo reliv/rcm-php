@@ -62,7 +62,7 @@ class PluginWrapper extends EntityRepository
         );
 
         if (!empty($oldWrapper)
-            && ($pluginData['siteWide'] || $oldWrapper->getInstance()->isSiteWide())
+            && ($pluginData['siteWide'] || $oldWrapper->getInstance()->isSiteWide()) // @deprecated <deprecated-site-wide-plugin>
             && $pluginInstance->getInstanceId() != $oldWrapper->getInstance()
                 ->getInstanceId()
         ) {
@@ -82,7 +82,7 @@ class PluginWrapper extends EntityRepository
             && $oldWrapper->getLayoutContainer() == $pluginData['containerName']
             && ($oldWrapper->getInstance()->getInstanceId()
                 == $pluginInstance->getInstanceId()
-                || $pluginData['siteWide'])
+                || $pluginData['siteWide']) // @deprecated <deprecated-site-wide-plugin>
         ) {
             return $oldWrapper;
         }
@@ -133,6 +133,7 @@ class PluginWrapper extends EntityRepository
             $pluginData['layoutContainer'] = null;
         }
 
+        // @deprecated <deprecated-site-wide-plugin>
         if (!isset($pluginData['siteWide'])) {
             $pluginData['siteWide'] = 0;
         }

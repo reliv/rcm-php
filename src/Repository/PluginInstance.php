@@ -106,7 +106,7 @@ class PluginInstance extends EntityRepository
 
         if (!$forceSave
             && $pluginInstance->getMd5() == md5(serialize($pluginData['saveData']))
-            && $pluginInstance->isSiteWide() == (bool)$pluginData['siteWide'] // <deprecated site-wide-plugin>
+            && $pluginInstance->isSiteWide() == (bool)$pluginData['siteWide'] // @deprecated <deprecated-site-wide-plugin>
         ) {
             return $pluginInstance;
         }
@@ -147,6 +147,7 @@ class PluginInstance extends EntityRepository
         );
         $pluginInstance->populate($pluginData);
 
+        // @deprecated <deprecated-site-wide-plugin>
         $this->updateSiteSitewide(
             $pluginInstance,
             $site,
@@ -163,6 +164,7 @@ class PluginInstance extends EntityRepository
     }
 
     /**
+     *  @deprecated <deprecated-site-wide-plugin>
      * updateSiteSitewide
      *
      * @param PluginInstanceEntity $pluginInstance
@@ -177,14 +179,17 @@ class PluginInstance extends EntityRepository
         $oldPluginInstance = null
     ) {
         // ignore non-sitewides
+        // @deprecated <deprecated-site-wide-plugin>
         if (!$pluginInstance->isSiteWide()) {
             return;
         }
 
         if (!empty($oldPluginInstance)) {
+            // @deprecated <deprecated-site-wide-plugin>
             $site->removeSiteWidePlugin($oldPluginInstance);
         }
 
+        //  @deprecated <deprecated-site-wide-plugin>
         $site->addSiteWidePlugin($pluginInstance);
 
         $this->_em->persist($site);
@@ -204,6 +209,7 @@ class PluginInstance extends EntityRepository
             $pluginData['pluginInstanceId'] = (int)$pluginData['instanceId'];
         }
 
+        // @deprecated <deprecated-site-wide-plugin>
         if (array_key_exists('sitewideName', $pluginData)) {
             $pluginData['displayName'] = $pluginData['sitewideName'];
         }
@@ -212,13 +218,14 @@ class PluginInstance extends EntityRepository
             $pluginData['plugin'] = $pluginData['name'];
         }
 
+        // @deprecated <deprecated-site-wide-plugin>
         if (array_key_exists('isSitewide', $pluginData)) {
             $pluginData['siteWide'] = $pluginData['isSitewide'];
         }
 
         // Defaults
         if (!isset($pluginData['displayName'])
-            && !empty($pluginData['siteWide'])
+            && !empty($pluginData['siteWide']) // @deprecated <deprecated-site-wide-plugin>
             && !empty($pluginData['plugin'])
         ) {
             $pluginData['displayName'] = $pluginData['plugin'];

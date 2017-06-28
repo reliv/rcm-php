@@ -5,7 +5,6 @@ namespace Rcm\Service;
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Site;
 use Rcm\Tracking\Model\Tracking;
-use RcmUser\Service\RcmUserService;
 use Zend\Validator\Ip;
 
 /**
@@ -34,8 +33,8 @@ class SiteService
     protected $cache = [];
 
     /**
-     * @param DomainService  $domainService
-     * @param EntityManager  $entityManager
+     * @param DomainService $domainService
+     * @param EntityManager $entityManager
      */
     public function __construct(
         DomainService $domainService,
@@ -135,7 +134,6 @@ class SiteService
 
         return $currentDomain;
     }
-
 
     /**
      * getSiteDomain
