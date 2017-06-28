@@ -62,7 +62,7 @@ class DispatchListenerFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $factory = new DispatchListenerFactory();
-        $object = $factory->createService($serviceManager);
+        $object = $factory->__invoke($serviceManager);
 
         $this->assertTrue($object instanceof DispatchListener);
     }

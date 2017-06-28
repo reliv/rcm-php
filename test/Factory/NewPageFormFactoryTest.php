@@ -124,7 +124,7 @@ class NewPageFormFactoryTest extends \PHPUnit_Framework_TestCase
         $formManager->setServiceLocator($serviceManager);
 
         $factory = new NewPageFormFactory();
-        $object = $factory->createService($formManager);
+        $object = $factory->__invoke($formManager);
 
         $this->assertTrue($object instanceof NewPageForm);
     }
