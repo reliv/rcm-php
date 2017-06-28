@@ -104,7 +104,7 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
         $sm = new ServiceManager();
         $sm->setService('Config', $config);
         $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
-        $sm->setService('Rcm\Service\CurrentSite', $mockCurrentSite);
+        $sm->setService(\Rcm\Service\CurrentSite::class, $mockCurrentSite);
 
         $factory = new AclResourceProviderFactory();
         $object = $factory->createService($sm);
@@ -141,7 +141,7 @@ class AclResourceProviderFactoryTest extends \PHPUnit_Framework_TestCase
         $sm = new ServiceManager();
         $sm->setService('Config', $config);
         $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
-        $sm->setService('Rcm\Service\CurrentSite', $mockCurrentSite);
+        $sm->setService(\Rcm\Service\CurrentSite::class, $mockCurrentSite);
 
         $factory = new AclResourceProviderFactory();
         $object = $factory->createService($sm);

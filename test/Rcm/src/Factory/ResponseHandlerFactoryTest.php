@@ -60,7 +60,7 @@ class ResponseHandlerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
-            'Rcm\Service\CurrentSite',
+            \Rcm\Service\CurrentSite::class,
             $mockCurrentSite
         );
         $serviceManager->setService(

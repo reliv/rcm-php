@@ -179,7 +179,7 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         $serviceLocator = $this->getServiceLocator();
 
         /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+        $currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
 
         if (!$currentSite->getSiteId()) {
             return null;

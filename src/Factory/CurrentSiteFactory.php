@@ -4,9 +4,6 @@ namespace Rcm\Factory;
 
 use Rcm\Entity\Site;
 use Rcm\Tracking\Model\Tracking;
-use RcmUser\Service\RcmUserService;
-use Zend\Cache\Storage\StorageInterface;
-use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Validator\Ip;

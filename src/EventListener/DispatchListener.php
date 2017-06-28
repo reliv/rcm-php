@@ -48,7 +48,7 @@ class DispatchListener
      */
     protected function getLayoutManager()
     {
-        return $this->serviceLocator->get('Rcm\Service\LayoutManager');
+        return $this->serviceLocator->get(\Rcm\Service\LayoutManager::class);
     }
 
     /**
@@ -58,7 +58,7 @@ class DispatchListener
      */
     protected function getCurrentSite()
     {
-        return $this->serviceLocator->get('Rcm\Service\CurrentSite');
+        return $this->serviceLocator->get(\Rcm\Service\CurrentSite::class);
     }
 
     /**

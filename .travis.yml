@@ -6,7 +6,7 @@ install:
 - composer self-update
 - composer --version
 - composer global require fxp/composer-asset-plugin --no-plugins
-- composer install --prefer-dist
+- composer install
 script:
   - find . -type d \( -path ./vendor -o -path ./test \) -prune -o -name "*.php" -print0 | xargs -0 -n1 -P8 php -l -n
   - ./vendor/bin/phpunit

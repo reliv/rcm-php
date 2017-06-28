@@ -41,7 +41,7 @@ class Module
 
         //Add Domain Checker
         $eventWrapper = $serviceManager->get(
-            'Rcm\EventListener\EventWrapper'
+            \Rcm\EventListener\EventWrapper::class
         );
 
         /** @var \Zend\EventManager\EventManager $eventManager */
@@ -81,7 +81,7 @@ class Module
 
         // Use the configured session handler.
         // Should we really boot this for every request though?
-        $serviceManager->get('Rcm\Service\SessionMgr')->start();
+        $serviceManager->get(\Rcm\Service\SessionManager::class)->start();
     }
 
     /**

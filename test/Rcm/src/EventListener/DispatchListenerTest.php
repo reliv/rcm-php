@@ -61,7 +61,7 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
         $title = 'My Site Title';
         $layout = 'myLayout';
 
-        $mockLayoutManager = $this->getMockBuilder('Rcm\Service\LayoutManager')
+        $mockLayoutManager = $this->getMockBuilder(\Rcm\Service\LayoutManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -76,8 +76,8 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
         $currentSite->setSiteLayout($layout);
 
         $testCase = [
-            ['Rcm\Service\LayoutManager', $mockLayoutManager],
-            ['Rcm\Service\CurrentSite', $currentSite],
+            [\Rcm\Service\LayoutManager::class, $mockLayoutManager],
+            [\Rcm\Service\CurrentSite::class, $currentSite],
         ];
 
         // Zend\ServiceManager\ServiceLocatorInterface

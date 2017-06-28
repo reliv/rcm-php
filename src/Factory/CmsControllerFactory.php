@@ -38,10 +38,10 @@ class CmsControllerFactory implements FactoryInterface
         $serviceLocator = $controllerMgr->getServiceLocator();
 
         /** @var \Rcm\Service\LayoutManager $layoutManager */
-        $layoutManager = $serviceLocator->get('Rcm\Service\LayoutManager');
+        $layoutManager = $serviceLocator->get(\Rcm\Service\LayoutManager::class);
 
         /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+        $currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
 
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');

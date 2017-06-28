@@ -38,7 +38,7 @@ class RcmHtmlIncludesHelperFactory implements FactoryInterface
         /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $viewManager->getServiceLocator();
 
-        $htmlIncludesService = $serviceLocator->get('Rcm\Service\HtmlIncludes');
+        $htmlIncludesService = $serviceLocator->get(\Rcm\Service\HtmlIncludes::class);
 
         return new RcmHtmlIncludes($htmlIncludesService);
     }

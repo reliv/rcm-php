@@ -25,7 +25,7 @@ class PageRendererBcFactory
     public function __invoke($container)
     {
         return new PageRendererBc(
-            $container->get('Rcm\Service\LayoutManager'),
+            $container->get(\Rcm\Service\LayoutManager::class),
             $container->get(PageDataService::class),
             $container->get(PageStatus::class)
         );

@@ -52,7 +52,7 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
     public function testConstructor()
     {
         $mockResponseHandler = $this->getMockBuilder(
-            'Rcm\Service\ResponseHandler'
+            \Rcm\Service\ResponseHandler::class
         )
             ->disableOriginalConstructor()
             ->getMock();
@@ -100,7 +100,7 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
         $response->setStatusCode(404);
 
         $mockResponseHandler = $this->getMockBuilder(
-            'Rcm\Service\ResponseHandler'
+            \Rcm\Service\ResponseHandler::class
         )
             ->disableOriginalConstructor()
             ->getMock();
@@ -133,7 +133,7 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
         $response->setStatusCode(404);
 
         $mockResponseHandler = $this->getMockBuilder(
-            'Rcm\Service\ResponseHandler'
+            \Rcm\Service\ResponseHandler::class
         )
             ->disableOriginalConstructor()
             ->getMock();
@@ -188,7 +188,7 @@ class ViewEventListenerTest extends \PHPUnit_Framework_TestCase
         $response->setStatusCode(404);
 
         $mockResponseHandler = $this->getMockBuilder(
-            'Rcm\Service\ResponseHandler'
+            \Rcm\Service\ResponseHandler::class
         )
             ->disableOriginalConstructor()
             ->getMock();

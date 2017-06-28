@@ -52,7 +52,7 @@ class InstanceConfigApiControllerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(false));
 
         $serviceMgr = new ServiceManager();
-        $serviceMgr->setService('Rcm\Service\CurrentSite', $siteMgr);
+        $serviceMgr->setService(\Rcm\Service\CurrentSite::class, $siteMgr);
         $serviceMgr->setService('RcmUser\Service\RcmUserService', $userSvc);
 
         $unit = new InstanceConfigApiController($serviceMgr);

@@ -76,7 +76,7 @@ class PageValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             $mockEntityManager
         );
         $serviceLocator->setService(
-            'Rcm\Service\CurrentSite',
+            \Rcm\Service\CurrentSite::class,
             $mockCurrentSite
         );
 

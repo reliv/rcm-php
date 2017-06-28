@@ -82,7 +82,7 @@ class ContainerViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
         $sm = new ServiceManager();
         $sm->setService('Doctrine\ORM\EntityManager', $mockEntityManager);
         $sm->setService('Rcm\Service\PluginManager', $mockPluginManager);
-        $sm->setService('Rcm\Service\CurrentSite', $site);
+        $sm->setService(\Rcm\Service\CurrentSite::class, $site);
         $sm->setService(ConfigRepository::class, $mockConfigRepository);
 
         $helperManager = new HelperPluginManager();

@@ -38,7 +38,7 @@ class PageValidatorFactory implements FactoryInterface
         $pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
 
         /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+        $currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
 
         $pageValidator = new Page($pageRepo);
         $pageValidator->setSiteId($currentSite->getSiteId());

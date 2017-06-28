@@ -28,7 +28,7 @@ class MainLayoutValidatorFactory implements FactoryInterface
      *
      * @param ServiceLocatorInterface $serviceLocator Zend Service Locator
      *
-     * @return Page
+     * @return MainLayout
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {

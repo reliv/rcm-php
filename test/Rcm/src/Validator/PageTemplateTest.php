@@ -78,7 +78,7 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $this->assertInstanceOf('Rcm\Validator\PageTemplate', $this->validator);
+        $this->assertInstanceOf(\Rcm\Validator\PageTemplate::class, $this->validator);
     }
 
     /**

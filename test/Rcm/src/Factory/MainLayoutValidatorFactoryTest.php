@@ -61,12 +61,12 @@ class MainLayoutValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceLocator = new ServiceManager();
 
         $serviceLocator->setService(
-            'Rcm\Service\LayoutManager',
+            \Rcm\Service\LayoutManager::class,
             $mockLayoutManager
         );
 
         $serviceLocator->setService(
-            'Rcm\Service\CurrentSite',
+            \Rcm\Service\CurrentSite::class,
             $mockCurrentSite
         );
 

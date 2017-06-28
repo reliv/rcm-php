@@ -34,7 +34,7 @@ class RcmIsPageAllowedPluginFactory implements FactoryInterface
     {
         $serviceLocator = $mgr->getServiceLocator();
         $cmsPermissionChecks = $serviceLocator->get(
-            'Rcm\Acl\CmsPermissionsChecks'
+            \Rcm\Acl\CmsPermissionChecks::class
         );
 
         $service = new RcmIsPageAllowed($cmsPermissionChecks);
