@@ -88,7 +88,7 @@ class SiteManager
         $user = $this->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . self::class);
+            throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
         return $user;
@@ -147,7 +147,7 @@ class SiteManager
         $this->createPagePlugins(
             $newSite,
             $user->getId(),
-            'New site creation in ' . self::class,
+            'New site creation in ' . get_class($this),
             $this->getDefaultSitePageSettings($user),
             false
         );
@@ -177,7 +177,7 @@ class SiteManager
 
         $copySite = $existingSite->newInstance(
             $user->getId(),
-            'Copy site in ' . self::class
+            'Copy site in ' . get_class($this)
         );
         $copySite->setSiteId(null);
         $copySite->setDomain($domain);
@@ -435,7 +435,7 @@ class SiteManager
         // Set the author for each
         foreach ($pagesData as $key => $pageData) {
             $pagesData[$key]['createdByUserId'] = $createdByUser->getId();
-            $pagesData[$key]['createdReason'] = 'Default page creation in ' . self::class;
+            $pagesData[$key]['createdReason'] = 'Default page creation in ' . get_class($this);
             $pagesData[$key]['author'] = $createdByUser->getName();
         }
 

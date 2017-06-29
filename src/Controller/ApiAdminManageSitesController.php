@@ -71,7 +71,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $user = $service->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . self::class);
+            throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
         return (string)$user->getId();
@@ -104,8 +104,9 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
             ->select('site')
             ->leftJoin('site.domain', 'domain')
             ->leftJoin('site.country', 'country')
-            ->leftJoin('site.language', 'language')
-            ->orderBy('domain.domain', 'ASC');
+            ->leftJoin('site.language', 'language');
+        // @todo This is broken in doctrine 1.* with MySQL 5.7
+        //->orderBy('domain.domain', 'ASC');
 
         $query = $createQueryBuilder->getQuery();
 
@@ -180,7 +181,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
 
             $site = new Site(
                 $this->getCurrentUserId(),
-                'Get default site values in ' . self::class
+                'Get default site values in ' . get_class($this)
             );
 
             $site->populate($data);
@@ -260,12 +261,21 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         /** @var \Rcm\Entity\Site $site */
         $site = $siteRepo->findOneBy(['siteId' => $siteId]);
 
+        $newStatus = $site->getStatus();
+
         if ($data['status'] == 'D') {
-            $site->setStatus('D');
+            $newStatus = 'D';
         }
         if ($data['status'] == 'A') {
-            $site->setStatus('A');
+            $newStatus = 'A';
         }
+
+        $site->setStatus($newStatus);
+
+        $site->setModifiedByUserId(
+            $this->getCurrentUserId(),
+            "Update site status to {$newStatus} in " . get_class($this)
+        );
 
         $entityManager->persist($site);
         $entityManager->flush();
@@ -317,7 +327,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
             $data['domain'] = $domainRepo->createDomain(
                 $data['domainName'],
                 $userId,
-                'Create new domain in ' . self::class
+                'Create new domain in ' . get_class($this)
             );
         } catch (\Exception $e) {
             return new ApiJsonModel(null, 1, $e->getMessage());
@@ -326,7 +336,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         /** @var \Rcm\Entity\Site $newSite */
         $newSite = new Site(
             $userId,
-            'Create new site in ' . self::class
+            'Create new site in ' . get_class($this)
         );
 
         $newSite->populate($data);

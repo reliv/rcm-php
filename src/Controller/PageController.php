@@ -112,7 +112,7 @@ class PageController extends AbstractActionController
         $user = $this->rcmUserService->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . self::class);
+            throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
         if ($request->isPost() && $form->isValid()) {
@@ -127,7 +127,7 @@ class PageController extends AbstractActionController
                     'pageTitle' => $validatedData['title'],
                     'siteLayoutOverride' => $validatedData['main-layout'],
                     'createdByUserId' => $user->getId(),
-                    'createdReason' => 'New page in ' . self::class,
+                    'createdReason' => 'New page in ' . get_class($this),
                     'author' => $user->getName(),
                 ];
 
@@ -156,7 +156,7 @@ class PageController extends AbstractActionController
                     'pageTitle' => $validatedData['title'],
                     'pageType' => 'n',
                     'createdByUserId' => $user->getId(),
-                    'createdReason' => 'New page from template in ' . self::class,
+                    'createdReason' => 'New page from template in ' . get_class($this),
                     'author' => $user->getName(),
                 ];
 
@@ -266,12 +266,12 @@ class PageController extends AbstractActionController
             $user = $this->rcmUserService->getCurrentUser();
 
             if (empty($user)) {
-                throw new TrackingException('A valid user is required in ' . self::class);
+                throw new TrackingException('A valid user is required in ' . get_class($this));
             }
 
             $pageData = [
                 'createdByUserId' => $user->getId(),
-                'createdReason' => 'New page in ' . self::class,
+                'createdReason' => 'New page in ' . get_class($this),
                 'author' => $user->getName(),
                 'name' => $validatedData['template-name'],
                 'pageTitle' => null,
@@ -366,7 +366,7 @@ class PageController extends AbstractActionController
         $user = $this->rcmUserService->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . self::class);
+            throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
         $this->pageRepo->publishPageRevision(
@@ -375,7 +375,7 @@ class PageController extends AbstractActionController
             $pageType,
             $pageRevision,
             $user->getId(),
-            'Publish page in ' . self::class
+            'Publish page in ' . get_class($this)
         );
 
         return $this->redirect()->toUrl(
@@ -434,7 +434,7 @@ class PageController extends AbstractActionController
         $user = $this->rcmUserService->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . self::class);
+            throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
         if ($request->isPost()) {
@@ -450,7 +450,7 @@ class PageController extends AbstractActionController
                 $pageType,
                 $data,
                 $user->getId(),
-                'Save existing page in ' . self::class,
+                'Save existing page in ' . get_class($this),
                 $user->getName()
             );
 
@@ -610,7 +610,7 @@ class PageController extends AbstractActionController
         $user = $service->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . self::class);
+            throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
         return $user;
