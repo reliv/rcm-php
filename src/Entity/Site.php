@@ -1105,7 +1105,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
             // @todo This is dangerous
             $domain = new Domain(
                 $data['createdByUserId'],
-                'New domain on populate in ' . self::class
+                'New domain on populate in ' . get_class($this)
             );
             $domain->populate($data['domain']);
             $this->setDomain($domain);
@@ -1142,7 +1142,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
             // @todo This is dangerous
             $language = new Language(
                 $data['createdByUserId'],
-                'New language on populate in ' . self::class
+                'New language on populate in ' . get_class($this)
             );
             $language->populate($data['language']);
             $this->setLanguage($language);
@@ -1169,7 +1169,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
             // @todo This is dangerous
             $country = new Country(
                 $data['createdByUserId'],
-                'New country on populate in ' . self::class
+                'New country on populate in ' . get_class($this)
             );
             $country->populate($data['country']);
             $this->setCountry($country);
@@ -1327,5 +1327,29 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
         }
 
         return $data;
+    }
+
+    /**
+     * <tracking>
+     *
+     * @return void
+     *
+     * @ORM\PrePersist
+     */
+    public function assertHasTrackingData()
+    {
+        parent::assertHasTrackingData();
+    }
+
+    /**
+     * <tracking>
+     *
+     * @return void
+     *
+     * @ORM\PreUpdate
+     */
+    public function assertHasNewModifiedData()
+    {
+        parent::assertHasNewModifiedData();
     }
 }

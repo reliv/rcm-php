@@ -405,7 +405,7 @@ class Page extends ContainerAbstract
         }
 
         if (empty($pageData['modifiedReason'])) {
-            $pageData['modifiedReason'] = 'Update page in ' . self::class;
+            $pageData['modifiedReason'] = 'Update page in ' . get_class($this);
         }
 
         // Values cannot be changed
@@ -464,7 +464,7 @@ class Page extends ContainerAbstract
         }
 
         if (empty($pageData['createdReason'])) {
-            $pageData['createdReason'] = 'Copy page in ' . self::class;
+            $pageData['createdReason'] = 'Copy page in ' . get_class($this);
         }
 
         if (empty($pageData['author'])) {
@@ -561,17 +561,25 @@ class Page extends ContainerAbstract
     /**
      * Get a page entity containing a Revision Id.
      *
-     * @param integer $siteId     Site Id
-     * @param string  $pageName   Name of page
-     * @param string  $pageType   Page Type
-     * @param integer $revisionId Revision Id to search for
+     * @param int    $siteId     Site Id
+     * @param string $pageName   Name of page
+     * @param string $pageType   Page Type
+     * @param int    $revisionId Revision Id to search for
+     * @param string $modifiedByUserId
+     * @param string $modifiedReason
      *
      * @return \Rcm\Entity\Page
      * @throws PageNotFoundException
      * @throws RuntimeException
      */
-    public function publishPageRevision($siteId, $pageName, $pageType, $revisionId)
-    {
+    public function publishPageRevision(
+        $siteId,
+        $pageName,
+        $pageType,
+        $revisionId,
+        string $modifiedByUserId,
+        string $modifiedReason = Tracking::UNKNOWN_REASON
+    ) {
         //Query is needed to ensure revision belongs to the page in question
         $pageQueryBuilder = $this->_em->createQueryBuilder();
         $pageQueryBuilder->select('page, revision')
@@ -602,6 +610,15 @@ class Page extends ContainerAbstract
         }
 
         $page->setPublishedRevision($revision);
+        $page->setModifiedByUserId(
+            $modifiedByUserId,
+            $modifiedReason
+        );
+
+        $revision->setModifiedByUserId(
+            $modifiedByUserId,
+            $modifiedReason
+        );
 
         $this->_em->flush(
             [
@@ -784,8 +801,8 @@ class Page extends ContainerAbstract
      * @param            $pageRevision
      * @param            $pageType
      * @param            $saveData
-     * @param            $createdByUserId
-     * @param string     $createdReason
+     * @param            $modifiedByUserId
+     * @param string     $modifiedReason
      * @param string     $author
      *
      * @return int|null
@@ -796,8 +813,8 @@ class Page extends ContainerAbstract
         $pageRevision,
         $pageType,
         $saveData,
-        $createdByUserId,
-        $createdReason = Tracking::UNKNOWN_REASON,
+        $modifiedByUserId,
+        $modifiedReason = Tracking::UNKNOWN_REASON,
         $author = Tracking::UNKNOWN_AUTHOR
     ) {
         if (empty($pageType)) {
@@ -817,8 +834,8 @@ class Page extends ContainerAbstract
                     $container = $containerRepo->createContainer(
                         $siteEntity,
                         $containerName,
-                        $createdByUserId,
-                        $createdReason,
+                        $modifiedByUserId,
+                        $modifiedReason,
                         $author
                     );
                 }
@@ -826,8 +843,8 @@ class Page extends ContainerAbstract
                 $this->saveContainer(
                     $container,
                     $containerData,
-                    $createdByUserId,
-                    $createdReason,
+                    $modifiedByUserId,
+                    $modifiedReason,
                     $author
                 );
             }
@@ -838,8 +855,8 @@ class Page extends ContainerAbstract
         return $this->saveContainer(
             $page,
             $saveData['pageContainer'],
-            $createdByUserId,
-            $createdReason,
+            $modifiedByUserId,
+            $modifiedReason,
             $author,
             $pageRevision
         );

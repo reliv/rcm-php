@@ -96,11 +96,11 @@ class DispatchListener
         /* Add on for non CMS pages */
         $fakePage = new Page(
             Tracking::UNKNOWN_USER_ID,
-            'Fake page for non CMS pages in ' . self::class
+            'Fake page for non CMS pages in ' . get_class($this)
         );
         $fakeRevision = new Revision(
             Tracking::UNKNOWN_USER_ID,
-            'Fake revision for non CMS pages in ' . self::class
+            'Fake revision for non CMS pages in ' . get_class($this)
         );
 
         $fakePage->setCurrentRevision($fakeRevision);
