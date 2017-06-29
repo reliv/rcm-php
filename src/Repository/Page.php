@@ -405,7 +405,7 @@ class Page extends ContainerAbstract
         }
 
         if (empty($pageData['modifiedReason'])) {
-            $pageData['modifiedReason'] = 'Update page in ' . self::class;
+            $pageData['modifiedReason'] = 'Update page in ' . get_class($this);
         }
 
         // Values cannot be changed
@@ -464,7 +464,7 @@ class Page extends ContainerAbstract
         }
 
         if (empty($pageData['createdReason'])) {
-            $pageData['createdReason'] = 'Copy page in ' . self::class;
+            $pageData['createdReason'] = 'Copy page in ' . get_class($this);
         }
 
         if (empty($pageData['author'])) {
