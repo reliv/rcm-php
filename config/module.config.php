@@ -100,8 +100,8 @@ return [
     /* controllers */
     'controllers' => [
         'factories' => [
-            RcmAdmin\Controller\PageController::class
-            => RcmAdmin\Factory\PageControllerFactory::class,
+            RcmAdmin\Controller\ApiAdminSitesCloneController::class
+            => RcmAdmin\Factory\ApiAdminSitesCloneControllerFactory::class,
 
             RcmAdmin\Controller\ApiAdminManageSitesController::class
             => RcmAdmin\Factory\ApiAdminManageSitesControllerFactory::class,
@@ -115,6 +115,8 @@ return [
             RcmAdmin\Controller\AvailableBlocksJsController::class
             => RcmAdmin\Factory\AvailableBlocksJsControllerFactory::class,
 
+            RcmAdmin\Controller\PageController::class
+            => RcmAdmin\Factory\PageControllerFactory::class,
         ],
         'invokables' => [
             RcmAdmin\Controller\PagePermissionsController::class
@@ -125,9 +127,6 @@ return [
 
             RcmAdmin\Controller\ApiAdminCurrentSiteController::class
             => RcmAdmin\Controller\ApiAdminCurrentSiteController::class,
-
-            RcmAdmin\Controller\ApiAdminSitesCloneController::class
-            => RcmAdmin\Controller\ApiAdminSitesCloneController::class,
 
             RcmAdmin\Controller\ApiAdminLanguageController::class
             => RcmAdmin\Controller\ApiAdminLanguageController::class,

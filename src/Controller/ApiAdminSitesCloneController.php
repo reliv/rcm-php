@@ -2,12 +2,11 @@
 
 namespace RcmAdmin\Controller;
 
-use Rcm\Entity\Site;
+use Interop\Container\ContainerInterface;
 use Rcm\Http\Response;
-use Rcm\Tracking\Exception\TrackingException;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\InputFilter\SiteDuplicateInputFilter;
-use RcmUser\Service\RcmUserService;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -27,6 +26,14 @@ use Zend\View\Model\JsonModel;
  */
 class ApiAdminSitesCloneController extends ApiAdminManageSitesController
 {
+    /**
+     * @param ContainerInterface|ServiceLocatorInterface $serviceLocator
+     */
+    public function __construct($serviceLocator)
+    {
+        parent::__construct($serviceLocator);
+    }
+
     /**
      * create - Clone a site
      *
@@ -69,7 +76,7 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
             $domain = $domainRepo->createDomain(
                 $data['domainName'],
                 $this->getCurrentUserId(),
-                'Create new domain in ' . self::class
+                'Create new domain in ' . get_class($this)
             );
         } catch (\Exception $e) {
             return new ApiJsonModel(null, 1, $e->getMessage());

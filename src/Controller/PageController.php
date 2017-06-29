@@ -112,7 +112,7 @@ class PageController extends AbstractActionController
         $user = $this->rcmUserService->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . self::class);
+            throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
         if ($request->isPost() && $form->isValid()) {
@@ -127,7 +127,7 @@ class PageController extends AbstractActionController
                     'pageTitle' => $validatedData['title'],
                     'siteLayoutOverride' => $validatedData['main-layout'],
                     'createdByUserId' => $user->getId(),
-                    'createdReason' => 'New page in ' . self::class,
+                    'createdReason' => 'New page in ' . get_class($this),
                     'author' => $user->getName(),
                 ];
 
@@ -156,7 +156,7 @@ class PageController extends AbstractActionController
                     'pageTitle' => $validatedData['title'],
                     'pageType' => 'n',
                     'createdByUserId' => $user->getId(),
-                    'createdReason' => 'New page from template in ' . self::class,
+                    'createdReason' => 'New page from template in ' . get_class($this),
                     'author' => $user->getName(),
                 ];
 
@@ -197,6 +197,7 @@ class PageController extends AbstractActionController
      *
      * @return Response|ViewModel
      * @throws \Rcm\Exception\PageNotFoundException
+     * @throws TrackingException
      */
     public function createTemplateFromPageAction()
     {
@@ -265,12 +266,12 @@ class PageController extends AbstractActionController
             $user = $this->rcmUserService->getCurrentUser();
 
             if (empty($user)) {
-                throw new TrackingException('A valid user is required in ' . self::class);
+                throw new TrackingException('A valid user is required in ' . get_class($this));
             }
 
             $pageData = [
                 'createdByUserId' => $user->getId(),
-                'createdReason' => 'New page in ' . self::class,
+                'createdReason' => 'New page in ' . get_class($this),
                 'author' => $user->getName(),
                 'name' => $validatedData['template-name'],
                 'pageTitle' => null,
@@ -321,6 +322,7 @@ class PageController extends AbstractActionController
      *
      * @return Response|\Zend\Http\Response
      * @throws \Rcm\Exception\InvalidArgumentException
+     * @throws TrackingException
      */
     public function publishPageRevisionAction()
     {
@@ -361,12 +363,19 @@ class PageController extends AbstractActionController
                 'Invalid Page Revision Id.'
             );
         }
+        $user = $this->rcmUserService->getCurrentUser();
+
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . get_class($this));
+        }
 
         $this->pageRepo->publishPageRevision(
             $this->currentSite->getSiteId(),
             $pageName,
             $pageType,
-            $pageRevision
+            $pageRevision,
+            $user->getId(),
+            'Publish page in ' . get_class($this)
         );
 
         return $this->redirect()->toUrl(
@@ -381,6 +390,8 @@ class PageController extends AbstractActionController
      * savePageAction
      *
      * @return Response|ResponseInterface
+     *
+     * @throws TrackingException
      */
     public function savePageAction()
     {
@@ -423,7 +434,7 @@ class PageController extends AbstractActionController
         $user = $this->rcmUserService->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . self::class);
+            throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
         if ($request->isPost()) {
@@ -439,7 +450,7 @@ class PageController extends AbstractActionController
                 $pageType,
                 $data,
                 $user->getId(),
-                'Save existing page in ' . self::class,
+                'Save existing page in ' . get_class($this),
                 $user->getName()
             );
 
@@ -599,7 +610,7 @@ class PageController extends AbstractActionController
         $user = $service->getCurrentUser();
 
         if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . self::class);
+            throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
         return $user;
