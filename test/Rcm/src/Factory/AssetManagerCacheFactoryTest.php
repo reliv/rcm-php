@@ -56,7 +56,7 @@ class AssetManagerCacheFactoryTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Rcm\Service\Cache', $mockZendCache);
+        $serviceManager->setService(\Rcm\Service\Cache::class, $mockZendCache);
 
         $factory = new AssetManagerCacheFactory();
         $object = $factory->createService($serviceManager);

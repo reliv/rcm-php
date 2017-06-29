@@ -54,7 +54,7 @@ class DoctrineCacheFactoryTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $sm = new ServiceManager();
-        $sm->setService('Rcm\Service\Cache', $mockCache);
+        $sm->setService(\Rcm\Service\Cache::class, $mockCache);
 
         $factory = new DoctrineCacheFactory();
         $object = $factory->createService($sm);
