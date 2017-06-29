@@ -1,21 +1,4 @@
 <?php
-/**
- * Unit Test for the Container Abstract
- *
- * This file contains the unit test for the Container Abstract
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace RcmTest\Entity;
 
@@ -53,7 +36,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->container = new Container();
+        $this->container = new Container('user123');
     }
 
     /**
@@ -112,15 +95,11 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Rcm\Entity\ContainerAbstract
      */
-    public function testGetAndSetCreatedDate()
+    public function testGetCreatedDate()
     {
-        $createdDate = new \DateTime('2014-Apr-20');
-
-        $this->container->setCreatedDate($createdDate);
-
         $actual = $this->container->getCreatedDate();
 
-        $this->assertEquals($createdDate, $actual);
+        $this->assertInstanceOf(\DateTime::class, $actual);
     }
 
     /**
@@ -150,7 +129,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetPublishedRevision()
     {
-        $publishedRevision = new Revision();
+        $publishedRevision = new Revision('user123');
         $publishedRevision->setRevisionId(6);
 
         $this->container->setPublishedRevision($publishedRevision);
@@ -182,7 +161,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testAliasGetAndSetCurrentRevisionRevision()
     {
-        $publishedRevision = new Revision();
+        $publishedRevision = new Revision('user123');
         $publishedRevision->setRevisionId(6);
 
         $this->container->setPublishedRevision($publishedRevision);
@@ -214,7 +193,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveCurrentRevisionRevision()
     {
-        $publishedRevision = new Revision();
+        $publishedRevision = new Revision('user123');
         $publishedRevision->setRevisionId(6);
 
         $this->container->setPublishedRevision($publishedRevision);
@@ -239,7 +218,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetStagedRevisionRevision()
     {
-        $publishedRevision = new Revision();
+        $publishedRevision = new Revision('user123');
         $publishedRevision->setRevisionId(6);
 
         $this->container->setStagedRevision($publishedRevision);
@@ -271,7 +250,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveStagedRevisionRevision()
     {
-        $publishedRevision = new Revision();
+        $publishedRevision = new Revision('user123');
         $publishedRevision->setRevisionId(6);
 
         $this->container->setStagedRevision($publishedRevision);
@@ -296,7 +275,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetSite()
     {
-        $site = new Site();
+        $site = new Site('user123');
         $site->setSiteId(3);
 
         $this->container->setSite($site);
@@ -328,10 +307,10 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndAddRevisions()
     {
-        $revisionFive = new Revision();
+        $revisionFive = new Revision('user123');
         $revisionFive->setRevisionId(5);
 
-        $revisionSix = new Revision();
+        $revisionSix = new Revision('user123');
         $revisionSix->setRevisionId(6);
 
         $expected = [
@@ -357,10 +336,10 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRevisionByRevisionId()
     {
-        $revisionFive = new Revision();
+        $revisionFive = new Revision('user123');
         $revisionFive->setRevisionId(5);
 
-        $revisionSix = new Revision();
+        $revisionSix = new Revision('user123');
         $revisionSix->setRevisionId(6);
 
         $this->container->addRevision($revisionFive);
@@ -382,21 +361,21 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLastSavedRevision()
     {
-        $revisionFour = new Revision();
+        $revisionFour = new Revision('user123');
         $revisionFour->setRevisionId(4);
         $revisionFour->publishRevision();
 
-        $revisionFive = new Revision();
+        $revisionFive = new Revision('user123');
         $revisionFive->setRevisionId(5);
         $revisionFour->publishRevision();
 
-        $revisionSix = new Revision();
+        $revisionSix = new Revision('user123');
         $revisionSix->setRevisionId(6);
 
-        $revisionSeven = new Revision();
+        $revisionSeven = new Revision('user123');
         $revisionSeven->setRevisionId(7);
 
-        $revisionEight = new Revision();
+        $revisionEight = new Revision('user123');
         $revisionEight->setRevisionId(8);
 
         $this->container->addRevision($revisionFour);
@@ -421,22 +400,22 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLastSavedRevisionNoUnPublishedRevisions()
     {
-        $revisionFour = new Revision();
+        $revisionFour = new Revision('user123');
         $revisionFour->setRevisionId(4);
         $revisionFour->publishRevision();
 
-        $revisionFive = new Revision();
+        $revisionFive = new Revision('user123');
         $revisionFive->setRevisionId(5);
         $revisionFour->publishRevision();
 
-        $revisionSix = new Revision();
+        $revisionSix = new Revision('user123');
         $revisionSix->setRevisionId(6);
 
-        $revisionSeven = new Revision();
+        $revisionSeven = new Revision('user123');
         $revisionSeven->setRevisionId(7);
         $revisionSeven->publishRevision();
 
-        $revisionEight = new Revision();
+        $revisionEight = new Revision('user123');
         $revisionEight->setRevisionId(8);
         $revisionEight->publishRevision();
 
@@ -462,14 +441,13 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testClone()
     {
-        $site = new Site();
+        $site = new Site('user123');
         $site->setSiteId(55);
 
         $container = [
             'containerId' => '200',
             'name' => 'containerOne',
             'author' => 'Westin Shafer',
-            'createdDate' => new \DateTime('yesterday'),
             'lastPublished' => new \DateTime('yesterday'),
             'revisions' => [
                 0 => [
@@ -490,7 +468,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 44,
                                 'plugin' => 'MockPlugin',
-                                'siteWide' => false,
+                                'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                 'displayName' => null,
                                 'instanceConfig' => [
                                     'var1' => 1,
@@ -510,8 +488,8 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 46,
                                 'plugin' => 'MockPlugin2',
-                                'siteWide' => true,
-                                'displayName' => 'TestSiteWide',
+                                'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
+                                'displayName' => 'TestSiteWide', // @deprecated <deprecated-site-wide-plugin>
                                 'instanceConfig' => [
                                     'var3' => 3,
                                     'var4' => 4
@@ -540,7 +518,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 48,
                                 'plugin' => 'MockPlugin3',
-                                'siteWide' => false,
+                                'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                                 'displayName' => null,
                                 'instanceConfig' => [
                                     'var1' => 1,
@@ -560,8 +538,8 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                             'instance' => [
                                 'pluginInstanceId' => 50,
                                 'plugin' => 'MockPlugin4',
-                                'siteWide' => true,
-                                'displayName' => 'TestSiteWide2',
+                                'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
+                                'displayName' => 'TestSiteWide2', // @deprecated <deprecated-site-wide-plugin>
                                 'instanceConfig' => [
                                     'var3' => 3,
                                     'var4' => 4
@@ -577,24 +555,23 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
         $this->container->setContainerId($container['containerId']);
         $this->container->setName($container['name']);
         $this->container->setAuthor($container['author']);
-        $this->container->setCreatedDate($container['createdDate']);
         $this->container->setLastPublished($container['lastPublished']);
         $this->container->setSite($site);
 
         foreach ($container['revisions'] as $index => $revisionData) {
-            $revision = new Revision();
+            $revision = new Revision('user123');
             $revision->setRevisionId($revisionData['revisionId']);
             $revision->setAuthor($revisionData['author']);
-            $revision->setCreatedDate($revisionData['createdDate']);
             $revision->publishRevision();
             $revision->setPublishedDate($revisionData['publishedDate']);
             $revision->setMd5($revisionData['md5']);
 
             foreach ($revisionData['instances'] as $instance) {
-                $plugin = new PluginInstance();
+                $plugin = new PluginInstance('user123');
                 $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
                 $plugin->setPlugin($instance['instance']['plugin']);
 
+                // @deprecated <deprecated-site-wide-plugin>
                 if ($instance['instance']['siteWide']) {
                     $plugin->setSiteWide();
                 }
@@ -603,13 +580,13 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
                 $plugin->setInstanceConfig($instance['instance']['instanceConfig']);
                 $plugin->setMd5($instance['instance']['md5']);
 
-                $wrapper = new PluginWrapper();
+                $wrapper = new PluginWrapper('user123');
                 $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
                 $wrapper->setLayoutContainer($instance['layoutContainer']);
                 $wrapper->setRenderOrderNumber($instance['renderOrder']);
-//                $wrapper->setHeight($instance['height']);
-//                $wrapper->setWidth($instance['width']);
-//                $wrapper->setDivFloat($instance['divFloat']);
+                //$wrapper->setHeight($instance['height']);
+                //$wrapper->setWidth($instance['width']);
+                //$wrapper->setDivFloat($instance['divFloat']);
                 $wrapper->setInstance($plugin);
 
                 $revision->addPluginWrapper($wrapper);
@@ -626,7 +603,7 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(2, $this->container->getRevisions());
 
-        $clonedContainer = clone $this->container;
+        $clonedContainer = $this->container->newInstance('user123');
 
         /* Test Container */
         $this->assertNotEquals(
@@ -654,10 +631,11 @@ class ContainerAbstractTest extends \PHPUnit_Framework_TestCase
             $clonedCurrentRev->getAuthor()
         );
 
-        $this->assertNotEquals(
-            $currentRevision->getCreatedDate(),
-            $clonedCurrentRev->getCreatedDate()
-        );
+        // @todo Is this a valid test? should cloning a container create revision clones?
+        //$this->assertNotEquals(
+        //    $currentRevision->getCreatedDate(),
+        //    $clonedCurrentRev->getCreatedDate()
+        //);
 
         $this->assertFalse($clonedCurrentRev->wasPublished());
 

@@ -26,7 +26,7 @@ class PageDataServiceFactory
     {
         return new PageDataService(
             $container->get('Doctrine\ORM\EntityManager'),
-            $container->get('Rcm\Acl\CmsPermissionsChecks'),
+            $container->get(\Rcm\Acl\CmsPermissionChecks::class),
             $container->get(PageStatus::class)
         );
     }

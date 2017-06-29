@@ -8,6 +8,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Rcm\Exception\DomainNotFoundException;
 use Rcm\Exception\DuplicateDomainException;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Domain Repository
@@ -73,11 +74,11 @@ class Domain extends EntityRepository
             site.siteId,
             country.iso3 countryId'
         )
-            ->from('\Rcm\Entity\Domain', 'domain', 'domain.domain')
+            ->from(\Rcm\Entity\Domain::class, 'domain', 'domain.domain')
             ->leftJoin('domain.primaryDomain', 'primary')
             ->leftJoin('domain.defaultLanguage', 'language')
             ->leftJoin(
-                '\Rcm\Entity\Site',
+                \Rcm\Entity\Site::class,
                 'site',
                 Join::WITH,
                 'site.domain = domain.domainId'
@@ -130,9 +131,9 @@ class Domain extends EntityRepository
     }
 
     /**
-     * createDomain
-     *
-     * @param string $domainName
+     * @param        $domainName
+     * @param string $createdByUserId
+     * @param string $createdReason
      * @param null   $primaryDomain
      * @param bool   $doFlush
      *
@@ -140,6 +141,8 @@ class Domain extends EntityRepository
      */
     public function createDomain(
         $domainName,
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON,
         $primaryDomain = null,
         $doFlush = false
     ) {
@@ -154,7 +157,10 @@ class Domain extends EntityRepository
             );
         }
 
-        $domain = new \Rcm\Entity\Domain();
+        $domain = new \Rcm\Entity\Domain(
+            $createdByUserId,
+            $createdReason
+        );
         $domain->setDomainName($domainName);
 
         if ($primaryDomain instanceof \Rcm\Entity\Domain) {

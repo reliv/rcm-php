@@ -4,6 +4,7 @@ namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Page Revision Information Entity
@@ -20,9 +21,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="rcm_revisions")
  */
-class Revision extends AbstractApiModel
+class Revision extends ApiModelTrackingAbstract implements Tracking
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -39,13 +41,6 @@ class Revision extends AbstractApiModel
      * @ORM\Column(type="string")
      */
     protected $author;
-
-    /**
-     * @var \DateTime Date revision was created
-     *
-     * @ORM\Column(type="datetime")
-     */
-    protected $createdDate;
 
     /**
      * @var \DateTime Date page was last published
@@ -98,6 +93,60 @@ class Revision extends AbstractApiModel
     protected $pluginWrappers;
 
     /**
+     * <tracking>
+     *
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * <tracking>
+     *
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
+
+    /**
      * @var bool
      */
     public $isDirty = false;
@@ -113,45 +162,61 @@ class Revision extends AbstractApiModel
     protected $wrappersByRows = [];
 
     /**
-     * Constructor for Page Revision Entity.
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
      */
-    public function __construct()
-    {
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         $this->pluginWrappers = new ArrayCollection();
-        $this->createdDate = new \DateTime();
+        parent::__construct($createdByUserId, $createdReason);
     }
 
     /**
-     * __clone
+     * Get a clone with special logic
      *
-     * @return void
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
      */
-    public function __clone()
-    {
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         if (!$this->revisionId) {
-            return;
+            return clone($this);
         }
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
 
-        $this->revisionId = null;
-        $this->createdDate = new \DateTime();
+        $new->revisionId = null;
+        $new->createdDate = new \DateTime();
 
-        $this->published = false;
-        $this->publishedDate = null;
+        $new->published = false;
+        $new->publishedDate = null;
 
         /* Clone Plugins */
-        $pluginWrappers = $this->pluginWrappers;
+        $pluginWrappers = $new->pluginWrappers;
         $clonedPluginWrappers = new ArrayCollection();
 
         /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
         foreach ($pluginWrappers as $pluginWrapper) {
-            $clonedPluginWrapper = clone $pluginWrapper;
+            $clonedPluginWrapper = $pluginWrapper->newInstance(
+                $createdByUserId,
+                $createdReason
+            );
             $clonedPluginWrappers->add($clonedPluginWrapper);
         }
 
-        $this->pluginWrappers = $clonedPluginWrappers;
-    }
+        $new->pluginWrappers = $clonedPluginWrappers;
 
-    /*   Start Getters and Setters    */
+        return $new;
+    }
 
     /**
      * Gets the PageRevId property
@@ -172,7 +237,7 @@ class Revision extends AbstractApiModel
      *
      * @param int $revisionId Unique Page Revision ID
      *
-     * @return null
+     * @return void
      *
      */
     public function setRevisionId($revisionId)
@@ -195,34 +260,11 @@ class Revision extends AbstractApiModel
      *
      * @param string $author ID for the Author of revision
      *
-     * @return null
+     * @return void
      */
     public function setAuthor($author)
     {
         $this->author = $author;
-    }
-
-    /**
-     * Gets the CreatedDate property
-     *
-     * @return \DateTime CreatedDate
-     */
-    public function getCreatedDate()
-    {
-        return $this->createdDate;
-    }
-
-    /**
-     * Sets the CreatedDate property
-     *
-     * @param \DateTime $createdDate DateTime Object when revision was created
-     *
-     * @return null
-     *
-     */
-    public function setCreatedDate(\DateTime $createdDate)
-    {
-        $this->createdDate = $createdDate;
     }
 
     /**
@@ -258,7 +300,7 @@ class Revision extends AbstractApiModel
      *
      * @param \DateTime $publishedDate Date the page was last published.
      *
-     * @return null
+     * @return void
      */
     public function setPublishedDate(\DateTime $publishedDate)
     {
@@ -286,7 +328,7 @@ class Revision extends AbstractApiModel
     /**
      * Get Plugin Instances - Assumes we have ordered them by RenderOrder the DB join
      *
-     * @return ArrayCollection
+     * @return ArrayCollection|array
      */
     public function getPluginWrappers()
     {
@@ -325,7 +367,7 @@ class Revision extends AbstractApiModel
      *
      * @param string $containerName
      *
-     * @return null
+     * @return array
      */
     public function getPluginWrappersByPageContainerName($containerName)
     {
@@ -355,7 +397,7 @@ class Revision extends AbstractApiModel
      *
      * @param integer $instanceId
      *
-     * @return ArrayCollection
+     * @return PluginWrapper
      */
     public function getPluginWrapper($instanceId)
     {
@@ -363,7 +405,7 @@ class Revision extends AbstractApiModel
             return null;
         }
 
-        /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
+        /** @var PluginWrapper $pluginWrapper */
         foreach ($this->pluginWrappers as $pluginWrapper) {
             if ($pluginWrapper->getInstance()->getInstanceId() == $instanceId) {
                 return $pluginWrapper;
@@ -378,7 +420,7 @@ class Revision extends AbstractApiModel
      *
      * @param PluginWrapper $instanceWrapper Plugin Instance to add to revision.
      *
-     * @return null
+     * @return void
      */
     public function addPluginWrapper(PluginWrapper $instanceWrapper)
     {
@@ -525,5 +567,29 @@ class Revision extends AbstractApiModel
         }
 
         return $data;
+    }
+
+    /**
+     * <tracking>
+     *
+     * @return void
+     *
+     * @ORM\PrePersist
+     */
+    public function assertHasTrackingData()
+    {
+        parent::assertHasTrackingData();
+    }
+
+    /**
+     * <tracking>
+     *
+     * @return void
+     *
+     * @ORM\PreUpdate
+     */
+    public function assertHasNewModifiedData()
+    {
+        parent::assertHasNewModifiedData();
     }
 }

@@ -62,7 +62,7 @@ class PageValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($mockPageRepo));
 
-        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
+        $mockCurrentSite = $this->getMockBuilder(\Rcm\Entity\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -76,7 +76,7 @@ class PageValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             $mockEntityManager
         );
         $serviceLocator->setService(
-            'Rcm\Service\CurrentSite',
+            \Rcm\Service\CurrentSite::class,
             $mockCurrentSite
         );
 

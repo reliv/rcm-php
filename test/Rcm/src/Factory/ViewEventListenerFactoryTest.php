@@ -57,7 +57,7 @@ class ViewEventListenerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
-            'Rcm\Service\ResponseHandler',
+            \Rcm\Service\ResponseHandler::class,
             $mockResponseHandler
         );
 

@@ -2,7 +2,6 @@
 
 namespace Rcm\Controller;
 
-use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -28,7 +27,7 @@ class CacheController extends AbstractActionController
     public function flushAction()
     {
         /** @var \Zend\Cache\Storage\Adapter\Memory $cache */
-        $cache = $this->serviceLocator->get('Rcm\Service\Cache');
+        $cache = $this->serviceLocator->get(\Rcm\Service\Cache::class);
         $cache->flush();
     }
 }

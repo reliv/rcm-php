@@ -3,6 +3,7 @@
 namespace Rcm\Entity;
 
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Container Abstract.  Contains methods shared by container classes
@@ -20,14 +21,29 @@ use Rcm\Exception\InvalidArgumentException;
  * @link      http://github.com/reliv
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-interface ContainerInterface extends ApiModelInterface
+interface ContainerInterface extends ApiModelInterface, Tracking
 {
     /**
-     * Clone the container
+     * @param string $createdByUserId
+     * @param string $createdReason
      *
-     * @return void
+     * @return ContainerInterface
      */
-    public function __clone();
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    );
+
+    /**
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return ContainerInterface|null
+     */
+    public function newInstanceIfHasRevision(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    );
 
     /**
      * Gets the Name property
@@ -43,7 +59,7 @@ interface ContainerInterface extends ApiModelInterface
      * @param string $name Name of Page.  Should be URL friendly and should not
      *                     included spaces.
      *
-     * @return null
+     * @return void
      *
      * @throws InvalidArgumentException Exception thrown if name contains spaces.
      */
@@ -61,26 +77,9 @@ interface ContainerInterface extends ApiModelInterface
      *
      * @param string $author ID of Author.
      *
-     * @return null
+     * @return void
      */
     public function setAuthor($author);
-
-    /**
-     * Gets the CreatedDate property
-     *
-     * @return \DateTime CreatedDate
-     *
-     */
-    public function getCreatedDate();
-
-    /**
-     * Sets the CreatedDate property
-     *
-     * @param \DateTime $createdDate Date the page was initially created.
-     *
-     * @return null
-     */
-    public function setCreatedDate(\DateTime $createdDate);
 
     /**
      * Gets the LastPublished property
@@ -94,7 +93,7 @@ interface ContainerInterface extends ApiModelInterface
      *
      * @param \DateTime $lastPublished Date the page was last published.
      *
-     * @return null
+     * @return void
      */
     public function setLastPublished(\DateTime $lastPublished);
 
@@ -110,7 +109,7 @@ interface ContainerInterface extends ApiModelInterface
      *
      * @param Revision $revision Revision object to add
      *
-     * @return null
+     * @return void
      */
     public function setPublishedRevision(Revision $revision);
 
@@ -126,7 +125,7 @@ interface ContainerInterface extends ApiModelInterface
      *
      * @param Revision $revision Revision object to add
      *
-     * @return null
+     * @return void
      */
     public function setStagedRevision(Revision $revision);
 

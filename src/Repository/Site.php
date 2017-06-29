@@ -7,6 +7,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\SiteNotFoundException;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Site Repository
@@ -53,7 +54,7 @@ class Site extends EntityRepository
             },
             language,
             country'
-        )->from('\Rcm\Entity\Site', 'site')
+        )->from(\Rcm\Entity\Site::class, 'site')
             ->join('site.country', 'country')
             ->join('site.language', 'language')
             ->where('site.siteId = :siteId')
@@ -78,7 +79,7 @@ class Site extends EntityRepository
     public function getSites($mustBeActive = false)
     {
         $repo = $this->_em
-            ->getRepository('\Rcm\Entity\Site');
+            ->getRepository(\Rcm\Entity\Site::class);
         if ($mustBeActive) {
             return $repo->findBy(['status' => \Rcm\Entity\Site::STATUS_ACTIVE]);
         } else {
@@ -106,7 +107,7 @@ class Site extends EntityRepository
 
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('site.siteId')
-            ->from('\Rcm\Entity\Site', 'site')
+            ->from(\Rcm\Entity\Site::class, 'site')
             ->where('site.siteId = :siteId')
             ->setParameter('siteId', $siteId);
 
@@ -121,6 +122,7 @@ class Site extends EntityRepository
             if ($checkActive) {
                 $this->activeSiteIdCache[] = $siteId;
             }
+
             return true;
         }
 
@@ -128,6 +130,7 @@ class Site extends EntityRepository
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * getSiteWidePluginsList
      *
      * @param int $siteId
@@ -140,7 +143,7 @@ class Site extends EntityRepository
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('partial site.{siteId}, plugins')
-            ->from('\Rcm\Entity\Site', 'site')
+            ->from(\Rcm\Entity\Site::class, 'site')
             ->join('site.sitePlugins', 'plugins')
             ->where('site.siteId = :siteId')
             ->setParameter('siteId', $siteId);
@@ -167,7 +170,7 @@ class Site extends EntityRepository
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('domain, site, primaryDomain')
-            ->from('\Rcm\Entity\Domain', 'domain')
+            ->from(\Rcm\Entity\Domain::class, 'domain')
             ->leftJoin('domain.site', 'site')
             ->leftJoin('domain.primaryDomain', 'primaryDomain')
             ->where('domain.domain = :domainName')
@@ -202,7 +205,7 @@ class Site extends EntityRepository
     protected function getPrimaryDomain($domain)
     {
         /** @var \Rcm\Entity\Domain $domain */
-        $domain = $this->_em->getRepository('\Rcm\Entity\Domain')
+        $domain = $this->_em->getRepository(\Rcm\Entity\Domain::class)
             ->findOneBy(['domain' => $domain]);
 
         if (empty($domain)) {
@@ -222,32 +225,49 @@ class Site extends EntityRepository
      * @todo Fix Me
      * createNewSite
      *
-     * @param null $siteId
+     * @param null|int $siteId
+     * @param string   $createdByUserId
+     * @param string   $createdReason
      *
      * @return SiteEntity
      * @throws SiteNotFoundException
      */
-    public function createNewSite($siteId = null)
-    {
+    public function createNewSite(
+        $siteId = null,
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         if (empty($siteId)) {
             // new site
             /** @var \Rcm\Entity\Site $newSite */
-            return new \Rcm\Entity\Site();
+            return new \Rcm\Entity\Site(
+                $createdByUserId,
+                $createdReason
+            );
         }
 
-        return $this->copySiteById($siteId);
+        return $this->copySiteById(
+            $siteId,
+            $createdByUserId,
+            $createdReason
+        );
     }
 
     /**
      * @todo Fix Me
      * copySite
      *
-     * @param $siteId
+     * @param int    $siteId
+     * @param string $createdByUserId
+     * @param string $createdReason
      *
      * @return SiteEntity
      */
-    public function copySiteById($siteId)
-    {
+    public function copySiteById(
+        $siteId,
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         /** @var \Rcm\Entity\Site $site */
         $existingSite = $this->find($siteId);
 
@@ -255,7 +275,10 @@ class Site extends EntityRepository
             throw new SiteNotFoundException("Site {$siteId} not found.");
         }
 
-        $site = clone($existingSite);
+        $site = $existingSite->newInstance(
+            $createdByUserId,
+            $createdReason
+        );
 
         return $site;
     }

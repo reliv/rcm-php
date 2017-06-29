@@ -1,21 +1,4 @@
 <?php
-/**
- * Unit Test for the Plugin Instance Entity
- *
- * This file contains the unit test for the Plugin Instance
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace RcmTest\Entity;
 
@@ -48,7 +31,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->pluginInstance = new PluginInstance();
+        $this->pluginInstance = new PluginInstance('user123');
     }
 
     /**
@@ -88,11 +71,12 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Test Set Site Wide and test Is it a side wide
      *
      * @return void
      *
-     * @covers \Rcm\Entity\PluginInstance
+     * @covers     \Rcm\Entity\PluginInstance
      */
     public function testSetSiteWideAndIsSiteWide()
     {
@@ -146,7 +130,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetPreviousInstance()
     {
-        $previous = new PluginInstance();
+        $previous = new PluginInstance('user123');
         $previous->setInstanceId(987);
 
         $this->pluginInstance->setPreviousInstance($previous);
@@ -201,35 +185,35 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
         $this->pluginInstance->setDisplayName($displayName);
         $this->pluginInstance->setMd5($md5);
         $this->pluginInstance->setPlugin($plugin);
-        $this->pluginInstance->setSiteWide(true);
+        $this->pluginInstance->setSiteWide(true); // @deprecated <deprecated-site-wide-plugin>
 
-        $cloned = clone $this->pluginInstance;
+        $cloned = $this->pluginInstance->newInstance('user123');
 
         $this->assertEquals($instanceConfig, $cloned->getInstanceConfig());
         $this->assertEquals($displayName, $cloned->getDisplayName());
         $this->assertEquals($md5, $cloned->getMd5());
         $this->assertEquals($plugin, $cloned->getPlugin());
-        $this->assertTrue($cloned->isSiteWide());
+        $this->assertTrue($cloned->isSiteWide()); //@deprecated <deprecated-site-wide-plugin>
         $this->assertNotEquals($instanceId, $cloned->getInstanceId());
         $this->assertNull($cloned->getInstanceId());
 
-        $pluginInstance = new PluginInstance();
+        $pluginInstance = new PluginInstance('user123');
 
-        $clone = clone($pluginInstance);
+        $clone = $pluginInstance->newInstance('user123');
 
-        $this->assertInstanceOf('Rcm\Entity\PluginInstance', $clone);
+        $this->assertInstanceOf(\Rcm\Entity\PluginInstance::class, $clone);
     }
 
     public function getTestData()
     {
         $data = [];
         $data['plugin'] = 'NAME';
-        $data['siteWide'] = true;
+        $data['siteWide'] = true; // @deprecated <deprecated-site-wide-plugin>
         $data['displayName'] = 'DISPLAYNAME';
         $data['instanceConfig'] = ['test' => 'insconf'];
         $data['md5'] = 'MD5';
         //
-        $data['previousInstance'] = new PluginInstance();
+        $data['previousInstance'] = new PluginInstance('user123');
         $data['previousInstance']->setInstanceId(123);
         $data['renderedCss'] = 'RENDCSS';
         $data['renderedJs'] = 'RENDJS';
@@ -247,12 +231,12 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
     {
         $data = $this->getTestData();
 
-        $obj1 = new PluginInstance();
+        $obj1 = new PluginInstance('user123');
 
         $obj1->populate($data);
 
         $this->assertEquals($data['plugin'], $obj1->getPlugin());
-        $this->assertEquals($data['siteWide'], $obj1->isSiteWide());
+        $this->assertEquals($data['siteWide'], $obj1->isSiteWide()); //@deprecated <deprecated-site-wide-plugin>
         $this->assertEquals($data['displayName'], $obj1->getDisplayName());
         $this->assertEquals($data['instanceConfig'], $obj1->getInstanceConfig());
         $this->assertEquals($data['md5'], $obj1->getMd5());
@@ -268,7 +252,6 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['editJs'], $obj1->getEditJs());
         $this->assertEquals($data['icon'], $obj1->getIcon());
         $this->assertEquals($data['tooltip'], $obj1->getTooltip());
-
 
         $data['saveData'] = ['testSave' => 'saveData'];
 
@@ -292,7 +275,7 @@ class PluginInstanceTest extends \PHPUnit_Framework_TestCase
         $array = $obj1->toArray();
 
         $this->assertEquals($data['plugin'], $array['plugin']);
-        $this->assertEquals($data['siteWide'], $array['siteWide']);
+        $this->assertEquals($data['siteWide'], $array['siteWide']); // @deprecated <deprecated-site-wide-plugin>
         $this->assertEquals($data['displayName'], $array['displayName']);
         // @todo this breaks in travis?
         // $this->assertEquals($data['instanceConfig'], $array['instanceConfig']);

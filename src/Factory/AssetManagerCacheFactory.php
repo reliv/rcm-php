@@ -34,7 +34,7 @@ class AssetManagerCacheFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Zend\Cache\Storage\StorageInterface $rcmCache */
-        $rcmCache = $serviceLocator->get('Rcm\Service\Cache');
+        $rcmCache = $serviceLocator->get(\Rcm\Service\Cache::class);
 
         return new ZendCacheAdapter($rcmCache);
     }

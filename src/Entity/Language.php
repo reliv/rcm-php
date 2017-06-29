@@ -4,6 +4,7 @@ namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Tracking\Model\Tracking;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
@@ -20,11 +21,12 @@ use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity(repositoryClass="Rcm\Repository\Language")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="rcm_languages")
  *
  * @SuppressWarnings("CamelCase")
  */
-class Language extends AbstractApiModel implements \IteratorAggregate
+class Language extends ApiModelTrackingAbstract implements \IteratorAggregate, Tracking
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -83,6 +85,92 @@ class Language extends AbstractApiModel implements \IteratorAggregate
      * @deprecated
      */
     protected $oldWebLanguage;
+
+    /**
+     * <tracking>
+     *
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * <tracking>
+     *
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
+     */
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        parent::__construct($createdByUserId, $createdReason);
+    }
+
+    /**
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
+     */
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+
+        return $new;
+    }
 
     /**
      * Alias of getThreeDigit() - Returns the three digit ISO "terminological"
@@ -301,7 +389,7 @@ class Language extends AbstractApiModel implements \IteratorAggregate
      *
      * @return void
      */
-    public function populate(array $data = [], array $ignore = [])
+    public function populate(array $data = [], array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (!empty($data['languageId']) && !in_array('languageId', $ignore)) {
             $this->setLanguageId($data['languageId']);
@@ -379,5 +467,25 @@ class Language extends AbstractApiModel implements \IteratorAggregate
         }
 
         return $data;
+    }
+
+    /**
+     * @return void
+     *
+     * @ORM\PrePersist
+     */
+    public function assertHasTrackingData()
+    {
+        parent::assertHasTrackingData();
+    }
+
+    /**
+     * @return void
+     *
+     * @ORM\PreUpdate
+     */
+    public function assertHasNewModifiedData()
+    {
+        parent::assertHasNewModifiedData();
     }
 }

@@ -4,7 +4,6 @@ namespace Rcm\Factory;
 
 use Rcm\Controller\IndexController;
 use Rcm\Page\Renderer\PageRendererBc;
-use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -14,13 +13,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * Factory for the Index Controller.
  *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: 1.0
- * @link      https://github.com/reliv
+ * @category    Reliv
+ * @package     Rcm
+ * @author      Westin Shafer <wshafer@relivinc.com>
+ * @copyright   2012 Reliv International
+ * @license     License.txt New BSD License
+ * @version     Release: 1.0
+ * @link        https://github.com/reliv
  *
  */
 class IndexControllerFactory implements FactoryInterface
@@ -45,7 +44,7 @@ class IndexControllerFactory implements FactoryInterface
         $pageRenderer = $serviceLocator->get(PageRendererBc::class);
 
         /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+        $currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
 
         return new IndexController(
             $pageRenderer,

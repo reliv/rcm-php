@@ -56,7 +56,7 @@ class RcmMockPluginFactory implements FactoryInterface
 
 
         /** @var \Zend\Cache\Storage\Adapter\Memory $cache */
-        $cache = $serviceLocator->get('Rcm\Service\Cache');
+        $cache = $serviceLocator->get(\Rcm\Service\Cache::class);
 
         $controller = new PluginController(
             $cache

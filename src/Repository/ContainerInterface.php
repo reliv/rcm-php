@@ -2,6 +2,8 @@
 
 namespace Rcm\Repository;
 
+use Rcm\Tracking\Model\Tracking;
+
 /**
  * Container Repository Interface
  *
@@ -17,7 +19,6 @@ namespace Rcm\Repository;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-
 interface ContainerInterface
 {
     /**
@@ -53,19 +54,21 @@ interface ContainerInterface
     public function getRevisionDbInfo($siteId, $name, $revisionId);
 
     /**
-     * Save a container
-     *
      * @param \Rcm\Entity\ContainerInterface $container
      * @param                                $containerData
-     * @param                                $author
+     * @param                                $createdByUserId
+     * @param string                         $createdReason
+     * @param string                         $author
      * @param null                           $revisionNumber
      *
-     * @return mixed
+     * @return int revisionId
      */
     public function saveContainer(
         \Rcm\Entity\ContainerInterface $container,
         $containerData,
-        $author,
+        $createdByUserId,
+        $createdReason = Tracking::UNKNOWN_REASON,
+        $author = Tracking::UNKNOWN_AUTHOR,
         $revisionNumber = null
     );
 }

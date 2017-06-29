@@ -51,7 +51,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->domain = new Domain();
+        $this->domain = new Domain('user123');
     }
 
     /**
@@ -98,7 +98,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsNotPrimaryDomain()
     {
-        $primaryDomain = new Domain();
+        $primaryDomain = new Domain('user123');
         $this->domain->setPrimary($primaryDomain);
 
         $this->assertFalse($this->domain->isPrimary());
@@ -140,7 +140,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAndSetSite()
     {
-        $site = new Site();
+        $site = new Site('user123');
 
         $this->domain->setSite($site);
         $actual = $this->domain->getSite();
@@ -206,7 +206,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetPrimaryDomainName()
     {
-        $primaryDomain = new Domain();
+        $primaryDomain = new Domain('user123');
         $primaryDomain->setDomainId(654);
 
         $this->domain->setPrimary($primaryDomain);
@@ -237,13 +237,13 @@ class DomainTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetAdditionalDomainNames()
     {
-        $domainOne = new Domain();
+        $domainOne = new Domain('user123');
         $domainOne->setDomainId(1);
 
-        $domainTwo = new Domain();
+        $domainTwo = new Domain('user123');
         $domainTwo->setDomainId(2);
 
-        $domainThree = new Domain();
+        $domainThree = new Domain('user123');
         $domainThree->setDomainId(3);
 
         $expected = [
@@ -268,9 +268,9 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         $data = [];
         $data['domainId'] = 123;
         $data['domain'] = 'test';
-        $data['primaryDomain'] = new Domain();
+        $data['primaryDomain'] = new Domain('user123');
 
-        $objOne = new Domain();
+        $objOne = new Domain('user123');
 
         $objOne->populate($data);
 
@@ -278,7 +278,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['domain'], $objOne->getDomainName());
         $this->assertEquals($data['primaryDomain'], $objOne->getPrimary());
 
-        $objTwo = new Domain();
+        $objTwo = new Domain('user123');
 
         $objTwo->populateFromObject($objOne);
 

@@ -12,19 +12,22 @@ return [
     'controller_plugins' => [
         'factories' => [
             'shouldShowRevisions'
-            => 'Rcm\Factory\ShouldShowRevisionsPluginFactory',
-            'rcmIsAllowed' =>
-                'Rcm\Factory\RcmIsAllowedFactory',
-            'rcmIsSiteAdmin' =>
-                'Rcm\Factory\IsSiteAdminPluginFactory',
-            'rcmIsPageAllowed' =>
-                '\Rcm\Factory\RcmIsPageAllowedPluginFactory',
+            => Rcm\Factory\ShouldShowRevisionsPluginFactory::class,
+
+            'rcmIsAllowed'
+            => Rcm\Factory\RcmIsAllowedFactory::class,
+
+            'rcmIsSiteAdmin'
+            => Rcm\Factory\IsSiteAdminPluginFactory::class,
+
+            'rcmIsPageAllowed'
+            => Rcm\Factory\RcmIsPageAllowedPluginFactory::class,
         ],
         'invokables' => [
             'redirectToPage'
-            => 'Rcm\Controller\Plugin\RedirectToPage',
+            => Rcm\Controller\Plugin\RedirectToPage::class,
             'urlToPage'
-            => 'Rcm\Controller\Plugin\UrlToPage',
+            => Rcm\Controller\Plugin\UrlToPage::class,
         ],
     ],
     /* controllers */
@@ -48,7 +51,7 @@ return [
     /* route_manager */
     'route_manager' => [
         'invokables' => [
-            'Rcm\Route\Cms' => 'Rcm\Route\Cms'
+            \Rcm\Route\Cms::class => \Rcm\Route\Cms::class
         ],
     ],
     /* router */
@@ -67,18 +70,18 @@ return [
         'invokables' => [
             /* <OVER-RIDE ZF2 HELPERS> */
             'headmeta'
-            => 'Rcm\View\Helper\HeadMeta',
+            => Rcm\View\Helper\HeadMeta::class,
             'headtitle'
-            => 'Rcm\View\Helper\HeadTitle',
+            => Rcm\View\Helper\HeadTitle::class,
             'headlink'
-            => 'Rcm\View\Helper\HeadLink',
+            => Rcm\View\Helper\HeadLink::class,
             /* </OVER-RIDE ZF2 HELPERS> */
             'rcmOutOfDateBrowserWarning'
-            => 'Rcm\View\Helper\OutOfDateBrowserWarning',
+            => Rcm\View\Helper\OutOfDateBrowserWarning::class,
             'urlToPage'
-            => 'Rcm\View\Helper\UrlToPage',
+            => Rcm\View\Helper\UrlToPage::class,
             'revisionHelper'
-            => 'Rcm\View\Helper\RevisionHelper',
+            => Rcm\View\Helper\RevisionHelper::class,
 
         ],
     ],

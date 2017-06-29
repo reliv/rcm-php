@@ -1,21 +1,4 @@
 <?php
-/**
- * Unit Test for the Plugin Wrapper
- *
- * This file contains the unit test for the Plugin Wrapper
- *
- * PHP version 5.3
- *
- * LICENSE: BSD
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   GIT: <git_id>
- * @link      http://github.com/reliv
- */
 
 namespace RcmTest\Entity;
 
@@ -51,7 +34,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->pluginWrapper = new PluginWrapper();
+        $this->pluginWrapper = new PluginWrapper('user123');
     }
 
     /**
@@ -117,7 +100,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetInstance()
     {
-        $plugin = new PluginInstance();
+        $plugin = new PluginInstance('user123');
         $plugin->setInstanceId(44);
 
         $this->pluginWrapper->setInstance($plugin);
@@ -127,19 +110,6 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($plugin instanceof PluginInstance);
         $this->assertEquals($plugin, $actual);
     }
-
-    /**
-     * Test Set Plugin Instance Only Accepts a Plugin Instance object
-     *
-     * @return void
-     *
-     * @covers \Rcm\Entity\PluginWrapper
-     * @expectedException \TypeError
-     */
-//    public function testSetCreatedDateOnlyAcceptsDateTime()
-//    {
-//        $this->pluginWrapper->setInstance(time());
-//    }
 
     /**
      * Test Get and Set Height
@@ -215,7 +185,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
                 'instance' => [
                     'pluginInstanceId' => 44,
                     'plugin' => 'MockPlugin',
-                    'siteWide' => false,
+                    'siteWide' => false, // @deprecated <deprecated-site-wide-plugin>
                     'displayName' => null,
                     'instanceConfig' => [
                         'var1' => 1,
@@ -235,7 +205,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
                 'instance' => [
                     'pluginInstanceId' => 46,
                     'plugin' => 'MockPlugin2',
-                    'siteWide' => true,
+                    'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                     'displayName' => 'TestSiteWide',
                     'instanceConfig' => [
                         'var3' => 3,
@@ -247,10 +217,11 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
         ];
 
         foreach ($instances as $instance) {
-            $plugin = new PluginInstance();
+            $plugin = new PluginInstance('user123');
             $plugin->setInstanceId($instance['instance']['pluginInstanceId']);
             $plugin->setPlugin($instance['instance']['plugin']);
 
+            // @deprecated <deprecated-site-wide-plugin>
             if ($instance['instance']['siteWide']) {
                 $plugin->setSiteWide();
             }
@@ -259,7 +230,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
             $plugin->setInstanceConfig($instance['instance']['instanceConfig']);
             $plugin->setMd5($instance['instance']['md5']);
 
-            $wrapper = new PluginWrapper();
+            $wrapper = new PluginWrapper('user123');
             $wrapper->setPluginWrapperId($instance['pluginWrapperId']);
             $wrapper->setLayoutContainer($instance['layoutContainer']);
             $wrapper->setRenderOrderNumber($instance['renderOrder']);
@@ -268,7 +239,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
             $wrapper->setDivFloat($instance['divFloat']);
             $wrapper->setInstance($plugin);
 
-            $clonedWrapper = clone $wrapper;
+            $clonedWrapper = $wrapper->newInstance('user123');
 
             $this->assertNotEquals(
                 $wrapper->getPluginWrapperId(),
@@ -305,6 +276,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
             $preInstance = $wrapper->getInstance();
             $clonedInstance = $clonedWrapper->getInstance();
 
+            // @deprecated <deprecated-site-wide-plugin>
             if (!$instance['instance']['siteWide']) {
                 $this->assertNotEquals(
                     $preInstance->getInstanceId(),
@@ -324,6 +296,7 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
                 $clonedInstance->getPlugin()
             );
 
+            // @deprecated <deprecated-site-wide-plugin>
             $this->assertEquals(
                 $preInstance->isSiteWide(),
                 $clonedInstance->isSiteWide()
@@ -345,11 +318,11 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
             );
         }
 
-        $wrapper = new PluginWrapper();
+        $wrapper = new PluginWrapper('user123');
 
-        $clone = clone($wrapper);
+        $clone = $wrapper->newInstance('user123');
 
-        $this->assertInstanceOf('Rcm\Entity\PluginWrapper', $clone);
+        $this->assertInstanceOf(\Rcm\Entity\PluginWrapper::class, $clone);
     }
 
     public function testUtilities()
@@ -360,9 +333,9 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
         $data['height'] = 123;
         $data['width'] = 321;
         $data['divFloat'] = 'left';
-        $data['instance'] = new PluginInstance();
+        $data['instance'] = new PluginInstance('user123');
 
-        $obj1 = new PluginWrapper();
+        $obj1 = new PluginWrapper('user123');
 
         $obj1->populate($data);
 

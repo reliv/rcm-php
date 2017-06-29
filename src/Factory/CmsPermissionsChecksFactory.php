@@ -33,7 +33,7 @@ class CmsPermissionsChecksFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \RcmUser\Service\RcmUserService $rcmUserService */
-        $rcmUserService = $serviceLocator->get('RcmUser\Service\RcmUserService');
+        $rcmUserService = $serviceLocator->get(\RcmUser\Service\RcmUserService::class);
         return new CmsPermissionChecks($rcmUserService);
     }
 }

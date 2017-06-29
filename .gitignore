@@ -10,3 +10,4 @@ nbproject
 .project
 .settings
 vendor
+public/bower_components

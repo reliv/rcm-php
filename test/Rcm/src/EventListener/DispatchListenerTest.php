@@ -61,7 +61,7 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
         $title = 'My Site Title';
         $layout = 'myLayout';
 
-        $mockLayoutManager = $this->getMockBuilder('Rcm\Service\LayoutManager')
+        $mockLayoutManager = $this->getMockBuilder(\Rcm\Service\LayoutManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -69,15 +69,15 @@ class DispatchListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getSiteLayout')
             ->will($this->returnValue($layout));
 
-        $currentSite = new Site();
+        $currentSite = new Site('user123');
         $currentSite->setSiteId(1);
         $currentSite->setFavIcon($favicon);
         $currentSite->setSiteTitle($title);
         $currentSite->setSiteLayout($layout);
 
         $testCase = [
-            ['Rcm\Service\LayoutManager', $mockLayoutManager],
-            ['Rcm\Service\CurrentSite', $currentSite],
+            [\Rcm\Service\LayoutManager::class, $mockLayoutManager],
+            [\Rcm\Service\CurrentSite::class, $currentSite],
         ];
 
         // Zend\ServiceManager\ServiceLocatorInterface

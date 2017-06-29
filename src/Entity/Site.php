@@ -6,6 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Page\PageTypes\PageTypes;
+use Rcm\Tracking\Exception\TrackingException;
+use Rcm\Tracking\Model\Tracking;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
@@ -23,11 +25,12 @@ use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity (repositoryClass="Rcm\Repository\Site")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="rcm_sites")
  *
  * @SuppressWarnings(PHPMD)
  */
-class Site extends AbstractApiModel implements \IteratorAggregate
+class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Tracking
 {
     const STATUS_ACTIVE = 'A';
 
@@ -197,6 +200,48 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     protected $notFoundPage = 'not-found';
 
     /**
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdDate;
+
+    /**
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
+
+    /**
      * @var array Supported page types - these should be populated at object creation
      * @todo This should be part of the DB schema, so each site can have a list on creation
      * @todo Get these from PageTypes service
@@ -221,47 +266,89 @@ class Site extends AbstractApiModel implements \IteratorAggregate
         ];
 
     /**
-     * Constructor for site
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
      */
-    public function __construct()
-    {
+    /**
+     * @param string        $createdByUserId
+     * @param string        $createdReason
+     * @param Domain|null   $domain
+     * @param Country|null  $country
+     * @param Language|null $language
+     */
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON,
+        $domain = null,
+        $country = null,
+        $language = null
+    ) {
         $this->pages = new ArrayCollection();
         $this->sitePlugins = new ArrayCollection();
         $this->containers = new ArrayCollection();
-        $this->domain = new Domain();
-        $this->country = new Country();
-        $this->language = new Language();
+
+        // Removed this because it is dangerous
+        if ($domain instanceof Domain) {
+            $this->setDomain($domain);
+        }
+
+        // Removed this because it is dangerous
+        if ($country instanceof Country) {
+            $this->setCountry($country);
+        }
+
+        // Removed this because it is dangerous
+        if ($language instanceof Language) {
+            $this->setLanguage($language);
+        }
+
+        parent::__construct($createdByUserId, $createdReason);
     }
 
     /**
-     * __clone
+     * Get a clone with special logic
      *
-     * @return void
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
      */
-    public function __clone()
-    {
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         if (!$this->siteId) {
-            return;
+            return clone($this);
         }
 
-        $this->siteId = null;
-        $this->domain = null;
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
 
-        /* Clone Site Wide Plugins */
-        $siteWidePlugins = $this->sitePlugins;
-        $clonedSiteWides = [];
-        $siteWideIdsToChange = [];
+        $new->siteId = null;
+        $new->domain = null;
 
-        /** @var \Rcm\Entity\PluginInstance $siteWidePlugin */
-        foreach ($siteWidePlugins as $siteWidePlugin) {
-            $clonedSiteWide = clone $siteWidePlugin;
-            $siteWideIdsToChange[$siteWidePlugin->getInstanceId()]
-                = $clonedSiteWide;
-            $clonedSiteWides[] = $clonedSiteWide;
-        }
+        /* @deprecated Clone Site Wide Plugins
+         * $siteWidePlugins = $new->sitePlugins;
+         * $clonedSiteWides = [];
+         * $siteWideIdsToChange = [];
+         *
+         * /** @var \Rcm\Entity\PluginInstance $siteWidePlugin *
+         * foreach ($siteWidePlugins as $siteWidePlugin) {
+         * $clonedSiteWide = $siteWidePlugin->newInstance(
+         * $createdByUserId,
+         * $createdReason
+         * );
+         * $siteWideIdsToChange[$siteWidePlugin->getInstanceId()]
+         * = $clonedSiteWide;
+         * $clonedSiteWides[] = $clonedSiteWide;
+         * }
+         */
 
         /* Get Cloned Pages */
-        $pages = $this->getPages();
+        $pages = $new->getPages();
         $clonedPages = [];
 
         /** @var \Rcm\Entity\Page $page */
@@ -269,24 +356,29 @@ class Site extends AbstractApiModel implements \IteratorAggregate
             $pageType = $page->getPageType();
 
             // Only clone if is supported
-            if (!isset($this->supportedPageTypes[$pageType])) {
+            if (!isset($new->supportedPageTypes[$pageType])) {
                 continue;
             }
             // Only clone if is cloneable
-            if (!$this->supportedPageTypes[$pageType]['canClone']) {
+            if (!$new->supportedPageTypes[$pageType]['canClone']) {
                 continue;
             }
 
-            $clonedPage = $this->getContainerClone($page, $siteWideIdsToChange);
+            $clonedPage = $page->newInstanceIfHasRevision(
+                $createdByUserId,
+                $createdReason
+            );
 
             if (!$clonedPage) {
                 continue;
             }
 
+            $clonedPage->setSite($new);
+
             $clonedPages[] = $clonedPage;
         }
 
-        $this->pages = new ArrayCollection($clonedPages);
+        $new->pages = new ArrayCollection($clonedPages);
 
         /* Get Cloned Containers */
         $containers = $this->getContainers();
@@ -294,57 +386,65 @@ class Site extends AbstractApiModel implements \IteratorAggregate
 
         /** @var \Rcm\Entity\Container $container */
         foreach ($containers as $container) {
-            $clonedContainer = $this->getContainerClone(
-                $container,
-                $siteWideIdsToChange
+            $clonedContainer = $container->newInstanceIfHasRevision(
+                $createdByUserId,
+                $createdReason
             );
 
             if (!$clonedContainer) {
                 continue;
             }
 
+            $clonedContainer->setSite($new);
+
             $clonedContainers[] = $clonedContainer;
         }
 
-        $this->containers = new ArrayCollection($clonedContainers);
+        $new->containers = new ArrayCollection($clonedContainers);
+
+        return $new;
     }
 
     /**
-     * getContainerClone
+     * @deprecated use ContainerInterface::newInstanceIfRevisionExists
+     * @param Page   $originalPage
+     * @param string $createdByUserId
+     * @param string $createdReason
      *
-     * @param ContainerInterface $original
-     * @param array              $siteWideIdsToChange
-     *
-     * @return null|ContainerInterface
+     * @return Page
      */
-    protected function getContainerClone(
-        ContainerInterface $original,
-        $siteWideIdsToChange
+    protected function getPageClone(
+        Page $originalPage,
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
     ) {
-        $clonedContainer = clone $original;
-        $clonedContainer->setSite($this);
-        $clonedContainer->setName($original->getName());
+        $clonedPage = $originalPage->newInstance(
+            $createdByUserId,
+            $createdReason
+        );
 
-        $check = $original->getPublishedRevision();
+        $clonedPage->setSite($this);
+        $clonedPage->setName($originalPage->getName());
 
-        if (empty($check)) {
+        $publishedRevision = $originalPage->getPublishedRevision();
+
+        if (empty($publishedRevision)) {
             return null;
         }
 
-        $revision = $clonedContainer->getStagedRevision();
+        $stagedRevision = $clonedPage->getStagedRevision();
 
-        if (empty($revision)) {
+        if (empty($stagedRevision)) {
             return null;
         }
 
-        $clonedContainer->setPublishedRevision($revision);
+        $clonedPage->setPublishedRevision($stagedRevision);
 
-        $this->fixRevisionSiteWides($revision, $siteWideIdsToChange);
-
-        return $clonedContainer;
+        return $clonedPage;
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * fixRevisionSiteWides
      *
      * @param Revision $revision
@@ -563,7 +663,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
      *
      * @param \Rcm\Entity\Country $country Country Entity
      *
-     * @return null
+     * @return void
      */
     public function setCountry(Country $country)
     {
@@ -751,6 +851,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Get Site wide plugins
      *
      * @return ArrayCollection Returns an array collection of PluginInstance Entities
@@ -761,11 +862,12 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Add a plugin to the site.
      *
      * @param PluginInstance $plugin Site wide plugin.
      *
-     * @return null
+     * @return void
      * @throws InvalidArgumentException
      */
     public function addSiteWidePlugin(PluginInstance $plugin)
@@ -788,6 +890,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * listAvailableSiteWidePlugins
      *
      * @return array
@@ -807,7 +910,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
             $list[$plugin->getDisplayName()] = [
                 'displayName' => $plugin->getDisplayName(),
                 'icon' => $plugin->getIcon(),
-                'siteWide' => true,
+                'siteWide' => true, // @deprecated <deprecated-site-wide-plugin>
                 'name' => $plugin->getPlugin(),
                 'instanceId' => $plugin->getInstanceId()
             ];
@@ -817,6 +920,7 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Remove a Site Wide Plugin Instance from the entity
      *
      * @param PluginInstance $plugin Site wide plugin.
@@ -966,34 +1070,47 @@ class Site extends AbstractApiModel implements \IteratorAggregate
     }
 
     /**
-     * populate @todo some properties are missing
+     * populate
+     *
+     * @todo some properties are missing
+     * @todo $data['createdByUserId'] should
      *
      * @param array $data
      * @param array $ignore
      *
      * @return void
+     * @throws TrackingException
      */
-    public function populate(array $data, array $ignore = [])
+    public function populate(array $data, array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (!empty($data['siteId']) && !in_array('siteId', $ignore)) {
             $this->setSiteId($data['siteId']);
         }
+
+        // Domain
         if (!empty($data['domain']) && $data['domain'] instanceof Domain
             && !in_array('domain', $ignore)
         ) {
             $this->setDomain($data['domain']);
+            unset($data['domain']);
         }
+
+        if (!empty($data['domain']) && empty($data['createdByUserId'])) {
+            throw new TrackingException('Populating new domain requires createdByUserId');
+        }
+
         if (!empty($data['domain']) && is_array($data['domain'])
-            && !in_array(
-                'domain',
-                $ignore
-            )
+            && !in_array('domain', $ignore)
         ) {
-            // is this right?
-            $domain = new Domain();
+            // @todo This is dangerous
+            $domain = new Domain(
+                $data['createdByUserId'],
+                'New domain on populate in ' . self::class
+            );
             $domain->populate($data['domain']);
             $this->setDomain($domain);
         }
+
         if (!empty($data['theme']) && !in_array('theme', $ignore)) {
             $this->setTheme($data['theme']);
         }
@@ -1003,33 +1120,57 @@ class Site extends AbstractApiModel implements \IteratorAggregate
         if (!empty($data['siteTitle']) && !in_array('siteTitle', $ignore)) {
             $this->setSiteTitle($data['siteTitle']);
         }
+
+        // Language
         if (!empty($data['language']) && $data['language'] instanceof Language
             && !in_array('language', $ignore)
         ) {
             $this->setLanguage($data['language']);
+            unset($data['language']);
         }
+
+        if (!empty($data['language']) && empty($data['createdByUserId'])) {
+            throw new TrackingException('Populating new language requires createdByUserId');
+        }
+
         if (!empty($data['language']) && is_array($data['language'])
             && !in_array(
                 'language',
                 $ignore
             )
         ) {
-            $language = new Language();
+            // @todo This is dangerous
+            $language = new Language(
+                $data['createdByUserId'],
+                'New language on populate in ' . self::class
+            );
             $language->populate($data['language']);
             $this->setLanguage($language);
         }
+
+        // Country
         if (!empty($data['country']) && $data['country'] instanceof Country
             && !in_array('country', $ignore)
         ) {
             $this->setCountry($data['country']);
+            unset($data['country']);
         }
+
+        if (!empty($data['country']) && empty($data['createdByUserId'])) {
+            throw new TrackingException('Populating new country requires createdByUserId');
+        }
+
         if (!empty($data['country']) && is_array($data['country'])
             && !in_array(
                 'country',
                 $ignore
             )
         ) {
-            $country = new Country();
+            // @todo This is dangerous
+            $country = new Country(
+                $data['createdByUserId'],
+                'New country on populate in ' . self::class
+            );
             $country->populate($data['country']);
             $this->setCountry($country);
         }

@@ -50,7 +50,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->redirect = new Redirect();
+        $this->redirect = new Redirect('user123');
     }
 
     /**
@@ -146,7 +146,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndSetSiteId()
     {
-        $siteId = new Site();
+        $siteId = new Site('user123');
 
         $siteId->setSiteId(1);
 
@@ -159,7 +159,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAndSetSite()
     {
-        $site = new Site();
+        $site = new Site('user123');
         $site->setSiteId(28);
 
         $this->redirect->setSite($site);
@@ -171,11 +171,11 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
 
     public function testToArray()
     {
-        $unit = new Redirect();
+        $unit = new Redirect('user123');
 
-        $site = new Site();
+        $site = new Site('user123');
 
-        $domain = new Domain();
+        $domain = new Domain('user123');
 
         $site->setSiteId(28);
 

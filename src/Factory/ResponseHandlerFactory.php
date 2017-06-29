@@ -34,7 +34,7 @@ class ResponseHandlerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+        $currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
 
         /** @var \RcmUser\Service\RcmUserService $rcmUserService */
         $rcmUserService = $serviceLocator->get('RcmUser\Service\RcmUserService');

@@ -62,7 +62,7 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
 
         $this->pageRepo = $pageRepo;
 
-        $this->currentSite = new Site();
+        $this->currentSite = new Site('user123');
         $this->currentSite->setSiteId(1);
 
         /** @var \Rcm\Repository\Page $pageRepo */
@@ -78,7 +78,7 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $this->assertInstanceOf('Rcm\Validator\PageTemplate', $this->validator);
+        $this->assertInstanceOf(\Rcm\Validator\PageTemplate::class, $this->validator);
     }
 
     /**
@@ -119,7 +119,7 @@ class PageTemplateTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $defaultValue->getSiteId());
 
-        $site = new Site();
+        $site = new Site('user123');
         $site->setSiteId(22);
 
         $this->validator->setSite($site);

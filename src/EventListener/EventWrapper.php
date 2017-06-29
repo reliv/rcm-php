@@ -48,7 +48,7 @@ class EventWrapper
 
         /** @var \Rcm\EventListener\RouteListener $routeListener */
         $routeListener = $this->serviceLocator->get(
-            'Rcm\EventListener\RouteListener'
+            \Rcm\EventListener\RouteListener::class
         );
 
         $return = $routeListener->checkRedirect($event);
@@ -91,7 +91,7 @@ class EventWrapper
 
         /** @var \Rcm\EventListener\DispatchListener $dispatchListener */
         $dispatchListener
-            = $this->serviceLocator->get('Rcm\EventListener\DispatchListener');
+            = $this->serviceLocator->get(\Rcm\EventListener\DispatchListener::class);
 
         $return = $dispatchListener->setSiteLayout($event);
 
@@ -119,7 +119,7 @@ class EventWrapper
 
         /** @var \Rcm\EventListener\EventFinishListener $eventFinishListener */
         $eventFinishListener = $this->serviceLocator->get(
-            'Rcm\EventListener\EventFinishListener'
+            \Rcm\EventListener\EventFinishListener::class
         );
 
         $return = $eventFinishListener->processRcmResponses($event);
@@ -142,7 +142,7 @@ class EventWrapper
     {
         /** @var \Rcm\EventListener\ViewEventListener $viewEventListener */
         $viewEventListener
-            = $this->serviceLocator->get('Rcm\EventListener\ViewEventListener');
+            = $this->serviceLocator->get(\Rcm\EventListener\ViewEventListener::class);
 
         $return = $viewEventListener->processRcmResponses($event);
 

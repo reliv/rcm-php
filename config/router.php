@@ -9,7 +9,7 @@ return [
             'options' => [
                 'route' => '/api/admin/instance-configs/:pluginType/:id',
                 'defaults' => [
-                    'controller' => 'Rcm\Controller\InstanceConfigApiController',
+                    'controller' => \Rcm\Controller\InstanceConfigApiController::class,
                 ]
             ],
         ],
@@ -19,14 +19,14 @@ return [
             'options' => [
                 'route' => '/rcm[/:page][/:revision]',
                 'defaults' => [
-                    'controller' => 'Rcm\Controller\IndexController',
+                    'controller' => \Rcm\Controller\IndexController::class,
                     'action' => 'index',
                 ]
             ],
         ],
         /* CmsRoute Example*/
         //'rcmCmsPageRevisionRoute' => [
-        //    'type' => 'Rcm\Route\Cms',
+        //    'type' => \Rcm\Route\Cms::class,
         //    'options' => [
         //        'route' => '/rcm[/:page][/:revision]',
         //        // optional: Defaults to PageTypes::NORMAL if left blank
@@ -47,7 +47,7 @@ return [
                     'pageType' => '[a-z]',
                 ],
                 'defaults' => [
-                    'controller' => 'Rcm\Controller\IndexController',
+                    'controller' => \Rcm\Controller\IndexController::class,
                     'action' => 'index',
                 ]
             ],
@@ -57,7 +57,7 @@ return [
             'options' => [
                 'route' => '/blog[/:page]',
                 'defaults' => [
-                    'controller' => 'Rcm\Controller\IndexController',
+                    'controller' => \Rcm\Controller\IndexController::class,
                     'action' => 'index',
                 ]
             ],
@@ -67,7 +67,7 @@ return [
             'options' => [
                 'route' => '/rcm-admin-get-instance/:pluginType/:instanceId',
                 'defaults' => [
-                    'controller' => 'Rcm\Controller\NewPluginInstanceApiController',
+                    'controller' => \Rcm\Controller\NewPluginInstanceApiController::class,
                     'action' => 'getNewInstance',
                 ],
             ],
@@ -77,7 +77,7 @@ return [
             'options' => [
                 'route' => '/rcm/core/rpc/render-plugin-instance-preview',
                 'defaults' => [
-                    'controller' => 'Rcm\Controller\RenderPluginInstancePreviewApiController',
+                    'controller' => \Rcm\Controller\RenderPluginInstancePreviewApiController::class,
                     'action' => 'index',
                 ],
             ],
@@ -87,7 +87,7 @@ return [
             'options' => [
                 'route' => '/rcm-page-search/title[/:query]',
                 'defaults' => [
-                    'controller' => 'Rcm\Controller\PageSearchApiController',
+                    'controller' => \Rcm\Controller\PageSearchApiController::class,
                     'action' => 'siteTitleSearch',
                 ]
             ],
@@ -97,7 +97,7 @@ return [
             'options' => [
                 'route' => '/rcm-page-search[/:language]',
                 'defaults' => [
-                    'controller' => 'Rcm\Controller\PageSearchApiController',
+                    'controller' => \Rcm\Controller\PageSearchApiController::class,
                     'action' => 'allSitePages',
                 ]
             ],
@@ -107,7 +107,7 @@ return [
             'options' => [
                 'route' => '/rcm/page/check[/:pageType]/:pageId',
                 'defaults' => [
-                    'controller' => 'Rcm\Controller\PageCheckController',
+                    'controller' => \Rcm\Controller\PageCheckController::class,
                 ],
             ],
         ],
@@ -116,7 +116,7 @@ return [
             'options' => [
                 'route' => '/rcm/cache/flush',
                 'defaults' => [
-                    'controller' => '\Rcm\Controller\CacheController',
+                    'controller' => \Rcm\Controller\CacheController::class,
                     'action' => 'flush',
                 ],
             ],

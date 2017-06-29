@@ -33,7 +33,7 @@ class DoctrineCacheFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \Zend\Cache\Storage\StorageInterface $zendCache */
-        $zendCache = $serviceLocator->get('Rcm\Service\Cache');
+        $zendCache = $serviceLocator->get(\Rcm\Service\Cache::class);
 
         return new ZendStorageCache($zendCache);
     }

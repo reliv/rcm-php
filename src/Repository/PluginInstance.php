@@ -3,10 +3,10 @@
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Rcm\Entity\PluginInstance as PluginInstanceEntity;
 use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * PluginInstance.  Used to get custom page results from the DB
@@ -24,10 +24,10 @@ use Rcm\Exception\InvalidArgumentException;
 class PluginInstance extends EntityRepository
 {
     /**
-     * updatePlugin
-     *
-     * @param array      $pluginData
+     * @param            $pluginData
      * @param SiteEntity $site
+     * @param string     $modifiedByUserId
+     * @param string     $modifiedReason
      * @param bool       $forceSave
      * @param bool       $doFlush
      *
@@ -36,6 +36,8 @@ class PluginInstance extends EntityRepository
     public function updatePlugin(
         $pluginData,
         SiteEntity $site,
+        string $modifiedByUserId,
+        string $modifiedReason = Tracking::UNKNOWN_REASON,
         $forceSave = false,
         $doFlush = true
     ) {
@@ -45,28 +47,38 @@ class PluginInstance extends EntityRepository
             return $this->updateExistingPlugin(
                 $pluginData,
                 $site,
+                $modifiedByUserId,
+                $modifiedReason,
                 $forceSave,
                 $doFlush
             );
         }
 
-        return $this->createPluginInstance($pluginData, $site, null, $doFlush);
+        return $this->createPluginInstance(
+            $pluginData,
+            $site,
+            $modifiedByUserId,
+            $modifiedReason,
+            null,
+            $doFlush
+        );
     }
 
     /**
-     * updateExistingPlugin
-     *
      * @param array      $pluginData
      * @param SiteEntity $site
+     * @param string     $modifiedByUserId
+     * @param string     $modifiedReason
      * @param bool       $forceSave
      * @param bool       $doFlush
      *
      * @return PluginInstanceEntity
-     * @throws \InvalidArgumentException
      */
     public function updateExistingPlugin(
         $pluginData,
         SiteEntity $site,
+        string $modifiedByUserId,
+        string $modifiedReason = Tracking::UNKNOWN_REASON,
         $forceSave = false,
         $doFlush = true
     ) {
@@ -94,7 +106,7 @@ class PluginInstance extends EntityRepository
 
         if (!$forceSave
             && $pluginInstance->getMd5() == md5(serialize($pluginData['saveData']))
-            && $pluginInstance->isSiteWide() == (bool)$pluginData['siteWide']
+            && $pluginInstance->isSiteWide() == (bool)$pluginData['siteWide'] // @deprecated <deprecated-site-wide-plugin>
         ) {
             return $pluginInstance;
         }
@@ -102,6 +114,8 @@ class PluginInstance extends EntityRepository
         $newPluginInstance = $this->createPluginInstance(
             $pluginData,
             $site,
+            $modifiedByUserId,
+            $modifiedReason,
             $pluginInstance,
             $doFlush
         );
@@ -110,10 +124,10 @@ class PluginInstance extends EntityRepository
     }
 
     /**
-     * createPluginInstance
-     *
      * @param array      $pluginData
      * @param SiteEntity $site
+     * @param string     $createdByUserId
+     * @param string     $createdReason
      * @param null       $oldPluginInstance
      * @param bool       $doFlush
      *
@@ -122,12 +136,18 @@ class PluginInstance extends EntityRepository
     public function createPluginInstance(
         $pluginData,
         SiteEntity $site,
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON,
         $oldPluginInstance = null,
         $doFlush = true
     ) {
-        $pluginInstance = new PluginInstanceEntity();
+        $pluginInstance = new PluginInstanceEntity(
+            $createdByUserId,
+            $createdReason
+        );
         $pluginInstance->populate($pluginData);
 
+        // @deprecated <deprecated-site-wide-plugin>
         $this->updateSiteSitewide(
             $pluginInstance,
             $site,
@@ -144,6 +164,7 @@ class PluginInstance extends EntityRepository
     }
 
     /**
+     *  @deprecated <deprecated-site-wide-plugin>
      * updateSiteSitewide
      *
      * @param PluginInstanceEntity $pluginInstance
@@ -158,14 +179,17 @@ class PluginInstance extends EntityRepository
         $oldPluginInstance = null
     ) {
         // ignore non-sitewides
+        // @deprecated <deprecated-site-wide-plugin>
         if (!$pluginInstance->isSiteWide()) {
             return;
         }
 
         if (!empty($oldPluginInstance)) {
+            // @deprecated <deprecated-site-wide-plugin>
             $site->removeSiteWidePlugin($oldPluginInstance);
         }
 
+        //  @deprecated <deprecated-site-wide-plugin>
         $site->addSiteWidePlugin($pluginInstance);
 
         $this->_em->persist($site);
@@ -185,6 +209,7 @@ class PluginInstance extends EntityRepository
             $pluginData['pluginInstanceId'] = (int)$pluginData['instanceId'];
         }
 
+        // @deprecated <deprecated-site-wide-plugin>
         if (array_key_exists('sitewideName', $pluginData)) {
             $pluginData['displayName'] = $pluginData['sitewideName'];
         }
@@ -193,13 +218,14 @@ class PluginInstance extends EntityRepository
             $pluginData['plugin'] = $pluginData['name'];
         }
 
+        // @deprecated <deprecated-site-wide-plugin>
         if (array_key_exists('isSitewide', $pluginData)) {
             $pluginData['siteWide'] = $pluginData['isSitewide'];
         }
 
         // Defaults
         if (!isset($pluginData['displayName'])
-            && !empty($pluginData['siteWide'])
+            && !empty($pluginData['siteWide']) // @deprecated <deprecated-site-wide-plugin>
             && !empty($pluginData['plugin'])
         ) {
             $pluginData['displayName'] = $pluginData['plugin'];

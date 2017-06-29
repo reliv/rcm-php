@@ -75,7 +75,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
                 'options' => [
                     'route' => '/rcm/page/check[/:pageType]/:pageId',
                     'defaults' => [
-                        'controller' => 'Rcm\Controller\PageCheckController',
+                        'controller' => \Rcm\Controller\PageCheckController::class,
                     ],
                 ],
             ],
@@ -88,7 +88,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
-            'Rcm\Validator\Page',
+            \Rcm\Validator\Page::class,
             $this->mockPageValidator
         );
 
@@ -98,7 +98,7 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
         $this->request = new Request();
         $this->request->setMethod('GET');
         $this->routeMatch = new RouteMatch(
-            ['controller' => 'Rcm\Controller\PageCheckController']
+            ['controller' => \Rcm\Controller\PageCheckController::class]
         );
         $this->event = new MvcEvent();
         $routerConfig = $config;

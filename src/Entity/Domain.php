@@ -5,6 +5,7 @@ namespace Rcm\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Tracking\Model\Tracking;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 use Zend\Validator\Hostname;
 use Zend\Validator\ValidatorInterface;
@@ -24,12 +25,13 @@ use Zend\Validator\ValidatorInterface;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity (repositoryClass="Rcm\Repository\Domain")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="rcm_domains",
  *     indexes={
  *         @ORM\Index(name="domain_name", columns={"domain"})
  *     })
  */
-class Domain extends AbstractApiModel implements \IteratorAggregate
+class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tracking
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -89,11 +91,90 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
     protected $domainValidator;
 
     /**
-     * Constructor for Domain Entity.
+     * <tracking>
+     *
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
      */
-    public function __construct()
-    {
+    protected $createdDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * <tracking>
+     *
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
+     */
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         $this->additionalDomains = new ArrayCollection();
+        parent::__construct($createdByUserId, $createdReason);
+    }
+
+    /**
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
+     */
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+
+        return $new;
     }
 
     /**
@@ -261,7 +342,7 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
     /**
      * getPrimaryDomainId
      *
-     * @return Domain
+     * @return int|null
      */
     public function getPrimaryDomainId()
     {
@@ -271,7 +352,7 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
     /**
      * getPrimaryId
      *
-     * @return null
+     * @return int|null
      */
     public function getPrimaryId()
     {
@@ -343,7 +424,7 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
      *
      * @return void
      */
-    public function populate(array $data = [], array $ignore = [])
+    public function populate(array $data = [], array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (!empty($data['domainId']) && !in_array('domainId', $ignore)) {
             $this->setDomainId($data['domainId']);
@@ -447,5 +528,25 @@ class Domain extends AbstractApiModel implements \IteratorAggregate
         }
 
         return $data;
+    }
+
+    /**
+     * @return void
+     *
+     * @ORM\PrePersist
+     */
+    public function assertHasTrackingData()
+    {
+        parent::assertHasTrackingData();
+    }
+
+    /**
+     * @return void
+     *
+     * @ORM\PreUpdate
+     */
+    public function assertHasNewModifiedData()
+    {
+        parent::assertHasNewModifiedData();
     }
 }

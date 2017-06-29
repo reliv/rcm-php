@@ -34,7 +34,7 @@ class IsSiteAdminPluginFactory implements FactoryInterface
     {
         $serviceLocator = $mgr->getServiceLocator();
         $cmsPermissionChecks = $serviceLocator->get(
-            'Rcm\Acl\CmsPermissionsChecks'
+            \Rcm\Acl\CmsPermissionChecks::class
         );
 
         $service = new IsSiteAdmin($cmsPermissionChecks);

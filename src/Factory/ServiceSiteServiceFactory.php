@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Rcm\Service\DomainService;
 use Rcm\Service\SiteService;
+use RcmUser\Service\RcmUserService;
 
 /**
  * Class ServiceCurrentSiteFactory

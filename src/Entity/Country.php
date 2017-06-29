@@ -4,6 +4,7 @@ namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Tracking\Model\Tracking;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
@@ -22,9 +23,10 @@ use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity(repositoryClass="Rcm\Repository\Country")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="rcm_countries")
  */
-class Country extends AbstractApiModel implements \IteratorAggregate
+class Country extends ApiModelTrackingAbstract implements \IteratorAggregate, Tracking
 {
     /**
      * @var string ISO Three Digit Country Code
@@ -53,6 +55,92 @@ class Country extends AbstractApiModel implements \IteratorAggregate
     protected $countryName = 'United States';
 
     /**
+     * <tracking>
+     *
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * <tracking>
+     *
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
+     */
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        parent::__construct($createdByUserId, $createdReason);
+    }
+
+    /**
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
+     */
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+
+        return $new;
+    }
+
+    /**
      * getId
      *
      * @return string
@@ -67,7 +155,7 @@ class Country extends AbstractApiModel implements \IteratorAggregate
      *
      * @param string $countryName Name of the Country
      *
-     * @return null
+     * @return void
      *
      */
     public function setCountryName($countryName)
@@ -91,7 +179,7 @@ class Country extends AbstractApiModel implements \IteratorAggregate
      *
      * @param string $iso2 ISO2 Country Code
      *
-     * @return null
+     * @return void
      * @throws InvalidArgumentException
      */
     public function setIso2($iso2)
@@ -119,7 +207,7 @@ class Country extends AbstractApiModel implements \IteratorAggregate
      *
      * @param string $iso3 ISO3 Country Code
      *
-     * @return null
+     * @return void
      * @throws InvalidArgumentException
      */
     public function setIso3($iso3)
@@ -150,7 +238,7 @@ class Country extends AbstractApiModel implements \IteratorAggregate
      *
      * @return void
      */
-    public function populate(array $data = [], array $ignore = [])
+    public function populate(array $data = [], array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (!empty($data['iso3']) && !in_array('iso3', $ignore)) {
             $this->setIso3($data['iso3']);
@@ -210,5 +298,25 @@ class Country extends AbstractApiModel implements \IteratorAggregate
     public function toArray($ignore = [])
     {
         return parent::toArray($ignore);
+    }
+
+    /**
+     * @return void
+     *
+     * @ORM\PrePersist
+     */
+    public function assertHasTrackingData()
+    {
+        parent::assertHasTrackingData();
+    }
+
+    /**
+     * @return void
+     *
+     * @ORM\PreUpdate
+     */
+    public function assertHasNewModifiedData()
+    {
+        parent::assertHasNewModifiedData();
     }
 }

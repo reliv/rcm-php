@@ -4,6 +4,9 @@ namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Rcm\Exception\InvalidArgumentException;
+use Rcm\Tracking\Exception\TrackingException;
+use Rcm\Tracking\Model\Tracking;
+use Rcm\Tracking\Model\TrackingAbstract;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 use Reliv\RcmApiLib\Model\ApiSerializableInterface;
 
@@ -23,7 +26,7 @@ use Reliv\RcmApiLib\Model\ApiSerializableInterface;
  * @link      http://github.com/reliv
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-abstract class ContainerAbstract implements ContainerInterface
+abstract class ContainerAbstract extends TrackingAbstract implements ContainerInterface, Tracking
 {
     /**
      * @var string Container name
@@ -34,11 +37,6 @@ abstract class ContainerAbstract implements ContainerInterface
      * @var string Authors name
      */
     protected $author;
-
-    /**
-     * @var \DateTime Date page was first created
-     */
-    protected $createdDate;
 
     /**
      * @var \DateTime Date page was last published
@@ -91,27 +89,90 @@ abstract class ContainerAbstract implements ContainerInterface
     protected $lastSavedDraft;
 
     /**
-     * Clone the container
-     *
-     * @return void
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
      */
-    public function __clone()
-    {
-        $this->createdDate = new \DateTime();
-        $this->lastPublished = new \DateTime();
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        parent::__construct($createdByUserId, $createdReason);
+    }
 
-        $this->revisions = new ArrayCollection();
+    /**
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return ContainerInterface|ContainerAbstract
+     */
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        /** @var ContainerInterface|ContainerAbstract $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
 
-        if (!empty($this->publishedRevision)) {
-            $revision = clone $this->publishedRevision;
-            $this->removePublishedRevision();
-            $this->revisions->add($revision);
-            $this->setStagedRevision($revision);
-        } elseif (!empty($this->stagedRevision)) {
-            $revision = clone $this->stagedRevision;
-            $this->setStagedRevision($revision);
-            $this->revisions->add($revision);
+        $new->lastPublished = new \DateTime();
+
+        $new->revisions = new ArrayCollection();
+
+        if (!empty($new->publishedRevision)) {
+            $revision = $new->publishedRevision->newInstance(
+                $createdByUserId,
+                $createdReason
+            );
+            $new->removePublishedRevision();
+            $new->revisions->add($revision);
+            $new->setStagedRevision($revision);
+        } elseif (!empty($new->stagedRevision)) {
+            $revision = $new->stagedRevision->newInstance(
+                $createdByUserId,
+                $createdReason
+            );
+            $new->setStagedRevision($revision);
+            $new->revisions->add($revision);
         }
+
+        return $new;
+    }
+
+    /**
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return null|ContainerAbstract|ContainerInterface
+     */
+    public function newInstanceIfHasRevision(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        $newInstance = $this->newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+        // @todo Is this needed?
+        $newInstance->setName($this->getName());
+
+        $publishedRevision = $newInstance->getPublishedRevision();
+
+        if (empty($publishedRevision)) {
+            return null;
+        }
+
+        $stagedRevision = $newInstance->getStagedRevision();
+
+        if (empty($stagedRevision)) {
+            return null;
+        }
+
+        $newInstance->setPublishedRevision($stagedRevision);
+
+        return $newInstance;
     }
 
     /**
@@ -131,7 +192,7 @@ abstract class ContainerAbstract implements ContainerInterface
      * @param string $name Name of Page.  Should be URL friendly and should not
      *                     included spaces.
      *
-     * @return null
+     * @return void
      *
      * @throws InvalidArgumentException Exception thrown if name contains spaces.
      */
@@ -162,7 +223,7 @@ abstract class ContainerAbstract implements ContainerInterface
      *
      * @param string $author ID of Author.
      *
-     * @return null
+     * @return void
      */
     public function setAuthor($author)
     {
@@ -175,21 +236,9 @@ abstract class ContainerAbstract implements ContainerInterface
      * @return \DateTime CreatedDate
      *
      */
-    public function getCreatedDate()
+    public function getCreatedDate(): \DateTime
     {
         return $this->createdDate;
-    }
-
-    /**
-     * Sets the CreatedDate property
-     *
-     * @param \DateTime $createdDate Date the page was initially created.
-     *
-     * @return null
-     */
-    public function setCreatedDate(\DateTime $createdDate)
-    {
-        $this->createdDate = $createdDate;
     }
 
     /**
@@ -225,7 +274,7 @@ abstract class ContainerAbstract implements ContainerInterface
      *
      * @param \DateTime $lastPublished Date the page was last published.
      *
-     * @return null
+     * @return void
      */
     public function setLastPublished(\DateTime $lastPublished)
     {
@@ -265,7 +314,7 @@ abstract class ContainerAbstract implements ContainerInterface
      *
      * @param Revision $revision Revision object to add
      *
-     * @return null
+     * @return void
      */
     public function setPublishedRevision(Revision $revision)
     {
@@ -304,13 +353,12 @@ abstract class ContainerAbstract implements ContainerInterface
      *
      * @param Revision $revision Revision object to add
      *
-     * @return null
+     * @return void
      */
     public function setStagedRevision(Revision $revision)
     {
         if (!empty($this->publishedRevision)
-            && $this->publishedRevision->getRevisionId() == $revision->getRevisionId(
-            )
+            && $this->publishedRevision->getRevisionId() == $revision->getRevisionId()
         ) {
             $this->removePublishedRevision();
         }
@@ -517,11 +565,11 @@ abstract class ContainerAbstract implements ContainerInterface
      * @param array $data
      * @param array $ignore List of properties to skip population for
      *
-     * @return mixed
+     * @return void
      */
     public function populate(
         array $data,
-        array $ignore = []
+        array $ignore = ['createdByUserId', 'createdDate', 'createdReason']
     ) {
         $prefix = 'set';
 
@@ -545,11 +593,11 @@ abstract class ContainerAbstract implements ContainerInterface
      * @param ApiPopulatableInterface $object Object of THIS type
      * @param array                   $ignore List of properties to skip population for
      *
-     * @return mixed
+     * @return void
      */
     public function populateFromObject(
         ApiPopulatableInterface $object,
-        array $ignore = []
+        array $ignore = ['createdByUserId', 'createdDate', 'createdReason']
     ) {
         if ($object instanceof ContainerInterface) {
             $this->populate($object->toArray(), $ignore);
@@ -610,7 +658,7 @@ abstract class ContainerAbstract implements ContainerInterface
         if (!in_array('lastPublishedString', $ignore)) {
             $data['lastPublishedString'] = $this->getLastPublishedString();
         }
-        
+
         return $data;
     }
 

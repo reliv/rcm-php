@@ -1,31 +1,31 @@
 <?php
 return [
     'abstract_factories' => [
-        'Rcm\Factory\AbstractPluginControllerFactory'
+        \Rcm\Factory\AbstractPluginControllerFactory::class
     ],
     'config_factories' => [
-        'Rcm\Controller\CacheController' => [
-            'class' => '\Rcm\Controller\CacheController',
+        \Rcm\Controller\CacheController::class => [
+            'class' => \Rcm\Controller\CacheController::class,
             'arguments' => ['ServiceManager'],
         ],
-        'Rcm\Controller\InstanceConfigApiController' => [
-            'class' => 'Rcm\Controller\InstanceConfigApiController',
+        \Rcm\Controller\InstanceConfigApiController::class => [
+            'class' => \Rcm\Controller\InstanceConfigApiController::class,
             'arguments' => ['ServiceManager'],
         ],
-        'Rcm\Controller\NewPluginInstanceApiController' => [
-            'class' => 'Rcm\Controller\NewPluginInstanceApiController',
+        \Rcm\Controller\NewPluginInstanceApiController::class => [
+            'class' => \Rcm\Controller\NewPluginInstanceApiController::class,
             'arguments' => ['ServiceManager'],
         ],
-        'Rcm\Controller\RenderPluginInstancePreviewApiController' => [
-            'class' => 'Rcm\Controller\RenderPluginInstancePreviewApiController',
+        \Rcm\Controller\RenderPluginInstancePreviewApiController::class => [
+            'class' => \Rcm\Controller\RenderPluginInstancePreviewApiController::class,
             'arguments' => ['Rcm\Service\PluginManager'],
         ],
-        'Rcm\Controller\PageCheckController' => [
-            'class' => 'Rcm\Controller\PageCheckController',
+        \Rcm\Controller\PageCheckController::class => [
+            'class' => \Rcm\Controller\PageCheckController::class,
             'arguments' => ['ServiceManager'],
         ],
-        'Rcm\Controller\PageSearchApiController' => [
-            'class' => 'Rcm\Controller\PageSearchApiController',
+        \Rcm\Controller\PageSearchApiController::class => [
+            'class' => \Rcm\Controller\PageSearchApiController::class,
             'arguments' => ['ServiceManager'],
         ],
     ],

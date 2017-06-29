@@ -3,6 +3,7 @@
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Plugin Wrapper Entity
@@ -18,9 +19,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity(repositoryClass="Rcm\Repository\PluginWrapper")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="rcm_plugin_wrappers")
  */
-class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \IteratorAggregate
+class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializable, \IteratorAggregate, Tracking
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -104,22 +106,103 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
     protected $pluginInstanceId;
 
     /**
-     * __clone
+     * <tracking>
      *
-     * @return void
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
      */
-    public function __clone()
-    {
-        if (!$this->pluginWrapperId) {
-            return;
+    protected $createdDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * <tracking>
+     *
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
+     */
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        parent::__construct($createdByUserId, $createdReason);
+    }
+
+    /**
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return PluginWrapper
+     */
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        if (!$this->pluginInstanceId) {
+            return clone($this);
+        }
+        /** @var PluginWrapper $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+
+        $new->pluginWrapperId = null;
+
+        // @deprecated <deprecated-site-wide-plugin>
+        if (!$new->instance->isSiteWide()) {
+            $pluginInstance = $new->instance->newInstance(
+                $createdByUserId,
+                $createdReason
+            );
+            $new->instance = $pluginInstance;
         }
 
-        $this->pluginWrapperId = null;
-
-        if (!$this->instance->isSiteWide()) {
-            $pluginInstance = clone $this->instance;
-            $this->instance = $pluginInstance;
-        }
+        return $new;
     }
 
     /**
@@ -163,7 +246,7 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
      *
      * @param int $container The container ID number to display in.
      *
-     * @return null
+     * @return void
      */
     public function setLayoutContainer($container)
     {
@@ -209,7 +292,7 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
      *
      * @param int $order Order to display in.
      *
-     * @return null
+     * @return void
      */
     public function setRenderOrderNumber($order)
     {
@@ -381,7 +464,7 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
      *
      * @return void
      */
-    public function populate(array $data, array $ignore = [])
+    public function populate(array $data, array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (isset($data['layoutContainer'])
             && !in_array(
@@ -444,5 +527,29 @@ class PluginWrapper extends AbstractApiModel implements \JsonSerializable, \Iter
         $data = parent::toArray($ignore);
 
         return $data;
+    }
+
+    /**
+     * <tracking>
+     *
+     * @return void
+     *
+     * @ORM\PrePersist
+     */
+    public function assertHasTrackingData()
+    {
+        parent::assertHasTrackingData();
+    }
+
+    /**
+     * <tracking>
+     *
+     * @return void
+     *
+     * @ORM\PreUpdate
+     */
+    public function assertHasNewModifiedData()
+    {
+        parent::assertHasNewModifiedData();
     }
 }

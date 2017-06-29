@@ -4,6 +4,7 @@ namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Page Information Entity
@@ -20,6 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity (repositoryClass="Rcm\Repository\Container")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table (
  *     name="rcm_containers",
  *     uniqueConstraints={
@@ -34,7 +36,7 @@ use Doctrine\ORM\Mapping as ORM;
  * )
  *
  */
-class Container extends ContainerAbstract
+class Container extends ContainerAbstract implements Tracking
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -58,13 +60,6 @@ class Container extends ContainerAbstract
      * @ORM\Column(type="string")
      */
     protected $author;
-
-    /**
-     * @var \DateTime Date page was first created
-     *
-     * @ORM\Column(type="datetime")
-     */
-    protected $createdDate;
 
     /**
      * @var \DateTime Date page was last published
@@ -145,27 +140,96 @@ class Container extends ContainerAbstract
     protected $revisions;
 
     /**
-     * Constructor for Page Entity.  Adds a hydrator to site reference
+     * <tracking>
+     *
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
      */
-    public function __construct()
-    {
+    protected $createdDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * <tracking>
+     *
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
+     */
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         $this->revisions = new ArrayCollection();
-        $this->createdDate = new \DateTime();
+
+        parent::__construct($createdByUserId, $createdReason);
     }
 
     /**
-     * Clone the container
+     * Get a clone with special logic
      *
-     * @return void
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
      */
-    public function __clone()
-    {
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
         if (!$this->containerId) {
-            return;
+            return clone($this);
         }
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
 
-        $this->containerId = null;
-        parent::__clone();
+        $new->containerId = null;
+
+        return $new;
     }
 
     /**
@@ -191,5 +255,25 @@ class Container extends ContainerAbstract
     public function setContainerId($containerId)
     {
         $this->containerId = $containerId;
+    }
+
+    /**
+     * @return void
+     *
+     * @ORM\PrePersist
+     */
+    public function assertHasTrackingData()
+    {
+        parent::assertHasTrackingData();
+    }
+
+    /**
+     * @return void
+     *
+     * @ORM\PreUpdate
+     */
+    public function assertHasNewModifiedData()
+    {
+        parent::assertHasNewModifiedData();
     }
 }

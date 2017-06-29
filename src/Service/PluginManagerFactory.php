@@ -21,7 +21,7 @@ class PluginManagerFactory
             $serviceLocator,
             $serviceLocator->get('ViewRenderer'),
             $serviceLocator->get('request'),
-            $serviceLocator->get('Rcm\Service\Cache'),
+            $serviceLocator->get(\Rcm\Service\Cache::class),
             $serviceLocator->get('ViewManager')
                 ->getView()
                 ->getEventManager(),

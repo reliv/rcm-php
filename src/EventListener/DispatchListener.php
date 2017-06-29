@@ -4,6 +4,7 @@ namespace Rcm\EventListener;
 
 use Rcm\Entity\Page;
 use Rcm\Entity\Revision;
+use Rcm\Tracking\Model\Tracking;
 use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -25,7 +26,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class DispatchListener
 {
-    /** @var ServiceLocatorInterface */
+    /**
+     * @var ServiceLocatorInterface
+     */
     protected $serviceLocator;
 
     /**
@@ -45,8 +48,7 @@ class DispatchListener
      */
     protected function getLayoutManager()
     {
-
-        return $this->serviceLocator->get('Rcm\Service\LayoutManager');
+        return $this->serviceLocator->get(\Rcm\Service\LayoutManager::class);
     }
 
     /**
@@ -56,7 +58,7 @@ class DispatchListener
      */
     protected function getCurrentSite()
     {
-        return $this->serviceLocator->get('Rcm\Service\CurrentSite');
+        return $this->serviceLocator->get(\Rcm\Service\CurrentSite::class);
     }
 
     /**
@@ -92,8 +94,15 @@ class DispatchListener
         $viewModel = $event->getViewModel();
 
         /* Add on for non CMS pages */
-        $fakePage = new Page();
-        $fakeRevision = new Revision();
+        $fakePage = new Page(
+            Tracking::UNKNOWN_USER_ID,
+            'Fake page for non CMS pages in ' . self::class
+        );
+        $fakeRevision = new Revision(
+            Tracking::UNKNOWN_USER_ID,
+            'Fake revision for non CMS pages in ' . self::class
+        );
+
         $fakePage->setCurrentRevision($fakeRevision);
 
         $currentSite = $this->getCurrentSite();

@@ -321,7 +321,7 @@ class Container extends AbstractHelper
             . ' data-rcmPluginInstanceId="' . $plugin->getInstanceId() . '"'
             . ' data-rcmPluginWrapperId="' . $pluginWrapper->getPluginWrapperId()
             . '"'
-            . ' data-rcmSiteWidePlugin="' . $plugin->isSiteWide() . '"'
+            . ' data-rcmSiteWidePlugin="' . $plugin->isSiteWide() . '"' // @deprecated <deprecated-site-wide-plugin>
             . ' data-rcmPluginDisplayName="' . $plugin->getDisplayName() . '"'
             // @GammaRelease
             . ' data-block-editor="' . $blockConfig->getEditor() . '"'

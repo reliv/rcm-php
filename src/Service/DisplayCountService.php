@@ -3,6 +3,8 @@
 namespace Rcm\Service;
 
 /**
+ * @deprecated This does NOT belong in this module
+ * @todo This does NOT belong in this module, should be separated
  * Class DisplayCountService
  *
  * PHP version 5

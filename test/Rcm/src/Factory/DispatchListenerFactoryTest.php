@@ -53,7 +53,7 @@ class DispatchListenerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockCurrentSite = $this->getMockBuilder('\Rcm\Entity\Site')
+        $mockCurrentSite = $this->getMockBuilder(\Rcm\Entity\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -64,8 +64,8 @@ class DispatchListenerFactoryTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $sm = new ServiceManager();
-        $sm->setService('Rcm\Service\LayoutManager', $mockLayoutManager);
-        $sm->setService('Rcm\Service\CurrentSite', $mockCurrentSite);
+        $sm->setService(\Rcm\Service\LayoutManager::class, $mockLayoutManager);
+        $sm->setService(\Rcm\Service\CurrentSite::class, $mockCurrentSite);
         $sm->setService('viewHelperManager', $mockHelperManager);
 
         $factory = new DispatchListenerFactory();

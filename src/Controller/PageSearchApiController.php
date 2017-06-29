@@ -38,7 +38,7 @@ class PageSearchApiController extends AbstractRestfulController
         );
 
         $currentSite = $this->getServiceLocator()->get(
-            'Rcm\Service\CurrentSite'
+            \Rcm\Service\CurrentSite::class
         );
         $siteId = $currentSite->getSiteId();
 
@@ -74,13 +74,13 @@ class PageSearchApiController extends AbstractRestfulController
             'Doctrine\ORM\EntityManager'
         );
         $currentSite = $this->getServiceLocator()->get(
-            'Rcm\Service\CurrentSite'
+            \Rcm\Service\CurrentSite::class
         );
         $siteId = $currentSite->getSiteId();
 
         /** @var Site $site */
         $site = $entityMgr->getRepository(
-            '\Rcm\Entity\Site'
+            Site::class
         )->findOneBy(
             [
                 'siteId' => $siteId

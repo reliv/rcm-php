@@ -34,7 +34,7 @@ class PageCheckController extends AbstractRestfulController
         $pageId = $this->params('pageId', null);
 
         /** @var \Rcm\Validator\Page $validator */
-        $validator = $this->getServiceLocator()->get('Rcm\Validator\Page');
+        $validator = clone($this->getServiceLocator()->get(\Rcm\Validator\Page::class));
         $validator->setPageType($pageType);
 
         $return = [

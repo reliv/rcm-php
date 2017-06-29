@@ -179,7 +179,7 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         $serviceLocator = $this->getServiceLocator();
 
         /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+        $currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
 
         if (!$currentSite->getSiteId()) {
             return null;
@@ -189,7 +189,7 @@ class Cms implements RcmRouteInterface, ServiceLocatorAwareInterface
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
         /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
+        $pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
 
         /* Get the Page for display */
         return $pageRepo->getPageByName(

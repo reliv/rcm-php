@@ -48,7 +48,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->language = new Language();
+        $this->language = new Language('user123');
     }
 
     /**
@@ -312,7 +312,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
         $data['iso639_2b'] = 'tst';
         $data['iso639_2t'] = 'ttt';
 
-        $obj1 = new Language();
+        $obj1 = new Language('user123');
 
         $obj1->populate($data);
 
@@ -322,7 +322,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['iso639_2b'], $obj1->getIso6392b());
         $this->assertEquals($data['iso639_2t'], $obj1->getIso6392t());
 
-        $obj2 = new Language();
+        $obj2 = new Language('user123');
 
         $obj2->populateFromObject($obj1);
 

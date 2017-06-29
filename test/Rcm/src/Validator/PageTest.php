@@ -72,7 +72,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $this->assertInstanceOf('Rcm\Validator\Page', $this->validator);
+        $this->assertInstanceOf(\Rcm\Validator\Page::class, $this->validator);
     }
 
     /**

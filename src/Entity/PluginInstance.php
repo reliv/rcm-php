@@ -3,6 +3,7 @@
 namespace Rcm\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Rcm\Tracking\Model\Tracking;
 
 /**
  * Plugin Instances Entity
@@ -19,9 +20,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @link      http://github.com/reliv
  *
  * @ORM\Entity(repositoryClass="Rcm\Repository\PluginInstance")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="rcm_plugin_instances")
  */
-class PluginInstance extends AbstractApiModel implements \JsonSerializable, \IteratorAggregate
+class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializable, \IteratorAggregate, Tracking
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -38,6 +40,7 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
     protected $plugin;
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * @var Boolean Site wide instance
      *
      * @ORM\Column(type="boolean")
@@ -71,6 +74,60 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      * @ORM\Column(type="text", nullable=true)
      */
     protected $instanceConfig = "[]";
+
+    /**
+     * <tracking>
+     *
+     * @var \DateTime Date object was first created
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of creator
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $createdByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $createdReason = Tracking::UNKNOWN_REASON;
+
+    /**
+     * <tracking>
+     *
+     * @var \DateTime Date object was modified
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $modifiedDate;
+
+    /**
+     * <tracking>
+     *
+     * @var string User ID of modifier
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    protected $modifiedByUserId;
+
+    /**
+     * <tracking>
+     *
+     * @var string Short description of create reason
+     *
+     * @ORM\Column(type="string", length=512, nullable=false)
+     */
+    protected $modifiedReason = Tracking::UNKNOWN_REASON;
 
     /**
      * @var string Place holder for rendered HTML
@@ -113,18 +170,41 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
     protected $canCache;
 
     /**
-     * __clone
-     *
-     * @return void
+     * @param string $createdByUserId <tracking>
+     * @param string $createdReason   <tracking>
      */
-    public function __clone()
-    {
-        if (!$this->pluginInstanceId) {
-            return;
-        }
+    public function __construct(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        parent::__construct($createdByUserId, $createdReason);
+    }
 
-        $this->pluginInstanceId = null;
-        $this->previousEntity = null;
+    /**
+     * Get a clone with special logic
+     *
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return static
+     */
+    public function newInstance(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        if (!$this->pluginInstanceId) {
+            return clone($this);
+        }
+        /** @var static $new */
+        $new = parent::newInstance(
+            $createdByUserId,
+            $createdReason
+        );
+
+        $new->pluginInstanceId = null;
+        $new->previousEntity = null;
+
+        return $new;
     }
 
     /**
@@ -176,6 +256,7 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Set this instance as a site wide plugin instance
      *
      * @return void
@@ -186,6 +267,7 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
     }
 
     /**
+     * @deprecated <deprecated-site-wide-plugin>
      * Is this a site wide plugin
      *
      * @return bool
@@ -267,9 +349,9 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
     }
 
     /**
-     * Get Previous Plugin Instance.  This is used to keep a record of changes.
+     * Get Previous Plugin Instance ID.  This is used to keep a record of changes.
      *
-     * @return PluginInstance
+     * @return int
      */
     public function getPreviousInstance()
     {
@@ -464,12 +546,13 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
      *
      * @return void
      */
-    public function populate(array $data, array $ignore = [])
+    public function populate(array $data, array $ignore = ['createdByUserId', 'createdDate', 'createdReason'])
     {
         if (isset($data['plugin']) && !in_array('plugin', $ignore)) {
             $this->setPlugin($data['plugin']);
         }
 
+        // @deprecated <deprecated-site-wide-plugin>
         if (isset($data['siteWide']) && $data['siteWide']
             && !in_array(
                 'siteWide',
@@ -570,14 +653,40 @@ class PluginInstance extends AbstractApiModel implements \JsonSerializable, \Ite
         $data = parent::toArray($ignore);
 
         // @bc
+        // @deprecated <deprecated-site-wide-plugin>
         if (!in_array('siteWide', $ignore)) {
             $data['siteWide'] = $this->isSiteWide();
         }
 
+        // @deprecated <deprecated-site-wide-plugin>
         if (!in_array('isSiteWide', $ignore)) {
             $data['isSiteWide'] = $this->isSiteWide();
         }
 
         return $data;
+    }
+
+    /**
+     * <tracking>
+     *
+     * @return void
+     *
+     * @ORM\PrePersist
+     */
+    public function assertHasTrackingData()
+    {
+        parent::assertHasTrackingData();
+    }
+
+    /**
+     * <tracking>
+     *
+     * @return void
+     *
+     * @ORM\PreUpdate
+     */
+    public function assertHasNewModifiedData()
+    {
+        parent::assertHasNewModifiedData();
     }
 }

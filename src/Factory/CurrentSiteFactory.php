@@ -3,8 +3,7 @@
 namespace Rcm\Factory;
 
 use Rcm\Entity\Site;
-use Zend\Cache\Storage\StorageInterface;
-use Zend\Cache\StorageFactory;
+use Rcm\Tracking\Model\Tracking;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Validator\Ip;
@@ -45,7 +44,10 @@ class CurrentSiteFactory implements FactoryInterface
 
         if ($request instanceof \Zend\Console\Request) {
             // Fake Site for console
-            return new Site();
+            return new Site(
+                Tracking::UNKNOWN_USER_ID,
+                'Fake site for console in ' . self::class
+            );
         }
 
         $serverParam = $request->getServer();
@@ -63,12 +65,15 @@ class CurrentSiteFactory implements FactoryInterface
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
         /** @var \Rcm\Repository\Site $siteRepo */
-        $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
+        $siteRepo = $entityManager->getRepository(\Rcm\Entity\Site::class);
 
         $currentSite = $siteRepo->getSiteByDomain($currentDomain);
 
         if (empty($currentSite)) {
-            $currentSite = new Site();
+            $currentSite = new Site(
+                Tracking::UNKNOWN_USER_ID,
+                'Fake site due to site domain not found ' . self::class
+            );
         }
 
         return $currentSite;

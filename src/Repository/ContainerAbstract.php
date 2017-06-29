@@ -3,32 +3,22 @@
 namespace Rcm\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Rcm\Entity\ContainerInterface as ContainerEntityInterface;
 use Rcm\Entity\Revision;
+use Rcm\Tracking\Model\Tracking;
 
 /**
- * Container Repository
- *
  * Container Repository.  Used to get custom container results from the DB
  *
- * PHP version 5
- *
- * @category  Reliv
- * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: 1.0
- * @link      https://github.com/reliv
  */
 abstract class ContainerAbstract extends EntityRepository implements ContainerInterface
 {
     /**
-     * saveContainer
-     *
      * @param ContainerEntityInterface $container
-     * @param array                    $containerData
+     * @param                          $containerData
+     * @param string                   $createdByUserId
+     * @param string                   $createdReason
      * @param string                   $author
      * @param null                     $revisionNumber
      *
@@ -37,7 +27,9 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
     public function saveContainer(
         ContainerEntityInterface $container,
         $containerData,
-        $author,
+        $createdByUserId,
+        $createdReason = Tracking::UNKNOWN_REASON,
+        $author = Tracking::UNKNOWN_AUTHOR,
         $revisionNumber = null
     ) {
         $revision = null;
@@ -60,7 +52,10 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
 
         $site = $container->getSite();
 
-        $newRevision = new Revision();
+        $newRevision = new Revision(
+            $createdByUserId,
+            $createdReason
+        );
         $newRevision->setAuthor($author);
         $newRevision->setMd5($md5);
 
@@ -68,7 +63,7 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
 
         /** @var \Rcm\Repository\PluginWrapper $pluginWrapperRepo */
         $pluginWrapperRepo = $this->_em->getRepository(
-            '\Rcm\Entity\PluginWrapper'
+            \Rcm\Entity\PluginWrapper::class
         );
 
         //Make a list of original wrappers so we can see if one was removed
@@ -105,6 +100,8 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
                 $newPluginWrapper = $pluginWrapperRepo->savePluginWrapper(
                     $pluginData,
                     $site,
+                    $createdByUserId,
+                    $createdReason,
                     $pluginWrapper
                 );
 
@@ -115,7 +112,7 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
                     == $newPluginWrapper->getPluginWrapperId()
                     && ($pluginWrapper->getInstance()->getInstanceId()
                         == $newPluginWrapper->getInstance()->getInstanceId()
-                        || $pluginWrapper->getInstance()->isSiteWide())
+                        || $pluginWrapper->getInstance()->isSiteWide()) //@deprecated <deprecated-site-wide-plugin>
                 ) {
                     continue;
                 }

@@ -4,7 +4,6 @@ namespace Rcm\Factory;
 
 use Rcm\Block\Config\ConfigRepository;
 use Rcm\View\Helper\Container;
-use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -47,7 +46,7 @@ class ContainerViewHelperFactory implements FactoryInterface
 
         /** @var \Rcm\Entity\Site $currentSite */
         $currentSite = $serviceLocator->get(
-            'Rcm\Service\CurrentSite'
+            \Rcm\Service\CurrentSite::class
         );
 
         // @GammaRelease
