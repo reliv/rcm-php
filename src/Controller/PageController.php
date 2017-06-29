@@ -197,6 +197,7 @@ class PageController extends AbstractActionController
      *
      * @return Response|ViewModel
      * @throws \Rcm\Exception\PageNotFoundException
+     * @throws TrackingException
      */
     public function createTemplateFromPageAction()
     {
@@ -321,6 +322,7 @@ class PageController extends AbstractActionController
      *
      * @return Response|\Zend\Http\Response
      * @throws \Rcm\Exception\InvalidArgumentException
+     * @throws TrackingException
      */
     public function publishPageRevisionAction()
     {
@@ -361,12 +363,19 @@ class PageController extends AbstractActionController
                 'Invalid Page Revision Id.'
             );
         }
+        $user = $this->rcmUserService->getCurrentUser();
+
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . self::class);
+        }
 
         $this->pageRepo->publishPageRevision(
             $this->currentSite->getSiteId(),
             $pageName,
             $pageType,
-            $pageRevision
+            $pageRevision,
+            $user->getId(),
+            'Publish page in ' . self::class
         );
 
         return $this->redirect()->toUrl(
@@ -381,6 +390,8 @@ class PageController extends AbstractActionController
      * savePageAction
      *
      * @return Response|ResponseInterface
+     *
+     * @throws TrackingException
      */
     public function savePageAction()
     {

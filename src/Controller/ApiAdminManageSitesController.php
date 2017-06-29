@@ -122,11 +122,14 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
             $query->setParameter('searchQuery', $searchQuery . '%');
         }
 
-        $adaptor = new DoctrinePaginator(new ORMPaginator($query));
+        $adaptor = new DoctrinePaginator(
+            new ORMPaginator($query)
+        );
         $paginator = new Paginator($adaptor);
         $paginator->setDefaultItemCountPerPage(10);
 
         $page = (int)$this->params()->fromQuery('page');
+
         if ($page) {
             $paginator->setCurrentPageNumber($page);
         }
