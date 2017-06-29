@@ -69,7 +69,7 @@ class AdminPanelControllerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->currentSite = new Site();
+        $this->currentSite = new Site('user123');
         $this->currentSite->setSiteId(1);
 
         $this->mockCmsPermissionCheck = $this->getMockBuilder('\Rcm\Acl\CmsPermissionChecks')
@@ -208,7 +208,7 @@ class AdminPanelControllerTest extends \PHPUnit_Framework_TestCase
 //            ->with(
 //                $this->equalTo('sites.1'),
 //                $this->equalTo('admin'),
-//                $this->equalTo('Rcm\Acl\ResourceProvider')
+//                $this->equalTo(\Rcm\Acl\ResourceProvider::class)
 //            )->will($this->returnValue(false));
 //
 //        $result = $this->controller->getAdminWrapperAction();

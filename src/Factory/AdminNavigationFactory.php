@@ -49,12 +49,12 @@ class AdminNavigationFactory extends AbstractNavigationFactory
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->rcmUserService = $serviceLocator->get(
-            'RcmUser\Service\RcmUserService'
+            \RcmUser\Service\RcmUserService::class
         );
         $this->cmsPermissionChecks = $serviceLocator->get(
-            'Rcm\Acl\CmsPermissionsChecks'
+            \Rcm\Acl\CmsPermissionChecks::class
         );
-        $this->currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+        $this->currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
 
         $config = $serviceLocator->get('config');
 
@@ -62,7 +62,7 @@ class AdminNavigationFactory extends AbstractNavigationFactory
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
         /** @var \Rcm\Repository\Page $pageRepo */
-        $this->pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
+        $this->pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
 
         $application = $serviceLocator->get('Application');
 

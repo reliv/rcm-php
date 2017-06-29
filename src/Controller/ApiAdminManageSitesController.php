@@ -4,10 +4,14 @@ namespace RcmAdmin\Controller;
 
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
+use Interop\Container\ContainerInterface;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
+use Rcm\Tracking\Exception\TrackingException;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\InputFilter\SiteInputFilter;
+use RcmAdmin\Service\SiteManager;
+use RcmUser\Service\RcmUserService;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\JsonModel;
 
@@ -24,19 +28,53 @@ use Zend\View\Model\JsonModel;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  *
- * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = 'Rcm\Acl\ResourceProvider')
+ * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = \Rcm\Acl\ResourceProvider::class)
  */
 class ApiAdminManageSitesController extends ApiAdminBaseController
 {
+    /**
+     * @param ContainerInterface $serviceLocator
+     */
+    public function __construct(
+        $serviceLocator
+    ) {
+        $this->serviceLocator = $serviceLocator;
+    }
 
     /**
      * getSiteManager
      *
-     * @return \RcmAdmin\Service\SiteManager
+     * @return SiteManager
      */
     protected function getSiteManager()
     {
-        return $this->serviceLocator->get('RcmAdmin\Service\SiteManager');
+        return $this->serviceLocator->get(SiteManager::class);
+    }
+
+    /**
+     * @return RcmUserService
+     */
+    protected function getRcmUserService()
+    {
+        return $this->serviceLocator->get(RcmUserService::class);
+    }
+
+    /**
+     * @return string
+     * @throws TrackingException
+     */
+    protected function getCurrentUserId()
+    {
+        /** @var RcmUserService $service */
+        $service = $this->getRcmUserService();
+
+        $user = $service->getCurrentUser();
+
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . self::class);
+        }
+
+        return (string)$user->getId();
     }
 
     /**
@@ -61,7 +99,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Site $siteRepo */
-        $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
+        $siteRepo = $entityManager->getRepository(\Rcm\Entity\Site::class);
         $createQueryBuilder = $siteRepo->createQueryBuilder('site')
             ->select('site')
             ->leftJoin('site.domain', 'domain')
@@ -134,10 +172,13 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         // get default site data - kinda hacky, but keeps us to one controller
         if ($id == 'default') {
             $siteManager = $this->getSiteManager();
-            
+
             $data = $siteManager->getDefaultSiteValues();
 
-            $site = new Site();
+            $site = new Site(
+                $this->getCurrentUserId(),
+                'Get default site values in ' . self::class
+            );
 
             $site->populate($data);
 
@@ -153,7 +194,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
 
         /** @var \Rcm\Repository\Site $siteRepo */
         $siteRepo = $this->getEntityManager()->getRepository(
-            '\Rcm\Entity\Site'
+            \Rcm\Entity\Site::class
         );
 
         try {
@@ -205,7 +246,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Site $siteRepo */
-        $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
+        $siteRepo = $entityManager->getRepository(\Rcm\Entity\Site::class);
 
         if (!$siteRepo->isValidSiteId($siteId)) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
@@ -261,23 +302,29 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $data = $inputFilter->getValues();
 
         $siteManager = $this->getSiteManager();
+        $userId = $this->getCurrentUserId();
 
         try {
             $data = $siteManager->prepareSiteData($data);
             /** @var \Rcm\Repository\Domain $domainRepo */
             $domainRepo = $this->getEntityManager()->getRepository(
-                '\Rcm\Entity\Domain'
+                \Rcm\Entity\Domain::class
             );
 
             $data['domain'] = $domainRepo->createDomain(
-                $data['domainName']
+                $data['domainName'],
+                $userId,
+                'Create new domain in ' . self::class
             );
         } catch (\Exception $e) {
             return new ApiJsonModel(null, 1, $e->getMessage());
         }
 
         /** @var \Rcm\Entity\Site $newSite */
-        $newSite = new Site();
+        $newSite = new Site(
+            $userId,
+            'Create new site in ' . self::class
+        );
 
         $newSite->populate($data);
         // make sure we don't have a siteId

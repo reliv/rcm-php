@@ -46,6 +46,15 @@ class NewPageForm extends Form implements ElementInterface
     protected $templateValidator;
 
     /**
+     * @var array
+     */
+    protected $safeValidatorServices = [
+        'layoutValidator' => null,
+        'pageValidator' => null,
+        'templateValidator' => null,
+    ];
+
+    /**
      * Constructor
      *
      * @param Site          $currentSite       Rcm Site
@@ -70,7 +79,30 @@ class NewPageForm extends Form implements ElementInterface
         $this->pageValidator     = $pageValidator;
         $this->templateValidator = $templateValidator;
 
+        $this->buildSafeValidators();
+
         parent::__construct();
+    }
+
+    /**
+     * @return void
+     */
+    protected function buildSafeValidators()
+    {
+        $this->safeValidatorServices['layoutValidator'] = clone($this->layoutValidator);
+        $this->safeValidatorServices['pageValidator'] = clone($this->pageValidator);
+        $this->safeValidatorServices['templateValidator'] = clone($this->templateValidator);
+    }
+
+    /**
+     * @param array|\ArrayAccess|\Traversable $data
+     *
+     * @return Form
+     */
+    public function setData($data)
+    {
+        $this->buildSafeValidators();
+        return parent::setData($data);
     }
 
     /**
@@ -103,16 +135,16 @@ class NewPageForm extends Form implements ElementInterface
                 'name' => 'url',
                 'required' => true,
                 'filters' => [
-                    ['name' => 'StripTags'],
+                    ['name' => \Zend\Filter\StripTags::class],
                     [
-                        'name' => 'StringTrim',
+                        'name' => \Zend\Filter\StringTrim::class,
                         'options' => [
                             'charlist' => '-_',
                         ]
                     ],
                 ],
                 'validators' => [
-                    $this->pageValidator,
+                    $this->safeValidatorServices['pageValidator'],
                 ],
             ]
         );
@@ -132,12 +164,12 @@ class NewPageForm extends Form implements ElementInterface
                 'name' => 'title',
                 'required' => true,
                 'filters' => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
                     [
-                        'name' => '\Zend\I18n\Validator\Alnum',
+                        'name' => \Zend\I18n\Validator\Alnum::class,
                         'options' => [
                             'allowWhiteSpace' => true,
                         ]
@@ -162,11 +194,11 @@ class NewPageForm extends Form implements ElementInterface
                 'name' => 'page-template',
                 'required' => true,
                 'filters' => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
-                    $this->templateValidator,
+                    $this->safeValidatorServices['templateValidator'],
                 ],
             ]
         );
@@ -187,11 +219,11 @@ class NewPageForm extends Form implements ElementInterface
             [
                 'name' => 'main-layout',
                 'filters' => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
-                    $this->layoutValidator,
+                    $this->safeValidatorServices['layoutValidator'],
                 ],
             ]
         );

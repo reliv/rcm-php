@@ -30,12 +30,12 @@ class SitePageCreateInputFilter extends InputFilter
                 'name' => 'name',
                 'required' => true,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
                     [
-                        'name' => 'Regex',
+                        'name' => \Zend\Validator\Regex::class,
                         'options' => [
                             'pattern' => '/[a-z\-0-9\.]/',
                             'messageTemplates' => [
@@ -50,8 +50,8 @@ class SitePageCreateInputFilter extends InputFilter
                 'name' => 'pageLayout',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
                 ]
@@ -60,8 +60,8 @@ class SitePageCreateInputFilter extends InputFilter
                 'name' => 'siteLayoutOverride',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
                 ]
@@ -70,8 +70,8 @@ class SitePageCreateInputFilter extends InputFilter
                 'name' => 'pageTitle',
                 'required' => true,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
                 ]
@@ -80,8 +80,8 @@ class SitePageCreateInputFilter extends InputFilter
                 'name' => 'description',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
                 ]
@@ -90,8 +90,8 @@ class SitePageCreateInputFilter extends InputFilter
                 'name' => 'keywords',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
                 ]
@@ -100,12 +100,12 @@ class SitePageCreateInputFilter extends InputFilter
                 'name' => 'pageType',
                 'required' => false,
                 'filters' => [
-                    ['name' => 'Zend\Filter\StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => \Zend\Filter\StripTags::class],
+                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
                 'validators' => [
                     [
-                        'name' => 'StringLength',
+                        'name' => \Zend\Validator\StringLength::class,
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min' => 1,

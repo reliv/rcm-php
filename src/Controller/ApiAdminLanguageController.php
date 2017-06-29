@@ -42,7 +42,7 @@ class ApiAdminLanguageController extends ApiAdminBaseController
         }
 
         /** @var \Rcm\Repository\Language $languageRepo */
-        $languageRepo = $this->getEntityManager()->getRepository('\Rcm\Entity\Language');
+        $languageRepo = $this->getEntityManager()->getRepository(\Rcm\Entity\Language::class);
 
         try {
             $languages = $languageRepo->findBy([], ['languageName' => 'ASC']);

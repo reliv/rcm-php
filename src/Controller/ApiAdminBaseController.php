@@ -3,6 +3,7 @@
 namespace RcmAdmin\Controller;
 
 use Rcm\Controller\AbstractRestfulJsonController;
+use Rcm\Tracking\Exception\TrackingException;
 
 /**
  * Class ApiAdminBaseController
@@ -48,7 +49,7 @@ class ApiAdminBaseController extends AbstractRestfulJsonController
      */
     protected function getCurrentSite()
     {
-        return $this->serviceLocator->get('Rcm\Service\CurrentSite');
+        return $this->serviceLocator->get(\Rcm\Service\CurrentSite::class);
     }
 
     /**
@@ -60,28 +61,24 @@ class ApiAdminBaseController extends AbstractRestfulJsonController
     {
         /** @var \RcmUser\Service\RcmUserService $rcmUserService */
         $rcmUserService = $this->serviceLocator->get(
-            'RcmUser\Service\RcmUserService'
+            \RcmUser\Service\RcmUserService::class
         );
 
         return $rcmUserService->getCurrentUser();
     }
 
     /**
-     * getCurrentAuthor
-     *
-     * @param string $default
-     *
-     * @return string
+     * @return \RcmUser\User\Entity\User
+     * @throws TrackingException
      */
-    protected function getCurrentAuthor($default = 'Unknown Author')
+    protected function getCurrentUserTracking()
     {
         $user = $this->getCurrentUser();
 
-        // @todo How should we handle this case?
         if (empty($user)) {
-            return $default;
+            throw new TrackingException('A valid user is required in ' . self::class);
         }
 
-        return $user->getName();
+        return $user;
     }
 }

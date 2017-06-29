@@ -7,7 +7,10 @@ use Rcm\Entity\Country;
 use Rcm\Entity\Domain;
 use Rcm\Entity\Language;
 use Rcm\Entity\Site;
+use Rcm\Tracking\Exception\TrackingException;
+use Rcm\Tracking\Model\Tracking;
 use RcmUser\Service\RcmUserService;
+use RcmUser\User\Entity\User;
 
 /**
  * Class ManageSites
@@ -77,6 +80,22 @@ class SiteManager
     }
 
     /**
+     * @return \RcmUser\User\Entity\User
+     * @throws TrackingException
+     */
+    protected function getCurrentUserTracking()
+    {
+        $user = $this->getCurrentUser();
+
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . self::class);
+        }
+
+        return $user;
+    }
+
+    /**
+     * @deprecated
      * getCurrentAuthor
      *
      * @param string $default
@@ -102,20 +121,21 @@ class SiteManager
      * @return Site
      * @throws \Exception
      */
-    public function createSite(Site $newSite)
-    {
+    public function createSite(
+        Site $newSite
+    ) {
         $newSite = $this->prepareNewSite($newSite);
 
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
+        $pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
 
-        $author = $this->getCurrentAuthor();
+        $user = $this->getCurrentUserTracking();
 
         $pageRepo->createPages(
             $newSite,
-            $this->getDefaultSitePageSettings($author),
+            $this->getDefaultSitePageSettings($user),
             true,
             false
         );
@@ -126,7 +146,9 @@ class SiteManager
 
         $this->createPagePlugins(
             $newSite,
-            $this->getDefaultSitePageSettings($author),
+            $user->getId(),
+            'New site creation in ' . self::class,
+            $this->getDefaultSitePageSettings($user),
             false
         );
 
@@ -151,16 +173,19 @@ class SiteManager
     ) {
         $entityManager = $this->getEntityManager();
 
-        $copySite = clone($existingSite);
+        $user = $this->getCurrentUserTracking();
+
+        $copySite = $existingSite->newInstance(
+            $user->getId(),
+            'Copy site in ' . self::class
+        );
         $copySite->setSiteId(null);
         $copySite->setDomain($domain);
-
-        $author = $this->getCurrentAuthor();
 
         $pages = $copySite->getPages();
 
         foreach ($pages as &$page) {
-            $page->setAuthor($author);
+            $page->setAuthor($user->getName());
         }
 
         $entityManager->persist($copySite);
@@ -316,7 +341,7 @@ class SiteManager
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Country $countryRepo */
-        $countryRepo = $entityManager->getRepository('\Rcm\Entity\Country');
+        $countryRepo = $entityManager->getRepository(\Rcm\Entity\Country::class);
 
         $country = $countryRepo->find(
             $countryId
@@ -343,7 +368,7 @@ class SiteManager
 
         /** @var \Rcm\Repository\Language $languageRepo */
         $languageRepo = $entityManager->getRepository(
-            '\Rcm\Entity\Language'
+            \Rcm\Entity\Language::class
         );
 
         $language = $languageRepo->getLanguageByString(
@@ -372,7 +397,7 @@ class SiteManager
 
         /** @var \Rcm\Repository\Domain $domainRepo */
         $domainRepo = $entityManager->getRepository(
-            '\Rcm\Entity\Domain'
+            \Rcm\Entity\Domain::class
         );
 
         $domain = $domainRepo->getDomainByName($domainName);
@@ -397,11 +422,11 @@ class SiteManager
     }
 
     /**
-     * getDefaultSitePageSettings
+     * @param User $createdByUser
      *
-     * @return array
+     * @return mixed
      */
-    public function getDefaultSitePageSettings($author)
+    public function getDefaultSitePageSettings(User $createdByUser)
     {
         $myConfig = $this->getDefaultSiteSettings();
 
@@ -409,40 +434,46 @@ class SiteManager
 
         // Set the author for each
         foreach ($pagesData as $key => $pageData) {
-            $pagesData[$key]['author'] = $author;
+            $pagesData[$key]['createdByUserId'] = $createdByUser->getId();
+            $pagesData[$key]['createdReason'] = 'Default page creation in ' . self::class;
+            $pagesData[$key]['author'] = $createdByUser->getName();
         }
 
         return $pagesData;
     }
 
     /**
-     * createPagePlugins
-     *
-     * @param Site  $site
-     * @param array $pagesData
-     * @param bool  $doFlush
+     * @param Site   $site
+     * @param string $createdByUserId
+     * @param string $createdReason
+     * @param array  $pagesData
+     * @param bool   $doFlush
      *
      * @return void
      * @throws \Exception
      */
     protected function createPagePlugins(
         Site $site,
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON,
         $pagesData = [],
         $doFlush = true
     ) {
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
+        $pageRepo = $entityManager->getRepository(
+            \Rcm\Entity\Page::class
+        );
 
         /** @var \Rcm\Repository\PluginInstance $pluginInstanceRepo */
         $pluginInstanceRepo = $entityManager->getRepository(
-            '\Rcm\Entity\PluginInstance'
+            \Rcm\Entity\PluginInstance::class
         );
 
         /** @var \Rcm\Repository\PluginWrapper $pluginWrapperRepo */
         $pluginWrapperRepo = $entityManager->getRepository(
-            '\Rcm\Entity\PluginWrapper'
+            \Rcm\Entity\PluginWrapper::class
         );
 
         foreach ($pagesData as $pageName => $pageData) {
@@ -465,7 +496,9 @@ class SiteManager
                     $pluginInstance = $pluginInstanceRepo->createPluginInstance(
                         $pluginData,
                         $site,
-                        false
+                        $createdByUserId,
+                        $createdReason,
+                        null
                     );
 
                     $pluginData['pluginInstanceId']
@@ -473,7 +506,10 @@ class SiteManager
 
                     $wrapper = $pluginWrapperRepo->savePluginWrapper(
                         $pluginData,
-                        $site
+                        $site,
+                        $createdByUserId,
+                        $createdReason,
+                        null
                     );
 
                     $pageRevision->addPluginWrapper($wrapper);

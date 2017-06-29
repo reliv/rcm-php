@@ -2,8 +2,8 @@
 
 namespace RcmAdmin\Factory;
 
+use Interop\Container\ContainerInterface;
 use RcmAdmin\Controller\AdminPanelController;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -20,19 +20,18 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
-class AdminPanelControllerFactory implements FactoryInterface
+class AdminPanelControllerFactory
 {
-
     /**
      * Factory for the Admin Panel Controller
      *
-     * @param ServiceLocatorInterface $serviceLocator Zend Service Locator
+     * @param ContainerInterface|ServiceLocatorInterface $container
      *
      * @return AdminPanelController
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($container)
     {
-        $config = $serviceLocator->get('config');
+        $config = $container->get('config');
 
         $adminPanelConfig = [];
 
@@ -43,10 +42,10 @@ class AdminPanelControllerFactory implements FactoryInterface
         }
 
         /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+        $currentSite = $container->get(\Rcm\Service\CurrentSite::class);
 
         /** @var \Rcm\Acl\CmsPermissionChecks $cmsPermissionChecks */
-        $cmsPermissionChecks = $serviceLocator->get('Rcm\Acl\CmsPermissionsChecks');
+        $cmsPermissionChecks = $container->get(\Rcm\Acl\CmsPermissionChecks::class);
 
         return new AdminPanelController(
             $adminPanelConfig,

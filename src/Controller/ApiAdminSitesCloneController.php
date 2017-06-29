@@ -4,8 +4,10 @@ namespace RcmAdmin\Controller;
 
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
+use Rcm\Tracking\Exception\TrackingException;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\InputFilter\SiteDuplicateInputFilter;
+use RcmUser\Service\RcmUserService;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -21,7 +23,7 @@ use Zend\View\Model\JsonModel;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  *
- * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = 'Rcm\Acl\ResourceProvider')
+ * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = \Rcm\Acl\ResourceProvider::class)
  */
 class ApiAdminSitesCloneController extends ApiAdminManageSitesController
 {
@@ -61,11 +63,13 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
             $data = $siteManager->prepareSiteData($data);
             /** @var \Rcm\Repository\Domain $domainRepo */
             $domainRepo = $this->getEntityManager()->getRepository(
-                '\Rcm\Entity\Domain'
+                \Rcm\Entity\Domain::class
             );
 
             $domain = $domainRepo->createDomain(
-                $data['domainName']
+                $data['domainName'],
+                $this->getCurrentUserId(),
+                'Create new domain in ' . self::class
             );
         } catch (\Exception $e) {
             return new ApiJsonModel(null, 1, $e->getMessage());
@@ -74,7 +78,7 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Site $siteRepo */
-        $siteRepo = $entityManager->getRepository('\Rcm\Entity\Site');
+        $siteRepo = $entityManager->getRepository(\Rcm\Entity\Site::class);
 
         /** @var \Rcm\Entity\Site $existingSite */
         $existingSite = $siteRepo->find($data['siteId']);

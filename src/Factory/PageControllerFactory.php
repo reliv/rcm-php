@@ -2,9 +2,10 @@
 
 namespace RcmAdmin\Factory;
 
+use Interop\Container\ContainerInterface;
 use RcmAdmin\Controller\PageController;
-use Zend\Di\ServiceLocator;
-use Zend\ServiceManager\FactoryInterface;
+use RcmUser\Service\RcmUserService;
+use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -21,35 +22,36 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class PageControllerFactory implements FactoryInterface
+class PageControllerFactory
 {
-
     /**
-     * Create Service
+     * __invoke
      *
-     * @param ServiceLocatorInterface $controllerManager Zend Controller Manager
+     * @param $container ContainerInterface|ServiceLocatorInterface|ControllerManager
      *
      * @return PageController
      */
-    public function createService(ServiceLocatorInterface $controllerManager)
+    public function __invoke($container)
     {
-        /** @var \Zend\Mvc\Controller\ControllerManager $controllerMgr For IDE */
-        $controllerMgr = $controllerManager;
-
-        /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
-        $serviceLocator = $controllerMgr->getServiceLocator();
+        // @BC for ZendFramework
+        if ($container instanceof ControllerManager) {
+            $container = $container->getServiceLocator();
+        }
 
         /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get('Rcm\Service\CurrentSite');
+        $currentSite = $container->get(\Rcm\Service\CurrentSite::class);
 
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
-        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
+        $entityManager = $container->get('Doctrine\ORM\EntityManager');
 
         /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $entityManager->getRepository('\Rcm\Entity\Page');
+        $pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
+
+        $rcmUserService = $container->get(RcmUserService::class);
 
         return new PageController(
             $currentSite,
+            $rcmUserService,
             $pageRepo
         );
     }

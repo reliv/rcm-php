@@ -3,13 +3,14 @@
 namespace RcmAdmin\Controller;
 
 use Interop\Container\ContainerInterface;
-use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
+use Rcm\Tracking\Exception\TrackingException;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\Entity\SitePageApiResponse;
 use RcmAdmin\InputFilter\SitePageCreateInputFilter;
 use RcmAdmin\InputFilter\SitePageUpdateInputFilter;
+use RcmUser\Service\RcmUserService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -77,7 +78,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     protected function getPageRepo()
     {
-        return $this->getEntityManager()->getRepository('\Rcm\Entity\Page');
+        return $this->getEntityManager()->getRepository(\Rcm\Entity\Page::class);
     }
 
     /**
@@ -87,7 +88,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     protected function getSiteRepo()
     {
-        return $this->getEntityManager()->getRepository('\Rcm\Entity\Site');
+        return $this->getEntityManager()->getRepository(\Rcm\Entity\Site::class);
     }
 
     /**
@@ -119,6 +120,32 @@ class ApiAdminSitePageController extends ApiAdminBaseController
     protected function getPage(Site $site, $pageId)
     {
         return $this->getPageRepo()->getSitePage($site, $pageId);
+    }
+
+    /**
+     * @return RcmUserService
+     */
+    protected function getRcmUserService()
+    {
+        return $this->serviceLocator->get(RcmUserService::class);
+    }
+
+    /**
+     * @return string
+     * @throws TrackingException
+     */
+    protected function getCurrentUserId()
+    {
+        /** @var RcmUserService $service */
+        $service = $this->getRcmUserService();
+
+        $user = $service->getCurrentUser();
+
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . self::class);
+        }
+
+        return (string)$user->getId();
     }
 
     /**
@@ -197,10 +224,8 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         $pages = $site->getPages();
 
-        foreach ($pages as $key => $value) {
-            $apiResponse = new SitePageApiResponse();
-
-            $apiResponse->populate($value->toArray());
+        foreach ($pages as $key => $page) {
+            $apiResponse = new SitePageApiResponse($page);
 
             $pages[$key] = $apiResponse;
         }
@@ -256,9 +281,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
             );
         }
 
-        $apiResponse = new SitePageApiResponse();
-
-        $apiResponse->populate($page->toArray());
+        $apiResponse = new SitePageApiResponse($page);
 
         return new ApiJsonModel($apiResponse, 0, 'Success');
     }
@@ -305,6 +328,10 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         $data = $inputFilter->getValues();
 
+        // <tracking>
+        $data['modifiedByUserId'] = $this->getCurrentUserId();
+        $data['modifiedReason'] = 'Update site in ' . self::class;
+
         $site = $this->getSite($siteId);
 
         if (empty($site)) {
@@ -330,9 +357,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
             );
         }
 
-        $apiResponse = new SitePageApiResponse();
-
-        $apiResponse->populate($page->toArray());
+        $apiResponse = new SitePageApiResponse($page);
 
         return new ApiJsonModel($apiResponse, 0, 'Success: Page updated.');
     }
@@ -395,7 +420,11 @@ class ApiAdminSitePageController extends ApiAdminBaseController
             );
         }
 
-        $data['author'] = $this->getCurrentAuthor();
+        $user = $this->getCurrentUserTracking();
+
+        $data['createdByUserId'] = $user->getId();
+        $data['createdReason'] = 'New page in ' . self::class;
+        $data['author'] = $user->getName();
 
         try {
             $page = $this->getPageRepo()->createPage(
@@ -410,9 +439,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
             );
         }
 
-        $apiResponse = new SitePageApiResponse();
-
-        $apiResponse->populate($page->toArray());
+        $apiResponse = new SitePageApiResponse($page);
 
         return new ApiJsonModel($apiResponse, 0, 'Success: Page created');
     }
@@ -468,7 +495,11 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         $pageRepo = $this->getPageRepo();
 
-        $result = $pageRepo->setPageDeleted($page);
+        $result = $pageRepo->setPageDeleted(
+            $page,
+            $this->getCurrentUserId(),
+            'Delete page in ' . self::class
+        );
 
         if (!$result) {
             return new ApiJsonModel([$result], 1, 'Page could not be deleted');

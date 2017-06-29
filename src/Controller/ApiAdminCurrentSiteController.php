@@ -19,7 +19,7 @@ use RcmAdmin\Entity\SiteApiResponse;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  *
- * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = 'Rcm\Acl\ResourceProvider')
+ * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = \Rcm\Acl\ResourceProvider::class)
  */
 class ApiAdminCurrentSiteController extends ApiAdminBaseController
 {
@@ -30,7 +30,7 @@ class ApiAdminCurrentSiteController extends ApiAdminBaseController
      */
     protected function getCurrentSite()
     {
-        return $this->serviceLocator->get('Rcm\Service\CurrentSite');
+        return $this->serviceLocator->get(\Rcm\Service\CurrentSite::class);
     }
 
     /**\

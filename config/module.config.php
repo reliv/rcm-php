@@ -100,51 +100,68 @@ return [
     /* controllers */
     'controllers' => [
         'factories' => [
-            'RcmAdmin\Controller\PageController'
-            => 'RcmAdmin\Factory\PageControllerFactory',
+            RcmAdmin\Controller\PageController::class
+            => RcmAdmin\Factory\PageControllerFactory::class,
+
+            RcmAdmin\Controller\ApiAdminManageSitesController::class
+            => RcmAdmin\Factory\ApiAdminManageSitesControllerFactory::class,
+
             RcmAdmin\Controller\ApiAdminSitePageController::class
             => RcmAdmin\Factory\ApiAdminSitePageControllerFactory::class,
+
             RcmAdmin\Controller\ApiAdminSitePageCloneController::class
             => RcmAdmin\Factory\ApiAdminSitePageCloneControllerFactory::class,
+
             RcmAdmin\Controller\AvailableBlocksJsController::class
             => RcmAdmin\Factory\AvailableBlocksJsControllerFactory::class,
+
         ],
         'invokables' => [
-            'RcmAdmin\Controller\PagePermissionsController'
-            => 'RcmAdmin\Controller\PagePermissionsController',
-            'RcmAdmin\Controller\PageViewPermissionsController' =>
-                'RcmAdmin\Controller\PageViewPermissionsController',
-            'RcmAdmin\Controller\ApiAdminCurrentSiteController' =>
-                'RcmAdmin\Controller\ApiAdminCurrentSiteController',
-            'RcmAdmin\Controller\ApiAdminManageSitesController'
-            => 'RcmAdmin\Controller\ApiAdminManageSitesController',
-            'RcmAdmin\Controller\ApiAdminSitesCloneController'
-            => 'RcmAdmin\Controller\ApiAdminSitesCloneController',
-            'RcmAdmin\Controller\ApiAdminLanguageController'
-            => 'RcmAdmin\Controller\ApiAdminLanguageController',
-            'RcmAdmin\Controller\ApiAdminThemeController'
-            => 'RcmAdmin\Controller\ApiAdminThemeController',
-            'RcmAdmin\Controller\ApiAdminCountryController'
-            => 'RcmAdmin\Controller\ApiAdminCountryController',
-            'RcmAdmin\Controller\ApiAdminPageTypesController'
-            => 'RcmAdmin\Controller\ApiAdminPageTypesController',
-            'RcmAdmin\Controller\RpcAdminCanEdit'
-            => 'RcmAdmin\Controller\RpcAdminCanEdit',
-            'RcmAdmin\Controller\RpcAdminKeepAlive'
-            => 'RcmAdmin\Controller\RpcAdminKeepAlive',
-            'RcmAdmin\Controller\ApiAdminCheckPermissionsController'
-            => 'RcmAdmin\Controller\ApiAdminCheckPermissionsController'
+            RcmAdmin\Controller\PagePermissionsController::class
+            => RcmAdmin\Controller\PagePermissionsController::class,
+
+            RcmAdmin\Controller\PageViewPermissionsController::class
+            => RcmAdmin\Controller\PageViewPermissionsController::class,
+
+            RcmAdmin\Controller\ApiAdminCurrentSiteController::class
+            => RcmAdmin\Controller\ApiAdminCurrentSiteController::class,
+
+            RcmAdmin\Controller\ApiAdminSitesCloneController::class
+            => RcmAdmin\Controller\ApiAdminSitesCloneController::class,
+
+            RcmAdmin\Controller\ApiAdminLanguageController::class
+            => RcmAdmin\Controller\ApiAdminLanguageController::class,
+
+            RcmAdmin\Controller\ApiAdminThemeController::class
+            => RcmAdmin\Controller\ApiAdminThemeController::class,
+
+            RcmAdmin\Controller\ApiAdminCountryController::class
+            => RcmAdmin\Controller\ApiAdminCountryController::class,
+
+            RcmAdmin\Controller\ApiAdminPageTypesController::class
+            => RcmAdmin\Controller\ApiAdminPageTypesController::class,
+
+            RcmAdmin\Controller\RpcAdminCanEdit::class
+            => RcmAdmin\Controller\RpcAdminCanEdit::class,
+
+            RcmAdmin\Controller\RpcAdminKeepAlive::class
+            => RcmAdmin\Controller\RpcAdminKeepAlive::class,
+
+            RcmAdmin\Controller\ApiAdminCheckPermissionsController::class
+            => RcmAdmin\Controller\ApiAdminCheckPermissionsController::class
         ],
     ],
     /* form_elements */
     'form_elements' => [
         'invokables' => [
-            'mainLayout' => 'RcmAdmin\Form\Element\MainLayout',
+            'mainLayout' => RcmAdmin\Form\Element\MainLayout::class,
         ],
         'factories' => [
-            'RcmAdmin\Form\NewPageForm' => 'RcmAdmin\Factory\NewPageFormFactory',
-            'RcmAdmin\Form\CreateTemplateFromPageForm'
-            => 'RcmAdmin\Factory\CreateTemplateFromPageFormFactory',
+            RcmAdmin\Form\NewPageForm::class
+            => RcmAdmin\Factory\NewPageFormFactory::class,
+
+            RcmAdmin\Form\CreateTemplateFromPageForm::class
+            => RcmAdmin\Factory\CreateTemplateFromPageFormFactory::class,
         ],
     ],
     /* includeFileManager */
@@ -226,7 +243,7 @@ return [
                                     'rcmPageRevision' => ':rcmPageRevision'
                                 ],
                                 'acl' => [
-                                    'providerId' => 'Rcm\Acl\ResourceProvider',
+                                    'providerId' => \Rcm\Acl\ResourceProvider::class,
                                     'resource' => 'sites.:siteId.pages.create'
                                 ]
                             ],
@@ -446,7 +463,7 @@ return [
                 'options' => [
                     'route' => '/rcm-admin/page/new',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\PageController',
+                        'controller' => RcmAdmin\Controller\PageController::class,
                         'action' => 'new',
                     ],
                 ],
@@ -457,7 +474,7 @@ return [
                     'route'
                     => '/rcm-admin/page/create-template-from-page/:rcmPageType/:rcmPageName[/[:rcmPageRevision]]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\PageController',
+                        'controller' => RcmAdmin\Controller\PageController::class,
                         'action' => 'createTemplateFromPage',
                     ],
                 ],
@@ -467,7 +484,7 @@ return [
                 'options' => [
                     'route' => '/rcm-admin/page/publish-page-revision/:rcmPageType/:rcmPageName/:rcmPageRevision',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\PageController',
+                        'controller' => RcmAdmin\Controller\PageController::class,
                         'action' => 'publishPageRevision',
                     ],
                 ],
@@ -478,7 +495,7 @@ return [
                     'route' => '/api/admin/current-site[/:id]',
                     'defaults' => [
                         'id' => 'current',
-                        'controller' => 'RcmAdmin\Controller\ApiAdminCurrentSiteController',
+                        'controller' => RcmAdmin\Controller\ApiAdminCurrentSiteController::class,
                     ]
                 ],
             ],
@@ -487,7 +504,7 @@ return [
                 'options' => [
                     'route' => '/api/admin/manage-sites[/:id]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\ApiAdminManageSitesController',
+                        'controller' => RcmAdmin\Controller\ApiAdminManageSitesController::class,
                     ]
                 ],
             ],
@@ -496,7 +513,7 @@ return [
                 'options' => [
                     'route' => '/api/admin/site-copy[/:id]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\ApiAdminSitesCloneController',
+                        'controller' => RcmAdmin\Controller\ApiAdminSitesCloneController::class,
                     ]
                 ],
             ],
@@ -505,7 +522,7 @@ return [
                 'options' => [
                     'route' => '/api/admin/language[/:id]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\ApiAdminLanguageController',
+                        'controller' => RcmAdmin\Controller\ApiAdminLanguageController::class,
                     ]
                 ],
             ],
@@ -514,7 +531,7 @@ return [
                 'options' => [
                     'route' => '/api/admin/theme[/:id]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\ApiAdminThemeController',
+                        'controller' => RcmAdmin\Controller\ApiAdminThemeController::class,
                     ]
                 ],
             ],
@@ -523,7 +540,7 @@ return [
                 'options' => [
                     'route' => '/api/admin/country[/:id]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\ApiAdminCountryController',
+                        'controller' => RcmAdmin\Controller\ApiAdminCountryController::class,
                     ]
                 ],
             ],
@@ -541,7 +558,7 @@ return [
                 'options' => [
                     'route' => '/api/admin/sites/:siteId/page-copy[/:id]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\ApiAdminSitePageCloneController',
+                        'controller' => RcmAdmin\Controller\ApiAdminSitePageCloneController::class,
                     ]
                 ],
             ],
@@ -550,7 +567,7 @@ return [
                 'options' => [
                     'route' => '/api/admin/pagetypes[/:id]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\ApiAdminPageTypesController',
+                        'controller' => RcmAdmin\Controller\ApiAdminPageTypesController::class,
                     ]
                 ],
             ],
@@ -559,7 +576,7 @@ return [
                 'options' => [
                     'route' => '/api/rpc/rcm-admin/can-edit[/:id]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\RpcAdminCanEdit',
+                        'controller' => RcmAdmin\Controller\RpcAdminCanEdit::class,
                     ]
                 ],
             ],
@@ -568,7 +585,7 @@ return [
                 'options' => [
                     'route' => '/api/rpc/rcm-admin/keep-alive[/:id]',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\RpcAdminKeepAlive',
+                        'controller' => RcmAdmin\Controller\RpcAdminKeepAlive::class,
                     ]
                 ],
             ],
@@ -577,7 +594,7 @@ return [
                 'options' => [
                     'route' => '/rcm-admin/page/save-page/:rcmPageType/:rcmPageName/:rcmPageRevision',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\PageController',
+                        'controller' => RcmAdmin\Controller\PageController::class,
                         'action' => 'savePage',
                     ],
                 ],
@@ -587,7 +604,7 @@ return [
                 'options' => [
                     'route' => '/rcm-admin/page-permissions/:rcmPageType/:rcmPageName',
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\PagePermissionsController',
+                        'controller' => RcmAdmin\Controller\PagePermissionsController::class,
                         'action' => 'pagePermissions',
                     ],
                 ],
@@ -600,7 +617,7 @@ return [
                         'id' => '[a-zA-Z0-9_-]+',
                     ],
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\PageViewPermissionsController',
+                        'controller' => RcmAdmin\Controller\PageViewPermissionsController::class,
                     ],
                 ],
             ],
@@ -614,7 +631,7 @@ return [
                         'privileges' => '[a-zA-Z0-9._-]+',
                     ],
                     'defaults' => [
-                        'controller' => 'RcmAdmin\Controller\ApiAdminCheckPermissionsController',
+                        'controller' => RcmAdmin\Controller\ApiAdminCheckPermissionsController::class,
                     ],
                 ],
             ],
@@ -633,23 +650,26 @@ return [
     /* service_manager */
     'service_manager' => [
         'config_factories' => [
-            'RcmAdmin\Service\SiteManager' => [
+            RcmAdmin\Service\SiteManager::class => [
                 'arguments' => [
                     'Config',
                     'Doctrine\ORM\EntityManager',
-                    'RcmUser\Service\RcmUserService',
+                    RcmUser\Service\RcmUserService::class,
                 ],
             ],
         ],
         'factories' => [
-            'RcmAdmin\EventListener\DispatchListener'
-            => 'RcmAdmin\Factory\DispatchListenerFactory',
-            'RcmAdmin\Controller\AdminPanelController'
-            => 'RcmAdmin\Factory\AdminPanelControllerFactory',
+            RcmAdmin\EventListener\DispatchListener::class
+            => RcmAdmin\Factory\DispatchListenerFactory::class,
+
+            RcmAdmin\Controller\AdminPanelController::class
+            => RcmAdmin\Factory\AdminPanelControllerFactory::class,
+
             'RcmAdminNavigation'
-            => 'RcmAdmin\Factory\AdminNavigationFactory',
-            \RcmAdmin\Service\RendererAvailableBlocksJs::class
-            => \RcmAdmin\Service\RendererAvailableBlocksJsFactory::class,
+            => RcmAdmin\Factory\AdminNavigationFactory::class,
+
+            RcmAdmin\Service\RendererAvailableBlocksJs::class
+            => RcmAdmin\Service\RendererAvailableBlocksJsFactory::class,
         ],
     ],
     /* view_manager */
@@ -663,12 +683,9 @@ return [
     ],
     /* view_helpers */
     'view_helpers' => [
-        //'factories' => [
-        //    'availablePluginsList' => \RcmAdmin\Factory\AvailablePluginsJsListFactory::class
-        //],
         'invokables' => [
-            'formPageLayout' => 'RcmAdmin\View\Helper\FormPageLayout',
-            'displayErrors' => 'RcmAdmin\View\Helper\DisplayErrors',
+            'formPageLayout' => RcmAdmin\View\Helper\FormPageLayout::class,
+            'displayErrors' => RcmAdmin\View\Helper\DisplayErrors::class,
         ]
     ],
 ];

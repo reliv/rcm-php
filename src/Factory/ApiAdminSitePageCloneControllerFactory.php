@@ -4,6 +4,7 @@ namespace RcmAdmin\Factory;
 
 use Interop\Container\ContainerInterface;
 use RcmAdmin\Controller\ApiAdminSitePageCloneController;
+use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -22,9 +23,12 @@ class ApiAdminSitePageCloneControllerFactory
      *
      * @return ApiAdminSitePageCloneController
      */
-    public function __invoke($controllerManager)
+    public function __invoke($container)
     {
-        $container = $controllerManager->getServiceLocator();
+        // @BC for ZendFramework
+        if ($container instanceof ControllerManager) {
+            $container = $container->getServiceLocator();
+        }
 
         return new ApiAdminSitePageCloneController($container);
     }

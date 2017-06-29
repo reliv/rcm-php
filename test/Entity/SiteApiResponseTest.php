@@ -1,7 +1,10 @@
 <?php
 
-
 namespace RcmAdmin\Entity;
+
+use Rcm\Entity\Country;
+use Rcm\Entity\Domain;
+use Rcm\Entity\Language;
 
 require_once __DIR__ . '/../autoload.php';
 
@@ -44,7 +47,33 @@ class SiteApiResponseTest extends \PHPUnit_Framework_TestCase
             'notFoundPage' => 'string',
         ];
 
-        $unit = new SiteApiResponse();
+        $unit = new SiteApiResponse(
+            'user123'
+        );
+
+        $unit->setDomain(
+            $this->getMockBuilder(
+                Domain::class
+            )
+                ->disableOriginalConstructor()
+                ->getMock()
+        );
+
+        $unit->setLanguage(
+            $this->getMockBuilder(
+                Language::class
+            )
+                ->disableOriginalConstructor()
+                ->getMock()
+        );
+
+        $unit->setCountry(
+            $this->getMockBuilder(
+                Country::class
+            )
+                ->disableOriginalConstructor()
+                ->getMock()
+        );
 
         $data = $unit->toArray();
 
