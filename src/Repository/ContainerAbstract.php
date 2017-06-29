@@ -16,9 +16,9 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
 {
     /**
      * @param ContainerEntityInterface $container
-     * @param                          $containerData
-     * @param string                   $createdByUserId
-     * @param string                   $createdReason
+     * @param array                    $containerData
+     * @param string                   $modifiedByUserId
+     * @param string                   $modifiedReason
      * @param string                   $author
      * @param null                     $revisionNumber
      *
@@ -27,8 +27,8 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
     public function saveContainer(
         ContainerEntityInterface $container,
         $containerData,
-        $createdByUserId,
-        $createdReason = Tracking::UNKNOWN_REASON,
+        $modifiedByUserId,
+        $modifiedReason = Tracking::UNKNOWN_REASON,
         $author = Tracking::UNKNOWN_AUTHOR,
         $revisionNumber = null
     ) {
@@ -53,8 +53,8 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
         $site = $container->getSite();
 
         $newRevision = new Revision(
-            $createdByUserId,
-            $createdReason
+            $modifiedByUserId,
+            $modifiedReason
         );
         $newRevision->setAuthor($author);
         $newRevision->setMd5($md5);
@@ -100,8 +100,8 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
                 $newPluginWrapper = $pluginWrapperRepo->savePluginWrapper(
                     $pluginData,
                     $site,
-                    $createdByUserId,
-                    $createdReason,
+                    $modifiedByUserId,
+                    $modifiedReason,
                     $pluginWrapper
                 );
 
@@ -143,6 +143,11 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
             ) {
                 $container->setStagedRevision($newRevision);
             }
+
+            $container->setModifiedByUserId(
+                $modifiedByUserId,
+                $modifiedReason
+            );
 
             $this->_em->flush($container);
 

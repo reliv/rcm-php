@@ -101,7 +101,7 @@ trait TrackingTrait
     {
         // not set
         if (empty($this->createdDate)) {
-            throw new TrackingException('Value not set for createdDate');
+            throw new TrackingException('Value not set for createdDate in ' . get_class($this));
         }
 
         return $this->createdDate;
@@ -117,7 +117,7 @@ trait TrackingTrait
     {
         // not set
         if (empty($this->createdByUserId)) {
-            throw new TrackingException('Value not set for createdByUserId');
+            throw new TrackingException('Value not set for createdByUserId in ' . get_class($this));
         }
 
         return $this->createdByUserId;
@@ -149,19 +149,19 @@ trait TrackingTrait
     ) {
         // invalid
         if (strlen($createdByUserId) < 1) {
-            throw new TrackingException('Invalid createdByUserId');
+            throw new TrackingException('Invalid createdByUserId in ' . get_class($this));
         }
 
         // already set
         if (!empty($this->createdByUserId)) {
-            throw new TrackingException('Can not change createdByUserId');
+            throw new TrackingException('Can not change createdByUserId in ' . get_class($this));
         }
 
         $this->createdByUserId = $createdByUserId;
 
         // already set
         if (!empty($this->createdDate)) {
-            throw new TrackingException('Can not change createdDate');
+            throw new TrackingException('Can not change createdDate in ' . get_class($this));
         }
 
         $this->createdDate = new \DateTime();
@@ -183,7 +183,7 @@ trait TrackingTrait
     {
         // not set
         if (empty($this->modifiedDate)) {
-            throw new TrackingException('Value not set for modifiedDate');
+            throw new TrackingException('Value not set for modifiedDate in ' . get_class($this));
         }
 
         return $this->modifiedDate;
@@ -199,7 +199,7 @@ trait TrackingTrait
     {
         // not set
         if (empty($this->modifiedByUserId)) {
-            throw new TrackingException('Value not set for modifiedByUserId');
+            throw new TrackingException('Value not set for modifiedByUserId in ' . get_class($this));
         }
 
         return $this->modifiedByUserId;
@@ -230,7 +230,7 @@ trait TrackingTrait
     ) {
         // invalid
         if (strlen($modifiedByUserId) < 1) {
-            throw new TrackingException('Invalid modifiedByUserId');
+            throw new TrackingException('Invalid modifiedByUserId in ' . get_class($this));
         }
 
         $this->modifiedByUserIdUpdated = true;
@@ -250,19 +250,19 @@ trait TrackingTrait
     public function assertHasTrackingData()
     {
         if (empty($this->createdDate)) {
-            throw new TrackingException('Value not set for createdDate');
+            throw new TrackingException('Value not set for createdDate in ' . get_class($this));
         }
 
         if (empty($this->createdByUserId)) {
-            throw new TrackingException('Value not set for createdByUserId');
+            throw new TrackingException('Value not set for createdByUserId in ' . get_class($this));
         }
 
         if (empty($this->modifiedByUserId)) {
-            throw new TrackingException('Value not set for modifiedByUserId');
+            throw new TrackingException('Value not set for modifiedByUserId in ' . get_class($this));
         }
 
         if (empty($this->modifiedDate)) {
-            throw new TrackingException('Value not set for modifiedDate');
+            throw new TrackingException('Value not set for modifiedDate in ' . get_class($this));
         }
     }
 
@@ -275,7 +275,7 @@ trait TrackingTrait
     public function assertHasNewModifiedData()
     {
         if (!$this->modifiedByUserIdUpdated) {
-            throw new TrackingException('Modified data has not been updated');
+            throw new TrackingException('Modified data has not been updated in ' . get_class($this));
         }
 
         $this->assertHasTrackingData();
