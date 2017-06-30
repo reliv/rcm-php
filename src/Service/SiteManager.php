@@ -3,9 +3,11 @@
 namespace RcmAdmin\Service;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\Entity\Container;
 use Rcm\Entity\Country;
 use Rcm\Entity\Domain;
 use Rcm\Entity\Language;
+use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\Tracking\Model\Tracking;
@@ -142,17 +144,15 @@ class SiteManager
 
         $entityManager->persist($newSite);
 
-        $entityManager->flush();
+        $entityManager->flush($newSite);
 
         $this->createPagePlugins(
             $newSite,
             $user->getId(),
             'New site creation in ' . get_class($this),
             $this->getDefaultSitePageSettings($user),
-            false
+            true
         );
-
-        $entityManager->flush();
 
         return $newSite;
     }
@@ -175,23 +175,56 @@ class SiteManager
 
         $user = $this->getCurrentUserTracking();
 
+        $domain->setModifiedByUserId(
+            $user->getId(),
+            'Copy site in ' . get_class($this)
+        );
+
         $copySite = $existingSite->newInstance(
             $user->getId(),
             'Copy site in ' . get_class($this)
         );
+
         $copySite->setSiteId(null);
         $copySite->setDomain($domain);
 
+        // NOTE: site::newInstance() does page copy too
         $pages = $copySite->getPages();
+        $pageRevisions = [];
 
-        foreach ($pages as &$page) {
+        /** @var Page $page */
+        foreach ($pages as $page) {
             $page->setAuthor($user->getName());
+            $page->setModifiedByUserId(
+                $user->getId(),
+                'Copy site in ' . get_class($this)
+            );
+            $pageRevision = $page->getPublishedRevision();
+            $pageRevisions[] = $pageRevision;
+            $entityManager->persist($page);
+            $entityManager->persist($pageRevision);
+        }
+
+        $containers = $copySite->getContainers();
+        $containerRevisions = [];
+
+        /** @var Container $container */
+        foreach ($containers as $container) {
+            $containerRevision = $container->getPublishedRevision();
+            $containerRevisions[] = $containerRevision;
+            $entityManager->persist($container);
+            $entityManager->persist($containerRevision);
         }
 
         $entityManager->persist($copySite);
 
         if ($doFlush) {
-            $entityManager->flush();
+            $entityManager->flush($domain);
+            $entityManager->flush($copySite);
+            $entityManager->flush($pages->toArray());
+            $entityManager->flush($pageRevisions);
+            $entityManager->flush($containers->toArray());
+            $entityManager->flush($containerRevisions);
         }
 
         return $copySite;
@@ -220,7 +253,12 @@ class SiteManager
         $copySite->populate($data);
 
         if ($doFlush) {
+            $entityManager->flush($domain);
             $entityManager->flush($copySite);
+            // @todo Missing pages publishedRevisions in flush
+            $entityManager->flush($copySite->getPages()->toArray());
+            // @todo Missing containers publishedRevisions in flush
+            $entityManager->flush($copySite->getContainers()->toArray());
         }
 
         return $copySite;
@@ -476,6 +514,9 @@ class SiteManager
             \Rcm\Entity\PluginWrapper::class
         );
 
+        $pages = [];
+        $pageRevisions = [];
+
         foreach ($pagesData as $pageName => $pageData) {
             if (empty($pageData['plugins'])) {
                 continue;
@@ -483,44 +524,62 @@ class SiteManager
 
             $page = $pageRepo->getPageByName($site, $pageData['name']);
 
-            if (!empty($page)) {
-                $pageRevision = $page->getPublishedRevision();
+            if (empty($page)) {
+                continue;
+            }
 
-                if (empty($pageRevision)) {
-                    throw new \Exception(
-                        "Could not find published revision for page {$page->getPageId()}"
-                    );
-                }
+            $page->setModifiedByUserId(
+                $createdByUserId,
+                $createdReason
+            );
 
-                foreach ($pageData['plugins'] as $pluginData) {
-                    $pluginInstance = $pluginInstanceRepo->createPluginInstance(
-                        $pluginData,
-                        $site,
-                        $createdByUserId,
-                        $createdReason,
-                        null
-                    );
+            $pages[] = $page;
 
-                    $pluginData['pluginInstanceId']
-                        = $pluginInstance->getInstanceId();
+            $pageRevision = $page->getPublishedRevision();
 
-                    $wrapper = $pluginWrapperRepo->savePluginWrapper(
-                        $pluginData,
-                        $site,
-                        $createdByUserId,
-                        $createdReason,
-                        null
-                    );
+            if (empty($pageRevision)) {
+                throw new \Exception(
+                    "Could not find published revision for page {$page->getPageId()}"
+                );
+            }
 
-                    $pageRevision->addPluginWrapper($wrapper);
+            foreach ($pageData['plugins'] as $pluginData) {
+                $pluginInstance = $pluginInstanceRepo->createPluginInstance(
+                    $pluginData,
+                    $site,
+                    $createdByUserId,
+                    $createdReason,
+                    null,
+                    $doFlush
+                );
 
-                    $entityManager->persist($pageRevision);
-                }
+                $pluginData['pluginInstanceId'] = $pluginInstance->getInstanceId();
+
+                $wrapper = $pluginWrapperRepo->savePluginWrapper(
+                    $pluginData,
+                    $site,
+                    $createdByUserId,
+                    $createdReason,
+                    null,
+                    $doFlush
+                );
+
+                $pageRevision->addPluginWrapper($wrapper);
+
+                $pageRevision->setModifiedByUserId(
+                    $createdByUserId,
+                    $createdReason
+                );
+
+                $entityManager->persist($pageRevision);
+
+                $pageRevisions[] = $pageRevision;
             }
         }
 
         if ($doFlush) {
-            $entityManager->flush();
+            $entityManager->flush($pages);
+            $entityManager->flush($pageRevisions);
         }
     }
 }

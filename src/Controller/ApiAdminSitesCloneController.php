@@ -7,7 +7,6 @@ use Rcm\Http\Response;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\InputFilter\SiteDuplicateInputFilter;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Model\JsonModel;
 
 /**
  * ApiAdminSitesCloneController
@@ -21,8 +20,6 @@ use Zend\View\Model\JsonModel;
  * @license   License.txt New BSD License
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
- *
- * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = \Rcm\Acl\ResourceProvider::class)
  */
 class ApiAdminSitesCloneController extends ApiAdminManageSitesController
 {
@@ -39,12 +36,13 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
      *
      * @param array $data - see buildSiteApiResponse()
      *
-     * @return mixed|JsonModel
+     * @return ApiJsonModel|\Zend\Stdlib\ResponseInterface
+     * @throws \Exception
      */
     public function create($data)
     {
         /* ACCESS CHECK */
-        if (!$this->rcmIsAllowed('sites', 'admin')) {
+        if (!$this->isAllowed('sites', 'admin')) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();
@@ -76,7 +74,9 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
             $domain = $domainRepo->createDomain(
                 $data['domainName'],
                 $this->getCurrentUserId(),
-                'Create new domain in ' . get_class($this)
+                'Create new domain in ' . get_class($this),
+                null,
+                false
             );
         } catch (\Exception $e) {
             return new ApiJsonModel(null, 1, $e->getMessage());
@@ -94,12 +94,20 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
             return new ApiJsonModel(null, 1, "Site {$data['siteId']} not found.");
         }
 
-        $copySite = $siteManager->copySiteAndPopulate(
-            $existingSite,
-            $domain,
-            $data,
-            true
-        );
+        try {
+            $copySite = $siteManager->copySiteAndPopulate(
+                $existingSite,
+                $domain,
+                $data,
+                true
+            );
+        } catch (\Exception $exception) {
+            // Remove domain if error occurs
+            if ($entityManager->contains($domain)) {
+                $entityManager->remove($domain);
+            }
+            throw $exception;
+        }
 
         return new ApiJsonModel($copySite, 0, 'Success');
     }
