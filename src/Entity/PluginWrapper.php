@@ -182,14 +182,15 @@ class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializabl
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
-        if (!$this->pluginInstanceId) {
-            return clone($this);
-        }
         /** @var PluginWrapper $new */
         $new = parent::newInstance(
             $createdByUserId,
             $createdReason
         );
+
+        if (!$this->pluginInstanceId) {
+            return $new;
+        }
 
         $new->pluginWrapperId = null;
 

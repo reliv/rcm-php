@@ -218,14 +218,39 @@ class Container extends ContainerAbstract implements Tracking
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
-        if (!$this->containerId) {
-            return clone($this);
-        }
         /** @var static $new */
         $new = parent::newInstance(
             $createdByUserId,
             $createdReason
         );
+
+        if (!$this->containerId) {
+            return $new;
+        }
+
+        $new->containerId = null;
+
+        return $new;
+    }
+
+    /**
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return null|ContainerAbstract|ContainerInterface
+     */
+    public function newInstanceIfHasRevision(
+        string $createdByUserId,
+        string $createdReason = Tracking::UNKNOWN_REASON
+    ) {
+        $new = parent::newInstanceIfHasRevision(
+            $createdByUserId,
+            $createdReason
+        );
+
+        if (empty($new)) {
+            return null;
+        }
 
         $new->containerId = null;
 

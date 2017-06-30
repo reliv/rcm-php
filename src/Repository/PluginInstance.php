@@ -157,7 +157,7 @@ class PluginInstance extends EntityRepository
         $this->_em->persist($pluginInstance);
 
         if ($doFlush) {
-            $this->_em->flush();
+            $this->_em->flush($pluginInstance);
         }
 
         return $pluginInstance;
