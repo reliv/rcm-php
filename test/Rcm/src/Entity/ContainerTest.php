@@ -291,11 +291,12 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
         /** @var \Rcm\Entity\PluginWrapper $clonedWrapper */
         foreach ($clonedWrappers as $clonedWrapper) {
-            if (!$clonedWrapper->getInstance()->isSiteWide()) {
+            //@deprecated <deprecated-site-wide-plugin>
+            //if (!$clonedWrapper->getInstance()->isSiteWide()) {
                 $this->assertNull($clonedWrapper->getInstance()->getInstanceId());
-            } else {
-                $this->assertNotNull($clonedWrapper->getInstance()->getInstanceId());
-            }
+            //} else {
+            //    $this->assertNotNull($clonedWrapper->getInstance()->getInstanceId());
+            //}
         }
 
         $this->container->setContainerId(null);
