@@ -25,7 +25,7 @@ class LocaleService
     public function __construct(
         $config
     ) {
-        $this->defaultLocale = $config;
+        $this->setDefaultDomainName($config);
     }
 
     /**
