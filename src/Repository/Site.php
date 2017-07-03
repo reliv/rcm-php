@@ -225,17 +225,17 @@ class Site extends EntityRepository
      * @todo Fix Me
      * createNewSite
      *
-     * @param null|int $siteId
      * @param string   $createdByUserId
      * @param string   $createdReason
+     * @param null|int $siteId
      *
      * @return SiteEntity
      * @throws SiteNotFoundException
      */
     public function createNewSite(
-        $siteId = null,
         string $createdByUserId,
-        string $createdReason = Tracking::UNKNOWN_REASON
+        string $createdReason = Tracking::UNKNOWN_REASON,
+        $siteId = null
     ) {
         if (empty($siteId)) {
             // new site

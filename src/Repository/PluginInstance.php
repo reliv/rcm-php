@@ -106,7 +106,8 @@ class PluginInstance extends EntityRepository
 
         if (!$forceSave
             && $pluginInstance->getMd5() == md5(serialize($pluginData['saveData']))
-            && $pluginInstance->isSiteWide() == (bool)$pluginData['siteWide'] // @deprecated <deprecated-site-wide-plugin>
+            // @deprecated <deprecated-site-wide-plugin>
+            && $pluginInstance->isSiteWide() == (bool)$pluginData['siteWide']
         ) {
             return $pluginInstance;
         }
