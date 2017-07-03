@@ -22,6 +22,7 @@ namespace RcmTest\Entity;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Util\Debug;
 use Rcm\Entity\Container;
 use Rcm\Entity\Country;
 use Rcm\Entity\Domain;
@@ -1142,6 +1143,7 @@ class SIteTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->site->getContainers());
 
         $original = $this->site;
+
         $cloned = $this->site->newInstance('user123');
 
         $this->assertNotEquals($original->getSiteId(), $cloned->getSiteId());

@@ -198,7 +198,8 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
             $createdReason
         );
 
-        if (!$this->pluginInstanceId) {
+        // if no id, then it has not been save and can be returned
+        if (empty($new->pluginInstanceId)) {
             return $new;
         }
 

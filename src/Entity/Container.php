@@ -224,7 +224,8 @@ class Container extends ContainerAbstract implements Tracking
             $createdReason
         );
 
-        if (!$this->containerId) {
+        // if no id, then it has not been save and can be returned
+        if (empty($new->containerId)) {
             return $new;
         }
 

@@ -323,7 +323,8 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
             $createdReason
         );
 
-        if (!$this->siteId) {
+        // if no id, then it has not been save and can be returned
+        if (empty($new->siteId)) {
             return $new;
         }
 

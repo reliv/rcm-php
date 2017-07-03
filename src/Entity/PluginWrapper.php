@@ -188,7 +188,8 @@ class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializabl
             $createdReason
         );
 
-        if (!$this->pluginInstanceId) {
+        // if no id, then it has not been save and can be returned
+        if (empty($new->pluginWrapperId)) {
             return $new;
         }
 

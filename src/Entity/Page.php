@@ -284,7 +284,8 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
             $createdReason
         );
 
-        if (!$this->pageId) {
+        // if no id, then it has not been save and can be returned
+        if (empty($new->pageId)) {
             return $new;
         }
 

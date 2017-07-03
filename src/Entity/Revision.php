@@ -191,7 +191,8 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
             $createdReason
         );
 
-        if (!$this->revisionId) {
+        // if no id, then it has not been save and can be returned
+        if (empty($new->revisionId)) {
             return $new;
         }
 
