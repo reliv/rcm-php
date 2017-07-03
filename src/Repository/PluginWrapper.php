@@ -31,6 +31,7 @@ class PluginWrapper extends EntityRepository
      * @param string                         $modifiedByUserId
      * @param string                         $modifiedReason
      * @param null|\Rcm\Entity\PluginWrapper $oldWrapper
+     * @param bool                           $doFlush
      *
      * @return null|PluginWrapperEntity
      */
@@ -39,7 +40,8 @@ class PluginWrapper extends EntityRepository
         SiteEntity $site,
         string $modifiedByUserId,
         string $modifiedReason = Tracking::UNKNOWN_REASON,
-        $oldWrapper = null
+        $oldWrapper = null,
+        $doFlush = true
     ) {
         if (!empty($oldWrapper) && !is_a($oldWrapper, \Rcm\Entity\PluginWrapper::class)) {
             throw new RuntimeException(
@@ -62,7 +64,8 @@ class PluginWrapper extends EntityRepository
         );
 
         if (!empty($oldWrapper)
-            && ($pluginData['siteWide'] || $oldWrapper->getInstance()->isSiteWide()) // @deprecated <deprecated-site-wide-plugin>
+            && ($pluginData['siteWide'] || $oldWrapper->getInstance()->isSiteWide())
+            // @deprecated <deprecated-site-wide-plugin>
             && $pluginInstance->getInstanceId() != $oldWrapper->getInstance()
                 ->getInstanceId()
         ) {
@@ -95,7 +98,10 @@ class PluginWrapper extends EntityRepository
         $pluginWrapper->setInstance($pluginInstance);
 
         $this->_em->persist($pluginWrapper);
-        $this->_em->flush($pluginWrapper);
+
+        if ($doFlush) {
+            $this->_em->flush($pluginWrapper);
+        }
 
         return $pluginWrapper;
     }

@@ -4,7 +4,6 @@ namespace Rcm\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Rcm\Exception\InvalidArgumentException;
-use Rcm\Tracking\Exception\TrackingException;
 use Rcm\Tracking\Model\Tracking;
 use Rcm\Tracking\Model\TrackingAbstract;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
@@ -101,6 +100,7 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
 
     /**
      * Get a clone with special logic
+     * Any copy will be changed to staged
      *
      * @param string $createdByUserId
      * @param string $createdReason
@@ -142,6 +142,8 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
+     * This is used mainly for site copies to eliminate pages that are not published
+     *
      * @param string $createdByUserId
      * @param string $createdReason
      *
@@ -151,28 +153,32 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
-        $newInstance = $this->newInstance(
+        /** @var ContainerInterface|ContainerAbstract $new */
+        $new = parent::newInstance(
             $createdByUserId,
             $createdReason
         );
-        // @todo Is this needed?
-        $newInstance->setName($this->getName());
 
-        $publishedRevision = $newInstance->getPublishedRevision();
+        $publishedRevision = $new->getPublishedRevision();
 
         if (empty($publishedRevision)) {
             return null;
         }
 
-        $stagedRevision = $newInstance->getStagedRevision();
+        $new->lastPublished = new \DateTime();
 
-        if (empty($stagedRevision)) {
-            return null;
-        }
+        $new->revisions = new ArrayCollection();
+        $new->stagedRevision = null;
+        $new->stagedRevisionId = null;
 
-        $newInstance->setPublishedRevision($stagedRevision);
+        $new->setPublishedRevision(
+            $publishedRevision->newInstance(
+                $createdByUserId,
+                $createdReason
+            )
+        );
 
-        return $newInstance;
+        return $new;
     }
 
     /**

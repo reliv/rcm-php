@@ -317,38 +317,23 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
-        if (!$this->siteId) {
-            return clone($this);
-        }
-
         /** @var static $new */
         $new = parent::newInstance(
             $createdByUserId,
             $createdReason
         );
 
+        // if no id, then it has not been save and can be returned
+        if (empty($new->siteId)) {
+            return $new;
+        }
+
         $new->siteId = null;
         $new->domain = null;
 
-        /* @deprecated Clone Site Wide Plugins
-         * $siteWidePlugins = $new->sitePlugins;
-         * $clonedSiteWides = [];
-         * $siteWideIdsToChange = [];
-         *
-         * /** @var \Rcm\Entity\PluginInstance $siteWidePlugin *
-         * foreach ($siteWidePlugins as $siteWidePlugin) {
-         * $clonedSiteWide = $siteWidePlugin->newInstance(
-         * $createdByUserId,
-         * $createdReason
-         * );
-         * $siteWideIdsToChange[$siteWidePlugin->getInstanceId()]
-         * = $clonedSiteWide;
-         * $clonedSiteWides[] = $clonedSiteWide;
-         * }
-         */
-
         /* Get Cloned Pages */
         $pages = $new->getPages();
+
         $clonedPages = [];
 
         /** @var \Rcm\Entity\Page $page */
@@ -403,69 +388,6 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
         $new->containers = new ArrayCollection($clonedContainers);
 
         return $new;
-    }
-
-    /**
-     * @deprecated use ContainerInterface::newInstanceIfRevisionExists
-     * @param Page   $originalPage
-     * @param string $createdByUserId
-     * @param string $createdReason
-     *
-     * @return Page
-     */
-    protected function getPageClone(
-        Page $originalPage,
-        string $createdByUserId,
-        string $createdReason = Tracking::UNKNOWN_REASON
-    ) {
-        $clonedPage = $originalPage->newInstance(
-            $createdByUserId,
-            $createdReason
-        );
-
-        $clonedPage->setSite($this);
-        $clonedPage->setName($originalPage->getName());
-
-        $publishedRevision = $originalPage->getPublishedRevision();
-
-        if (empty($publishedRevision)) {
-            return null;
-        }
-
-        $stagedRevision = $clonedPage->getStagedRevision();
-
-        if (empty($stagedRevision)) {
-            return null;
-        }
-
-        $clonedPage->setPublishedRevision($stagedRevision);
-
-        return $clonedPage;
-    }
-
-    /**
-     * @deprecated <deprecated-site-wide-plugin>
-     * fixRevisionSiteWides
-     *
-     * @param Revision $revision
-     * @param array    $siteWideIdsToChange
-     *
-     * @return void
-     */
-    protected function fixRevisionSiteWides(Revision $revision, $siteWideIdsToChange)
-    {
-        $pluginWrappers = $revision->getPluginWrappers();
-
-        /** @var \Rcm\Entity\PluginWrapper $pluginWrapper */
-        foreach ($pluginWrappers as $pluginWrapper) {
-            $instanceId = $pluginWrapper->getInstance()->getInstanceId();
-
-            if (isset($siteWideIdsToChange[$instanceId])
-                && $siteWideIdsToChange[$instanceId] instanceof PluginInstance
-            ) {
-                $pluginWrapper->setInstance($siteWideIdsToChange[$instanceId]);
-            }
-        }
     }
 
     /**

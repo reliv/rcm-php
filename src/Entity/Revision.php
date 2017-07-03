@@ -185,14 +185,16 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
-        if (!$this->revisionId) {
-            return clone($this);
-        }
         /** @var static $new */
         $new = parent::newInstance(
             $createdByUserId,
             $createdReason
         );
+
+        // if no id, then it has not been save and can be returned
+        if (empty($new->revisionId)) {
+            return $new;
+        }
 
         $new->revisionId = null;
         $new->createdDate = new \DateTime();

@@ -192,14 +192,16 @@ class PluginInstance extends ApiModelTrackingAbstract implements \JsonSerializab
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
-        if (!$this->pluginInstanceId) {
-            return clone($this);
-        }
         /** @var static $new */
         $new = parent::newInstance(
             $createdByUserId,
             $createdReason
         );
+
+        // if no id, then it has not been save and can be returned
+        if (empty($new->pluginInstanceId)) {
+            return $new;
+        }
 
         $new->pluginInstanceId = null;
         $new->previousEntity = null;

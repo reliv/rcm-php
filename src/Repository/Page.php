@@ -425,8 +425,9 @@ class Page extends ContainerAbstract
         );
 
         $this->getEntityManager()->persist($page);
+
         if ($doFlush) {
-            $this->getEntityManager()->flush();
+            $this->getEntityManager()->flush($page);
         }
     }
 
