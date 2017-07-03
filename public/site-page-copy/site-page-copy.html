@@ -29,16 +29,23 @@
                         </div>
                     </div>
 
-                    <div class="form-group" ng-hide="loadings.destinationSites">
+                    <div class="form-group">
                         <label class="col-sm-3 control-label"
                                for="destinationSite">Destination Site</label>
 
                         <div class="col-sm-8">
                             <select class="form-control"
                                     id="destinationSite"
+                                    ng-hide="loadings.destinationSites"
                                     ng-model="destinationSite"
                                     ng-options="v as v.domainName for (k, v) in destinationSites"
                                     >
+                            </select>
+                            <select class="form-control"
+                                    disabled="disabled"
+                                    id="destinationSiteLoading"
+                                    ng-show="loadings.destinationSites">
+                                <option>loading..</option>
                             </select>
                         </div>
                     </div>
