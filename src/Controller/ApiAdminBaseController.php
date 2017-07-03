@@ -35,7 +35,7 @@ class ApiAdminBaseController extends AbstractRestfulJsonController
     /**
      * getEntityManager
      *
-     * @return \Doctrine\ORM\EntityManagerInterface
+     * @return \Doctrine\ORM\EntityManager
      */
     protected function getEntityManager()
     {

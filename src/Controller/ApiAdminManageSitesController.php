@@ -27,8 +27,6 @@ use Zend\View\Model\JsonModel;
  * @license   License.txt New BSD License
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
- *
- * @method boolean rcmIsAllowed($resourceId, $privilege = null, $providerId = \Rcm\Acl\ResourceProvider::class)
  */
 class ApiAdminManageSitesController extends ApiAdminBaseController
 {
@@ -78,6 +76,20 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     }
 
     /**
+     * @param string $resourceId
+     * @param null   $privilege
+     *
+     * @return bool
+     */
+    public function isAllowed($resourceId, $privilege = null)
+    {
+        /** @var RcmUserService $rcmUserService */
+        $rcmUserService = $this->getRcmUserService();
+
+        return $rcmUserService->isAllowed($resourceId, $privilege);
+    }
+
+    /**
      * getList
      *
      * @return mixed|JsonModel
@@ -85,7 +97,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     public function getList()
     {
         //ACCESS CHECK
-        if (!$this->rcmIsAllowed(
+        if (!$this->isAllowed(
             'sites',
             'admin'
         )
@@ -167,7 +179,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     public function get($id)
     {
         //ACCESS CHECK
-        if (!$this->rcmIsAllowed('sites', 'admin')) {
+        if (!$this->isAllowed('sites', 'admin')) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();
@@ -232,7 +244,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     public function update($siteId, $data)
     {
         //ACCESS CHECK
-        if (!$this->rcmIsAllowed(
+        if (!$this->isAllowed(
             'sites',
             'admin'
         )
@@ -246,7 +258,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
             throw new \Exception('Invalid data format');
         }
 
-        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = $this->getEntityManager();
 
         /** @var \Rcm\Repository\Site $siteRepo */
@@ -278,7 +290,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         );
 
         $entityManager->persist($site);
-        $entityManager->flush();
+        $entityManager->flush($site);
 
         return new JsonModel($site);
     }
@@ -293,7 +305,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     public function create($data)
     {
         /* ACCESS CHECK */
-        if (!$this->rcmIsAllowed('sites', 'admin')) {
+        if (!$this->isAllowed('sites', 'admin')) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();
