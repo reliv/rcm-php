@@ -196,13 +196,13 @@ class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializabl
         $new->pluginWrapperId = null;
 
         // @deprecated <deprecated-site-wide-plugin>
-        if (!$new->instance->isSiteWide()) {
+        //if (!$new->instance->isSiteWide()) {
             $pluginInstance = $new->instance->newInstance(
                 $createdByUserId,
                 $createdReason
             );
             $new->instance = $pluginInstance;
-        }
+        //}
 
         return $new;
     }

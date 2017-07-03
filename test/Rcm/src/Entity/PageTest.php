@@ -441,11 +441,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
         /** @var \Rcm\Entity\PluginWrapper $clonedWrapper */
         foreach ($clonedWrappers as $clonedWrapper) {
             // @deprecated <deprecated-site-wide-plugin>
-            if (!$clonedWrapper->getInstance()->isSiteWide()) {
+            //if (!$clonedWrapper->getInstance()->isSiteWide()) {
                 $this->assertNull($clonedWrapper->getInstance()->getInstanceId());
-            } else {
-                $this->assertNotNull($clonedWrapper->getInstance()->getInstanceId());
-            }
+            //} else {
+            //    $this->assertNotNull($clonedWrapper->getInstance()->getInstanceId());
+            //}
         }
 
         $page = new Page('user123');

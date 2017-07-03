@@ -277,19 +277,19 @@ class PluginWrapperTest extends \PHPUnit_Framework_TestCase
             $clonedInstance = $clonedWrapper->getInstance();
 
             // @deprecated <deprecated-site-wide-plugin>
-            if (!$instance['instance']['siteWide']) {
+            //if (!$instance['instance']['siteWide']) {
                 $this->assertNotEquals(
                     $preInstance->getInstanceId(),
                     $clonedInstance->getInstanceId()
                 );
 
                 $this->assertNull($clonedInstance->getInstanceId());
-            } else {
-                $this->assertEquals(
-                    $preInstance->getInstanceId(),
-                    $clonedInstance->getInstanceId()
-                );
-            }
+            //} else {
+            //    $this->assertEquals(
+            //        $preInstance->getInstanceId(),
+            //        $clonedInstance->getInstanceId()
+            //    );
+            //}
 
             $this->assertEquals(
                 $preInstance->getPlugin(),
