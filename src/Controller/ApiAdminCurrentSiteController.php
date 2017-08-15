@@ -3,6 +3,7 @@
 namespace RcmAdmin\Controller;
 
 use Rcm\Entity\Site;
+use Rcm\Tracking\Model\Tracking;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\Entity\SiteApiResponse;
 
@@ -58,7 +59,7 @@ class ApiAdminCurrentSiteController extends ApiAdminBaseController
      */
     protected function buildSiteApiResponse(Site $site)
     {
-        $siteApiResponse = new SiteApiResponse();
+        $siteApiResponse = new SiteApiResponse(Tracking::UNKNOWN_AUTHOR);
 
         $siteApiResponse->populateFromObject($site);
 
