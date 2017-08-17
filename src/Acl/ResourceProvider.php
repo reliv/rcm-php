@@ -29,9 +29,6 @@ class ResourceProvider extends RcmUserResourceProvider
     /** @var string */
     protected $providerId = \Rcm\Acl\ResourceProvider::class;
 
-    /** @var \Rcm\Repository\Site */
-    protected $siteRepo;
-
     /** @var Site */
     protected $currentSite;
 
@@ -39,17 +36,16 @@ class ResourceProvider extends RcmUserResourceProvider
      * ResourceProvider constructor.
      *
      * @param array $resources
-     * @param SiteRepo $siteRepo
      * @param Site $currentSite
      */
     public function __construct(
         array $resources,
-        SiteRepo $siteRepo,
         Site $currentSite
     ) {
-        $this->resources = $resources;
-        $this->siteRepo = $siteRepo;
         $this->currentSite = $currentSite;
+        parent::__construct(
+            $resources
+        );
     }
 
     /**

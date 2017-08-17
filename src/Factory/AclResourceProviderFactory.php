@@ -40,18 +40,11 @@ class AclResourceProviderFactory implements FactoryInterface
             $aclConfig = $config['Rcm']['Acl'];
         }
 
-        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
-        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
-
-        /** @var \Rcm\Repository\Site $siteRepo */
-        $siteRepo = $entityManager->getRepository(\Rcm\Entity\Site::class);
-
         /** @var \Rcm\Entity\Site $currentSite */
         $currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
 
         return new ResourceProvider(
             $aclConfig,
-            $siteRepo,
             $currentSite
         );
     }
