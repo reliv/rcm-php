@@ -3,26 +3,10 @@
 namespace Rcm\Factory;
 
 use Rcm\Acl\ResourceProvider;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Service Factory for Rcm Cache
- *
- * Factory for Rcm Cache.
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: 1.0
- * @link      https://github.com/reliv
- *
- */
-class AclResourceProviderFactory implements FactoryInterface
+class AclResourceProviderFactory
 {
-
     /**
      * Creates Service
      *
@@ -30,7 +14,7 @@ class AclResourceProviderFactory implements FactoryInterface
      *
      * @return ResourceProvider
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         $config = $serviceLocator->get('Config');
 
