@@ -2,8 +2,10 @@
 
 namespace RcmAdmin\Controller;
 
+use Rcm\Acl\ResourceName;
 use Rcm\Http\Response;
 use RcmUser\Acl\Entity\AclRule;
+use RcmUser\Service\RcmUserService;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
@@ -47,7 +49,7 @@ class PageViewPermissionsController extends AbstractRestfulController
     /**
      * Update an existing resource
      *
-     * @param  string $id   $pageName
+     * @param  string $id $pageName
      * @param  array  $data $roles
      *
      * @return mixed
@@ -61,13 +63,16 @@ class PageViewPermissionsController extends AbstractRestfulController
         $this->resourceProvider = $this->getServiceLocator()->get(
             \Rcm\Acl\ResourceProvider::class
         );
+
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
         $this->pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
 
+        // @todo Real input validation
         if (!is_array($data)) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
+
             return $this->getResponse();
         }
 
@@ -76,10 +81,11 @@ class PageViewPermissionsController extends AbstractRestfulController
             \Rcm\Service\CurrentSite::class
         );
 
-        if (is_numeric($data['siteId']) && ($currentSite->getSiteId() == $data['siteId'])) {
+        if (!empty($data['siteId']) && is_numeric($data['siteId']) && ($currentSite->getSiteId() == $data['siteId'])) {
             $siteId = $data['siteId'];
         } else {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
+
             return $this->getResponse();
         }
 
@@ -87,6 +93,7 @@ class PageViewPermissionsController extends AbstractRestfulController
             $pageName = $data['pageName'];
         } else {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
+
             return $this->getResponse();
         }
 
@@ -94,6 +101,7 @@ class PageViewPermissionsController extends AbstractRestfulController
             $pageType = $data['pageType'];
         } else {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
+
             return $this->getResponse();
         }
 
@@ -101,13 +109,36 @@ class PageViewPermissionsController extends AbstractRestfulController
             $selectedRoles = $data['selectedRoles'];
         } else {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
+
             return $this->getResponse();
         }
         //CREATE RESOURCE ID
-        $resourceId = 'sites.' . $siteId . '.pages.' . 'n' . '.' . $pageName;
-        //ACCESS CHECK
-        if (!$this->rcmIsAllowed($resourceId, 'edit') && !$this->isAllowed('pages', 'edit')) {
+        /** @var ResourceName $resourceName */
+        $resourceName = $this->getServiceLocator()->get(
+            ResourceName::class
+        );
+
+        $resourceId = $resourceName->get(
+            ResourceName::RESOURCE_SITES,
+            $siteId,
+            ResourceName::RESOURCE_PAGES,
+            'n',
+            $pageName
+        );
+
+        /** @var RcmUserService $rcmUserService */
+        $rcmUserService = $this->getServiceLocator()->get(
+            RcmUserService::class
+        );
+
+        if (!$rcmUserService->isAllowed($resourceId, 'edit')
+            && !$rcmUserService->isAllowed(
+                ResourceName::RESOURCE_PAGES,
+                'edit'
+            )
+        ) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+
             return $this->getResponse();
         }
 
@@ -116,11 +147,13 @@ class PageViewPermissionsController extends AbstractRestfulController
 
         if (!$validPage) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_404);
+
             return $this->getResponse();
         }
 
         if (!$this->isValidResourceId($resourceId)) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
+
             return $this->getResponse();
         }
 
@@ -129,6 +162,7 @@ class PageViewPermissionsController extends AbstractRestfulController
 
         if (!$deleteAllPermissions) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_400);
+
             return $this->getResponse();
         }
 

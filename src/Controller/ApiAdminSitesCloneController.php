@@ -3,6 +3,7 @@
 namespace RcmAdmin\Controller;
 
 use Interop\Container\ContainerInterface;
+use Rcm\Acl\ResourceName;
 use Rcm\Http\Response;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\InputFilter\SiteDuplicateInputFilter;
@@ -42,7 +43,7 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
     public function create($data)
     {
         /* ACCESS CHECK */
-        if (!$this->isAllowed('sites', 'admin')) {
+        if (!$this->isAllowed(ResourceName::RESOURCE_SITES, 'admin')) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();

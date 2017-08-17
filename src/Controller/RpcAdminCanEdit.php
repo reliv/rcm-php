@@ -3,8 +3,11 @@
 
 namespace RcmAdmin\Controller;
 
+use Rcm\Acl\ResourceName;
 use Rcm\View\Model\ApiJsonModel;
+use RcmUser\Service\RcmUserService;
 use Zend\Http\Response;
+use Zend\View\Model\JsonModel;
 
 /**
  * Class RpcAdminCanEdit
@@ -24,7 +27,6 @@ use Zend\Http\Response;
 
 class RpcAdminCanEdit extends ApiAdminBaseController
 {
-
     /**
      * create
      *
@@ -32,7 +34,14 @@ class RpcAdminCanEdit extends ApiAdminBaseController
      */
     public function create($data)
     {
-        $result = $this->rcmIsAllowed('sites', 'admin');
+        /** @var RcmUserService $rcmUserService */
+        $rcmUserService = $this->serviceLocator->get(RcmUserService::class);
+
+        //ACCESS CHECK
+        $result = $rcmUserService->isAllowed(
+            ResourceName::RESOURCE_SITES,
+            'admin'
+        );
 
         return new ApiJsonModel(['canEdit' => $result]);
     }

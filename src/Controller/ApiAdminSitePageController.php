@@ -3,6 +3,7 @@
 namespace RcmAdmin\Controller;
 
 use Interop\Container\ContainerInterface;
+use Rcm\Acl\ResourceName;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use Rcm\Tracking\Exception\TrackingException;
@@ -68,7 +69,16 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     protected function getSitePagesResourceId($siteId)
     {
-        return 'sites.' . $siteId . '.pages';
+        /** @var ResourceName $resourceName */
+        $resourceName = $this->getServiceLocator()->get(
+            ResourceName::class
+        );
+
+        return $resourceName->get(
+            ResourceName::RESOURCE_SITES,
+            $siteId,
+            ResourceName::RESOURCE_PAGES
+        );
     }
 
     /**

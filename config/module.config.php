@@ -243,7 +243,9 @@ return [
                                 ],
                                 'acl' => [
                                     'providerId' => \Rcm\Acl\ResourceProvider::class,
-                                    'resource' => 'sites.:siteId.pages.create'
+                                    'resource'
+                                    => \Rcm\Acl\ResourceName::RESOURCE_SITES . '.:siteId'
+                                        . '.' . \Rcm\Acl\ResourceName::RESOURCE_PAGES . '.create'
                                 ]
                             ],
                         ],

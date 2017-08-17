@@ -2,8 +2,11 @@
 
 namespace RcmAdmin\Controller;
 
+use Rcm\Acl\ResourceName;
 use Rcm\View\Model\ApiJsonModel;
+use RcmUser\Service\RcmUserService;
 use Zend\Http\Response;
+use Zend\View\Model\JsonModel;
 
 /**
  * Class ApiAdminCountryController
@@ -20,7 +23,6 @@ use Zend\Http\Response;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
-
 class ApiAdminCountryController extends ApiAdminBaseController
 {
 
@@ -31,13 +33,17 @@ class ApiAdminCountryController extends ApiAdminBaseController
      */
     public function getList()
     {
+        /** @var RcmUserService $rcmUserService */
+        $rcmUserService = $this->serviceLocator->get(RcmUserService::class);
+
         //ACCESS CHECK
-        if (!$this->rcmIsAllowed(
-            'sites',
+        if (!$rcmUserService->isAllowed(
+            ResourceName::RESOURCE_SITES,
             'admin'
         )
         ) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+
             return $this->getResponse();
         }
 

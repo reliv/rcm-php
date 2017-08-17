@@ -2,6 +2,7 @@
 
 namespace RcmAdmin\Controller;
 
+use Rcm\Acl\ResourceName;
 use Rcm\Entity\Site;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\PageNotFoundException;
@@ -81,8 +82,19 @@ class PageController extends AbstractActionController
      */
     public function newAction()
     {
-        if (!$this->rcmIsAllowed(
-            'sites.' . $this->currentSite->getSiteId() . '.pages',
+        /** @var ResourceName $resourceName */
+        $resourceName = $this->getServiceLocator()->get(
+            ResourceName::class
+        );
+
+        $resourceId = $resourceName->get(
+            ResourceName::RESOURCE_SITES,
+            $this->currentSite->getSiteId(),
+            ResourceName::RESOURCE_PAGES
+        );
+
+        if (!$this->rcmUserService->isAllowed(
+            $resourceId,
             'create'
         )
         ) {
@@ -201,8 +213,19 @@ class PageController extends AbstractActionController
      */
     public function createTemplateFromPageAction()
     {
-        if (!$this->rcmIsAllowed(
-            'sites.' . $this->currentSite->getSiteId() . '.pages',
+        /** @var ResourceName $resourceName */
+        $resourceName = $this->getServiceLocator()->get(
+            ResourceName::class
+        );
+
+        $resourceId = $resourceName->get(
+            ResourceName::RESOURCE_SITES,
+            $this->currentSite->getSiteId(),
+            ResourceName::RESOURCE_PAGES
+        );
+
+        if (!$this->rcmUserService->isAllowed(
+            $resourceId,
             'create'
         )
         ) {
@@ -326,8 +349,19 @@ class PageController extends AbstractActionController
      */
     public function publishPageRevisionAction()
     {
-        if (!$this->rcmIsAllowed(
-            'sites.' . $this->currentSite->getSiteId() . '.pages',
+        /** @var ResourceName $resourceName */
+        $resourceName = $this->getServiceLocator()->get(
+            ResourceName::class
+        );
+
+        $resourceId = $resourceName->get(
+            ResourceName::RESOURCE_SITES,
+            $this->currentSite->getSiteId(),
+            ResourceName::RESOURCE_PAGES
+        );
+
+        if (!$this->rcmUserService->isAllowed(
+            $resourceId,
             'create'
         )
         ) {
@@ -395,8 +429,19 @@ class PageController extends AbstractActionController
      */
     public function savePageAction()
     {
-        if (!$this->rcmIsAllowed(
-            'sites.' . $this->currentSite->getSiteId() . '.pages',
+        /** @var ResourceName $resourceName */
+        $resourceName = $this->getServiceLocator()->get(
+            ResourceName::class
+        );
+
+        $resourceId = $resourceName->get(
+            ResourceName::RESOURCE_SITES,
+            $this->currentSite->getSiteId(),
+            ResourceName::RESOURCE_PAGES
+        );
+
+        if (!$this->rcmUserService->isAllowed(
+            $resourceId,
             'edit'
         )
         ) {
