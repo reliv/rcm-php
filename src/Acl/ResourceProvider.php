@@ -310,8 +310,7 @@ class ResourceProvider extends RcmUserResourceProvider
                 . " of type '{$pageType}' on site '{$primaryDomainName}'"
         ];
 
-        $return[$pageResourceId]
-            = array_merge(
+        $return[$pageResourceId] = array_merge(
             $this->resources[self::RESOURCE_PAGES],
             $return[$pageResourceId]
         );
