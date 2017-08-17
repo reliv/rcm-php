@@ -4,7 +4,6 @@ namespace Rcm\Acl;
 
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
-use Rcm\Repository\Site as SiteRepo;
 use RcmUser\Acl\Provider\ResourceProvider as RcmUserResourceProvider;
 
 /**
