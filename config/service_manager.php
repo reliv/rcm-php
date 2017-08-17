@@ -10,6 +10,9 @@ return [
         \Rcm\Acl\CmsPermissionChecks::class
         => \Rcm\Factory\CmsPermissionsChecksFactory::class,
 
+        \Rcm\Acl\ResourceName::class
+        => \Rcm\Acl\ResourceNameRcmFactory::class,
+
         \Rcm\Acl\ResourceProvider::class
         => \Rcm\Factory\AclResourceProviderFactory::class,
 

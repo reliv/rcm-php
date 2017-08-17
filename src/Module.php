@@ -27,7 +27,7 @@ class Module
      *
      * @param MvcEvent $event Zend MVC Event
      *
-     * @return null
+     * @return void
      */
     public function onBootstrap(MvcEvent $event)
     {

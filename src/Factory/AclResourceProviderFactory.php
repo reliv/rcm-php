@@ -2,7 +2,9 @@
 
 namespace Rcm\Factory;
 
+use Rcm\Acl\ResourceName;
 use Rcm\Acl\ResourceProvider;
+use Rcm\Service\CurrentSite;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class AclResourceProviderFactory
@@ -25,11 +27,14 @@ class AclResourceProviderFactory
         }
 
         /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
+        $currentSite = $serviceLocator->get(CurrentSite::class);
+        /** @var ResourceName $resourceName */
+        $resourceName = $serviceLocator->get(ResourceName::class);
 
         return new ResourceProvider(
             $aclConfig,
-            $currentSite
+            $currentSite,
+            $resourceName
         );
     }
 }

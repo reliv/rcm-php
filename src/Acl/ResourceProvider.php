@@ -21,9 +21,9 @@ use RcmUser\Acl\Provider\ResourceProvider as RcmUserResourceProvider;
  */
 class ResourceProvider extends RcmUserResourceProvider
 {
-    const RESOURCE_SITES = 'sites';
+    const RESOURCE_SITES = ResourceName::RESOURCE_SITES;
 
-    const RESOURCE_PAGES = 'pages';
+    const RESOURCE_PAGES = ResourceName::RESOURCE_PAGES;
 
     /** @var string */
     protected $providerId = \Rcm\Acl\ResourceProvider::class;
@@ -32,16 +32,22 @@ class ResourceProvider extends RcmUserResourceProvider
     protected $currentSite;
 
     /**
-     * ResourceProvider constructor.
-     *
-     * @param array $resources
-     * @param Site $currentSite
+     * @var ResourceName
+     */
+    protected $resourceName;
+
+    /**
+     * @param array        $resources
+     * @param Site         $currentSite
+     * @param ResourceName $resourceName
      */
     public function __construct(
         array $resources,
-        Site $currentSite
+        Site $currentSite,
+        ResourceName $resourceName
     ) {
         $this->currentSite = $currentSite;
+        $this->resourceName = $resourceName;
         parent::__construct(
             $resources
         );
@@ -114,7 +120,7 @@ class ResourceProvider extends RcmUserResourceProvider
             return true;
         }
 
-        if (!$this->startsWith($resourceId, self::RESOURCE_SITES . '.')) {
+        if (!$this->resourceName->isSitesResourceId($resourceId)) {
             return false;
         }
 
@@ -122,21 +128,6 @@ class ResourceProvider extends RcmUserResourceProvider
         $resource = $this->getResource($resourceId);
 
         return ($resource !== null);
-    }
-
-    /**
-     * startsWith
-     *
-     * @param $haystack
-     * @param $needle
-     *
-     * @return bool
-     */
-    protected function startsWith($haystack, $needle)
-    {
-        $length = strlen($needle);
-
-        return (substr($haystack, 0, $length) === $needle);
     }
 
     /**
@@ -148,16 +139,14 @@ class ResourceProvider extends RcmUserResourceProvider
      */
     protected function dynamicResourceMapper($resourceId)
     {
-        $resources = explode('.', $resourceId);
-
         // Page Resource Mapper
-        $resource = $this->pageResourceMapper($resourceId, $resources);
+        $resource = $this->pageResourceMapper($resourceId);
 
         if (!empty($resource)) {
             return $resource;
         }
 
-        $resource = $this->siteResourceMapper($resourceId, $resources);
+        $resource = $this->siteResourceMapper($resourceId);
 
         if (!empty($resource)) {
             return $resource;
@@ -170,27 +159,31 @@ class ResourceProvider extends RcmUserResourceProvider
      * Page Resource Mapper
      *
      * @param string $resourceId Resource Id to search
-     * @param array $resources Resources parsed from Resource Id
      *
      * @return array|null
      */
-    protected function pageResourceMapper($resourceId, $resources)
+    protected function pageResourceMapper($resourceId)
     {
-        if (empty($resources[2])
-            || $resources[2] != self::RESOURCE_PAGES
-        ) {
+        if (!$this->resourceName->isPagesResourceId($resourceId)) {
             return null;
         }
 
+        $resources = explode('.', $resourceId);
+
+        if (empty($resources[1])) {
+            return null;
+        }
+
+        $siteResourceId = $this->resourceName->get(self::RESOURCE_SITES, $resources[1]);
+
         $return = [
             'resourceId' => $resourceId,
-            'parentResourceId' => self::RESOURCE_SITES . '.' . $resources[1],
+            'parentResourceId' => $siteResourceId,
         ];
 
-        if (!empty($resources[3])
-            && !empty($resources[4])
-        ) {
-            $return['parentResourceId'] = self::RESOURCE_SITES . '.' . $resources[1] . '.' . self::RESOURCE_PAGES;
+        if ($this->resourceName->isPageResourceId($resourceId)) {
+            $pagesResourceId = $this->resourceName->get(self::RESOURCE_SITES, $resources[1], self::RESOURCE_PAGES);
+            $return['parentResourceId'] = $pagesResourceId;
         }
 
         return array_merge(
@@ -203,21 +196,20 @@ class ResourceProvider extends RcmUserResourceProvider
      * Site Resource Mapper
      *
      * @param string $resourceId Resource Id to search
-     * @param array $resources Resources parsed from Resource Id
      *
      * @return array|null
      */
-    protected function siteResourceMapper($resourceId, $resources)
+    protected function siteResourceMapper($resourceId)
     {
-        if (empty($resources[0])
-            || $resources[0] != self::RESOURCE_SITES
-        ) {
+        if (!$this->resourceName->isSitesResourceId($resourceId)) {
             return null;
         }
 
+        $sitesResourceId = $this->resourceName->get(self::RESOURCE_SITES);
+
         $return = [
             'resourceId' => $resourceId,
-            'parentResourceId' => self::RESOURCE_SITES,
+            'parentResourceId' => $sitesResourceId,
         ];
 
         return array_merge(
@@ -245,31 +237,36 @@ class ResourceProvider extends RcmUserResourceProvider
         $primaryDomainName = $primaryDomain->getDomainName();
         $siteId = $site->getSiteId();
 
-        $return[self::RESOURCE_SITES . '.' . $siteId] = [
-            'resourceId' => self::RESOURCE_SITES . '.' . $siteId,
-            'parentResourceId' => self::RESOURCE_SITES,
+        $sitesResourceId = $this->resourceName->get(self::RESOURCE_SITES);
+        $siteResourceId = $this->resourceName->get(self::RESOURCE_SITES, $siteId);
+
+        $return[$siteResourceId] = [
+            'resourceId' => $siteResourceId,
+            'parentResourceId' => $sitesResourceId,
             'name' => $primaryDomainName,
             'description' => "Resource for site '{$primaryDomainName}'"
         ];
 
-        $return['sites.' . $siteId] = array_merge(
-            $this->resources[self::RESOURCE_SITES],
-            $return[self::RESOURCE_SITES . '.' . $siteId]
+        $return[$siteResourceId] = array_merge(
+            $this->resources[$sitesResourceId],
+            $return[$siteResourceId]
         );
 
-        $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES] = [
-            'resourceId' => self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES,
-            'parentResourceId' => self::RESOURCE_SITES . '.' . $siteId,
+        $pagesResourceId = $this->resourceName->get(self::RESOURCE_SITES, $siteId, self::RESOURCE_PAGES);
+
+        $return[$pagesResourceId] = [
+            'resourceId' => $pagesResourceId,
+            'parentResourceId' => $siteResourceId,
             'name' => $primaryDomainName . ' - pages',
             'description' => "Resource for pages on site '{$primaryDomainName}'"
         ];
 
-        $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES] = array_merge(
+        $return[$pagesResourceId] = array_merge(
             $this->resources[self::RESOURCE_PAGES],
-            $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES]
+            $return[$pagesResourceId]
         );
 
-        $pages = $site->getpages();
+        $pages = $site->getPages();
 
         /** @var \Rcm\Entity\Page $page */
         foreach ($pages as &$page) {
@@ -295,22 +292,29 @@ class ResourceProvider extends RcmUserResourceProvider
         $pageName = $page->getName();
         $pageType = $page->getPageType();
 
-        $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES . '.' . $pageType . '.' . $pageName]
+        $pagesResourceId = $this->resourceName->get(self::RESOURCE_SITES, $siteId, self::RESOURCE_PAGES);
+        $pageResourceId = $this->resourceName->get(
+            self::RESOURCE_SITES,
+            $siteId,
+            self::RESOURCE_PAGES,
+            $pageType,
+            $pageName
+        );
+
+        $return[$pageResourceId]
             = [
-            'resourceId' => self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES . '.' . $pageType . '.'
-                . $pageName,
-            'parentResourceId' => self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES,
+            'resourceId' => $pageResourceId,
+            'parentResourceId' => $pagesResourceId,
             'name' => $primaryDomainName . ' - pages - ' . $pageName,
             'description' => "Resource for page '{$pageName}'"
                 . " of type '{$pageType}' on site '{$primaryDomainName}'"
-            ];
+        ];
 
-        $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES . '.' . $pageType . '.' . $pageName]
+        $return[$pageResourceId]
             = array_merge(
-                $this->resources[self::RESOURCE_PAGES],
-                $return[self::RESOURCE_SITES . '.' . $siteId . '.' . self::RESOURCE_PAGES . '.' . $pageType . '.'
-                . $pageName]
-            );
+            $this->resources[self::RESOURCE_PAGES],
+            $return[$pageResourceId]
+        );
 
         return $return;
     }

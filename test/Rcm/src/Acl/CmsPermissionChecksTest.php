@@ -1,9 +1,9 @@
 <?php
 
-
 namespace Rcm\Test\Acl;
 
 use Rcm\Acl\CmsPermissionChecks;
+use Rcm\Acl\ResourceNameRcm;
 use Rcm\Test\Mocks;
 use RcmUser\Result;
 
@@ -389,20 +389,17 @@ class CmsPermissionChecksTest extends Mocks
             ->disableOriginalConstructor()
             ->getMock();
 
-
         $rcmUserService->expects($this->any())
             ->method('getAuthorizeService')
             ->will(
                 $this->returnValue($this->getMockAuthorizeService($testCaseKey))
             );
 
-
         $rcmUserService->expects($this->any())
             ->method('isAllowed')
             ->will(
                 $this->returnValueMap($testCase['authorizeService']['isAllowedMap'])
             );
-
 
         return $rcmUserService;
     }
@@ -516,12 +513,16 @@ class CmsPermissionChecksTest extends Mocks
         $site->expects($this->any())
             ->method('getNotFoundPage')
             ->will($this->returnValue($testCase['site']['notFoundPage']));
+
         return $site;
     }
 
     public function getCmsPermissionChecks($testCaseKey = '_DEFAULT')
     {
-        return new CmsPermissionChecks($this->getMockRcmUserService($testCaseKey));
+        return new CmsPermissionChecks(
+            $this->getMockRcmUserService($testCaseKey),
+            new ResourceNameRcm()
+        );
     }
 
     /**
