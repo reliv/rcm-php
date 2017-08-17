@@ -2,8 +2,8 @@
 
 namespace Rcm\Factory;
 
-use \Rcm\Acl\CmsPermissionChecks;
-use Zend\ServiceManager\FactoryInterface;
+use Rcm\Acl\CmsPermissionChecks;
+use Rcm\Acl\ResourceName;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -20,20 +20,21 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class CmsPermissionsChecksFactory implements FactoryInterface
+class CmsPermissionsChecksFactory
 {
-
     /**
-     * Creates Service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Zend Service Locator
+     * @param ServiceLocatorInterface $serviceLocator
      *
      * @return CmsPermissionChecks
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         /** @var \RcmUser\Service\RcmUserService $rcmUserService */
         $rcmUserService = $serviceLocator->get(\RcmUser\Service\RcmUserService::class);
-        return new CmsPermissionChecks($rcmUserService);
+
+        return new CmsPermissionChecks(
+            $rcmUserService,
+            $serviceLocator->get(ResourceName::class)
+        );
     }
 }

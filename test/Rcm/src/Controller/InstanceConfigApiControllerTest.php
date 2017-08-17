@@ -17,6 +17,9 @@ namespace RcmTest\Controller;
 
 require_once __DIR__ . '/../../../autoload.php';
 
+use phpDocumentor\Reflection\Types\Resource;
+use Rcm\Acl\ResourceName;
+use Rcm\Acl\ResourceNameRcm;
 use Rcm\Controller\InstanceConfigApiController;
 use Zend\ServiceManager\ServiceManager;
 
@@ -53,7 +56,8 @@ class InstanceConfigApiControllerTest extends \PHPUnit_Framework_TestCase
 
         $serviceMgr = new ServiceManager();
         $serviceMgr->setService(\Rcm\Service\CurrentSite::class, $siteMgr);
-        $serviceMgr->setService('RcmUser\Service\RcmUserService', $userSvc);
+        $serviceMgr->setService(\RcmUser\Service\RcmUserService::class, $userSvc);
+        $serviceMgr->setService(ResourceName::class, new ResourceNameRcm());
 
         $unit = new InstanceConfigApiController($serviceMgr);
 

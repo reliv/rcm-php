@@ -85,7 +85,7 @@ return [
      */
     'Acl' => [
         'sites' => [
-            'resourceId' => 'sites',
+            'resourceId' => \Rcm\Acl\ResourceName::RESOURCE_SITES,
             'parentResourceId' => null,
             'privileges' => [
                 'read',
@@ -99,7 +99,7 @@ return [
             'description' => 'Global resource for sites',
         ],
         'pages' => [
-            'resourceId' => 'pages',
+            'resourceId' => \Rcm\Acl\ResourceName::RESOURCE_PAGES,
             'parentResourceId' => null,
             'privileges' => [
                 'read',

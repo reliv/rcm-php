@@ -2,6 +2,7 @@
 
 namespace RcmTest\Acl;
 
+use Rcm\Acl\ResourceNameRcm;
 use Rcm\Acl\ResourceProvider;
 use Rcm\Entity\Domain;
 use Rcm\Entity\Page;
@@ -46,7 +47,7 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'sites' => [
-                'resourceId' => 'sites',
+                'resourceId' => \Rcm\Acl\ResourceName::RESOURCE_SITES,
                 'parentResourceId' => null,
                 'privileges' => [
                     'read',
@@ -60,7 +61,7 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
                 'description' => 'Global resource for sites',
             ],
             'pages' => [
-                'resourceId' => 'pages',
+                'resourceId' => \Rcm\Acl\ResourceName::RESOURCE_PAGES,
                 'parentResourceId' => null,
                 'privileges' => [
                     'read',
@@ -115,20 +116,12 @@ class ResourceProviderTest extends \PHPUnit_Framework_TestCase
             $mockReturn[] = $site;
         }
 
-        $mockSiteRepo = $this->getMockBuilder('\Rcm\Repository\Site')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockSiteRepo->expects($this->any())
-            ->method('getSites')
-            ->will($this->returnValue($mockReturn));
-
         /** @var \Rcm\Repository\Site $mockSiteRepo */
         /** @var \Rcm\Service\PluginManager $mockPluginManager */
         return new ResourceProvider(
             $this->config,
-            $mockSiteRepo,
-            $currsite
+            $currsite,
+            new ResourceNameRcm()
         );
     }
 

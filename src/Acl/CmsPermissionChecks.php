@@ -25,11 +25,20 @@ class CmsPermissionChecks
     protected $rcmUserService;
 
     /**
-     * @param RcmUserService $rcmUserService
+     * @var ResourceName
      */
-    public function __construct(RcmUserService $rcmUserService)
-    {
+    protected $resourceName;
+
+    /**
+     * @param RcmUserService $rcmUserService
+     * @param ResourceName   $resourceName
+     */
+    public function __construct(
+        RcmUserService $rcmUserService,
+        ResourceName $resourceName
+    ) {
         $this->rcmUserService = $rcmUserService;
+        $this->resourceName = $resourceName;
     }
 
     /**
@@ -220,9 +229,10 @@ class CmsPermissionChecks
     public function buildSiteResourceId(
         $siteId
     ) {
-
-        return 'sites.' .
-        $siteId;
+        return $this->resourceName->get(
+            ResourceName::RESOURCE_SITES,
+            $siteId
+        );
     }
 
     /**
@@ -235,10 +245,11 @@ class CmsPermissionChecks
     public function buildPagesResourceId(
         $siteId
     ) {
-
-        return 'sites.' .
-        $siteId .
-        '.pages';
+        return $this->resourceName->get(
+            ResourceName::RESOURCE_SITES,
+            $siteId,
+            ResourceName::RESOURCE_PAGES
+        );
     }
 
     /**
@@ -255,12 +266,12 @@ class CmsPermissionChecks
         $pageType,
         $pageName
     ) {
-
-        return 'sites.' .
-        $siteId .
-        '.pages.' .
-        $pageType .
-        '.' .
-        $pageName;
+        return $this->resourceName->get(
+            ResourceName::RESOURCE_SITES,
+            $siteId,
+            ResourceName::RESOURCE_PAGES,
+            $pageType,
+            $pageName
+        );
     }
 }

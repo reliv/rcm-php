@@ -2,9 +2,10 @@
 
 namespace Rcm\Controller;
 
+use Rcm\Acl\ResourceName;
 use Rcm\Exception\PluginInstanceNotFoundException;
 use Rcm\Service\PluginManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use RcmUser\Service\RcmUserService;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -33,12 +34,20 @@ class InstanceConfigApiController extends AbstractRestfulController
     {
         $siteId = $this->getServiceLocator()->get(\Rcm\Service\CurrentSite::class)
             ->getSiteId();
-        $allowed = $this->getServiceLocator()
-            ->get('RcmUser\Service\RcmUserService')->isAllowed(
-                'sites.' . $siteId,
-                'admin',
-                \Rcm\Acl\ResourceProvider::class
-            );
+        /** @var RcmUserService $rcmUserService */
+        $rcmUserService = $this->serviceLocator->get(RcmUserService::class);
+
+        /** @var ResourceName $resourceName */
+        $resourceName = $this->getServiceLocator()->get(
+            ResourceName::class
+        );
+
+        $allowed = $rcmUserService->isAllowed(
+            $resourceName->get(ResourceName::RESOURCE_SITES, $siteId),
+            'admin',
+            \Rcm\Acl\ResourceProvider::class
+        );
+
         if (!$allowed) {
             $this->getResponse()->setStatusCode(401);
 
