@@ -87,7 +87,8 @@ class ResourceNameRcm implements ResourceName
     {
         $resources = explode('.', $resourceId);
 
-        return ($this->isSitesResourceId($resourceId) && !empty($resources[2]) && $resources[2] === self::RESOURCE_PAGES);
+        return ($this->isSitesResourceId($resourceId) && !empty($resources[2])
+            && $resources[2] === self::RESOURCE_PAGES);
     }
 
     /**
