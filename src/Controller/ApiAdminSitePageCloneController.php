@@ -3,6 +3,7 @@
 namespace RcmAdmin\Controller;
 
 use Interop\Container\ContainerInterface;
+use Rcm\Acl\ResourceName;
 use Rcm\Entity\Page;
 use Rcm\Http\Response;
 use Rcm\View\Model\ApiJsonModel;
@@ -45,7 +46,7 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
     public function create($data)
     {
         //ACCESS CHECK
-        if (!$this->getRcmUserService()->isAllowed('sites', 'admin')) {
+        if (!$this->getRcmUserService()->isAllowed(ResourceName::RESOURCE_SITES, 'admin')) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();

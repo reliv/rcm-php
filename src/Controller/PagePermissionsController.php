@@ -2,6 +2,7 @@
 
 namespace RcmAdmin\Controller;
 
+use Rcm\Acl\ResourceName;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -60,8 +61,19 @@ class PagePermissionsController extends AbstractActionController
                 'n'
             );
 
-        $resourceId = 'sites.' . $currentSiteId . '.pages.' . $pageType . '.'
-            . $sourcePageName;
+        /** @var ResourceName $resourceName */
+        $resourceName = $this->getServiceLocator()->get(
+            ResourceName::class
+        );
+
+        $resourceId = $resourceName->get(
+            ResourceName::RESOURCE_SITES,
+            $currentSiteId,
+            ResourceName::RESOURCE_PAGES,
+            $pageType,
+            $sourcePageName
+        );
+
         /** @var \RcmUser\Acl\Service\AclDataService $aclDataService */
         $aclDataService = $this->getServiceLocator()->get(
             \RcmUser\Acl\Service\AclDataService::class

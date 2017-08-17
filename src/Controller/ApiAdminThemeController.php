@@ -2,8 +2,11 @@
 
 namespace RcmAdmin\Controller;
 
+use Rcm\Acl\ResourceName;
 use Rcm\View\Model\ApiJsonModel;
+use RcmUser\Service\RcmUserService;
 use Zend\Http\Response;
+use Zend\View\Model\JsonModel;
 
 /**
  * Class ApiAdminThemeController
@@ -48,9 +51,12 @@ class ApiAdminThemeController extends ApiAdminBaseController
      */
     public function getList()
     {
+        /** @var RcmUserService $rcmUserService */
+        $rcmUserService = $this->serviceLocator->get(RcmUserService::class);
+
         //ACCESS CHECK
-        if (!$this->rcmIsAllowed(
-            'sites',
+        if (!$rcmUserService->isAllowed(
+            ResourceName::RESOURCE_SITES,
             'admin'
         )
         ) {

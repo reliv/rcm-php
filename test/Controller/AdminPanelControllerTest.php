@@ -194,25 +194,4 @@ class AdminPanelControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $actual);
     }
-
-//    /**
-//     * Test getAdminWrapperAction User not Allowed to see admin panel
-//     *
-//     * @return void
-//     * @covers RcmAdmin\Controller\AdminPanelController::getAdminWrapperAction
-//     */
-//    public function testGetAdminWrapperActionNotAllowed()
-//    {
-//        $this->mockUserService->expects($this->once())
-//            ->method('isAllowed')
-//            ->with(
-//                $this->equalTo('sites.1'),
-//                $this->equalTo('admin'),
-//                $this->equalTo(\Rcm\Acl\ResourceProvider::class)
-//            )->will($this->returnValue(false));
-//
-//        $result = $this->controller->getAdminWrapperAction();
-//
-//        $this->assertNull($result);
-//    }
 }

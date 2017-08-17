@@ -5,6 +5,7 @@ namespace RcmAdmin\Controller;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 use Interop\Container\ContainerInterface;
+use Rcm\Acl\ResourceName;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use Rcm\Tracking\Exception\TrackingException;
@@ -98,7 +99,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     {
         //ACCESS CHECK
         if (!$this->isAllowed(
-            'sites',
+            ResourceName::RESOURCE_SITES,
             'admin'
         )
         ) {
@@ -179,7 +180,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     public function get($id)
     {
         //ACCESS CHECK
-        if (!$this->isAllowed('sites', 'admin')) {
+        if (!$this->isAllowed(ResourceName::RESOURCE_SITES, 'admin')) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();
@@ -245,7 +246,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     {
         //ACCESS CHECK
         if (!$this->isAllowed(
-            'sites',
+            ResourceName::RESOURCE_SITES,
             'admin'
         )
         ) {
@@ -305,7 +306,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
     public function create($data)
     {
         /* ACCESS CHECK */
-        if (!$this->isAllowed('sites', 'admin')) {
+        if (!$this->isAllowed(ResourceName::RESOURCE_SITES, 'admin')) {
             $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
 
             return $this->getResponse();
