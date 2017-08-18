@@ -4,7 +4,6 @@ namespace Rcm\Factory;
 
 use Rcm\Service\ResponseHandler;
 use Zend\Mvc\ResponseSender\HttpResponseSender;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -21,9 +20,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class ResponseHandlerFactory implements FactoryInterface
+class ResponseHandlerFactory
 {
-
     /**
      * Creates Service
      *
@@ -31,13 +29,13 @@ class ResponseHandlerFactory implements FactoryInterface
      *
      * @return ResponseHandler
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         /** @var \Rcm\Entity\Site $currentSite */
         $currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
 
         /** @var \RcmUser\Service\RcmUserService $rcmUserService */
-        $rcmUserService = $serviceLocator->get('RcmUser\Service\RcmUserService');
+        $rcmUserService = $serviceLocator->get(\RcmUser\Service\RcmUserService::class);
 
         /** @var \Zend\Stdlib\Request $request */
         $request = $serviceLocator->get('request');

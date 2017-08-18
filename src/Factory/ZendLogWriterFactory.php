@@ -2,9 +2,8 @@
 
 namespace Rcm\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Log\Writer\Stream;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Service Factory for the Zend Log Writer
@@ -20,9 +19,8 @@ use Zend\Log\Writer\Stream;
  * @link      https://github.com/reliv
  *
  */
-class ZendLogWriterFactory implements FactoryInterface
+class ZendLogWriterFactory
 {
-
     /**
      * Create Service
      *
@@ -30,7 +28,7 @@ class ZendLogWriterFactory implements FactoryInterface
      *
      * @return Stream
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         $config = $serviceLocator->get('Config');
 

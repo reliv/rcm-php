@@ -3,7 +3,6 @@
 namespace Rcm\Factory;
 
 use Rcm\Validator\Page;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -20,7 +19,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class PageValidatorFactory implements FactoryInterface
+class PageValidatorFactory
 {
     /**
      * Creates Service
@@ -29,7 +28,7 @@ class PageValidatorFactory implements FactoryInterface
      *
      * @return Page
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');

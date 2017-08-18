@@ -3,7 +3,6 @@
 namespace Rcm\Factory;
 
 use Rcm\EventListener\EventWrapper;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -20,7 +19,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class EventWrapperFactory implements FactoryInterface
+class EventWrapperFactory
 {
     /**
      * Create Service
@@ -29,7 +28,7 @@ class EventWrapperFactory implements FactoryInterface
      *
      * @return EventWrapper
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         return new EventWrapper(
             $serviceLocator

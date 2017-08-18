@@ -4,8 +4,6 @@ namespace Rcm\Factory;
 
 use Rcm\Controller\CmsController;
 use Rcm\Page\Renderer\PageRendererBc;
-use Zend\Di\ServiceLocator;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -20,7 +18,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class CmsControllerFactory implements FactoryInterface
+class CmsControllerFactory
 {
     /**
      * Create Service
@@ -29,7 +27,7 @@ class CmsControllerFactory implements FactoryInterface
      *
      * @return CmsController
      */
-    public function createService(ServiceLocatorInterface $controllerManager)
+    public function __invoke($controllerManager)
     {
         /** @var \Zend\Mvc\Controller\ControllerManager $controllerMgr For IDE */
         $controllerMgr = $controllerManager;

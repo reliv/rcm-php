@@ -4,7 +4,6 @@ namespace Rcm\Factory;
 
 use Rcm\Entity\Site;
 use Rcm\Tracking\Model\Tracking;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Validator\Ip;
 
@@ -22,7 +21,7 @@ use Zend\Validator\Ip;
  * @link      https://github.com/reliv
  *
  */
-class CurrentSiteFactory implements FactoryInterface
+class CurrentSiteFactory
 {
     /**
      * Create Service
@@ -31,7 +30,7 @@ class CurrentSiteFactory implements FactoryInterface
      *
      * @return Site
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
 //        //Uncomment to turn on sql query logging. They echo in the browser
 //        $serviceLocator->get('Doctrine\ORM\EntityManager')

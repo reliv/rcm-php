@@ -3,7 +3,6 @@
 namespace Rcm\Factory;
 
 use Rcm\View\Helper\RcmHtmlIncludes;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -21,7 +20,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
-class RcmHtmlIncludesHelperFactory implements FactoryInterface
+class RcmHtmlIncludesHelperFactory
 {
     /**
      * createService
@@ -30,7 +29,7 @@ class RcmHtmlIncludesHelperFactory implements FactoryInterface
      *
      * @return RcmHtmlIncludes
      */
-    public function createService(ServiceLocatorInterface $viewServiceManager)
+    public function __invoke($viewServiceManager)
     {
         /** @var \Zend\View\HelperPluginManager $viewManager */
         $viewManager = $viewServiceManager;

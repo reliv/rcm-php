@@ -46,7 +46,7 @@ class InstanceConfigApiControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $userSvc = $this
-            ->getMockBuilder('RcmUser\Service\RcmUserService')
+            ->getMockBuilder(\RcmUser\Service\RcmUserService::class)
             ->disableOriginalConstructor()
             ->getMock();
 

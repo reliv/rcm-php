@@ -3,8 +3,6 @@
 namespace Rcm\Factory;
 
 use AssetManager\Cache\ZendCacheAdapter;
-use Zend\Cache\Storage\StorageInterface;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -21,17 +19,16 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class AssetManagerCacheFactory implements FactoryInterface
+class AssetManagerCacheFactory
 {
-
     /**
      * Creates Service
      *
      * @param ServiceLocatorInterface $serviceLocator Zend Service Locator
      *
-     * @return StorageInterface
+     * @return ZendCacheAdapter
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         /** @var \Zend\Cache\Storage\StorageInterface $rcmCache */
         $rcmCache = $serviceLocator->get(\Rcm\Service\Cache::class);

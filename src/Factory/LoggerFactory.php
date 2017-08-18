@@ -20,9 +20,8 @@ use Rcm\Service\Logger;
  * @link      https://github.com/reliv
  *
  */
-class LoggerFactory implements FactoryInterface
+class LoggerFactory
 {
-
     /**
      * Create Service
      *
@@ -30,7 +29,7 @@ class LoggerFactory implements FactoryInterface
      *
      * @return Logger
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         /** @var \Zend\Log\Logger $zendLogger */
         $zendLogger = $serviceLocator->get('Rcm\Service\ZendLogger');

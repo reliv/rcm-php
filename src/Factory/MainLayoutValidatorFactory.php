@@ -21,7 +21,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class MainLayoutValidatorFactory implements FactoryInterface
+class MainLayoutValidatorFactory
 {
     /**
      * Creates Service
@@ -30,7 +30,7 @@ class MainLayoutValidatorFactory implements FactoryInterface
      *
      * @return MainLayout
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         /** @var \Rcm\Entity\Site $currentSite */
         $currentSite = $serviceLocator->get('\Rcm\Service\CurrentSite');

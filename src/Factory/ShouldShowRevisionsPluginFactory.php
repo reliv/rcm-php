@@ -3,7 +3,6 @@
 namespace Rcm\Factory;
 
 use Rcm\Controller\Plugin\ShouldShowRevisions;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -21,7 +20,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @version   GIT: <git_id>
  * @link      https://github.com/reliv
  */
-class ShouldShowRevisionsPluginFactory implements FactoryInterface
+class ShouldShowRevisionsPluginFactory
 {
     /**
      * createService
@@ -30,7 +29,7 @@ class ShouldShowRevisionsPluginFactory implements FactoryInterface
      *
      * @return ShouldShowRevisions
      */
-    public function createService(ServiceLocatorInterface $mgr)
+    public function __invoke($mgr)
     {
         $serviceLocator = $mgr->getServiceLocator();
         $cmsPermissionChecks = $serviceLocator->get(

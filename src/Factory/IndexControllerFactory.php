@@ -4,7 +4,6 @@ namespace Rcm\Factory;
 
 use Rcm\Controller\IndexController;
 use Rcm\Page\Renderer\PageRendererBc;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -22,9 +21,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link        https://github.com/reliv
  *
  */
-class IndexControllerFactory implements FactoryInterface
+class IndexControllerFactory
 {
-
     /**
      * Create Service
      *
@@ -32,7 +30,7 @@ class IndexControllerFactory implements FactoryInterface
      *
      * @return IndexController
      */
-    public function createService(ServiceLocatorInterface $controllerManager)
+    public function __invoke($controllerManager)
     {
         /** @var \Zend\Mvc\Controller\ControllerManager $controllerMgr For IDE */
         $controllerMgr = $controllerManager;
