@@ -58,7 +58,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('Config', []);
 
         $factory = new SessionManagerFactory();
-        $object = $factory->createService($serviceManager);
+        $object = $factory->__invoke($serviceManager);
 
         $this->assertTrue($object instanceof SessionManager);
     }
@@ -85,7 +85,7 @@ class SessionManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('Config', $config);
 
         $factory = new SessionManagerFactory();
-        $object = $factory->createService($serviceManager);
+        $object = $factory->__invoke($serviceManager);
 
         $this->assertTrue($object instanceof SessionManager);
     }

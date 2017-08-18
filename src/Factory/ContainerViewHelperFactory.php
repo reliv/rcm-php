@@ -4,7 +4,6 @@ namespace Rcm\Factory;
 
 use Rcm\Block\Config\ConfigRepository;
 use Rcm\View\Helper\Container;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -21,9 +20,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class ContainerViewHelperFactory implements FactoryInterface
+class ContainerViewHelperFactory
 {
-
     /**
      * Create Service
      *
@@ -31,7 +29,7 @@ class ContainerViewHelperFactory implements FactoryInterface
      *
      * @return Container
      */
-    public function createService(ServiceLocatorInterface $viewServiceManager)
+    public function __invoke($viewServiceManager)
     {
         /** @var \Zend\View\HelperPluginManager $viewManager */
         $viewManager = $viewServiceManager;

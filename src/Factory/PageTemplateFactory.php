@@ -2,8 +2,7 @@
 
 namespace Rcm\Factory;
 
-use Rcm\Validator\Page;
-use Zend\ServiceManager\FactoryInterface;
+use Rcm\Validator\PageTemplate;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -20,16 +19,16 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class PageTemplateFactory implements FactoryInterface
+class PageTemplateFactory
 {
     /**
      * Creates Service
      *
      * @param ServiceLocatorInterface $serviceLocator Zend Service Locator
      *
-     * @return Page
+     * @return PageTemplate
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         /** @var \Rcm\Entity\Site $currentSite */
         $currentSite = $serviceLocator->get('\Rcm\Service\CurrentSite');
@@ -40,7 +39,7 @@ class PageTemplateFactory implements FactoryInterface
         /** @var \Rcm\Repository\Page $pageRepo */
         $pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
 
-        $pageValidator = new \Rcm\Validator\PageTemplate($currentSite, $pageRepo);
+        $pageValidator = new PageTemplate($currentSite, $pageRepo);
 
         return $pageValidator;
     }

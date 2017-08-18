@@ -3,7 +3,6 @@
 namespace Rcm\Factory;
 
 use DoctrineModule\Cache\ZendStorageCache;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -20,9 +19,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class DoctrineCacheFactory implements FactoryInterface
+class DoctrineCacheFactory
 {
-
     /**
      * Create Service
      *
@@ -30,7 +28,7 @@ class DoctrineCacheFactory implements FactoryInterface
      *
      * @return ZendStorageCache
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         /** @var \Zend\Cache\Storage\StorageInterface $zendCache */
         $zendCache = $serviceLocator->get(\Rcm\Service\Cache::class);

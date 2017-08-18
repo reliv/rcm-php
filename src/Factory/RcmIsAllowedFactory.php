@@ -3,7 +3,6 @@
 namespace Rcm\Factory;
 
 use Rcm\Controller\Plugin\RcmIsAllowed;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -21,7 +20,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
-class RcmIsAllowedFactory implements FactoryInterface
+class RcmIsAllowedFactory
 {
     /**
      * createService
@@ -30,7 +29,7 @@ class RcmIsAllowedFactory implements FactoryInterface
      *
      * @return mixed|RcmIsAllowed
      */
-    public function createService(ServiceLocatorInterface $mgr)
+    public function __invoke($mgr)
     {
         /** @var \Zend\Mvc\Controller\ControllerManager $pluginManager For IDE */
         $pluginManager = $mgr;
@@ -40,7 +39,7 @@ class RcmIsAllowedFactory implements FactoryInterface
 
         /** @var \RcmUser\Service\RcmUserService $rcmUserService */
         $rcmUserService = $serviceLocator->get(
-            'RcmUser\Service\RcmUserService'
+            \RcmUser\Service\RcmUserService::class
         );
 
         $service = new RcmIsAllowed($rcmUserService);

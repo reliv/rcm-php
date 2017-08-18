@@ -2,10 +2,9 @@
 
 namespace Rcm\Factory;
 
-use Zend\Log\Writer\Noop;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Log\Logger;
+use Zend\Log\Writer\Noop;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Service Factory for the Zend Log Service
@@ -21,9 +20,8 @@ use Zend\Log\Logger;
  * @link      https://github.com/reliv
  *
  */
-class ZendLogFactory implements FactoryInterface
+class ZendLogFactory
 {
-
     /**
      * Create Service
      *
@@ -31,7 +29,7 @@ class ZendLogFactory implements FactoryInterface
      *
      * @return Logger
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         $config = $serviceLocator->get('Config');
 

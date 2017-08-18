@@ -166,7 +166,7 @@ class EventWrapper
         $sm = $application->getServiceManager();
         /** @var \RcmUser\Service\RcmUserService $rcmUserService */
         $rcmUserService = $this->serviceLocator->get(
-            'RcmUser\Service\RcmUserService'
+            \RcmUser\Service\RcmUserService::class
         );
 
         /** @var $request \Zend\Http\Request */

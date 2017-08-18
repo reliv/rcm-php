@@ -3,7 +3,6 @@
 namespace Rcm\Factory;
 
 use Rcm\View\Helper\RcmEdit;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -19,7 +18,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
  */
-class TextEditFactory implements FactoryInterface
+class TextEditFactory
 {
     /**
      * Creates this service
@@ -28,7 +27,7 @@ class TextEditFactory implements FactoryInterface
      *
      * @return RcmEdit
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         return new RcmEdit(
             $serviceLocator->getServiceLocator()->get('RcmHtmlPurifier'),

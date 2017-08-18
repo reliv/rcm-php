@@ -4,7 +4,6 @@ namespace Rcm\Factory;
 
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\StorageFactory;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -21,9 +20,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class CacheFactory implements FactoryInterface
+class CacheFactory
 {
-
     /**
      * Creates Service
      *
@@ -31,7 +29,7 @@ class CacheFactory implements FactoryInterface
      *
      * @return StorageInterface
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         $config = $serviceLocator->get('Config');
 

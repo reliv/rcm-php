@@ -71,7 +71,7 @@ class MainLayoutValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $factory = new MainLayoutValidatorFactory();
-        $object = $factory->createService($serviceLocator);
+        $object = $factory->__invoke($serviceLocator);
 
         $this->assertTrue($object instanceof MainLayout);
     }

@@ -4,7 +4,6 @@ namespace Rcm\Factory;
 
 use DoctrineModule\Cache\ZendStorageCache;
 use Rcm\Exception\InvalidArgumentException;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Config\ConfigInterface;
 use Zend\Session\Config\SessionConfig;
@@ -31,9 +30,8 @@ use Zend\Session\Validator\ValidatorInterface;
  * @todo      Refactor and move to model object.  Also look at simplifying the factory
  *       overall.
  */
-class SessionManagerFactory implements FactoryInterface
+class SessionManagerFactory
 {
-
     /**
      * Create Service
      *
@@ -41,7 +39,7 @@ class SessionManagerFactory implements FactoryInterface
      *
      * @return ZendStorageCache
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         $config = $serviceLocator->get('Config');
 
@@ -82,7 +80,6 @@ class SessionManagerFactory implements FactoryInterface
         );
 
         Container::setDefaultManager($sessionManager);
-
 
 //        $sessionManager->start();
 

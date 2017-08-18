@@ -57,7 +57,7 @@ class DoctrineCacheFactoryTest extends \PHPUnit_Framework_TestCase
         $sm->setService(\Rcm\Service\Cache::class, $mockCache);
 
         $factory = new DoctrineCacheFactory();
-        $object = $factory->createService($sm);
+        $object = $factory->__invoke($sm);
 
         $this->assertTrue($object instanceof ZendStorageCache);
     }

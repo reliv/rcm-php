@@ -65,7 +65,7 @@ class CacheFactoryTest extends \PHPUnit_Framework_TestCase
         $sm->setService('Config', $config);
 
         $factory = new CacheFactory();
-        $object = $factory->createService($sm);
+        $object = $factory->__invoke($sm);
 
         $this->assertTrue($object instanceof StorageInterface);
     }

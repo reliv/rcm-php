@@ -3,7 +3,6 @@
 namespace Rcm\Factory;
 
 use Rcm\EventListener\DispatchListener;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -20,9 +19,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class DispatchListenerFactory implements FactoryInterface
+class DispatchListenerFactory
 {
-
     /**
      * Create Service
      *
@@ -30,7 +28,7 @@ class DispatchListenerFactory implements FactoryInterface
      *
      * @return DispatchListener
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         return new DispatchListener(
             $serviceLocator

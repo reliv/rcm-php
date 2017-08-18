@@ -3,7 +3,6 @@
 namespace Rcm\Factory;
 
 use Rcm\EventListener\EventFinishListener;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -20,9 +19,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class EventFinishListenerFactory implements FactoryInterface
+class EventFinishListenerFactory
 {
-
     /**
      * Create Service
      *
@@ -30,7 +28,7 @@ class EventFinishListenerFactory implements FactoryInterface
      *
      * @return EventFinishListener
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         /** @var \Rcm\Service\ResponseHandler $responseHandler */
         $responseHandler = $serviceLocator->get(\Rcm\Service\ResponseHandler::class);

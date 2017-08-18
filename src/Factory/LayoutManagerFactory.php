@@ -20,9 +20,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class LayoutManagerFactory implements FactoryInterface
+class LayoutManagerFactory
 {
-
     /**
      * Create Service
      *
@@ -30,7 +29,7 @@ class LayoutManagerFactory implements FactoryInterface
      *
      * @return LayoutManager
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke($serviceLocator)
     {
         $config = $serviceLocator->get('Config');
         return new LayoutManager($config);
