@@ -69,7 +69,7 @@ class DispatchListenerFactoryTest extends \PHPUnit_Framework_TestCase
         $sm->setService('viewHelperManager', $mockHelperManager);
 
         $factory = new DispatchListenerFactory();
-        $object = $factory->createService($sm);
+        $object = $factory->__invoke($sm);
 
         $this->assertTrue($object instanceof DispatchListener);
     }

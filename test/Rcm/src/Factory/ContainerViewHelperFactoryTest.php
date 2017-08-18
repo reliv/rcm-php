@@ -89,7 +89,7 @@ class ContainerViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
         $helperManager->setServiceLocator($sm);
 
         $factory = new ContainerViewHelperFactory();
-        $object = $factory->createService($helperManager);
+        $object = $factory->__invoke($helperManager);
 
         $this->assertTrue($object instanceof Container);
     }

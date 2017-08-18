@@ -70,7 +70,7 @@ class ResponseHandlerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('request', new Request());
 
         $factory = new ResponseHandlerFactory();
-        $object = $factory->createService($serviceManager);
+        $object = $factory->__invoke($serviceManager);
 
         $this->assertTrue($object instanceof ResponseHandler);
     }

@@ -62,7 +62,7 @@ class ViewEventListenerFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $factory = new ViewEventListenerFactory();
-        $object = $factory->createService($serviceManager);
+        $object = $factory->__invoke($serviceManager);
 
         $this->assertTrue($object instanceof ViewEventListener);
     }

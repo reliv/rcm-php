@@ -62,7 +62,7 @@ class EventFinishListenerFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $factory = new EventFinishListenerFactory();
-        $object = $factory->createService($serviceManager);
+        $object = $factory->__invoke($serviceManager);
 
         $this->assertTrue($object instanceof EventFinishListener);
     }
