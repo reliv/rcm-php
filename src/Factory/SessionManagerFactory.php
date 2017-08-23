@@ -2,7 +2,6 @@
 
 namespace Rcm\Factory;
 
-use DoctrineModule\Cache\ZendStorageCache;
 use Rcm\Exception\InvalidArgumentException;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Config\ConfigInterface;
@@ -37,7 +36,7 @@ class SessionManagerFactory
      *
      * @param ServiceLocatorInterface $serviceLocator Zend Service Manager
      *
-     * @return ZendStorageCache
+     * @return SessionManager
      */
     public function __invoke($serviceLocator)
     {
