@@ -30,6 +30,11 @@ class FindActiveSites
         );
     }
 
+    /**
+     * @param array $options
+     *
+     * @return Site[]
+     */
     public function __invoke(
         array $options = []
     ) {
