@@ -16,6 +16,69 @@ return [
         \Rcm\Acl\ResourceProvider::class
         => \Rcm\Factory\AclResourceProviderFactory::class,
 
+        /**
+         * API =====================================
+         */
+        \Rcm\Repository\Container\FindContainers::class
+        => \Rcm\Repository\Container\FindContainersFactory::class,
+
+        \Rcm\Repository\Country\FindCountryByIso2::class
+        => \Rcm\Repository\Country\FindCountryByIso2Factory::class,
+
+        \Rcm\Repository\Country\FindCountryByIso3::class
+        => \Rcm\Repository\Country\FindCountryByIso3Factory::class,
+
+        \Rcm\Repository\Domain\FindDomainsLike::class
+        => \Rcm\Repository\Domain\FindDomainsLikeFactory::class,
+
+        \Rcm\Repository\Language\FindLanguageByIso639_1::class
+        => \Rcm\Repository\Language\FindLanguageByIso639_1Factory::class,
+
+        \Rcm\Repository\Page\FindPage::class
+        => \Rcm\Repository\Page\FindPageFactory::class,
+
+        \Rcm\Repository\Page\FindPages::class
+        => \Rcm\Repository\Page\FindPagesFactory::class,
+
+        \Rcm\Repository\Page\FindPagesByType::class
+        => \Rcm\Repository\Page\FindPagesByTypeFactory::class,
+
+        \Rcm\Repository\Page\PageExists::class
+        => \Rcm\Repository\Page\PageExistsFactory::class,
+
+        \Rcm\Repository\Redirect\FindGlobalRedirects::class
+        => \Rcm\Repository\Redirect\FindGlobalRedirectsFactory::class,
+
+        \Rcm\Repository\Redirect\FindRedirect::class
+        => \Rcm\Repository\Redirect\FindRedirectFactory::class,
+
+        \Rcm\Repository\Redirect\FindRedirects::class
+        => \Rcm\Repository\Redirect\FindRedirectsFactory::class,
+
+        \Rcm\Repository\Redirect\FindSiteRedirects::class
+        => \Rcm\Repository\Redirect\FindSiteRedirectsFactory::class,
+
+        \Rcm\Repository\Redirect\UpdateRedirect::class
+        => \Rcm\Repository\Redirect\UpdateRedirectFactory::class,
+
+        \Rcm\Repository\Setting\FindSettingByName::class
+        => \Rcm\Repository\Setting\FindSettingByNameFactory::class,
+
+        \Rcm\Repository\Site\CopySite::class
+        => \Rcm\Repository\Site\CopySiteFactory::class,
+
+        \Rcm\Repository\Site\CreateSite::class
+        => \Rcm\Repository\Site\CreateSiteFactory::class,
+
+        \Rcm\Repository\Site\FindActiveSites::class
+        => \Rcm\Repository\Site\FindActiveSitesFactory::class,
+
+        \Rcm\Repository\Site\FindAllSites::class
+        => \Rcm\Repository\Site\FindAllSitesFactory::class,
+
+        \Rcm\Repository\Site\FindSite::class
+        => \Rcm\Repository\Site\FindSiteFactory::class,
+
         /* BLOCK */
         /* @GammaRelease */
         \Rcm\Block\Config\ConfigFields::class
