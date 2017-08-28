@@ -51,9 +51,9 @@ class CreateRedirect
 
         $newRedirect->populate($redirectData);
 
-        $this->repository->save($redirectToUpdate);
+        $this->repository->save($newRedirect);
 
-        return $redirectToUpdate;
+        return $newRedirect;
     }
 
     /**
