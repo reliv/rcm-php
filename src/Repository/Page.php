@@ -15,6 +15,7 @@ use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Tracking\Model\Tracking;
 
 /**
+ * @deprecated Repository should not be used directly, please use the /Rcm/Api/{model}/Repository functions
  * Page Repository
  *
  * Page Repository.  Used to get custom page results from the DB

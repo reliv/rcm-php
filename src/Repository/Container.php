@@ -9,6 +9,8 @@ use Rcm\Entity\Site as SiteEntity;
 use Rcm\Tracking\Model\Tracking;
 
 /**
+ *
+ * @deprecated Repository should not be used directly, please use the /Rcm/Api/{model}/Repository functions
  * Container Repository
  *
  * Container Repository.  Used to get custom container results from the DB

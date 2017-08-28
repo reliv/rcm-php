@@ -5,6 +5,7 @@ namespace Rcm\Repository;
 use Rcm\Tracking\Model\Tracking;
 
 /**
+ * @deprecated Repository should not be used directly, please use the /Rcm/Api/{model}/Repository functions
  * Container Repository Interface
  *
  * Container Repository Interface.  Used by container repositories.

@@ -9,6 +9,7 @@ use Rcm\Exception\InvalidArgumentException;
 use Rcm\Tracking\Model\Tracking;
 
 /**
+ * @deprecated Repository should not be used directly, please use the /Rcm/Api/{model}/Repository functions
  * PluginInstance.  Used to get custom page results from the DB
  *
  * PHP version 5

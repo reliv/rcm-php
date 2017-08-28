@@ -7,6 +7,7 @@ use Doctrine\ORM\NoResultException;
 use Rcm\Exception\CountryNotFoundException;
 
 /**
+ * @deprecated Repository should not be used directly, please use the /Rcm/Api/{model}/Repository functions
  * Class Country
  *
  * PHP version 5
