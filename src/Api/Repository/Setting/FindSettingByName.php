@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Repository\Setting;
+namespace Rcm\Api\Repository\Setting;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Setting;

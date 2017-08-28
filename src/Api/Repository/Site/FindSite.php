@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Repository\Site;
+namespace Rcm\Api\Repository\Site;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Site;

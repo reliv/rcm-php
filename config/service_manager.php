@@ -19,65 +19,71 @@ return [
         /**
          * API =====================================
          */
-        \Rcm\Repository\Container\FindContainers::class
-        => \Rcm\Repository\Container\FindContainersFactory::class,
+        \Rcm\Api\Repository\Container\FindContainers::class
+        => \Rcm\Api\Repository\Container\FindContainersFactory::class,
 
-        \Rcm\Repository\Country\FindCountryByIso2::class
-        => \Rcm\Repository\Country\FindCountryByIso2Factory::class,
+        \Rcm\Api\Repository\Country\FindCountryByIso2::class
+        => \Rcm\Api\Repository\Country\FindCountryByIso2Factory::class,
 
-        \Rcm\Repository\Country\FindCountryByIso3::class
-        => \Rcm\Repository\Country\FindCountryByIso3Factory::class,
+        \Rcm\Api\Repository\Country\FindCountryByIso3::class
+        => \Rcm\Api\Repository\Country\FindCountryByIso3Factory::class,
 
-        \Rcm\Repository\Domain\FindDomainsLike::class
-        => \Rcm\Repository\Domain\FindDomainsLikeFactory::class,
+        \Rcm\Api\Repository\Domain\FindDomainByName::class
+        => \Rcm\Api\Repository\Domain\FindDomainByNameFactory::class,
 
-        \Rcm\Repository\Language\FindLanguageByIso639_1::class
-        => \Rcm\Repository\Language\FindLanguageByIso639_1Factory::class,
+        \Rcm\Api\Repository\Domain\FindDomainsLike::class
+        => \Rcm\Api\Repository\Domain\FindDomainsLikeFactory::class,
 
-        \Rcm\Repository\Page\FindPage::class
-        => \Rcm\Repository\Page\FindPageFactory::class,
+        \Rcm\Api\Repository\Language\FindLanguageByIso639_1::class
+        => \Rcm\Api\Repository\Language\FindLanguageByIso639_1Factory::class,
 
-        \Rcm\Repository\Page\FindPages::class
-        => \Rcm\Repository\Page\FindPagesFactory::class,
+        \Rcm\Api\Repository\Page\FindPage::class
+        => \Rcm\Api\Repository\Page\FindPageFactory::class,
 
-        \Rcm\Repository\Page\FindPagesByType::class
-        => \Rcm\Repository\Page\FindPagesByTypeFactory::class,
+        \Rcm\Api\Repository\Page\FindPages::class
+        => \Rcm\Api\Repository\Page\FindPagesFactory::class,
 
-        \Rcm\Repository\Page\PageExists::class
-        => \Rcm\Repository\Page\PageExistsFactory::class,
+        \Rcm\Api\Repository\Page\FindPagesByType::class
+        => \Rcm\Api\Repository\Page\FindPagesByTypeFactory::class,
 
-        \Rcm\Repository\Redirect\FindGlobalRedirects::class
-        => \Rcm\Repository\Redirect\FindGlobalRedirectsFactory::class,
+        \Rcm\Api\Repository\Page\PageExists::class
+        => \Rcm\Api\Repository\Page\PageExistsFactory::class,
 
-        \Rcm\Repository\Redirect\FindRedirect::class
-        => \Rcm\Repository\Redirect\FindRedirectFactory::class,
+        \Rcm\Api\Repository\Page\SavePage::class
+        => \Rcm\Api\Repository\Page\SavePageFactory::class,
 
-        \Rcm\Repository\Redirect\FindRedirects::class
-        => \Rcm\Repository\Redirect\FindRedirectsFactory::class,
+        \Rcm\Api\Repository\Redirect\FindGlobalRedirects::class
+        => \Rcm\Api\Repository\Redirect\FindGlobalRedirectsFactory::class,
 
-        \Rcm\Repository\Redirect\FindSiteRedirects::class
-        => \Rcm\Repository\Redirect\FindSiteRedirectsFactory::class,
+        \Rcm\Api\Repository\Redirect\FindRedirect::class
+        => \Rcm\Api\Repository\Redirect\FindRedirectFactory::class,
 
-        \Rcm\Repository\Redirect\UpdateRedirect::class
-        => \Rcm\Repository\Redirect\UpdateRedirectFactory::class,
+        \Rcm\Api\Repository\Redirect\FindRedirects::class
+        => \Rcm\Api\Repository\Redirect\FindRedirectsFactory::class,
 
-        \Rcm\Repository\Setting\FindSettingByName::class
-        => \Rcm\Repository\Setting\FindSettingByNameFactory::class,
+        \Rcm\Api\Repository\Redirect\FindSiteRedirects::class
+        => \Rcm\Api\Repository\Redirect\FindSiteRedirectsFactory::class,
 
-        \Rcm\Repository\Site\CopySite::class
-        => \Rcm\Repository\Site\CopySiteFactory::class,
+        \Rcm\Api\Repository\Redirect\UpdateRedirect::class
+        => \Rcm\Api\Repository\Redirect\UpdateRedirectFactory::class,
 
-        \Rcm\Repository\Site\CreateSite::class
-        => \Rcm\Repository\Site\CreateSiteFactory::class,
+        \Rcm\Api\Repository\Setting\FindSettingByName::class
+        => \Rcm\Api\Repository\Setting\FindSettingByNameFactory::class,
 
-        \Rcm\Repository\Site\FindActiveSites::class
-        => \Rcm\Repository\Site\FindActiveSitesFactory::class,
+        \Rcm\Api\Repository\Site\CopySite::class
+        => \Rcm\Api\Repository\Site\CopySiteFactory::class,
 
-        \Rcm\Repository\Site\FindAllSites::class
-        => \Rcm\Repository\Site\FindAllSitesFactory::class,
+        \Rcm\Api\Repository\Site\CreateSite::class
+        => \Rcm\Api\Repository\Site\CreateSiteFactory::class,
 
-        \Rcm\Repository\Site\FindSite::class
-        => \Rcm\Repository\Site\FindSiteFactory::class,
+        \Rcm\Api\Repository\Site\FindActiveSites::class
+        => \Rcm\Api\Repository\Site\FindActiveSitesFactory::class,
+
+        \Rcm\Api\Repository\Site\FindAllSites::class
+        => \Rcm\Api\Repository\Site\FindAllSitesFactory::class,
+
+        \Rcm\Api\Repository\Site\FindSite::class
+        => \Rcm\Api\Repository\Site\FindSiteFactory::class,
 
         /* BLOCK */
         /* @GammaRelease */

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Repository\Redirect;
+namespace Rcm\Api\Repository\Redirect;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Redirect;

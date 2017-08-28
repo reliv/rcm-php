@@ -8,16 +8,16 @@ use Interop\Container\ContainerInterface;
 /**
  * @author James Jervis - https://github.com/jerv13
  */
-class FindPageFactory
+class SavePageFactory
 {
     /**
      * @param ContainerInterface $serviceContainer
      *
-     * @return FindPage
+     * @return SavePage
      */
     public function __invoke($serviceContainer)
     {
-        return new FindPage(
+        return new SavePage(
             $serviceContainer->get(EntityManager::class)
         );
     }

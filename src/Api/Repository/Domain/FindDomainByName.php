@@ -1,17 +1,17 @@
 <?php
 
-namespace Rcm\Api\Repository\Country;
+namespace Rcm\Api\Repository\Domain;
 
 use Doctrine\ORM\EntityManager;
-use Rcm\Entity\Country;
+use Rcm\Entity\Domain;
 
 /**
  * @author James Jervis - https://github.com/jerv13
  */
-class FindCountryByIso2
+class FindDomainByName
 {
     /**
-     * @var \Rcm\Repository\Country
+     * @var \Rcm\Repository\Domain
      */
     protected $repository;
 
@@ -22,20 +22,22 @@ class FindCountryByIso2
         EntityManager $entityManager
     ) {
         $this->repository = $entityManager->getRepository(
-            Country::class
+            Domain::class
         );
     }
 
     /**
-     * @param string $iso2
+     * @param string $domainName
      * @param array  $options
      *
-     * @return null|Country
+     * @return Domain[]
      */
     public function __invoke(
-        string $iso2,
+        string $domainName,
         array $options = []
     ) {
-        return $this->repository->findOneBy(['iso2' => $iso2]);
+        return $this->repository->findOneBy(
+            ['domain' => $domainName]
+        );
     }
 }

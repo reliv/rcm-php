@@ -1,10 +1,10 @@
 <?php
 
-namespace Rcm\Repository\Redirect;
+namespace Rcm\Api\Repository\Redirect;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Redirect;
-use Rcm\Repository\Options;
+use Rcm\Api\Repository\Options;
 
 /**
  * @author James Jervis - https://github.com/jerv13

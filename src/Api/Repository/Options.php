@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Repository;
+namespace Rcm\Api\Repository;
 
 /**
  * @author James Jervis - https://github.com/jerv13

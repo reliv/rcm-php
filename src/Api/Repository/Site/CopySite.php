@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Repository\Site;
+namespace Rcm\Api\Repository\Site;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Container;
@@ -46,7 +46,7 @@ class CopySite
     }
 
     /**
-     * @param Site   $existingSite
+     * @param Site   $sourceSite
      * @param string $newDomainName
      * @param array  $newSiteData
      * @param string $createdByUserId
@@ -56,7 +56,7 @@ class CopySite
      * @return Site
      */
     public function __invoke(
-        Site $existingSite,
+        Site $sourceSite,
         string $newDomainName,
         array $newSiteData,
         string $createdByUserId,
@@ -73,13 +73,19 @@ class CopySite
             false
         );
 
-        $copySite = $this->copySite(
-            $existingSite,
-            $newDomain,
-            $createdByUserId,
-            $createdReason,
-            false
-        );
+        try {
+            $copySite = $this->copySite(
+                $sourceSite,
+                $newDomain,
+                $createdByUserId,
+                $createdReason,
+                false
+            );
+        } catch (\Exception $exception) {
+            // Remove domain if error occurs
+            $this->entityManager->remove($newDomain);
+            throw $exception;
+        }
 
         $copySite->populate($newSiteData);
 
@@ -96,7 +102,7 @@ class CopySite
     }
 
     /**
-     * @param Site   $existingSite
+     * @param Site   $sourceSite
      * @param Domain $domain
      * @param string $createdByUserId
      * @param string $createdReason
@@ -105,7 +111,7 @@ class CopySite
      * @return Site
      */
     protected function copySite(
-        Site $existingSite,
+        Site $sourceSite,
         Domain $domain,
         string $createdByUserId,
         string $createdReason,
@@ -119,7 +125,7 @@ class CopySite
             . ' for: ' . $createdReason
         );
 
-        $copySite = $existingSite->newInstance(
+        $copySite = $sourceSite->newInstance(
             $createdByUserId,
             'Copy site in ' . get_class($this)
             . ' for: ' . $createdReason

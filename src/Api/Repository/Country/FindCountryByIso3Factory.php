@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Repository\Country;
+namespace Rcm\Api\Repository\Country;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;

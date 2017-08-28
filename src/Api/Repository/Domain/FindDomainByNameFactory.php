@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Api\Repository\Page;
+namespace Rcm\Api\Repository\Domain;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
@@ -8,16 +8,16 @@ use Interop\Container\ContainerInterface;
 /**
  * @author James Jervis - https://github.com/jerv13
  */
-class FindPageFactory
+class FindDomainByNameFactory
 {
     /**
      * @param ContainerInterface $serviceContainer
      *
-     * @return FindPage
+     * @return FindDomainByName
      */
     public function __invoke($serviceContainer)
     {
-        return new FindPage(
+        return new FindDomainByName(
             $serviceContainer->get(EntityManager::class)
         );
     }

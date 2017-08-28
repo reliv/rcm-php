@@ -1,10 +1,10 @@
 <?php
 
-namespace Rcm\Repository\Site;
+namespace Rcm\Api\Repository\Site;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Site;
-use Rcm\Repository\Options;
+use Rcm\Api\Repository\Options;
 
 /**
  * @author James Jervis - https://github.com/jerv13

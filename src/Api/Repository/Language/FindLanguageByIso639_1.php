@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Repository\Language;
+namespace Rcm\Api\Repository\Language;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Language;

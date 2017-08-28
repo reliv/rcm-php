@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Repository\Redirect;
+namespace Rcm\Api\Repository\Redirect;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Redirect;
@@ -28,15 +28,19 @@ class UpdateRedirect
     }
 
     /**
-     * @param int   $id
-     * @param array $redirectData
-     * @param array $options
+     * @param int    $id
+     * @param array  $redirectData
+     * @param string $modifiedByUserId
+     * @param string $modifiedReason
+     * @param array  $options
      *
-     * @return Redirect|null
+     * @return null|Redirect
      */
     public function __invoke(
         int $id,
         array $redirectData,
+        string $modifiedByUserId,
+        string $modifiedReason,
         array $options = []
     ) {
         /** @var Redirect $redirectToUpdate */
@@ -51,6 +55,10 @@ class UpdateRedirect
         $redirectToUpdate->setRedirectUrl($redirectData['redirectUrl']);
         $redirectToUpdate->setRequestUrl($redirectData['requestUrl']);
         $redirectToUpdate->setSiteId($redirectData['siteId']);
+        $redirectToUpdate->setModifiedByUserId(
+            $modifiedByUserId,
+            $modifiedReason
+        );
 
         $this->repository->save($redirectToUpdate);
 

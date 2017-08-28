@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Repository\Domain;
+namespace Rcm\Api\Repository\Domain;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Domain;

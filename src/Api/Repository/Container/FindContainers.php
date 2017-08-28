@@ -1,10 +1,10 @@
 <?php
 
-namespace Rcm\Repository\Container;
+namespace Rcm\Api\Repository\Container;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Container;
-use Rcm\Repository\Options;
+use Rcm\Api\Repository\Options;
 
 /**
  * @author James Jervis - https://github.com/jerv13

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Repository\Container;
+namespace Rcm\Api\Repository\Container;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
