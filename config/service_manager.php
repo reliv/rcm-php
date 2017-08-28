@@ -52,6 +52,12 @@ return [
         \Rcm\Api\Repository\Page\SavePage::class
         => \Rcm\Api\Repository\Page\SavePageFactory::class,
 
+        \Rcm\Api\Repository\Redirect\CreateRedirect::class
+        => \Rcm\Api\Repository\Redirect\CreateRedirectFactory::class,
+
+        \Rcm\Api\Repository\Redirect\FindAllSiteRedirects::class
+        => \Rcm\Api\Repository\Redirect\FindAllSiteRedirectsFactory::class,
+
         \Rcm\Api\Repository\Redirect\FindGlobalRedirects::class
         => \Rcm\Api\Repository\Redirect\FindGlobalRedirectsFactory::class,
 
@@ -63,6 +69,9 @@ return [
 
         \Rcm\Api\Repository\Redirect\FindSiteRedirects::class
         => \Rcm\Api\Repository\Redirect\FindSiteRedirectsFactory::class,
+
+        \Rcm\Api\Repository\Redirect\RemoveRedirect::class
+        => \Rcm\Api\Repository\Redirect\RemoveRedirectFactory::class,
 
         \Rcm\Api\Repository\Redirect\UpdateRedirect::class
         => \Rcm\Api\Repository\Redirect\UpdateRedirectFactory::class,

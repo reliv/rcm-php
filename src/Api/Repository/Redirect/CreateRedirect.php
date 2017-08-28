@@ -9,7 +9,7 @@ use Rcm\Exception\RedirectException;
 /**
  * @author James Jervis - https://github.com/jerv13
  */
-class UpdateRedirect
+class CreateRedirect
 {
     /**
      * @var \Rcm\Repository\Redirect
@@ -28,37 +28,28 @@ class UpdateRedirect
     }
 
     /**
-     * @param int    $id
      * @param array  $redirectData
-     * @param string $modifiedByUserId
-     * @param string $modifiedReason
+     * @param string $createdByUserId
+     * @param string $createdReason
      * @param array  $options
      *
-     * @return null|Redirect
+     * @return Redirect
      */
     public function __invoke(
-        int $id,
         array $redirectData,
-        string $modifiedByUserId,
-        string $modifiedReason,
+        string $createdByUserId,
+        string $createdReason,
         array $options = []
     ) {
-        /** @var Redirect $redirectToUpdate */
-        $redirectToUpdate = $this->repository->find($id);
-
-        if (empty($redirectToUpdate)) {
-            return null;
-        }
-
         $this->assertValid($redirectData);
 
-        $redirectToUpdate->setRedirectUrl($redirectData['redirectUrl']);
-        $redirectToUpdate->setRequestUrl($redirectData['requestUrl']);
-        $redirectToUpdate->setSiteId($redirectData['siteId']);
-        $redirectToUpdate->setModifiedByUserId(
-            $modifiedByUserId,
-            $modifiedReason
+        /** @var Redirect $redirectToUpdate */
+        $newRedirect = new Redirect(
+            $createdByUserId,
+            $createdReason
         );
+
+        $newRedirect->populate($redirectData);
 
         $this->repository->save($redirectToUpdate);
 
