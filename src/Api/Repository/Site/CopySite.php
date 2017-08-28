@@ -54,6 +54,7 @@ class CopySite
      * @param array  $options
      *
      * @return Site
+     * @throws \Exception
      */
     public function __invoke(
         Site $sourceSite,
