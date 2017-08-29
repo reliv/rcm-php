@@ -301,13 +301,11 @@ class ResourceProvider extends RcmUserResourceProvider
             $pageName
         );
 
-        $return[$pageResourceId]
-            = [
+        $return[$pageResourceId] = [
             'resourceId' => $pageResourceId,
             'parentResourceId' => $pagesResourceId,
             'name' => $primaryDomainName . ' - pages - ' . $pageName,
-            'description' => "Resource for page '{$pageName}'"
-                . " of type '{$pageType}' on site '{$primaryDomainName}'"
+            'description' => "Resource for page '{$pageName}'" . " of type '{$pageType}' on site '{$primaryDomainName}'"
         ];
 
         $return[$pageResourceId] = array_merge(

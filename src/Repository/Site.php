@@ -10,6 +10,7 @@ use Rcm\Exception\SiteNotFoundException;
 use Rcm\Tracking\Model\Tracking;
 
 /**
+ * @deprecated Repository should not be used directly, please use the /Rcm/Api/{model}/Repository functions
  * Site Repository
  *
  * PHP version 5

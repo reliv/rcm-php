@@ -7,6 +7,7 @@ use Doctrine\ORM\NoResultException;
 use Rcm\Exception\LanguageNotFoundException;
 
 /**
+ * @deprecated Repository should not be used directly, please use the /Rcm/Api/{model}/Repository functions
  * Class Language
  *
  * PHP version 5

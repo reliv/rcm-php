@@ -8,6 +8,7 @@ use Rcm\Entity\Revision;
 use Rcm\Tracking\Model\Tracking;
 
 /**
+ * @deprecated Repository should not be used directly, please use the /Rcm/Api/{model}/Repository functions
  * Container Repository.  Used to get custom container results from the DB
  *
  * @author    Westin Shafer <wshafer@relivinc.com>

@@ -11,6 +11,7 @@ use Rcm\Exception\DuplicateDomainException;
 use Rcm\Tracking\Model\Tracking;
 
 /**
+ * @deprecated Repository should not be used directly, please use the /Rcm/Api/{model}/Repository functions
  * Domain Repository
  *
  * Domain Repository.  Used to get domains for the CMS

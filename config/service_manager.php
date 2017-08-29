@@ -16,6 +16,84 @@ return [
         \Rcm\Acl\ResourceProvider::class
         => \Rcm\Factory\AclResourceProviderFactory::class,
 
+        /**
+         * API =====================================
+         */
+        \Rcm\Api\Repository\Container\FindContainers::class
+        => \Rcm\Api\Repository\Container\FindContainersFactory::class,
+
+        \Rcm\Api\Repository\Country\FindCountryByIso2::class
+        => \Rcm\Api\Repository\Country\FindCountryByIso2Factory::class,
+
+        \Rcm\Api\Repository\Country\FindCountryByIso3::class
+        => \Rcm\Api\Repository\Country\FindCountryByIso3Factory::class,
+
+        \Rcm\Api\Repository\Domain\FindDomainByName::class
+        => \Rcm\Api\Repository\Domain\FindDomainByNameFactory::class,
+
+        \Rcm\Api\Repository\Domain\FindDomainsLike::class
+        => \Rcm\Api\Repository\Domain\FindDomainsLikeFactory::class,
+
+        \Rcm\Api\Repository\Language\FindLanguageByIso6391::class
+        => \Rcm\Api\Repository\Language\FindLanguageByIso6391Factory::class,
+
+        \Rcm\Api\Repository\Page\FindPage::class
+        => \Rcm\Api\Repository\Page\FindPageFactory::class,
+
+        \Rcm\Api\Repository\Page\FindPages::class
+        => \Rcm\Api\Repository\Page\FindPagesFactory::class,
+
+        \Rcm\Api\Repository\Page\FindPagesByType::class
+        => \Rcm\Api\Repository\Page\FindPagesByTypeFactory::class,
+
+        \Rcm\Api\Repository\Page\PageExists::class
+        => \Rcm\Api\Repository\Page\PageExistsFactory::class,
+
+        \Rcm\Api\Repository\Page\SavePage::class
+        => \Rcm\Api\Repository\Page\SavePageFactory::class,
+
+        \Rcm\Api\Repository\Redirect\CreateRedirect::class
+        => \Rcm\Api\Repository\Redirect\CreateRedirectFactory::class,
+
+        \Rcm\Api\Repository\Redirect\FindAllSiteRedirects::class
+        => \Rcm\Api\Repository\Redirect\FindAllSiteRedirectsFactory::class,
+
+        \Rcm\Api\Repository\Redirect\FindGlobalRedirects::class
+        => \Rcm\Api\Repository\Redirect\FindGlobalRedirectsFactory::class,
+
+        \Rcm\Api\Repository\Redirect\FindRedirect::class
+        => \Rcm\Api\Repository\Redirect\FindRedirectFactory::class,
+
+        \Rcm\Api\Repository\Redirect\FindRedirects::class
+        => \Rcm\Api\Repository\Redirect\FindRedirectsFactory::class,
+
+        \Rcm\Api\Repository\Redirect\FindSiteRedirects::class
+        => \Rcm\Api\Repository\Redirect\FindSiteRedirectsFactory::class,
+
+        \Rcm\Api\Repository\Redirect\RemoveRedirect::class
+        => \Rcm\Api\Repository\Redirect\RemoveRedirectFactory::class,
+
+        \Rcm\Api\Repository\Redirect\UpdateRedirect::class
+        => \Rcm\Api\Repository\Redirect\UpdateRedirectFactory::class,
+
+        \Rcm\Api\Repository\Setting\FindSettingByName::class
+        => \Rcm\Api\Repository\Setting\FindSettingByNameFactory::class,
+
+        \Rcm\Api\Repository\Site\CopySite::class
+        => \Rcm\Api\Repository\Site\CopySiteFactory::class,
+
+        \Rcm\Api\Repository\Site\CreateSite::class
+        => \Rcm\Api\Repository\Site\CreateSiteFactory::class,
+
+        \Rcm\Api\Repository\Site\FindActiveSites::class
+        => \Rcm\Api\Repository\Site\FindActiveSitesFactory::class,
+
+        \Rcm\Api\Repository\Site\FindAllSites::class
+        => \Rcm\Api\Repository\Site\FindAllSitesFactory::class,
+
+        \Rcm\Api\Repository\Site\FindSite::class
+        => \Rcm\Api\Repository\Site\FindSiteFactory::class,
+
         /* BLOCK */
         /* @GammaRelease */
         \Rcm\Block\Config\ConfigFields::class

@@ -9,6 +9,7 @@ use Rcm\Exception\RuntimeException;
 use Rcm\Tracking\Model\Tracking;
 
 /**
+ * @deprecated Repository should not be used directly, please use the /Rcm/Api/{model}/Repository functions
  * PluginWrapper Repository
  *
  * PluginWrapper Repository.  Used to get custom page results from the DB

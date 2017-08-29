@@ -9,6 +9,7 @@ use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\RedirectException;
 
 /**
+ * @deprecated Repository should not be used directly, please use the /Rcm/Api/{model}/Repository functions
  * Redirect Repository
  *
  * Redirect Repository.  Used to get redirects for the CMS
