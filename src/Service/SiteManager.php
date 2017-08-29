@@ -52,51 +52,6 @@ class SiteManager
     }
 
     /**
-     * getConfig
-     *
-     * @return array
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * getEntityManager
-     *
-     * @return EntityManager
-     */
-    public function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    /**
-     * getCurrentUser
-     *
-     * @return null|\RcmUser\User\Entity\User
-     */
-    public function getCurrentUser()
-    {
-        return $this->rcmUserService->getCurrentUser();
-    }
-
-    /**
-     * @return \RcmUser\User\Entity\User
-     * @throws TrackingException
-     */
-    protected function getCurrentUserTracking()
-    {
-        $user = $this->getCurrentUser();
-
-        if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . get_class($this));
-        }
-
-        return $user;
-    }
-
-    /**
      * @deprecated
      * getCurrentAuthor
      *
@@ -116,6 +71,7 @@ class SiteManager
     }
 
     /**
+     * @deprecated Use Rcm\Repository\Site\CreateSite
      * createSite
      *
      * @param Site $newSite
@@ -157,7 +113,143 @@ class SiteManager
         return $newSite;
     }
 
+
     /**
+     * @deprecated Use Rcm\Repository\Site\CopySite
+     * copySiteAndPopulate
+     *
+     * @param Site   $existingSite
+     * @param Domain $domain
+     * @param array  $data
+     * @param bool   $doFlush
+     *
+     * @return Site
+     */
+    public function copySiteAndPopulate(
+        Site $existingSite,
+        Domain $domain,
+        $data = [],
+        $doFlush = false
+    ) {
+        $entityManager = $this->getEntityManager();
+
+        $copySite = $this->copySite($existingSite, $domain, false);
+
+        $copySite->populate($data);
+
+        if ($doFlush) {
+            $entityManager->flush($domain);
+            $entityManager->flush($copySite);
+            // @todo Missing pages publishedRevisions in flush
+            $entityManager->flush($copySite->getPages()->toArray());
+            // @todo Missing containers publishedRevisions in flush
+            $entityManager->flush($copySite->getContainers()->toArray());
+        }
+
+        return $copySite;
+    }
+
+
+    /**
+     * getDefaultSiteSettings
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getDefaultSiteValues()
+    {
+        $data = $this->getDefaultSiteSettings();
+
+        // Site Id
+        if (empty($data['siteId'])) {
+            $data['siteId'] = null;
+        }
+
+        // Language
+        if (empty($data['languageIso6392t'])) {
+            throw new \Exception(
+                'languageIso6392t default is required to create new site.'
+            );
+        }
+
+        // Country
+        if (empty($data['countryId'])) {
+            throw new \Exception(
+                'CountryId default is required to create new site.'
+            );
+        }
+
+        return $this->prepareSiteData($data);
+    }
+
+    /**
+     * prepareSiteData
+     *
+     * @param array $data
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function prepareSiteData(array $data)
+    {
+        if (!empty($data['languageIso6392t'])) {
+            $data['language'] = $this->getLanguage($data['languageIso6392t']);
+        }
+
+        if (!empty($data['countryId'])) {
+            $data['country'] = $this->getCountry($data['countryId']);
+        }
+
+        return $data;
+    }
+
+    /**
+     * getConfig
+     *
+     * @return array
+     */
+    protected function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * getEntityManager
+     *
+     * @return EntityManager
+     */
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * getCurrentUser
+     *
+     * @return null|\RcmUser\User\Entity\User
+     */
+    protected function getCurrentUser()
+    {
+        return $this->rcmUserService->getCurrentUser();
+    }
+
+    /**
+     * @return \RcmUser\User\Entity\User
+     * @throws TrackingException
+     */
+    protected function getCurrentUserTracking()
+    {
+        $user = $this->getCurrentUser();
+
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . get_class($this));
+        }
+
+        return $user;
+    }
+
+    /**
+     * @deprecated Use Rcm\Repository\Site\CopySite
      * copySite
      *
      * @param Site   $existingSite
@@ -166,7 +258,7 @@ class SiteManager
      *
      * @return Site
      */
-    public function copySite(
+    protected function copySite(
         Site $existingSite,
         Domain $domain,
         $doFlush = false
@@ -231,40 +323,6 @@ class SiteManager
     }
 
     /**
-     * copySiteAndPopulate
-     *
-     * @param Site   $existingSite
-     * @param Domain $domain
-     * @param array  $data
-     * @param bool   $doFlush
-     *
-     * @return Site
-     */
-    public function copySiteAndPopulate(
-        Site $existingSite,
-        Domain $domain,
-        $data = [],
-        $doFlush = false
-    ) {
-        $entityManager = $this->getEntityManager();
-
-        $copySite = $this->copySite($existingSite, $domain, false);
-
-        $copySite->populate($data);
-
-        if ($doFlush) {
-            $entityManager->flush($domain);
-            $entityManager->flush($copySite);
-            // @todo Missing pages publishedRevisions in flush
-            $entityManager->flush($copySite->getPages()->toArray());
-            // @todo Missing containers publishedRevisions in flush
-            $entityManager->flush($copySite->getContainers()->toArray());
-        }
-
-        return $copySite;
-    }
-
-    /**
      * prepareNewSite
      *
      * @param Site $newSite
@@ -314,59 +372,6 @@ class SiteManager
     }
 
     /**
-     * getDefaultSiteSettings
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getDefaultSiteValues()
-    {
-        $data = $this->getDefaultSiteSettings();
-
-        // Site Id
-        if (empty($data['siteId'])) {
-            $data['siteId'] = null;
-        }
-
-        // Language
-        if (empty($data['languageIso6392t'])) {
-            throw new \Exception(
-                'languageIso6392t default is required to create new site.'
-            );
-        }
-
-        // Country
-        if (empty($data['countryId'])) {
-            throw new \Exception(
-                'CountryId default is required to create new site.'
-            );
-        }
-
-        return $this->prepareSiteData($data);
-    }
-
-    /**
-     * prepareSiteData
-     *
-     * @param array $data
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function prepareSiteData(array $data)
-    {
-        if (!empty($data['languageIso6392t'])) {
-            $data['language'] = $this->getLanguage($data['languageIso6392t']);
-        }
-
-        if (!empty($data['countryId'])) {
-            $data['country'] = $this->getCountry($data['countryId']);
-        }
-
-        return $data;
-    }
-
-    /**
      * getCountry
      *
      * @param string $countryId
@@ -374,7 +379,7 @@ class SiteManager
      * @return null|object
      * @throws \Exception
      */
-    public function getCountry($countryId)
+    protected function getCountry($countryId)
     {
         $entityManager = $this->getEntityManager();
 
@@ -400,7 +405,7 @@ class SiteManager
      * @return null|object
      * @throws \Exception
      */
-    public function getLanguage($languageIso6392t)
+    protected function getLanguage($languageIso6392t)
     {
         $entityManager = $this->getEntityManager();
 
@@ -429,7 +434,7 @@ class SiteManager
      * @return null|object
      * @throws \Exception
      */
-    public function getDomain($domainName)
+    protected function getDomain($domainName)
     {
         $entityManager = $this->getEntityManager();
 
@@ -452,7 +457,7 @@ class SiteManager
      *
      * @return array
      */
-    public function getDefaultSiteSettings()
+    protected function getDefaultSiteSettings()
     {
         $config = $this->getConfig();
 
@@ -464,7 +469,7 @@ class SiteManager
      *
      * @return mixed
      */
-    public function getDefaultSitePageSettings(User $createdByUser)
+    protected function getDefaultSitePageSettings(User $createdByUser)
     {
         $myConfig = $this->getDefaultSiteSettings();
 
