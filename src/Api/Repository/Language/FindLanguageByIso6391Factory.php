@@ -8,16 +8,16 @@ use Interop\Container\ContainerInterface;
 /**
  * @author James Jervis - https://github.com/jerv13
  */
-class FindLanguageByIso639_1Factory
+class FindLanguageByIso6391Factory
 {
     /**
      * @param ContainerInterface $serviceContainer
      *
-     * @return FindLanguageByIso639_1
+     * @return FindLanguageByIso6391
      */
     public function __invoke($serviceContainer)
     {
-        return new FindLanguageByIso639_1(
+        return new FindLanguageByIso6391(
             $serviceContainer->get(EntityManager::class)
         );
     }

@@ -18,7 +18,7 @@ class Options
         array $options,
         $key,
         $default = null
-    ){
+    ) {
         return (array_key_exists($key, $options) ? $options[$key] : $default);
     }
 }

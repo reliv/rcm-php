@@ -34,8 +34,8 @@ return [
         \Rcm\Api\Repository\Domain\FindDomainsLike::class
         => \Rcm\Api\Repository\Domain\FindDomainsLikeFactory::class,
 
-        \Rcm\Api\Repository\Language\FindLanguageByIso639_1::class
-        => \Rcm\Api\Repository\Language\FindLanguageByIso639_1Factory::class,
+        \Rcm\Api\Repository\Language\FindLanguageByIso6391::class
+        => \Rcm\Api\Repository\Language\FindLanguageByIso6391Factory::class,
 
         \Rcm\Api\Repository\Page\FindPage::class
         => \Rcm\Api\Repository\Page\FindPageFactory::class,

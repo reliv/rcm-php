@@ -8,7 +8,7 @@ use Rcm\Entity\Language;
 /**
  * @author James Jervis - https://github.com/jerv13
  */
-class FindLanguageByIso639_1
+class FindLanguageByIso6391
 {
     /**
      * @var \Rcm\Repository\Language

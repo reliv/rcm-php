@@ -301,8 +301,7 @@ class ResourceProvider extends RcmUserResourceProvider
             $pageName
         );
 
-        $return[$pageResourceId]
-            = [
+        $return[$pageResourceId] = [
             'resourceId' => $pageResourceId,
             'parentResourceId' => $pagesResourceId,
             'name' => $primaryDomainName . ' - pages - ' . $pageName,
