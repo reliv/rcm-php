@@ -202,7 +202,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
 
     /**
      * @deprecated This validation does not belong in the entity
-     *             
+     *
      * getDomainValidator - Get validator
      *
      * @return Hostname|ValidatorInterface
@@ -281,7 +281,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
         $domain = strtolower($domain);
         if (!$this->getDomainValidator()->isValid($domain)) {
             throw new InvalidArgumentException(
-                'Domain name is invalid'
+                'Domain name is invalid: ' . $domain
             );
         }
 
