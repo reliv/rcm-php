@@ -91,6 +91,11 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     protected $domainValidator;
 
     /**
+     * @var array
+     */
+    protected $domainValidatorOptions;
+
+    /**
      * <tracking>
      *
      * @var \DateTime Date object was first created
@@ -178,18 +183,26 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     }
 
     /**
+     * @deprecated This validation does not belong in the entity
+     *
      * Overwrite the default validator
      *
-     * @param ValidatorInterface $domainValidator Domain Validator
+     * @param ValidatorInterface $domainValidator
+     * @param array              $options
      *
      * @return void
      */
-    public function setDomainValidator(ValidatorInterface $domainValidator)
-    {
-        $this->domainValidator = $domainValidator;
+    public function setDomainValidator(
+        ValidatorInterface $domainValidator,
+        array $options = []
+    ) {
+        $this->domainValidator = get_class($domainValidator);
+        $this->domainValidatorOptions = $options;
     }
 
     /**
+     * @deprecated This validation does not belong in the entity
+     *             
      * getDomainValidator - Get validator
      *
      * @return Hostname|ValidatorInterface
@@ -197,14 +210,26 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     public function getDomainValidator()
     {
         if (empty($this->domainValidator)) {
-            $this->domainValidator = new Hostname(
-                [
-                    'allow' => Hostname::ALLOW_LOCAL | Hostname::ALLOW_IP
-                ]
+            $this->domainValidatorOptions = [
+                'allow' => Hostname::ALLOW_LOCAL | Hostname::ALLOW_IP
+            ];
+
+            $this->domainValidator = Hostname::class;
+        }
+
+        $domainValidatorClass = $this->domainValidator;
+
+        $domainValidator = new $domainValidatorClass(
+            $this->domainValidatorOptions
+        );
+
+        if (method_exists($domainValidator, 'setOptions')) {
+            $domainValidator->setOptions(
+                $this->domainValidatorOptions
             );
         }
 
-        return $this->domainValidator;
+        return $domainValidator;
     }
 
     /**
