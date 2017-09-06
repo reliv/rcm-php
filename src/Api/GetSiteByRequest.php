@@ -17,6 +17,13 @@ class GetSiteByRequest
     protected $repository;
 
     /**
+     * @todo Implement real cache that can expire
+     *
+     * @var array
+     */
+    protected $cache = [];
+
+    /**
      * @param EntityManager $entityManager
      */
     public function __construct(
@@ -39,6 +46,12 @@ class GetSiteByRequest
     ) {
         $domain = $request->getUri()->getHost();
 
-        return $this->repository->getSiteByDomain($domain);
+        if (array_key_exists($domain, $this->cache)) {
+            return $this->cache[$domain];
+        }
+
+        $this->cache[$domain] = $this->repository->getSiteByDomain($domain);
+
+        return $this->cache[$domain];
     }
 }
