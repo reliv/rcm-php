@@ -94,6 +94,9 @@ return [
         \Rcm\Api\Repository\Site\FindSite::class
         => \Rcm\Api\Repository\Site\FindSiteFactory::class,
 
+        \Rcm\Api\GetSiteByRequest::class
+        => \Rcm\Api\GetSiteByRequestFactory::class,
+
         /* BLOCK */
         /* @GammaRelease */
         \Rcm\Block\Config\ConfigFields::class
