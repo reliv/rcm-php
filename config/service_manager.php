@@ -206,6 +206,10 @@ return [
         // NOTE: this is state-full and should be cloned before use
         \Rcm\Validator\MainLayout::class
         => \Rcm\Factory\MainLayoutValidatorFactory::class,
+
+        /* Zend Over-ride */
+        \Rcm\Zend\Mvc\ResponseSender\HttpResponseSender::class
+        => \Rcm\Zend\Mvc\ResponseSender\HttpResponseSenderFactory::class
     ],
     'invokables' => [
         // @todo This does NOT belong in this module, should be separated
