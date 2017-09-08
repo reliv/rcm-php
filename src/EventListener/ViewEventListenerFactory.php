@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Factory;
+namespace Rcm\EventListener;
 
 use Rcm\EventListener\ViewEventListener;
 use Zend\ServiceManager\ServiceLocatorInterface;

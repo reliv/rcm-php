@@ -22,7 +22,7 @@ namespace RcmTest\Factory;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\EventListener\ViewEventListener;
-use Rcm\Factory\ViewEventListenerFactory;
+use Rcm\EventListener\ViewEventListenerFactory;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -45,7 +45,7 @@ class ViewEventListenerFactoryTest extends \PHPUnit_Framework_TestCase
      * Generic test for the constructor
      *
      * @return null
-     * @covers \Rcm\Factory\ViewEventListenerFactory
+     * @covers \Rcm\EventListener\ViewEventListenerFactory
      */
     public function testCreateService()
     {

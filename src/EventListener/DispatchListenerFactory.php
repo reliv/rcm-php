@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Factory;
+namespace Rcm\EventListener;
 
 use Rcm\EventListener\DispatchListener;
 use Zend\ServiceManager\ServiceLocatorInterface;

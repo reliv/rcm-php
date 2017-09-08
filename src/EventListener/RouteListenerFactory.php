@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\Factory;
+namespace Rcm\EventListener;
 
 use Interop\Container\ContainerInterface;
 use Rcm\EventListener\RouteListener;

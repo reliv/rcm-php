@@ -22,7 +22,7 @@ namespace RcmTest\Factory;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\EventListener\EventFinishListener;
-use Rcm\Factory\EventFinishListenerFactory;
+use Rcm\EventListener\EventFinishListenerFactory;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -45,7 +45,7 @@ class EventFinishListenerFactoryTest extends \PHPUnit_Framework_TestCase
      * Generic test for the constructor
      *
      * @return null
-     * @covers \Rcm\Factory\EventFinishListenerFactory
+     * @covers \Rcm\EventListener\EventFinishListenerFactory
      */
     public function testCreateService()
     {
