@@ -95,8 +95,6 @@ function RcmNewPageForm() {
             me.checkErrorLine();
         })
     }
-
-
 }
 
 jQuery(function () {
