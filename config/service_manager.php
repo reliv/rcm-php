@@ -132,15 +132,15 @@ return [
         //@TODO decouple service name from renderer name
 
         \Rcm\EventListener\EventWrapper::class
-        => \Rcm\Factory\EventWrapperFactory::class,
+        => \Rcm\EventListener\EventWrapperFactory::class,
         \Rcm\EventListener\RouteListener::class
-        => \Rcm\Factory\RouteListenerFactory::class,
+        => \Rcm\EventListener\RouteListenerFactory::class,
         \Rcm\EventListener\DispatchListener::class
-        => \Rcm\Factory\DispatchListenerFactory::class,
+        => \Rcm\EventListener\DispatchListenerFactory::class,
         \Rcm\EventListener\EventFinishListener::class
-        => \Rcm\Factory\EventFinishListenerFactory::class,
+        => \Rcm\EventListener\EventFinishListenerFactory::class,
         \Rcm\EventListener\ViewEventListener::class
-        => \Rcm\Factory\ViewEventListenerFactory::class,
+        => \Rcm\EventListener\ViewEventListenerFactory::class,
         \Rcm\Middleware\DomainCheck::class
         => \Rcm\Factory\MiddlewareDomainCheckFactory::class,
         \Rcm\Middleware\LocaleSetter::class
@@ -206,6 +206,10 @@ return [
         // NOTE: this is state-full and should be cloned before use
         \Rcm\Validator\MainLayout::class
         => \Rcm\Factory\MainLayoutValidatorFactory::class,
+
+        /* Zend Over-ride */
+        \Rcm\Zend\Mvc\ResponseSender\HttpResponseSender::class
+        => \Rcm\Zend\Mvc\ResponseSender\HttpResponseSenderFactory::class
     ],
     'invokables' => [
         // @todo This does NOT belong in this module, should be separated

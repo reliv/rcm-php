@@ -40,7 +40,7 @@ class ResponseHandlerFactory
         /** @var \Zend\Stdlib\Request $request */
         $request = $serviceLocator->get('request');
 
-        $responseSender = new HttpResponseSender();
+        $responseSender = $serviceLocator->get(\Rcm\Zend\Mvc\ResponseSender\HttpResponseSender::class);
 
         return new ResponseHandler(
             $request,

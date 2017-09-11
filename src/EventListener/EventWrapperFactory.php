@@ -1,14 +1,14 @@
 <?php
 
-namespace Rcm\Factory;
+namespace Rcm\EventListener;
 
-use Rcm\EventListener\EventFinishListener;
+use Rcm\EventListener\EventWrapper;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Service Factory for the Event Finish Listener
+ * Service Factory for the Event Wrapper
  *
- * Factory for the Event Finish Listener.
+ * Factory for the Event Wrapper
  *
  * @category  Reliv
  * @package   Rcm
@@ -19,20 +19,19 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link      https://github.com/reliv
  *
  */
-class EventFinishListenerFactory
+class EventWrapperFactory
 {
     /**
      * Create Service
      *
      * @param ServiceLocatorInterface $serviceLocator Zend Service Manager
      *
-     * @return EventFinishListener
+     * @return EventWrapper
      */
     public function __invoke($serviceLocator)
     {
-        /** @var \Rcm\Service\ResponseHandler $responseHandler */
-        $responseHandler = $serviceLocator->get(\Rcm\Service\ResponseHandler::class);
-
-        return new EventFinishListener($responseHandler);
+        return new EventWrapper(
+            $serviceLocator
+        );
     }
 }

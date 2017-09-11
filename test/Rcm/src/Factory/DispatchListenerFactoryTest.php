@@ -22,7 +22,7 @@ namespace RcmTest\Factory;
 require_once __DIR__ . '/../../../autoload.php';
 
 use Rcm\EventListener\DispatchListener;
-use Rcm\Factory\DispatchListenerFactory;
+use Rcm\EventListener\DispatchListenerFactory;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -45,7 +45,7 @@ class DispatchListenerFactoryTest extends \PHPUnit_Framework_TestCase
      * Generic test for the constructor
      *
      * @return null
-     * @covers \Rcm\Factory\DispatchListenerFactory
+     * @covers \Rcm\EventListener\DispatchListenerFactory
      */
     public function testCreateService()
     {
