@@ -4,7 +4,6 @@ echo ""
 echo "[test.bash] Running Composer install..."
 composer self-update
 composer --version
-composer global require fxp/composer-asset-plugin --no-plugins
 composer install --prefer-dist
 
 echo ""
