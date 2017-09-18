@@ -37,6 +37,13 @@
       "homepage": "http://www.reliv.com/"
     }
   ],
+  "suggest":{
+    "bower-asset/angular": "~1",
+    "bower-asset/angular-utils-pagination": "~0.9",
+    "bower-asset/rcm-loading": ">=0.1.14",
+    "bower-asset/rcm-html-editor": ">=0.4.0",
+    "bower-asset/rcm-dialog": ">=0.2.0"
+  },
   "require": {
     "php": ">=5.4.0",
     "reliv/zf-config-factories": "3.* || 4.*",
@@ -45,11 +52,6 @@
     "rcm/core-js": "^1.0.0",
     "rcm/user": "1.*",
     "rcm/user-ui": "1.*",
-    "bower-asset/angular": "~1",
-    "bower-asset/angular-utils-pagination": "~0.9",
-    "bower-asset/rcm-loading": ">=0.1.14",
-    "bower-asset/rcm-html-editor": ">=0.4.0",
-    "bower-asset/rcm-dialog": ">=0.2.0",
     "zendframework/zend-form": "2.*",
     "zendframework/zend-filter": "2.*",
     "zendframework/zend-http": "2.*",
