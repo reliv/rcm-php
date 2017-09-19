@@ -45,12 +45,21 @@ class PageExists
      * @return bool
      */
     public function __invoke(
-        int $siteId,
+        $siteId,
         string $pageName,
         string $pageType = PageTypes::NORMAL,
         array $options = []
     ): bool {
+        if (empty($siteId)) {
+            return false;
+        }
+
         $site = $this->siteRepository->find($siteId);
+
+        if (empty($site)) {
+            return false;
+        }
+
         try {
             $page = $this->repository->getPageByName(
                 $site,
