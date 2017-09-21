@@ -4,6 +4,7 @@
 namespace Rcm\Api\Repository\Site;
 
 
+use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Site;
 
 class SetDomainName
@@ -27,14 +28,15 @@ class SetDomainName
         $this->em = $entityManager;
     }
 
-    public function __invoke(string $siteId, string $domain)
+    public function __invoke(string $siteId, string $domainName, string $modifiedUserId, string $modifiedReason)
     {
         /**
          * @var Site $site
          */
         $site = $this->repository->find($siteId);
         $domain = $site->getDomain();
-        $domain->setDomainName($domain);
+        $domain->setDomainName($domainName);
+        $domain->setModifiedByUserId($modifiedUserId, $modifiedReason);
         $this->em->flush($domain);
     }
 }
