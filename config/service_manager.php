@@ -94,6 +94,8 @@ return [
         \Rcm\Api\Repository\Site\FindSite::class
         => \Rcm\Api\Repository\Site\FindSiteFactory::class,
 
+        \Rcm\Api\Repository\Site\SetDomainName::class => \Rcm\Api\Repository\Site\SetDomainNameFactory::class,
+
         \Rcm\Api\GetSiteByRequest::class
         => \Rcm\Api\GetSiteByRequestFactory::class,
 
