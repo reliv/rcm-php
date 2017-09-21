@@ -69,5 +69,5 @@
   },
   "suggest": {
     "rcm/core-js": "Provides basic JS including jQuery, AngularJS and Bootstrap"
-  },
+  }
 }
