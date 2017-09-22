@@ -99,6 +99,9 @@ return [
         \Rcm\Api\GetSiteByRequest::class
         => \Rcm\Api\GetSiteByRequestFactory::class,
 
+        \Rcm\Api\GetSiteIdByRequest::class
+        => \Rcm\Api\GetSiteIdByRequestFactory::class,
+
         /* BLOCK */
         /* @GammaRelease */
         \Rcm\Block\Config\ConfigFields::class
