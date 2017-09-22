@@ -23,7 +23,6 @@ require_once __DIR__ . '/../../../autoload.php';
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Rcm\Entity\Domain;
-use Rcm\Entity\Language;
 use Rcm\Entity\Site;
 
 /**
@@ -63,13 +62,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetValidatorAndValidatorCalled()
     {
-        $mockValidator = $this->getMockBuilder('\Zend\Validator\Hostname')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockValidator->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
+        $mockValidator = new \Zend\Validator\Hostname();
 
         /** @var \Zend\Validator\Hostname $mockValidator */
         $this->domain->setDomainValidator($mockValidator);
