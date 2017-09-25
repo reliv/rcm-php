@@ -229,7 +229,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
             );
         }
 
-        return $domainValidator;
+        return clone($domainValidator);
     }
 
     /**
