@@ -146,12 +146,18 @@ return [
         => \Rcm\EventListener\EventFinishListenerFactory::class,
         \Rcm\EventListener\ViewEventListener::class
         => \Rcm\EventListener\ViewEventListenerFactory::class,
+
+        /**
+         * Middleware
+         */
         \Rcm\Middleware\DomainCheck::class
-        => \Rcm\Factory\MiddlewareDomainCheckFactory::class,
+        => \Rcm\Middleware\DomainCheckFactory::class,
         \Rcm\Middleware\LocaleSetter::class
-        => \Rcm\Factory\MiddlewareLocaleSetterFactory::class,
+        => \Rcm\Middleware\LocaleSetterFactory::class,
         \Rcm\Middleware\RedirectCheck::class
-        => \Rcm\Factory\MiddlewareRedirectCheckFactory::class,
+        => \Rcm\Middleware\RedirectCheckFactory::class,
+        \Rcm\Middleware\SiteExistsCheck::class
+        => \Rcm\Middleware\SiteExistsCheckFactory::class,
 
         /* PAGE *
         /* @GammaRelease */

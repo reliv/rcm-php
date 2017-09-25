@@ -1,21 +1,20 @@
 <?php
 
-namespace Rcm\Factory;
+namespace Rcm\Middleware;
 
 use Interop\Container\ContainerInterface;
-use Rcm\Middleware\LocaleSetter;
 use Rcm\Service\LocaleService;
 use Rcm\Service\SiteService;
 
 /**
- * Class MiddlewareLocaleSetterFactory
+ * Class LocaleSetterFactory
  *
  * @author    James Jervis <jjervis@relivinc.com>
  * @copyright 2016 Reliv International
  * @license   License.txt
  * @link      https://github.com/reliv
  */
-class MiddlewareLocaleSetterFactory
+class LocaleSetterFactory
 {
     /**
      * __invoke
