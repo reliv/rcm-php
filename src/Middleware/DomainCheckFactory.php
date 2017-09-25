@@ -1,32 +1,33 @@
 <?php
 
-namespace Rcm\Factory;
+namespace Rcm\Middleware;
 
 use Interop\Container\ContainerInterface;
-use Rcm\Middleware\RedirectCheck;
-use Rcm\Service\RedirectService;
+use Rcm\Service\DomainRedirectService;
+use Rcm\Service\SiteService;
 
 /**
- * Class MiddlewareRedirectCheckFactory
+ * Class DomainCheckFactory
  *
  * @author    James Jervis <jjervis@relivinc.com>
  * @copyright 2016 Reliv International
  * @license   License.txt
  * @link      https://github.com/reliv
  */
-class MiddlewareRedirectCheckFactory
+class DomainCheckFactory
 {
     /**
      * __invoke
      *
      * @param ContainerInterface $container
      *
-     * @return RedirectCheck
+     * @return DomainCheck
      */
     public function __invoke($container)
     {
-        return new RedirectCheck(
-            $container->get(RedirectService::class)
+        return new DomainCheck(
+            $container->get(SiteService::class),
+            $container->get(DomainRedirectService::class)
         );
     }
 }
