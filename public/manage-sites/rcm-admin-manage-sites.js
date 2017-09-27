@@ -8,6 +8,8 @@ angular.module('rcmAdmin').controller(
 
             $scope.currentSiteId = pageData.page.siteId;
 
+            var lastDestinationRequestId = 0;
+
             var self = this;
             var namespace = 'rcmAdminManageSites';
 
@@ -201,9 +203,18 @@ angular.module('rcmAdmin').controller(
 
                 rcmLoading.setLoading(sitePageNamespace, 0);
 
+                lastDestinationRequestId++
+
+                var thisDestinationRequestId = lastDestinationRequestId;
+
                 $http.get(url + '?' + pageParam + '&' + pageSizeParam + '&' + queryParam)
                     .then(
                         function (result) {
+                            if (thisDestinationRequestId < lastDestinationRequestId) {
+                                //This prevents quickly typing "fit" and getting the results for "fi"
+                                return;
+                            }
+
                             $scope.sites = result.data.data.items;
                             $scope.totalItems = result.data.data.itemCount;
                             rcmLoading.setLoading(sitePageNamespace, 1);

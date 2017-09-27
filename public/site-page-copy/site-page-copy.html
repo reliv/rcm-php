@@ -32,21 +32,17 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label"
                                for="destinationSite">Destination Site</label>
-
                         <div class="col-sm-8">
-                            <select class="form-control"
-                                    id="destinationSite"
-                                    ng-hide="loadings.destinationSites"
-                                    ng-model="destinationSite"
-                                    ng-options="v as v.domainName for (k, v) in destinationSites"
-                                    >
-                            </select>
-                            <select class="form-control"
-                                    disabled="disabled"
-                                    id="destinationSiteLoading"
-                                    ng-show="loadings.destinationSites">
-                                <option>loading..</option>
-                            </select>
+                            <input type="text" ng-model="destinationSiteSearch" ng-change="handleDestSearchChange()"
+                                   class="form-control" placeholder="Search here">
+                        </div>
+
+                        <div class="radio col-sm-8 col-sm-offset-3">
+                            <label ng-repeat="site in destinationSites" style="display: block">
+                                <input type="radio"
+                                       ng-model="$parent.destinationSite"
+                                       name="destinationSite"
+                                       ng-value="site">{{site.domainName}}</label>
                         </div>
                     </div>
                 </form>
@@ -63,7 +59,7 @@
                                     ng-model="selectedPageType"
                                     ng-options="v.type as v.title + ' (' + v.type + ')' for (k, v) in pageTypes"
                                     ng-change="clearSelectedPages()"
-                                    >
+                            >
                                 <option value="">-All-</option>
                             </select>
                         </div>
@@ -108,7 +104,7 @@
                                                    ng-model="selectedStuff"
                                                    ng-change="toggleSelectPage(page)"
                                                    ng-checked="(selectedPages.indexOf(page) > -1)"
-                                                    />
+                                            />
 
                                             <div>
                                                 <div>
