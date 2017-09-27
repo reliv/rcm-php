@@ -2,8 +2,8 @@
 
 namespace Rcm\Page\PageData;
 
-use Doctrine\ORM\EntityManager;
 use Rcm\Acl\CmsPermissionChecks;
+use Rcm\Api\Repository\Page\FindPage;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use Rcm\Exception\PageNotFoundException;
@@ -22,9 +22,9 @@ use Rcm\Page\PageTypes\PageTypes;
 class PageDataService
 {
     /**
-     * @var EntityManager
+     * @var FindPage
      */
-    protected $entityManager;
+    protected $findPage;
 
     /**
      * @var CmsPermissionChecks
@@ -37,42 +37,18 @@ class PageDataService
     protected $pageStatus;
 
     /**
-     * Constructor.
-     *
-     * @param EntityManager       $entityManager
+     * @param FindPage            $findPage
      * @param CmsPermissionChecks $cmsPermissionChecks
      * @param PageStatus          $pageStatus
      */
     public function __construct(
-        EntityManager $entityManager,
+        FindPage $findPage,
         CmsPermissionChecks $cmsPermissionChecks,
         PageStatus $pageStatus
     ) {
-        $this->entityManager = $entityManager;
+        $this->findPage = $findPage;
         $this->cmsPermissionChecks = $cmsPermissionChecks;
         $this->pageStatus = $pageStatus;
-    }
-
-    /**
-     * getEntityManager
-     *
-     * @return EntityManager
-     */
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    /**
-     * getPageRepository
-     *
-     * @return \Rcm\Repository\Page
-     */
-    protected function getPageRepository()
-    {
-        $entityManager = $this->getEntityManager();
-
-        return $entityManager->getRepository(Page::class);
     }
 
     /**
@@ -161,27 +137,24 @@ class PageDataService
      *
      * @param Site $site
      * @param      $pageName
-     * @param      $type
+     * @param      $pageType
      *
      * @return null|Page
      */
     protected function getPage(
         Site $site,
         $pageName,
-        $type
+        $pageType
     ) {
         if (empty($site) || !$site->getSiteId()) {
             return null;
         }
 
-        /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $this->getPageRepository();
-
         /* Get the Page for display */
-        $page = $pageRepo->getPageByName(
-            $site,
+        $page = $this->findPage->__invoke(
+            $site->getSiteId(),
             $pageName,
-            $type
+            $pageType
         );
 
         return $page;
@@ -315,11 +288,8 @@ class PageDataService
     protected function getNotFoundPage(
         Site $site
     ) {
-        /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $this->getPageRepository();
-
-        $page = $pageRepo->getPageByName(
-            $site,
+        $page = $this->findPage->__invoke(
+            $site->getSiteId(),
             $site->getNotFoundPage(),
             PageTypes::NORMAL
         );

@@ -3,6 +3,7 @@
 namespace Rcm\Page\PageData;
 
 use Interop\Container\ContainerInterface;
+use Rcm\Api\Repository\Page\FindPage;
 use Rcm\Page\PageStatus\PageStatus;
 
 /**
@@ -25,7 +26,7 @@ class PageDataServiceFactory
     public function __invoke($container)
     {
         return new PageDataService(
-            $container->get('Doctrine\ORM\EntityManager'),
+            $container->get(FindPage::class),
             $container->get(\Rcm\Acl\CmsPermissionChecks::class),
             $container->get(PageStatus::class)
         );
