@@ -134,7 +134,10 @@ class PageDataBc extends ApiModelAbstract implements ApiModel, PageData
         if (empty($revision)) {
             $revision = $page->getPublishedRevision();
         }
-        $revisionId = $revision->getRevisionId();
+        $revisionId = null;
+        if (!empty($revision)) {
+            $revisionId = $revision->getRevisionId();
+        }
         $this->setRevisionId($revisionId);
         $this->setTitle($page->getPageTitle());
         $this->setPageId($page->getPageId());
