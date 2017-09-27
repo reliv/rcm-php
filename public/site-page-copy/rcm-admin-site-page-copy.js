@@ -7,7 +7,7 @@ angular.module('rcmAdmin')
 
                 var self = this;
 
-                var lastDestinationRequestId = 0;
+                var lastSitesSearchRequestId = 0;
 
                 $scope.errorMessage = null;
 
@@ -210,9 +210,9 @@ angular.module('rcmAdmin')
                  */
                 self.getDestinationSites = function (searchQuery) {
 
-                    lastDestinationRequestId++
+                    lastSitesSearchRequestId++
 
-                    var thisDestinationRequestId = lastDestinationRequestId;
+                    var thisDestinationRequestId = lastSitesSearchRequestId;
 
                     rcmApiService.get(
                         {
@@ -222,7 +222,7 @@ angular.module('rcmAdmin')
                                 $scope.loadings.destinationSites = loading;
                             },
                             success: function (data) {
-                                if (thisDestinationRequestId < lastDestinationRequestId) {
+                                if (thisDestinationRequestId < lastSitesSearchRequestId) {
                                     //This prevents quickly typing "fit" and getting the results for "fi"
                                     return;
                                 }

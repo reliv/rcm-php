@@ -8,7 +8,7 @@ angular.module('rcmAdmin').controller(
 
             $scope.currentSiteId = pageData.page.siteId;
 
-            var lastDestinationRequestId = 0;
+            var lastSitesSearchRequestId = 0;
 
             var self = this;
             var namespace = 'rcmAdminManageSites';
@@ -203,14 +203,14 @@ angular.module('rcmAdmin').controller(
 
                 rcmLoading.setLoading(sitePageNamespace, 0);
 
-                lastDestinationRequestId++
+                lastSitesSearchRequestId++
 
-                var thisDestinationRequestId = lastDestinationRequestId;
+                var thisDestinationRequestId = lastSitesSearchRequestId;
 
                 $http.get(url + '?' + pageParam + '&' + pageSizeParam + '&' + queryParam)
                     .then(
                         function (result) {
-                            if (thisDestinationRequestId < lastDestinationRequestId) {
+                            if (thisDestinationRequestId < lastSitesSearchRequestId) {
                                 //This prevents quickly typing "fit" and getting the results for "fi"
                                 return;
                             }
