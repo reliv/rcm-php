@@ -38,7 +38,7 @@
     "container-interop/container-interop": "^1",
     "doctrine/doctrine-orm-module": "1.*",
     "psr/http-message": "^1.0",
-    "rcm/user": "1.*",
+    "rcm/user": "~1.4",
     "rcm/api-lib": "0.*",
     "reliv/pipe-rat": "0.*",
     "reliv/zf-config-factories": "3.* || 4.*",
