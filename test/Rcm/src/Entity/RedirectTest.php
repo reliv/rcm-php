@@ -190,6 +190,5 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test.com', $result['domain']);
 
         $this->assertEquals(28, $result['siteId']);
-
     }
 }

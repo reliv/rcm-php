@@ -70,6 +70,5 @@ class PluginController extends AbstractActionController implements
 
     public function setRequest(RequestInterface $request)
     {
-
     }
 }
