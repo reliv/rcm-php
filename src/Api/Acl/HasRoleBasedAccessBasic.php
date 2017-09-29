@@ -3,7 +3,6 @@
 namespace Rcm\Api\Acl;
 
 use Psr\Http\Message\ServerRequestInterface;
-use RcmUser\Api\Acl\HasRoleBasedAccess;
 
 /**
  * @author James Jervis - https://github.com/jerv13
@@ -13,10 +12,10 @@ class HasRoleBasedAccessBasic implements HasRoleBasedAccess
     protected $hasRoleBasedAccess;
 
     /**
-     * @param HasRoleBasedAccess $hasRoleBasedAccess
+     * @param \RcmUser\Api\Acl\HasRoleBasedAccess $hasRoleBasedAccess
      */
     public function __construct(
-        HasRoleBasedAccess $hasRoleBasedAccess
+        \RcmUser\Api\Acl\HasRoleBasedAccess $hasRoleBasedAccess
     ) {
         $this->hasRoleBasedAccess = $hasRoleBasedAccess;
     }
