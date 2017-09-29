@@ -4,21 +4,16 @@ namespace Rcm\Factory;
 
 use Rcm\Acl\CmsPermissionChecks;
 use Rcm\Acl\ResourceName;
+use Rcm\Api\Acl\HasRoleBasedAccess;
+use Rcm\Api\Acl\IsAllowedShowRevisions;
+use Rcm\Api\Acl\IsAllowedSiteAdmin;
+use Rcm\Api\Acl\IsPageAllowedForReading;
+use Rcm\Api\Acl\IsPageRestricted;
+use Rcm\Api\Acl\IsUserLoggedIn;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Service Factory for the Cms Permissions Helper
- *
- * Factory for the Container Manager.
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: 1.0
- * @link      https://github.com/reliv
- *
+ * @author James Jervis - https://github.com/jerv13
  */
 class CmsPermissionsChecksFactory
 {
@@ -29,12 +24,14 @@ class CmsPermissionsChecksFactory
      */
     public function __invoke($serviceLocator)
     {
-        /** @var \RcmUser\Service\RcmUserService $rcmUserService */
-        $rcmUserService = $serviceLocator->get(\RcmUser\Service\RcmUserService::class);
-
         return new CmsPermissionChecks(
-            $rcmUserService,
-            $serviceLocator->get(ResourceName::class)
+            $serviceLocator->get(ResourceName::class),
+            $serviceLocator->get(IsPageAllowedForReading::class),
+            $serviceLocator->get(IsAllowedSiteAdmin::class),
+            $serviceLocator->get(HasRoleBasedAccess::class),
+            $serviceLocator->get(IsUserLoggedIn::class),
+            $serviceLocator->get(IsAllowedShowRevisions::class),
+            $serviceLocator->get(IsPageRestricted::class)
         );
     }
 }
