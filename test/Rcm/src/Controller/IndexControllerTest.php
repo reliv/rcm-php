@@ -71,7 +71,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            $result, $this->response
+            $result,
+            $this->response
         );
     }
 }
