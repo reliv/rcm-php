@@ -2,56 +2,58 @@
 
 namespace Rcm\Acl;
 
+use Rcm\Api\Acl\HasRoleBasedAccess;
+use Rcm\Api\Acl\IsAllowedShowRevisions;
+use Rcm\Api\Acl\IsAllowedSiteAdmin;
+use Rcm\Api\Acl\IsPageAllowedForReading;
+use Rcm\Api\Acl\IsPageRestricted;
+use Rcm\Api\Acl\IsUserLoggedIn;
+use Rcm\Api\GetPsrRequest;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
-use RcmUser\Service\RcmUserService;
 
 /**
- * Class CmsPermissionChecks
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   Rcm\Acl
- * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: <package_version>
- * @link      https://github.com/reliv
+ * @deprecated Use \Rcm\Api\Acl\*
  */
 class CmsPermissionChecks
 {
-    /** @var  \RcmUser\Service\RcmUserService */
-    protected $rcmUserService;
-
-    /**
-     * @var ResourceName
-     */
     protected $resourceName;
+    protected $isPageAllowedForReading;
+    protected $isAllowedSiteAdmin;
+    protected $hasRoleBasedAccess;
+    protected $isUserLoggedIn;
+    protected $isAllowedShowRevisions;
+    protected $isPageRestricted;
 
     /**
-     * @param RcmUserService $rcmUserService
-     * @param ResourceName   $resourceName
+     * @param ResourceName            $resourceName
+     * @param IsPageAllowedForReading $isPageAllowedForReading
+     * @param IsAllowedSiteAdmin      $isAllowedSiteAdmin
+     * @param HasRoleBasedAccess      $hasRoleBasedAccess
+     * @param IsUserLoggedIn          $isUserLoggedIn
+     * @param IsAllowedShowRevisions  $isAllowedShowRevisions
+     * @param IsPageRestricted        $isPageRestricted
      */
     public function __construct(
-        RcmUserService $rcmUserService,
-        ResourceName $resourceName
+        ResourceName $resourceName,
+        IsPageAllowedForReading $isPageAllowedForReading,
+        IsAllowedSiteAdmin $isAllowedSiteAdmin,
+        HasRoleBasedAccess $hasRoleBasedAccess,
+        IsUserLoggedIn $isUserLoggedIn,
+        IsAllowedShowRevisions $isAllowedShowRevisions,
+        IsPageRestricted $isPageRestricted
     ) {
-        $this->rcmUserService = $rcmUserService;
         $this->resourceName = $resourceName;
+        $this->isPageAllowedForReading = $isPageAllowedForReading;
+        $this->isAllowedSiteAdmin = $isAllowedSiteAdmin;
+        $this->hasRoleBasedAccess = $hasRoleBasedAccess;
+        $this->isUserLoggedIn = $isUserLoggedIn;
+        $this->isAllowedShowRevisions = $isAllowedShowRevisions;
+        $this->isPageRestricted = $isPageRestricted;
     }
 
     /**
-     * getAclDataService
-     *
-     * @return \RcmUser\Acl\Service\AclDataService
-     */
-    protected function getAclDataService()
-    {
-        return $this->rcmUserService->getAuthorizeService()->getAclDataService();
-    }
-
-    /**
+     * @deprecated Use \Rcm\Api\Acl\IsPageAllowedForReading
      * isPageAllowedForReading
      *
      * @param Page $page
@@ -60,33 +62,14 @@ class CmsPermissionChecks
      */
     public function isPageAllowedForReading(Page $page)
     {
-        $allowed = $this->rcmUserService->isAllowed(
-            $this->buildPageResourceId(
-                $page->getSite()->getSiteId(),
-                $page->getPageType(),
-                $page->getName()
-            ),
-            'read',
-            \Rcm\Acl\ResourceProvider::class
+        return $this->isPageAllowedForReading->__invoke(
+            GetPsrRequest::invoke(),
+            $page
         );
-
-        /* ltrim added for BC */
-        $currentPage = $page->getName();
-        $siteLoginPage = ltrim($page->getSite()->getLoginPage(), '/');
-        $notAuthorizedPage = ltrim($page->getSite()->getNotAuthorizedPage(), '/');
-        $notFoundPage = ltrim($page->getSite()->getNotFoundPage(), '/');
-
-        if ($siteLoginPage == $currentPage
-            || $notAuthorizedPage == $currentPage
-            || $notFoundPage == $currentPage
-        ) {
-            $allowed = true;
-        }
-
-        return $allowed;
     }
 
     /**
+     * @deprecated Use \Rcm\Api\Acl\IsAllowedSiteAdmin
      * siteAdminCheck
      *
      * @param Site $site
@@ -95,16 +78,14 @@ class CmsPermissionChecks
      */
     public function siteAdminCheck(Site $site)
     {
-        return $this->rcmUserService->isAllowed(
-            $this->buildSiteResourceId(
-                $site->getSiteId()
-            ),
-            'admin',
-            \Rcm\Acl\ResourceProvider::class
+        return $this->isAllowedSiteAdmin->__invoke(
+            GetPsrRequest::invoke(),
+            $site
         );
     }
 
     /**
+     * @deprecated  Use \Rcm\Api\Acl\HasRoleBasedAccess
      * hasRoleBasedAccess
      *
      * @param $role
@@ -113,84 +94,43 @@ class CmsPermissionChecks
      */
     public function hasRoleBasedAccess($role)
     {
-        return $this->rcmUserService->hasRoleBasedAccess($role);
+        return $this->hasRoleBasedAccess->__invoke(
+            GetPsrRequest::invoke(),
+            $role
+        );
     }
 
     /**
+     * @deprecated Use \Rcm\Api\Acl\IsUserLoggedIn
      * isCurrentUserLoggedIn
      *
      * @return bool
      */
     public function isCurrentUserLoggedIn()
     {
-        return $this->rcmUserService->hasIdentity();
+        return $this->isUserLoggedIn->__invoke(
+            GetPsrRequest::invoke()
+        );
     }
 
     /**
+     * @deprecated Use \Rcm\Api\Acl\IsAllowedShowRevisions
      * Check to make sure user can see revisions
      *
      * @return bool
      */
     public function shouldShowRevisions($siteId, $pageType, $pageName)
     {
-        $allowedRevisions = $this->rcmUserService->isAllowed(
-            $this->buildPageResourceId(
-                $siteId,
-                $pageType,
-                $pageName
-            ),
-            'edit',
-            \Rcm\Acl\ResourceProvider::class
+        return $this->isAllowedShowRevisions->__invoke(
+            GetPsrRequest::invoke(),
+            $siteId,
+            $pageType,
+            $pageName
         );
-
-        if ($allowedRevisions) {
-            return true;
-        }
-
-        $allowedRevisions = $this->rcmUserService->isAllowed(
-            $this->buildPageResourceId(
-                $siteId,
-                $pageType,
-                $pageName
-            ),
-            'approve',
-            \Rcm\Acl\ResourceProvider::class
-        );
-
-        if ($allowedRevisions) {
-            return true;
-        }
-
-        $allowedRevisions = $this->rcmUserService->isAllowed(
-            $this->buildPageResourceId(
-                $siteId,
-                $pageType,
-                $pageName
-            ),
-            'revisions',
-            \Rcm\Acl\ResourceProvider::class
-        );
-
-        if ($allowedRevisions) {
-            return true;
-        }
-
-        $allowedRevisions = $this->rcmUserService->isAllowed(
-            $this->buildPagesResourceId(
-                $siteId
-            ),
-            'create',
-            \Rcm\Acl\ResourceProvider::class
-        );
-
-        if ($allowedRevisions) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
+     * @deprecated Use \Rcm\Api\Acl\IsPageRestricted
      * isPageRestricted
      *
      * @param $siteId
@@ -202,24 +142,16 @@ class CmsPermissionChecks
      */
     public function isPageRestricted($siteId, $pageType, $pageName, $privilege)
     {
-        $resourceId = $this->buildPageResourceId($siteId, $pageType, $pageName);
-
-        $aclDataService = $this->getAclDataService();
-
-        //getting all set rules by resource Id
-        $rules = $aclDataService->getRulesByResourcePrivilege(
-            $resourceId,
+        return $this->isPageRestricted->__invoke(
+            $siteId,
+            $pageType,
+            $pageName,
             $privilege
-        )->getData();
-
-        if (empty($rules)) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**
+     * @deprecated Use \Rcm\Acl\ResourceName
      * buildSiteResourceId
      *
      * @param $siteId
@@ -236,6 +168,7 @@ class CmsPermissionChecks
     }
 
     /**
+     * @deprecated Use \Rcm\Acl\ResourceName
      * buildPagesResourceId
      *
      * @param $siteId
@@ -253,6 +186,7 @@ class CmsPermissionChecks
     }
 
     /**
+     * @deprecated Use \Rcm\Acl\ResourceName
      * buildResourceId
      *
      * @param $siteId

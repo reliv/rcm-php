@@ -19,6 +19,24 @@ return [
         /**
          * API =====================================
          */
+        \Rcm\Api\Acl\HasRoleBasedAccess::class
+        => \Rcm\Api\Acl\HasRoleBasedAccessBasicFactory::class,
+
+        \Rcm\Api\Acl\IsAllowedShowRevisions::class
+        => \Rcm\Api\Acl\IsAllowedShowRevisionsBasicFactory::class,
+
+        \Rcm\Api\Acl\IsAllowedSiteAdmin::class
+        => \Rcm\Api\Acl\IsAllowedSiteAdminBasicFactory::class,
+
+        \Rcm\Api\Acl\IsPageAllowedForReading::class
+        => \Rcm\Api\Acl\IsPageAllowedForReadingBasicFactory::class,
+
+        \Rcm\Api\Acl\IsPageRestricted::class
+        => \Rcm\Api\Acl\IsPageRestrictedBasicFactory::class,
+
+        \Rcm\Api\Acl\IsUserLoggedIn::class
+        => \Rcm\Api\Acl\IsUserLoggedInBasicFactory::class,
+
         \Rcm\Api\Repository\Container\FindContainers::class
         => \Rcm\Api\Repository\Container\FindContainersFactory::class,
 
