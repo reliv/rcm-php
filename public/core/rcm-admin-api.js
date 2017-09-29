@@ -21,7 +21,7 @@ angular.module('rcmAdminApi', [])
                 siteCurrent: '/api/admin/manage-sites/current',
                 /* Default site configuration */
                 siteDefault: '/api/admin/manage-sites/default',
-                sites: '/api/admin/manage-sites?page_size=-1',
+                sites: '/api/admin/manage-sites',
                 site: '/api/admin/manage-sites/{siteId}',
                 siteCopy: '/api/admin/site-copy',
                 sitePages: '/api/admin/sites/{siteId}/pages',
