@@ -49,7 +49,7 @@
     "reliv/zf-config-factories": "3.* || 4.*",
     "rcm/core": "~1.21",
     "rcm/core-js": "~1.1",
-    "rcm/user": "1.*",
+    "rcm/user": "~1.5",
     "rcm/user-ui": "1.*",
     "zendframework/zend-form": "2.*",
     "zendframework/zend-filter": "2.*",
