@@ -6,19 +6,7 @@ use Rcm\Controller\AbstractRestfulJsonController;
 use Rcm\Tracking\Exception\TrackingException;
 
 /**
- * Class ApiAdminBaseController
- *
- * ApiAdminBaseController
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   RcmAdmin\Controller
- * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2014 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: <package_version>
- * @link      https://github.com/reliv
+ * @author James Jervis - https://github.com/jerv13
  */
 class ApiAdminBaseController extends AbstractRestfulJsonController
 {
@@ -55,7 +43,7 @@ class ApiAdminBaseController extends AbstractRestfulJsonController
     /**
      * getCurrentUser
      *
-     * @return \RcmUser\User\Entity\User
+     * @return \RcmUser\User\Entity\UserInterface
      */
     protected function getCurrentUser()
     {
@@ -68,7 +56,7 @@ class ApiAdminBaseController extends AbstractRestfulJsonController
     }
 
     /**
-     * @return \RcmUser\User\Entity\User
+     * @return \RcmUser\User\Entity\UserInterface
      * @throws TrackingException
      */
     protected function getCurrentUserTracking()
