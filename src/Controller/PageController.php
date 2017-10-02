@@ -10,7 +10,7 @@ use Rcm\Http\Response;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
 use RcmUser\Service\RcmUserService;
-use RcmUser\User\Entity\User;
+use RcmUser\User\Entity\UserInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\ResponseInterface;
 use Zend\View\Model\JsonModel;
@@ -644,7 +644,7 @@ class PageController extends AbstractActionController
     }
 
     /**
-     * @return User
+     * @return UserInterface
      * @throws TrackingException
      */
     protected function getCurrentUser()

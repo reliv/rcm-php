@@ -12,7 +12,7 @@ use Rcm\Entity\Site;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\Tracking\Model\Tracking;
 use RcmUser\Service\RcmUserService;
-use RcmUser\User\Entity\User;
+use RcmUser\User\Entity\UserInterface;
 
 /**
  * Class ManageSites
@@ -226,7 +226,7 @@ class SiteManager
     /**
      * getCurrentUser
      *
-     * @return null|\RcmUser\User\Entity\User
+     * @return null|\RcmUser\User\Entity\UserInterface
      */
     protected function getCurrentUser()
     {
@@ -234,7 +234,7 @@ class SiteManager
     }
 
     /**
-     * @return \RcmUser\User\Entity\User
+     * @return \RcmUser\User\Entity\UserInterface
      * @throws TrackingException
      */
     protected function getCurrentUserTracking()
@@ -465,11 +465,11 @@ class SiteManager
     }
 
     /**
-     * @param User $createdByUser
+     * @param UserInterface $createdByUser
      *
      * @return mixed
      */
-    protected function getDefaultSitePageSettings(User $createdByUser)
+    protected function getDefaultSitePageSettings(UserInterface $createdByUser)
     {
         $myConfig = $this->getDefaultSiteSettings();
 
