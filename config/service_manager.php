@@ -117,6 +117,9 @@ return [
         \Rcm\Api\GetSiteByRequest::class
         => \Rcm\Api\GetSiteByRequestFactory::class,
 
+        \Rcm\Api\GetSiteCountryIso3ByRequest::class
+        => \Rcm\Api\GetSiteCountryIso3ByRequestFactory::class,
+
         \Rcm\Api\GetSiteIdByRequest::class
         => \Rcm\Api\GetSiteIdByRequestFactory::class,
 

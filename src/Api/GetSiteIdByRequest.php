@@ -9,6 +9,8 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class GetSiteIdByRequest
 {
+    protected $getSiteByRequest;
+
     public function __construct(
         GetSiteByRequest $getSiteByRequest
     ) {
