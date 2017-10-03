@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @author James Jervis - https://github.com/jerv13
  */
-class GetSiteIdByRequest
+class GetSiteCountryIso3ByRequest
 {
     protected $getSiteByRequest;
 
@@ -21,7 +21,7 @@ class GetSiteIdByRequest
      * @param ServerRequestInterface $request
      * @param array                  $options
      *
-     * @return int|string|null
+     * @return string|null
      */
     public function __invoke(
         ServerRequestInterface $request,
@@ -36,6 +36,12 @@ class GetSiteIdByRequest
             return null;
         }
 
-        return $site->getSiteId();
+        $country = $site->getCountry();
+
+        if (empty($country)) {
+            return null;
+        }
+
+        return $country->getIso3();
     }
 }
