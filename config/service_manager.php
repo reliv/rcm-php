@@ -40,11 +40,17 @@ return [
         \Rcm\Api\Repository\Container\FindContainers::class
         => \Rcm\Api\Repository\Container\FindContainersFactory::class,
 
+        \Rcm\Api\Repository\Country\FindCountries::class
+        => \Rcm\Api\Repository\Country\FindCountriesFactory::class,
+
         \Rcm\Api\Repository\Country\FindCountryByIso2::class
         => \Rcm\Api\Repository\Country\FindCountryByIso2Factory::class,
 
         \Rcm\Api\Repository\Country\FindCountryByIso3::class
         => \Rcm\Api\Repository\Country\FindCountryByIso3Factory::class,
+
+        \Rcm\Api\Repository\Country\FindOneCountry::class
+        => \Rcm\Api\Repository\Country\FindOneCountryFactory::class,
 
         \Rcm\Api\Repository\Domain\FindDomainByName::class
         => \Rcm\Api\Repository\Domain\FindDomainByNameFactory::class,
