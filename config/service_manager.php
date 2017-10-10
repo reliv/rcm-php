@@ -109,10 +109,17 @@ return [
         \Rcm\Api\Repository\Site\FindAllSites::class
         => \Rcm\Api\Repository\Site\FindAllSitesFactory::class,
 
+        \Rcm\Api\Repository\Site\FindOneSite::class
+        => \Rcm\Api\Repository\Site\FindOneSiteFactory::class,
+
         \Rcm\Api\Repository\Site\FindSite::class
         => \Rcm\Api\Repository\Site\FindSiteFactory::class,
 
-        \Rcm\Api\Repository\Site\SetDomainName::class => \Rcm\Api\Repository\Site\SetDomainNameFactory::class,
+        \Rcm\Api\Repository\Site\FindSites::class
+        => \Rcm\Api\Repository\Site\FindSitesFactory::class,
+
+        \Rcm\Api\Repository\Site\SetDomainName::class
+        => \Rcm\Api\Repository\Site\SetDomainNameFactory::class,
 
         \Rcm\Api\GetSiteByRequest::class
         => \Rcm\Api\GetSiteByRequestFactory::class,
@@ -152,19 +159,25 @@ return [
         \Rcm\Block\Renderer\RendererService::class
         => \Rcm\Block\Renderer\RendererServiceFactory::class,
 
-        \Rcm\Block\Renderer\RendererBc::class => \Rcm\Block\Renderer\RendererBcFactory::class,
+        \Rcm\Block\Renderer\RendererBc::class
+        => \Rcm\Block\Renderer\RendererBcFactory::class,
 
-        \Rcm\Block\Renderer\RendererMustache::class => \Rcm\Block\Renderer\RendererMustacheFactory::class,
+        \Rcm\Block\Renderer\RendererMustache::class
+        => \Rcm\Block\Renderer\RendererMustacheFactory::class,
         //@TODO decouple service name from renderer name
 
         \Rcm\EventListener\EventWrapper::class
         => \Rcm\EventListener\EventWrapperFactory::class,
+
         \Rcm\EventListener\RouteListener::class
         => \Rcm\EventListener\RouteListenerFactory::class,
+
         \Rcm\EventListener\DispatchListener::class
         => \Rcm\EventListener\DispatchListenerFactory::class,
+
         \Rcm\EventListener\EventFinishListener::class
         => \Rcm\EventListener\EventFinishListenerFactory::class,
+
         \Rcm\EventListener\ViewEventListener::class
         => \Rcm\EventListener\ViewEventListenerFactory::class,
 
@@ -173,10 +186,13 @@ return [
          */
         \Rcm\Middleware\DomainCheck::class
         => \Rcm\Middleware\DomainCheckFactory::class,
+
         \Rcm\Middleware\LocaleSetter::class
         => \Rcm\Middleware\LocaleSetterFactory::class,
+
         \Rcm\Middleware\RedirectCheck::class
         => \Rcm\Middleware\RedirectCheckFactory::class,
+
         \Rcm\Middleware\SiteExistsCheck::class
         => \Rcm\Middleware\SiteExistsCheckFactory::class,
 
@@ -196,37 +212,53 @@ return [
 
         \Rcm\Service\AssetManagerCache::class
         => \Rcm\Factory\AssetManagerCacheFactory::class,
+
         Rcm\Service\Cache::class
         => Rcm\Factory\CacheFactory::class,
+
         \Rcm\Service\CurrentSite::class
         => \Rcm\Factory\CurrentSiteFactory::class,
+
         \Rcm\Service\DomainRedirectService::class
         => \Rcm\Factory\ServiceDomainRedirectServiceFactory::class,
+
         \Rcm\Service\DomainService::class
         => \Rcm\Factory\ServiceDomainServiceFactory::class,
+
         \Rcm\Service\HtmlIncludes::class
         => \Rcm\Factory\RcmHtmlIncludesServiceFactory::class,
+
         \Rcm\Service\LayoutManager::class
         => \Rcm\Factory\LayoutManagerFactory::class,
+
         \Rcm\Service\LocaleService::class
         => \Rcm\Factory\ServiceLocaleServiceFactory::class,
+
         \Rcm\Service\Logger::class
         => \Rcm\Factory\LoggerFactory::class,
+
         \Rcm\Service\PluginManager::class
         => \Rcm\Service\PluginManagerFactory::class,
+
         \Rcm\Service\RcmUser::class
         => \Rcm\Factory\RcmUserFactory::class,
+
         \Rcm\Service\RedirectService::class
         => \Rcm\Factory\ServiceRedirectServiceFactory::class,
+
         \Rcm\Service\ResponseHandler::class
         => \Rcm\Factory\ResponseHandlerFactory::class,
+
         // WAS: "Rcm\Service\SessionMgr"
         \Rcm\Service\SessionManager::class
         => \Rcm\Factory\SessionManagerFactory::class,
+
         \Rcm\Service\SiteService::class
         => \Rcm\Factory\ServiceSiteServiceFactory::class,
+
         \Rcm\Service\ZendLogger::class
         => \Rcm\Factory\ZendLogFactory::class,
+
         \Rcm\Service\ZendLogWriter::class
         => \Rcm\Factory\ZendLogWriterFactory::class,
         // NOTE: this is state-full and should be cloned before use
@@ -245,12 +277,20 @@ return [
     ],
     'invokables' => [
         // @todo This does NOT belong in this module, should be separated
-        \Rcm\Service\DisplayCountService::class => \Rcm\Service\DisplayCountService::class,
-        \Rcm\Block\Instance\InstanceConfigMerger::class => \Rcm\Block\Instance\InstanceConfigMerger::class
+        \Rcm\Service\DisplayCountService::class
+        => \Rcm\Service\DisplayCountService::class,
+
+        \Rcm\Block\Instance\InstanceConfigMerger::class
+        => \Rcm\Block\Instance\InstanceConfigMerger::class
     ],
     'aliases' => [
-        'rcmLogger' => \Rcm\Service\Logger::class,
-        'Rcm\Service\SessionMgr' => \Rcm\Service\SessionManager::class,
-        'Rcm\Acl\CmsPermissionsChecks' => \Rcm\Acl\CmsPermissionChecks::class,
+        'rcmLogger'
+        => \Rcm\Service\Logger::class,
+
+        'Rcm\Service\SessionMgr'
+        => \Rcm\Service\SessionManager::class,
+
+        'Rcm\Acl\CmsPermissionsChecks'
+        => \Rcm\Acl\CmsPermissionChecks::class,
     ]
 ];
