@@ -64,6 +64,9 @@ return [
         \Rcm\Api\Repository\Page\FindPage::class
         => \Rcm\Api\Repository\Page\FindPageFactory::class,
 
+        \Rcm\Api\Repository\Page\FindPageById::class
+        => \Rcm\Api\Repository\Page\FindPageByIdFactory::class,
+
         \Rcm\Api\Repository\Page\FindPages::class
         => \Rcm\Api\Repository\Page\FindPagesFactory::class,
 
