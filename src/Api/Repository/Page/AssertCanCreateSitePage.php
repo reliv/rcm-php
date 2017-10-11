@@ -17,6 +17,7 @@ class AssertCanCreateSitePage
 
     /**
      * @param AllowDuplicateForPageType $allowDuplicateForPageType
+     * @param FindSite                  $findSite
      * @param PageExists                $pageExists
      */
     public function __construct(

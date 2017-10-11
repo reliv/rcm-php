@@ -61,6 +61,18 @@ return [
         \Rcm\Api\Repository\Language\FindLanguageByIso6391::class
         => \Rcm\Api\Repository\Language\FindLanguageByIso6391Factory::class,
 
+        \Rcm\Api\Repository\Page\AllowDuplicateForPageType::class
+        => \Rcm\Api\Repository\Page\AllowDuplicateForPageTypeFactory::class,
+
+        \Rcm\Api\Repository\Page\AssertCanCreateSitePage::class
+        => \Rcm\Api\Repository\Page\AssertCanCreateSitePageFactory::class,
+
+        \Rcm\Api\Repository\Page\CopyPage::class
+        => \Rcm\Api\Repository\Page\CopyPageFactory::class,
+
+        \Rcm\Api\Repository\Page\FindOnePage::class
+        => \Rcm\Api\Repository\Page\FindOnePageFactory::class,
+
         \Rcm\Api\Repository\Page\FindPage::class
         => \Rcm\Api\Repository\Page\FindPageFactory::class,
 
