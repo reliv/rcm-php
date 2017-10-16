@@ -4,6 +4,7 @@ namespace Rcm\Api\Repository\Page;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Page;
+use Rcm\Entity\Site;
 use Rcm\Page\PageTypes\PageTypes;
 
 /**
@@ -32,7 +33,7 @@ class PageExists
         );
 
         $this->siteRepository = $entityManager->getRepository(
-            Page::class
+            Site::class
         );
     }
 
