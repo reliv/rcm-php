@@ -57,8 +57,7 @@ class CopyPage
         $pageToCopyId,
         array $pageData,
         array $options = []
-    ):Page
-    {
+    ):Page {
         $pageRevisionId = Options::get(
             $options,
             static::OPTION_PAGE_REVISION_ID,
