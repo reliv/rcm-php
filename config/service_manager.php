@@ -52,11 +52,17 @@ return [
         \Rcm\Api\Repository\Country\FindOneCountry::class
         => \Rcm\Api\Repository\Country\FindOneCountryFactory::class,
 
+        \Rcm\Api\Repository\Domain\CopyDomain::class
+        => \Rcm\Api\Repository\Domain\CopyDomainFactory::class,
+
         \Rcm\Api\Repository\Domain\FindDomainByName::class
         => \Rcm\Api\Repository\Domain\FindDomainByNameFactory::class,
 
         \Rcm\Api\Repository\Domain\FindDomainsLike::class
         => \Rcm\Api\Repository\Domain\FindDomainsLikeFactory::class,
+
+        \Rcm\Api\Repository\Domain\FindDomainsWithSubDomain::class
+        => \Rcm\Api\Repository\Domain\FindDomainsWithSubDomainFactory::class,
 
         \Rcm\Api\Repository\Language\FindLanguageByIso6391::class
         => \Rcm\Api\Repository\Language\FindLanguageByIso6391Factory::class,

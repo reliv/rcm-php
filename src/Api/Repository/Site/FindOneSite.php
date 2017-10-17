@@ -31,7 +31,7 @@ class FindOneSite
      * @param null  $orderBy
      * @param array $options
      *
-     * @return null|object
+     * @return null|Site
      */
     public function __invoke(
         array $criteria = [],

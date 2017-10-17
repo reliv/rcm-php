@@ -186,7 +186,7 @@ class Domain extends EntityRepository
      */
     public function searchForDomain($domainSearchParam)
     {
-        $domainsQueryBuilder = $pwsSites = $this->createQueryBuilder('domain');
+        $domainsQueryBuilder = $this->createQueryBuilder('domain');
         $domainsQueryBuilder->where('domain.domain LIKE :domainSearchParam');
 
         $query = $domainsQueryBuilder->getQuery();
