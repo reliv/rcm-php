@@ -3,6 +3,7 @@
 namespace Rcm\Api\Repository\Site;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\Api\Repository\Options;
 use Rcm\Entity\Container;
 use Rcm\Entity\Domain;
 use Rcm\Entity\Page;
@@ -64,7 +65,11 @@ class CopySite
         string $createdReason = Tracking::UNKNOWN_REASON,
         array $options = []
     ) {
-        $doFlush = (array_key_exists(self::OPTION_DO_FLUSH, $options) ? $options[self::OPTION_DO_FLUSH] : false);
+        $doFlush = Options::get(
+            $options,
+            self::OPTION_DO_FLUSH,
+            false
+        );
 
         $newDomain = $this->domainRepository->createDomain(
             $newDomainName,
