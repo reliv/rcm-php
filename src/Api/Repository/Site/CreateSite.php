@@ -2,6 +2,7 @@
 
 namespace Rcm\Api\Repository\Site;
 
+use Aws\Swf\Exception\DomainAlreadyExistsException;
 use Doctrine\ORM\EntityManager;
 use Rcm\Api\Repository\Options;
 use Rcm\Entity\Country;
@@ -22,6 +23,11 @@ class CreateSite
 {
     const OPTION_AUTHOR = 'author';
     const OPTION_CREATE_DEFAULT_PAGES = 'createDefaultPages';
+    const OPTION_DEFAULT_SITE_SETTINGS = 'defaultSiteSettings';
+
+    const DEFAULT_LANGUAGE_ISO6392T = 'eng';
+    const DEFAULT_COUNTRY_ISO3 = 'USA';
+
     /**
      * @var EntityManager
      */
@@ -63,18 +69,34 @@ class CreateSite
     protected $languageRepository;
 
     /**
+     * @var string
+     */
+    protected $defaultLanguageIso6392t;
+
+    /**
+     * @var string
+     */
+    protected $defaultCountryIso3;
+
+    /**
      * @param EntityManager $entityManager
+     * @param string        $defaultLanguageIso6392t
+     * @param string        $defaultCountryIso3
      */
     public function __construct(
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        string $defaultLanguageIso6392t = self::DEFAULT_LANGUAGE_ISO6392T,
+        string $defaultCountryIso3 = self::DEFAULT_COUNTRY_ISO3
     ) {
         $this->entityManager = $entityManager;
         $this->repository = $entityManager->getRepository(
             Site::class
         );
+
         $this->domainRepository = $entityManager->getRepository(
             Domain::class
         );
+
         $this->pageRepository = $entityManager->getRepository(
             Page::class
         );
@@ -94,13 +116,15 @@ class CreateSite
         $this->languageRepository = $entityManager->getRepository(
             Language::class
         );
+
+        $this->defaultLanguageIso6392t = $defaultLanguageIso6392t;
+        $this->defaultCountryIso3 = $defaultCountryIso3;
     }
 
     /**
      * @param array  $siteData
      * @param string $createdByUserId
      * @param string $createdReason
-     * @param array  $defaultSiteSettings
      * @param array  $options
      *
      * @return Site
@@ -110,26 +134,14 @@ class CreateSite
         array $siteData,
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON,
-        array $defaultSiteSettings = [],
         array $options = []
     ) {
         $author = (array_key_exists(self::OPTION_AUTHOR, $options) ? $options[self::OPTION_AUTHOR] : $createdByUserId);
-        $siteData = $this->prepareSiteData($siteData);
-
-        if (empty($siteData['domain']) && empty($siteData['domainName'])) {
-            throw new \Exception(
-                'siteData[domain] (existing domain) or siteData[domainName] (new domain) must be set to create new site'
-            );
-        }
-
-        if (!empty($siteData['domainName'])) {
-            $siteData['domain'] = $this->domainRepository->createDomain(
-                $siteData['domainName'],
-                $createdByUserId,
-                'Create new domain in ' . get_class($this)
-                . ' for: ' . $createdReason
-            );
-        }
+        $siteData = $this->prepareSiteData(
+            $siteData,
+            $createdByUserId,
+            $createdReason
+        );
 
         /** @var \Rcm\Entity\Site $newSite */
         $newSite = new Site(
@@ -142,7 +154,18 @@ class CreateSite
         // make sure we don't have a siteId
         $newSite->setSiteId(null);
 
-        $newSite = $this->prepareNewSite($newSite, $defaultSiteSettings);
+        $defaultSiteSettings = Options::get(
+            $options,
+            self::OPTION_DEFAULT_SITE_SETTINGS,
+            []
+        );
+
+        $newSite = $this->prepareNewSite(
+            $newSite,
+            $defaultSiteSettings,
+            $createdByUserId,
+            $createdReason
+        );
 
         $createDefaultPages = Options::get(
             $options,
@@ -187,15 +210,19 @@ class CreateSite
     }
 
     /**
-     * @param Site  $newSite
-     * @param array $defaultSiteSettings
+     * @param Site   $newSite
+     * @param array  $defaultSiteSettings
+     * @param string $createdByUserId
+     * @param string $createdReason
      *
      * @return Site
      * @throws \Exception
      */
     protected function prepareNewSite(
         Site $newSite,
-        array $defaultSiteSettings
+        array $defaultSiteSettings,
+        string $createdByUserId,
+        string $createdReason
     ) {
         $siteId = $newSite->getSiteId();
         if (!empty($siteId)) {
@@ -210,61 +237,167 @@ class CreateSite
 
         return $this->prepareDefaultValues(
             $newSite,
-            $defaultSiteSettings
+            $defaultSiteSettings,
+            $createdByUserId,
+            $createdReason
         );
     }
 
     /**
-     * @param array $siteData
+     * @param array  $siteData
+     * @param string $createdByUserId
+     * @param string $createdReason
      *
      * @return array
-     * @throws \Exception
      */
-    public function prepareSiteData(array $siteData)
-    {
-        if (!empty($siteData['languageIso6392t'])) {
-            $siteData['language'] = $this->languageRepository->findOneBy(
-                ['iso639_2t' => $siteData['languageIso6392t']]
-            );
-
-            if (empty($siteData['language'])) {
-                throw new LanguageNotFoundException("Language {$siteData['languageIso6392t']} could not be found.");
-            }
+    protected function prepareSiteData(
+        array $siteData,
+        string $createdByUserId,
+        string $createdReason
+    ) {
+        $language = $this->buildLanguage($siteData);
+        if (!empty($language)) {
+            $siteData['language'] = $language;
         }
 
-        if (!empty($siteData['countryId'])) {
-            $siteData['country'] = $this->countryRepository->findOneBy(
-                ['iso3' => $siteData['countryId']]
-            );
-
-            if (empty($siteData['country'])) {
-                throw new CountryNotFoundException("Country {$siteData['countryId']} could not be found.");
-            }
+        $country = $this->buildCountry($siteData);
+        if (!empty($country)) {
+            $siteData['country'] = $country;
         }
 
-        if (!empty($siteData['countryIso3'])) {
-            $siteData['country'] = $this->countryRepository->findOneBy(
-                ['iso3' => $siteData['countryIso3']]
-            );
-            if (empty($siteData['country'])) {
-                throw new CountryNotFoundException("Country {$siteData['countryIso3']} could not be found.");
-            }
+        $domain = $this->buildDomain(
+            $siteData,
+            $createdByUserId,
+            $createdReason
+        );
+        if (!empty($domain)) {
+            $siteData['domain'] = $domain;
         }
 
         return $siteData;
     }
 
     /**
-     * @param Site  $site
-     * @param array $defaultSiteSettings
+     * @param array $siteData
+     *
+     * @return Language|null
+     */
+    protected function buildLanguage(array $siteData)
+    {
+        if (!empty($siteData['language']) && $siteData['language'] instanceof Language) {
+            return $siteData['language'];
+        }
+
+        if (!empty($siteData['languageIso6392t'])) {
+            $language = $this->languageRepository->findOneBy(
+                ['iso639_2t' => $siteData['languageIso6392t']]
+            );
+
+            if (empty($language)) {
+                throw new LanguageNotFoundException("Language {$siteData['languageIso6392t']} could not be found.");
+            }
+
+            return $language;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $siteData
+     *
+     * @return Country|null
+     */
+    protected function buildCountry(array $siteData)
+    {
+        if (!empty($siteData['country']) && $siteData['country'] instanceof Country) {
+            return $siteData['country'];
+        }
+
+        if (!empty($siteData['countryId'])) {
+            $country = $this->countryRepository->findOneBy(
+                ['iso3' => $siteData['countryId']]
+            );
+
+            if (empty($country)) {
+                throw new CountryNotFoundException("Country {$siteData['countryId']} could not be found.");
+            }
+
+            return $country;
+        }
+
+        if (!empty($siteData['countryIso3'])) {
+            $country = $this->countryRepository->findOneBy(
+                ['iso3' => $siteData['countryIso3']]
+            );
+            if (empty($country)) {
+                throw new CountryNotFoundException("Country {$siteData['countryIso3']} could not be found.");
+            }
+
+            return $country;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array  $siteData
+     * @param string $createdByUserId
+     * @param string $createdReason
+     *
+     * @return Domain|null
+     * @throws \Exception
+     */
+    protected function buildDomain(
+        array $siteData,
+        string $createdByUserId,
+        string $createdReason
+    ) {
+        if (!empty($siteData['domain']) && $siteData['domain'] instanceof Domain) {
+            return $siteData['domain'];
+        }
+
+        if (!empty($siteData['domainName'])) {
+            $domain = $this->domainRepository->findOneBy(
+                ['domain' => $siteData['domainName']]
+            );
+
+            if (!empty($domain)) {
+                throw new DomainAlreadyExistsException(
+                    "Domain {$siteData['domainName']} was found and should not be duplicated."
+                );
+            }
+
+            return $this->domainRepository->createDomain(
+                $siteData['domainName'],
+                $createdByUserId,
+                'Create new domain in ' . get_class($this)
+                . ' for: ' . $createdReason
+            );
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Site   $site
+     * @param array  $defaultSiteSettings
+     * @param string $createdByUserId
+     * @param string $createdReason
      *
      * @return Site
      */
     protected function prepareDefaultValues(
         Site $site,
-        array $defaultSiteSettings
+        array $defaultSiteSettings,
+        string $createdByUserId,
+        string $createdReason
     ) {
-        $defaults = $this->getDefaultSiteValues($defaultSiteSettings);
+        $defaults = $this->getDefaultSiteValues(
+            $defaultSiteSettings,
+            $createdByUserId,
+            $createdReason
+        );
 
         foreach ($defaults as $key => $value) {
             $getMethod = 'get' . ucfirst($key);
@@ -281,13 +414,16 @@ class CreateSite
     }
 
     /**
-     * @param array $defaultSiteSettings
+     * @param array  $defaultSiteSettings
+     * @param string $createdByUserId
+     * @param string $createdReason
      *
      * @return array
-     * @throws \Exception
      */
     public function getDefaultSiteValues(
-        array $defaultSiteSettings
+        array $defaultSiteSettings,
+        string $createdByUserId,
+        string $createdReason
     ) {
         // Site Id
         if (empty($defaultSiteSettings['siteId'])) {
@@ -296,19 +432,19 @@ class CreateSite
 
         // Language
         if (empty($defaultSiteSettings['languageIso6392t'])) {
-            throw new \Exception(
-                'languageIso6392t default is required to create new site.'
-            );
+            $defaultSiteSettings['languageIso6392t'] = $this->defaultLanguageIso6392t;
         }
 
         // Country
         if (empty($defaultSiteSettings['countryId'])) {
-            throw new \Exception(
-                'CountryId default is required to create new site.'
-            );
+            $defaultSiteSettings['countryId'] = $this->defaultCountryIso3;
         }
 
-        return $this->prepareSiteData($defaultSiteSettings);
+        return $this->prepareSiteData(
+            $defaultSiteSettings,
+            $createdByUserId,
+            $createdReason
+        );
     }
 
     /**
