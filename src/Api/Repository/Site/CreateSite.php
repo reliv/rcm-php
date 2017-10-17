@@ -3,6 +3,7 @@
 namespace Rcm\Api\Repository\Site;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\Api\Repository\Options;
 use Rcm\Entity\Country;
 use Rcm\Entity\Domain;
 use Rcm\Entity\Language;
@@ -20,6 +21,7 @@ use Rcm\Tracking\Model\Tracking;
 class CreateSite
 {
     const OPTION_AUTHOR = 'author';
+    const OPTION_CREATE_DEFAULT_PAGES = 'createDefaultPages';
     /**
      * @var EntityManager
      */
@@ -95,7 +97,6 @@ class CreateSite
     }
 
     /**
-     * @param string $domainName
      * @param array  $siteData
      * @param string $createdByUserId
      * @param string $createdReason
@@ -103,9 +104,9 @@ class CreateSite
      * @param array  $options
      *
      * @return Site
+     * @throws \Exception
      */
     public function __invoke(
-        string $domainName,
         array $siteData,
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON,
@@ -115,12 +116,20 @@ class CreateSite
         $author = (array_key_exists(self::OPTION_AUTHOR, $options) ? $options[self::OPTION_AUTHOR] : $createdByUserId);
         $siteData = $this->prepareSiteData($siteData);
 
-        $siteData['domain'] = $this->domainRepository->createDomain(
-            $siteData['domainName'],
-            $createdByUserId,
-            'Create new domain in ' . get_class($this)
-            . ' for: ' . $createdReason
-        );
+        if (empty($siteData['domain']) && empty($siteData['domainName'])) {
+            throw new \Exception(
+                'siteData[domain] (existing domain) or siteData[domainName] (new domain) must be set to create new site'
+            );
+        }
+
+        if (!empty($siteData['domainName'])) {
+            $siteData['domain'] = $this->domainRepository->createDomain(
+                $siteData['domainName'],
+                $createdByUserId,
+                'Create new domain in ' . get_class($this)
+                . ' for: ' . $createdReason
+            );
+        }
 
         /** @var \Rcm\Entity\Site $newSite */
         $newSite = new Site(
@@ -135,34 +144,44 @@ class CreateSite
 
         $newSite = $this->prepareNewSite($newSite, $defaultSiteSettings);
 
-        $this->pageRepository->createPages(
-            $newSite,
-            $this->getDefaultSitePageSettings(
-                $defaultSiteSettings,
-                $author,
-                $createdByUserId,
-                $createdReason
-            ),
-            true,
-            false
+        $createDefaultPages = Options::get(
+            $options,
+            self::OPTION_CREATE_DEFAULT_PAGES,
+            true
         );
+
+        if ($createDefaultPages) {
+            $this->pageRepository->createPages(
+                $newSite,
+                $this->getDefaultSitePageSettings(
+                    $defaultSiteSettings,
+                    $author,
+                    $createdByUserId,
+                    $createdReason
+                ),
+                true,
+                false
+            );
+        }
 
         $this->entityManager->persist($newSite);
 
         $this->entityManager->flush($newSite);
 
-        $this->createPagePlugins(
-            $newSite,
-            $createdByUserId,
-            'New site creation in ' . get_class($this) . ' for: ' . $createdReason,
-            $this->getDefaultSitePageSettings(
-                $defaultSiteSettings,
-                $author,
+        if ($createDefaultPages) {
+            $this->createPagePlugins(
+                $newSite,
                 $createdByUserId,
-                $createdReason
-            ),
-            true
-        );
+                'New site creation in ' . get_class($this) . ' for: ' . $createdReason,
+                $this->getDefaultSitePageSettings(
+                    $defaultSiteSettings,
+                    $author,
+                    $createdByUserId,
+                    $createdReason
+                ),
+                true
+            );
+        }
 
         return $newSite;
     }

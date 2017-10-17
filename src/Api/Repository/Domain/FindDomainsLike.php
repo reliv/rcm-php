@@ -36,8 +36,12 @@ class FindDomainsLike
         string $domainNameSearch,
         array $options = []
     ) {
-        return $this->repository->searchForDomain(
-            $domainNameSearch
-        );
+        $domainsQueryBuilder = $this->repository->createQueryBuilder('domain');
+        $domainsQueryBuilder->where('domain.domain LIKE :domainSearchParam');
+
+        $query = $domainsQueryBuilder->getQuery();
+        $query->setParameter('domainSearchParam', $domainNameSearch);
+
+        return $query->getResult();
     }
 }
