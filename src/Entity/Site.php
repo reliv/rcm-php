@@ -581,6 +581,18 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
     }
 
     /**
+     * @return null|string
+     */
+    public function getCountryIso3()
+    {
+        if ($this->country) {
+            return $this->country->getIso3();
+        }
+
+        return null;
+    }
+
+    /**
      * Sets the Country property
      *
      * @param \Rcm\Entity\Country $country Country Entity

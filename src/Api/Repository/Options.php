@@ -21,4 +21,17 @@ class Options
     ) {
         return (array_key_exists($key, $options) ? $options[$key] : $default);
     }
+
+    /**
+     * @param array $options
+     * @param       $key
+     *
+     * @return bool
+     */
+    public static function has(
+        array $options,
+        $key
+    ): bool {
+        return array_key_exists($key, $options);
+    }
 }
