@@ -67,6 +67,9 @@ return [
         \Rcm\Api\Repository\Language\FindLanguageByIso6391::class
         => \Rcm\Api\Repository\Language\FindLanguageByIso6391Factory::class,
 
+        \Rcm\Api\Repository\Language\FindLanguageByIso6392t::class
+        => \Rcm\Api\Repository\Language\FindLanguageByIso6392tFactory::class,
+
         \Rcm\Api\Repository\Page\AllowDuplicateForPageType::class
         => \Rcm\Api\Repository\Page\AllowDuplicateForPageTypeFactory::class,
 
@@ -129,6 +132,9 @@ return [
 
         \Rcm\Api\Repository\Site\CreateSite::class
         => \Rcm\Api\Repository\Site\CreateSiteFactory::class,
+
+        \Rcm\Api\Repository\Site\CreateSiteOld::class
+        => \Rcm\Api\Repository\Site\CreateSiteOldFactory::class,
 
         \Rcm\Api\Repository\Site\FindActiveSites::class
         => \Rcm\Api\Repository\Site\FindActiveSitesFactory::class,

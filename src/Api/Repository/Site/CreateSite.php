@@ -4,16 +4,16 @@ namespace Rcm\Api\Repository\Site;
 
 use Aws\Swf\Exception\DomainAlreadyExistsException;
 use Doctrine\ORM\EntityManager;
+use Rcm\Api\Repository\Country\FindCountryByIso3;
+use Rcm\Api\Repository\Domain\FindDomainByName;
+use Rcm\Api\Repository\Language\FindLanguageByIso6392t;
 use Rcm\Api\Repository\Options;
 use Rcm\Entity\Country;
 use Rcm\Entity\Domain;
-use Rcm\Entity\Language;
-use Rcm\Entity\Page;
-use Rcm\Entity\PluginInstance;
-use Rcm\Entity\PluginWrapper;
 use Rcm\Entity\Site;
 use Rcm\Exception\CountryNotFoundException;
 use Rcm\Exception\LanguageNotFoundException;
+use Rcm\Exception\PropertyMissing;
 use Rcm\Tracking\Model\Tracking;
 
 /**
@@ -21,542 +21,309 @@ use Rcm\Tracking\Model\Tracking;
  */
 class CreateSite
 {
-    const OPTION_AUTHOR = 'author';
-    const OPTION_CREATE_DEFAULT_PAGES = 'createDefaultPages';
-    const OPTION_DEFAULT_SITE_SETTINGS = 'defaultSiteSettings';
+    const PROPERTY_HOST = 'host';
+    // Theme name: 'GuestResponsive'
+    const PROPERTY_THEME_NAME = 'theme';
+    const PROPERTY_LAYOUT = 'layout';
+    const PROPERTY_STATUS = 'status';
+    /* possibly required */
+    // ISO3 Country code: 'USA'
+    const PROPERTY_COUNTRY_ISO3 = 'countryIso3';
+    // ISO 639-2/T Language Code: 'eng'
+    const PROPERTY_LANGUAGE_ISO_939_2T = 'languageIso9392t';
+    // Site title
+    const PROPERTY_TITLE = 'title';
+    /* other */
+    // Path to favicon: '/images/favicon.ico'
+    const PROPERTY_FAVICON = 'favicon';
+    // Login page path: '/login'
+    const PROPERTY_LOGIN_PAGE = 'loginPage';
+    const PROPERTY_NOT_AUTHORIZED_PAGE = 'notAuthorizedPage';
+    const PROPERTY_NOT_FOUND_PAGE = 'notFoundPage';
 
-    const DEFAULT_LANGUAGE_ISO6392T = 'eng';
-    const DEFAULT_COUNTRY_ISO3 = 'USA';
+    const DEFAULT_STATUS = Site::STATUS_ACTIVE;
+    const DEFAULT_FAVICON = '/images/favicon.ico';
+    const DEFAULT_LOGIN_PAGE = '/login';
+    const DEFAULT_NOT_AUTHORIZED_PAGE = '/not-authorized';
+    const DEFAULT_NOT_FOUND_PAGE = 'not-found';
 
-    /**
-     * @var EntityManager
-     */
     protected $entityManager;
+    protected $findDomainByName;
+    protected $findCountryByIso3;
+    protected $findLanguageByIso6392t;
 
     /**
-     * @var \Rcm\Repository\Site
-     */
-    protected $repository;
-
-    /**
-     * @var \Rcm\Repository\Domain
-     */
-    protected $domainRepository;
-
-    /**
-     * @var \Rcm\Repository\Page
-     */
-    protected $pageRepository;
-
-    /**
-     * @var \Rcm\Repository\PluginInstance
-     */
-    protected $pluginInstanceRepository;
-
-    /**
-     * @var \Rcm\Repository\PluginWrapper
-     */
-    protected $pluginWrapperRepository;
-
-    /**
-     * @var \Rcm\Repository\PluginWrapper
-     */
-    protected $countryRepository;
-
-    /**
-     * @var \Rcm\Repository\PluginWrapper
-     */
-    protected $languageRepository;
-
-    /**
-     * @var string
-     */
-    protected $defaultLanguageIso6392t;
-
-    /**
-     * @var string
-     */
-    protected $defaultCountryIso3;
-
-    /**
-     * @param EntityManager $entityManager
-     * @param string        $defaultLanguageIso6392t
-     * @param string        $defaultCountryIso3
+     * @param EntityManager          $entityManager
+     * @param FindDomainByName       $findDomainByName
+     * @param FindCountryByIso3      $findCountryByIso3
+     * @param FindLanguageByIso6392t $findLanguageByIso6392t
      */
     public function __construct(
         EntityManager $entityManager,
-        string $defaultLanguageIso6392t = self::DEFAULT_LANGUAGE_ISO6392T,
-        string $defaultCountryIso3 = self::DEFAULT_COUNTRY_ISO3
+        FindDomainByName $findDomainByName,
+        FindCountryByIso3 $findCountryByIso3,
+        FindLanguageByIso6392t $findLanguageByIso6392t
     ) {
         $this->entityManager = $entityManager;
-        $this->repository = $entityManager->getRepository(
-            Site::class
-        );
-
-        $this->domainRepository = $entityManager->getRepository(
-            Domain::class
-        );
-
-        $this->pageRepository = $entityManager->getRepository(
-            Page::class
-        );
-
-        $this->pluginInstanceRepository = $entityManager->getRepository(
-            PluginInstance::class
-        );
-
-        $this->pluginWrapperRepository = $entityManager->getRepository(
-            PluginWrapper::class
-        );
-
-        $this->countryRepository = $entityManager->getRepository(
-            Country::class
-        );
-
-        $this->languageRepository = $entityManager->getRepository(
-            Language::class
-        );
-
-        $this->defaultLanguageIso6392t = $defaultLanguageIso6392t;
-        $this->defaultCountryIso3 = $defaultCountryIso3;
+        $this->findDomainByName = $findDomainByName;
+        $this->findCountryByIso3 = $findCountryByIso3;
+        $this->findLanguageByIso6392t = $findLanguageByIso6392t;
     }
 
     /**
-     * @param array  $siteData
+     * @param array  $properties
      * @param string $createdByUserId
      * @param string $createdReason
      * @param array  $options
      *
      * @return Site
-     * @throws \Exception
      */
     public function __invoke(
-        array $siteData,
+        array $properties = [],
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON,
         array $options = []
-    ) {
-        $author = (array_key_exists(self::OPTION_AUTHOR, $options) ? $options[self::OPTION_AUTHOR] : $createdByUserId);
-        $siteData = $this->prepareSiteData(
-            $siteData,
+    ): Site {
+        $this->assertValidProperties($properties);
+
+        $domain = $this->buildDomain(
+            Options::get(
+                $properties,
+                self::PROPERTY_HOST
+            ),
             $createdByUserId,
             $createdReason
         );
 
-        /** @var \Rcm\Entity\Site $newSite */
+        $language = $this->buildLanguage(
+            Options::get(
+                $properties,
+                self::PROPERTY_LANGUAGE_ISO_939_2T
+            )
+        );
+
+        $country = $this->buildCountry(
+            Options::get(
+                $properties,
+                self::PROPERTY_COUNTRY_ISO3
+            )
+        );
+
         $newSite = new Site(
             $createdByUserId,
             'Create new site in ' . get_class($this)
             . ' for: ' . $createdReason
         );
 
-        $newSite->populate($siteData);
-        // make sure we don't have a siteId
-        $newSite->setSiteId(null);
-
-        $defaultSiteSettings = Options::get(
-            $options,
-            self::OPTION_DEFAULT_SITE_SETTINGS,
-            []
+        $newSite->setDomain(
+            $domain
         );
 
-        $newSite = $this->prepareNewSite(
-            $newSite,
-            $defaultSiteSettings,
-            $createdByUserId,
-            $createdReason
+        $newSite->setLanguage(
+            $language
         );
 
-        $createDefaultPages = Options::get(
-            $options,
-            self::OPTION_CREATE_DEFAULT_PAGES,
-            true
+        $newSite->setCountry(
+            $country
         );
 
-        if ($createDefaultPages) {
-            $this->pageRepository->createPages(
-                $newSite,
-                $this->getDefaultSitePageSettings(
-                    $defaultSiteSettings,
-                    $author,
-                    $createdByUserId,
-                    $createdReason
-                ),
-                true,
-                false
-            );
-        }
+        $newSite->setSiteLayout(
+            Options::get(
+                $properties,
+                self::PROPERTY_LAYOUT
+            )
+        );
+
+        $newSite->setSiteTitle(
+            Options::get(
+                $properties,
+                self::PROPERTY_TITLE
+            )
+        );
+
+        $newSite->setStatus(
+            Options::get(
+                $properties,
+                self::PROPERTY_STATUS,
+                self::DEFAULT_STATUS
+            )
+        );
+
+        $newSite->setFavIcon(
+            Options::get(
+                $properties,
+                self::PROPERTY_FAVICON,
+                self::DEFAULT_FAVICON
+            )
+        );
+
+        $newSite->setLoginPage(
+            Options::get(
+                $properties,
+                self::PROPERTY_LOGIN_PAGE,
+                self::DEFAULT_LOGIN_PAGE
+            )
+        );
+
+        $newSite->setNotAuthorizedPage(
+            Options::get(
+                $properties,
+                self::PROPERTY_NOT_AUTHORIZED_PAGE,
+                self::DEFAULT_NOT_AUTHORIZED_PAGE
+            )
+        );
+
+        $newSite->setNotFoundPage(
+            Options::get(
+                $properties,
+                self::PROPERTY_NOT_FOUND_PAGE,
+                self::DEFAULT_NOT_FOUND_PAGE
+            )
+        );
+
+        $domain->setSite($newSite);
 
         $this->entityManager->persist($newSite);
+        $this->entityManager->persist($domain);
 
         $this->entityManager->flush($newSite);
-
-        if ($createDefaultPages) {
-            $this->createPagePlugins(
-                $newSite,
-                $createdByUserId,
-                'New site creation in ' . get_class($this) . ' for: ' . $createdReason,
-                $this->getDefaultSitePageSettings(
-                    $defaultSiteSettings,
-                    $author,
-                    $createdByUserId,
-                    $createdReason
-                ),
-                true
-            );
-        }
+        $this->entityManager->flush($domain);
 
         return $newSite;
     }
 
     /**
-     * @param Site   $newSite
-     * @param array  $defaultSiteSettings
+     * @param string $domainName
      * @param string $createdByUserId
      * @param string $createdReason
+     * @param array  $properties
      *
-     * @return Site
-     * @throws \Exception
-     */
-    protected function prepareNewSite(
-        Site $newSite,
-        array $defaultSiteSettings,
-        string $createdByUserId,
-        string $createdReason
-    ) {
-        $siteId = $newSite->getSiteId();
-        if (!empty($siteId)) {
-            throw new \Exception(
-                "Site ID must be empty to create new site, id {$siteId} given."
-            );
-        }
-
-        if (empty($newSite->getDomain())) {
-            throw new \Exception('Domain is required to create new site.');
-        }
-
-        return $this->prepareDefaultValues(
-            $newSite,
-            $defaultSiteSettings,
-            $createdByUserId,
-            $createdReason
-        );
-    }
-
-    /**
-     * @param array  $siteData
-     * @param string $createdByUserId
-     * @param string $createdReason
-     *
-     * @return array
-     */
-    protected function prepareSiteData(
-        array $siteData,
-        string $createdByUserId,
-        string $createdReason
-    ) {
-        $language = $this->buildLanguage($siteData);
-        if (!empty($language)) {
-            $siteData['language'] = $language;
-        }
-
-        $country = $this->buildCountry($siteData);
-        if (!empty($country)) {
-            $siteData['country'] = $country;
-        }
-
-        $domain = $this->buildDomain(
-            $siteData,
-            $createdByUserId,
-            $createdReason
-        );
-        if (!empty($domain)) {
-            $siteData['domain'] = $domain;
-        }
-
-        return $siteData;
-    }
-
-    /**
-     * @param array $siteData
-     *
-     * @return Language|null
-     */
-    protected function buildLanguage(array $siteData)
-    {
-        if (!empty($siteData['language']) && $siteData['language'] instanceof Language) {
-            return $siteData['language'];
-        }
-
-        if (!empty($siteData['languageIso6392t'])) {
-            $language = $this->languageRepository->findOneBy(
-                ['iso639_2t' => $siteData['languageIso6392t']]
-            );
-
-            if (empty($language)) {
-                throw new LanguageNotFoundException("Language {$siteData['languageIso6392t']} could not be found.");
-            }
-
-            return $language;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param array $siteData
-     *
-     * @return Country|null
-     */
-    protected function buildCountry(array $siteData)
-    {
-        if (!empty($siteData['country']) && $siteData['country'] instanceof Country) {
-            return $siteData['country'];
-        }
-
-        if (!empty($siteData['countryId'])) {
-            $country = $this->countryRepository->findOneBy(
-                ['iso3' => $siteData['countryId']]
-            );
-
-            if (empty($country)) {
-                throw new CountryNotFoundException("Country {$siteData['countryId']} could not be found.");
-            }
-
-            return $country;
-        }
-
-        if (!empty($siteData['countryIso3'])) {
-            $country = $this->countryRepository->findOneBy(
-                ['iso3' => $siteData['countryIso3']]
-            );
-            if (empty($country)) {
-                throw new CountryNotFoundException("Country {$siteData['countryIso3']} could not be found.");
-            }
-
-            return $country;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param array  $siteData
-     * @param string $createdByUserId
-     * @param string $createdReason
-     *
-     * @return Domain|null
-     * @throws \Exception
+     * @return Domain|\Rcm\Entity\Domain[]
      */
     protected function buildDomain(
-        array $siteData,
+        string $domainName,
         string $createdByUserId,
-        string $createdReason
+        string $createdReason,
+        array $properties = []
     ) {
-        if (!empty($siteData['domain']) && $siteData['domain'] instanceof Domain) {
-            return $siteData['domain'];
-        }
+        $domain = $this->findDomainByName->__invoke(
+            $domainName
+        );
 
-        if (!empty($siteData['domainName'])) {
-            $domain = $this->domainRepository->findOneBy(
-                ['domain' => $siteData['domainName']]
-            );
-
-            if (!empty($domain)) {
-                throw new DomainAlreadyExistsException(
-                    "Domain {$siteData['domainName']} was found and should not be duplicated."
-                );
-            }
-
-            return $this->domainRepository->createDomain(
-                $siteData['domainName'],
-                $createdByUserId,
-                'Create new domain in ' . get_class($this)
-                . ' for: ' . $createdReason
+        if (!empty($domain)) {
+            throw new DomainAlreadyExistsException(
+                "Domain {$domainName} was found and should not be duplicated."
             );
         }
 
-        return null;
-    }
-
-    /**
-     * @param Site   $site
-     * @param array  $defaultSiteSettings
-     * @param string $createdByUserId
-     * @param string $createdReason
-     *
-     * @return Site
-     */
-    protected function prepareDefaultValues(
-        Site $site,
-        array $defaultSiteSettings,
-        string $createdByUserId,
-        string $createdReason
-    ) {
-        $defaults = $this->getDefaultSiteValues(
-            $defaultSiteSettings,
+        $domain = new Domain(
             $createdByUserId,
-            $createdReason
+            'Create new domain in ' . get_class($this)
+            . ' for: ' . $createdReason
         );
 
-        foreach ($defaults as $key => $value) {
-            $getMethod = 'get' . ucfirst($key);
-            $setMethod = 'set' . ucfirst($key);
-
-            $currentValue = $site->$getMethod();
-
-            if (empty($currentValue)) {
-                $site->$setMethod($value);
-            }
-        }
-
-        return $site;
-    }
-
-    /**
-     * @param array  $defaultSiteSettings
-     * @param string $createdByUserId
-     * @param string $createdReason
-     *
-     * @return array
-     */
-    public function getDefaultSiteValues(
-        array $defaultSiteSettings,
-        string $createdByUserId,
-        string $createdReason
-    ) {
-        // Site Id
-        if (empty($defaultSiteSettings['siteId'])) {
-            $defaultSiteSettings['siteId'] = null;
-        }
-
-        // Language
-        if (empty($defaultSiteSettings['languageIso6392t'])) {
-            $defaultSiteSettings['languageIso6392t'] = $this->defaultLanguageIso6392t;
-        }
-
-        // Country
-        if (empty($defaultSiteSettings['countryId'])) {
-            $defaultSiteSettings['countryId'] = $this->defaultCountryIso3;
-        }
-
-        return $this->prepareSiteData(
-            $defaultSiteSettings,
-            $createdByUserId,
-            $createdReason
+        $domain->setDomainName(
+            $domainName
         );
+
+        // @todo Get any other properties and set them
+
+        return $domain;
     }
 
     /**
-     * @param array  $defaultSiteSettings
-     * @param string $author
-     * @param string $createdByUserId
-     * @param string $createdReason
+     * @param string $countryIso3
      *
-     * @return array|mixed
+     * @return null|Country
      */
-    public function getDefaultSitePageSettings(
-        array $defaultSiteSettings,
-        string $author,
-        string $createdByUserId,
-        string $createdReason
+    protected function buildCountry(
+        string $countryIso3
     ) {
-        $pagesData = (array_key_exists('pages', $defaultSiteSettings) ? $defaultSiteSettings['pages'] : []);
+        $country = $this->findCountryByIso3->__invoke(
+            $countryIso3
+        );
 
-        // Set the author for each
-        foreach ($pagesData as $key => $pageData) {
-            $pagesData[$key]['createdByUserId'] = $createdByUserId;
-            $pagesData[$key]['createdReason']
-                = 'Default page creation in ' . get_class($this) . ' for: ' . $createdReason;
-            $pagesData[$key]['author'] = $author;
+        if (empty($country)) {
+            throw new CountryNotFoundException(
+                "Country {$countryIso3} could not be found."
+            );
         }
 
-        return $pagesData;
+        return $country;
     }
 
     /**
-     * @param Site   $site
-     * @param string $createdByUserId
-     * @param string $createdReason
-     * @param array  $pagesData
-     * @param bool   $doFlush
+     * @param string $languageIso6392t
+     *
+     * @return null|\Rcm\Entity\Language
+     */
+    protected function buildLanguage(
+        string $languageIso6392t
+    ) {
+        $language = $this->findLanguageByIso6392t->__invoke(
+            $languageIso6392t
+        );
+
+        if (empty($language)) {
+            throw new LanguageNotFoundException(
+                "Language {$language} could not be found."
+            );
+        }
+
+        return $language;
+    }
+
+    /**
+     * @param array $properties
      *
      * @return void
      * @throws \Exception
      */
-    protected function createPagePlugins(
-        Site $site,
-        string $createdByUserId,
-        string $createdReason = Tracking::UNKNOWN_REASON,
-        $pagesData = [],
-        $doFlush = true
-    ) {
-        $pages = [];
-        $pageRevisions = [];
+    protected function assertValidProperties(array $properties)
+    {
+        $domainName = Options::get(
+            $properties,
+            self::PROPERTY_HOST
+        );
 
-        foreach ($pagesData as $pageName => $pageData) {
-            if (empty($pageData['plugins'])) {
-                continue;
-            }
-
-            $page = $this->pageRepository->getPageByName($site, $pageData['name']);
-
-            if (empty($page)) {
-                continue;
-            }
-
-            $page->setModifiedByUserId(
-                $createdByUserId,
-                $createdReason
-            );
-
-            $pages[] = $page;
-
-            $pageRevision = $page->getPublishedRevision();
-
-            if (empty($pageRevision)) {
-                throw new \Exception(
-                    "Could not find published revision for page {$page->getPageId()}"
-                );
-            }
-
-            foreach ($pageData['plugins'] as $pluginData) {
-                $pluginInstance = $this->pluginInstanceRepository->createPluginInstance(
-                    $pluginData,
-                    $site,
-                    $createdByUserId,
-                    $createdReason,
-                    null,
-                    $doFlush
-                );
-
-                $pluginData['pluginInstanceId'] = $pluginInstance->getInstanceId();
-
-                $wrapper = $this->pluginWrapperRepository->savePluginWrapper(
-                    $pluginData,
-                    $site,
-                    $createdByUserId,
-                    $createdReason,
-                    null,
-                    $doFlush
-                );
-
-                $pageRevision->addPluginWrapper($wrapper);
-
-                $pageRevision->setModifiedByUserId(
-                    $createdByUserId,
-                    $createdReason
-                );
-
-                $this->entityManager->persist($pageRevision);
-
-                $pageRevisions[] = $pageRevision;
-            }
+        if (empty($domainName)) {
+            throw new PropertyMissing('Host (domain name) is required to create site');
         }
 
-        if ($doFlush) {
-            $this->entityManager->flush($pages);
-            $this->entityManager->flush($pageRevisions);
+        $languageIso9392t = Options::get(
+            $properties,
+            self::PROPERTY_LANGUAGE_ISO_939_2T
+        );
+
+        if (empty($languageIso9392t)) {
+            throw new PropertyMissing('LanguageIso9392t code is required to create site');
+        }
+
+        $countryIso3 = Options::get(
+            $properties,
+            self::PROPERTY_COUNTRY_ISO3
+        );
+
+        if (empty($countryIso3)) {
+            throw new PropertyMissing('CountryIso3 code is required to create site');
+        }
+
+        $siteLayout = Options::get(
+            $properties,
+            self::PROPERTY_LAYOUT
+        );
+
+        if (empty($siteLayout)) {
+            throw new PropertyMissing('Layout is required to create site');
+        }
+
+        $title = Options::get(
+            $properties,
+            self::PROPERTY_TITLE
+        );
+
+        if (empty($title)) {
+            throw new PropertyMissing('Title is required to create site');
         }
     }
 }
