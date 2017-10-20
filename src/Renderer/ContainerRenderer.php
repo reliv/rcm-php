@@ -216,7 +216,7 @@ class ContainerRenderer
         $pageContainer = false
     ) {
 
-        $html = '<div class="container-fluid rcmContainer section-' . $containerName . '"'
+        $html = '<div class="container-fluid rcmContainer section-container id-' . $containerName . '"'
             . ' data-containerId="' . $containerName . '"'
             . ' data-containerRevision="'
             . $revisionId
