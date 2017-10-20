@@ -79,7 +79,7 @@ class CreateSite
      * @return Site
      */
     public function __invoke(
-        array $properties = [],
+        array $properties,
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON,
         array $options = []
