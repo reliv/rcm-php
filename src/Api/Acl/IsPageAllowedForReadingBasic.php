@@ -39,7 +39,7 @@ class IsPageAllowedForReadingBasic implements IsPageAllowedForReading
     ):bool {
         $resourceId = $this->resourceName->get(
             ResourceName::RESOURCE_SITES,
-            $page->getSite()->getSiteId(),
+            $page->getSiteId(),
             ResourceName::RESOURCE_PAGES,
             $page->getPageType(),
             $page->getName()
