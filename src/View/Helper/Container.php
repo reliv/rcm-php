@@ -216,7 +216,7 @@ class Container extends AbstractHelper
         $pluginsHtml,
         $pageContainer = false
     ) {
-        $html = '<div class="container-fluid rcmContainer section-container ' . $containerName . '"'
+        $html = '<div class="container-fluid rcmContainer section-container"'
             . ' data-containerId="' . $containerName . '"'
             . ' data-containerRevision="'
             . $revisionId
