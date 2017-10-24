@@ -30,7 +30,7 @@ class FindDomainByName
      * @param string $domainName
      * @param array  $options
      *
-     * @return Domain[]
+     * @return Domain|null
      */
     public function __invoke(
         string $domainName,
