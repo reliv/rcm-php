@@ -122,7 +122,7 @@ var RcmAvailablePluginsMenu = {
                             outerContainer.addClass(colClass);
                             outerContainer.attr(
                                 'data-rcmPluginDefaultClass',
-                                'rcmPlugin ' + pluginInfo.name
+                                'content-block rcmPlugin ' + pluginInfo.name
                             );
                             outerContainer.attr(
                                 'editing',
@@ -146,7 +146,7 @@ var RcmAvailablePluginsMenu = {
                             );
                             outerContainer.appendTo(initialState);
 
-                            var innerContainer = $('<div class="rcmPluginContainer">');
+                            var innerContainer = $('<div class="content-block-container rcmPluginContainer">');
                             innerContainer.appendTo(outerContainer);
                         }
                     );
