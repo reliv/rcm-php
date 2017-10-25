@@ -216,7 +216,7 @@ class Container extends AbstractHelper
         $pluginsHtml,
         $pageContainer = false
     ) {
-        $html = '<div class="container-fluid rcmContainer section-container"'
+        $html = '<div class="content-container container-fluid rcmContainer"'
             . ' data-containerId="' . $containerName . '"'
             . ' data-containerRevision="'
             . $revisionId
@@ -306,10 +306,16 @@ class Container extends AbstractHelper
         }
 
         $html
-            = '<div class="rcmPlugin ' . $plugin->getPlugin() . $displayName
+            = '<div class="content-block rcmPlugin ' . $plugin->getPlugin() . $displayName
             . ' ' . $pluginWrapper->getColumnClass() . '"'
+            . ' block-name="' . $plugin->getPlugin() . '"'
+            . ' default-class="content-block rcmPlugin ' . $plugin->getPlugin() . '"'
+            . ' column-class="' . $pluginWrapper->getColumnClass() . '"'
+            . ' row-number="' . $pluginWrapper->getRowNumber() . '"'
+            . ' render-order="' . $pluginWrapper->getRenderOrder() . '"'
+            . ' instance-id="' . $plugin->getInstanceId() . '"'
             . ' data-rcmPluginName="' . $plugin->getPlugin() . '"'
-            . ' data-rcmPluginDefaultClass="rcmPlugin ' . $plugin->getPlugin()
+            . ' data-rcmPluginDefaultClass="content-block rcmPlugin ' . $plugin->getPlugin()
             . $displayName . '"'
             . ' data-rcmPluginColumnClass="' . $pluginWrapper->getColumnClass()
             . '"'
@@ -326,7 +332,7 @@ class Container extends AbstractHelper
             . ' data-block-editor="' . $blockConfig->getEditor() . '"'
             . '>';
 
-        $html .= '<div class="rcmPluginContainer">';
+        $html .= '<div class="content-block-container rcmPluginContainer">';
 
         $html .= $plugin->getRenderedHtml();
 
