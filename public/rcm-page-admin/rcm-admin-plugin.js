@@ -118,28 +118,41 @@ var RcmAdminPlugin = function (
     /**
      * getInstanceConfig
      * @param onComplete
+     *
+     * @return {Promise}
      */
     self.getInstanceConfig = function (onComplete) {
         if (self.instanceConfig && self.defaultInstanceConfig) {
-            //This path needed for preview to work
-            if (typeof onComplete === 'function') {
-                onComplete(self.instanceConfig, self.defaultInstanceConfig);
-            }
-        } else {
-            self.model.getInstanceConfig(
-                self.container.id,
-                self.id,
-                function (instanceConfig, defaultInstanceConfig) {
-
-                    self.instanceConfig = instanceConfig;
-                    self.defaultInstanceConfig = defaultInstanceConfig;
+            // This path needed for preview to work
+            return new Promise(
+                function (resolve, reject) {
+                    resolve(self.instanceConfig, self.defaultInstanceConfig);
 
                     if (typeof onComplete === 'function') {
-                        onComplete(instanceConfig, defaultInstanceConfig);
+                        onComplete(self.instanceConfig, self.defaultInstanceConfig);
                     }
                 }
             );
         }
+
+        return new Promise(
+            function (resolve, reject) {
+                self.model.getInstanceConfig(
+                    self.container.id,
+                    self.id,
+                    function (instanceConfig, defaultInstanceConfig) {
+                        self.instanceConfig = instanceConfig;
+                        self.defaultInstanceConfig = defaultInstanceConfig;
+
+                        resolve(instanceConfig, defaultInstanceConfig);
+
+                        if (typeof onComplete === 'function') {
+                            onComplete(instanceConfig, defaultInstanceConfig);
+                        }
+                    }
+                );
+            }
+        );
     };
 
     /**
@@ -179,32 +192,63 @@ var RcmAdminPlugin = function (
 
     /**
      * getSaveData
+     *
      * @param onComplete
+     * @return {Promise}
      */
     self.getSaveData = function (onComplete) {
-
-        var data = self.getData();
-
         var pluginObject = self.getPluginObject();
 
-        data.saveData = {};
+        var saveData = {};
 
         if (pluginObject.getSaveData) {
-
-            var saveData = pluginObject.getSaveData();
-
-            jQuery.extend(data.saveData, saveData);
+            saveData = pluginObject.getSaveData();
         }
+
+        if (saveData instanceof Promise) {
+            return new Promise(
+                function (resolve, reject) {
+                    saveData.then(
+                        function (saveData) {
+                            var pluginData = self.buildSaveData(saveData);
+                            resolve(pluginData);
+                            // @BC
+                            if (typeof onComplete === 'function') {
+                                onComplete(self);
+                            }
+                        }
+                    )
+                }
+            );
+        }
+
+        return new Promise(
+            function (resolve, reject) {
+                var pluginData = self.buildSaveData(saveData);
+                resolve(pluginData);
+                // @BC
+                if (typeof onComplete === 'function') {
+                    onComplete(self);
+                }
+            }
+        );
+    };
+
+    /**
+     * @param saveData
+     */
+    self.buildSaveData = function (saveData) {
+        var pluginData = self.getData();
+
+        pluginData.saveData = {};
+
+        jQuery.extend(pluginData.saveData, saveData);
 
         var editorData = self.getEditorData();
 
-        jQuery.extend(data.saveData, editorData);
+        jQuery.extend(pluginData.saveData, editorData);
 
-        if (typeof onComplete === 'function') {
-            onComplete(self);
-        }
-
-        return data;
+        return pluginData;
     };
 
     /**
@@ -287,6 +331,7 @@ var RcmAdminPlugin = function (
     };
 
     /**
+     * @todo return {Promise}
      * prepareEditors
      * @param onComplete
      */
@@ -322,6 +367,7 @@ var RcmAdminPlugin = function (
     };
 
     /**
+     * @todo return {Promise}
      * remove
      * @param onComplete
      */
@@ -386,6 +432,7 @@ var RcmAdminPlugin = function (
     };
 
     /**
+     * @todo return {Promise}
      * enableArrange
      * @param onComplete
      */
@@ -400,6 +447,7 @@ var RcmAdminPlugin = function (
     };
 
     /**
+     * @todo return {Promise}
      * disableArrange
      * @param onComplete
      */
@@ -413,6 +461,7 @@ var RcmAdminPlugin = function (
     };
 
     /**
+     * @todo return {Promise}
      * updateView - ONLY use this if needed - may cause issues with ng-repeat and possibly other
      * @param elm
      * @param onComplete
@@ -441,6 +490,7 @@ var RcmAdminPlugin = function (
     };
 
     /**
+     * @todo return {Promise}
      * Asks the plugin edit controller for its instance config, then has
      * the server re-render the plugin. This is useful for previewing
      * changes to plugins without having to save the page.
@@ -472,6 +522,7 @@ var RcmAdminPlugin = function (
     };
 
     /**
+     * @todo return {Promise}
      * pluginReady - trigger post plugin ready actions/ DOM parsing
      */
     self.pluginReady = function (onComplete) {
@@ -524,6 +575,7 @@ var RcmAdminPlugin = function (
     };
 
     /**
+     * @todo return {Promise}
      * onInitComplete
      */
     self.onInitComplete = function (onComplete) {
@@ -539,6 +591,7 @@ var RcmAdminPlugin = function (
     };
 
     /**
+     * @todo return {Promise}
      * init
      */
     self.init = function (onComplete) {
