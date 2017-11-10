@@ -501,20 +501,24 @@ var RcmAdminPlugin = function (
 
         var name = self.model.getName(pluginElm);
         var pluginContainer = self.model.getPluginContainer(pluginElm);
-        self.instanceConfig = self.getSaveData().saveData;
-        // @todo This should be in a model
-        $.post(
-            '/rcm/core/rpc/render-plugin-instance-preview',
-            {
-                pluginType: name,
-                instanceId: id,
-                instanceConfig: self.instanceConfig
-            },
-            function (data) {
-                pluginContainer.html(data.html);
-                self.updateView(
-                    pluginContainer, function () {
-                        self.initEdit(onComplete, true);
+        self.getSaveData().then(
+            function (pluginData) {
+                self.instanceConfig = pluginData.saveData;
+                // @todo This should be in a model
+                jQuery.post(
+                    '/rcm/core/rpc/render-plugin-instance-preview',
+                    {
+                        pluginType: name,
+                        instanceId: id,
+                        instanceConfig: self.instanceConfig
+                    },
+                    function (data) {
+                        pluginContainer.html(data.html);
+                        self.updateView(
+                            pluginContainer, function () {
+                                self.initEdit(onComplete, true);
+                            }
+                        );
                     }
                 );
             }
