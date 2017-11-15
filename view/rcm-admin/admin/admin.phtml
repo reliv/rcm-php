@@ -31,7 +31,6 @@ $this->headScript()->appendFile(
     . '/modules/rcm-admin/jquery-context-menu/jquery.ui.position.js'
 );
 
-
 $layout = $this->layout();
 
 /** @var \Rcm\Entity\Page $page */
@@ -43,29 +42,22 @@ $site = $layout->site;
 /** @var array $requestedPageData */
 $requestedPageData = $layout->requestedPageData;
 
-$revisionId = '';
-$revision = $page->getCurrentRevision();
-if($revision instanceof \Rcm\Entity\Revision) {
-    $revisionId = $revision->getRevisionId();
-}
+$getPageData = new \RcmAdmin\Api\GetPageData();
 
-$pageData = [
-    'site' => [
-        'id' => $site->getSiteId(),
-        'title' => $site->getSiteTitle(),
-    ],
-    'page' => [
-        'revision' => $revisionId,
-        'type' => $page->getPageType(),
-        'name' => $page->getName(),
-        'id' => $page->getPageId(),
-        'title' => $page->getPageTitle(),
-        'keywords' => $page->getKeywords(),
-        'description' => $page->getDescription(),
-        'siteId' => $site->getSiteId(),
-    ],
-    'requestedPage' => $requestedPageData,
-];
+$pageData = $getPageData->__invoke(
+    $page,
+    $site,
+    $requestedPageData
+);
+
+$revision = null;
+$revisionId = '';
+if (!empty($page)) {
+    $revision = $page->getCurrentRevision();
+    if ($revision instanceof \Rcm\Entity\Revision) {
+        $revisionId = $revision->getRevisionId();
+    }
+}
 
 $this->headMeta()->setProperty(
     'rcm:page',
