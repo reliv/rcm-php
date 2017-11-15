@@ -658,6 +658,7 @@ return [
                     RcmUser\Service\RcmUserService::class,
                 ],
             ],
+            \RcmAdmin\Api\GetPageData::class => [],
         ],
         'factories' => [
             RcmAdmin\EventListener\DispatchListener::class
