@@ -239,11 +239,13 @@ var RcmAdminViewModel = function (config, model, page) {
             );
 
             var rcmContainerMenuList = jQuery(
+                ' <div>' +
                 '  <div class="rcm-plugin-title">' + displayName + '</div>' +
                 '  <ul>' +
                 '   <li><a href="#" class="rcmDeletePluginMenuItem">Delete Plugin</a> </li>' +
                 '   <li><a href="#" class="rcmResetSizePluginMenuItem">Reset Size</a> </li>' +
-                '  </ul>'
+                '  </ul>' +
+                ' </div>'
             );
 
             var rcmContainerMenu = jQuery(
@@ -270,7 +272,7 @@ var RcmAdminViewModel = function (config, model, page) {
                         menuOptionsElm.append(
                             menuOptionsAElm
                         );
-                        rcmContainerMenuList.append(
+                        rcmContainerMenuList.find('ul').append(
                             menuOptionsElm
                         );
                     }
