@@ -33,7 +33,7 @@ class FindPageById
      * @return null|Page
      */
     public function __invoke(
-        int $id,
+        $id,
         array $options = []
     ) {
         return $this->repository->find($id);

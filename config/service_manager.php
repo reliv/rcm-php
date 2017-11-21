@@ -37,6 +37,15 @@ return [
         \Rcm\Api\Acl\IsUserLoggedIn::class
         => \Rcm\Api\Acl\IsUserLoggedInBasicFactory::class,
 
+        \Rcm\Api\Repository\Container\FindContainer::class
+        => \Rcm\Api\Repository\Container\FindContainerFactory::class,
+
+        \Rcm\Api\Repository\Container\FindContainerPluginInstance::class
+        => \Rcm\Api\Repository\Container\FindContainerPluginInstanceFactory::class,
+
+        \Rcm\Api\Repository\Container\FindContainerPluginInstanceConfig::class
+        => \Rcm\Api\Repository\Container\FindContainerPluginInstanceConfigFactory::class,
+
         \Rcm\Api\Repository\Container\FindContainers::class
         => \Rcm\Api\Repository\Container\FindContainersFactory::class,
 
