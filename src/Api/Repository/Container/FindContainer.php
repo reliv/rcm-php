@@ -1,17 +1,17 @@
 <?php
 
-namespace Rcm\Api\Repository\Redirect;
+namespace Rcm\Api\Repository\Container;
 
 use Doctrine\ORM\EntityManager;
-use Rcm\Entity\Redirect;
+use Rcm\Entity\Container;
 
 /**
  * @author James Jervis - https://github.com/jerv13
  */
-class FindRedirect
+class FindContainer
 {
     /**
-     * @var \Rcm\Repository\Redirect
+     * @var \Rcm\Repository\Container
      */
     protected $repository;
 
@@ -22,7 +22,7 @@ class FindRedirect
         EntityManager $entityManager
     ) {
         $this->repository = $entityManager->getRepository(
-            Redirect::class
+            Container::class
         );
     }
 
@@ -30,7 +30,7 @@ class FindRedirect
      * @param int   $id
      * @param array $options
      *
-     * @return null|Redirect
+     * @return null|Container
      */
     public function __invoke(
         $id,

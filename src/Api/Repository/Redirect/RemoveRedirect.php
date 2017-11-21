@@ -33,7 +33,7 @@ class RemoveRedirect
      * @return bool
      */
     public function __invoke(
-        int $id,
+        $id,
         string $modifiedByUserId,
         string $modifiedReason,
         array $options = []

@@ -37,7 +37,7 @@ class UpdateRedirect
      * @return null|Redirect
      */
     public function __invoke(
-        int $id,
+        $id,
         array $redirectData,
         string $modifiedByUserId,
         string $modifiedReason,
