@@ -62,9 +62,10 @@ class InstanceConfigApiController extends AbstractRestfulController
         $pluginMgr = $this->getServiceLocator()
             ->get('Rcm\Service\PluginManager');
         $defaultInstanceCfg = $pluginMgr->getDefaultInstanceConfig($pluginType);
-        if (empty($defaultInstanceCfg)) {
+        if (!is_array($defaultInstanceCfg)) {
             return $this->notFoundAction();
         }
+
         if ($instanceId > 0) {
             try {
                 $instanceConfig = $pluginMgr->getInstanceConfig($instanceId);
