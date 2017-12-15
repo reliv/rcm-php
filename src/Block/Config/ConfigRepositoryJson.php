@@ -53,9 +53,8 @@ class ConfigRepositoryJson extends ConfigRepositoryArray implements ConfigReposi
     }
 
     /**
-     * hasCache
-     *
      * @return bool
+     * @throws \Zend\Cache\Exception\ExceptionInterface
      */
     protected function hasCache()
     {
@@ -63,9 +62,8 @@ class ConfigRepositoryJson extends ConfigRepositoryArray implements ConfigReposi
     }
 
     /**
-     * getCache
-     *
      * @return mixed
+     * @throws \Zend\Cache\Exception\ExceptionInterface
      */
     protected function getCache()
     {
@@ -73,11 +71,10 @@ class ConfigRepositoryJson extends ConfigRepositoryArray implements ConfigReposi
     }
 
     /**
-     * setCache
-     *
-     * @param array $configs
+     * @param $configs
      *
      * @return void
+     * @throws \Zend\Cache\Exception\ExceptionInterface
      */
     protected function setCache($configs)
     {
@@ -85,9 +82,8 @@ class ConfigRepositoryJson extends ConfigRepositoryArray implements ConfigReposi
     }
 
     /**
-     * getConfigs
-     *
      * @return array|mixed
+     * @throws \Zend\Cache\Exception\ExceptionInterface
      */
     protected function getConfigs()
     {
@@ -115,11 +111,10 @@ class ConfigRepositoryJson extends ConfigRepositoryArray implements ConfigReposi
     }
 
     /**
-     * readConfigs
-     *
      * @param array $blockPaths
      *
      * @return array
+     * @throws \Exception
      */
     protected function readConfigs(array $blockPaths)
     {
@@ -128,12 +123,31 @@ class ConfigRepositoryJson extends ConfigRepositoryArray implements ConfigReposi
         foreach ($blockPaths as $blockPath) {
             $pluginDir = $blockPath;
             $configFileName = $pluginDir . '/block.json';
+            $this->assertPathValid($configFileName);
             $configFileContents = file_get_contents($configFileName);
             $config = json_decode($configFileContents, true, 512, JSON_BIGINT_AS_STRING);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Received invalid JSON for: ' . $configFileName);
+            }
             $config['directory'] = realpath($pluginDir);
             $pluginConfigs[$config['name']] = $config;
         }
 
         return $pluginConfigs;
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return void
+     * @throws \Exception
+     */
+    protected function assertPathValid(string $path)
+    {
+        if(empty(realpath($path))) {
+            throw new \Exception(
+                'Path is not valid: ' . $path
+            );
+        }
     }
 }
