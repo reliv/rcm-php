@@ -52,21 +52,20 @@ class InstanceRepositoryBc extends AbstractRepository implements InstanceReposit
      *
      * @param $id
      * @param $config
-     * @param $data
+     * @param $data // NOT USED
      *
      * @return Instance
      */
     public function getNew($id, $name, $config, $data)
     {
-        return new InstanceBasic($id, $name, $config, $data);
+        return new InstanceBasic($id, $name, $config);
     }
 
     /**
-     * findById
+     * @param int $id
      *
-     * @param $id
-     *
-     * @return null|Instance
+     * @return null|Instance|\stdClass
+     * @throws \Exception
      */
     public function findById($id)
     {
@@ -78,7 +77,16 @@ class InstanceRepositoryBc extends AbstractRepository implements InstanceReposit
         }
 
         $configFromDb = $pluginInstance->getInstanceConfig();
-        $defaultConfig = $this->blockConfigRepository->findById($pluginInstance->getPlugin())->getDefaultConfig();
+
+        $blockConfig = $this->blockConfigRepository->findById($pluginInstance->getPlugin());
+
+        if (empty($blockConfig)) {
+            throw new \Exception(
+                'Block Config not found for: ' . $pluginInstance->getPlugin()
+            );
+        }
+
+        $defaultConfig = $blockConfig->getDefaultConfig();
         $mergedConfig = $this->instanceConfigMerger->__invoke($defaultConfig, $configFromDb);
 
         $blockInstance = $this->getNew(
