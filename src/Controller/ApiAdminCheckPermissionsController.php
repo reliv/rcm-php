@@ -15,7 +15,7 @@ use RcmUser\User\Entity\UserRoleProperty;
  * @category  Reliv
  * @package   RcmAdmin\Controller
  * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2014 Reliv International
+ * @copyright 2017 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
