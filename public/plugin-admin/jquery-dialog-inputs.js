@@ -567,8 +567,6 @@ var inputImageEventsDelegated = false;
                 throw '"choices" field missing from options.'
             }
 
-            console.log(options);
-
             return selectFieldFunction(
                 description,
                 options['options'],
