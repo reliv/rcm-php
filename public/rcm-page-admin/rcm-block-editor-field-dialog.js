@@ -73,7 +73,8 @@ RcmBlockEditorFieldDialogDialog = function () {
             inputElements[field.name] = jQuery.dialogIn(
                 field.type,
                 field.label,
-                instanceConfig[field.name]
+                instanceConfig[field.name],
+                field.options
             );
             form.append(inputElements[field.name]);
         });
