@@ -753,6 +753,7 @@ var RcmAdminModel = function (
             return elms;
         },
         /**
+         * @todo return {Promise}
          * getInstanceConfig
          * @param containerId
          * @param pluginId

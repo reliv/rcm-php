@@ -112,46 +112,60 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
                 // loop containers and fire saves... aggregate data and sent to server
                 data.plugins = {};
 
+                var promiseArray = [];
+
                 jQuery.each(
                     self.plugins,
                     function (key, plugin) {
-                        data.plugins[key] = plugin.getSaveData();
+                        promiseArray.push(
+                            plugin.getSaveData().then(
+                                function (pluginData) {
+                                    data.plugins[key] = pluginData;
+                                }
+                            )
+                        );
                     }
                 );
 
-                jQuery.post(
-                    self.saveUrl + '/' + data.type + '/' + data.name + '/' + data.revision,
-                    data,
-                    function (msg) {
-                        self.setLoading(
-                            'RcmAdminPage',
-                            1
-                        );
-                        //self.events.trigger('alert', {type:'success',message: 'Page saved'});
-                        if (msg.redirect) {
-                            window.location = msg.redirect;
-                        } else {
+                return Promise.all(
+                    promiseArray
+                ).then(
+                    function () {
+                        jQuery.post(
+                            self.saveUrl + '/' + data.type + '/' + data.name + '/' + data.revision,
+                            data,
+                            function (msg) {
+                                self.setLoading(
+                                    'RcmAdminPage',
+                                    1
+                                );
+                                //self.events.trigger('alert', {type:'success',message: 'Page saved'});
+                                if (msg.redirect) {
+                                    window.location = msg.redirect;
+                                } else {
 
-                            self.events.trigger(
-                                'alert', {
-                                    type: 'warning',
-                                    message: msg
+                                    self.events.trigger(
+                                        'alert', {
+                                            type: 'warning',
+                                            message: msg
+                                        }
+                                    );
                                 }
-                            );
-                        }
 
-                    },
-                    'json'
-                ).fail(
-                    function (msg) {
-                        self.setLoading(
-                            'RcmAdminPage',
-                            1
-                        );
-                        self.events.trigger(
-                            'alert', {
-                                type: 'warning',
-                                message: msg
+                            },
+                            'json'
+                        ).fail(
+                            function (msg) {
+                                self.setLoading(
+                                    'RcmAdminPage',
+                                    1
+                                );
+                                self.events.trigger(
+                                    'alert', {
+                                        type: 'warning',
+                                        message: msg
+                                    }
+                                );
                             }
                         );
                     }
@@ -257,6 +271,7 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
     };
 
     /**
+     * @todo return {Promise}
      * registerObjects
      * - Update object list based on DOM state
      * - should be called after DOM update

@@ -1,4 +1,3 @@
-
 /**
  *
  * @param {RcmAdminPlugin} pluginHandler
@@ -6,16 +5,26 @@
  * @constructor
  */
 var RcmBlockEditorFieldDialog = function (pluginHandler, fields) {
+
+    var self = this;
+
     var instanceId = pluginHandler.getInstanceId();
-    var instanceConfig;//instanceConfig gets filled in via AJAX call below
+
+    //instanceConfig gets filled in via AJAX call below
+    var instanceConfig;
 
     var dialog = new RcmBlockEditorFieldDialogDialog();
 
     function showEditDialog() {
-        dialog.show(instanceConfig, fields, function (newInstanceConfig) {
-            this.instanceConfig = newInstanceConfig;
-            pluginHandler.preview();//re-render the plugin with it's new instance config
-        })
+        dialog.show(
+            instanceConfig,
+            fields,
+            function (newInstanceConfig) {
+                instanceConfig = newInstanceConfig;
+                //re-render the plugin with it's new instance config
+                pluginHandler.preview();
+            }
+        )
     }
 
     // console.log(container);
@@ -30,22 +39,24 @@ var RcmBlockEditorFieldDialog = function (pluginHandler, fields) {
         container.find('a').attr('href', 'javascript:void(0)');
 
         //Add right click menu
-        $.contextMenu({
-            selector: rcm.getPluginContainerSelector(instanceId),
-            //Here are the right click menu options
-            items: {
-                edit: {
-                    name: 'Edit Properties',
-                    icon: 'edit',
-                    callback: function () {
-                        showEditDialog();
+        $.contextMenu(
+            {
+                selector: rcm.getPluginContainerSelector(instanceId),
+                //Here are the right click menu options
+                items: {
+                    edit: {
+                        name: 'Edit Properties',
+                        icon: 'edit',
+                        callback: function () {
+                            showEditDialog();
+                        }
                     }
                 }
             }
-        });
+        );
     }
 
-    this.initEdit = function () {
+    self.initEdit = function () {
         pluginHandler.getInstanceConfig(
             function (instanceConfigFromServer) {
                 instanceConfig = instanceConfigFromServer;
@@ -54,19 +65,17 @@ var RcmBlockEditorFieldDialog = function (pluginHandler, fields) {
         );
     };
 
-    this.getSaveData = function () {
+    self.getSaveData = function () {
         return instanceConfig;
     };
-
-    //Fix "this" var in these functions
-    this.initEdit = this.initEdit.bind(this);
-    this.getSaveData = this.getSaveData.bind(this);
 };
 
 RcmBlockEditorFieldDialogDialog = function () {
+    var self = this;
+
     var form = $('<form class="simple"></form>');
 
-    this.show = function (instanceConfig, fields, callback) {
+    self.show = function (instanceConfig, fields, callback) {
         form.html('<span></span>');//Clear any html from previous usage of the form;
         var inputElements = {};
         fields.forEach(function (field) {
@@ -74,11 +83,10 @@ RcmBlockEditorFieldDialogDialog = function () {
                 field.type,
                 field.label,
                 instanceConfig[field.name],
-                field.options
-            );
+            field.options);
             form.append(inputElements[field.name]);
-        });
-        form.dialog({
+        }
+        );form.dialog({
                 title: 'Properties',
                 modal: true,
                 width: 620,
@@ -87,9 +95,11 @@ RcmBlockEditorFieldDialogDialog = function () {
                         $(this).dialog("close");
                     },
                     Ok: function () {
-                        fields.forEach(function (field) {
-                            instanceConfig[field.name] = inputElements[field.name].val();
-                        });
+                        fields.forEach(
+                            function (field) {
+                                instanceConfig[field.name] = inputElements[field.name].val();
+                            }
+                        );
 
                         callback(instanceConfig);
 

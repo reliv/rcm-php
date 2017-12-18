@@ -12,8 +12,15 @@ var RcmAdminPluginEditJs = function (pluginHandler) {
         //console.warn('initEdit: no edit js object found for '+pluginHandler.getName()+' - using default for: ' + self.id);
     };
 
+    /**
+     * @return {Promise}|{*}
+     */
     self.getSaveData = function () {
         //console.warn('getSaveData: no edit js object found '+pluginHandler.getName()+' - using default for: ' + self.id);
-        return {};
+        return new Promise(
+            function (resolve, reject) {
+                resolve({});
+            }
+        );
     };
 };
