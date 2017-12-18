@@ -190,10 +190,10 @@ var inputImageEventsDelegated = false;
         if (height < 420)
             height = 420;
 
-        var top = parseInt(( window.screen.height - height ) / 2, 10),
-            left = parseInt(( window.screen.width - width ) / 2, 10);
+        var top = parseInt((window.screen.height - height) / 2, 10),
+            left = parseInt((window.screen.width - width) / 2, 10);
 
-        options = ( options || 'location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes' ) +
+        options = (options || 'location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes') +
             ',width=' + width +
             ',height=' + height +
             ',top=' + top +
@@ -220,6 +220,82 @@ var inputImageEventsDelegated = false;
         }
 
         return true;
+    };
+
+    var selectFieldFunction = function (description, choices, value, allowCustomValues) {
+
+        //Give it a random name so labels and multi-dialogs work
+        var name = $.fn.generateUUID();
+
+        var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"></p>');
+        var selected;
+
+        if (description) {
+            p.append('<label for="' + name + '">' + description + '</label><br>');
+        }
+
+        var select = $('<select name="' + name + '"><select>');
+
+        if (allowCustomValues) {
+            select.append('<option></option>');
+        }
+
+
+        for (var key in choices) {
+            selected = '';
+            if (key == value) {
+                selected = ' selected="selected"';
+            }
+            select.append('<option value="' + key + '"' + selected + '>' + choices[key] + '</option>')
+        }
+        var inputBox = '';
+
+        if (allowCustomValues) {
+
+            selected = '';
+            var displayNone = ' style="display:none"';
+            var customValue = '';
+
+            if (!(value in choices)) {
+                selected = ' selected="selected"';
+                displayNone = '';
+                customValue = value;
+            }
+
+            select.append('<option class="custom" value="' + customValue + '"' + selected + '>Custom Value</option>');
+            inputBox = $('<input' + displayNone + ' size="80" value="' + customValue + '">');
+        }
+
+        p.append(select);
+        p.append(inputBox);
+
+        //Ensure events are attached for the custom input box
+        if (allowCustomValues) {
+
+            //Hide/show the custom text box if the 'Custom Value' is modded
+            select.change(
+                function (event) {
+                    var select = $(event.target);
+                    var textBox = select.parent().children('input');
+                    if (select.find(':selected').hasClass('custom')) {
+                        textBox.show();
+                    } else {
+                        textBox.hide();
+                    }
+                }
+            );
+
+            //Move any input box input to the select key value
+            inputBox.change(
+                function (event) {
+                    var textBox = $(event.target);
+                    textBox.parent().children('select')
+                        .children('option.custom').val(textBox.val());
+                }
+            );
+        }
+
+        return p;
     };
 
     var methods = {
@@ -472,6 +548,9 @@ var inputImageEventsDelegated = false;
         },
 
         /**
+         * Follows a more standard interface than the normal "select". This makes it compatible
+         * with the newer block system and "field-dialog" editor.
+         *
          * Build html for a select drop down box
          *
          * @param {String} description title to show user
@@ -482,81 +561,34 @@ var inputImageEventsDelegated = false;
          *
          * @return {String}
          */
-        select: function (description, choices, value, allowCustomValues) {
+        selectWithOptions: function (description, value, options) {
 
-            //Give it a random name so labels and multi-dialogs work
-            var name = $.fn.generateUUID();
-
-            var p = $('<p class="dialogElement" data-dialogElementName="' + name + '"></p>');
-            var selected;
-
-            if (description) {
-                p.append('<label for="' + name + '">' + description + '</label><br>');
+            if (!'options' in options) {
+                throw '"choices" field missing from options.'
             }
 
-            var select = $('<select name="' + name + '"><select>');
+            console.log(options);
 
-            if (allowCustomValues) {
-                select.append('<option></option>');
-            }
-
-
-            for (var key in choices) {
-                selected = '';
-                if (key == value) {
-                    selected = ' selected="selected"';
-                }
-                select.append('<option value="' + key + '"' + selected + '>' + choices[key] + '</option>')
-            }
-            var inputBox = '';
-
-            if (allowCustomValues) {
-
-                selected = '';
-                var displayNone = ' style="display:none"';
-                var customValue = '';
-
-                if (!(value in choices)) {
-                    selected = ' selected="selected"';
-                    displayNone = '';
-                    customValue = value;
-                }
-
-                select.append('<option class="custom" value="' + customValue + '"' + selected + '>Custom Value</option>');
-                inputBox = $('<input' + displayNone + ' size="80" value="' + customValue + '">');
-            }
-
-            p.append(select);
-            p.append(inputBox);
-
-            //Ensure events are attached for the custom input box
-            if (allowCustomValues) {
-
-                //Hide/show the custom text box if the 'Custom Value' is modded
-                select.change(
-                    function (event) {
-                        var select = $(event.target);
-                        var textBox = select.parent().children('input');
-                        if (select.find(':selected').hasClass('custom')) {
-                            textBox.show();
-                        } else {
-                            textBox.hide();
-                        }
-                    }
-                );
-
-                //Move any input box input to the select key value
-                inputBox.change(
-                    function (event) {
-                        var textBox = $(event.target);
-                        textBox.parent().children('select')
-                            .children('option.custom').val(textBox.val());
-                    }
-                );
-            }
-
-            return p;
+            return selectFieldFunction(
+                description,
+                options['options'],
+                value,
+                options['allowCustomValues']
+            )
         },
+
+        /**
+         * Build html for a select drop down box
+         *
+         * @param {String} description title to show user
+         * @param {Object} choices options {value: display, value2: display2}
+         * @param {String} [value] current choice key
+         * @param {Boolean} [allowCustomValues] allow user to enter custom values that
+         *                  are no in the select
+         *
+         * @return {String}
+         */
+        select: selectFieldFunction,
 
 
         /**
@@ -876,14 +908,13 @@ var inputImageEventsDelegated = false;
 
 /**
  *
- * @param {String} inputType
- * @param {String} label
- * @param [option1]
- * @param [option2]
- * @param [option3]
- * @return {Object}
+ * @param inputType
+ * @param description
+ * @param value
+ * @param options
+ * @param depricatedUsedToBeOption3
  */
-jQuery.dialogIn = function (inputType, description, value, option2, option3) {
+jQuery.dialogIn = function (inputType, description, value, options, depricatedUsedToBeOption3) {
     return $.fn.dialogIn.apply(this, arguments);
 };
 

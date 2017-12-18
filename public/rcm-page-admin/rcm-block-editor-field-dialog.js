@@ -78,18 +78,15 @@ RcmBlockEditorFieldDialogDialog = function () {
     self.show = function (instanceConfig, fields, callback) {
         form.html('<span></span>');//Clear any html from previous usage of the form;
         var inputElements = {};
-        fields.forEach(
-            function (field) {
-                inputElements[field.name] = jQuery.dialogIn(
-                    field.type,
-                    field.label,
-                    instanceConfig[field.name]
-                );
-                form.append(inputElements[field.name]);
-            }
-        );
-        form.dialog(
-            {
+        fields.forEach(function (field) {
+            inputElements[field.name] = jQuery.dialogIn(
+                field.type,
+                field.label,
+                instanceConfig[field.name],
+            field.options);
+            form.append(inputElements[field.name]);
+        }
+        );form.dialog({
                 title: 'Properties',
                 modal: true,
                 width: 620,

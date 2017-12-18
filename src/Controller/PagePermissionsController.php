@@ -16,7 +16,7 @@ use Zend\View\Model\ViewModel;
  * @category  Reliv
  * @package   RcmAdmin\Controller
  * @author    Inna Davis <idavis@relivinc.com>
- * @copyright 2014 Reliv International
+ * @copyright 2017 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
