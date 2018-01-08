@@ -4,7 +4,7 @@ namespace Rcm\Api\Repository\Page;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Page\PageTypes\PageTypes;
-use Rcm\Repository\Page;
+use Rcm\Entity\Page;
 
 /**
  * @author James Jervis - https://github.com/jerv13
