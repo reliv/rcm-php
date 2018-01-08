@@ -2,11 +2,15 @@
 
 namespace RcmAdmin\Factory;
 
+use Rcm\Api\Repository\Page\FindPage;
+use Rcm\Api\Repository\Page\FindRevisionList;
 use Rcm\Entity\Page;
-use Zend\Navigation\Service\AbstractNavigationFactory;
+use RcmUser\Api\Acl\IsAllowed;
+use RcmUser\Api\GetPsrRequest;
+use Zend\Http\Request;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\RouteStackInterface as Router;
-use Zend\Http\Request;
+use Zend\Navigation\Service\AbstractNavigationFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -24,20 +28,24 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class AdminNavigationFactory extends AbstractNavigationFactory
 {
-    /** @var  \RcmUser\Service\RcmUserService */
-    protected $rcmUserService;
+    /** @var  IsAllowed */
+    protected $isAllowed;
 
     /** @var \Rcm\Entity\Site */
     protected $currentSite;
 
-    /** @var  \Rcm\Repository\Page */
-    protected $pageRepo;
+    /**
+     * @var FindPage
+     */
+    protected $findPage;
+
+    /**
+     * @var FindRevisionList
+     */
+    protected $findRevisionList;
 
     /** @var  \Rcm\Entity\Page */
     protected $page = null;
-
-    /** @var  \Rcm\Acl\CmsPermissionChecks */
-    protected $cmsPermissionChecks;
 
     protected $pageRevision = null;
 
@@ -48,21 +56,17 @@ class AdminNavigationFactory extends AbstractNavigationFactory
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->rcmUserService = $serviceLocator->get(
-            \RcmUser\Service\RcmUserService::class
+        $this->isAllowed = $serviceLocator->get(
+            IsAllowed::class
         );
-        $this->cmsPermissionChecks = $serviceLocator->get(
-            \Rcm\Acl\CmsPermissionChecks::class
-        );
+
         $this->currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
 
         $config = $serviceLocator->get('config');
 
-        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
-        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
+        $this->findPage = $serviceLocator->get(FindPage::class);
 
-        /** @var \Rcm\Repository\Page $pageRepo */
-        $this->pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
+        $this->findRevisionList = $serviceLocator->get(FindRevisionList::class);
 
         $application = $serviceLocator->get('Application');
 
@@ -87,17 +91,15 @@ class AdminNavigationFactory extends AbstractNavigationFactory
         $pageTypeMatch = $routeMatch->getParam('pageType', 'n');
 
         if (!empty($pageMatch)) {
-            $this->page = $this->pageRepo->findOneBy(
-                [
-                    'name' => $pageMatch,
-                    'pageType' => $pageTypeMatch
-                ]
+            $this->page = $this->findPage->__invoke(
+                $this->currentSite->getSiteId(),
+                $pageMatch,
+                $pageTypeMatch
             );
         }
 
         return parent::createService($serviceLocator);
     }
-
 
     /**
      * Get the name of the navigation container
@@ -112,14 +114,13 @@ class AdminNavigationFactory extends AbstractNavigationFactory
     }
 
     /**
-     * Zend Inject Components.
+     * @param array           $pages
+     * @param RouteMatch|null $routeMatch
+     * @param Router|null     $router
+     * @param null            $request
      *
-     * @param array        $pages
-     * @param RouteMatch   $routeMatch
-     * @param Router       $router
-     * @param null|Request $request
-     *
-     * @return mixed
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     protected function injectComponents(
         array $pages,
@@ -183,11 +184,6 @@ class AdminNavigationFactory extends AbstractNavigationFactory
         if (isset($page['acl']) && is_array($page['acl'])
             && !empty($page['acl']['resource'])
         ) {
-            $providerId = null;
-            if (!empty($page['acl']['providerId'])) {
-                $providerId = $page['acl']['providerId'];
-            }
-
             $privilege = null;
             if (!empty($page['acl']['privilege'])) {
                 $privilege = $page['acl']['privilege'];
@@ -227,10 +223,10 @@ class AdminNavigationFactory extends AbstractNavigationFactory
                 );
             }
 
-            if (!$this->rcmUserService->isAllowed(
+            if (!$this->isAllowed->__invoke(
+                GetPsrRequest::invoke(),
                 $resource,
-                $privilege,
-                $providerId
+                $privilege
             )
             ) {
                 return false;
@@ -241,9 +237,10 @@ class AdminNavigationFactory extends AbstractNavigationFactory
     }
 
     /**
-     * Setup Rcm Navigation
-     *
      * @param $page
+     *
+     * @return void
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     protected function setupRcmNavigation(&$page)
     {
@@ -266,11 +263,10 @@ class AdminNavigationFactory extends AbstractNavigationFactory
     }
 
     /**
-     * buildRevisionsNav
-     *
      * @param $page
      *
      * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     protected function buildRevisionsNav(&$page)
     {
@@ -318,7 +314,7 @@ class AdminNavigationFactory extends AbstractNavigationFactory
      * @param $key
      * @param $revision
      *
-     * @return mixed
+     * @return void
      */
     protected function parseRevisionConfigValue(&$value, $key, $revision)
     {
@@ -346,23 +342,17 @@ class AdminNavigationFactory extends AbstractNavigationFactory
     }
 
     /**
-     * Get Draft Revision List
-     *
-     * @return array
-     */
-    /**
-     * getRevisionList
-     *
      * @param bool $published
      * @param int  $limit
      *
      * @return array|mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     protected function getRevisionList(
         $published = false,
         $limit = 10
     ) {
-        $revisions =  $this->pageRepo->getRevisionList(
+        $revisions = $this->findRevisionList->__invoke(
             $this->currentSite->getSiteId(),
             $this->page->getName(),
             $this->page->getPageType(),

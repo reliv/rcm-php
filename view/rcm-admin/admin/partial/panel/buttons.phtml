@@ -3,6 +3,10 @@
 /** @var \Rcm\Entity\Page $page */
 $page = $layout->page;
 
+if (empty($page)) {
+    return;
+}
+
 if (empty($page->getPageId())) {
     return;
 }
