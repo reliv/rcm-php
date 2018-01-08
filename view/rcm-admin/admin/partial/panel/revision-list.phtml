@@ -2,6 +2,10 @@
 /** @var \Rcm\Entity\Page $page */
 $page = $layout->page;
 
+if (empty($page)) {
+    return;
+}
+
 if (!$page->getPageId()) {
     ?>
     <div id="rcmRevisionList" class="container-fluid">
