@@ -11,11 +11,6 @@ use Rcm\Tracking\Model\Tracking;
 use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 
 /**
- * Site Information Entity
- *
- * This object contains a list of layouts for use with the content managment
- * system.
- *
  * @category  Reliv
  * @package   Rcm
  * @author    Westin Shafer <wshafer@relivinc.com>
@@ -33,6 +28,7 @@ use Reliv\RcmApiLib\Model\ApiPopulatableInterface;
 class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Tracking
 {
     const STATUS_ACTIVE = 'A';
+    const DEFAULT_LAYOUT = 'default';
 
     /**
      * @var int Auto-Incremented Primary Key

@@ -46,6 +46,7 @@ class CreateSite
     const DEFAULT_LOGIN_PAGE = '/login';
     const DEFAULT_NOT_AUTHORIZED_PAGE = '/not-authorized';
     const DEFAULT_NOT_FOUND_PAGE = 'not-found';
+    const DEFAULT_THEME_NAME = '';
 
     protected $entityManager;
     protected $findDomainByName;
@@ -77,6 +78,8 @@ class CreateSite
      * @param array  $options
      *
      * @return Site
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     public function __invoke(
         array $properties,
@@ -127,10 +130,19 @@ class CreateSite
             $country
         );
 
+        $newSite->setTheme(
+            Options::get(
+                $properties,
+                self::PROPERTY_THEME_NAME,
+                self::DEFAULT_THEME_NAME
+            )
+        );
+
         $newSite->setSiteLayout(
             Options::get(
                 $properties,
-                self::PROPERTY_LAYOUT
+                self::PROPERTY_LAYOUT,
+                Site::DEFAULT_LAYOUT
             )
         );
 
@@ -306,15 +318,6 @@ class CreateSite
 
         if (empty($countryIso3)) {
             throw new PropertyMissing('CountryIso3 code is required to create site');
-        }
-
-        $siteLayout = Options::get(
-            $properties,
-            self::PROPERTY_LAYOUT
-        );
-
-        if (empty($siteLayout)) {
-            throw new PropertyMissing('Layout is required to create site');
         }
 
         $title = Options::get(
