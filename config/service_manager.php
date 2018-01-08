@@ -103,6 +103,9 @@ return [
         \Rcm\Api\Repository\Page\FindPagesByType::class
         => \Rcm\Api\Repository\Page\FindPagesByTypeFactory::class,
 
+        \Rcm\Api\Repository\Page\FindRevisionList::class
+        => \Rcm\Api\Repository\Page\FindRevisionListFactory::class,
+
         \Rcm\Api\Repository\Page\PageExists::class
         => \Rcm\Api\Repository\Page\PageExistsFactory::class,
 
