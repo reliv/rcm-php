@@ -17,7 +17,7 @@ use Zend\View\Model\JsonModel;
  * @category  Reliv
  * @package   Rcm\Controller
  * @author    author Brian Janish <bjanish@relivinc.com>
- * @copyright 2017 Reliv International
+ * @copyright 2018 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: GIT:
  * @link      https://github.com/reliv

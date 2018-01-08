@@ -15,7 +15,7 @@ use Zend\View\Helper\AbstractHelper;
  * @category  Reliv
  * @package   RcmInstanceConfig\ViewHelper
  * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2017 Reliv International
+ * @copyright 2018 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
