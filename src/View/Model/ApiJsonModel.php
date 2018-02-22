@@ -147,6 +147,12 @@ class ApiJsonModel extends JsonModel
         return Json::encode($result);
     }
 
+    /**
+     * @param array|\ArrayAccess|Traversable $variables
+     * @param bool                           $overwrite
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
     public function setVariables($variables, $overwrite = false)
     {
         if (is_array($variables) || $variables instanceof Traversable) {
