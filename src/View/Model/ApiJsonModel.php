@@ -2,10 +2,10 @@
 
 namespace Rcm\View\Model;
 
-use Zend\View\Model\JsonModel;
 use Traversable;
 use Zend\Json\Json;
 use Zend\Stdlib\ArrayUtils;
+use Zend\View\Model\JsonModel;
 
 /**
  * @deprecated Use rcm-api-lib controller::getApiResponse
@@ -15,13 +15,13 @@ use Zend\Stdlib\ArrayUtils;
  *
  * PHP version 5
  *
- * @category  Reliv
- * @package   moduleNameHere
- * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2017 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: <package_version>
- * @link      https://github.com/reliv
+ * @category   Reliv
+ * @package    moduleNameHere
+ * @author     James Jervis <jjervis@relivinc.com>
+ * @copyright  2017 Reliv International
+ * @license    License.txt New BSD License
+ * @version    Release: <package_version>
+ * @link       https://github.com/reliv
  */
 class ApiJsonModel extends JsonModel
 {
@@ -41,11 +41,11 @@ class ApiJsonModel extends JsonModel
     protected $errors = [];
 
     /**
-     * @param null   $variables
-     * @param mixed|int    $code - 0 for success
-     * @param string $message - General public message for client
-     * @param array  $errors - Example - Pass the messages from input validator
-     * @param null   $options
+     * @param null      $variables
+     * @param mixed|int $code    - 0 for success
+     * @param string    $message - General public message for client
+     * @param array     $errors  - Example - Pass the messages from input validator
+     * @param null      $options
      */
     public function __construct($variables = null, $code = 0, $message = 'OK', $errors = [], $options = null)
     {
@@ -84,7 +84,7 @@ class ApiJsonModel extends JsonModel
      */
     public function setMessage($message)
     {
-        $this->message = (string) $message;
+        $this->message = (string)$message;
     }
 
     /**
@@ -111,13 +111,13 @@ class ApiJsonModel extends JsonModel
      * setError
      *
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return void
      */
     public function setError($name, $value)
     {
-        $name = (string) $name;
+        $name = (string)$name;
         $this->errors[$name] = $value;
     }
 
@@ -141,9 +141,42 @@ class ApiJsonModel extends JsonModel
         }
 
         if (null !== $this->jsonpCallback) {
-            return $this->jsonpCallback.'('.Json::encode($result).');';
+            return $this->jsonpCallback . '(' . Json::encode($result) . ');';
         }
 
         return Json::encode($result);
+    }
+
+    public function setVariables($variables, $overwrite = false)
+    {
+        if (is_array($variables) || $variables instanceof Traversable) {
+            return parent::setVariables($variables, $overwrite);
+        }
+
+        if ($variables instanceof \JsonSerializable) {
+            $variables = $variables->jsonSerialize();
+
+            return parent::setVariables($variables, $overwrite);
+        }
+
+        if (is_object($variables) && method_exists($variables, 'toArray')) {
+            $variables = $variables->toArray();
+
+            return parent::setVariables($variables, $overwrite);
+        }
+
+        if (is_object($variables) && method_exists($variables, '_toArray')) {
+            $variables = $variables->_toArray();
+
+            return parent::setVariables($variables, $overwrite);
+        }
+
+        if (is_object($variables) && method_exists($variables, '__toArray')) {
+            $variables = $variables->__toArray();
+
+            return parent::setVariables($variables, $overwrite);
+        }
+
+        return parent::setVariables($variables, $overwrite);
     }
 }
