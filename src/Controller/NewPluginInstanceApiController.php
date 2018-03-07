@@ -14,7 +14,7 @@ use Zend\View\Helper\HeadScript;
  * @category  Reliv
  * @package   Rcm\Controller
  * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2017 Reliv International
+ * @copyright 2018 Reliv International
  * @license   License.txt New BSD License
  * @version   Release: <package_version>
  * @link      https://github.com/reliv
