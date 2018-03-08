@@ -4,6 +4,7 @@ namespace Rcm\Middleware;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Rcm\Service\LocaleService;
 use Rcm\Service\PhpServer;
 use Rcm\Service\SiteService;
@@ -18,6 +19,8 @@ use Rcm\Service\SiteService;
  */
 class LocaleSetter
 {
+    const ATTRIBUTE_SITE_LOCALE = 'rcm-site-locale';
+
     /**
      * @var SiteService
      */
@@ -29,8 +32,6 @@ class LocaleSetter
     protected $localeService;
 
     /**
-     * LocaleSetter constructor.
-     *
      * @param SiteService   $siteService
      * @param LocaleService $localeService
      */
@@ -43,8 +44,6 @@ class LocaleSetter
     }
 
     /**
-     * getSiteFromRequest
-     *
      * @param RequestInterface $request
      *
      * @return void
@@ -61,20 +60,21 @@ class LocaleSetter
     }
 
     /**
-     * __invoke
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface      $response
+     * @param callable|null          $next
      *
-     * @param RequestInterface  $request
-     * @param ResponseInterface $response
-     * @param callable|null     $next
-     *
-     * @return ResponseInterface
+     * @return mixed
      */
-    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
     {
         $locale = $this->siteService->getCurrentSite()->getLocale();
         // @todo Set from $request site getSiteFromRequest($request)
         $this->localeService->setLocale($locale);
 
-        return $next($request, $response);
+        return $next(
+            $request->withAttribute(self::ATTRIBUTE_SITE_LOCALE, $locale),
+            $response
+        );
     }
 }
