@@ -630,7 +630,7 @@ var inputImageEventsDelegated = false;
             }
 
             var id = $.fn.generateUUID();
-            var div = $('<div id="' + id + '" data-rcm-html-edit>' + value + '</div>');
+            var div = $('<div id="' + id + '" data-rcm-html-edit data-html-editor-attached-toolbar="true" data-html-editor-type="simpleText">' + value + '</div>');
             var p = $(
                 '<p class="dialogElement" data-dialogRichEditId="' + id + '">' +
                 '<label>' + description + '</label><br>' +
