@@ -6,14 +6,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Rcm\Service\RedirectService;
 
-/**
- * Class RedirectCheck
- *
- * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2016 Reliv International
- * @license   License.txt
- * @link      https://github.com/reliv
- */
 class RedirectCheck
 {
     /**
@@ -33,11 +25,13 @@ class RedirectCheck
     }
 
     /**
+     * If there is a redirect in the DB for the request URL, redirect to it.
+     *
      * __invoke
      *
-     * @param RequestInterface  $request
+     * @param RequestInterface $request
      * @param ResponseInterface $response
-     * @param callable|null     $next
+     * @param callable|null $next
      *
      * @return ResponseInterface
      */
@@ -47,8 +41,11 @@ class RedirectCheck
         $redirectUrl = $this->redirectService->getRedirectUrl();
 
         if (!empty($redirect)) {
-            $response = $response->withHeader('Location', $redirectUrl);
-            return $response->withStatus(302);
+            $queryParams = $request->getQueryParams();
+
+            return new RedirectResponse(
+                $redirectUrl . (count($queryParams) ? '?' . http_build_query($queryParams) : null)
+            );
         }
 
         return $next($request, $response);
