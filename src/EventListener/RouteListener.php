@@ -44,10 +44,10 @@ class RouteListener
     /**
      * RouteListener constructor.
      *
-     * @param SiteService           $siteService
-     * @param RedirectService       $redirectService
+     * @param SiteService $siteService
+     * @param RedirectService $redirectService
      * @param DomainRedirectService $domainRedirectService
-     * @param LocaleService         $localeService
+     * @param LocaleService $localeService
      */
     public function __construct(
         SiteService $siteService,
@@ -145,7 +145,14 @@ class RouteListener
             return null;
         }
 
-        header('Location: ' . $redirectUrl, true, 302);
+
+        $queryParams = $event->getRequest()->getQuery()->toArray();
+
+        header(
+            'Location: ' . $redirectUrl . (count($queryParams) ? '?' . http_build_query($queryParams) : null),
+            true,
+            302
+        );
         exit;
 
         /* Below is the ZF2 way but Response is not short-circuiting the event like it should *
