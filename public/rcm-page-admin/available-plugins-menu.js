@@ -1,21 +1,3 @@
-/**
- * Takes a block configs associative-array and returns a map of them sorted into smaller associative-arrays
- * by their category
- * @param blockConfigs
- * @returns {{}|*}
- */
-function rcmAdminSortBlockConfigsByCategory(blockConfigs) {
-    blockConfigsByCategory = {};
-    for (blockName in blockConfigs) {
-        blockConfig = blockConfigs[blockName];
-        if (!blockConfigsByCategory[blockConfig.category]) {
-            blockConfigsByCategory[blockConfig.category] = {};
-        }
-        blockConfigsByCategory[blockConfig.category][blockConfig.name] = blockConfig;
-    }
-    return blockConfigsByCategory;
-}
-
 var RcmAvailablePluginsMenu = {
 
     menu: null,
@@ -53,104 +35,84 @@ var RcmAvailablePluginsMenu = {
             header.append(heading);
             menu.append(header);
 
-            var accordion = $('<div class="panel-group panel-minified-hide" id="availablePluginsGroup">');
-            menu.append(accordion);
+            var pluginListEle = $('<div class="panel-group panel-minified-hide" id="availablePluginsGroup">');
+            menu.append(pluginListEle);
             menu.draggable({cancel: '.panel-group'});
             var categoryIndex = 0;
             var newInstanceId = 0;
 
-
             $.each(
-                rcmAdminSortBlockConfigsByCategory(window.rcmBlockConfigs),
-                function (category, plugins) {
+                Object.values(window.rcmBlockConfigs).sort(function (a, b) {
+                    var textA = a.label.toUpperCase();
+                    var textB = b.label.toUpperCase();
+                    if (a.name == 'RcmHtmlArea') {
+                        /**
+                         * Is a bit wierd but this puts the most used plugin at the top
+                         * so admins don't freak out. The next version of the CMS will have
+                         * a search box that should aleviate problems like this.
+                         */
+                        return -1;
+                    }
+                    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                }),
+                function (pluginInfoIndex, pluginInfo) {
+                    var displayNameStr = pluginInfo.name
+                    newInstanceId--;
+                    var instanceId = newInstanceId;
+                    var plugin = $('<div class="rcmPluginDrag panel-inner"></div>');
+                    plugin.appendTo(pluginListEle);
+                    plugin.data('pluginName', pluginInfo.name);
 
-                    var collapseId = 'availablePluginsCollapse' + categoryIndex;
+                    var icon = $('<img>');
+                    var iconSrc = pluginInfo.icon;
+                    if (!iconSrc) {
+                        iconSrc = '/modules/rcm/images/no-plugin-icon.png';
+                    }
+                    icon.attr('src', iconSrc);
+                    icon.appendTo(plugin);
+                    var displayName = $('<span></span>');
+                    displayName.appendTo(plugin);
+                    displayName.html(pluginInfo.label);
+                    displayName.attr('data-toggle', 'tooltip')
+                    displayName.attr('title', pluginInfo.description)
+                    displayName.tooltip();
 
-                    var group = $('<div class="panel panel-default"></div>');
-                    group.appendTo(accordion);
+                    var initialState = $('<div class="initialState"></div>');
+                    initialState.css('display', 'none');
+                    initialState.appendTo(plugin);
 
-                    var link = $('<a class="panel-link"></a>');
-                    link.appendTo(group);
-                    link.attr('data-parent', '#availablePluginsGroup');
-                    link.attr('data-toggle', 'collapse');
-                    link.attr('href', '#' + collapseId);
-
-                    var heading = $('<div class="panel-heading"></div>');
-                    heading.appendTo(link);
-
-                    var title = $('<h4 class="panel-title"></h4>');
-                    title.appendTo(heading);
-                    title.html(category);
-
-                    var collapse = $('<div class="panel-collapse collapse"></div>');
-                    collapse.appendTo(group);
-                    collapse.attr('id', collapseId);
-
-                    var collapseBody = $('<div class="panel-body"></div>');
-                    collapse.append(collapseBody);
-
-                    $.each(
-                        plugins,
-                        function (displayNameStr, pluginInfo) {
-                            newInstanceId--;
-                            var instanceId = newInstanceId;
-                            var plugin = $('<div class="rcmPluginDrag panel-inner"></div>');
-                            plugin.appendTo(collapseBody);
-                            plugin.data('pluginName', pluginInfo.name);
-
-                            var icon = $('<img>');
-                            var iconSrc = pluginInfo.icon;
-                            if (!iconSrc) {
-                                iconSrc = '/modules/rcm/images/no-plugin-icon.png';
-                            }
-                            icon.attr('src', iconSrc);
-                            icon.appendTo(plugin);
-                            var displayName = $('<span></span>');
-                            displayName.appendTo(plugin);
-                            displayName.html(pluginInfo.label);
-                            displayName.attr('data-toggle', 'tooltip')
-                            displayName.attr('title', pluginInfo.description)
-                            displayName.tooltip();
-
-                            var initialState = $('<div class="initialState"></div>');
-                            initialState.css('display', 'none');
-                            initialState.appendTo(plugin);
-
-                            var colClass = 'col-sm-12';
-                            var outerContainer = $('<div class="rcmPlugin">');
-                            outerContainer.addClass(pluginInfo.name);
-                            outerContainer.addClass(colClass);
-                            outerContainer.attr(
-                                'data-rcmPluginDefaultClass',
-                                'content-block rcmPlugin ' + pluginInfo.name
-                            );
-                            outerContainer.attr(
-                                'editing',
-                                true
-                            );
-                            outerContainer.attr(
-                                'data-rcmPluginInstanceId',
-                                instanceId
-                            );
-                            outerContainer.attr(
-                                'data-rcmPluginName',
-                                pluginInfo.name
-                            );
-                            outerContainer.attr(
-                                'data-rcmplugincolumnclass',
-                                colClass
-                            );
-                            outerContainer.attr(
-                                'data-rcmpluginrownumber',
-                                '0'
-                            );
-                            outerContainer.appendTo(initialState);
-
-                            var innerContainer = $('<div class="content-block-container rcmPluginContainer">');
-                            innerContainer.appendTo(outerContainer);
-                        }
+                    var colClass = 'col-sm-12';
+                    var outerContainer = $('<div class="rcmPlugin">');
+                    outerContainer.addClass(pluginInfo.name);
+                    outerContainer.addClass(colClass);
+                    outerContainer.attr(
+                        'data-rcmPluginDefaultClass',
+                        'content-block rcmPlugin ' + pluginInfo.name
                     );
-                    categoryIndex++;
+                    outerContainer.attr(
+                        'editing',
+                        true
+                    );
+                    outerContainer.attr(
+                        'data-rcmPluginInstanceId',
+                        instanceId
+                    );
+                    outerContainer.attr(
+                        'data-rcmPluginName',
+                        pluginInfo.name
+                    );
+                    outerContainer.attr(
+                        'data-rcmplugincolumnclass',
+                        colClass
+                    );
+                    outerContainer.attr(
+                        'data-rcmpluginrownumber',
+                        '0'
+                    );
+                    outerContainer.appendTo(initialState);
+
+                    var innerContainer = $('<div class="content-block-container rcmPluginContainer">');
+                    innerContainer.appendTo(outerContainer);
                 }
             );
 
