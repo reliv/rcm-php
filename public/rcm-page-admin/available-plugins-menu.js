@@ -42,13 +42,20 @@ var RcmAvailablePluginsMenu = {
             var newInstanceId = 0;
 
             $.each(
-                Object.values(window.rcmBlockConfigs).sort(function(a, b) {
-                    var textA = a.name.toUpperCase();
-                    var textB = b.name.toUpperCase();
+                Object.values(window.rcmBlockConfigs).sort(function (a, b) {
+                    var textA = a.label.toUpperCase();
+                    var textB = b.label.toUpperCase();
+                    if (a.name == 'RcmHtmlArea') {
+                        /**
+                         * Is a bit wierd but this puts the most used plugin at the top
+                         * so admins don't freak out. The next version of the CMS will have
+                         * a search box that should aleviate problems like this.
+                         */
+                        return -1;
+                    }
                     return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
                 }),
                 function (pluginInfoIndex, pluginInfo) {
-                    console.log(pluginInfo);
                     var displayNameStr = pluginInfo.name
                     newInstanceId--;
                     var instanceId = newInstanceId;
