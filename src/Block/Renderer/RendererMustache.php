@@ -2,8 +2,6 @@
 
 namespace Rcm\Block\Renderer;
 
-use Phly\Mustache\Mustache;
-use Phly\Mustache\Resolver\DefaultResolver;
 use Rcm\Block\Config\Config;
 use Rcm\Block\Config\ConfigRepository;
 use Rcm\Block\InstanceWithData\InstanceWithData;
@@ -31,12 +29,6 @@ class RendererMustache implements Renderer
          */
         $blockConfig = $this->blockConfigRepository->findById($instance->getName());
 
-        $resolver = new DefaultResolver();
-        $resolver->addTemplatePath($blockConfig->getDirectory());
-
-        $mustache = new Mustache();
-        $mustache->getResolver()->attach($resolver);
-
         $viewData = [
             'id' => $instance->getId(),
             'config' => $instance->getConfig(),
@@ -48,11 +40,11 @@ class RendererMustache implements Renderer
                     /**
                      * Allows the ussage of {{#jsonStringify}}config{{/jsonStringify}}
                      *
-                     * In the future we may parse for dots to allow usage of something like
-                     * {{#jsonStringify}}config.something.something{{/jsonStringify}}
+                     * And for depth, you can do things like
+                     * {{#jsonStringify}}config.backgroundImage{{/jsonStringify}}
                      */
                     'jsonStringify' => function ($value) use ($viewData) {
-                        return json_encode($viewData[$value]);
+                        return json_encode($this->getFromArrayByDotDelimitedPath($value, $viewData));
                     }
                 ]
             ]
@@ -62,5 +54,24 @@ class RendererMustache implements Renderer
             file_get_contents($blockConfig->getDirectory() . '/template.mustache'),
             $viewData
         );
+    }
+
+    /**
+     * Returns the value from an array by the given dot-seperated path
+     *
+     * @param string $path a dot delimited string
+     * @param array $array
+     * @return array|mixed
+     */
+    protected function getFromArrayByDotDelimitedPath(string $path, array $array)
+    {
+        $value = $array;
+        $i = 0;
+        foreach (explode('.', $path) as $key) {
+            $i++;
+            $value = $value[$key];
+        }
+
+        return $value;
     }
 }
