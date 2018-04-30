@@ -37,10 +37,13 @@ class RendererMustache implements Renderer
         $mustache = new Mustache();
         $mustache->getResolver()->attach($resolver);
 
+        $configJsonWhitelist = $blockConfig->getConfigJsonWhitelist();
+
         $viewData = [
             'id' => $instance->getId(),
             'config' => $instance->getConfig(),
-            'data' => $instance->getData()
+            'data' => $instance->getData(),
+            'configJson' => $instance->getConfigJson($configJsonWhitelist),
         ];
 
         return $mustache->render('template', $viewData);
