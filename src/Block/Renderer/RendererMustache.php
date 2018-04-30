@@ -40,9 +40,27 @@ class RendererMustache implements Renderer
         $viewData = [
             'id' => $instance->getId(),
             'config' => $instance->getConfig(),
-            'data' => $instance->getData()
+            'data' => $instance->getData(),
         ];
 
-        return $mustache->render('template', $viewData);
+        $musacheEngine = new \Mustache_Engine([
+                'helpers' => [
+                    /**
+                     * Allows the ussage of {{#jsonStringify}}config{{/jsonStringify}}
+                     *
+                     * In the future we may parse for dots to allow usage of something like
+                     * {{#jsonStringify}}config.something.something{{/jsonStringify}}
+                     */
+                    'jsonStringify' => function ($value) use ($viewData) {
+                        return json_encode($viewData[$value]);
+                    }
+                ]
+            ]
+        );
+
+        return $musacheEngine->render(
+            file_get_contents($blockConfig->getDirectory() . '/template.mustache'),
+            $viewData
+        );
     }
 }
