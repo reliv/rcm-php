@@ -7,6 +7,7 @@ use Phly\Mustache\Resolver\DefaultResolver;
 use Rcm\Block\Config\Config;
 use Rcm\Block\Config\ConfigRepository;
 use Rcm\Block\InstanceWithData\InstanceWithData;
+use Reliv\WhiteRat\Whitelist;
 
 class RendererMustache implements Renderer
 {
@@ -37,13 +38,13 @@ class RendererMustache implements Renderer
         $mustache = new Mustache();
         $mustache->getResolver()->attach($resolver);
 
-        $configJsonWhitelist = $blockConfig->getConfigJsonWhitelist();
+        $configJsonWhitelist = new Whitelist($blockConfig->getConfigJsonWhitelist());
 
         $viewData = [
             'id' => $instance->getId(),
             'config' => $instance->getConfig(),
             'data' => $instance->getData(),
-            'configJson' => $instance->getConfigJson($configJsonWhitelist),
+            'configJson' => json_encode($configJsonWhitelist->filter($instance->getConfig())),
         ];
 
         return $mustache->render('template', $viewData);
