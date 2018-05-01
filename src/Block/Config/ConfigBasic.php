@@ -166,6 +166,19 @@ class ConfigBasic implements Config
     }
 
     /**
+     * Get a manifest of config values that are whitelisted for JSON encoding.
+     *
+     * This is in WhiteRat format.
+     *
+     * @return array
+     * @see Reliv\WhiteRat
+     */
+    public function getConfigJsonWhitelist()
+    {
+        return $this->get(ConfigFields::CONFIG_JSON_WHITELIST);
+    }
+
+    /**
      * toArray
      *
      * @return array

@@ -107,6 +107,11 @@ interface Config
     public function getDefaultConfig();
 
     /**
+     * @return array
+     */
+    public function getConfigJsonWhitelist();
+
+    /**
      * toArray
      *
      * @return array

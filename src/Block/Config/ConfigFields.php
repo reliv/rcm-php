@@ -24,6 +24,7 @@ class ConfigFields
     const CACHE = 'cache';
     const FIELDS = 'fields';
     const CONFIG = 'defaultConfig';
+    const CONFIG_JSON_WHITELIST = 'configJsonWhitelist';
 
     protected $fields
         = [
@@ -38,6 +39,7 @@ class ConfigFields
             self::CACHE => false,
             self::FIELDS => [],
             self::CONFIG => [],
+            self::CONFIG_JSON_WHITELIST => [],
         ];
 
     protected $bcFields
@@ -50,6 +52,7 @@ class ConfigFields
             'icon' => self::ICON,
             'canCache' => self::CACHE,
             'defaultInstanceConfig' => self::CONFIG,
+            'configJsonWhitelist' => self::CONFIG_JSON_WHITELIST,
         ];
 
     /**
