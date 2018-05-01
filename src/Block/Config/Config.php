@@ -112,12 +112,6 @@ interface Config
     public function getConfigJsonWhitelist();
 
     /**
-     * @param Instance $instance
-     * @return array
-     */
-    public function getInstanceWhitelistedConfigJson(Instance $instance);
-
-    /**
      * toArray
      *
      * @return array

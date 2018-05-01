@@ -2,9 +2,6 @@
 
 namespace Rcm\Block\Config;
 
-use Rcm\Block\Instance;
-use Rcm\Exception\InvalidPluginException;
-
 /**
  * @GammaRelease
  * Class ConfigBasic
