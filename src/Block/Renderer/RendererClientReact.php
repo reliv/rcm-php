@@ -32,12 +32,6 @@ class RendererClientReact implements Renderer
          */
         $blockConfig = $this->blockConfigRepository->findById($instance->getName());
 
-        $resolver = new DefaultResolver();
-        $resolver->addTemplatePath($blockConfig->getDirectory());
-
-        $mustache = new Mustache();
-        $mustache->getResolver()->attach($resolver);
-
         $configJsonWhitelist = new Whitelist($blockConfig->getConfigJsonWhitelist());
 
         $clientBlockData = [
