@@ -333,7 +333,7 @@ return [
         => \Rcm\Service\DisplayCountService::class,
 
         \Rcm\Block\Instance\InstanceConfigMerger::class
-        => \Rcm\Block\Instance\InstanceConfigMerger::class,
+        => \Rcm\Block\Instance\InstanceConfigMerger::class
     ],
     'aliases' => [
         'rcmLogger'
