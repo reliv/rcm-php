@@ -30,6 +30,7 @@ return [
     'block-render' => [
         'rcm-plugin-bc' => \Rcm\Block\Renderer\RendererBc::class,
         'mustache' => \Rcm\Block\Renderer\RendererMustache::class,
+        'clientReact' => \Rcm\Block\Renderer\RendererClientReact::class,
     ],
 
     /**

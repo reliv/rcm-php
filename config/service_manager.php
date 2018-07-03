@@ -212,6 +212,10 @@ return [
 
         \Rcm\Block\Renderer\RendererMustache::class
         => \Rcm\Block\Renderer\RendererMustacheFactory::class,
+
+        \Rcm\Block\Renderer\RendererClientReact::class
+        => \Rcm\Block\Renderer\RendererClientReactFactory::class,
+
         //@TODO decouple service name from renderer name
 
         \Rcm\EventListener\EventWrapper::class
