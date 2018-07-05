@@ -44,7 +44,7 @@ class RendererMustache implements Renderer
             'id' => $instance->getId(),
             'config' => $instance->getConfig(),
             'data' => $instance->getData(),
-            'configJson' => json_encode($configJsonWhitelist->filter($instance->getConfig())),
+            'configJson' => json_encode($configJsonWhitelist->__invoke($instance->getConfig())),
         ];
 
         return $mustache->render('template', $viewData);

@@ -37,7 +37,7 @@ class RendererClientReact implements Renderer
         $clientBlockData = [
             'id' => $instance->getId(),
             'data' => $instance->getData(),
-            'config' => $configJsonWhitelist->filter($instance->getConfig()),
+            'config' => $configJsonWhitelist->__invoke($instance->getConfig()),
         ];
 
         $reactAppDivId = 'renderClientReactBlock' . $instance->getId();
