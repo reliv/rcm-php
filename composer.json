@@ -42,7 +42,7 @@
     "rcm/user": "~1.5",
     "rcm/api-lib": "~0.11",
     "reliv/pipe-rat": "~0.5",
-    "reliv/white-rat": "~0.1.1",
+    "reliv/white-rat": "^0.2.0",
     "reliv/zf-config-factories": "3.* || 4.*",
     "rwoverdijk/assetmanager": "1.*",
     "zendframework/zend-cache": "2.*",
