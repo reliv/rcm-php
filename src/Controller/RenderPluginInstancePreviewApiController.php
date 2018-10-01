@@ -30,21 +30,16 @@ class RenderPluginInstancePreviewApiController extends AbstractActionController
             true
         );
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        if (
+            json_last_error() !== JSON_ERROR_NONE
+            || !is_array($data)
+            || !array_key_exists('pluginType', $data)
+            || !array_key_exists('instanceId', $data)
+            || !array_key_exists('instanceConfig', $data)
+        ) {
             $response = new Response();
-            $response->setContent('400 Bad Request - Request body contains invalid json');
+            $response->setContent('400 Bad Request');
             $response->setStatusCode(400);
-
-            return $response;
-        }
-
-        $error = $this->getValidationMessage($data);
-
-        if (!empty($error)) {
-            $response = new Response();
-            $response->setContent('400 Bad Request - Request data failed validation');
-            $response->setStatusCode(400);
-            $response->setReasonPhrase($error);
 
             return $response;
         }
@@ -59,35 +54,5 @@ class RenderPluginInstancePreviewApiController extends AbstractActionController
         $responseData = ['html' => $html];
 
         return new JsonModel($responseData);
-    }
-
-    /**
-     * @param $data
-     *
-     * @return string
-     */
-    protected function getValidationMessage($data)
-    {
-        $error = '';
-
-        if (!is_array($data)) {
-            $error .= 'Data must be object';
-
-            return $error;
-        }
-
-        if (!array_key_exists('pluginType', $data)) {
-            $error .= 'Data must be object';
-        }
-
-        if (!array_key_exists('pluginType', $data)) {
-            $error .= 'Data must be object';
-        }
-
-        if (!array_key_exists('pluginType', $data)) {
-            $error .= 'Data must be object';
-        }
-
-        return $error;
     }
 }
