@@ -32,6 +32,7 @@ class RenderPluginInstancePreviewApiController extends AbstractActionController
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             $response = new Response();
+            $response->setContent('400 Bad Request - Request body contains invalid json');
             $response->setStatusCode(400);
 
             return $response;
@@ -41,6 +42,7 @@ class RenderPluginInstancePreviewApiController extends AbstractActionController
 
         if (!empty($error)) {
             $response = new Response();
+            $response->setContent('400 Bad Request - Request data failed validation');
             $response->setStatusCode(400);
             $response->setReasonPhrase($error);
 
