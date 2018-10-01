@@ -25,11 +25,6 @@ class RenderPluginInstancePreviewApiController extends AbstractActionController
 
     public function indexAction()
     {
-        // This does not work
-        $pluginType = $this->params()->fromPost('pluginType');
-        $instanceId = $this->params()->fromPost('instanceId');
-        $instanceConfig = $this->params()->fromPost('instanceConfig');
-
         $data = json_decode(
             $this->getRequest()->getContent(),
             true
