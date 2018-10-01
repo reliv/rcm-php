@@ -505,14 +505,17 @@ var RcmAdminPlugin = function (
             function (pluginData) {
                 self.instanceConfig = pluginData.saveData;
                 // @todo This should be in a model
-                jQuery.post(
-                    '/rcm/core/rpc/render-plugin-instance-preview',
-                    {
+                $.ajax
+                ({
+                    type: "POST",
+                    url: '/rcm/core/rpc/render-plugin-instance-preview',
+                    dataType: 'json',
+                    data: JSON.stringify({
                         pluginType: name,
                         instanceId: id,
                         instanceConfig: self.instanceConfig
-                    },
-                    function (data) {
+                    }),
+                    success: function (data) {
                         pluginContainer.html(data.html);
                         self.updateView(
                             pluginContainer, function () {
@@ -520,7 +523,7 @@ var RcmAdminPlugin = function (
                             }
                         );
                     }
-                );
+                })
             }
         );
     };
