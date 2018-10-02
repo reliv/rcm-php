@@ -38,7 +38,7 @@ class RenderPluginInstancePreviewApiController extends AbstractActionController
         ) {
             $response = new Response();
             $response->setContent(
-                '400 Bad Request - Request must be a JSON object'
+                '400 Bad Request - Request body must be a JSON object'
                 . ' that contains properties pluginType, instanceId, and instanceConfig'
             );
             $response->setStatusCode(400);
