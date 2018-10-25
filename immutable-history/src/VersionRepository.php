@@ -8,7 +8,8 @@ class VersionRepository
     protected $entityManger;
 
     /**
-     * @TODO allow per-resource-type locator validators to be injected and use them
+     * @TODO allow per-resource-type locator validators to be injected and use them or use data models?
+     * @TODO allow per-resouce-type content validators to be injected and use them or use data models?
      * @TODO set dates, user, and reason
      * @TODO replace all \Rcm\ImmutableHistory\Entity\ImmutablePageVersion with interface in here
      * @TODO make userId and programmatic and any other fields that should be required, required

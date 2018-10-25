@@ -3,6 +3,7 @@
 namespace RcmAdmin\Factory;
 
 use Interop\Container\ContainerInterface;
+use Rcm\Entity\Revision;
 use RcmAdmin\Controller\PageController;
 use RcmUser\Service\RcmUserService;
 use Zend\Mvc\Controller\ControllerManager;
@@ -53,6 +54,7 @@ class PageControllerFactory
             $currentSite,
             $rcmUserService,
             $pageRepo,
+            $entityManager->getRepository(Revision::class),
             $container->get('Rcm\ImmutableHistory\PageVersionRepo')
         );
     }

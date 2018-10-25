@@ -61,6 +61,8 @@ class PageController extends AbstractActionController
 
     protected $immuteblePageVersionRepo;
 
+    protected $revisionRepo;
+
     /**
      * @param Site $currentSite
      * @param RcmUserService $rcmUserService
@@ -70,10 +72,12 @@ class PageController extends AbstractActionController
         Site $currentSite,
         RcmUserService $rcmUserService,
         PageRepo $pageRepo,
+        $revisionRepo,
         VersionRepository $immuteblePageVersionRepo
     ) {
         $this->currentSite = $currentSite;
         $this->pageRepo = $pageRepo;
+        $this->revisionRepo = $revisionRepo;
         $this->rcmUserService = $rcmUserService;
         $this->immuteblePageVersionRepo = $immuteblePageVersionRepo;
 
@@ -410,7 +414,7 @@ class PageController extends AbstractActionController
 
         $siteId = $this->currentSite->getSiteId();
 
-        $this->pageRepo->publishPageRevision(
+        $page = $this->pageRepo->publishPageRevision(
             $siteId,
             $pageName,
             $pageType,
@@ -425,7 +429,16 @@ class PageController extends AbstractActionController
                 'siteId' => $siteId,
                 'relativeUrl' => '/' . $pageName
             ],
-            ['!!!! @TODO !!!!'],//@TODO get the data from the revision somehow?
+            [
+                //@TODO is this data in the right structure?
+                // @TODO should this code be centralized to snsure consitant schema?
+                'title' => $page->getPageTitle(),
+                'keywords' => $page->getKeywords(),
+                'description' => $page->getDescription(),
+                //@TODO get rid of all the potentially erroneos old tracking info in this json
+                //@TODO do we really want to store this data like this? as "plugin wrappers"?
+                'pluginWrappers' => $page->getPublishedRevision()->getPluginWrappers()->toArray()
+            ],
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
 
@@ -507,7 +520,7 @@ class PageController extends AbstractActionController
 
             $this->prepSaveData($data);
 
-            $result = $this->pageRepo->savePage(
+            $resultRevisionId = $this->pageRepo->savePage(
                 $this->currentSite,
                 $pageName,
                 $pageRevision,
@@ -518,30 +531,47 @@ class PageController extends AbstractActionController
                 $user->getName()
             );
 
+            if (empty($resultRevisionId)) {
+                throw new \Exception(
+                    'newer immuteblePageVersionRepo code requires a resultRevisionId'
+                    . ' from $this->pageRepo->savePage'
+                );
+            }
+
             //@TODO what if result somehow says didn't save? @TODO Handle this case
             $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
                 [
                     'siteId' => $this->currentSite->getSiteId(),
                     'relativeUrl' => '/' . $pageName
                 ],
-                $data, //is this data right? and is it in the right schema?
+                [
+                    //@TODO is this data in the right structure?
+                    // @TODO should this code be centralized to snsure consitant schema?
+                    'title' => null, //title is not yet part of revisions in RCM so null is most accurate
+                    'keywords' => null,//keywords are not yet part of revisions in RCM so null is most accurate
+                    'description' => null,//description is not yet part of revisions in RCM so null is most accurate
+                    //@TODO get rid of all the potentially erroneos old tracking info in this json
+                    //@TODO do we really want to store this data like this? as "plugin wrappers"?
+                    'pluginWrappers' => $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
+                ],
                 $user->getId(),
                 __CLASS__ . '::' . __FUNCTION__
             );
 
-            if (empty($result)) {
-                $return['redirect'] = $this->urlToPage(
-                    $pageName,
-                    $pageType,
-                    $pageRevision
-                );
-            } else {
-                $return['redirect'] = $this->urlToPage(
-                    $pageName,
-                    $pageType,
-                    $result
-                );
-            }
+//            if (empty($resultRevisionId)) {
+//                $return['redirect'] = $this->urlToPage(
+//                    $pageName,
+//                    $pageType,
+//                    $pageRevision
+//                );
+//            } else {
+            $return['redirect'] = $this->urlToPage(
+                $pageName,
+                $pageType,
+                $resultRevisionId
+            );
+
+//            }
 
             return $this->getJsonResponse($return);
         }
