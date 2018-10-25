@@ -534,12 +534,11 @@ class PageController extends AbstractActionController
 
             if (empty($resultRevisionId)) {
                 throw new \Exception(
-                    'newer immuteblePageVersionRepo code requires a resultRevisionId'
-                    . ' from $this->pageRepo->savePage'
+                    'Newer immuteblePageVersionRepo code requires a resultRevisionId'
+                    . ' be returned from $this->pageRepo->savePage but nothing was returned.'
                 );
             }
 
-            //@TODO what if result somehow says didn't save? @TODO Handle this case
             $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
                 [
                     'siteId' => $this->currentSite->getSiteId(),
