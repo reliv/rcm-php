@@ -66,8 +66,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Rcm\\": "core/src/",
-      "Rcm\\RcmImmutableHistory\\": "immutable-history/src/"
+      "Rcm\\RcmImmutableHistory\\": "immutable-history/src/",
+      "Rcm\\": "core/src/"
     }
   },
   "suggest": {
