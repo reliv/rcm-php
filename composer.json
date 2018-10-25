@@ -12,7 +12,7 @@
   ],
   "homepage": "http://www.reliv.com/",
   "suggest": {
-    "rcm/core-js": "Provides basic JS including jQuery, AngularJS and Bootstrap"
+    "rcm/core-js": "Provides basic JS including jQuery, AngularJS and Bootstrap",
     "bower-asset/angular": "~1",
     "bower-asset/angular-utils-pagination": "~0.9",
     "bower-asset/rcm-loading": ">=0.1.14",
