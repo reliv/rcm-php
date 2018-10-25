@@ -1,0 +1,270 @@
+<div class="rcmAdminSitePageCopy">
+    <link href="/modules/rcm-admin/site-page-copy/site-page-copy.css"
+          media="screen"
+          rel="stylesheet"
+          type="text/css"/>
+    <div data-ng-controller="rcmAdminSitePageCopyController">
+
+        <h2>Copy Pages</h2>
+
+        <div>
+            <div class="alert alert-danger" ng-show="errorMessage">
+                <div>{{errorMessage}}</div>
+            </div>
+            <div class="alert alert-success" ng-show="message">
+                <div>{{message}}</div>
+            </div>
+
+            <!-- STEP 1 -->
+            <div class="container-fluid" ng-show="step==1">
+                <form class="form-horizontal" role="form">
+
+                    <div class="form-group" ng-hide="loadings.sourceSite">
+                        <label class="col-sm-3 control-label">Source Site</label>
+
+                        <div class="col-sm-8">
+                            <div class="form-control">
+                                <span class="site-domain">{{sourceSite.domainName}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"
+                               for="destinationSite">Destination Site</label>
+                        <div class="col-sm-8">
+                            <input type="text" ng-model="destinationSiteSearch" ng-change="handleDestSearchChange()"
+                                   class="form-control" placeholder="Search here">
+                        </div>
+
+                        <div class="radio col-sm-8 col-sm-offset-3">
+                            <label ng-repeat="site in destinationSites" style="display: block">
+                                <input type="radio"
+                                       ng-model="$parent.destinationSite"
+                                       name="destinationSite"
+                                       ng-value="site">{{site.domainName}}</label>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="pageSelection" ng-hide="loadings.pageTypes || loadings.sourcePages">
+                    <form class="form-inline page-search"
+                          role="form">
+                        <div class="form-group">
+                            <label class="control-label aria-label"
+                                   for="pageTypes">Filter By Page Type</label>
+
+                            <select class="form-control aria-labelledby"
+                                    id="pageTypes"
+                                    ng-model="selectedPageType"
+                                    ng-options="v.type as v.title + ' (' + v.type + ')' for (k, v) in pageTypes"
+                                    ng-change="clearSelectedPages()"
+                            >
+                                <option value="">-All-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"
+                                   for="pageNameSearch">Search by Name and Title</label>
+                            <input class="form-control"
+                                   id="pageNameSearch"
+                                   ng-change="clearSelectedPages()"
+                                   type="text"
+                                   ng-model="pageNameSearch"/>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-default btn-xs"
+                                    data-ng-click="selectFilteredPages()"
+                                    type="button">Select All
+                            </button>
+                        </div>
+                    </form>
+                    <br/>
+
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <label class="control-label">Pages to Copy</label>
+                            </div>
+                            <div class="col-sm-offset-6 col-sm-2">
+                                <button class="btn btn-primary btn-sm"
+                                        data-ng-click="step=2"
+                                        data-ng-disabled="!destinationSite || selectedPages.length < 1"
+                                        type="button">Copy Pages
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-hide="loadings.sourcePages">
+                            <div class="col-sm-12">
+                                <div class=""
+                                     data-ng-repeat="page in (filteredPages = (sourcePages | rcmAdminPageTypeFilter:selectedPageType | rcmAdminPageNameFilter:pageNameSearch))">
+                                    <div class="pageSelect">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox"
+                                                   ng-model="selectedStuff"
+                                                   ng-change="toggleSelectPage(page)"
+                                                   ng-checked="(selectedPages.indexOf(page) > -1)"
+                                            />
+
+                                            <div>
+                                                <div>
+                                                    <span class="message-label page-title">Page:</span>
+                                                    <span class="page-title">{{page.pageTitle}}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="message-label page-name">Name:</span>
+                                                    <span class="page-name">{{page.name}}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="message-label page-type">Type:</span>
+                                                    <span class="page-type">{{page.pageType}}</span>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="container-fluid" ng-show="step==2">
+
+                <form role="form">
+                    <div class="form-group">
+                        <label class="col-sm-11 control-label">{{selectedPages.length}} Pages to Copy:</label>
+
+                        <div class="col-sm-9">
+                            <div>From: {{sourceSite.siteTitle}} ({{sourceSite.domainName}})</div>
+                            <div>To: {{destinationSite.siteTitle}} ({{destinationSite.domainName}})</div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <button class="btn btn-default btn-sm"
+                                    data-ng-click="step=1">Back
+                            </button>
+                            <button class="btn btn-primary btn-sm"
+                                    data-ng-click="step=3; copySelectedPages();">Submit
+                            </button>
+                        </div>
+
+                        <div class="col-sm-11">
+                            <div class=""
+                                 data-ng-repeat="copypage in selectedPages">
+                                <div class="pageSelect">
+                                    <label class="">
+                                        <div>
+                                            <div>
+                                                <span class="message-label page-title">Page:</span>
+                                                <span class="page-title">{{copypage.pageTitle}}</span>
+                                            </div>
+                                            <div>
+                                                <span class="message-label page-name">Name:</span>
+                                                <span class="page-name">{{copypage.name}}</span>
+                                            </div>
+                                            <div>
+                                                <span class="message-label page-type">Type:</span>
+                                                <span class="page-type">{{copypage.pageType}}</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="container-fluid" ng-show="step==3">
+
+                <div class="col-sm-11">
+
+                    <div>Copying pages {{copyMessages.count}} of {{selectedPages.length}}</div>
+
+                    <div class="page-copy error"
+                         ng-show="copyMessages.error.length > 0">
+                        <div class="message">
+                            {{copyMessages.error.length}} pages could not be copied:
+                            <button class="btn btn-default btn-xs"
+                                    data-ng-click="showCopyErrors = !showCopyErrors">Details
+                            </button>
+                        </div>
+
+                        <div ng-show="showCopyErrors">
+                            <div class="alert alert-danger"
+                                 data-ng-repeat="result in copyMessages.error">
+                                <div>
+                                    <span class="message-label">Error:</span>
+                                    <span>{{result.message}}</span>
+                                </div>
+                                <div>
+                                    <div>
+                                        <span class="message-label page-title">Page:</span>
+                                        <span class="page-title">{{result.page.pageTitle}}</span>
+                                    </div>
+                                    <div>
+                                        <span class="message-label page-name">Name:</span>
+                                        <span class="page-name">{{result.page.name}}</span>
+                                    </div>
+                                    <div>
+                                        <span class="message-label page-type">Type:</span>
+                                        <span class="page-type">{{result.page.pageType}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="page-copy success"
+                         ng-show="copyMessages.success.length > 0">
+                        <div class="message">
+                            {{copyMessages.success.length}} pages copied successfully:
+                            <button class="btn btn-default btn-xs"
+                                    data-ng-click="showCopySuccesses = !showCopySuccesses">Details
+                            </button>
+                        </div>
+
+                        <div ng-show="showCopySuccesses">
+                            <div class="alert alert-success"
+                                 data-ng-repeat="result in copyMessages.success">
+                                <div>
+                                    <span class="message-label">Complete:</span>
+                                    <span>{{result.message}}</span>
+                                </div>
+                                <div>
+                                    <div>
+                                        <span class="message-label page-title">Page:</span>
+                                        <span class="page-title">{{result.page.pageTitle}}</span>
+                                    </div>
+                                    <div>
+                                        <span class="message-label page-name">Name:</span>
+                                        <span class="page-name">{{result.page.name}}</span>
+                                    </div>
+                                    <div>
+                                        <span class="message-label page-type">Type:</span>
+                                        <span class="page-type">{{result.page.pageType}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-11" ng-show="copyMessages.count == selectedPages.length">
+                    <div class="complete-message">Copying Complete!</div>
+                    <button class="btn btn-default btn-sm"
+                            data-ng-click="step=1">Back
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

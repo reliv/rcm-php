@@ -1,0 +1,109 @@
+<?php
+/** @var \Rcm\Entity\Page $page */
+$page = $layout->page;
+
+if (empty($page)) {
+    return;
+}
+
+if (!$page->getPageId()) {
+    ?>
+    <div id="rcmRevisionList" class="container-fluid">
+        <div class="dropdown">
+            <button class="btn btn-xs btn-default"
+                    disabled="disabled"
+                    type="button"
+                    id="revisionsList">
+                Not an Editable Page
+            </button>
+        </div>
+    </div>
+    <?php
+    return;
+}
+
+$currentRevisionType = "N/A";
+$publishedRevisionLink = "<a>N/A</a>";
+$stagedRevisionLink = "<a>N/A</a>";
+$lastSavedDraftRevisionLink = "<a>N/A</a>";
+
+$currentRevision = $page->getCurrentRevision();
+$publishedRevision = $page->getPublishedRevision();
+$stagedRevision = $page->getStagedRevision();
+$lastSavedDraftRevision = $page->getLastSavedDraftRevision();
+
+if ($currentRevision instanceof \Rcm\Entity\Revision) {
+    $currentRevisionType = $this->revisionHelper()->getRevisionType(
+        $page,
+        $currentRevision
+    );
+}
+
+if ($publishedRevision instanceof \Rcm\Entity\Revision) {
+    $publishedRevisionLink = $this->revisionHelper()->getRevisionLink(
+        $page,
+        $publishedRevision
+    );
+}
+
+if ($stagedRevision instanceof \Rcm\Entity\Revision) {
+    $stagedRevisionLink = $this->revisionHelper()->getRevisionLink(
+        $page,
+        $stagedRevision
+    );
+}
+
+if ($lastSavedDraftRevision instanceof \Rcm\Entity\Revision) {
+    $lastSavedDraftRevisionLink = $this->revisionHelper()->getRevisionLink(
+        $page,
+        $lastSavedDraftRevision
+    );
+}
+
+?>
+<div id="rcmRevisionList" class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 rcm-admin-menu-col">
+            <div class="dropdown">
+                <button class="btn btn-xs btn-default"
+                        type="button"
+                        id="revisionsList"
+                        data-toggle="dropdown">
+                    <?= $currentRevisionType; ?>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="revisionsList">
+                    <?php
+                    if (!empty($publishedRevision)) {
+                        ?>
+                        <li role="presentation">
+                            <?= $publishedRevisionLink ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
+
+                    <?php
+                    if (!empty($stagedRevision)) {
+                        ?>
+                        <li role="presentation">
+                            <?= $stagedRevisionLink ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
+
+                    <?php
+                    if (!empty($lastSavedDraftRevision)) {
+                        ?>
+                        <li role="presentation">
+                            <?= $lastSavedDraftRevisionLink ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

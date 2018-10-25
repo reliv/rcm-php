@@ -1,0 +1,87 @@
+<link rel="stylesheet" type="text/css"
+      href="<?=
+      $this->basePath(); ?>/modules/rcm-admin/page-new/form.css"
+    />
+
+<script type="text/javascript"
+        src="<?=
+        $this->basePath(); ?>/modules/rcm-admin/page-new/form.js"
+    >
+
+</script>
+
+<?php
+
+$form = $this->form;
+$form->prepare();
+
+$elements['pageUrl']['element'] = $form->get('url');
+$elements['pageTitle']['element'] = $form->get('title');
+$elements['pageTemplate']['element'] = $form->get('page-template');
+$elements['mainLayouts']['element'] = $form->get('main-layout');
+
+foreach ($elements as &$element) {
+    if (count($element['element']->getMessages()) > 0) {
+        $element['attributes'] = array(
+            'class' => 'invalid-field'
+        );
+    } else {
+        $element['attributes'] = array();
+    }
+}
+
+// Assuming the "contact/process" route exists...
+$form->setAttribute('action', $this->url('RcmAdmin\Page\New'));
+
+// Set the method attribute for the form
+$form->setAttribute('method', 'post');
+
+// Get the form label plugin
+$formLabel = $this->plugin('formLabel');
+?>
+<div id="rcmNewPageErrorLine"><?= $this->displayErrors($this->errors); ?></div>
+
+<?= $this->form()->openTag($form); ?>
+
+<?= $this->message; ?><br/>
+
+<div id="pageUrl">
+    <?=
+    $formLabel->openTag($elements['pageUrl']['attributes'])
+    . $elements['pageUrl']['element']->getOption('label');
+    ?> &nbsp;
+    <?= $this->formInput($elements['pageUrl']['element']); ?>
+    <?= $formLabel->closeTag(); ?>
+</div>
+
+<br/>
+
+<?=
+$formLabel->openTag($elements['pageTitle']['attributes'])
+. $elements['pageTitle']['element']->getOption('label'); ?> &nbsp;
+<?= $this->formInput($elements['pageTitle']['element']); ?>
+<?= $formLabel->closeTag(); ?>
+
+<br/>
+
+<div id="pageTemplate">
+    <?=
+    $formLabel->openTag($elements['pageTemplate']['attributes'])
+    . $elements['pageTemplate']['element']->getOption('label'); ?> &nbsp;
+    <?= $this->formSelect($elements['pageTemplate']['element']); ?>
+    <?= $formLabel->closeTag(); ?>
+</div>
+
+<div id="pageLayout">
+    <?= $formLabel->openTag($elements['mainLayouts']['attributes']); ?>
+    <div class="PageLayoutLabelDiv">
+        <?= $elements['mainLayouts']['element']->getOption('label'); ?>
+    </div>
+    <?= $this->formPageLayout($elements['mainLayouts']['element']); ?>
+    <?= $formLabel->closeTag(); ?>
+    <div style="clear: both;"></div>
+</div>
+
+
+
+<?= $this->form()->closeTag(); ?>

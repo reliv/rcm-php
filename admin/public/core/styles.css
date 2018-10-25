@@ -1,0 +1,12 @@
+.rcm-admin-dialog .modal-body input[type="text"],
+.rcm-admin-dialog .modal-body input[type="url"],
+.rcm-admin-dialog .modal-body input[type="date"]{
+    min-width: 75%;
+}
+
+.rcm-admin-dialog label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: bold;
+}

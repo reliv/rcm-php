@@ -1,0 +1,174 @@
+.rcm-admin-panel {
+}
+
+.rcm-admin-panel .container-fluid {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.rcm-admin-panel .row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.rcm-admin-panel .rcm-admin-menu-col {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-nav-col {
+
+}
+
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-button-col {
+
+}
+
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-button-col button {
+    display: inline-block;
+    margin: .1em .2em .1em .2em;
+}
+
+.rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-toolbar {
+    min-height: 36px;
+    background-color: #eeeeee;
+}
+
+.rcm-admin-panel.rcmAdminPanelSpacer {
+    visibility: hidden;
+}
+
+.rcm-admin-panel.rcmAdminPanelWrapper {
+    background-color: #FFFFFF;
+    position: fixed;
+    left: 0;
+    -webkit-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.10);
+    -moz-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.10);
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.10);
+    width: 100%;
+    z-index: 1001;
+}
+
+.rcm-admin-panel .rcmAdminPanelNav {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid black;
+    position: relative;
+    z-index: 1030;
+    font-size: 11px;
+    width: 100%;
+}
+
+.rcm-admin-panel div.rcmPanelEditorToolbar {
+    position: relative;
+    width: 100%;
+    z-index: 1020;
+}
+
+.modal-body {
+    /* allow scrollable content */
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
+}
+
+.modal-dialog {
+    width: auto !important;
+    max-width: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* Bootstrap standards */
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: auto !important;
+        max-width: 100%;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+}
+
+@media (min-width: 992px) {
+    .modal-dialog {
+        width: auto !important;
+        max-width: 98%;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .modal-dialog {
+        width: auto !important;
+        max-width: 992px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+}
+
+/* fixes the bug in bootstrap form-control input, width was wider in FF than it appears in Chrome */
+@-moz-document url-prefix() {
+    .form-control {
+        width: 96%;
+    }
+}
+
+/* <REVISION LIST> */
+#rcmRevisionList {
+    display: inline-block;
+    float: right;
+    margin: 0 .2em 0 .2em;
+}
+
+#rcmRevisionList button {
+    text-align: left;
+    min-width: 25em;
+}
+
+#rcmRevisionList button .caret {
+    float: right;
+    margin-top: .5em;
+}
+
+#rcmRevisionList .dropdown-menu {
+    min-width: 25em;
+}
+
+#rcmRevisionList .dropdown-menu a {
+    padding: .2em 1em;
+}
+/* </REVISION LIST> */
+
+/* <BUTTONS> */
+.rcm-admin-panel div.rcmPanelRightButtons {
+    display: inline-block;
+    float: right;
+    text-align: right;
+}
+
+.rcm-admin-panel .panel-button-container {
+    display: inline-block;
+}
+
+.rcm-admin-panel .panel-button-icon {
+    text-align: center;
+    font-size: 1em;
+    width: 1em;
+    height: 1em;
+}
+
+.rcm-admin-panel .rcmPanelRightButtons #unlockPermissionsNonEdit {
+    /*float:right;*/
+}
+
+.rcm-admin-panel .rcmPanelRightButtons #lockPermissionsNonEdit {
+    /*float:right;*/
+}
+
+.rcm-admin-panel .rcmPanelRightButtons #unlockPermissionsEditMode {
+    /*float:right;*/
+}
+
+.rcm-admin-panel .rcmPanelRightButtons #lockPermissionsEditMode {
+    /*float:right;*/
+}
+/* </BUTTONS> */

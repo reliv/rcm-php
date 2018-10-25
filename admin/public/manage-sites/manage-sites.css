@@ -1,0 +1,47 @@
+.rcmAdminManageSites .td {
+    vertical-align: top;
+}
+.rcmAdminManageSites .tr {
+    vertical-align: top;
+}
+
+.rcmAdminManageSites .domain {
+    font-size: 1em;
+    font-weight: bold;
+}
+.rcmAdminManageSites .site-duplicate-options {
+    margin: .8em 0;
+    padding: .5em;
+    border: .1em solid #AAAAAA;
+    border-radius: .3em;
+}
+
+.rcmAdminManageSites .site-duplicate-title {
+    margin-bottom: 1em;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.rcmAdminManageSites .buttons {
+    margin: .5em 0;
+    text-align :right;
+}
+
+.controlBox {
+    width: 96%;
+    height: 78px;
+    position: fixed;
+    top: 59px;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #ddd;
+}
+
+.siteSearch {
+    float: right;
+    top: 20px;
+    width: 240px;
+}
+
+.fixedSpacer {
+    width: 96%;
+    height: 70px;
+}

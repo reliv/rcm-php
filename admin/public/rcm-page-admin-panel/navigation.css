@@ -1,0 +1,137 @@
+.rcmAdminNavigation, .rcmAdminNavigation ul {
+    list-style: none;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    background-color: #FFFFFF;
+    border-width: 1px 0;
+    padding-top: 1px;
+}
+
+.rcmAdminNavigation {
+    float: left;
+}
+
+.rcmAdminNavigation ul ul {
+    width: 100%;
+    list-style: none;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    background-color: #FFFFFF;
+    border: solid #00A3E6;
+    border-width: 1px 0;
+}
+
+.rcmAdminNavigation a {
+    display: block;
+    width: 4em;
+    color: #000000;
+    text-decoration: none;
+    padding: 0.10em 1.2em;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.rcmAdminNavigation li {
+    float: left;
+    padding: 0;
+    width: 8em;
+
+}
+
+.rcmAdminNavigation li:hover {
+    background: #00A3E6;
+    border-radius: 3px 3px 0px 0px;
+}
+
+.rcmAdminNavigation li ul {
+    position: absolute;
+    left: -999em;
+    height: auto;
+    /*width: 250px;*/
+    width: 22.5em;
+    font-weight: normal;
+    border-width: 0.25em;
+    margin: 0;
+    border-radius: 0px 10px 10px 5px;
+}
+
+.rcmAdminNavigation li li:hover {
+    background: #00A3E6;
+    border-radius: 0px 0px 0px 0px;
+}
+
+.rcmAdminNavigation li li {
+    width: 100%;
+}
+
+.rcmAdminNavigation li ul a {
+    width: 20em;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.rcmAdminNavigation li ul ul {
+    margin: -30px 0 0 232px;
+}
+
+.rcmAdminNavigation li:hover ul ul, .rcmAdminNavigation li:hover ul ul ul {
+    left: -999em;
+}
+
+.rcmAdminNavigation li:hover ul, .rcmAdminNavigation li li:hover ul, .rcmAdminNavigation li li li:hover ul {
+    left: auto;
+}
+
+.rcmAdminNavigation .icon-before a:before{
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding-right: .5em;
+}
+
+.rcmAdminNavigation .icon-after a:after {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    float: right;
+}
+
+.rcmAdminNavigation li li.new-page a:after {
+    content: "\e022";
+}
+
+.rcmAdminNavigation li li.delete-page a:after {
+    content: "\e020";
+}
+
+.rcmAdminNavigation li li.restore-page a:before,
+.rcmAdminNavigation li li.revision-page a:before{
+    content: "\e176";
+}
+
+.rcmAdminNavigation li li.manage-sites a:after{
+    content: "\e135";
+}
+
+.rcmAdminNavigation li li.create-site a:after{
+    content: "\e081";
+}
+
+.rcmAdminNavigation li li.copy-pages a:after{
+    content: "\e205";
+}

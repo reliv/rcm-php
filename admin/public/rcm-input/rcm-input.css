@@ -1,0 +1,15 @@
+.rcm-input {
+
+}
+
+.rcm-input.image label {
+    display: block;
+}
+
+.rcm-input.image img {
+    max-height: 8em;
+    /*max-width: 120px !important;*/
+    /*max-height: 170px !important;*/
+    /*float: left;*/
+    /*margin-right: 10px*/
+}

@@ -1,0 +1,131 @@
+<?php
+
+/** @var \Rcm\Entity\Page $page */
+$page = $layout->page;
+
+if (empty($page)) {
+    return;
+}
+
+if (empty($page->getPageId())) {
+    return;
+}
+
+$wasPublished = true;
+$currentRevisionId = '';
+$pageType = $page->getPageType();
+$pageName = $page->getName();
+$currentRevision = $page->getCurrentRevision();
+if ($currentRevision instanceof \Rcm\Entity\Revision) {
+    $wasPublished = $currentRevision->wasPublished();
+    $currentRevisionId = $currentRevision->getRevisionId();
+}
+
+/** @var \Rcm\Entity\Site $site */
+$site = $layout->site;
+if($restrictions) {
+    $unlockedStyle = 'display: none;';
+    $lockedStyle = '';
+} else {
+    $unlockedStyle = '';
+    $lockedStyle = 'display: none;';
+}
+?>
+<div class="container-fluid rcmPanelRightButtons" data-rcm-admin-menu-actions>
+    <div class="row">
+        <div class="col-sm-12 rcm-admin-menu-col">
+            <!-- <publish> -->
+            <?php if ($wasPublished !== true) : ?>
+            <div class="panel-button-container" ng-hide="rcmAdminPage.editMode">
+                <button
+                    class="btn btn-primary btn-xs rcmMenuPost publishBtn"
+                    type="button"
+                    publish-url="<?=
+                    $this->url(
+                        'RcmAdmin\Page\PublishPageRevision',
+                        array(
+                            'rcmPageRevision' => $currentRevisionId,
+                            'rcmPageType' => $pageType,
+                            'rcmPageName' => $pageName,
+                        )
+                    ); ?>"
+                >
+                    <span class="glyphicon glyphicon-check"></span>
+                    Publish
+                </button>
+            </div>
+            <?php endif; ?>
+            <!-- </publish> -->
+
+            <!-- <edit> -->
+            <div class="panel-button-container" ng-hide="rcmAdminPage.editMode">
+                <button
+                    class="btn btn-warning btn-xs"
+                    rcm-admin-edit-button="page"
+                    ng-disabled="loading"
+                    type="button"
+                >
+                    <span class="glyphicon glyphicon-edit"></span>
+                    Edit
+                </button>
+            </div>
+            <!-- </edit> -->
+
+            <!-- <save-draft> -->
+            <div class="panel-button-container" ng-show="rcmAdminPage.editMode">
+                <button
+                    class="btn btn-primary btn-xs"
+                    rcm-admin-edit-button="save"
+                    ng-disabled="loading"
+                    type="button"
+                >
+                    <span class="glyphicon glyphicon glyphicon glyphicon-ok"></span>
+                    Save Draft
+                </button>
+            </div>
+            <!-- </save-draft> -->
+
+            <!-- <cancel> -->
+            <div class="panel-button-container" ng-show="rcmAdminPage.editMode">
+                <button
+                    class="btn btn-xs"
+                    rcm-admin-edit-button="cancel"
+                    ng-disabled="loading"
+                    type="button"
+                >
+                    <span class="glyphicon glyphicon glyphicon-remove"></span>
+                    Cancel
+                </button>
+            </div>
+            <!-- </cancel> -->
+
+            <!-- <lock-permissions> -->
+            <div class="panel-button-container" id="lockPermissionsEditMode" style="<?= $lockedStyle ?>">
+                <div class="rcmAdminMenu RcmBlankDialog">
+                    <a title="Page Permissions Lock"
+                       href="/rcm-admin/page-permissions/<?= $pageType ?>/<?= $pageName ?>"
+                       id="lockPermissionsEditModeLink">
+                        <button class="btn btn-default btn-xs">
+                            <span class="glyphicon glyphicon-lock panel-button-icon"></span>
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <!-- </lock-permissions> -->
+
+            <!-- <unlock-permissions> -->
+            <div class="panel-button-container" id="unlockPermissionsEditMode" style="<?= $unlockedStyle ?>">
+                <div class="rcmAdminMenu RcmBlankDialog">
+                    <a title="Page Permissions Unlock"
+                       href="/rcm-admin/page-permissions/<?= $pageType ?>/<?= $pageName ?>"
+                       id="unlockPermissionsEditModeLink">
+                        <button class="btn btn-default btn-xs">
+                            <img class="panel-button-icon" src="/modules/rcm-admin/img/glyphicons_unlock.png"/>
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <!-- </unlock-permissions> -->
+        </div>
+    </div>
+</div>

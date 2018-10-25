@@ -1,0 +1,22 @@
+sudo: false
+language: php
+php:
+  - "7.0"
+before_install:
+  - phpenv config-rm xdebug.ini #Turn off xdebug to speed up composer
+install:
+- php -v
+- composer self-update
+- composer --version
+- composer install
+script:
+- find . -type d \( -path ./vendor -o -path ./test \) -prune -o -name "*.php" -print0 | xargs -0 -n1 -P8 php -l -n
+- ./vendor/bin/phpunit
+- ./vendor/bin/phpcs --standard=PSR2 --ignore=vendor,test,config,data,autoload_classmap.php --extensions=php ./
+cache:
+  directories:
+  - vendor
+  - $HOME/.composer/cache
+  - node_modules
+matrix:
+  fast_finish: true
