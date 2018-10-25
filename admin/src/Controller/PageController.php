@@ -437,7 +437,8 @@ class PageController extends AbstractActionController
                 'description' => $page->getDescription(),
                 //@TODO get rid of all the potentially erroneos old tracking info in this json
                 //@TODO do we really want to store this data like this? as "plugin wrappers"?
-                'pluginWrappers' => $page->getPublishedRevision()->getPluginWrappers()->toArray()
+                'pluginWrappers' => $page->getPublishedRevision()->getPluginWrappers()->toArray(),
+                'contentSchemaVersion' => '1' //@TODO does this make sense?
             ],
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
@@ -552,7 +553,8 @@ class PageController extends AbstractActionController
                     'description' => null,//description is not yet part of revisions in RCM so null is most accurate
                     //@TODO get rid of all the potentially erroneos old tracking info in this json
                     //@TODO do we really want to store this data like this? as "plugin wrappers"?
-                    'pluginWrappers' => $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
+                    'pluginWrappers' => $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray(),
+                    'contentSchemaVersion' => '1' //@TODO does this make sense?
                 ],
                 $user->getId(),
                 __CLASS__ . '::' . __FUNCTION__
