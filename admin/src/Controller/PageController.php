@@ -534,8 +534,8 @@ class PageController extends AbstractActionController
 
             if (empty($resultRevisionId)) {
                 throw new \Exception(
-                    'Newer immuteblePageVersionRepo code requires a resultRevisionId'
-                    . ' be returned from $this->pageRepo->savePage but nothing was returned.'
+                    'Newer immuteblePageVersionRepo->createUnpublishedFromNothing call requires a' . '
+                     resultRevisionId be returned from $this->pageRepo->savePage but nothing was returned.'
                 );
             }
 
