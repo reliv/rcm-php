@@ -2,7 +2,7 @@
 /**
  * asset_manager.php
  */
-$bowerComponentsDir = __DIR__ . '/../../../../public/bower_components/';
+$bowerComponentsDir = __DIR__ . '/../../../../../public/bower_components/';
 return [
     'resolver_configs' => [
         'aliases' => [
