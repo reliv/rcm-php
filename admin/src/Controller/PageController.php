@@ -7,6 +7,7 @@ use Rcm\Entity\Site;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Http\Response;
+use Rcm\ImmutableHistory\VersionRepository;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
 use RcmUser\Service\RcmUserService;
@@ -58,19 +59,23 @@ class PageController extends AbstractActionController
      */
     protected $rcmUserService;
 
+    protected $immuteblePageVersionRepo;
+
     /**
-     * @param Site           $currentSite
+     * @param Site $currentSite
      * @param RcmUserService $rcmUserService
-     * @param PageRepo       $pageRepo
+     * @param PageRepo $pageRepo
      */
     public function __construct(
         Site $currentSite,
         RcmUserService $rcmUserService,
-        PageRepo $pageRepo
+        PageRepo $pageRepo,
+        VersionRepository $immuteblePageVersionRepo
     ) {
         $this->currentSite = $currentSite;
         $this->pageRepo = $pageRepo;
         $this->rcmUserService = $rcmUserService;
+        $this->immuteblePageVersionRepo = $immuteblePageVersionRepo;
 
         $this->view = new ViewModel();
         $this->view->setTerminal(true);
@@ -403,13 +408,27 @@ class PageController extends AbstractActionController
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
+        $siteId = $this->currentSite->getSiteId();
+
         $this->pageRepo->publishPageRevision(
-            $this->currentSite->getSiteId(),
+            $siteId,
             $pageName,
             $pageType,
             $pageRevision,
             $user->getId(),
             'Publish page in ' . get_class($this)
+        );
+
+        //@TODO change this to call publishFromExistingVersion() once we figure out how to get versionId
+        $this->immuteblePageVersionRepo->publishFromNothing(
+            [
+                'siteResourceId' => $siteId,
+                'relativeUrl' => '/' . $pageName
+            ],
+            '!!!! @TODO !!!!',//@TODO get the data from the revision somehow?
+            $user->getId(),
+            __CLASS__ . '::' . __FUNCTION__
+
         );
 
         return $this->redirect()->toUrl(
@@ -497,6 +516,17 @@ class PageController extends AbstractActionController
                 $user->getId(),
                 'Save existing page in ' . get_class($this),
                 $user->getName()
+            );
+
+            //@TODO what if result somehow says didn't save? @TODO Handle this case
+            $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
+                [
+                    'siteResourceId' => $this->currentSite->getSiteId(),
+                    'relativeUrl' => '/' . $pageName
+                ],
+                $data, //is this data right? and is it in the right schema?
+                $user->getId(),
+                __CLASS__ . '::' . __FUNCTION__
             );
 
             if (empty($result)) {
