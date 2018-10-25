@@ -52,7 +52,8 @@ class PageControllerFactory
         return new PageController(
             $currentSite,
             $rcmUserService,
-            $pageRepo
+            $pageRepo,
+            $container->get('Rcm\ImmutableHistory\PageVersionRepo')
         );
     }
 }

@@ -25,10 +25,10 @@ class VersionRepository
         $this->entityManger = $entityManger;
     }
 
-    public function createUnpublishedFromNothing(array $locator, $content, $userId, $programmaticReason)
+    public function createUnpublishedFromNothing(array $locator, array $content, $userId, $programmaticReason)
     {
-        $newVersion = new ($this->entityClassName)(
-            '?? @TODO ??', //@TODO
+        $newVersion = new $this->entityClassName(
+            0, //@TODO
             null,
             new \DateTime(),
             VersionStatuses::UNPUBLISHED,
@@ -43,10 +43,10 @@ class VersionRepository
         $this->entityManger->flush($newVersion);
     }
 
-    public function publishFromNothing(array $locator, $content, $userId, $programmaticReason)
+    public function publishFromNothing(array $locator, array $content, $userId, $programmaticReason)
     {
-        $newVersion = new ($this->entityClassName)(
-            '?? @TODO ??', //@TODO
+        $newVersion = new $this->entityClassName(
+            0, //@TODO
             null,
             new \DateTime(),
             VersionStatuses::PUBLISHED,
@@ -69,8 +69,8 @@ class VersionRepository
 
     public function depublish(array $locator, $userId, $programmaticReason)
     {
-        $newVersion = new ($this->entityClassName)(
-            '?? @TODO ??', //@TODO
+        $newVersion = new $this->entityClassName(
+            0, //@TODO
             null,
             new \DateTime(),
             VersionStatuses::DEPUBLISHED,
@@ -89,8 +89,8 @@ class VersionRepository
     {
         $originalEntity = $this->getByLocator($oldLocator); //@TODO handle not found case
 
-        $relocateDepublishVersion = new ($this->entityClassName)(
-            '?? @TODO ??', //@TODO
+        $relocateDepublishVersion = new $this->entityClassName(
+            0, //@TODO
             null,
             new \DateTime(),
             VersionStatuses::DEPUBLISHED,
@@ -103,8 +103,8 @@ class VersionRepository
 
         $this->entityManger->persist($relocateDepublishVersion);
 
-        $relocatePublishVersion = new ($this->entityClassName)(
-            '?? @TODO ??', //@TODO
+        $relocatePublishVersion = new $this->entityClassName(
+            0, //@TODO
             null,
             new \DateTime(),
             VersionStatuses::PUBLISHED,

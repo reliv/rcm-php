@@ -2,15 +2,17 @@
 
 namespace Rcm\ImmutableHistory\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @TODO add indexes
  * @TODO can we block update and delete quiries on this entity somehow?
- *
+ * @ORM\Entity
  * @ORM\Table(name="rcm_immutable_page_version")
  */
 class ImmutablePageVersion
 {
-//    public const LOCATOR_FIELD_NAMES = ['siteResourceId', 'relateUrl'];
+//    public const LOCATOR_FIELD_NAMES = ['siteId', 'relateUrl'];
 
     /**
      * @var int Auto-Incremented Primary Key
@@ -30,19 +32,32 @@ class ImmutablePageVersion
     protected $resourceId;
 
     /**
-     * @var int|null Can be null
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     */
-    protected $fromVersionId;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $date;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer")
+     */
+    protected $siteId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $relativeUrl;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="json")
+     */
+    protected $content;
 
     /**
      * @var string
@@ -71,38 +86,37 @@ class ImmutablePageVersion
      * @ORM\Column(type="string", nullable=true)
      */
     protected $programmaticReason;
+    
+    /**
+     * @var int|null Can be null
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\GeneratedValue
+     */
+    protected $fromVersionId;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer")
+     * ImmutablePageVersion constructor.
+     * @param int $resourceId
+     * @param int|null $fromVersionId
+     * @param \DateTime $date
+     * @param string $status
+     * @param string $action
+     * @param string $userId
+     * @param string $programmaticReason
+     * @param array $locator
+     * @param array $content
      */
-    protected $siteResourceId;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     */
-    protected $relativeUrl;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="json")
-     */
-    protected $content;
-
     public function __construct(
         int $resourceId,
-        int $fromVersionId,
+        $fromVersionId,
         \DateTime $date,
         string $status,
         string $action,
         string $userId,
         string $programmaticReason,
         array $locator,
-        string $content
+        array $content
     ) {
         $this->fromVersionId = $fromVersionId;
         $this->resourceId = $resourceId;
@@ -111,14 +125,15 @@ class ImmutablePageVersion
         $this->userId = $userId;
         $this->programmaticReason = $programmaticReason;
         $this->content = $content;
-        $this->siteResourceId = $locator['siteResourceId'];
+        $this->siteId = $locator['siteId'];
         $this->relativeUrl = $locator['relativeUrl'];
+        $this->date = $date;
     }
 
     public function getLocator()
     {
         return [
-            'siteResourceId' => $this->siteResourceId,
+            'siteId' => $this->siteId,
             'relativeUrl' => $this->relativeUrl
         ];
     }
@@ -190,9 +205,9 @@ class ImmutablePageVersion
     /**
      * @return int
      */
-    public function getSiteResourceId(): int
+    public function getSiteId(): int
     {
-        return $this->siteResourceId;
+        return $this->siteId;
     }
 
     /**

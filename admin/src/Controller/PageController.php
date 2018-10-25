@@ -422,10 +422,10 @@ class PageController extends AbstractActionController
         //@TODO change this to call publishFromExistingVersion() once we figure out how to get versionId
         $this->immuteblePageVersionRepo->publishFromNothing(
             [
-                'siteResourceId' => $siteId,
+                'siteId' => $siteId,
                 'relativeUrl' => '/' . $pageName
             ],
-            '!!!! @TODO !!!!',//@TODO get the data from the revision somehow?
+            ['!!!! @TODO !!!!'],//@TODO get the data from the revision somehow?
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
 
@@ -521,7 +521,7 @@ class PageController extends AbstractActionController
             //@TODO what if result somehow says didn't save? @TODO Handle this case
             $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
                 [
-                    'siteResourceId' => $this->currentSite->getSiteId(),
+                    'siteId' => $this->currentSite->getSiteId(),
                     'relativeUrl' => '/' . $pageName
                 ],
                 $data, //is this data right? and is it in the right schema?

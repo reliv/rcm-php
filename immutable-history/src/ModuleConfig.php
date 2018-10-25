@@ -9,15 +9,14 @@ class ModuleConfig
     public function __invoke()
     {
         return [
-            'depedencies' => [
-                [
-                    'config_factories' => [
-                        'Rcm\ImmutableHistory\PageVersionRepo' => [
-                            'class' => VersionRepository::class,
-                            'arguments' => [
-                                ['literal' => ImmutablePageVersion::class],
-                                Doctrine\ORM\EntityManager::class
-                            ]
+//            'depedencies' => [
+            'service_manager' => [
+                'config_factories' => [
+                    'Rcm\ImmutableHistory\PageVersionRepo' => [
+                        'class' => VersionRepository::class,
+                        'arguments' => [
+                            ['literal' => ImmutablePageVersion::class],
+                            \Doctrine\ORM\EntityManager::class
                         ]
                     ]
                 ]
