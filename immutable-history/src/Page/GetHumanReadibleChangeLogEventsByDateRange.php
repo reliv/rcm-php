@@ -45,13 +45,13 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
             $event->setUserId($version->getUserId());
             $event->setActionDescription($actionDescription);
             $event->setResourceDescription(
-                'page "' . $version->getRelativeUrl()
+                'page "' . $version->getPathname()
                 . '" on site #' . $version->getSiteId()
-                . ' ({{siteIdToDomainName}}' . $version->getRelativeUrl() . ')');
+                . ' ({{siteIdToDomainName}}' . $version->getPathname() . ')');
             $event->setMetaData(
                 [
                     'siteId' => $version->getSiteId(),
-                    'relativeUrl' => $version->getRelativeUrl()
+                    'relativeUrl' => $version->getPathname()
                 ]
             );
 
