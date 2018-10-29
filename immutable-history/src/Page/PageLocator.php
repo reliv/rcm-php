@@ -4,15 +4,15 @@ namespace Rcm\ImmutableHistory\Page;
 
 use Rcm\ImmutableHistory\LocatorInterface;
 
-class PageLocatorDataModel implements LocatorInterface
+class PageLocator implements LocatorInterface
 {
     protected $siteId;
-    protected $relativeUrl;
+    protected $pathname;
 
-    public function __construct(int $siteId, string $relativeUrl)
+    public function __construct(int $siteId, string $pathname)
     {
         $this->siteId = $siteId;
-        $this->relativeUrl = $relativeUrl;
+        $this->pathname = $pathname;
     }
 
     /**
@@ -26,8 +26,8 @@ class PageLocatorDataModel implements LocatorInterface
     /**
      * @return string
      */
-    public function getRelativeUrl()
+    public function getPathname()
     {
-        return $this->relativeUrl;
+        return $this->pathname;
     }
 }

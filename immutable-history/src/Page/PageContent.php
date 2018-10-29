@@ -4,7 +4,7 @@ namespace Rcm\ImmutableHistory\Page;
 
 use Rcm\ImmutableHistory\ContentInterface;
 
-class PageContentDataModel implements ContentInterface
+class PageContent implements ContentInterface
 {
     const CONTET_SCHEMA_VERSION = 1;
 

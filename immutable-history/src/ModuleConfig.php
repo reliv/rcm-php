@@ -10,6 +10,7 @@ use Rcm\ImmutableHistory\Controller\ChangeLogListController;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersion;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersionEntity;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
+use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\Page\RcmPluginWrappersToRcmImmutablePluginInstances;
 use RcmUser\Api\Acl\IsAllowed;
 
@@ -47,7 +48,8 @@ class ModuleConfig
                             EntityManager::class
                         ]
                     ],
-                    PageContentFactory::class => []
+                    PageContentFactory::class => [],
+                    RcmPageNameToPathname::class => []
                 ]
             ],
             'routes' => [

@@ -28,7 +28,7 @@ class PageContentFactory
             ];
         };
 
-        return new PageContentDataModel(
+        return new PageContent(
             $title,
             $description,
             $keywords,

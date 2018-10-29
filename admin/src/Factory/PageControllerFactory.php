@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Rcm\Entity\Revision;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
+use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use RcmAdmin\Controller\PageController;
 use RcmUser\Service\RcmUserService;
 use Zend\Mvc\Controller\ControllerManager;
@@ -47,7 +48,8 @@ class PageControllerFactory
             $container->get(EntityManager::class)->getRepository(\Rcm\Entity\Page::class),
             $container->get(EntityManager::class)->getRepository(Revision::class),
             $container->get('Rcm\ImmutableHistory\PageVersionRepo'),
-            $container->get(PageContentFactory::class)
+            $container->get(PageContentFactory::class),
+            $container->get(RcmPageNameToPathname::class)
         );
     }
 }

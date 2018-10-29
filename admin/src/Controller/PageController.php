@@ -8,9 +8,10 @@ use Rcm\Entity\Site;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Http\Response;
-use Rcm\ImmutableHistory\Page\PageContentDataModel;
+use Rcm\ImmutableHistory\Page\PageContent;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
-use Rcm\ImmutableHistory\Page\PageLocatorDataModel;
+use Rcm\ImmutableHistory\Page\PageLocator;
+use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\VersionRepository;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
@@ -69,6 +70,8 @@ class PageController extends AbstractActionController
 
     protected $immutablePageContentFactory;
 
+    protected $rcmPageNameToPathname;
+
     /**
      * @param Site $currentSite
      * @param RcmUserService $rcmUserService
@@ -80,7 +83,8 @@ class PageController extends AbstractActionController
         PageRepo $pageRepo,
         $revisionRepo,
         VersionRepository $immuteblePageVersionRepo,
-        PageContentFactory $immutablePageContentFactory
+        PageContentFactory $immutablePageContentFactory,
+        RcmPageNameToPathname $rcmPageNameToPathname
     ) {
         $this->currentSite = $currentSite;
         $this->pageRepo = $pageRepo;
@@ -88,6 +92,7 @@ class PageController extends AbstractActionController
         $this->rcmUserService = $rcmUserService;
         $this->immuteblePageVersionRepo = $immuteblePageVersionRepo;
         $this->immutablePageContentFactory = $immutablePageContentFactory;
+        $this->rcmPageNameToPathname = $rcmPageNameToPathname;
 
         $this->view = new ViewModel();
         $this->view->setTerminal(true);
@@ -433,7 +438,7 @@ class PageController extends AbstractActionController
 
         //@TODO change this to call publishFromExistingVersion() once we figure out how to get versionId
         $this->immuteblePageVersionRepo->publishFromNothing(
-            new PageLocatorDataModel($this->currentSite->getSiteId(), '/' . $pageName),
+            new PageLocator($this->currentSite->getSiteId(), $this->rcmPageNameToPathname->__invoke($pageName)),
             $this->immutablePageContentFactory->__invoke(
                 $page->getPageTitle(),
                 $page->getDescription(),
@@ -548,7 +553,7 @@ class PageController extends AbstractActionController
                 ]);
 
                 $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
-                    new PageLocatorDataModel($this->currentSite->getSiteId(), '/' . $pageName),
+                    new PageLocator($this->currentSite->getSiteId(), $this->rcmPageNameToPathname->__invoke($pageName)),
                     $this->immutablePageContentFactory->__invoke(
                         $page->getPageTitle(),
                         $page->getDescription(),

@@ -51,7 +51,7 @@ class ImmutablePageVersionEntity
      *
      * @ORM\Column(type="string")
      */
-    protected $relativeUrl;
+    protected $pathname;
 
     /**
      * @var array
@@ -116,8 +116,8 @@ class ImmutablePageVersionEntity
         string $action,
         string $userId,
         string $programmaticReason,
-        PageLocatorDataModel $locator,
-        PageContentDataModel $content
+        PageLocator $locator,
+        PageContent $content
     ) {
         $this->fromVersionId = $fromVersionId;
         $this->resourceId = $resourceId;
@@ -127,13 +127,13 @@ class ImmutablePageVersionEntity
         $this->programmaticReason = $programmaticReason;
         $this->content = $content->toArrayForLongTermStorage();
         $this->siteId = $locator->getSiteId();
-        $this->relativeUrl = $locator->getRelativeUrl();
+        $this->pathname = $locator->getPathname();
         $this->date = $date;
     }
 
-    public function getLocator(): PageLocatorDataModel
+    public function getLocator(): PageLocator
     {
-        return new PageLocatorDataModel($this->siteId, $this->relativeUrl);
+        return new PageLocator($this->siteId, $this->pathname);
     }
 
     /**
@@ -211,9 +211,9 @@ class ImmutablePageVersionEntity
     /**
      * @return string
      */
-    public function getRelativeUrl(): string
+    public function getPathname(): string
     {
-        return $this->relativeUrl;
+        return $this->pathname;
     }
 
     /**
