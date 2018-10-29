@@ -532,48 +532,47 @@ class PageController extends AbstractActionController
                 $user->getName()
             );
 
-            if (empty($resultRevisionId)) {
-                throw new \Exception(
-                    'Newer immuteblePageVersionRepo->createUnpublishedFromNothing call requires a' . '
-                     resultRevisionId be returned from $this->pageRepo->savePage but nothing was returned.'
+            /**
+             * If the pageRepo deterimins there was no change, it saves nothing a returns and empty $resultRevisionId.
+             */
+            $savedANewVersion = !empty($resultRevisionId);
+
+            if ($savedANewVersion) {
+                /**
+                 * @var Page
+                 */
+                $page = $this->pageRepo->findOneBy([
+                    'site' => $this->currentSite,
+                    'name' => $pageName,
+                    'pageType' => $pageType
+                ]);
+
+                $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
+                    new PageLocatorDataModel($this->currentSite->getSiteId(), '/' . $pageName),
+                    $this->immutablePageContentFactory->__invoke(
+                        $page->getPageTitle(),
+                        $page->getDescription(),
+                        $page->getKeywords(),
+                        $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
+                    ),
+                    $user->getId(),
+                    __CLASS__ . '::' . __FUNCTION__
                 );
             }
 
-            /**
-             * @var Page
-             */
-            $page = $this->pageRepo->findOneBy([
-                'site' => $this->currentSite,
-                'name' => $pageName,
-                'pageType' => $pageType
-            ]);
-
-            $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
-                new PageLocatorDataModel($this->currentSite->getSiteId(), '/' . $pageName),
-                $this->immutablePageContentFactory->__invoke(
-                    $page->getPageTitle(),
-                    $page->getDescription(),
-                    $page->getKeywords(),
-                    $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
-                ),
-                $user->getId(),
-                __CLASS__ . '::' . __FUNCTION__
-            );
-
-//            if (empty($resultRevisionId)) {
-//                $return['redirect'] = $this->urlToPage(
-//                    $pageName,
-//                    $pageType,
-//                    $pageRevision
-//                );
-//            } else {
-            $return['redirect'] = $this->urlToPage(
-                $pageName,
-                $pageType,
-                $resultRevisionId
-            );
-
-//            }
+            if ($savedANewVersion) {
+                $return['redirect'] = $this->urlToPage(
+                    $pageName,
+                    $pageType,
+                    $resultRevisionId
+                );
+            } else {
+                $return['redirect'] = $this->urlToPage(
+                    $pageName,
+                    $pageType,
+                    $pageRevision
+                );
+            }
 
             return $this->getJsonResponse($return);
         }
