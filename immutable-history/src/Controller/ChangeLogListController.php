@@ -50,7 +50,7 @@ class ChangeLogListController implements MiddlewareInterface
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         //@TODO pick a better resource name and perhaps a privilage name
-        if (!$this->isAllowed->__invoke($request, 'admin')) {
+        if (!$this->isAllowed->__invoke($request, 'content-change-log', 'read')) {
             return new HtmlResponse('401 Unauthorized', 401);
         }
 

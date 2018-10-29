@@ -74,7 +74,22 @@ class ModuleConfig
                         ]
                     ]
                 ],
-            ]
+            ],
+            'Acl\Config' => [
+                'ResourceProviders' => [
+                    'Pws\Acl\ResourceProvider\Pws' => [
+                        'content-change-log' => [
+                            'resourceId' => 'content-change-log',
+                            'parentResourceId' => null,
+                            'privileges' => [
+                                'read',
+                            ],
+                            'name' => 'Content change log',
+                            'description' => 'Contains a log of all known content changes.',
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 }
