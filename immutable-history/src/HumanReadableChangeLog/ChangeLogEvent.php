@@ -1,96 +1,109 @@
 <?php
-//
-//namespace Zrcms\Core\Model;
-//
-//interface ChangeLogEvent
-//{
-//    /**
-//     * @return \DateTime
-//     */
-//    public function getDateTime();
-//
-//    /**
-//     * @param \DateTime $dateTime
-//     */
-//    public function setDateTime($dateTime);
-//
-//    /**
-//     * @return string
-//     */
-//    public function getUserId();
-//
-//    /**
-//     * @param string $userId
-//     */
-//    public function setUserId($userId);
-//
-//    /**
-//     * @return string
-//     */
-//    public function getUserName();
-//
-//    /**
-//     * @param string $userName
-//     */
-//    public function setUserName($userName);
-//
-//    /**
-//     * @return string
-//     */
-//    public function getActionId();
-//
-//    /**
-//     * @param string $actionId
-//     */
-//    public function setActionId($actionId);
-//
-//    /**
-//     * @return string
-//     */
-//    public function getActionName();
-//
-//    /**
-//     * @param string $actionName
-//     */
-//    public function setActionName($actionName);
-//
-//    /**
-//     * @return string
-//     */
-//    public function getResourceId();
-//
-//    /**
-//     * @param string $resourceId
-//     */
-//    public function setResourceId($resourceId);
-//
-//    /**
-//     * @return string
-//     */
-//    public function getResourceName();
-//
-//    /**
-//     * @param string $resourceName
-//     */
-//    public function setResourceName($resourceName);
-//
-//    /**
-//     * @return string
-//     */
-//    public function getResourceTypeName();
-//
-//    /**
-//     * @param string $resourceTypeName
-//     */
-//    public function setResourceTypeName($resourceTypeName);
-//
-//    /**
-//     * @return array
-//     */
-//    public function getMetaData(): array;
-//
-//    /**
-//     * @param array $metaData
-//     */
-//    public function setMetaData(array $metaData);
-//}
+
+namespace Rcm\ImmutableHistory\HumanReadableChangeLog;
+
+class ChangeLogEvent
+{
+    /**
+     * @var \DateTime
+     */
+    protected $date;
+    /**
+     * @var string
+     */
+    protected $userId;
+
+    /**
+     * @var string
+     */
+    protected $actionDescription;
+
+    /**
+     * @var string
+     */
+    protected $resourceDescription;
+    /**
+     * @var array
+     */
+    protected $metaData = [];
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate(): \DateTime
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param \DateTime $date
+     */
+    public function setDate(\DateTime $date): void
+    {
+        $this->date = $date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param string $userId
+     */
+    public function setUserId(string $userId): void
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getActionDescription(): string
+    {
+        return $this->actionDescription;
+    }
+
+    /**
+     * @param string $actionDescription
+     */
+    public function setActionDescription(string $actionDescription): void
+    {
+        $this->actionDescription = $actionDescription;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResourceDescription(): string
+    {
+        return $this->resourceDescription;
+    }
+
+    /**
+     * @param string $resourceDescription
+     */
+    public function setResourceDescription(string $resourceDescription): void
+    {
+        $this->resourceDescription = $resourceDescription;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetaData(): array
+    {
+        return $this->metaData;
+    }
+
+    /**
+     * @param array $metaData
+     */
+    public function setMetaData(array $metaData): void
+    {
+        $this->metaData = $metaData;
+    }
+}

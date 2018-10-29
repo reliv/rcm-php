@@ -2,18 +2,23 @@
 
 namespace Rcm\ImmutableHistory;
 
+use Doctrine\ORM\EntityManager;
+use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEventToSentence;
+use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllChangeLogEventSentencesForDateRange;
+use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogByDateRangeComposite;
+use Rcm\ImmutableHistory\Controller\ChangeLogListController;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersion;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersionEntity;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\RcmPluginWrappersToRcmImmutablePluginInstances;
+use RcmUser\Api\Acl\IsAllowed;
 
 class ModuleConfig
 {
     public function __invoke()
     {
         return [
-//            'depedencies' => [ //@TODO use this expressive key instead
-            'service_manager' => [
+            'dependencies' => [
                 'config_factories' => [
                     'Rcm\ImmutableHistory\PageVersionRepo' => [
                         'class' => VersionRepository::class,
@@ -22,8 +27,37 @@ class ModuleConfig
                             \Doctrine\ORM\EntityManager::class
                         ]
                     ],
+                    GetAllChangeLogEventSentencesForDateRange::class => [
+                        'arguments' => [
+                            ChangeLogEventToSentence::class
+                        ],
+                        'calls' => [
+                            ['addChild', [\Rcm\ImmutableHistory\Page\GetHumanReadibleChangeLogEventsByDateRange::class]]
+                        ]
+                    ],
+                    ChangeLogEventToSentence::class => [],
+                    ChangeLogListController::class => [
+                        'arguments' => [
+                            GetAllChangeLogEventSentencesForDateRange::class,
+                            IsAllowed::class
+                        ]
+                    ],
+                    \Rcm\ImmutableHistory\Page\GetHumanReadibleChangeLogEventsByDateRange::class => [
+                        'arguments' => [
+                            EntityManager::class
+                        ]
+                    ],
                     PageContentFactory::class => []
                 ]
+            ],
+            'routes' => [
+                [
+                    'path' => '/rcm/change-log',
+                    'allowed_methods' => ['GET'],
+                    'middleware' => [
+                        ChangeLogListController::class,
+                    ],
+                ],
             ],
             'doctrine' => [
                 'driver' => [

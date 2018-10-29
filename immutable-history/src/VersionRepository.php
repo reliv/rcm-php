@@ -26,14 +26,18 @@ class VersionRepository
         $this->entityManger = $entityManger;
     }
 
-    public function createUnpublishedFromNothing(LocatorInterface $locator, ContentInterface $content, $userId, $programmaticReason)
-    {
+    public function createUnpublishedFromNothing(
+        LocatorInterface $locator,
+        ContentInterface $content,
+        $userId,
+        $programmaticReason
+    ) {
         $newVersion = new $this->entityClassName(
             0, //@TODO
             null,
             new \DateTime(),
             VersionStatuses::UNPUBLISHED,
-            'createUnpublishedFromNothing',
+            VersionActions::CREATE_UNPUBLISHED_FROM_NOTHING,
             $userId,
             $programmaticReason,
             $locator,
@@ -44,14 +48,18 @@ class VersionRepository
         $this->entityManger->flush($newVersion);
     }
 
-    public function publishFromNothing(LocatorInterface $locator, ContentInterface $content, $userId, $programmaticReason)
-    {
+    public function publishFromNothing(
+        LocatorInterface $locator,
+        ContentInterface $content,
+        $userId,
+        $programmaticReason
+    ) {
         $newVersion = new $this->entityClassName(
             0, //@TODO
             null,
             new \DateTime(),
             VersionStatuses::PUBLISHED,
-            'publishFromNothing',
+            VersionActions::PUBLISH_FROM_NORTHING,
             $userId,
             $programmaticReason,
             $locator,
@@ -129,6 +137,7 @@ class VersionRepository
     public function getOneByLocator(LocatorInterface $locator)
     {
         $doctrineRepo = $this->entityManger->getRepository($this->entityClassName);
+
         return $doctrineRepo->findOneBy($locator); //@TODO handle not found case
     }
 

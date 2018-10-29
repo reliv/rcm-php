@@ -93,17 +93,6 @@ class Module
      */
     public function getConfig()
     {
-//        return include __DIR__ . '/../config/module.config.php';
-
-        /**
-         * @TODO stop loading Rcm\ImmutableHistory\ModuleConfig from in here and
-         * make app do it eventually. This is useful for now though for BC/FC support with the app
-         */
-        $immutableHistoryModuleConfig = (new \Rcm\ImmutableHistory\ModuleConfig())->__invoke();
-
-        return array_merge_recursive(
-            include __DIR__ . '/../config/module.config.php',
-            $immutableHistoryModuleConfig
-        );
+        return include __DIR__ . '/../config/module.config.php';
     }
 }
