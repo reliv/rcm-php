@@ -1,8 +1,9 @@
 <?php
 
-namespace Rcm\ImmutableHistory\Entity;
+namespace Rcm\ImmutableHistory\Page;
 
 use Doctrine\ORM\Mapping as ORM;
+use Rcm\ImmutableHistory\LocatorInterface;
 
 /**
  * @TODO add indexes
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="rcm_immutable_page_version")
  */
-class ImmutablePageVersion
+class ImmutablePageVersionEntity
 {
 //    public const LOCATOR_FIELD_NAMES = ['siteId', 'relateUrl'];
 
@@ -21,7 +22,7 @@ class ImmutablePageVersion
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
-    protected $versionId;
+    protected $id;
 
     /**
      * @var int
@@ -53,7 +54,7 @@ class ImmutablePageVersion
     protected $relativeUrl;
 
     /**
-     * @var string
+     * @var array
      *
      * @ORM\Column(type="json")
      */
@@ -86,7 +87,7 @@ class ImmutablePageVersion
      * @ORM\Column(type="string", nullable=true)
      */
     protected $programmaticReason;
-    
+
     /**
      * @var int|null Can be null
      *
@@ -104,8 +105,8 @@ class ImmutablePageVersion
      * @param string $action
      * @param string $userId
      * @param string $programmaticReason
-     * @param array $locator
-     * @param array $content
+     * @param PageLocator $locator
+     * @param ContentInterface $content
      */
     public function __construct(
         int $resourceId,
@@ -115,8 +116,8 @@ class ImmutablePageVersion
         string $action,
         string $userId,
         string $programmaticReason,
-        array $locator,
-        array $content
+        PageLocatorDataModel $locator,
+        PageContentDataModel $content
     ) {
         $this->fromVersionId = $fromVersionId;
         $this->resourceId = $resourceId;
@@ -124,18 +125,15 @@ class ImmutablePageVersion
         $this->action = $action;
         $this->userId = $userId;
         $this->programmaticReason = $programmaticReason;
-        $this->content = $content;
-        $this->siteId = $locator['siteId'];
-        $this->relativeUrl = $locator['relativeUrl'];
+        $this->content = $content->toArrayForLongTermStorage();
+        $this->siteId = $locator->getSiteId();
+        $this->relativeUrl = $locator->getRelativeUrl();
         $this->date = $date;
     }
 
-    public function getLocator()
+    public function getLocator(): PageLocatorDataModel
     {
-        return [
-            'siteId' => $this->siteId,
-            'relativeUrl' => $this->relativeUrl
-        ];
+        return new PageLocatorDataModel($this->siteId, $this->relativeUrl);
     }
 
     /**
@@ -143,7 +141,7 @@ class ImmutablePageVersion
      */
     public function getVersionId(): int
     {
-        return $this->versionId;
+        return $this->id;
     }
 
     /**
@@ -219,9 +217,9 @@ class ImmutablePageVersion
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getContent(): string
+    public function getContentAsArray(): array
     {
         return $this->content;
     }

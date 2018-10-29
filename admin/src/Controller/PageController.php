@@ -3,10 +3,14 @@
 namespace RcmAdmin\Controller;
 
 use Rcm\Acl\ResourceName;
+use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\PageNotFoundException;
 use Rcm\Http\Response;
+use Rcm\ImmutableHistory\Page\PageContentDataModel;
+use Rcm\ImmutableHistory\Page\PageContentFactory;
+use Rcm\ImmutableHistory\Page\PageLocatorDataModel;
 use Rcm\ImmutableHistory\VersionRepository;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
@@ -63,6 +67,8 @@ class PageController extends AbstractActionController
 
     protected $revisionRepo;
 
+    protected $immutablePageContentFactory;
+
     /**
      * @param Site $currentSite
      * @param RcmUserService $rcmUserService
@@ -73,13 +79,15 @@ class PageController extends AbstractActionController
         RcmUserService $rcmUserService,
         PageRepo $pageRepo,
         $revisionRepo,
-        VersionRepository $immuteblePageVersionRepo
+        VersionRepository $immuteblePageVersionRepo,
+        PageContentFactory $immutablePageContentFactory
     ) {
         $this->currentSite = $currentSite;
         $this->pageRepo = $pageRepo;
         $this->revisionRepo = $revisionRepo;
         $this->rcmUserService = $rcmUserService;
         $this->immuteblePageVersionRepo = $immuteblePageVersionRepo;
+        $this->immutablePageContentFactory = $immutablePageContentFactory;
 
         $this->view = new ViewModel();
         $this->view->setTerminal(true);
@@ -425,21 +433,13 @@ class PageController extends AbstractActionController
 
         //@TODO change this to call publishFromExistingVersion() once we figure out how to get versionId
         $this->immuteblePageVersionRepo->publishFromNothing(
-            [
-                'siteId' => $siteId,
-                'relativeUrl' => '/' . $pageName
-            ],
-            [
-                //@TODO is this data in the right structure?
-                // @TODO should this code be centralized to snsure consitant schema?
-                'title' => $page->getPageTitle(),
-                'keywords' => $page->getKeywords(),
-                'description' => $page->getDescription(),
-                //@TODO get rid of all the potentially erroneos old tracking info in this json
-                //@TODO do we really want to store this data like this? as "plugin wrappers"?
-                'pluginWrappers' => $page->getPublishedRevision()->getPluginWrappers()->toArray(),
-                'contentSchemaVersion' => '1' //@TODO does this make sense?
-            ],
+            new PageLocatorDataModel($this->currentSite->getSiteId(), '/' . $pageName),
+            $this->immutablePageContentFactory->__invoke(
+                $page->getPageTitle(),
+                $page->getDescription(),
+                $page->getKeywords(),
+                $page->getPublishedRevision()->getPluginWrappers()->toArray()
+            ),
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
 
@@ -539,22 +539,23 @@ class PageController extends AbstractActionController
                 );
             }
 
+            /**
+             * @var Page
+             */
+            $page = $this->pageRepo->findOneBy([
+                'site' => $this->currentSite,
+                'name' => $pageName,
+                'pageType' => $pageType
+            ]);
+
             $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
-                [
-                    'siteId' => $this->currentSite->getSiteId(),
-                    'relativeUrl' => '/' . $pageName
-                ],
-                [
-                    //@TODO is this data in the right structure?
-                    // @TODO should this code be centralized to snsure consitant schema?
-                    'title' => null, //title is not yet part of revisions in RCM so null is most accurate
-                    'keywords' => null,//keywords are not yet part of revisions in RCM so null is most accurate
-                    'description' => null,//description is not yet part of revisions in RCM so null is most accurate
-                    //@TODO get rid of all the potentially erroneos old tracking info in this json
-                    //@TODO do we really want to store this data like this? as "plugin wrappers"?
-                    'pluginWrappers' => $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray(),
-                    'contentSchemaVersion' => '1' //@TODO does this make sense?
-                ],
+                new PageLocatorDataModel($this->currentSite->getSiteId(), '/' . $pageName),
+                $this->immutablePageContentFactory->__invoke(
+                    $page->getPageTitle(),
+                    $page->getDescription(),
+                    $page->getKeywords(),
+                    $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
+                ),
                 $user->getId(),
                 __CLASS__ . '::' . __FUNCTION__
             );

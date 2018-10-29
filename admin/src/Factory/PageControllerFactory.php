@@ -2,8 +2,10 @@
 
 namespace RcmAdmin\Factory;
 
+use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Rcm\Entity\Revision;
+use Rcm\ImmutableHistory\Page\PageContentFactory;
 use RcmAdmin\Controller\PageController;
 use RcmUser\Service\RcmUserService;
 use Zend\Mvc\Controller\ControllerManager;
@@ -39,23 +41,13 @@ class PageControllerFactory
             $container = $container->getServiceLocator();
         }
 
-        /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $container->get(\Rcm\Service\CurrentSite::class);
-
-        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
-        $entityManager = $container->get('Doctrine\ORM\EntityManager');
-
-        /** @var \Rcm\Repository\Page $pageRepo */
-        $pageRepo = $entityManager->getRepository(\Rcm\Entity\Page::class);
-
-        $rcmUserService = $container->get(RcmUserService::class);
-
         return new PageController(
-            $currentSite,
-            $rcmUserService,
-            $pageRepo,
-            $entityManager->getRepository(Revision::class),
-            $container->get('Rcm\ImmutableHistory\PageVersionRepo')
+            $container->get(\Rcm\Service\CurrentSite::class),
+            $container->get(RcmUserService::class),
+            $container->get(EntityManager::class)->getRepository(\Rcm\Entity\Page::class),
+            $container->get(EntityManager::class)->getRepository(Revision::class),
+            $container->get('Rcm\ImmutableHistory\PageVersionRepo'),
+            $container->get(PageContentFactory::class)
         );
     }
 }

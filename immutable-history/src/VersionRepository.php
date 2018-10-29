@@ -11,7 +11,7 @@ class VersionRepository
      * @TODO allow per-resource-type locator validators to be injected and use them or use data models?
      * @TODO allow per-resouce-type content validators to be injected and use them or use data models?
      * @TODO set dates, user, and reason
-     * @TODO replace all \Rcm\ImmutableHistory\Entity\ImmutablePageVersion with interface in here
+     * @TODO replace all \Rcm\ImmutableHistory\Page\ImmutablePageVersion with interface in here
      * @TODO make userId and programmatic and any other fields that should be required, required
      * @TODO get statuses from constants? And actions too?
      * @TODO make an interface for this repo and make all callers use it
@@ -26,7 +26,7 @@ class VersionRepository
         $this->entityManger = $entityManger;
     }
 
-    public function createUnpublishedFromNothing(array $locator, array $content, $userId, $programmaticReason)
+    public function createUnpublishedFromNothing(LocatorInterface $locator, ContentInterface $content, $userId, $programmaticReason)
     {
         $newVersion = new $this->entityClassName(
             0, //@TODO
@@ -44,7 +44,7 @@ class VersionRepository
         $this->entityManger->flush($newVersion);
     }
 
-    public function publishFromNothing(array $locator, array $content, $userId, $programmaticReason)
+    public function publishFromNothing(LocatorInterface $locator, ContentInterface $content, $userId, $programmaticReason)
     {
         $newVersion = new $this->entityClassName(
             0, //@TODO
@@ -68,7 +68,7 @@ class VersionRepository
 // @TODO how can this work in RCM?
     }
 
-    public function depublish(array $locator, $userId, $programmaticReason)
+    public function depublish(LocatorInterface $locator, $userId, $programmaticReason)
     {
         $newVersion = new $this->entityClassName(
             0, //@TODO
@@ -86,7 +86,7 @@ class VersionRepository
         $this->entityManger->flush($newVersion);
     }
 
-    public function relocate(array $oldLocator, array $newLocator)
+    public function relocate(LocatorInterface $oldLocator, LocatorInterface $newLocator)
     {
         $originalEntity = $this->getByLocator($oldLocator); //@TODO handle not found case
 
@@ -121,23 +121,23 @@ class VersionRepository
         $this->entityManger->flush([$relocateDepublishVersion, $relocatePublishVersion]);
     }
 
-    public function copy(array $relocateDepublishVersion, array $relocatePublishVersion)
+    public function copy(LocatorInterface $relocateDepublishVersion, LocatorInterface $relocatePublishVersion)
     {
         $originalEntity = $this->getByLocator($oldLocator); //@TODO handle not found case
     }
 
-    public function getOneByLocator(array $locator)
+    public function getOneByLocator(LocatorInterface $locator)
     {
         $doctrineRepo = $this->entityManger->getRepository($this->entityClassName);
         return $doctrineRepo->findOneBy($locator); //@TODO handle not found case
     }
 
-    public function getUnpublishedVersionsByLocator(array $locator)
+    public function getUnpublishedVersionsByLocator(LocatorInterface $locator)
     {
 
     }
 
-    public function getPublishedVersionsByLocator(array $locator)
+    public function getPublishedVersionsByLocator(LocatorInterface $locator)
     {
 
     }
