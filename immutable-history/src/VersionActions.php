@@ -7,4 +7,7 @@ class VersionActions
 {
     const CREATE_UNPUBLISHED_FROM_NOTHING = 'createUnpublishedFromNothing';
     const PUBLISH_FROM_NORTHING = 'publishFromNothing';
+    const DEPUBLISH = 'depublish';
+    const RELOCATE_DEPUBLISH = 'relocateDepublish';
+    const RELOCATE_PUBLISH = 'relocatePublish';
 }

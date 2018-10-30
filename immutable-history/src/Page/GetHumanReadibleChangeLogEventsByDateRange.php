@@ -6,15 +6,22 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEvent;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogEventsByDateRangeInterface;
+use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
+use Rcm\ImmutableHistory\Site\UserIdToUserFullName;
 use Rcm\ImmutableHistory\VersionActions;
 
 class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChangeLogEventsByDateRangeInterface
 {
     protected $entityManager;
 
-    public function __construct(EntityManager $entityManger)
-    {
+    protected $siteIdToDomainName;
+
+    public function __construct(
+        EntityManager $entityManger,
+        SiteIdToDomainName $siteIdToDomainName
+    ) {
         $this->entityManager = $entityManger;
+        $this->siteIdToDomainName = $siteIdToDomainName;
     }
 
     public function __invoke(\DateTime $greaterThanDate, \DateTime $lessThanDate): array
@@ -47,7 +54,7 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
             $event->setResourceDescription(
                 'page "' . $version->getPathname()
                 . '" on site #' . $version->getSiteId()
-                . ' ({{siteIdToDomainName}}' . $version->getPathname() . ')');
+                . ' (' . $this->siteIdToDomainName->__invoke($version->getSiteId()) . $version->getPathname() . ')');
             $event->setMetaData(
                 [
                     'siteId' => $version->getSiteId(),

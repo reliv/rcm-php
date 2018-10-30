@@ -438,7 +438,8 @@ class PageController extends AbstractActionController
 
         //@TODO change this to call publishFromExistingVersion() once we figure out how to get versionId
         $this->immuteblePageVersionRepo->publishFromNothing(
-            new PageLocator($this->currentSite->getSiteId(), $this->rcmPageNameToPathname->__invoke($pageName)),
+            new PageLocator($this->currentSite->getSiteId(),
+                $this->rcmPageNameToPathname->__invoke($pageName, $pageType)),
             $this->immutablePageContentFactory->__invoke(
                 $page->getPageTitle(),
                 $page->getDescription(),
@@ -553,7 +554,8 @@ class PageController extends AbstractActionController
                 ]);
 
                 $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
-                    new PageLocator($this->currentSite->getSiteId(), $this->rcmPageNameToPathname->__invoke($pageName)),
+                    new PageLocator($this->currentSite->getSiteId(),
+                        $this->rcmPageNameToPathname->__invoke($pageName, $pageType)),
                     $this->immutablePageContentFactory->__invoke(
                         $page->getPageTitle(),
                         $page->getDescription(),

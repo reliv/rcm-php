@@ -12,6 +12,8 @@ use Rcm\ImmutableHistory\Page\ImmutablePageVersionEntity;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\Page\RcmPluginWrappersToRcmImmutablePluginInstances;
+use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
+use Rcm\ImmutableHistory\User\UserIdToUserFullName;
 use RcmUser\Api\Acl\IsAllowed;
 
 class ModuleConfig
@@ -36,7 +38,11 @@ class ModuleConfig
                             ['addChild', [\Rcm\ImmutableHistory\Page\GetHumanReadibleChangeLogEventsByDateRange::class]]
                         ]
                     ],
-                    ChangeLogEventToSentence::class => [],
+                    ChangeLogEventToSentence::class => [
+                        'arguments' => [
+                            UserIdToUserFullName::class
+                        ]
+                    ],
                     ChangeLogListController::class => [
                         'arguments' => [
                             GetAllChangeLogEventSentencesForDateRange::class,
@@ -45,10 +51,13 @@ class ModuleConfig
                     ],
                     \Rcm\ImmutableHistory\Page\GetHumanReadibleChangeLogEventsByDateRange::class => [
                         'arguments' => [
-                            EntityManager::class
+                            EntityManager::class,
+                            SiteIdToDomainName::class
                         ]
                     ],
                     PageContentFactory::class => [],
+                    UserIdToUserFullName::class => [],
+                    SiteIdToDomainName::class => [],
                     RcmPageNameToPathname::class => []
                 ]
             ],

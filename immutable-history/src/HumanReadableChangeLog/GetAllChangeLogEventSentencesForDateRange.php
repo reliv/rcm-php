@@ -44,8 +44,7 @@ class GetAllChangeLogEventSentencesForDateRange
             }
         }
 
-        //@TODO re-sort these by date since these are comming from multipule sources
-        //@TODO preserve order within same second?
+        //@TODO re-sort these by "date desc, id desc" since these are comming from multipule sources and in same second
         return $humanReadableEvents;
     }
 }

@@ -25,9 +25,9 @@ class ImmutablePageVersionEntity
     protected $id;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      * @ORM\GeneratedValue
      */
     protected $resourceId;
@@ -89,17 +89,8 @@ class ImmutablePageVersionEntity
     protected $programmaticReason;
 
     /**
-     * @var int|null Can be null
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     * @ORM\GeneratedValue
-     */
-    protected $fromVersionId;
-
-    /**
      * ImmutablePageVersion constructor.
      * @param int $resourceId
-     * @param int|null $fromVersionId
      * @param \DateTime $date
      * @param string $status
      * @param string $action
@@ -110,7 +101,6 @@ class ImmutablePageVersionEntity
      */
     public function __construct(
         int $resourceId,
-        $fromVersionId,
         \DateTime $date,
         string $status,
         string $action,
@@ -119,7 +109,6 @@ class ImmutablePageVersionEntity
         PageLocator $locator,
         PageContent $content
     ) {
-        $this->fromVersionId = $fromVersionId;
         $this->resourceId = $resourceId;
         $this->status = $status;
         $this->action = $action;
@@ -139,17 +128,9 @@ class ImmutablePageVersionEntity
     /**
      * @return int
      */
-    public function getVersionId(): int
+    public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFromVersionId(): int
-    {
-        return $this->fromVersionId;
     }
 
     /**

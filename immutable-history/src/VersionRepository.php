@@ -34,7 +34,6 @@ class VersionRepository
     ) {
         $newVersion = new $this->entityClassName(
             0, //@TODO
-            null,
             new \DateTime(),
             VersionStatuses::UNPUBLISHED,
             VersionActions::CREATE_UNPUBLISHED_FROM_NOTHING,
@@ -56,7 +55,6 @@ class VersionRepository
     ) {
         $newVersion = new $this->entityClassName(
             0, //@TODO
-            null,
             new \DateTime(),
             VersionStatuses::PUBLISHED,
             VersionActions::PUBLISH_FROM_NORTHING,
@@ -70,20 +68,13 @@ class VersionRepository
         $this->entityManger->flush($newVersion);
     }
 
-    public function publishFromExistingVersion($versionId, $userId, $programmaticReason)
-    {
-//        $newVersion = $this->entityManger->find($this->entityClassName, $versionId);
-// @TODO how can this work in RCM?
-    }
-
     public function depublish(LocatorInterface $locator, $userId, $programmaticReason)
     {
         $newVersion = new $this->entityClassName(
             0, //@TODO
-            null,
             new \DateTime(),
             VersionStatuses::DEPUBLISHED,
-            'depublish',
+            VersionActions::DEPUBLISH,
             $userId,
             $programmaticReason,
             $locator,
@@ -100,10 +91,9 @@ class VersionRepository
 
         $relocateDepublishVersion = new $this->entityClassName(
             0, //@TODO
-            null,
             new \DateTime(),
             VersionStatuses::DEPUBLISHED,
-            'relocateDepublish',
+            VersionActions::RELOCATE_DEPUBLISH,
             $userId,
             $programmaticReason,
             $originalEntity->getLocator(),
@@ -114,10 +104,9 @@ class VersionRepository
 
         $relocatePublishVersion = new $this->entityClassName(
             0, //@TODO
-            null,
             new \DateTime(),
             VersionStatuses::PUBLISHED,
-            'relocatePublish',
+            VersionActions::RELOCATE_PUBLISH,
             $userId,
             $programmaticReason,
             $newLocator,
@@ -126,28 +115,34 @@ class VersionRepository
 
         $this->entityManger->persist($relocatePublishVersion);
 
+        //@TODO use transaction to ensure both entries happen at same time
         $this->entityManger->flush([$relocateDepublishVersion, $relocatePublishVersion]);
     }
 
     public function copy(LocatorInterface $relocateDepublishVersion, LocatorInterface $relocatePublishVersion)
     {
-        $originalEntity = $this->getByLocator($oldLocator); //@TODO handle not found case
+        throw new \Exception('Not implemented'); //@TODO implement
+//        $originalEntity = $this->getByLocator($oldLocator); //@TODO handle not found case
     }
 
     public function getOneByLocator(LocatorInterface $locator)
     {
-        $doctrineRepo = $this->entityManger->getRepository($this->entityClassName);
-
-        return $doctrineRepo->findOneBy($locator); //@TODO handle not found case
+        throw new \Exception('Not implemented'); //@TODO implement
+//        $doctrineRepo = $this->entityManger->getRepository($this->entityClassName);
+//
+//        //@TODO "LocatorInterface to where criteria array" code needed
+//        return $doctrineRepo->findOneBy($locator); //@TODO handle not found case
     }
 
     public function getUnpublishedVersionsByLocator(LocatorInterface $locator)
     {
+        throw new \Exception('Not implemented'); //@TODO implement
 
     }
 
     public function getPublishedVersionsByLocator(LocatorInterface $locator)
     {
+        throw new \Exception('Not implemented'); //@TODO implement
 
     }
 }

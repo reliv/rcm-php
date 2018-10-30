@@ -2,8 +2,17 @@
 
 namespace Rcm\ImmutableHistory\HumanReadableChangeLog;
 
+use Rcm\ImmutableHistory\User\UserIdToUserFullName;
+
 class ChangeLogEventToSentence
 {
+    protected $userIdToUserFullName;
+
+    public function __construct(UserIdToUserFullName $userIdToUserFullName)
+    {
+        $this->userIdToUserFullName = $userIdToUserFullName;
+    }
+
     /**
      * @param ChangeLogEvent $changeLogEvent
      *
@@ -14,7 +23,7 @@ class ChangeLogEventToSentence
         ChangeLogEvent $changeLogEvent
     ): string {
         return 'User #' . $changeLogEvent->getUserId()
-            . (' ({{userIdToFullName}})')
+            . (' (' . $this->userIdToUserFullName->__invoke($changeLogEvent->getUserId()) . ')')
             . ' ' . $changeLogEvent->getActionDescription()
             . ' ' . $changeLogEvent->getResourceDescription();
     }
