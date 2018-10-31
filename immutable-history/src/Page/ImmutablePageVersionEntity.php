@@ -26,14 +26,6 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
     protected $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     * @ORM\GeneratedValue
-     */
-    protected $resourceId;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
@@ -74,6 +66,14 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
      * @ORM\Column(type="string")
      */
     protected $action;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     * @ORM\GeneratedValue
+     */
+    protected $resourceId;
 
     /**
      * @var string
