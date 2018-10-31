@@ -25,13 +25,13 @@ interface VersionRepositoryInterface
     public function duplicate(LocatorInterface $relocateDepublishVersion, LocatorInterface $relocatePublishVersion);
 
     /**
-     * Find the "active" version which means the most recent version that is either
-     * "published" or "depublished" while ignoring "unpublished" versions
+     * Finds the most recent active version of a resource and if it is "published" returns it,
+     * otherwise returns null.
      *
      * @param LocatorInterface $locator
      * @return VersionEntityInterface | null
      */
-    public function findActiveVersionByLocator(LocatorInterface $locator);
+    public function findPublishedVersionByLocator(LocatorInterface $locator);
 
     public function findUnpublishedVersionsByLocator(LocatorInterface $locator);
 

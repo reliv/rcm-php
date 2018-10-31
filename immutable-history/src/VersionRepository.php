@@ -2,6 +2,7 @@
 
 namespace Rcm\ImmutableHistory;
 
+use Doctrine\Common\Collections\Criteria;
 use Rcm\ImmutableHistory\ResourceId\GenerateResourceIdInterface;
 
 class VersionRepository implements VersionRepositoryInterface
@@ -34,8 +35,18 @@ class VersionRepository implements VersionRepositoryInterface
         $userId,
         $programmaticReason
     ) {
+        $previousPublishedVersion = $this->findPublishedVersionByLocator($locator);
+
+        if ($previousPublishedVersion !== null) {
+            //This resource already exists in the history system so use its existing resource id
+            $resourceId = $previousPublishedVersion->getResourceId();
+        } else {
+            //This resource doesn't exist in the history system yet so make a new resource id for it
+            $resourceId = $this->generateResourceId->__invoke();
+        }
+
         $newVersion = new $this->entityClassName(
-            $this->generateResourceId->__invoke(),
+            $resourceId,
             new \DateTime(),
             VersionStatuses::UNPUBLISHED,
             VersionActions::CREATE_UNPUBLISHED_FROM_NOTHING,
@@ -55,8 +66,18 @@ class VersionRepository implements VersionRepositoryInterface
         $userId,
         $programmaticReason
     ) {
+        $previousPublishedVersion = $this->findPublishedVersionByLocator($locator);
+
+        if ($previousPublishedVersion !== null) {
+            //This resource already exists in the history system so use its existing resource id
+            $resourceId = $previousPublishedVersion->getResourceId();
+        } else {
+            //This resource doesn't exist in the history system yet so make a new resource id for it
+            $resourceId = $this->generateResourceId->__invoke();
+        }
+
         $newVersion = new $this->entityClassName(
-            $this->generateResourceId->__invoke(),
+            $resourceId,
             new \DateTime(),
             VersionStatuses::PUBLISHED,
             VersionActions::PUBLISH_FROM_NORTHING,
@@ -89,15 +110,15 @@ class VersionRepository implements VersionRepositoryInterface
 
     public function relocate(LocatorInterface $oldLocator, LocatorInterface $newLocator)
     {
-        $originalEntity = $this->findActiveVersionByLocator($oldLocator);
+        $previousPublishedVersion = $this->findPublishedVersionByLocator($oldLocator);
 
         //We must use a transaction or two relcates in the same moment could corrupt the history data chain
         $this->entityManger->getConnection()->beginTransaction();
 
-        if ($originalEntity !== null) {
-            //This resoruce already exists in the history system so depublish it and use its resource id
+        if ($previousPublishedVersion !== null) {
+            //This resource already exists in the history system so depublish it and use its resource id
             $publishAction = VersionActions::RELOCATE_PUBLISH;
-            $resourceId = $originalEntity->getResourceId();
+            $resourceId = $previousPublishedVersion->getResourceId();
             $relocateDepublishVersion = new $this->entityClassName(
                 $this->generateResourceId->__invoke(),
                 $resourceId,
@@ -105,8 +126,8 @@ class VersionRepository implements VersionRepositoryInterface
                 VersionActions::RELOCATE_DEPUBLISH,
                 $userId,
                 $programmaticReason,
-                $originalEntity->getLocator(),
-                $originalEntity->getContent()
+                $previousPublishedVersion->getLocator(),
+                $previousPublishedVersion->getContent()
             );
             $this->entityManger->persist($relocateDepublishVersion);
             $this->entityManger->flush($relocateDepublishVersion);
@@ -124,7 +145,7 @@ class VersionRepository implements VersionRepositoryInterface
             $userId,
             $programmaticReason,
             $newLocator,
-            $originalEntity->getContent()
+            $previousPublishedVersion->getContent()
         );
 
         $this->entityManger->persist($relocatePublishVersion);
@@ -135,15 +156,15 @@ class VersionRepository implements VersionRepositoryInterface
 
     public function duplicate(LocatorInterface $relocateDepublishVersion, LocatorInterface $relocatePublishVersion)
     {
-        $originalEntity = $this->findActiveVersionByLocator($oldLocator);
+        $previousPublishedVersion = $this->findPublishedVersionByLocator($oldLocator);
 
         //We must use a transaction or two relcates in the same moment could corrupt the history data chain
         $this->entityManger->getConnection()->beginTransaction();
 
-        if ($originalEntity !== null) {
-            //This resoruce already exists in the history system so depublish it and use its resource id
+        if ($previousPublishedVersion !== null) {
+            //This resource already exists in the history system so depublish it and use its resource id
             $action = VersionActions::DUPLICATE;
-            $resourceId = $originalEntity->getResourceId();
+            $resourceId = $previousPublishedVersion->getResourceId();
         } else {
             //This resource doesn't exist in the history system yet so make a new resource id for it
             $action = VersionActions::DUPLICATE_FROM_UNKNOWN;
@@ -158,7 +179,7 @@ class VersionRepository implements VersionRepositoryInterface
             $userId,
             $programmaticReason,
             $newLocator,
-            $originalEntity->getContent()
+            $previousPublishedVersion->getContent()
         );
 
         $this->entityManger->persist($copiedVersion);
@@ -167,29 +188,18 @@ class VersionRepository implements VersionRepositoryInterface
     }
 
     /**
-     * Find the "active" version which means the most recent version that is either
-     * "published" or "depublished" while ignoring "unpublished" versions
+     * Finds the most recent active version of a resource and if it is "published" returns it,
+     * otherwise returns null.
      *
      * @param LocatorInterface $locator
      * @return VersionEntityInterface | null
      */
-    public function findActiveVersionByLocator(LocatorInterface $locator)
+    public function findPublishedVersionByLocator(LocatorInterface $locator)
     {
-        $criteria = new \Doctrine\Common\Collections\Criteria();
-        $criteria->where($criteria->expr()->in(
-            'status',
-            [VersionStatuses::PUBLISHED, VersionStatuses::DEPUBLISHED])
-        );
-        foreach ($locator->toArray() as $column => $value) {
-            $criteria->andWhere($criteria->expr()->eq($column, $value));
-        }
-        $criteria->orderBy(['id' => Criteria::DESC]);
-        $criteria->setMaxResults(1);
+        $entity = $this->findActiveVersionByLocator($locator);
 
-        $entities = $this->entityManager->getRepository($this->entityClassName)->matching($criteria)->toArray();
-
-        if ($entities[0]) {
-            return $entities[0];
+        if ($entity !== null && $entity->getStatus() === VersionStatuses::PUBLISHED) {
+            return $entity;
         }
 
         return null;
@@ -208,5 +218,34 @@ class VersionRepository implements VersionRepositoryInterface
         throw new \Exception(
             'findPublishedVersionsByLocator() is not implemented yet because it is not currently needed.'
         );
+    }
+
+    /**
+     * Find the "active" version which means the most recent version that is either
+     * "published" or "depublished" while ignoring "unpublished" versions
+     *
+     * @param LocatorInterface $locator
+     * @return VersionEntityInterface | null
+     */
+    protected function findActiveVersionByLocator(LocatorInterface $locator)
+    {
+        $criteria = new Criteria();
+        $criteria->where($criteria->expr()->in(
+            'status',
+            [VersionStatuses::PUBLISHED, VersionStatuses::DEPUBLISHED])
+        );
+        foreach ($locator->toArray() as $column => $value) {
+            $criteria->andWhere($criteria->expr()->eq($column, $value));
+        }
+        $criteria->orderBy(['id' => Criteria::DESC]);
+        $criteria->setMaxResults(1);
+
+        $entities = $this->entityManger->getRepository($this->entityClassName)->matching($criteria)->toArray();
+
+        if (isset($entities[0])) {
+            return $entities[0];
+        }
+
+        return null;
     }
 }

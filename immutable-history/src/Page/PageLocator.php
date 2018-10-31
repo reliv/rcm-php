@@ -34,8 +34,8 @@ class PageLocator implements LocatorInterface
     public function toArray(): array
     {
         return [
-            'siteId' => $siteId,
-            'pathname' => $pathName
+            'siteId' => $this->siteId,
+            'pathname' => $this->pathname
         ];
     }
 }
