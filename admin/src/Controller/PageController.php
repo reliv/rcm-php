@@ -698,8 +698,7 @@ class PageController extends AbstractActionController
      *
      * @param $data
      */
-    protected
-    function cleanSaveData(
+    protected function cleanSaveData(
         &$data
     ) {
         if (empty($data)) {
@@ -736,8 +735,7 @@ class PageController extends AbstractActionController
     /**
      * @return RcmUserService
      */
-    protected
-    function getRcmUserService()
+    protected function getRcmUserService()
     {
         return $this->rcmUserService;
     }
@@ -746,8 +744,7 @@ class PageController extends AbstractActionController
      * @return UserInterface
      * @throws TrackingException
      */
-    protected
-    function getCurrentUser()
+    protected function getCurrentUser()
     {
         /** @var RcmUserService $service */
         $service = $this->getRcmUserService();
