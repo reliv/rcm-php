@@ -226,7 +226,7 @@ class PageController extends AbstractActionController
         return $this->view;
     }
 
-//Disabled durring immutable history project since no-one is using it
+//Disabled durring immutable history project in 2018-10 since no-one is using it
 //    /**
 //     * createTemplateFromPageAction
 //     *
