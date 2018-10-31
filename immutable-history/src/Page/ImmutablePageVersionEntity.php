@@ -4,6 +4,7 @@ namespace Rcm\ImmutableHistory\Page;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\ImmutableHistory\LocatorInterface;
+use Rcm\ImmutableHistory\VersionEntityInterface;
 
 /**
  * @TODO add indexes
@@ -11,7 +12,7 @@ use Rcm\ImmutableHistory\LocatorInterface;
  * @ORM\Entity
  * @ORM\Table(name="rcm_immutable_page_version")
  */
-class ImmutablePageVersionEntity
+class ImmutablePageVersionEntity implements VersionEntityInterface
 {
 //    public const LOCATOR_FIELD_NAMES = ['siteId', 'relateUrl'];
 
@@ -90,7 +91,7 @@ class ImmutablePageVersionEntity
 
     /**
      * ImmutablePageVersion constructor.
-     * @param int $resourceId
+     * @param string $resourceId
      * @param \DateTime $date
      * @param string $status
      * @param string $action
@@ -100,7 +101,7 @@ class ImmutablePageVersionEntity
      * @param ContentInterface $content
      */
     public function __construct(
-        int $resourceId,
+        string $resourceId,
         \DateTime $date,
         string $status,
         string $action,
@@ -136,7 +137,7 @@ class ImmutablePageVersionEntity
     /**
      * @return int
      */
-    public function getResourceId(): int
+    public function getResourceId(): string
     {
         return $this->resourceId;
     }

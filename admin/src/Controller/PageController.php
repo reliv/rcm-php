@@ -12,7 +12,7 @@ use Rcm\ImmutableHistory\Page\PageContent;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\PageLocator;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
-use Rcm\ImmutableHistory\VersionRepository;
+use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
 use RcmUser\Service\RcmUserService;
@@ -82,7 +82,7 @@ class PageController extends AbstractActionController
         RcmUserService $rcmUserService,
         PageRepo $pageRepo,
         $revisionRepo,
-        VersionRepository $immuteblePageVersionRepo,
+        VersionRepositoryInterface $immuteblePageVersionRepo,
         PageContentFactory $immutablePageContentFactory,
         RcmPageNameToPathname $rcmPageNameToPathname
     ) {

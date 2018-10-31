@@ -14,6 +14,8 @@ use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\Page\RcmPluginWrappersToRcmImmutablePluginInstances;
 use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
 use Rcm\ImmutableHistory\User\UserIdToUserFullName;
+use Rcm\ImmutableHistory\ResourceId\GenerateResourceIdInterface;
+use Rcm\ImmutableHistory\ResourceId\GenerateUuidV4;
 use RcmUser\Api\Acl\IsAllowed;
 
 class ModuleConfig
@@ -27,8 +29,12 @@ class ModuleConfig
                         'class' => VersionRepository::class,
                         'arguments' => [
                             ['literal' => ImmutablePageVersionEntity::class],
-                            \Doctrine\ORM\EntityManager::class
+                            \Doctrine\ORM\EntityManager::class,
+                            GenerateResourceIdInterface::class
                         ]
+                    ],
+                    GenerateResourceIdInterface::class => [
+                        'class' => GenerateUuidV4::class
                     ],
                     GetAllChangeLogEventSentencesForDateRange::class => [
                         'arguments' => [

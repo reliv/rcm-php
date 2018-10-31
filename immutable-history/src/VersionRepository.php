@@ -2,28 +2,30 @@
 
 namespace Rcm\ImmutableHistory;
 
-class VersionRepository
+use Rcm\ImmutableHistory\ResourceId\GenerateResourceIdInterface;
+
+class VersionRepository implements VersionRepositoryInterface
 {
     protected $entityClassName;
     protected $entityManger;
+    protected $generateResourceId;
 
     /**
-     * @TODO allow per-resource-type locator validators to be injected and use them or use data models?
-     * @TODO allow per-resouce-type content validators to be injected and use them or use data models?
-     * @TODO set dates, user, and reason
-     * @TODO replace all \Rcm\ImmutableHistory\Page\ImmutablePageVersion with interface in here
-     * @TODO make userId and programmatic and any other fields that should be required, required
-     * @TODO get statuses from constants? And actions too?
      * @TODO make an interface for this repo and make all callers use it
      *
-     * Repository constructor.
+     * VersionRepository constructor.
      * @param $entityClassName
-     * @param $entityManger
+     * @param \Doctrine\ORM\EntityManager $entityManger
+     * @param GenerateResourceIdInterface $generateResourceId
      */
-    public function __construct($entityClassName, \Doctrine\ORM\EntityManager $entityManger)
-    {
+    public function __construct(
+        $entityClassName,
+        \Doctrine\ORM\EntityManager $entityManger,
+        GenerateResourceIdInterface $generateResourceId
+    ) {
         $this->entityClassName = $entityClassName;
         $this->entityManger = $entityManger;
+        $this->generateResourceId = $generateResourceId;
     }
 
     public function createUnpublishedFromNothing(
@@ -33,7 +35,7 @@ class VersionRepository
         $programmaticReason
     ) {
         $newVersion = new $this->entityClassName(
-            0, //@TODO
+            $this->generateResourceId->__invoke(),
             new \DateTime(),
             VersionStatuses::UNPUBLISHED,
             VersionActions::CREATE_UNPUBLISHED_FROM_NOTHING,
@@ -54,7 +56,7 @@ class VersionRepository
         $programmaticReason
     ) {
         $newVersion = new $this->entityClassName(
-            0, //@TODO
+            $this->generateResourceId->__invoke(),
             new \DateTime(),
             VersionStatuses::PUBLISHED,
             VersionActions::PUBLISH_FROM_NORTHING,
@@ -71,7 +73,7 @@ class VersionRepository
     public function depublish(LocatorInterface $locator, $userId, $programmaticReason)
     {
         $newVersion = new $this->entityClassName(
-            0, //@TODO
+            $this->generateResourceId->__invoke(),
             new \DateTime(),
             VersionStatuses::DEPUBLISHED,
             VersionActions::DEPUBLISH,
@@ -87,26 +89,38 @@ class VersionRepository
 
     public function relocate(LocatorInterface $oldLocator, LocatorInterface $newLocator)
     {
-        $originalEntity = $this->getByLocator($oldLocator); //@TODO handle not found case
+        $originalEntity = $this->findActiveVersionByLocator($oldLocator);
 
-        $relocateDepublishVersion = new $this->entityClassName(
-            0, //@TODO
-            new \DateTime(),
-            VersionStatuses::DEPUBLISHED,
-            VersionActions::RELOCATE_DEPUBLISH,
-            $userId,
-            $programmaticReason,
-            $originalEntity->getLocator(),
-            $originalEntity->getContent()
-        );
+        //We must use a transaction or two relcates in the same moment could corrupt the history data chain
+        $this->entityManger->getConnection()->beginTransaction();
 
-        $this->entityManger->persist($relocateDepublishVersion);
+        if ($originalEntity !== null) {
+            //This resoruce already exists in the history system so depublish it and use its resource id
+            $publishAction = VersionActions::RELOCATE_PUBLISH;
+            $resourceId = $originalEntity->getResourceId();
+            $relocateDepublishVersion = new $this->entityClassName(
+                $this->generateResourceId->__invoke(),
+                $resourceId,
+                VersionStatuses::DEPUBLISHED,
+                VersionActions::RELOCATE_DEPUBLISH,
+                $userId,
+                $programmaticReason,
+                $originalEntity->getLocator(),
+                $originalEntity->getContent()
+            );
+            $this->entityManger->persist($relocateDepublishVersion);
+            $this->entityManger->flush($relocateDepublishVersion);
+        } else {
+            //This resource doesn't exist in the history system yet so make a new resource id for it
+            $publishAction = VersionActions::RELOCATE_PUBLISH_FROM_UNKNOWN;
+            $resourceId = $this->generateResourceId->__invoke();
+        }
 
         $relocatePublishVersion = new $this->entityClassName(
-            0, //@TODO
-            new \DateTime(),
+            $this->generateResourceId->__invoke(),
+            $resourceId,
             VersionStatuses::PUBLISHED,
-            VersionActions::RELOCATE_PUBLISH,
+            $publishAction,
             $userId,
             $programmaticReason,
             $newLocator,
@@ -114,35 +128,85 @@ class VersionRepository
         );
 
         $this->entityManger->persist($relocatePublishVersion);
+        $this->entityManger->flush($relocatePublishVersion);
 
-        //@TODO use transaction to ensure both entries happen at same time
-        $this->entityManger->flush([$relocateDepublishVersion, $relocatePublishVersion]);
+        $em->getConnection()->commit();
     }
 
-    public function copy(LocatorInterface $relocateDepublishVersion, LocatorInterface $relocatePublishVersion)
+    public function duplicate(LocatorInterface $relocateDepublishVersion, LocatorInterface $relocatePublishVersion)
     {
-        throw new \Exception('Not implemented'); //@TODO implement
-//        $originalEntity = $this->getByLocator($oldLocator); //@TODO handle not found case
+        $originalEntity = $this->findActiveVersionByLocator($oldLocator);
+
+        //We must use a transaction or two relcates in the same moment could corrupt the history data chain
+        $this->entityManger->getConnection()->beginTransaction();
+
+        if ($originalEntity !== null) {
+            //This resoruce already exists in the history system so depublish it and use its resource id
+            $action = VersionActions::DUPLICATE;
+            $resourceId = $originalEntity->getResourceId();
+        } else {
+            //This resource doesn't exist in the history system yet so make a new resource id for it
+            $action = VersionActions::DUPLICATE_FROM_UNKNOWN;
+            $resourceId = $this->generateResourceId->__invoke();
+        }
+
+        $copiedVersion = new $this->entityClassName(
+            $this->generateResourceId->__invoke(),
+            $resourceId,
+            VersionStatuses::PUBLISHED,
+            VersionActions::DUPLICATE,
+            $userId,
+            $programmaticReason,
+            $newLocator,
+            $originalEntity->getContent()
+        );
+
+        $this->entityManger->persist($copiedVersion);
+        $this->entityManger->flush($copiedVersion);
+
     }
 
-    public function getOneByLocator(LocatorInterface $locator)
+    /**
+     * Find the "active" version which means the most recent version that is either
+     * "published" or "depublished" while ignoring "unpublished" versions
+     *
+     * @param LocatorInterface $locator
+     * @return VersionEntityInterface | null
+     */
+    public function findActiveVersionByLocator(LocatorInterface $locator)
     {
-        throw new \Exception('Not implemented'); //@TODO implement
-//        $doctrineRepo = $this->entityManger->getRepository($this->entityClassName);
-//
-//        //@TODO "LocatorInterface to where criteria array" code needed
-//        return $doctrineRepo->findOneBy($locator); //@TODO handle not found case
+        $criteria = new \Doctrine\Common\Collections\Criteria();
+        $criteria->where($criteria->expr()->in(
+            'status',
+            [VersionStatuses::PUBLISHED, VersionStatuses::DEPUBLISHED])
+        );
+        foreach ($locator->toArray() as $column => $value) {
+            $criteria->andWhere($criteria->expr()->eq($column, $value));
+        }
+        $criteria->orderBy(['id' => Criteria::DESC]);
+        $criteria->setMaxResults(1);
+
+        $entities = $this->entityManager->getRepository($this->entityClassName)->matching($criteria)->toArray();
+
+        if ($entities[0]) {
+            return $entities[0];
+        }
+
+        return null;
     }
 
-    public function getUnpublishedVersionsByLocator(LocatorInterface $locator)
+    public function findUnpublishedVersionsByLocator(LocatorInterface $locator)
     {
-        throw new \Exception('Not implemented'); //@TODO implement
+        throw new \Exception(
+            'findUnpublishedVersionsByLocator() is not implemented yet because it is not currently needed.'
+        );
 
     }
 
-    public function getPublishedVersionsByLocator(LocatorInterface $locator)
+    public function findPublishedVersionsByLocator(LocatorInterface $locator)
     {
-        throw new \Exception('Not implemented'); //@TODO implement
-
+        throw new \Exception(
+            'findPublishedVersionsByLocator() is not implemented yet because it is not currently needed.'
+        );
     }
 }
