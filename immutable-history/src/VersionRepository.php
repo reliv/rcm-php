@@ -186,8 +186,8 @@ class VersionRepository implements VersionRepositoryInterface
     }
 
     /**
-     * Finds the most recent active version of a resource and if it is "published" returns it,
-     * otherwise returns null.
+     * Finds the most recent "published" or "depublished" version of a resource
+     * and if it is "published" returns it, otherwise returns null.
      *
      * @param LocatorInterface $locator
      * @return VersionEntityInterface | null
