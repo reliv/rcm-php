@@ -159,21 +159,35 @@ class PageController extends AbstractActionController
                 $pageData = [
                     'name' => $validatedData['url'],
                     'pageTitle' => $validatedData['title'],
+                    'pageType' => 'n', // "n" means "normal"
                     'siteLayoutOverride' => $validatedData['main-layout'],
                     'createdByUserId' => $user->getId(),
                     'createdReason' => 'New page in ' . get_class($this),
                     'author' => $user->getName(),
                 ];
 
-                $this->pageRepo->createPage(
+                $resultRevisionId = $this->pageRepo->createPage(
                     $this->currentSite,
                     $pageData
                 );
-            } elseif (!empty($validatedData['page-template'])) {
+
+                $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
+                    new PageLocator($this->currentSite->getSiteId(),
+                        $this->rcmPageNameToPathname->__invoke($pageData['name'], $pageData['pageType'])),
+                    $this->immutablePageContentFactory->__invoke(
+                        $pageData['pageTitle'],
+                        '', //@TODO is this right?
+                        '', //@TODO is this right?
+                        $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
+                    ),
+                    $user->getId(),
+                    __CLASS__ . '::' . __FUNCTION__
+                );
+            } elseif (!empty($validatedData['page - template'])) {
                 /** @var \Rcm\Entity\Page $page */
                 $page = $this->pageRepo->findOneBy(
                     [
-                        'pageId' => $validatedData['page-template'],
+                        'pageId' => $validatedData['page - template'],
                         'pageType' => 't'
                     ]
                 );
@@ -181,23 +195,36 @@ class PageController extends AbstractActionController
                 if (empty($page)) {
                     throw new PageNotFoundException(
                         'No template found for page id: '
-                        . $validatedData['page-template']
+                        . $validatedData['page - template']
                     );
                 }
 
                 $pageData = [
                     'name' => $validatedData['url'],
                     'pageTitle' => $validatedData['title'],
-                    'pageType' => 'n',
+                    'pageType' => 'n', // "n" means "normal"
                     'createdByUserId' => $user->getId(),
                     'createdReason' => 'New page from template in ' . get_class($this),
                     'author' => $user->getName(),
                 ];
 
-                $this->pageRepo->copyPage(
+                $resultRevisionId = $this->pageRepo->copyPage(
                     $this->currentSite,
                     $page,
                     $pageData
+                );
+
+                $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
+                    new PageLocator($this->currentSite->getSiteId(),
+                        $this->rcmPageNameToPathname->__invoke($pageData['name'], $pageData['pageType'])),
+                    $this->immutablePageContentFactory->__invoke(
+                        $page->getPageTitle(),
+                        $page->getDescription(),
+                        $page->getKeywords(),
+                        $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
+                    ),
+                    $user->getId(),
+                    __CLASS__ . '::' . __FUNCTION__
                 );
             }
 
@@ -289,7 +316,7 @@ class PageController extends AbstractActionController
 //
 //        $data = $request->getPost();
 //
-//        $form->setValidationGroup('template-name');
+//        $form->setValidationGroup('template - name');
 //        $form->setData($data);
 //
 //        if ($request->isPost() && $form->isValid()) {
@@ -319,7 +346,7 @@ class PageController extends AbstractActionController
 //                'createdByUserId' => $user->getId(),
 //                'createdReason' => 'New page in ' . get_class($this),
 //                'author' => $user->getName(),
-//                'name' => $validatedData['template-name'],
+//                'name' => $validatedData['template - name'],
 //                'pageTitle' => null,
 //                'pageType' => 't',
 //            ];
@@ -334,7 +361,7 @@ class PageController extends AbstractActionController
 //            $this->view->setVariable(
 //                'newPageUrl',
 //                $this->urlToPage(
-//                    $validatedData['template-name'],
+//                    $validatedData['template - name'],
 //                    't'
 //                )
 //            );
@@ -417,7 +444,7 @@ class PageController extends AbstractActionController
 
         if (!is_numeric($pageRevision)) {
             throw new InvalidArgumentException(
-                'Invalid Page Revision Id.'
+                'Invalid Page Revision Id . '
             );
         }
         $user = $this->rcmUserService->getCurrentUser();
@@ -629,7 +656,7 @@ class PageController extends AbstractActionController
 
         if (empty($data['plugins'])) {
             throw new InvalidArgumentException(
-                'Save Data missing plugins.
+                'Save Data missing plugins .
                 Please make sure the data you\'re attempting to save is correctly formatted.
             '
             );
@@ -671,8 +698,10 @@ class PageController extends AbstractActionController
      *
      * @param $data
      */
-    protected function cleanSaveData(&$data)
-    {
+    protected
+    function cleanSaveData(
+        &$data
+    ) {
         if (empty($data)) {
             return;
         }
@@ -707,7 +736,8 @@ class PageController extends AbstractActionController
     /**
      * @return RcmUserService
      */
-    protected function getRcmUserService()
+    protected
+    function getRcmUserService()
     {
         return $this->rcmUserService;
     }
@@ -716,7 +746,8 @@ class PageController extends AbstractActionController
      * @return UserInterface
      * @throws TrackingException
      */
-    protected function getCurrentUser()
+    protected
+    function getCurrentUser()
     {
         /** @var RcmUserService $service */
         $service = $this->getRcmUserService();

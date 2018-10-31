@@ -9,7 +9,14 @@ use Rcm\Entity\PluginWrapper;
 
 class PageContentFactory
 {
-    public function __invoke(string $title, string $description, string $keywords, array $pluginWrappers)
+    /**
+     * @param string $title
+     * @param string | null $description
+     * @param string | null $keywords
+     * @param array $pluginWrappers
+     * @return PageContent
+     */
+    public function __invoke(string $title, $description, $keywords, array $pluginWrappers)
     {
         $pluginWrapperToImmutableFlatBlockInstanceData = function (PluginWrapper $wrapper) {
             /**

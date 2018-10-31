@@ -13,7 +13,14 @@ class PageContent implements ContentInterface
     protected $description;
     protected $blockInstances;
 
-    public function __construct(string $title, string $description, string $keywords, array $blockInstances)
+    /**
+     * PageContent constructor.
+     * @param string $title
+     * @param string | null $description
+     * @param string | null $keywords
+     * @param array $blockInstances
+     */
+    public function __construct(string $title, $description, $keywords, array $blockInstances)
     {
         $this->title = $title;
         $this->description = $description;
