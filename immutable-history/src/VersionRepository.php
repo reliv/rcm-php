@@ -91,8 +91,18 @@ class VersionRepository implements VersionRepositoryInterface
 
     public function depublish(LocatorInterface $locator, $userId, $programmaticReason)
     {
+        $previousPublishedVersion = $this->findPublishedVersionByLocator($locator);
+
+        if ($previousPublishedVersion !== null) {
+            //This resource already exists in the history system so use its existing resource id
+            $resourceId = $previousPublishedVersion->getResourceId();
+        } else {
+            //This resource doesn't yet exist in the history system yet so make a new resource id for it
+            $resourceId = $this->generateResourceId->__invoke();
+        }
+
         $newVersion = new $this->entityClassName(
-            $this->generateResourceId->__invoke(),
+            $resourceId,
             new \DateTime(),
             VersionStatuses::DEPUBLISHED,
             VersionActions::DEPUBLISH,
@@ -203,20 +213,20 @@ class VersionRepository implements VersionRepositoryInterface
         return null;
     }
 
-    public function findUnpublishedVersionsByLocator(LocatorInterface $locator)
-    {
-        throw new \Exception(
-            'findUnpublishedVersionsByLocator() is not implemented yet because it is not currently needed.'
-        );
-
-    }
-
-    public function findPublishedVersionsByLocator(LocatorInterface $locator)
-    {
-        throw new \Exception(
-            'findPublishedVersionsByLocator() is not implemented yet because it is not currently needed.'
-        );
-    }
+//    public function findUnpublishedVersionsByLocator(LocatorInterface $locator)
+//    {
+//        throw new \Exception(
+//            'findUnpublishedVersionsByLocator() is not implemented yet because it is not currently needed.'
+//        );
+//
+//    }
+//
+//    public function findPublishedVersionsByLocator(LocatorInterface $locator)
+//    {
+//        throw new \Exception(
+//            'findPublishedVersionsByLocator() is not implemented yet because it is not currently needed.'
+//        );
+//    }
 
     /**
      * Find the "active" version which means the most recent version that is either

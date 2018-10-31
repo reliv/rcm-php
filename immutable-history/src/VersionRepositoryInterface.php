@@ -33,7 +33,7 @@ interface VersionRepositoryInterface
      */
     public function findPublishedVersionByLocator(LocatorInterface $locator);
 
-    public function findUnpublishedVersionsByLocator(LocatorInterface $locator);
-
-    public function findPublishedVersionsByLocator(LocatorInterface $locator);
+//    public function findUnpublishedVersionsByLocator(LocatorInterface $locator);
+//
+//    public function findPublishedVersionsByLocator(LocatorInterface $locator);
 }
