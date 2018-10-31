@@ -226,141 +226,142 @@ class PageController extends AbstractActionController
         return $this->view;
     }
 
-    /**
-     * createTemplateFromPageAction
-     *
-     * @return Response|ViewModel
-     * @throws \Rcm\Exception\PageNotFoundException
-     * @throws TrackingException
-     */
-    public function createTemplateFromPageAction()
-    {
-        /** @var ResourceName $resourceName */
-        $resourceName = $this->getServiceLocator()->get(
-            ResourceName::class
-        );
-
-        $resourceId = $resourceName->get(
-            ResourceName::RESOURCE_SITES,
-            $this->currentSite->getSiteId(),
-            ResourceName::RESOURCE_PAGES
-        );
-
-        if (!$this->rcmUserService->isAllowed(
-            $resourceId,
-            'create'
-        )
-        ) {
-            $response = new Response();
-            $response->setStatusCode('401');
-
-            return $response;
-        }
-
-        $sourcePage = $this->getEvent()
-            ->getRouteMatch()
-            ->getParam(
-                'rcmPageName',
-                'index'
-            );
-
-        $sourcePageRevision = $this->getEvent()
-            ->getRouteMatch()
-            ->getParam(
-                'rcmPageRevision',
-                null
-            );
-
-        $sourcePageType = $this->getEvent()
-            ->getRouteMatch()
-            ->getParam(
-                'rcmPageType',
-                'n'
-            );
-
-        /** @var \RcmAdmin\Form\CreateTemplateFromPageForm $form */
-        $form = $this->getServiceLocator()
-            ->get('FormElementManager')
-            ->get(\RcmAdmin\Form\CreateTemplateFromPageForm::class);
-
-        /** @var \Zend\Http\Request $request */
-        $request = $this->request;
-
-        $data = $request->getPost();
-
-        $form->setValidationGroup('template-name');
-        $form->setData($data);
-
-        if ($request->isPost() && $form->isValid()) {
-            $validatedData = $form->getData();
-
-            $page = $this->pageRepo->getPageByName(
-                $this->currentSite,
-                $sourcePage,
-                $sourcePageType
-            );
-
-            if (empty($page)) {
-                throw new PageNotFoundException(
-                    'Unable to locate source page to copy'
-                );
-            }
-
-            $pageId = $page->getPageId();
-
-            $user = $this->rcmUserService->getCurrentUser();
-
-            if (empty($user)) {
-                throw new TrackingException('A valid user is required in ' . get_class($this));
-            }
-
-            $pageData = [
-                'createdByUserId' => $user->getId(),
-                'createdReason' => 'New page in ' . get_class($this),
-                'author' => $user->getName(),
-                'name' => $validatedData['template-name'],
-                'pageTitle' => null,
-                'pageType' => 't',
-            ];
-
-            $this->pageRepo->copyPage(
-                $this->currentSite,
-                $page,
-                $pageData,
-                $sourcePageRevision
-            );
-
-            $this->view->setVariable(
-                'newPageUrl',
-                $this->urlToPage(
-                    $validatedData['template-name'],
-                    't'
-                )
-            );
-            $this->view->setTemplate('rcm-admin/page/success');
-
-            return $this->view;
-        }
-
-        $this->view->setVariable(
-            'form',
-            $form
-        );
-        $this->view->setVariable(
-            'rcmPageName',
-            $sourcePage
-        );
-        $this->view->setVariable(
-            'rcmPageRevision',
-            $sourcePageRevision
-        );
-        $this->view->setVariable(
-            'rcmPageType',
-            $sourcePageType
-        );
-
-        return $this->view;
-    }
+//Disabled durring immutable history project since no-one is using it
+//    /**
+//     * createTemplateFromPageAction
+//     *
+//     * @return Response|ViewModel
+//     * @throws \Rcm\Exception\PageNotFoundException
+//     * @throws TrackingException
+//     */
+//    public function createTemplateFromPageAction()
+//    {
+//        /** @var ResourceName $resourceName */
+//        $resourceName = $this->getServiceLocator()->get(
+//            ResourceName::class
+//        );
+//
+//        $resourceId = $resourceName->get(
+//            ResourceName::RESOURCE_SITES,
+//            $this->currentSite->getSiteId(),
+//            ResourceName::RESOURCE_PAGES
+//        );
+//
+//        if (!$this->rcmUserService->isAllowed(
+//            $resourceId,
+//            'create'
+//        )
+//        ) {
+//            $response = new Response();
+//            $response->setStatusCode('401');
+//
+//            return $response;
+//        }
+//
+//        $sourcePage = $this->getEvent()
+//            ->getRouteMatch()
+//            ->getParam(
+//                'rcmPageName',
+//                'index'
+//            );
+//
+//        $sourcePageRevision = $this->getEvent()
+//            ->getRouteMatch()
+//            ->getParam(
+//                'rcmPageRevision',
+//                null
+//            );
+//
+//        $sourcePageType = $this->getEvent()
+//            ->getRouteMatch()
+//            ->getParam(
+//                'rcmPageType',
+//                'n'
+//            );
+//
+//        /** @var \RcmAdmin\Form\CreateTemplateFromPageForm $form */
+//        $form = $this->getServiceLocator()
+//            ->get('FormElementManager')
+//            ->get(\RcmAdmin\Form\CreateTemplateFromPageForm::class);
+//
+//        /** @var \Zend\Http\Request $request */
+//        $request = $this->request;
+//
+//        $data = $request->getPost();
+//
+//        $form->setValidationGroup('template-name');
+//        $form->setData($data);
+//
+//        if ($request->isPost() && $form->isValid()) {
+//            $validatedData = $form->getData();
+//
+//            $page = $this->pageRepo->getPageByName(
+//                $this->currentSite,
+//                $sourcePage,
+//                $sourcePageType
+//            );
+//
+//            if (empty($page)) {
+//                throw new PageNotFoundException(
+//                    'Unable to locate source page to copy'
+//                );
+//            }
+//
+//            $pageId = $page->getPageId();
+//
+//            $user = $this->rcmUserService->getCurrentUser();
+//
+//            if (empty($user)) {
+//                throw new TrackingException('A valid user is required in ' . get_class($this));
+//            }
+//
+//            $pageData = [
+//                'createdByUserId' => $user->getId(),
+//                'createdReason' => 'New page in ' . get_class($this),
+//                'author' => $user->getName(),
+//                'name' => $validatedData['template-name'],
+//                'pageTitle' => null,
+//                'pageType' => 't',
+//            ];
+//
+//            $this->pageRepo->copyPage(
+//                $this->currentSite,
+//                $page,
+//                $pageData,
+//                $sourcePageRevision
+//            );
+//
+//            $this->view->setVariable(
+//                'newPageUrl',
+//                $this->urlToPage(
+//                    $validatedData['template-name'],
+//                    't'
+//                )
+//            );
+//            $this->view->setTemplate('rcm-admin/page/success');
+//
+//            return $this->view;
+//        }
+//
+//        $this->view->setVariable(
+//            'form',
+//            $form
+//        );
+//        $this->view->setVariable(
+//            'rcmPageName',
+//            $sourcePage
+//        );
+//        $this->view->setVariable(
+//            'rcmPageRevision',
+//            $sourcePageRevision
+//        );
+//        $this->view->setVariable(
+//            'rcmPageType',
+//            $sourcePageType
+//        );
+//
+//        return $this->view;
+//    }
 
     /**
      * publishPageRevisionAction

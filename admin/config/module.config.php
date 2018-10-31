@@ -158,9 +158,9 @@ return [
         'factories' => [
             RcmAdmin\Form\NewPageForm::class
             => RcmAdmin\Factory\NewPageFormFactory::class,
-
-            RcmAdmin\Form\CreateTemplateFromPageForm::class
-            => RcmAdmin\Factory\CreateTemplateFromPageFormFactory::class,
+//Disabled durring immutable history project in 2018-10 since no-one is using it
+//            RcmAdmin\Form\CreateTemplateFromPageForm::class
+//            => RcmAdmin\Factory\CreateTemplateFromPageFormFactory::class,
         ],
     ],
     /* includeFileManager */
@@ -226,30 +226,31 @@ return [
                             ],
                         ]
                     ],
-                    'Copy To' => [
-                        'label' => 'Copy To...',
-                        'uri' => '#',
-                        'rcmOnly' => true,
-                        'pages' => [
-                            'Page' => [
-                                'label' => 'Template',
-                                'route' => 'RcmAdmin\Page\CreateTemplateFromPage',
-                                'class' => 'rcmAdminMenu RcmFormDialog',
-                                'title' => 'Copy To Template',
-                                'params' => [
-                                    'rcmPageName' => ':rcmPageName',
-                                    'rcmPageType' => ':rcmPageType',
-                                    'rcmPageRevision' => ':rcmPageRevision'
-                                ],
-                                'acl' => [
-                                    'providerId' => \Rcm\Acl\ResourceProvider::class,
-                                    'resource'
-                                    => \Rcm\Acl\ResourceName::RESOURCE_SITES . '.:siteId'
-                                        . '.' . \Rcm\Acl\ResourceName::RESOURCE_PAGES . '.create'
-                                ]
-                            ],
-                        ],
-                    ],
+//Disabled durring immutable history project since no-one is using it
+//                    'Copy To' => [
+//                        'label' => 'Copy To...',
+//                        'uri' => '#',
+//                        'rcmOnly' => true,
+//                        'pages' => [
+//                            'Page' => [
+//                                'label' => 'Template',
+//                                'route' => 'RcmAdmin\Page\CreateTemplateFromPage',
+//                                'class' => 'rcmAdminMenu RcmFormDialog',
+//                                'title' => 'Copy To Template',
+//                                'params' => [
+//                                    'rcmPageName' => ':rcmPageName',
+//                                    'rcmPageType' => ':rcmPageType',
+//                                    'rcmPageRevision' => ':rcmPageRevision'
+//                                ],
+//                                'acl' => [
+//                                    'providerId' => \Rcm\Acl\ResourceProvider::class,
+//                                    'resource'
+//                                    => \Rcm\Acl\ResourceName::RESOURCE_SITES . '.:siteId'
+//                                        . '.' . \Rcm\Acl\ResourceName::RESOURCE_PAGES . '.create'
+//                                ]
+//                            ],
+//                        ],
+//                    ],
                     'Drafts' => [
                         'label' => 'Drafts',
                         'uri' => '#',
@@ -469,17 +470,18 @@ return [
                     ],
                 ],
             ],
-            'RcmAdmin\Page\CreateTemplateFromPage' => [
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => [
-                    'route'
-                    => '/rcm-admin/page/create-template-from-page/:rcmPageType/:rcmPageName[/[:rcmPageRevision]]',
-                    'defaults' => [
-                        'controller' => RcmAdmin\Controller\PageController::class,
-                        'action' => 'createTemplateFromPage',
-                    ],
-                ],
-            ],
+//Disabled durring immutable history project since no-one is using it
+//            'RcmAdmin\Page\CreateTemplateFromPage' => [
+//                'type' => 'Zend\Mvc\Router\Http\Segment',
+//                'options' => [
+//                    'route'
+//                    => '/rcm-admin/page/create-template-from-page/:rcmPageType/:rcmPageName[/[:rcmPageRevision]]',
+//                    'defaults' => [
+//                        'controller' => RcmAdmin\Controller\PageController::class,
+//                        'action' => 'createTemplateFromPage',
+//                    ],
+//                ],
+//            ],
             'RcmAdmin\Page\PublishPageRevision' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
