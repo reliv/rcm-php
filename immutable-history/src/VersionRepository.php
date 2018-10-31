@@ -12,8 +12,6 @@ class VersionRepository implements VersionRepositoryInterface
     protected $generateResourceId;
 
     /**
-     * @TODO make an interface for this repo and make all callers use it
-     *
      * VersionRepository constructor.
      * @param $entityClassName
      * @param \Doctrine\ORM\EntityManager $entityManger
