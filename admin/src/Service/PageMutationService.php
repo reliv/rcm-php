@@ -311,24 +311,6 @@ class PageMutationService
 
     }
 
-//    /**
-//     * getJsonResponse
-//     *
-//     * @param $data $data
-//     *
-//     * @return \Zend\Stdlib\ResponseInterface
-//     */
-//    public function getJsonResponse($data)
-//    {
-//        $view = new JsonModel();
-//        $view->setTerminal(true);
-//
-//        $response = $this->getResponse();
-//        $response->setContent(json_encode($data));
-//
-//        return $response;
-//    }
-
     /**
      * Prep and validate data array to save
      *

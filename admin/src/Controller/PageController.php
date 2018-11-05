@@ -96,19 +96,12 @@ class PageController extends AbstractActionController
      */
     public function newAction()
     {
-        /** @var ResourceName $resourceName */
-        $resourceName = $this->getServiceLocator()->get(
-            ResourceName::class
-        );
-
-        $resourceId = $resourceName->get(
-            ResourceName::RESOURCE_SITES,
-            $this->currentSite->getSiteId(),
-            ResourceName::RESOURCE_PAGES
-        );
-
         if (!$this->rcmUserService->isAllowed(
-            $resourceId,
+            $this->getServiceLocator()->get(ResourceName::class)->get(
+                ResourceName::RESOURCE_SITES,
+                $this->currentSite->getSiteId(),
+                ResourceName::RESOURCE_PAGES
+            ),,
             'create'
         )
         ) {
@@ -341,101 +334,5 @@ class PageController extends AbstractActionController
         $response->setContent(json_encode($data));
 
         return $response;
-    }
-
-    /**
-     * Prep and validate data array to save
-     *
-     * @param $data
-     *
-     * @throws InvalidArgumentException
-     */
-    protected function prepSaveData(&$data)
-    {
-        if (!is_array($data)) {
-            $data = [];
-        }
-
-        ksort($data);
-
-        $data['containers'] = [];
-        $data['pageContainer'] = [];
-
-        if (empty($data['plugins'])) {
-            throw new InvalidArgumentException(
-                'Save Data missing plugins .
-                Please make sure the data you\'re attempting to save is correctly formatted.
-            '
-            );
-        }
-
-        foreach ($data['plugins'] as &$plugin) {
-            $this->cleanSaveData($plugin['saveData']);
-
-            /* Patch for a Json Bug */
-            if (!empty($plugin['isSitewide'])
-                && $plugin['isSitewide'] != 'false'
-                && $plugin['isSitewide'] != '0'
-            ) {
-                $plugin['isSitewide'] = 1;
-            } else {
-                $plugin['isSitewide'] = 0;
-            }
-
-            if (empty($plugin['sitewideName'])) {
-                $plugin['sitewideName'] = null;
-            }
-
-            $plugin['rank'] = (int)$plugin['rank'];
-            $plugin['rowNumber'] = (int)$plugin['rowNumber'];
-            $plugin['columnClass'] = (string)$plugin['columnClass'];
-
-            $plugin['containerName'] = $plugin['containerId'];
-
-            if ($plugin['containerType'] == 'layout') {
-                $data['containers'][$plugin['containerId']][] = &$plugin;
-            } else {
-                $data['pageContainer'][] = &$plugin;
-            }
-        }
-    }
-
-    /**
-     * Save data clean up.
-     *
-     * @param $data
-     */
-    protected function cleanSaveData(
-        &$data
-    ) {
-        if (empty($data)) {
-            return;
-        }
-
-        if (is_array($data)) {
-            ksort($data);
-
-            foreach ($data as &$arrayData) {
-                $this->cleanSaveData($arrayData);
-            }
-
-            return;
-        }
-
-        if (is_string($data)) {
-            $data = trim(
-                str_replace(
-                    [
-                        "\n",
-                        "\t",
-                        "\r"
-                    ],
-                    "",
-                    $data
-                )
-            );
-        }
-
-        return;
     }
 }
