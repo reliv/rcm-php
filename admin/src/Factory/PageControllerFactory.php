@@ -7,7 +7,9 @@ use Interop\Container\ContainerInterface;
 use Rcm\Entity\Revision;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
+use Rcm\Service\CurrentSite;
 use RcmAdmin\Controller\PageController;
+use RcmAdmin\Service\PageMutationService;
 use RcmUser\Service\RcmUserService;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -43,7 +45,8 @@ class PageControllerFactory
         }
 
         return new PageController(
-            $container->get(\Rcm\Service\CurrentSite::class),
+            $container->get(PageMutationService::class),
+            $container->get(CurrentSite::class),
             $container->get(RcmUserService::class),
             $container->get(EntityManager::class)->getRepository(\Rcm\Entity\Page::class),
             $container->get(EntityManager::class)->getRepository(Revision::class),

@@ -661,6 +661,16 @@ return [
                 ],
             ],
             \RcmAdmin\Api\GetPageData::class => [],
+            \RcmAdmin\Service\PageMutationService::class => [
+                'arguments' => [
+                    \Rcm\Service\CurrentSite::class,
+                    \RcmUser\Service\RcmUserService::class,
+                    \Doctrine\ORM\EntityManager::class,
+                    'Rcm\ImmutableHistory\PageVersionRepo',
+                    \Rcm\ImmutableHistory\Page\PageContentFactory::class,
+                    \Rcm\ImmutableHistory\Page\RcmPageNameToPathname::class
+                ]
+            ]
         ],
         'factories' => [
             RcmAdmin\EventListener\DispatchListener::class

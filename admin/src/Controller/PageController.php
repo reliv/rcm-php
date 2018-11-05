@@ -15,6 +15,7 @@ use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
+use RcmAdmin\Service\PageMutationService;
 use RcmUser\Service\RcmUserService;
 use RcmUser\User\Entity\UserInterface;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -68,9 +69,8 @@ class PageController extends AbstractActionController
 
     protected $revisionRepo;
 
-    protected $immutablePageContentFactory;
 
-    protected $rcmPageNameToPathname;
+    protected $pageMutationService;
 
     /**
      * @param Site $currentSite
@@ -78,21 +78,13 @@ class PageController extends AbstractActionController
      * @param PageRepo $pageRepo
      */
     public function __construct(
+        PageMutationService $pageMutationService,
         Site $currentSite,
-        RcmUserService $rcmUserService,
-        PageRepo $pageRepo,
-        $revisionRepo,
-        VersionRepositoryInterface $immuteblePageVersionRepo,
-        PageContentFactory $immutablePageContentFactory,
-        RcmPageNameToPathname $rcmPageNameToPathname
+        RcmUserService $rcmUserService
     ) {
+        $this->pageMutationService = $pageMutationService;
         $this->currentSite = $currentSite;
-        $this->pageRepo = $pageRepo;
-        $this->revisionRepo = $revisionRepo;
         $this->rcmUserService = $rcmUserService;
-        $this->immuteblePageVersionRepo = $immuteblePageVersionRepo;
-        $this->immutablePageContentFactory = $immutablePageContentFactory;
-        $this->rcmPageNameToPathname = $rcmPageNameToPathname;
 
         $this->view = new ViewModel();
         $this->view->setTerminal(true);
@@ -143,12 +135,6 @@ class PageController extends AbstractActionController
         $form->setValidationGroup('url');
         $form->setData($data);
 
-        $user = $this->rcmUserService->getCurrentUser();
-
-        if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . get_class($this));
-        }
-
         if ($request->isPost() && $form->isValid()) {
             $validatedData = $form->getData();
 
@@ -156,76 +142,17 @@ class PageController extends AbstractActionController
             if (empty($validatedData['page-template'])
                 && !empty($validatedData['main-layout'])
             ) {
-                $pageData = [
-                    'name' => $validatedData['url'],
-                    'pageTitle' => $validatedData['title'],
-                    'pageType' => 'n', // "n" means "normal"
-                    'siteLayoutOverride' => $validatedData['main-layout'],
-                    'createdByUserId' => $user->getId(),
-                    'createdReason' => 'New page in ' . get_class($this),
-                    'author' => $user->getName(),
-                ];
-
-                $resultRevisionId = $this->pageRepo->createPage(
-                    $this->currentSite,
-                    $pageData
+                $this->pageMutationService->createNewPage(
+                    $this->rcmUserService->getCurrentUser(),
+                    $validatedData
                 );
-
-                $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
-                    new PageLocator($this->currentSite->getSiteId(),
-                        $this->rcmPageNameToPathname->__invoke($pageData['name'], $pageData['pageType'])),
-                    $this->immutablePageContentFactory->__invoke(
-                        $pageData['pageTitle'],
-                        '', //@TODO is this right?
-                        '', //@TODO is this right?
-                        $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
-                    ),
-                    $user->getId(),
-                    __CLASS__ . '::' . __FUNCTION__
+            } elseif (!empty($validatedData['page-template'])) {
+                $this->pageMutationService->createNewPageFromTemplate(
+                    $this->rcmUserService->getCurrentUser(),
+                    $validatedData
                 );
-            } elseif (!empty($validatedData['page - template'])) {
-                /** @var \Rcm\Entity\Page $page */
-                $page = $this->pageRepo->findOneBy(
-                    [
-                        'pageId' => $validatedData['page - template'],
-                        'pageType' => 't'
-                    ]
-                );
-
-                if (empty($page)) {
-                    throw new PageNotFoundException(
-                        'No template found for page id: '
-                        . $validatedData['page - template']
-                    );
-                }
-
-                $pageData = [
-                    'name' => $validatedData['url'],
-                    'pageTitle' => $validatedData['title'],
-                    'pageType' => 'n', // "n" means "normal"
-                    'createdByUserId' => $user->getId(),
-                    'createdReason' => 'New page from template in ' . get_class($this),
-                    'author' => $user->getName(),
-                ];
-
-                $resultRevisionId = $this->pageRepo->copyPage(
-                    $this->currentSite,
-                    $page,
-                    $pageData
-                );
-
-                $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
-                    new PageLocator($this->currentSite->getSiteId(),
-                        $this->rcmPageNameToPathname->__invoke($pageData['name'], $pageData['pageType'])),
-                    $this->immutablePageContentFactory->__invoke(
-                        $page->getPageTitle(),
-                        $page->getDescription(),
-                        $page->getKeywords(),
-                        $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
-                    ),
-                    $user->getId(),
-                    __CLASS__ . '::' . __FUNCTION__
-                );
+            } else {
+                throw new \Exception('Could not figure out creation method from request properties');
             }
 
             $this->view->setVariable(
@@ -253,143 +180,6 @@ class PageController extends AbstractActionController
         return $this->view;
     }
 
-//Disabled durring immutable history project in 2018-10 since no-one is using it
-//    /**
-//     * createTemplateFromPageAction
-//     *
-//     * @return Response|ViewModel
-//     * @throws \Rcm\Exception\PageNotFoundException
-//     * @throws TrackingException
-//     */
-//    public function createTemplateFromPageAction()
-//    {
-//        /** @var ResourceName $resourceName */
-//        $resourceName = $this->getServiceLocator()->get(
-//            ResourceName::class
-//        );
-//
-//        $resourceId = $resourceName->get(
-//            ResourceName::RESOURCE_SITES,
-//            $this->currentSite->getSiteId(),
-//            ResourceName::RESOURCE_PAGES
-//        );
-//
-//        if (!$this->rcmUserService->isAllowed(
-//            $resourceId,
-//            'create'
-//        )
-//        ) {
-//            $response = new Response();
-//            $response->setStatusCode('401');
-//
-//            return $response;
-//        }
-//
-//        $sourcePage = $this->getEvent()
-//            ->getRouteMatch()
-//            ->getParam(
-//                'rcmPageName',
-//                'index'
-//            );
-//
-//        $sourcePageRevision = $this->getEvent()
-//            ->getRouteMatch()
-//            ->getParam(
-//                'rcmPageRevision',
-//                null
-//            );
-//
-//        $sourcePageType = $this->getEvent()
-//            ->getRouteMatch()
-//            ->getParam(
-//                'rcmPageType',
-//                'n'
-//            );
-//
-//        /** @var \RcmAdmin\Form\CreateTemplateFromPageForm $form */
-//        $form = $this->getServiceLocator()
-//            ->get('FormElementManager')
-//            ->get(\RcmAdmin\Form\CreateTemplateFromPageForm::class);
-//
-//        /** @var \Zend\Http\Request $request */
-//        $request = $this->request;
-//
-//        $data = $request->getPost();
-//
-//        $form->setValidationGroup('template - name');
-//        $form->setData($data);
-//
-//        if ($request->isPost() && $form->isValid()) {
-//            $validatedData = $form->getData();
-//
-//            $page = $this->pageRepo->getPageByName(
-//                $this->currentSite,
-//                $sourcePage,
-//                $sourcePageType
-//            );
-//
-//            if (empty($page)) {
-//                throw new PageNotFoundException(
-//                    'Unable to locate source page to copy'
-//                );
-//            }
-//
-//            $pageId = $page->getPageId();
-//
-//            $user = $this->rcmUserService->getCurrentUser();
-//
-//            if (empty($user)) {
-//                throw new TrackingException('A valid user is required in ' . get_class($this));
-//            }
-//
-//            $pageData = [
-//                'createdByUserId' => $user->getId(),
-//                'createdReason' => 'New page in ' . get_class($this),
-//                'author' => $user->getName(),
-//                'name' => $validatedData['template - name'],
-//                'pageTitle' => null,
-//                'pageType' => 't',
-//            ];
-//
-//            $this->pageRepo->copyPage(
-//                $this->currentSite,
-//                $page,
-//                $pageData,
-//                $sourcePageRevision
-//            );
-//
-//            $this->view->setVariable(
-//                'newPageUrl',
-//                $this->urlToPage(
-//                    $validatedData['template - name'],
-//                    't'
-//                )
-//            );
-//            $this->view->setTemplate('rcm-admin/page/success');
-//
-//            return $this->view;
-//        }
-//
-//        $this->view->setVariable(
-//            'form',
-//            $form
-//        );
-//        $this->view->setVariable(
-//            'rcmPageName',
-//            $sourcePage
-//        );
-//        $this->view->setVariable(
-//            'rcmPageRevision',
-//            $sourcePageRevision
-//        );
-//        $this->view->setVariable(
-//            'rcmPageType',
-//            $sourcePageType
-//        );
-//
-//        return $this->view;
-//    }
-
     /**
      * publishPageRevisionAction
      *
@@ -399,20 +189,25 @@ class PageController extends AbstractActionController
      */
     public function publishPageRevisionAction()
     {
-        /** @var ResourceName $resourceName */
-        $resourceName = $this->getServiceLocator()->get(
-            ResourceName::class
-        );
+        $request = $this->getRequest();
 
-        $resourceId = $resourceName->get(
-            ResourceName::RESOURCE_SITES,
-            $this->currentSite->getSiteId(),
-            ResourceName::RESOURCE_PAGES
-        );
+        //HTTP method check
+        if (!$request->isPost()) {
 
+            $response = new Response();
+            $response->setStatusCode('405');
+
+            return $response;
+        }
+
+        //ACL access check
         if (!$this->rcmUserService->isAllowed(
-            $resourceId,
-            'create'
+            $this->getServiceLocator()->get(ResourceName::class)->get(
+                ResourceName::RESOURCE_SITES,
+                $this->currentSite->getSiteId(),
+                ResourceName::RESOURCE_PAGES
+            ),
+            'edit'
         )
         ) {
             $response = new Response();
@@ -442,47 +237,16 @@ class PageController extends AbstractActionController
                 'n'
             );
 
-        if (!is_numeric($pageRevision)) {
-            throw new InvalidArgumentException(
-                'Invalid Page Revision Id . '
-            );
-        }
-        $user = $this->rcmUserService->getCurrentUser();
-
-        if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . get_class($this));
-        }
-
-        $siteId = $this->currentSite->getSiteId();
-
-        $page = $this->pageRepo->publishPageRevision(
-            $siteId,
-            $pageName,
-            $pageType,
-            $pageRevision,
-            $user->getId(),
-            'Publish page in ' . get_class($this)
-        );
-
-        //@TODO change this to call publishFromExistingVersion() once we figure out how to get versionId
-        $this->immuteblePageVersionRepo->publishFromNothing(
-            new PageLocator($this->currentSite->getSiteId(),
-                $this->rcmPageNameToPathname->__invoke($pageName, $pageType)),
-            $this->immutablePageContentFactory->__invoke(
-                $page->getPageTitle(),
-                $page->getDescription(),
-                $page->getKeywords(),
-                $page->getPublishedRevision()->getPluginWrappers()->toArray()
-            ),
-            $user->getId(),
-            __CLASS__ . '::' . __FUNCTION__
-
-        );
-
         return $this->redirect()->toUrl(
-            $this->urlToPage(
+            $this->pageMutationService->publishPageRevision(
+                $this->rcmUserService->getCurrentUser(),
+                $this->currentSite->getSiteId(),
                 $pageName,
-                $pageType
+                $pageType,
+                $pageRevision,
+                function ($pageName, $pageType = 'n', $pageRevision = null) {
+                    return $this->urlToPage($pageName, $pageType, $pageRevision);
+                }
             )
         );
     }
@@ -496,19 +260,24 @@ class PageController extends AbstractActionController
      */
     public function savePageAction()
     {
-        /** @var ResourceName $resourceName */
-        $resourceName = $this->getServiceLocator()->get(
-            ResourceName::class
-        );
+        $request = $this->getRequest();
 
-        $resourceId = $resourceName->get(
-            ResourceName::RESOURCE_SITES,
-            $this->currentSite->getSiteId(),
-            ResourceName::RESOURCE_PAGES
-        );
+        //HTTP method check
+        if (!$request->isPost()) {
 
+            $response = new Response();
+            $response->setStatusCode('405');
+
+            return $response;
+        }
+
+        //ACL access check
         if (!$this->rcmUserService->isAllowed(
-            $resourceId,
+            $this->getServiceLocator()->get(ResourceName::class)->get(
+                ResourceName::RESOURCE_SITES,
+                $this->currentSite->getSiteId(),
+                ResourceName::RESOURCE_PAGES
+            ),
             'edit'
         )
         ) {
@@ -540,82 +309,20 @@ class PageController extends AbstractActionController
                 'n'
             );
 
-        /** @var \Zend\Http\Request $request */
-        $request = $this->getRequest();
+        $data = $request->getPost();
 
-        $user = $this->rcmUserService->getCurrentUser();
-
-        if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . get_class($this));
-        }
-
-        if ($request->isPost()) {
-            /** @var \Zend\Stdlib\Parameters $data */
-            $data = $request->getPost()->toArray();
-
-            $this->prepSaveData($data);
-
-            $resultRevisionId = $this->pageRepo->savePage(
-                $this->currentSite,
+        return $this->getJsonResponse(
+            $this->pageMutationService->savePageDraft(
+                $this->rcmUserService->getCurrentUser(),
                 $pageName,
                 $pageRevision,
                 $pageType,
-                $data,
-                $user->getId(),
-                'Save existing page in ' . get_class($this),
-                $user->getName()
-            );
-
-            /**
-             * If the pageRepo deterimins there was no change, it saves nothing a returns and empty $resultRevisionId.
-             */
-            $savedANewVersion = !empty($resultRevisionId);
-
-            if ($savedANewVersion) {
-                /**
-                 * @var Page
-                 */
-                $page = $this->pageRepo->findOneBy([
-                    'site' => $this->currentSite,
-                    'name' => $pageName,
-                    'pageType' => $pageType
-                ]);
-
-                $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
-                    new PageLocator($this->currentSite->getSiteId(),
-                        $this->rcmPageNameToPathname->__invoke($pageName, $pageType)),
-                    $this->immutablePageContentFactory->__invoke(
-                        $page->getPageTitle(),
-                        $page->getDescription(),
-                        $page->getKeywords(),
-                        $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
-                    ),
-                    $user->getId(),
-                    __CLASS__ . '::' . __FUNCTION__
-                );
-            }
-
-            if ($savedANewVersion) {
-                $return['redirect'] = $this->urlToPage(
-                    $pageName,
-                    $pageType,
-                    $resultRevisionId
-                );
-            } else {
-                $return['redirect'] = $this->urlToPage(
-                    $pageName,
-                    $pageType,
-                    $pageRevision
-                );
-            }
-
-            return $this->getJsonResponse($return);
-        }
-
-        $response = new Response();
-        $response->setStatusCode('404');
-
-        return $response;
+                $request->getPost()->toArray(),
+                function ($pageName, $pageType = 'n', $pageRevision = null) {
+                    return $this->urlToPage($pageName, $pageType, $pageRevision);
+                }
+            )
+        );
     }
 
     /**
@@ -730,31 +437,5 @@ class PageController extends AbstractActionController
         }
 
         return;
-    }
-
-    /**
-     * @return RcmUserService
-     */
-    protected function getRcmUserService()
-    {
-        return $this->rcmUserService;
-    }
-
-    /**
-     * @return UserInterface
-     * @throws TrackingException
-     */
-    protected function getCurrentUser()
-    {
-        /** @var RcmUserService $service */
-        $service = $this->getRcmUserService();
-
-        $user = $service->getCurrentUser();
-
-        if (empty($user)) {
-            throw new TrackingException('A valid user is required in ' . get_class($this));
-        }
-
-        return $user;
     }
 }
