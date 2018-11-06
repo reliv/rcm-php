@@ -16,9 +16,8 @@ class GetAllChangeLogEventSentencesForDateRange
         $this->changeLogEventToSentence = $changeLogEventToSentence;
     }
 
-    //@TODO have interface for children?
     public function addChild(
-        $child
+        GetHumanReadableChangeLogEventsByDateRangeInterface $child
     ) {
         $this->children[] = $child;
     }
@@ -44,7 +43,6 @@ class GetAllChangeLogEventSentencesForDateRange
             }
         }
 
-        //@TODO re-sort these by "date desc, id desc" since these are comming from multipule sources and in same second
         return $humanReadableEvents;
     }
 }

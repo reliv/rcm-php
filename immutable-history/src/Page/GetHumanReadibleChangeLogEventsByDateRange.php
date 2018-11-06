@@ -36,7 +36,7 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
         $entities = $doctrineRepo->matching($criteria)->toArray();
 
         $entityToHumanReadable = function ($version): ChangeLogEvent {
-            switch ($version->getAction()) { //@TODO handle more action types
+            switch ($version->getAction()) {
                 case VersionActions::CREATE_UNPUBLISHED_FROM_NOTHING:
                     $actionDescription = 'created a draft of';
                     break;

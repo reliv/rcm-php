@@ -24,7 +24,6 @@ class PageContentFactory
              */
             $instance = $wrapper->getInstance();
 
-            //@TODO double check that everything needed to render is in here
             return [
                 'layoutContainer' => $wrapper->getLayoutContainer(),
                 'rowNumber' => $wrapper->getRowNumber(),

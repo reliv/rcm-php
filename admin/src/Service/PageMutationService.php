@@ -118,8 +118,8 @@ class PageMutationService
                 $this->rcmPageNameToPathname->__invoke($pageData['name'], $pageData['pageType'])),
             $this->immutablePageContentFactory->__invoke(
                 $pageData['pageTitle'],
-                '', //@TODO is this right?
-                '', //@TODO is this right?
+                '',
+                '',
                 $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
             ),
             $user->getId(),
@@ -186,8 +186,6 @@ class PageMutationService
     }
 
     /**
-     * @TODO stop passing $urlToPageFunction in here
-     *
      * @param $siteId
      * @param $pageName
      * @param $pageType
@@ -219,7 +217,6 @@ class PageMutationService
             'Publish page in ' . get_class($this)
         );
 
-        //@TODO change this to call publishFromExistingVersion() once we figure out how to get versionId
         $this->immuteblePageVersionRepo->publishFromNothing(
             new PageLocator($this->currentSite->getSiteId(),
                 $this->rcmPageNameToPathname->__invoke($pageName, $pageType)),
@@ -241,7 +238,6 @@ class PageMutationService
     }
 
     /**
-     * @TODO stop passing $urlToPageFunction in here
      * savePageDraft
      *
      * @return Response|ResponseInterface

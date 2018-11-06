@@ -181,7 +181,7 @@ class VersionRepository implements VersionRepositoryInterface
         } else {
             //This "from" resource does NOT already exist in the history system.
             $action = VersionActions::DUPLICATE_FROM_UNKNOWN;
-            $content = null; //@TODO is this ok? Probably not good!
+            $content = null;
         }
 
         $copiedVersion = new $this->entityClassName(

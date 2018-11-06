@@ -7,8 +7,6 @@ use Rcm\ImmutableHistory\LocatorInterface;
 use Rcm\ImmutableHistory\VersionEntityInterface;
 
 /**
- * @TODO add indexes
- * @TODO can we block update and delete quiries on this entity somehow?
  * @ORM\Entity
  * @ORM\Table(name="rcm_immutable_page_version")
  */
