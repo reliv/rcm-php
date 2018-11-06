@@ -688,8 +688,6 @@ class Page extends ContainerAbstract
     }
 
     /**
-     * isValid - @todo This is the same as exists?
-     *
      * @param int $siteId
      * @param string $pageName
      * @param string $pageType
