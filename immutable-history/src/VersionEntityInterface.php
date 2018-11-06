@@ -4,6 +4,8 @@ namespace Rcm\ImmutableHistory;
 
 interface VersionEntityInterface
 {
+    public function getId(): int;
+
     public function getResourceId(): string;
 
     public function getStatus(): string;

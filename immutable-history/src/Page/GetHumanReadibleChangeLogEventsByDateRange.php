@@ -32,7 +32,6 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
         $criteria = new \Doctrine\Common\Collections\Criteria();
         $criteria->where($criteria->expr()->gt('date', $greaterThanDate));
         $criteria->andWhere($criteria->expr()->lt('date', $lessThanDate));
-        $criteria->orderBy(['date' => Criteria::DESC, 'id' => Criteria::DESC]);
 
         $versions = $doctrineRepo->matching($criteria)->toArray();
 
@@ -40,7 +39,7 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
             $this->doDataIntegrityAssertions($version);
         }
 
-        $entityToHumanReadable = function ($version): ChangeLogEvent {
+        $entityToHumanReadable = function (VersionEntityInterface $version): ChangeLogEvent {
             switch ($version->getAction()) {
                 case VersionActions::CREATE_UNPUBLISHED_FROM_NOTHING:
                     $actionDescription = 'created a draft of';
@@ -78,6 +77,7 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
                     'relativeUrl' => $version->getPathname()
                 ]
             );
+            $event->setVersionId($version->getId());
 
             return $event;
         };

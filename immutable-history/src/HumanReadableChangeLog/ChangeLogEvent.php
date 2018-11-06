@@ -28,6 +28,27 @@ class ChangeLogEvent
     protected $metaData = [];
 
     /**
+     * @var int
+     */
+    protected $versionId;
+
+    /**
+     * @return int
+     */
+    public function getVersionId(): int
+    {
+        return $this->versionId;
+    }
+
+    /**
+     * @param int $versionId
+     */
+    public function setVersionId(int $versionId): void
+    {
+        $this->versionId = $versionId;
+    }
+
+    /**
      * @return \DateTime
      */
     public function getDate(): \DateTime

@@ -37,11 +37,21 @@ class GetAllChangeLogEventSentencesForDateRange
             /** @var ChangeLogEvent $event */
             foreach ($events as $event) {
                 $humanReadableEvents[] = [
+                    'versionId' => $event->getVersionId(),
                     'date' => $event->getDate()->format('c'),
                     'description' => $this->changeLogEventToSentence->__invoke($event)
                 ];
             }
         }
+
+        //Sort by "date desc", then by "versionId desc" incase events happened in the same second
+        usort($humanReadableEvents, function ($a, $b) {
+            if ($a['date'] === $b['date']) {
+                return $a['versionId'] < $b['versionId'];
+            } else {
+                return $a['date'] < $b['date'];
+            }
+        });
 
         return $humanReadableEvents;
     }

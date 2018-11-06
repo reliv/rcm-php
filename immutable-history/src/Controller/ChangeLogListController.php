@@ -71,7 +71,7 @@ class ChangeLogListController implements MiddlewareInterface
 
         $description = 'Content change log events for ' . $days . ' days'
             . ' from ' . $greaterThanYear->format('c') . ' to ' . $lessThanYear->format('c')
-            . '. Text in parentheses is from current lookups and is not guaranteed to be historically accurate.';
+            . '. Anything inside parentheses is from current lookups, is for convenience only,  and is not guaranteed to be historically accurate.';
 
         $contentType = isset($queryParams['content-type'])
             ? html_entity_decode($queryParams['content-type'])

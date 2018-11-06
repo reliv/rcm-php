@@ -1,7 +1,6 @@
 @TODOs:
 
 MUST:
-- add versionId to ChangeLogEvent and ensure it is sorted by it after date
 - 500 when visiting log screen when not logged in
 
 SHOULD:
