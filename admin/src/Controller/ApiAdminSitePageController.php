@@ -45,7 +45,6 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         $serviceLocator
     ) {
         $this->serviceLocator = $serviceLocator;
-        //@TODO use DI for this if doesn't break children
         $this->pageMutationService = $serviceLocator->get(PageMutationService::class);
     }
 
