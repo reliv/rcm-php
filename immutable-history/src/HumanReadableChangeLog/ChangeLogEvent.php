@@ -22,22 +22,21 @@ class ChangeLogEvent
      * @var string
      */
     protected $resourceDescription;
-    /**
-     * @var array
-     */
-    protected $metaData = [];
 
     /**
      * @var int
      */
     protected $versionId;
 
+    /**
+     * @var string
+     */
     protected $actionAsPartOf;
 
     /**
      * @return mixed
      */
-    public function getActionAsPartOf()
+    public function getActionAsPartOf(): string
     {
         return $this->actionAsPartOf;
     }
@@ -45,7 +44,7 @@ class ChangeLogEvent
     /**
      * @param mixed $actionAsPartOf
      */
-    public function setActionAsPartOf($actionAsPartOf): void
+    public function setActionAsPartOf(string $actionAsPartOf): void
     {
         $this->actionAsPartOf = $actionAsPartOf;
     }
@@ -128,21 +127,5 @@ class ChangeLogEvent
     public function setResourceDescription(string $resourceDescription): void
     {
         $this->resourceDescription = $resourceDescription;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMetaData(): array
-    {
-        return $this->metaData;
-    }
-
-    /**
-     * @param array $metaData
-     */
-    public function setMetaData(array $metaData): void
-    {
-        $this->metaData = $metaData;
     }
 }

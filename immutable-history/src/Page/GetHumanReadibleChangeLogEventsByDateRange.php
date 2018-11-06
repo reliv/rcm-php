@@ -79,12 +79,6 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
                     . ' ('
                     . $this->siteIdToDomainName->__invoke($version->getSiteId()) . $version->getPathname()
                     . ')');
-                $event->setMetaData(
-                    [
-                        'siteId' => $version->getSiteId(),
-                        'relativeUrl' => $version->getPathname()
-                    ]
-                );
                 $event->setVersionId($version->getId());
 
                 return $event;
