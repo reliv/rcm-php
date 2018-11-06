@@ -39,55 +39,56 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
             $this->doDataIntegrityAssertions($version);
         }
 
-        $entityToHumanReadable = function (VersionEntityInterface $version): ChangeLogEvent {
-            $actionAsPartOf = '';
-            switch ($version->getAction()) {
-                case VersionActions::CREATE_UNPUBLISHED:
-                    $actionDescription = 'created a draft of';
-                    break;
-                case VersionActions::PUBLISH:
-                    $actionDescription = 'published to';
-                    break;
-                case VersionActions::DEPUBLISH:
-                    $actionDescription = 'depublished';
-                    break;
-                case VersionActions::DUPLICATE:
-                    $actionDescription = 'published to';
-                    $actionAsPartOf = 'as part of a copy operation';
-                    break;
-                case VersionActions::RELOCATE_DEPUBLISH:
-                    $actionDescription = 'depublished';
-                    $actionAsPartOf = 'as part of a move operation';
-                    break;
-                case VersionActions::RELOCATE_PUBLISH:
-                    $actionDescription = 'published to';
-                    $actionAsPartOf = 'as part of a move operation';
-                    break;
-                default:
-                    throw new \Exception('Unknown action type found: ' . $version->getAction());
-            }
+        return array_map(
+            function (VersionEntityInterface $version): ChangeLogEvent {
+                $actionAsPartOf = '';
+                switch ($version->getAction()) {
+                    case VersionActions::CREATE_UNPUBLISHED:
+                        $actionDescription = 'created a draft of';
+                        break;
+                    case VersionActions::PUBLISH:
+                        $actionDescription = 'published to';
+                        break;
+                    case VersionActions::DEPUBLISH:
+                        $actionDescription = 'depublished';
+                        break;
+                    case VersionActions::DUPLICATE:
+                        $actionDescription = 'published to';
+                        $actionAsPartOf = 'as part of a copy operation';
+                        break;
+                    case VersionActions::RELOCATE_DEPUBLISH:
+                        $actionDescription = 'depublished';
+                        $actionAsPartOf = 'as part of a move operation';
+                        break;
+                    case VersionActions::RELOCATE_PUBLISH:
+                        $actionDescription = 'published to';
+                        $actionAsPartOf = 'as part of a move operation';
+                        break;
+                    default:
+                        throw new \Exception('Unknown action type found: ' . $version->getAction());
+                }
 
-            $event = new ChangeLogEvent();
-            $event->setDate($version->getDate());
-            $event->setUserId($version->getUserId());
-            $event->setActionDescription($actionDescription);
-            $event->setActionAsPartOf($actionAsPartOf);
-            $event->setResourceDescription(
-                'page "' . $version->getPathname()
-                . '" on site #' . $version->getSiteId()
-                . ' (' . $this->siteIdToDomainName->__invoke($version->getSiteId()) . $version->getPathname() . ')');
-            $event->setMetaData(
-                [
-                    'siteId' => $version->getSiteId(),
-                    'relativeUrl' => $version->getPathname()
-                ]
-            );
-            $event->setVersionId($version->getId());
+                $event = new ChangeLogEvent();
+                $event->setDate($version->getDate());
+                $event->setUserId($version->getUserId());
+                $event->setActionDescription($actionDescription);
+                $event->setActionAsPartOf($actionAsPartOf);
+                $event->setResourceDescription(
+                    'page "' . $version->getPathname()
+                    . '" on site #' . $version->getSiteId()
+                    . ' (' . $this->siteIdToDomainName->__invoke($version->getSiteId()) . $version->getPathname() . ')');
+                $event->setMetaData(
+                    [
+                        'siteId' => $version->getSiteId(),
+                        'relativeUrl' => $version->getPathname()
+                    ]
+                );
+                $event->setVersionId($version->getId());
 
-            return $event;
-        };
-
-        return array_map($entityToHumanReadable, $versions);
+                return $event;
+            },
+            $versions
+        );
     }
 
     /**
