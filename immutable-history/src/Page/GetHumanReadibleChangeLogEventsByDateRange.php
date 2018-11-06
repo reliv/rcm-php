@@ -91,6 +91,8 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
     }
 
     /**
+     * This will throw an exectpion if it finds anything wrong with the $version entity given to it.
+     *
      * Note: this could be moved to a shared location later on
      *
      * @param VersionEntityInterface $version
