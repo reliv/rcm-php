@@ -9,4 +9,4 @@ SHOULD:
 - document resourceIds and how they change and stay the same
 
 COULD:
-- Implment code to fill in "USER_FULL_NAME_UNKNOWN"
+- Fill in "USER_FULL_NAME_UNKNOWN" which should show in parentheses after every user id on the log screen
