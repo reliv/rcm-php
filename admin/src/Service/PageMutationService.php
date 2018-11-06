@@ -349,6 +349,7 @@ class PageMutationService
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
+
         /**
          * Site | null
          */
@@ -366,6 +367,7 @@ class PageMutationService
         $destinationPage->setSite($destinationSite);
         $destinationPage->setName($destinationPageName);
         $destinationPage->setAuthor($user->getName());
+
         if ($desitnationPageType !== null) {
             $destinationPage->setPageType($desitnationPageType);
         }
@@ -378,18 +380,64 @@ class PageMutationService
             true
         );
 
-        $this->immuteblePageVersionRepo->duplicate(
+        $this->immuteblePageVersionRepo->duplicateBc(
             new PageLocator(
                 $page->getSiteId(),
                 $this->rcmPageNameToPathname->__invoke($page->getName(), $page->getPageType())
             ),
             new PageLocator(
                 $destinationSite->getSiteId(),
-                $this->rcmPageNameToPathname->__invoke($destinationPageName, $desitnationPageType)
+                $this->rcmPageNameToPathname->__invoke($destinationPage->getName(), $destinationPage->getPageType())
+            ),
+            $this->immutablePageContentFactory->__invoke(
+                $page->getPageTitle(),
+                $page->getDescription(),
+                $page->getDescription(),
+                $page->getPublishedRevision()->getPluginWrappers()->toArray()
             ),
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
         );
+    }
+
+    /**
+     * Note: If the new version has different location information, this will be logged in immutable history
+     * as an "publish" action at the original location then a "relocate" action right afterward to the new location.
+     *
+     * @param $user
+     * @param Page $page
+     * @param $data
+     */
+    public function updatePublishedVersionOfPage($user, Page $page, $data)
+    {
+        $originalLocator = new PageLocator(
+            $this->currentSite->getSiteId(),
+            $this->rcmPageNameToPathname->__invoke($page->getName(), $page->getPageType())
+        );
+        $updatedPage = $this->pageRepo->updatePage($page, $data);
+        $updatedLocator = new PageLocator(
+            $this->currentSite->getSiteId(),
+            $this->rcmPageNameToPathname->__invoke($updatedPage->getName(), $updatedPage->getPageType())
+        );
+        $this->immuteblePageVersionRepo->publishFromNothing(
+            $originalLocator,
+            $this->immutablePageContentFactory->__invoke(
+                $updatedPage->getPageTitle(),
+                $updatedPage->getDescription(),
+                $updatedPage->getKeywords(),
+                $updatedPage->getPublishedRevision()->getPluginWrappers()->toArray()
+            ),
+            $user->getId(),
+            __CLASS__ . '::' . __FUNCTION__
+        );
+        if (json_encode($originalLocator->toArray()) !== json_encode($updatedLocator->toArray())) {
+            $this->immuteblePageVersionRepo->relocate(
+                $originalLocator,
+                $updatedLocator,
+                $user->getId(),
+                __CLASS__ . '::' . __FUNCTION__
+            );
+        }
     }
 
     /**

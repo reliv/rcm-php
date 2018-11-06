@@ -9,6 +9,7 @@ use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogEventsB
 use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
 use Rcm\ImmutableHistory\Site\UserIdToUserFullName;
 use Rcm\ImmutableHistory\VersionActions;
+use Rcm\ImmutableHistory\VersionEntityInterface;
 
 class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChangeLogEventsByDateRangeInterface
 {
@@ -33,7 +34,11 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
         $criteria->andWhere($criteria->expr()->lt('date', $lessThanDate));
         $criteria->orderBy(['date' => Criteria::DESC, 'id' => Criteria::DESC]);
 
-        $entities = $doctrineRepo->matching($criteria)->toArray();
+        $versions = $doctrineRepo->matching($criteria)->toArray();
+
+        foreach ($versions as $version) {
+            $this->doDataIntegrityAssertions($version);
+        }
 
         $entityToHumanReadable = function ($version): ChangeLogEvent {
             switch ($version->getAction()) {
@@ -46,9 +51,14 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
                 case VersionActions::DEPUBLISH:
                     $actionDescription = 'depublished';
                     break;
-                case VersionActions::DUPLICATE_FROM_UNKNOWN:
                 case VersionActions::DUPLICATE:
-                    $actionDescription = 'copied a page to';
+                    $actionDescription = 'as part of a copy operation, published to ';
+                    break;
+                case VersionActions::RELOCATE_DEPUBLISH:
+                    $actionDescription = 'as part of a move operation, depublished';
+                    break;
+                case VersionActions::RELOCATE_PUBLISH:
+                    $actionDescription = 'as part of a move operation, published to';
                     break;
                 default:
                     throw new \Exception('Unknown action type found: ' . $version->getAction());
@@ -72,6 +82,25 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
             return $event;
         };
 
-        return array_map($entityToHumanReadable, $entities);
+        return array_map($entityToHumanReadable, $versions);
+    }
+
+    /**
+     * Note: this could be moved to a shared location later on
+     *
+     * @param VersionEntityInterface $version
+     * @throws \Exception
+     */
+    protected function doDataIntegrityAssertions(VersionEntityInterface $version)
+    {
+        $content = $version->getContentAsArray();
+        $action = $version->getAction();
+
+        if (
+            ($content == null || (is_array($content) && count($content) === 0))
+            && $action !== VersionActions::DEPUBLISH
+        ) {
+            throw new \Exception('Found missing content for an action type that should have content');
+        }
     }
 }

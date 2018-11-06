@@ -8,5 +8,10 @@ interface VersionEntityInterface
 
     public function getStatus(): string;
 
-    public function getContentAsArray(): array;
+    public function getAction(): string;
+
+    /**
+     * @return array | null
+     */
+    public function getContentAsArray();
 }

@@ -388,7 +388,7 @@ class Page extends ContainerAbstract
      * @param array $pageData
      * @param bool $doFlush
      *
-     * @return void
+     * @return \Rcm\Entity\Page
      */
     public function updatePage(
         PageEntity $page,
@@ -427,6 +427,8 @@ class Page extends ContainerAbstract
         if ($doFlush) {
             $this->getEntityManager()->flush($page);
         }
+
+        return $page;
     }
 
     /**

@@ -4,6 +4,7 @@ namespace RcmAdmin\Controller;
 
 use Interop\Container\ContainerInterface;
 use Rcm\Acl\ResourceName;
+use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use Rcm\Tracking\Exception\TrackingException;
@@ -304,82 +305,70 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         return new ApiJsonModel($apiResponse, 0, 'Success');
     }
 
-//Commented out in 2018-11 because doesn't audit log properly and doesn't appear to be in use anywhere
-//    /**
-//     * update
-//     *
-//     * @todo Needs data prepare for site and exception message needs scrubbed
-//     *
-//     * @param mixed $id
-//     * @param mixed $data
-//     *
-//     * @return mixed|ApiJsonModel|\Zend\Stdlib\ResponseInterface
-//     */
-//    public function update($id, $data)
-//    {
-//        $siteId = $this->getRequestSiteId();
-//
-//        //ACCESS CHECK
-//        $sitePagesResource = $this->getSitePagesResourceId($siteId);
-//        if (!$this->isAllowed('pages', 'edit')
-//            && !$this->isAllowed(
-//                $sitePagesResource,
-//                'edit'
-//            )
-//        ) {
-//            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
-//
-//            return $this->getResponse();
-//        }
-//
-//        $inputFilter = new SitePageUpdateInputFilter();
-//
-//        $inputFilter->setData($data);
-//
-//        if (!$inputFilter->isValid()) {
-//            return new ApiJsonModel(
-//                [],
-//                1,
-//                'Some values are missing or invalid for page update.',
-//                $inputFilter->getMessages()
-//            );
-//        }
-//
-//        $data = $inputFilter->getValues();
-//
-//        // <tracking>
-//        $data['modifiedByUserId'] = $this->getCurrentUserId();
-//        $data['modifiedReason'] = 'Update site in ' . get_class($this);
-//
-//        $site = $this->getSite($siteId);
-//
-//        if (empty($site)) {
-//            return new ApiJsonModel(
-//                null,
-//                1,
-//                "Site was not found with id {$siteId}."
-//            );
-//        }
-//
-//        $page = $this->getPage($site, $id);
-//
-//        try {
-//            $this->getPageRepo()->updatePage(
-//                $page,
-//                $data
-//            );
-//        } catch (\Exception $e) {
-//            return new ApiJsonModel(
-//                null,
-//                1,
-//                $e->getMessage()
-//            );
-//        }
-//
-//        $apiResponse = new SitePageApiResponse($page);
-//
-//        return new ApiJsonModel($apiResponse, 0, 'Success: Page updated.');
-//    }
+    /**
+     * update
+     *
+     * @todo Needs data prepare for site and exception message needs scrubbed
+     *
+     * @param mixed $id
+     * @param mixed $data
+     *
+     * @return mixed|ApiJsonModel|\Zend\Stdlib\ResponseInterface
+     */
+    public function update($id, $data)
+    {
+        $siteId = $this->getRequestSiteId();
+
+        //ACCESS CHECK
+        $sitePagesResource = $this->getSitePagesResourceId($siteId);
+        if (!$this->isAllowed('pages', 'edit')
+            && !$this->isAllowed(
+                $sitePagesResource,
+                'edit'
+            )
+        ) {
+            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+
+            return $this->getResponse();
+        }
+
+        $inputFilter = new SitePageUpdateInputFilter();
+
+        $inputFilter->setData($data);
+
+        if (!$inputFilter->isValid()) {
+            return new ApiJsonModel(
+                [],
+                1,
+                'Some values are missing or invalid for page update.',
+                $inputFilter->getMessages()
+            );
+        }
+
+        $data = $inputFilter->getValues();
+
+        // <tracking>
+        $data['modifiedByUserId'] = $this->getCurrentUserId();
+        $data['modifiedReason'] = 'Update site in ' . get_class($this);
+
+        $site = $this->getSite($siteId);
+
+        if (empty($site)) {
+            return new ApiJsonModel(
+                null,
+                1,
+                "Site was not found with id {$siteId}."
+            );
+        }
+
+        $page = $this->getPage($site, $id);
+
+        $this->pageMutationService->updatePublishedVersionOfPage($this->getCurrentUser(), $page, $data);
+
+        $apiResponse = new SitePageApiResponse($page);
+
+        return new ApiJsonModel($apiResponse, 0, 'Success: Page updated.');
+    }
 
 //Commented out in 2018-11 because doesn't audit log properly and doesn't appear to be in use anywhere
 //    /**

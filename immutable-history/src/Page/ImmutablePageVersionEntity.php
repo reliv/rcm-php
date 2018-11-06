@@ -205,9 +205,9 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
     }
 
     /**
-     * @return array
+     * @return array | null
      */
-    public function getContentAsArray(): array
+    public function getContentAsArray()
     {
         return $this->content;
     }
