@@ -18,7 +18,7 @@ class PageLocator implements LocatorInterface
     /**
      * @return int
      */
-    public function getSiteId()
+    public function getSiteId(): int
     {
         return $this->siteId;
     }
@@ -26,7 +26,7 @@ class PageLocator implements LocatorInterface
     /**
      * @return string
      */
-    public function getPathname()
+    public function getPathname(): string
     {
         return $this->pathname;
     }

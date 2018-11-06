@@ -193,7 +193,6 @@ class VersionRepository implements VersionRepositoryInterface
             );
         } catch (SourceVersionNotFoundException $e) {
             //The source resource was not found in the newer history system
-
             $newVersion = new $this->entityClassName(
                 $this->generateResourceId->__invoke(),
                 new \DateTime(),
@@ -220,7 +219,6 @@ class VersionRepository implements VersionRepositoryInterface
 
         if ($previousPublishedVersion === null) {
             throw new SourceVersionNotFoundException('Locator: ' . json_encode($fromLocator));
-            //The "from" resource already exists in the history system
         }
 
         $content = $previousPublishedVersion->getContentAsArray();
