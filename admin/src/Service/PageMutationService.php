@@ -61,6 +61,8 @@ class PageMutationService
 
     protected $rcmPageNameToPathname;
 
+    protected $entityManager;
+
     public function __construct(
         Site $currentSite,
         RcmUserService $rcmUserService,
@@ -70,6 +72,7 @@ class PageMutationService
         RcmPageNameToPathname $rcmPageNameToPathname
     ) {
         $this->currentSite = $currentSite;
+        $this->entityManager = $entityManager;
         $this->pageRepo = $entityManager->getRepository(Page::class);
         $this->revisionRepo = $entityManager->getRepository(Revision::class);
         $this->rcmUserService = $rcmUserService;
@@ -280,8 +283,10 @@ class PageMutationService
             ]);
 
             $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
-                new PageLocator($this->currentSite->getSiteId(),
-                    $this->rcmPageNameToPathname->__invoke($pageName, $pageType)),
+                new PageLocator(
+                    $this->currentSite->getSiteId(),
+                    $this->rcmPageNameToPathname->__invoke($pageName, $pageType)
+                ),
                 $this->immutablePageContentFactory->__invoke(
                     $page->getPageTitle(),
                     $page->getDescription(),
@@ -308,7 +313,87 @@ class PageMutationService
         }
 
         return $return;
+    }
 
+    public function depublishPage($user, Page $page)
+    {
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . get_class($this));
+        }
+
+        $originalPageNameBeforeDeletionChangedIt = $page->getName();
+        $originalPageTypeBeforeDeletionChangedIt = $page->getPageType();
+
+        $result = $this->pageRepo->setPageDeleted(
+            $page,
+            $user->getId(),
+            'Delete page in ' . get_class($this)
+        );
+
+        $this->immuteblePageVersionRepo->depublish(
+            new PageLocator(
+                $page->getSiteId(),
+                $this->rcmPageNameToPathname->__invoke(
+                    $originalPageNameBeforeDeletionChangedIt,
+                    $originalPageTypeBeforeDeletionChangedIt
+                )
+            ),
+            $user->getId(),
+            __CLASS__ . '::' . __FUNCTION__
+        );
+    }
+
+    public function duplicatePage(
+        $user,
+        Page $page,
+        $destinationSiteId,
+        $destinationPageName,
+        $desitnationPageType = null
+    ) {
+        if (empty($user)) {
+            throw new TrackingException('A valid user is required in ' . get_class($this));
+        }
+        /**
+         * Site | null
+         */
+        $destinationSite = $this->entityManager->find(Site::class, $destinationSiteId);
+        if (!$destinationSite) {
+            throw new \Exception('Site could not be found for id "' . $destinationSiteId . '")');
+        }
+        $destinationPage = new Page(
+            $user->getId(),
+            'New page in ' . get_class($this)
+        );
+
+        $destinationPage->populate($page->toArray());
+
+        $destinationPage->setSite($destinationSite);
+        $destinationPage->setName($destinationPageName);
+        $destinationPage->setAuthor($user->getName());
+        if ($desitnationPageType !== null) {
+            $destinationPage->setPageType($desitnationPageType);
+        }
+
+        $destinationPage = $this->pageRepo->copyPage(
+            $destinationSite,
+            $page,
+            $destinationPage->toArray(),
+            null,
+            true
+        );
+
+        $this->immuteblePageVersionRepo->duplicate(
+            new PageLocator(
+                $page->getSiteId(),
+                $this->rcmPageNameToPathname->__invoke($page->getName(), $page->getPageType())
+            ),
+            new PageLocator(
+                $destinationSite->getSiteId(),
+                $this->rcmPageNameToPathname->__invoke($destinationPageName, $desitnationPageType)
+            ),
+            $user->getId(),
+            __CLASS__ . '::' . __FUNCTION__
+        );
     }
 
     /**

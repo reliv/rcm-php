@@ -49,7 +49,7 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
     /**
      * @var array
      *
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json", nullable=true)
      */
     protected $content;
 
@@ -98,7 +98,7 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
      * @param string $userId
      * @param string $programmaticReason
      * @param PageLocator $locator
-     * @param ContentInterface $content
+     * @param ContentInterface | null $content
      */
     public function __construct(
         string $resourceId,
@@ -108,14 +108,22 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
         string $userId,
         string $programmaticReason,
         PageLocator $locator,
-        PageContent $content
+        $content = null
     ) {
         $this->resourceId = $resourceId;
         $this->status = $status;
         $this->action = $action;
         $this->userId = $userId;
         $this->programmaticReason = $programmaticReason;
-        $this->content = $content->toArrayForLongTermStorage();
+        if ($content instanceof PageContent) {
+            $this->content = $content->toArrayForLongTermStorage();
+        } elseif ($content === null) {
+            $this->content = null;
+        } elseif (is_array($content)) {
+            $this->content = $content;
+        } else {
+            throw new \Exception('Content must be null or instance of PageContent');
+        }
         $this->siteId = $locator->getSiteId();
         $this->pathname = $locator->getPathname();
         $this->date = $date;
@@ -205,5 +213,4 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
     {
         return $this->content;
     }
-
 }

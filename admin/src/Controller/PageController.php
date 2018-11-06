@@ -101,7 +101,7 @@ class PageController extends AbstractActionController
                 ResourceName::RESOURCE_SITES,
                 $this->currentSite->getSiteId(),
                 ResourceName::RESOURCE_PAGES
-            ),,
+            ),
             'create'
         )
         ) {

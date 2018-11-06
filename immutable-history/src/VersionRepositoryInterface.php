@@ -18,11 +18,11 @@ interface VersionRepositoryInterface
         $programmaticReason
     );
 
-    public function depublish(LocatorInterface $locator, $userId, $programmaticReason);
+    public function depublish(LocatorInterface $locator, string $userId, string $programmaticReason);
 
-    public function relocate(LocatorInterface $oldLocator, LocatorInterface $newLocator);
+    public function relocate(LocatorInterface $oldLocator, LocatorInterface $newLocator, string $userId, string $programmaticReason);
 
-    public function duplicate(LocatorInterface $relocateDepublishVersion, LocatorInterface $relocatePublishVersion);
+    public function duplicate(LocatorInterface $fromLocator, LocatorInterface $toLocator, string $userId, string $programmaticReason);
 
     /**
      * Finds the most recent "published" or "depublished" version of a resource

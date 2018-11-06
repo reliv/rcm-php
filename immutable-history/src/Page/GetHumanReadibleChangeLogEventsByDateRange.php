@@ -38,10 +38,17 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
         $entityToHumanReadable = function ($version): ChangeLogEvent {
             switch ($version->getAction()) { //@TODO handle more action types
                 case VersionActions::CREATE_UNPUBLISHED_FROM_NOTHING:
-                    $actionDescription = 'created an unpublished version of';
+                    $actionDescription = 'created a draft of';
                     break;
                 case VersionActions::PUBLISH_FROM_NORTHING:
-                    $actionDescription = 'created a published version of ';
+                    $actionDescription = 'published to';
+                    break;
+                case VersionActions::DEPUBLISH:
+                    $actionDescription = 'depublished';
+                    break;
+                case VersionActions::DUPLICATE_FROM_UNKNOWN:
+                case VersionActions::DUPLICATE:
+                    $actionDescription = 'copied a page to';
                     break;
                 default:
                     throw new \Exception('Unknown action type found: ' . $version->getAction());
@@ -52,7 +59,7 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
             $event->setUserId($version->getUserId());
             $event->setActionDescription($actionDescription);
             $event->setResourceDescription(
-                'page "' . $version->getPathname()
+                ' page "' . $version->getPathname()
                 . '" on site #' . $version->getSiteId()
                 . ' (' . $this->siteIdToDomainName->__invoke($version->getSiteId()) . $version->getPathname() . ')');
             $event->setMetaData(

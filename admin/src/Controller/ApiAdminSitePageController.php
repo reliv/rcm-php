@@ -11,6 +11,7 @@ use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\Entity\SitePageApiResponse;
 use RcmAdmin\InputFilter\SitePageCreateInputFilter;
 use RcmAdmin\InputFilter\SitePageUpdateInputFilter;
+use RcmAdmin\Service\PageMutationService;
 use RcmUser\Service\RcmUserService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -30,6 +31,11 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ApiAdminSitePageController extends ApiAdminBaseController
 {
     /**
+     * @var PageMutationService
+     */
+    protected $pageMutationService;
+
+    /**
      * Constructor.
      *
      * @param ContainerInterface|ServiceLocatorInterface $serviceLocator
@@ -38,6 +44,8 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         $serviceLocator
     ) {
         $this->serviceLocator = $serviceLocator;
+        //@TODO use DI for this if doesn't break children
+        $this->pageMutationService = $serviceLocator->get(PageMutationService::class);
     }
 
     /**
@@ -161,7 +169,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
     /**
      * hasPage
      *
-     * @param Site   $site
+     * @param Site $site
      * @param string $pageName
      * @param string $pageType
      *
@@ -296,163 +304,165 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         return new ApiJsonModel($apiResponse, 0, 'Success');
     }
 
-    /**
-     * update
-     *
-     * @todo Needs data prepare for site and exception message needs scrubbed
-     *
-     * @param mixed $id
-     * @param mixed $data
-     *
-     * @return mixed|ApiJsonModel|\Zend\Stdlib\ResponseInterface
-     */
-    public function update($id, $data)
-    {
-        $siteId = $this->getRequestSiteId();
+//Commented out in 2018-11 because doesn't audit log properly and doesn't appear to be in use anywhere
+//    /**
+//     * update
+//     *
+//     * @todo Needs data prepare for site and exception message needs scrubbed
+//     *
+//     * @param mixed $id
+//     * @param mixed $data
+//     *
+//     * @return mixed|ApiJsonModel|\Zend\Stdlib\ResponseInterface
+//     */
+//    public function update($id, $data)
+//    {
+//        $siteId = $this->getRequestSiteId();
+//
+//        //ACCESS CHECK
+//        $sitePagesResource = $this->getSitePagesResourceId($siteId);
+//        if (!$this->isAllowed('pages', 'edit')
+//            && !$this->isAllowed(
+//                $sitePagesResource,
+//                'edit'
+//            )
+//        ) {
+//            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+//
+//            return $this->getResponse();
+//        }
+//
+//        $inputFilter = new SitePageUpdateInputFilter();
+//
+//        $inputFilter->setData($data);
+//
+//        if (!$inputFilter->isValid()) {
+//            return new ApiJsonModel(
+//                [],
+//                1,
+//                'Some values are missing or invalid for page update.',
+//                $inputFilter->getMessages()
+//            );
+//        }
+//
+//        $data = $inputFilter->getValues();
+//
+//        // <tracking>
+//        $data['modifiedByUserId'] = $this->getCurrentUserId();
+//        $data['modifiedReason'] = 'Update site in ' . get_class($this);
+//
+//        $site = $this->getSite($siteId);
+//
+//        if (empty($site)) {
+//            return new ApiJsonModel(
+//                null,
+//                1,
+//                "Site was not found with id {$siteId}."
+//            );
+//        }
+//
+//        $page = $this->getPage($site, $id);
+//
+//        try {
+//            $this->getPageRepo()->updatePage(
+//                $page,
+//                $data
+//            );
+//        } catch (\Exception $e) {
+//            return new ApiJsonModel(
+//                null,
+//                1,
+//                $e->getMessage()
+//            );
+//        }
+//
+//        $apiResponse = new SitePageApiResponse($page);
+//
+//        return new ApiJsonModel($apiResponse, 0, 'Success: Page updated.');
+//    }
 
-        //ACCESS CHECK
-        $sitePagesResource = $this->getSitePagesResourceId($siteId);
-        if (!$this->isAllowed('pages', 'edit')
-            && !$this->isAllowed(
-                $sitePagesResource,
-                'edit'
-            )
-        ) {
-            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
-
-            return $this->getResponse();
-        }
-
-        $inputFilter = new SitePageUpdateInputFilter();
-
-        $inputFilter->setData($data);
-
-        if (!$inputFilter->isValid()) {
-            return new ApiJsonModel(
-                [],
-                1,
-                'Some values are missing or invalid for page update.',
-                $inputFilter->getMessages()
-            );
-        }
-
-        $data = $inputFilter->getValues();
-
-        // <tracking>
-        $data['modifiedByUserId'] = $this->getCurrentUserId();
-        $data['modifiedReason'] = 'Update site in ' . get_class($this);
-
-        $site = $this->getSite($siteId);
-
-        if (empty($site)) {
-            return new ApiJsonModel(
-                null,
-                1,
-                "Site was not found with id {$siteId}."
-            );
-        }
-
-        $page = $this->getPage($site, $id);
-
-        try {
-            $this->getPageRepo()->updatePage(
-                $page,
-                $data
-            );
-        } catch (\Exception $e) {
-            return new ApiJsonModel(
-                null,
-                1,
-                $e->getMessage()
-            );
-        }
-
-        $apiResponse = new SitePageApiResponse($page);
-
-        return new ApiJsonModel($apiResponse, 0, 'Success: Page updated.');
-    }
-
-    /**
-     * create
-     *
-     * @param mixed $data
-     *
-     * @return mixed|ApiJsonModel|\Zend\Stdlib\ResponseInterface
-     */
-    public function create($data)
-    {
-        $siteId = $this->getRequestSiteId();
-
-        //ACCESS CHECK
-        $sitePagesResource = $this->getSitePagesResourceId($siteId);
-        if (!$this->isAllowed('pages', 'create')
-            && !$this->isAllowed(
-                $sitePagesResource,
-                'create'
-            )
-        ) {
-            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
-
-            return $this->getResponse();
-        }
-
-        $site = $this->getSite($siteId);
-
-        if (empty($site)) {
-            return new ApiJsonModel(
-                null,
-                1,
-                "Site was not found with id {$siteId}."
-            );
-        }
-
-        // // //
-        $inputFilter = new SitePageCreateInputFilter();
-
-        $inputFilter->setData($data);
-
-        if (!$inputFilter->isValid()) {
-            return new ApiJsonModel(
-                [],
-                1,
-                'Some values are missing or invalid for page creation.',
-                $inputFilter->getMessages()
-            );
-        }
-
-        $data = $inputFilter->getValues();
-
-        if ($this->hasPage($site, $data['name'], $data['pageType'])) {
-            return new ApiJsonModel(
-                null,
-                1,
-                'Page already exists, duplicates cannot be created'
-            );
-        }
-
-        $user = $this->getCurrentUserTracking();
-
-        $data['createdByUserId'] = $user->getId();
-        $data['createdReason'] = 'New page in ' . get_class($this);
-        $data['author'] = $user->getName();
-
-        try {
-            $page = $this->getPageRepo()->createPage(
-                $site,
-                $data
-            );
-        } catch (\Exception $e) {
-            return new ApiJsonModel(
-                null,
-                1,
-                $e->getMessage()
-            );
-        }
-
-        $apiResponse = new SitePageApiResponse($page);
-
-        return new ApiJsonModel($apiResponse, 0, 'Success: Page created');
-    }
+//Commented out in 2018-11 because doesn't audit log properly and doesn't appear to be in use anywhere
+//    /**
+//     * create
+//     *
+//     * @param mixed $data
+//     *
+//     * @return mixed|ApiJsonModel|\Zend\Stdlib\ResponseInterface
+//     */
+//    public function create($data)
+//    {
+//        $siteId = $this->getRequestSiteId();
+//
+//        //ACCESS CHECK
+//        $sitePagesResource = $this->getSitePagesResourceId($siteId);
+//        if (!$this->isAllowed('pages', 'create')
+//            && !$this->isAllowed(
+//                $sitePagesResource,
+//                'create'
+//            )
+//        ) {
+//            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+//
+//            return $this->getResponse();
+//        }
+//
+//        $site = $this->getSite($siteId);
+//
+//        if (empty($site)) {
+//            return new ApiJsonModel(
+//                null,
+//                1,
+//                "Site was not found with id {$siteId}."
+//            );
+//        }
+//
+//        // // //
+//        $inputFilter = new SitePageCreateInputFilter();
+//
+//        $inputFilter->setData($data);
+//
+//        if (!$inputFilter->isValid()) {
+//            return new ApiJsonModel(
+//                [],
+//                1,
+//                'Some values are missing or invalid for page creation.',
+//                $inputFilter->getMessages()
+//            );
+//        }
+//
+//        $data = $inputFilter->getValues();
+//
+//        if ($this->hasPage($site, $data['name'], $data['pageType'])) {
+//            return new ApiJsonModel(
+//                null,
+//                1,
+//                'Page already exists, duplicates cannot be created'
+//            );
+//        }
+//
+//        $user = $this->getCurrentUserTracking();
+//
+//        $data['createdByUserId'] = $user->getId();
+//        $data['createdReason'] = 'New page in ' . get_class($this);
+//        $data['author'] = $user->getName();
+//
+//        try {
+//            $page = $this->getPageRepo()->createPage(
+//                $site,
+//                $data
+//            );
+//        } catch (\Exception $e) {
+//            return new ApiJsonModel(
+//                null,
+//                1,
+//                $e->getMessage()
+//            );
+//        }
+//
+//        $apiResponse = new SitePageApiResponse($page);
+//
+//        return new ApiJsonModel($apiResponse, 0, 'Success: Page created');
+//    }
 
     /**
      * delete
@@ -503,18 +513,8 @@ class ApiAdminSitePageController extends ApiAdminBaseController
             );
         }
 
-        $pageRepo = $this->getPageRepo();
+        $this->pageMutationService->depublishPage($this->getCurrentUser(), $page);
 
-        $result = $pageRepo->setPageDeleted(
-            $page,
-            $this->getCurrentUserId(),
-            'Delete page in ' . get_class($this)
-        );
-
-        if (!$result) {
-            return new ApiJsonModel([$result], 1, 'Page could not be deleted');
-        }
-
-        return new ApiJsonModel([$result], 0, 'Page deleted');
+        return new ApiJsonModel([true], 0, 'Page deleted');
     }
 }

@@ -40,9 +40,9 @@ class Page extends ContainerAbstract
     /**
      * Get a page entity by name
      *
-     * @param SiteEntity $site     Site to lookup
-     * @param string     $pageName Page Name
-     * @param string     $pageType Page Type
+     * @param SiteEntity $site Site to lookup
+     * @param string $pageName Page Name
+     * @param string $pageType Page Type
      *
      * @return null|PageEntity
      */
@@ -68,8 +68,8 @@ class Page extends ContainerAbstract
      * getPagesByName
      *
      * @param SiteEntity $site
-     * @param string     $pageName
-     * @param string     $pageType
+     * @param string $pageName
+     * @param string $pageType
      *
      * @return array
      */
@@ -96,8 +96,8 @@ class Page extends ContainerAbstract
      * Gets the DB result of the Published Revision
      *
      * @param integer $siteId Site Id
-     * @param string  $name   Name of the container
-     * @param string  $type   Type of the container.  Currently only used by the page
+     * @param string $name Name of the container
+     * @param string $type Type of the container.  Currently only used by the page
      *                        container.
      *
      * @return mixed
@@ -127,9 +127,9 @@ class Page extends ContainerAbstract
     /**
      * Get the Page Staged Revision Id and cache for later use
      *
-     * @param integer     $siteId Site Id
-     * @param string      $name   Page Name
-     * @param null|string $type   Page Type.  Type "n" is default
+     * @param integer $siteId Site Id
+     * @param string $name Page Name
+     * @param null|string $type Page Type.  Type "n" is default
      *
      * @return null|integer
      */
@@ -158,10 +158,10 @@ class Page extends ContainerAbstract
     /**
      * Get Revision DB Info
      *
-     * @param integer $siteId     Site Id
-     * @param string  $name       Page Name
-     * @param string  $revisionId Revision Id
-     * @param string  $type       Container Type.
+     * @param integer $siteId Site Id
+     * @param string $name Page Name
+     * @param string $revisionId Revision Id
+     * @param string $type Container Type.
      *
      * @return null|array Database Result Set
      */
@@ -217,7 +217,7 @@ class Page extends ContainerAbstract
      * Get a list of page id's and page names by a given type
      *
      * @param integer $siteId SiteId
-     * @param string  $type   Page Type to Search By
+     * @param string $type Page Type to Search By
      *
      * @return array
      */
@@ -252,9 +252,9 @@ class Page extends ContainerAbstract
      * createPage
      *
      * @param SiteEntity $site
-     * @param array      $pageData
-     * @param bool       $publishPage
-     * @param bool       $doFlush
+     * @param array $pageData
+     * @param bool $publishPage
+     * @param bool $doFlush
      *
      * @return PageEntity
      * @throws PageException
@@ -324,8 +324,8 @@ class Page extends ContainerAbstract
      * setPageDeleted - A way of making pages appear deleted without deleting the DB entries
      *
      * @param PageEntity $page
-     * @param string     $modifiedByUserId
-     * @param string     $modifiedReason
+     * @param string $modifiedByUserId
+     * @param string $modifiedReason
      *
      * @return bool
      */
@@ -337,8 +337,7 @@ class Page extends ContainerAbstract
         $pageType = $page->getPageType();
 
         if (strpos($pageType, self::PAGE_TYPE_DELETED) !== false) {
-            // Already set as deleted
-            return false;
+            return;//This page is already deleted so we don't need to do anything further
         }
 
         $page->setPageType(self::PAGE_TYPE_DELETED . $pageType);
@@ -349,17 +348,15 @@ class Page extends ContainerAbstract
 
         $this->_em->persist($page);
         $this->_em->flush($page);
-
-        return true;
     }
 
     /**
      * createPages
      *
      * @param SiteEntity $site
-     * @param array      $pagesData
-     * @param bool       $publishPage
-     * @param bool       $doFlush
+     * @param array $pagesData
+     * @param bool $publishPage
+     * @param bool $doFlush
      *
      * @return array
      * @throws \Exception
@@ -388,8 +385,8 @@ class Page extends ContainerAbstract
      * updatePage
      *
      * @param PageEntity $page
-     * @param array      $pageData
-     * @param bool       $doFlush
+     * @param array $pageData
+     * @param bool $doFlush
      *
      * @return void
      */
@@ -436,11 +433,11 @@ class Page extends ContainerAbstract
      * Copy a page
      *
      * @param SiteEntity $destinationSite Site Entity to copy page to
-     * @param PageEntity $pageToCopy      Page Entity to copy
-     * @param array      $pageData        Array of data to populate the page entity
-     * @param null       $pageRevisionId  Page Revision ID to use for copy.  Defaults to currently published
-     * @param bool       $publishNewPage  Publish page instead of setting to staged
-     * @param bool       $doFlush         Force flush
+     * @param PageEntity $pageToCopy Page Entity to copy
+     * @param array $pageData Array of data to populate the page entity
+     * @param null $pageRevisionId Page Revision ID to use for copy.  Defaults to currently published
+     * @param bool $publishNewPage Publish page instead of setting to staged
+     * @param bool $doFlush Force flush
      *
      * @return PageEntity
      */
@@ -563,10 +560,10 @@ class Page extends ContainerAbstract
     /**
      * Get a page entity containing a Revision Id.
      *
-     * @param int    $siteId     Site Id
-     * @param string $pageName   Name of page
-     * @param string $pageType   Page Type
-     * @param int    $revisionId Revision Id to search for
+     * @param int $siteId Site Id
+     * @param string $pageName Name of page
+     * @param string $pageType Page Type
+     * @param int $revisionId Revision Id to search for
      * @param string $modifiedByUserId
      * @param string $modifiedReason
      *
@@ -691,7 +688,7 @@ class Page extends ContainerAbstract
     /**
      * isValid - @todo This is the same as exists?
      *
-     * @param int    $siteId
+     * @param int $siteId
      * @param string $pageName
      * @param string $pageType
      *
@@ -721,11 +718,11 @@ class Page extends ContainerAbstract
     /**
      * getRevisionList
      *
-     * @param int    $siteId
+     * @param int $siteId
      * @param string $pageName
      * @param string $pageType
-     * @param bool   $published
-     * @param int    $limit
+     * @param bool $published
+     * @param int $limit
      *
      * @return array|mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -804,8 +801,8 @@ class Page extends ContainerAbstract
      * @param            $pageType
      * @param            $saveData
      * @param            $modifiedByUserId
-     * @param string     $modifiedReason
-     * @param string     $author
+     * @param string $modifiedReason
+     * @param string $author
      *
      * @return int|null
      */
@@ -868,7 +865,7 @@ class Page extends ContainerAbstract
      * get Site Page
      *
      * @param SiteEntity $site
-     * @param int        $pageId
+     * @param int $pageId
      *
      * @return \Rcm\Entity\Page|null
      */
@@ -895,8 +892,8 @@ class Page extends ContainerAbstract
      * Site has page
      *
      * @param SiteEntity $site
-     * @param string     $pageName
-     * @param string     $pageType
+     * @param string $pageName
+     * @param string $pageType
      *
      * @return bool
      */
@@ -961,8 +958,8 @@ class Page extends ContainerAbstract
      * canCreateSitePage
      *
      * @param SiteEntity $site
-     * @param string     $pageName
-     * @param string     $pageType
+     * @param string $pageName
+     * @param string $pageType
      *
      * @return bool
      */
@@ -1009,8 +1006,8 @@ class Page extends ContainerAbstract
      * assertCanCreateSitePage
      *
      * @param SiteEntity $site
-     * @param string     $pageName
-     * @param string     $pageType
+     * @param string $pageName
+     * @param string $pageType
      *
      * @return void
      * @throws PageException

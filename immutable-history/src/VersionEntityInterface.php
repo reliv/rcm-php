@@ -7,4 +7,6 @@ interface VersionEntityInterface
     public function getResourceId(): string;
 
     public function getStatus(): string;
+
+    public function getContentAsArray(): array;
 }

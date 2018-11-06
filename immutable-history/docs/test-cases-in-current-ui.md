@@ -1,12 +1,12 @@
 #Pages
-- [ ] Site->Copy Pages (POST /api/admin/sites/12486/page-copy/5969)
 - [x] Page->New->notFromTemplate (RcmAdmin\Controller\PageController)
 - [x] Page->New->fromTemplate (RcmAdmin\Controller\PageController)
 - [x] Page->Save (RcmAdmin\Controller\PageController)
 - [x] Page->Publish (RcmAdmin\Controller\PageController)
-- [ ] Page->Delete
+- [x] Page->Delete (DELETE /api/admin/sites/8/pages/9588)
 - [ ] Page->Move (doesn't currently exist)
-- [ ] Page->Edit Permissions?
+- [ ] Page->Edit Permissions (does this even change the page?)
 - [ ] Page->Edit Properties
-- [ ] InventoryManager->createProduct (POST /api/resource/rcm-page/9547/copy)
-- [ ] Whatever uses ApiAdminSitePageController (can it be removed or partially removed?)
+- [x] Site->CopyPages->withPageAlreadInHistory (POST /api/admin/sites/12486/page-copy/5969)
+- [x] Site->CopyPages->withPageNotAlreadInHistory (POST /api/admin/sites/12486/page-copy/5969)
+- [x] InventoryManager->createProduct (POST /api/resource/rcm-page/9547/copy)

@@ -1,2 +1,0 @@
-/* create statement after removing "fromId" */
-OLLATE utf8_unicode_ci ENGINE = InnoDB;CREATE TABLE rcm_immutable_page_version (id INT AUTO_INCREMENT NOT NULL, resourceId VARCHAR(255) NOT NULL, date DATETIME DEFAULT NULL, siteId INT NOT NULL, pathname VARCHAR(255) NOT NULL, content JSON NOT NULL, status VARCHAR(255) NOT NULL, action VARCHAR(255) NOT NULL, userId VARCHAR(255) NOT NULL, programmaticReason VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 C

@@ -89,7 +89,7 @@ class VersionRepository implements VersionRepositoryInterface
         $this->entityManger->flush($newVersion);
     }
 
-    public function depublish(LocatorInterface $locator, $userId, $programmaticReason)
+    public function depublish(LocatorInterface $locator, string $userId, string $programmaticReason)
     {
         $previousPublishedVersion = $this->findPublishedVersionByLocator($locator);
 
@@ -108,91 +108,95 @@ class VersionRepository implements VersionRepositoryInterface
             VersionActions::DEPUBLISH,
             $userId,
             $programmaticReason,
-            $locator,
-            $content
+            $locator
         );
 
         $this->entityManger->persist($newVersion);
         $this->entityManger->flush($newVersion);
     }
 
-    public function relocate(LocatorInterface $oldLocator, LocatorInterface $newLocator)
-    {
-        $previousPublishedVersion = $this->findPublishedVersionByLocator($oldLocator);
-
-        //We must use a transaction or two relcates in the same moment could corrupt the history data chain
-        $this->entityManger->getConnection()->beginTransaction();
-
-        if ($previousPublishedVersion !== null) {
-            //This resource already exists in the history system so depublish it and use its resource id
-            $publishAction = VersionActions::RELOCATE_PUBLISH;
-            $resourceId = $previousPublishedVersion->getResourceId();
-            $relocateDepublishVersion = new $this->entityClassName(
-                $this->generateResourceId->__invoke(),
-                $resourceId,
-                VersionStatuses::DEPUBLISHED,
-                VersionActions::RELOCATE_DEPUBLISH,
-                $userId,
-                $programmaticReason,
-                $previousPublishedVersion->getLocator(),
-                $previousPublishedVersion->getContent()
-            );
-            $this->entityManger->persist($relocateDepublishVersion);
-            $this->entityManger->flush($relocateDepublishVersion);
-        } else {
-            //This resource doesn't exist in the history system yet so make a new resource id for it
-            $publishAction = VersionActions::RELOCATE_PUBLISH_FROM_UNKNOWN;
-            $resourceId = $this->generateResourceId->__invoke();
-        }
-
-        $relocatePublishVersion = new $this->entityClassName(
-            $this->generateResourceId->__invoke(),
-            $resourceId,
-            VersionStatuses::PUBLISHED,
-            $publishAction,
-            $userId,
-            $programmaticReason,
-            $newLocator,
-            $previousPublishedVersion->getContent()
-        );
-
-        $this->entityManger->persist($relocatePublishVersion);
-        $this->entityManger->flush($relocatePublishVersion);
-
-        $em->getConnection()->commit();
+    public function relocate(
+        LocatorInterface $oldLocator,
+        LocatorInterface $newLocator,
+        string $userId,
+        string $programmaticReason
+    ) {
+        throw new \Exception('relocate() was never fully tested and is disabled right now.');
+//        $previousPublishedVersion = $this->findPublishedVersionByLocator($oldLocator);
+//
+//        //We must use a transaction or two relcates in the same moment could corrupt the history data chain
+//        $this->entityManger->getConnection()->beginTransaction();
+//
+//        if ($previousPublishedVersion !== null) {
+//            //This resource already exists in the history system so depublish it and use its resource id
+//            $publishAction = VersionActions::RELOCATE_PUBLISH;
+//            $resourceId = $previousPublishedVersion->getResourceId();
+//            $relocateDepublishVersion = new $this->entityClassName(
+//                $this->generateResourceId->__invoke(),
+//                $resourceId,
+//                VersionStatuses::DEPUBLISHED,
+//                VersionActions::RELOCATE_DEPUBLISH,
+//                $userId,
+//                $programmaticReason,
+//                $previousPublishedVersion->getLocator(),
+//                $previousPublishedVersion->getContent()
+//            );
+//            $this->entityManger->persist($relocateDepublishVersion);
+//            $this->entityManger->flush($relocateDepublishVersion);
+//        } else {
+//            //This resource doesn't exist in the history system yet so make a new resource id for it
+//            $publishAction = VersionActions::RELOCATE_PUBLISH_FROM_UNKNOWN;
+//            $resourceId = $this->generateResourceId->__invoke();
+//        }
+//
+//        $relocatePublishVersion = new $this->entityClassName(
+//            $this->generateResourceId->__invoke(),
+//            new \DateTime(),
+//            VersionStatuses::PUBLISHED,
+//            $publishAction,
+//            $userId,
+//            $programmaticReason,
+//            $newLocator,
+//            $previousPublishedVersion->getContent()
+//        );
+//
+//        $this->entityManger->persist($relocatePublishVersion);
+//        $this->entityManger->flush($relocatePublishVersion);
+//
+//        $em->getConnection()->commit();
     }
 
-    public function duplicate(LocatorInterface $relocateDepublishVersion, LocatorInterface $relocatePublishVersion)
-    {
-        $previousPublishedVersion = $this->findPublishedVersionByLocator($oldLocator);
-
-        //We must use a transaction or two relcates in the same moment could corrupt the history data chain
-        $this->entityManger->getConnection()->beginTransaction();
+    public function duplicate(
+        LocatorInterface $fromLocator,
+        LocatorInterface $toLocator,
+        string $userId,
+        string $programmaticReason
+    ) {
+        $previousPublishedVersion = $this->findPublishedVersionByLocator($fromLocator);
 
         if ($previousPublishedVersion !== null) {
-            //This resource already exists in the history system so depublish it and use its resource id
+            //The "from" resource already exists in the history system
             $action = VersionActions::DUPLICATE;
-            $resourceId = $previousPublishedVersion->getResourceId();
+            $content = $previousPublishedVersion->getContentAsArray();
         } else {
-            //This resource doesn't exist in the history system yet so make a new resource id for it
+            //This "from" resource does NOT already exist in the history system.
             $action = VersionActions::DUPLICATE_FROM_UNKNOWN;
-            $resourceId = $this->generateResourceId->__invoke();
+            $content = null; //@TODO is this ok? Probably not good!
         }
 
         $copiedVersion = new $this->entityClassName(
             $this->generateResourceId->__invoke(),
-            $resourceId,
+            new \DateTime(),
             VersionStatuses::PUBLISHED,
-            VersionActions::DUPLICATE,
+            $action,
             $userId,
             $programmaticReason,
-            $newLocator,
-            $previousPublishedVersion->getContent()
+            $toLocator,
+            $content
         );
 
         $this->entityManger->persist($copiedVersion);
         $this->entityManger->flush($copiedVersion);
-
     }
 
     /**
