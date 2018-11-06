@@ -2,11 +2,11 @@
 
 MUST:
 - Ensure page->edit properties audit logs (also run through PageMutationService)
-- double check the resourceIds change and stay the same properly across all operations and with respect to locations
-- add versionId to ChangeLogEvent and ensure it is sorted
+- add versionId to ChangeLogEvent and ensure it is sorted by it after date
 - 500 when visiting log screen when not logged in
 
 SHOULD:
+- double check the resourceIds change and stay the same properly across all operations and with respect to locations
 - write doc explaining "fromIds" and why they were removed (include "link to thing that links to nothing") 
 - document that locations that never existed before or have been depublished have different resourceIds than when they get published and subsequent drafts
 - document resourceIds and how they change and stay the same
