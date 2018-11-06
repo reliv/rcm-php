@@ -71,7 +71,8 @@ class ChangeLogListController implements MiddlewareInterface
         $humanReadableEvents = $this->getHumanReadableChangeLogByDateRange->__invoke($greaterThanYear, $lessThanYear);
 
         $description = 'Content change log events for ' . $days . ' days'
-            . ' from ' . $greaterThanYear->format('c') . ' to ' . $lessThanYear->format('c');
+            . ' from ' . $greaterThanYear->format('c') . ' to ' . $lessThanYear->format('c')
+            . '. Text in parentheses is from current lookups and is not guaranteed to be historically accurate.';
 
         $contentType = isset($queryParams['content-type'])
             ? html_entity_decode($queryParams['content-type'])
