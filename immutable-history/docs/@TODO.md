@@ -1,7 +1,6 @@
 @TODOs:
 
 MUST:
-- 500 when visiting log screen when not logged in
 
 SHOULD:
 - double check the resourceIds change and stay the same properly across all operations and with respect to locations
