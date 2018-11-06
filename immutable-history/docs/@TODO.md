@@ -16,5 +16,5 @@ SHOULD:
 - document or fix that duplicateFromUnknown creates published rows with null content
 
 COULD:
-- Implment code to fill in "USER_FULL_NAME_UNKNOWN" and "DOMAIN_NAME_UNKNOWN" in log screen
+- Implment code to fill in "USER_FULL_NAME_UNKNOWN"
 - Implement "page move" in RCM UI and also ensure it audit logs properly

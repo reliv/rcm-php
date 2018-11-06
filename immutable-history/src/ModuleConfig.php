@@ -63,7 +63,11 @@ class ModuleConfig
                     ],
                     PageContentFactory::class => [],
                     UserIdToUserFullName::class => [],
-                    SiteIdToDomainName::class => [],
+                    SiteIdToDomainName::class => [
+                        'arguments' => [
+                            EntityManager::class
+                        ]
+                    ],
                     RcmPageNameToPathname::class => []
                 ]
             ],
