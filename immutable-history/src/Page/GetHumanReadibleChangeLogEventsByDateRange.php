@@ -42,10 +42,10 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
         $entityToHumanReadable = function (VersionEntityInterface $version): ChangeLogEvent {
             $actionAsPartOf = '';
             switch ($version->getAction()) {
-                case VersionActions::CREATE_UNPUBLISHED_FROM_NOTHING:
+                case VersionActions::CREATE_UNPUBLISHED:
                     $actionDescription = 'created a draft of';
                     break;
-                case VersionActions::PUBLISH_FROM_NORTHING:
+                case VersionActions::PUBLISH:
                     $actionDescription = 'published to';
                     break;
                 case VersionActions::DEPUBLISH:
