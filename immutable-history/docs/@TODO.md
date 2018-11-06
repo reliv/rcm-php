@@ -4,9 +4,6 @@ MUST:
 - Ensure page->edit properties audit logs (also run through PageMutationService)
 - double check the resourceIds change and stay the same properly across all operations and with respect to locations
 - add versionId to ChangeLogEvent and ensure it is sorted
-- Check all todos in /www/web/vendor/rcm/core/immutable-history
-- Check all todos in /www/web/vendor/rcm/admin/src/Controller/PageController.php
-- Check all todos in /www/web/vendor/rcm/core/admin/src/Service/PageMutationService.php
 - 500 when visiting log screen when not logged in
 
 SHOULD:
