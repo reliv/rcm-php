@@ -137,7 +137,7 @@ class ChangeLogListController implements MiddlewareInterface
         $html = '<html class="container-fluid">';
         $html .= '<link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" ';
         $html .= 'media="screen" rel="stylesheet" type="text/css">';
-        $html .= '<a href="/zrcms/change-log?days=365&content-type=text%2Fcsv">Download CSV file for last 365 days</a>';
+        $html .= '<a href="?days=365&content-type=text%2Fcsv">Download CSV file for last 365 days</a>';
         $html .= '<table class="table table-sm">';
         $html .= '<tr><th>Date</th>';
         $html .= '<th>' . $description . '</th>';
