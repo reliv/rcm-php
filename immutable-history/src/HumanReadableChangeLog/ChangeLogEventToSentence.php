@@ -23,8 +23,9 @@ class ChangeLogEventToSentence
         ChangeLogEvent $changeLogEvent
     ): string {
         return 'User #' . $changeLogEvent->getUserId()
-            . (' (' . $this->userIdToUserFullName->__invoke($changeLogEvent->getUserId()) . ')')
+            /*. (' (' . $this->userIdToUserFullName->__invoke($changeLogEvent->getUserId()) . ')') */
             . ' ' . $changeLogEvent->getActionDescription()
-            . ' ' . $changeLogEvent->getResourceDescription();
+            . ' ' . $changeLogEvent->getResourceDescription()
+            . ' ' . $changeLogEvent->getActionAsPartOf();
     }
 }

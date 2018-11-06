@@ -32,6 +32,24 @@ class ChangeLogEvent
      */
     protected $versionId;
 
+    protected $actionAsPartOf;
+
+    /**
+     * @return mixed
+     */
+    public function getActionAsPartOf()
+    {
+        return $this->actionAsPartOf;
+    }
+
+    /**
+     * @param mixed $actionAsPartOf
+     */
+    public function setActionAsPartOf($actionAsPartOf): void
+    {
+        $this->actionAsPartOf = $actionAsPartOf;
+    }
+
     /**
      * @return int
      */

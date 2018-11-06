@@ -40,6 +40,7 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
         }
 
         $entityToHumanReadable = function (VersionEntityInterface $version): ChangeLogEvent {
+            $actionAsPartOf = '';
             switch ($version->getAction()) {
                 case VersionActions::CREATE_UNPUBLISHED_FROM_NOTHING:
                     $actionDescription = 'created a draft of';
@@ -51,13 +52,16 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
                     $actionDescription = 'depublished';
                     break;
                 case VersionActions::DUPLICATE:
-                    $actionDescription = 'as part of a copy operation, published to ';
+                    $actionDescription = 'published to ';
+                    $actionAsPartOf = 'as part of a copy operation';
                     break;
                 case VersionActions::RELOCATE_DEPUBLISH:
-                    $actionDescription = 'as part of a move operation, depublished';
+                    $actionDescription = 'depublished';
+                    $actionAsPartOf = 'as part of a move operation';
                     break;
                 case VersionActions::RELOCATE_PUBLISH:
-                    $actionDescription = 'as part of a move operation, published to';
+                    $actionDescription = 'published to';
+                    $actionAsPartOf = 'as part of a move operation';
                     break;
                 default:
                     throw new \Exception('Unknown action type found: ' . $version->getAction());
@@ -67,6 +71,7 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
             $event->setDate($version->getDate());
             $event->setUserId($version->getUserId());
             $event->setActionDescription($actionDescription);
+            $event->setActionAsPartOf($actionAsPartOf);
             $event->setResourceDescription(
                 ' page "' . $version->getPathname()
                 . '" on site #' . $version->getSiteId()
