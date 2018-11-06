@@ -5,6 +5,7 @@ namespace Rcm\ImmutableHistory\Controller;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rcm\ImmutableHistory\Acl\AclConstants;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllChangeLogEventSentencesForDateRange;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogByDateRangeComposite;
 use RcmUser\Api\Acl\IsAllowed;
@@ -49,8 +50,12 @@ class ChangeLogListController implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        if (!$this->isAllowed->__invoke($request, 'content-change-log', 'read')) {
-            return new HtmlResponse('401 Unauthorized', 401);
+        if (!$this->isAllowed->__invoke($request, AclConstants::CONTENT_CHANGE_LOG, AclConstants::READ)) {
+            $loginUrl = '/login?redirect=' . urlencode($request->getUri()->getPath()
+                    . '?' . http_build_query($request->getQueryParams()));
+            $response = new HtmlResponse('Access denied. Try <a href="' . $loginUrl . '">logging in</a>.');
+
+            return $response;
         }
 
         $queryParams = $request->getQueryParams();

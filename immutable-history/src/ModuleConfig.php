@@ -3,6 +3,7 @@
 namespace Rcm\ImmutableHistory;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\ImmutableHistory\Acl\AclConstants;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEventToSentence;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllChangeLogEventSentencesForDateRange;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogByDateRangeComposite;
@@ -96,21 +97,23 @@ class ModuleConfig
                     ]
                 ],
             ],
-            'Acl\Config' => [
-                'ResourceProviders' => [
-                    'Pws\Acl\ResourceProvider\Pws' => [
-                        'content-change-log' => [
-                            'resourceId' => 'content-change-log',
-                            'parentResourceId' => null,
-                            'privileges' => [
-                                'read',
+            'RcmUser' => [
+                'Acl\Config' => [
+                    'ResourceProviders' => [
+                        'Rcm\ImmutableHistory\ResourceProvider' => [
+                            AclConstants::CONTENT_CHANGE_LOG => [
+                                'resourceId' => AclConstants::CONTENT_CHANGE_LOG,
+                                'parentResourceId' => null,
+                                'privileges' => [
+                                    AclConstants::READ,
+                                ],
+                                'name' => 'ContentChangeLog',
+                                'description' => 'Contains a log of all known content changes.',
                             ],
-                            'name' => 'Content change log',
-                            'description' => 'Contains a log of all known content changes.',
                         ],
                     ],
                 ],
-            ],
+            ]
         ];
     }
 }
