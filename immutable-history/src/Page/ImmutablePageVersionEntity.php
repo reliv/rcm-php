@@ -120,7 +120,7 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
         } elseif (is_array($content)) {
             $this->content = $content;
         } else {
-            throw new \Exception('Content must be null or instance of PageContent');
+            throw new \Exception('Content must be null, instance of PageContent, or an array');
         }
         $this->siteId = $locator->getSiteId();
         $this->pathname = $locator->getPathname();
