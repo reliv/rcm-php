@@ -6,7 +6,7 @@ use Rcm\ImmutableHistory\ContentInterface;
 
 class PageContent implements ContentInterface
 {
-    const CONTET_SCHEMA_VERSION = 1;
+    const CONTENT_SCHEMA_VERSION = 1;
 
     protected $title;
     protected $keywords;
@@ -35,7 +35,7 @@ class PageContent implements ContentInterface
             'description' => $this->description,
             'keywords' => $this->keywords,
             'blockInstances' => $this->blockInstances,
-            'contentSchemaVersion' => $this::CONTET_SCHEMA_VERSION
+            'contentSchemaVersion' => $this::CONTENT_SCHEMA_VERSION
         ];
     }
 }
