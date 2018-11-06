@@ -108,18 +108,20 @@ class PageMutationService
             'author' => $user->getName(),
         ];
 
-        $resultRevisionId = $this->pageRepo->createPage(
+        $createdPage = $resultRevisionId = $this->pageRepo->createPage(
             $this->currentSite,
             $pageData
         );
 
         $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
-            new PageLocator($this->currentSite->getSiteId(),
-                $this->rcmPageNameToPathname->__invoke($pageData['name'], $pageData['pageType'])),
+            new PageLocator(
+                $this->currentSite->getSiteId(),
+                $this->rcmPageNameToPathname->__invoke($createdPage->getName(), $createdPage->getPageType())
+            ),
             $this->immutablePageContentFactory->__invoke(
-                $pageData['pageTitle'],
-                '',
-                '',
+                $createdPage->getPageTitle(),
+                $createdPage->getDescription(),
+                $createdPage->getKeywords(),
                 $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
             ),
             $user->getId(),
@@ -165,19 +167,21 @@ class PageMutationService
             'author' => $user->getName(),
         ];
 
-        $resultRevisionId = $this->pageRepo->copyPage(
+        $createdPage = $resultRevisionId = $this->pageRepo->copyPage(
             $this->currentSite,
             $page,
             $pageData
         );
 
         $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
-            new PageLocator($this->currentSite->getSiteId(),
-                $this->rcmPageNameToPathname->__invoke($pageData['name'], $pageData['pageType'])),
+            new PageLocator(
+                $this->currentSite->getSiteId(),
+                $this->rcmPageNameToPathname->__invoke($createdPage->getName(), $createdPage->getPageType())
+            ),
             $this->immutablePageContentFactory->__invoke(
-                $page->getPageTitle(),
-                $page->getDescription(),
-                $page->getKeywords(),
+                $createdPage->getPageTitle(),
+                $createdPage->getDescription(),
+                $createdPage->getKeywords(),
                 $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
             ),
             $user->getId(),
@@ -419,13 +423,23 @@ class PageMutationService
             $this->currentSite->getSiteId(),
             $this->rcmPageNameToPathname->__invoke($updatedPage->getName(), $updatedPage->getPageType())
         );
+        $publishedRevision = $updatedPage->getPublishedRevision();
+
+        if (is_object($publishedRevision)) {
+            //This code path is the most commonly traveled.
+            $pluginWrapperData = $publishedRevision->getPluginWrappers()->toArray();
+        } else {
+            //We wind up here if someone edits the properties of an unpublished page.
+            $pluginWrapperData = [];
+        }
+
         $this->immuteblePageVersionRepo->publishFromNothing(
             $originalLocator,
             $this->immutablePageContentFactory->__invoke(
                 $updatedPage->getPageTitle(),
                 $updatedPage->getDescription(),
                 $updatedPage->getKeywords(),
-                $updatedPage->getPublishedRevision()->getPluginWrappers()->toArray()
+                $pluginWrapperData
             ),
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
