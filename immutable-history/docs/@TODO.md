@@ -11,4 +11,3 @@ SHOULD:
 
 COULD:
 - Implment code to fill in "USER_FULL_NAME_UNKNOWN"
-- Implement "page move" in RCM UI and also ensure it audit logs properly
