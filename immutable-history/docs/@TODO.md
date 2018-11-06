@@ -2,7 +2,7 @@
 
 MUST:
 - Fix created a draft of page "/ADAD" when its really "/adad"
-- fix or document that locations that never existed before or have been depublished have different resourceIds than when they get published and subsequent drafts
+- fix or document that drafts locations that never been published before or have been depublished have different resourceIds than when they get published and subsequent drafts
 
 SHOULD:
 - double check the resourceIds change and stay the same properly across all operations and with respect to locations
