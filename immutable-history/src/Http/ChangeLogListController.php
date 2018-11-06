@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\ImmutableHistory\Controller;
+namespace Rcm\ImmutableHistory\Http;
 
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;

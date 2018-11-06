@@ -7,7 +7,7 @@ use Rcm\ImmutableHistory\Acl\AclConstants;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEventToSentence;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllChangeLogEventSentencesForDateRange;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogByDateRangeComposite;
-use Rcm\ImmutableHistory\Controller\ChangeLogListController;
+use Rcm\ImmutableHistory\Http\ChangeLogListController;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersion;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersionEntity;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
