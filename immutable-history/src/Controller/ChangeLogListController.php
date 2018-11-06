@@ -114,12 +114,25 @@ class ChangeLogListController implements MiddlewareInterface
      */
     protected function makeCsvResponse($description, $humanReadableEvents)
     {
-        $body = 'Date,' . $description;
+        $arrayToCsvLine = function (array $values) {
+            $line = '';
+
+            $values = array_map(
+                function ($v) {
+                    return '"' . str_replace('"', '""', $v) . '"';
+                },
+                $values
+            );
+
+            $line .= implode(',', $values);
+
+            return $line . "\n";
+        };
+
+
+        $body = $arrayToCsvLine(['Date', $description]);
         foreach ($humanReadableEvents as $changeLogItem) {
-            $body .= "\n"
-                . $changeLogItem['date']
-                . ','
-                . $changeLogItem['description'];
+            $body .= $arrayToCsvLine([$changeLogItem['date'], $changeLogItem['description']]);
         }
 
         return new HtmlResponse($body, 200, ['content-type' => 'text/csv']);

@@ -52,7 +52,7 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
                     $actionDescription = 'depublished';
                     break;
                 case VersionActions::DUPLICATE:
-                    $actionDescription = 'published to ';
+                    $actionDescription = 'published to';
                     $actionAsPartOf = 'as part of a copy operation';
                     break;
                 case VersionActions::RELOCATE_DEPUBLISH:
@@ -73,7 +73,7 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
             $event->setActionDescription($actionDescription);
             $event->setActionAsPartOf($actionAsPartOf);
             $event->setResourceDescription(
-                ' page "' . $version->getPathname()
+                'page "' . $version->getPathname()
                 . '" on site #' . $version->getSiteId()
                 . ' (' . $this->siteIdToDomainName->__invoke($version->getSiteId()) . $version->getPathname() . ')');
             $event->setMetaData(
