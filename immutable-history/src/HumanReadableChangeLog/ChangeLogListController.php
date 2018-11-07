@@ -108,7 +108,6 @@ class ChangeLogListController implements MiddlewareInterface
         return new JsonResponse(['listDescription' => $description, 'events' => $humanReadableEvents]);
     }
 
-
     /**
      * @param $description
      * @param $humanReadableEvents
@@ -117,7 +116,7 @@ class ChangeLogListController implements MiddlewareInterface
      */
     protected function makeCsvResponse($description, $events)
     {
-        return new CsvResponse($this->changeLogEventsToTableArray($events));
+        return new CsvResponse(array_merge([[$description]], $this->changeLogEventsToTableArray($events)));
     }
 
     protected function changeLogEventsToTableArray(array $events): array
