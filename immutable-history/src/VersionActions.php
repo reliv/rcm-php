@@ -16,6 +16,6 @@ class VersionActions
         self::DEPUBLISH => 'depublished',
         self::DUPLICATE => 'published as part of a copy operation',
         self::RELOCATE_DEPUBLISH => 'depublished as part of a move operation',
-        self::RELOCATE_PUBLISH => 'published to as part of a move operation'
+        self::RELOCATE_PUBLISH => 'published as part of a move operation'
     ];
 }
