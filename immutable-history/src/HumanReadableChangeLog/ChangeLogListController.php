@@ -6,6 +6,7 @@ use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Rcm\ImmutableHistory\Acl\AclConstants;
+use Rcm\ImmutableHistory\Http\CsvResponse;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEvent;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllSortedChangeLogEventsByDateRange;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogByDateRangeComposite;
@@ -107,19 +108,6 @@ class ChangeLogListController implements MiddlewareInterface
         return new JsonResponse(['listDescription' => $description, 'events' => $humanReadableEvents]);
     }
 
-    protected function arrayToCsv(array $array)
-    {
-        if (count($array) == 0) {
-            return null;
-        }
-        ob_start();
-        $df = fopen("php://output", 'w');
-        foreach ($array as $row) {
-            fputcsv($df, $row);
-        }
-        fclose($df);
-        return ob_get_clean();
-    }
 
     /**
      * @param $description
@@ -129,8 +117,7 @@ class ChangeLogListController implements MiddlewareInterface
      */
     protected function makeCsvResponse($description, $events)
     {
-        $body = $this->arrayToCsv($this->changeLogEventsToTableArray($events));
-        return new HtmlResponse($body, 200, ['content-type' => 'text/csv']);
+        return new CsvResponse($this->changeLogEventsToTableArray($events));
     }
 
     protected function changeLogEventsToTableArray(array $events): array
