@@ -1,7 +1,6 @@
 @TODOs:
 
 MUST:
-- Clean up log screen code and ChangeLogevent. Maybe just allow resources to provide a "version to sentence" function
 
 SHOULD:
 - fix or document that drafts of locations that never been published before or have been depublished have different resourceIds than when they get published and subsequent drafts
