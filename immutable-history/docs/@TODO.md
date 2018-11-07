@@ -1,6 +1,7 @@
 @TODOs:
 
 MUST:
+- Make ChangeLogEvent use setters/getters again
 
 SHOULD:
 - fix or document that drafts of locations that never been published before or have been depublished have different resourceIds than when they get published and subsequent drafts
