@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEvent;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogEventsByDateRangeInterface;
 use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
-use Rcm\ImmutableHistory\Site\UserIdToUserFullName;
+use Rcm\ImmutableHistory\User\UserIdToUserFullName;
 use Rcm\ImmutableHistory\VersionActions;
 use Rcm\ImmutableHistory\VersionEntityInterface;
 
@@ -16,13 +16,16 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
     protected $entityManager;
 
     protected $siteIdToDomainName;
+    protected $userIdToFullName;
 
     public function __construct(
         EntityManager $entityManger,
-        SiteIdToDomainName $siteIdToDomainName
+        SiteIdToDomainName $siteIdToDomainName,
+        UserIdToUserFullName $userIdToUserFullName
     ) {
         $this->entityManager = $entityManger;
         $this->siteIdToDomainName = $siteIdToDomainName;
+        $this->userIdToFullName = $userIdToUserFullName;
     }
 
     public function __invoke(\DateTime $greaterThanDate, \DateTime $lessThanDate): array
@@ -41,45 +44,16 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
 
         return array_map(
             function (VersionEntityInterface $version): ChangeLogEvent {
-                $actionAsPartOf = '';
-                switch ($version->getAction()) {
-                    case VersionActions::CREATE_UNPUBLISHED:
-                        $actionDescription = 'created a draft of';
-                        break;
-                    case VersionActions::PUBLISH:
-                        $actionDescription = 'published to';
-                        break;
-                    case VersionActions::DEPUBLISH:
-                        $actionDescription = 'depublished';
-                        break;
-                    case VersionActions::DUPLICATE:
-                        $actionDescription = 'published to';
-                        $actionAsPartOf = 'as part of a copy operation';
-                        break;
-                    case VersionActions::RELOCATE_DEPUBLISH:
-                        $actionDescription = 'depublished';
-                        $actionAsPartOf = 'as part of a move operation';
-                        break;
-                    case VersionActions::RELOCATE_PUBLISH:
-                        $actionDescription = 'published to';
-                        $actionAsPartOf = 'as part of a move operation';
-                        break;
-                    default:
-                        throw new \Exception('Unknown action type found: ' . $version->getAction());
-                }
-
                 $event = new ChangeLogEvent();
-                $event->setDate($version->getDate());
-                $event->setUserId($version->getUserId());
-                $event->setActionDescription($actionDescription);
-                $event->setActionAsPartOf($actionAsPartOf);
-                $event->setResourceDescription(
-                    'page "' . $version->getPathname()
-                    . '" on site #' . $version->getSiteId()
-                    . ' ('
-                    . $this->siteIdToDomainName->__invoke($version->getSiteId()) . $version->getPathname()
-                    . ')');
-                $event->setVersionId($version->getId());
+                $event->date = $version->getDate();
+                $event->versionId = $version->getId();
+                $event->userId = $version->getUserId();
+                $event->userDescription = $this->userIdToFullName->__invoke($version->getUserId());
+                $event->resourceTypeDescription = 'page';
+                $event->actionDescription = VersionActions::DEFAULT_ACTION_DESCRIPTIONS[$version->getAction()];
+                $event->resourceLocatorArray = $version->getLocatorAsArray();
+                $event->resourceLocationDescription = $version->getPathname();
+                $event->parentCurrentLocationDescription = $this->siteIdToDomainName->__invoke($version->getSiteId());
 
                 return $event;
             },

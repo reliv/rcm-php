@@ -5,9 +5,9 @@ namespace Rcm\ImmutableHistory;
 use Doctrine\ORM\EntityManager;
 use Rcm\ImmutableHistory\Acl\AclConstants;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEventToSentence;
-use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllChangeLogEventSentencesForDateRange;
+use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllSortedChangeLogEventsByDateRange;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogByDateRangeComposite;
-use Rcm\ImmutableHistory\Http\ChangeLogListController;
+use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogListController;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersion;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersionEntity;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
@@ -37,29 +37,22 @@ class ModuleConfig
                     GenerateResourceIdInterface::class => [
                         'class' => GenerateUuidV4::class
                     ],
-                    GetAllChangeLogEventSentencesForDateRange::class => [
-                        'arguments' => [
-                            ChangeLogEventToSentence::class
-                        ],
+                    GetAllSortedChangeLogEventsByDateRange::class => [
                         'calls' => [
                             ['addChild', [\Rcm\ImmutableHistory\Page\GetHumanReadibleChangeLogEventsByDateRange::class]]
                         ]
                     ],
-                    ChangeLogEventToSentence::class => [
-                        'arguments' => [
-                            UserIdToUserFullName::class
-                        ]
-                    ],
                     ChangeLogListController::class => [
                         'arguments' => [
-                            GetAllChangeLogEventSentencesForDateRange::class,
+                            GetAllSortedChangeLogEventsByDateRange::class,
                             IsAllowed::class
                         ]
                     ],
                     \Rcm\ImmutableHistory\Page\GetHumanReadibleChangeLogEventsByDateRange::class => [
                         'arguments' => [
                             EntityManager::class,
-                            SiteIdToDomainName::class
+                            SiteIdToDomainName::class,
+                            UserIdToUserFullName::class
                         ]
                     ],
                     PageContentFactory::class => [],

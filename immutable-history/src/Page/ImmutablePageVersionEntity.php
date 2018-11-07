@@ -132,6 +132,11 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
         return new PageLocator($this->siteId, $this->pathname);
     }
 
+    public function getLocatorAsArray(): array
+    {
+        return (new PageLocator($this->siteId, $this->pathname))->toArray();
+    }
+
     /**
      * @return int
      */

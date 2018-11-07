@@ -1,6 +1,7 @@
 @TODOs:
 
 MUST:
+- Clean up log screen code and ChangeLogevent. Maybe just allow resources to provide a "version to sentence" function
 
 SHOULD:
 - fix or document that drafts of locations that never been published before or have been depublished have different resourceIds than when they get published and subsequent drafts
@@ -10,4 +11,4 @@ SHOULD:
 - fix and merge RCM travis.YML and any other root files
 
 COULD:
-- Fill in "USER_FULL_NAME_UNKNOWN" which should show in parentheses after every user id on the log screen
+- Lookup user full names and show them in the screen. see class UserIdToUserFullName

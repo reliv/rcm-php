@@ -16,4 +16,6 @@ interface VersionEntityInterface
      * @return array | null
      */
     public function getContentAsArray();
+
+    public function getLocatorAsArray(): array;
 }

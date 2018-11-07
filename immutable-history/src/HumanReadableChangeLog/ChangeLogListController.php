@@ -1,12 +1,13 @@
 <?php
 
-namespace Rcm\ImmutableHistory\Http;
+namespace Rcm\ImmutableHistory\HumanReadableChangeLog;
 
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Rcm\ImmutableHistory\Acl\AclConstants;
-use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllChangeLogEventSentencesForDateRange;
+use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEvent;
+use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllSortedChangeLogEventsByDateRange;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogByDateRangeComposite;
 use RcmUser\Api\Acl\IsAllowed;
 use Zend\Diactoros\Response;
@@ -34,7 +35,7 @@ class ChangeLogListController implements MiddlewareInterface
      * @param GetHumanReadableChangeLogByDateRange $getHumanReadableChangeLogByDateRange
      */
     public function __construct(
-        GetAllChangeLogEventSentencesForDateRange $getHumanReadableChangeLogByDateRange,
+        GetAllSortedChangeLogEventsByDateRange $getHumanReadableChangeLogByDateRange,
         IsAllowed $isAllowed
     ) {
         $this->getHumanReadableChangeLogByDateRange = $getHumanReadableChangeLogByDateRange;
@@ -76,7 +77,7 @@ class ChangeLogListController implements MiddlewareInterface
 
         $description = 'Content change log events for ' . $days . ' days'
             . ' from ' . $greaterThanYear->format('c') . ' to ' . $lessThanYear->format('c')
-            . '. Anything inside parentheses is from current lookups, is for convenience only,  and is not guaranteed to be historically accurate.';
+            . '. Data with "CURRENT" is from current lookups, is for convenience only,  and is not guaranteed to be historically accurate.';
 
         $contentType = isset($queryParams['content-type'])
             ? html_entity_decode($queryParams['content-type'])
@@ -106,36 +107,66 @@ class ChangeLogListController implements MiddlewareInterface
         return new JsonResponse(['listDescription' => $description, 'events' => $humanReadableEvents]);
     }
 
+    protected function arrayToCsv(array $array)
+    {
+        if (count($array) == 0) {
+            return null;
+        }
+        ob_start();
+        $df = fopen("php://output", 'w');
+        fputcsv($df, array_keys(reset($array)));
+        foreach ($array as $row) {
+            fputcsv($df, $row);
+        }
+        fclose($df);
+        return ob_get_clean();
+    }
+
     /**
      * @param $description
      * @param $humanReadableEvents
      *
      * @return HtmlResponse
      */
-    protected function makeCsvResponse($description, $humanReadableEvents)
+    protected function makeCsvResponse($description, $events)
     {
-        $arrayToCsvLine = function (array $values) {
-            $line = '';
-
-            $values = array_map(
-                function ($v) {
-                    return '"' . str_replace('"', '""', $v) . '"';
-                },
-                $values
-            );
-
-            $line .= implode(',', $values);
-
-            return $line . "\n";
-        };
-
-
-        $body = $arrayToCsvLine(['Date', $description]);
-        foreach ($humanReadableEvents as $changeLogItem) {
-            $body .= $arrayToCsvLine([$changeLogItem['date'], $changeLogItem['description']]);
-        }
-
+        $body = $this->arrayToCsv($this->changeLogEventsToTableArray($events));
         return new HtmlResponse($body, 200, ['content-type' => 'text/csv']);
+    }
+
+    protected function changeLogEventsToTableArray(array $events): array
+    {
+        return array_merge(
+            [
+                [
+                    'Date',
+                    'User ID',
+                    'User CURRENT name',
+                    'Resource type',
+                    'Resource parent CURRENT location',
+                    'Resource location',
+                    'How the resource was changed',
+                    'Resource location data',
+                    'Version ID'
+                ]
+            ],
+            array_map(
+                function (ChangeLogEvent $event) {
+                    return [
+                        $event->date->format('c'),
+                        $event->userId,
+                        $event->userDescription,
+                        $event->resourceTypeDescription,
+                        $event->parentCurrentLocationDescription,
+                        $event->resourceLocationDescription,
+                        $event->actionDescription,
+                        json_encode($event->resourceLocatorArray),
+                        $event->versionId
+                    ];
+                },
+                $events
+            )
+        );
     }
 
     /**
@@ -147,20 +178,20 @@ class ChangeLogListController implements MiddlewareInterface
      */
     protected function makeHtmlResponse($description, $humanReadableEvents)
     {
+        $eventsTable = $this->changeLogEventsToTableArray($humanReadableEvents);
+
         $html = '<html class="container-fluid">';
         $html .= '<link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" ';
         $html .= 'media="screen" rel="stylesheet" type="text/css">';
         $html .= '<a href="?days=365&content-type=text%2Fcsv">Download CSV file for last 365 days</a>';
+        $html .= '<p>' . $description . '</p>';
         $html .= '<table class="table table-sm">';
-        $html .= '<tr><th>Date</th>';
-        $html .= '<th>' . $description . '</th>';
-        $html .= '</tr>';
-        foreach ($humanReadableEvents as $changeLogItem) {
-            $html .= '<tr><td class="text-nowrap">'
-                . $changeLogItem['date']
-                . '</td><td>'
-                . $changeLogItem['description'];
-            '</td></tr>';
+        foreach ($eventsTable as $row) {
+            $html .= '<tr>';
+            foreach ($row as $cell) {
+                $html .= '<td class="text-nowrap">' . $cell . '</td>';
+            }
+            $html .= '</tr>';
         }
         $html .= '</table>';
         $html .= '</html>';
