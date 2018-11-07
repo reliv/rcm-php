@@ -3,6 +3,7 @@
 namespace Rcm\ImmutableHistory;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
 use Rcm\ImmutableHistory\Exception\SourceVersionNotFoundException;
 use Rcm\ImmutableHistory\ResourceId\GenerateResourceIdInterface;
 
@@ -20,7 +21,7 @@ class VersionRepository implements VersionRepositoryInterface
      */
     public function __construct(
         $entityClassName,
-        \Doctrine\ORM\EntityManager $entityManger,
+        EntityManager $entityManger,
         GenerateResourceIdInterface $generateResourceId
     ) {
         $this->entityClassName = $entityClassName;

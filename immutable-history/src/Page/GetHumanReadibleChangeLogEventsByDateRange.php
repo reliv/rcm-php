@@ -51,7 +51,7 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
                 $event->userDescription = $this->userIdToFullName->__invoke($version->getUserId());
                 $event->resourceTypeDescription = 'page';
                 $event->actionDescription = VersionActions::DEFAULT_ACTION_DESCRIPTIONS[$version->getAction()];
-                $event->resourceLocatorArray = $version->getLocatorAsArray();
+                $event->resourceLocatorArray = $version->getLocator()->toArray();
                 $event->resourceLocationDescription = $version->getPathname();
                 $event->parentCurrentLocationDescription = $this->siteIdToDomainName->__invoke($version->getSiteId());
 

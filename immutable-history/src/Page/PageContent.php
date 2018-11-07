@@ -35,7 +35,7 @@ class PageContent implements ContentInterface
             'description' => $this->description,
             'keywords' => $this->keywords,
             'blockInstances' => $this->blockInstances,
-            'contentSchemaVersion' => $this::CONTENT_SCHEMA_VERSION
+            'contentSchemaVersion' => self::CONTENT_SCHEMA_VERSION
         ];
     }
 }

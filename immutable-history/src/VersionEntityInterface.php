@@ -17,5 +17,5 @@ interface VersionEntityInterface
      */
     public function getContentAsArray();
 
-    public function getLocatorAsArray(): array;
+    public function getLocator(): LocatorInterface;
 }
