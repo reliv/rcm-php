@@ -10,6 +10,7 @@ List of test cases in the current UI that MUST WORK:
 - [x] Site->CopyPages->withPageAlreadyInHistory (POST /api/admin/sites/12486/page-copy/5969)
 - [x] Site->CopyPages->withPageNotAlreadyInHistory (POST /api/admin/sites/12486/page-copy/5969)
 - [x] InventoryManager->createProduct (POST /api/resource/rcm-page/9547/copy)
+- [ ] Site->ManageSites->duplicate
 
 Not doing right now but may exist in future:
 - [ ] Page->Edit Permissions (doesn't currently change the page resource, changes ACL rules instead)
