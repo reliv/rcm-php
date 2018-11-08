@@ -308,7 +308,7 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     /**
      * Get Published Revision
      *
-     * @return \Rcm\Entity\Revision
+     * @return \Rcm\Entity\Revision | null
      */
     public function getPublishedRevision()
     {

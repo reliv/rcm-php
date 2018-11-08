@@ -163,7 +163,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
 
     /**
      * @param string $createdByUserId <tracking>
-     * @param string $createdReason   <tracking>
+     * @param string $createdReason <tracking>
      */
     public function __construct(
         string $createdByUserId,
@@ -330,13 +330,14 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
     /**
      * Get Plugin Instances - Assumes we have ordered them by RenderOrder the DB join
      *
-     * @return ArrayCollection|array
+     * @return ArrayCollection
      */
     public function getPluginWrappers()
     {
-        if ($this->pluginWrappers->count() < 1) {
-            return [];
-        }
+// Commented out durring immutable history project in 2018-10 because broke toArray() calls
+//        if ($this->pluginWrappers->count() < 1) {
+//            return [];
+//        }
 
         return $this->pluginWrappers;
     }
@@ -488,6 +489,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
     }
 
     //////// SORTING ////////
+
     /**
      * orderPluginWrappersByRow - Assumes we have ordered them by RenderOrder the DB join
      *

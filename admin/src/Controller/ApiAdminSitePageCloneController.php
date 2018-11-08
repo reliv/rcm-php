@@ -91,14 +91,6 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
         }
 
         $page = $this->getPage($site, $data['pageId']);
-        $user = $this->getCurrentUserTracking();
-
-        $newPage = new Page(
-            $user->getId(),
-            'New page in ' . get_class($this)
-        );
-
-        $newPage->populate($data);
 
         if (empty($page)) {
             return new ApiJsonModel(
@@ -108,7 +100,7 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
             );
         }
 
-        if ($this->hasPage($destinationSite, $newPage->getName(), $newPage->getPageType())) {
+        if ($this->hasPage($destinationSite, $page->getName(), $page->getPageType())) {
             return new ApiJsonModel(
                 null,
                 1,
@@ -116,28 +108,18 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
             );
         }
 
-        $newPage->setAuthor($user->getName());
 
-        try {
-            $newPage = $this->getPageRepo()->copyPage(
-                $destinationSite,
-                $page,
-                $newPage->toArray(),
-                null,
-                true
-            );
-        } catch (\Exception $e) {
-            return new ApiJsonModel(
-                null,
-                1,
-                $e->getMessage()
-            );
-        }
+        $this->pageMutationService->duplicatePage(
+            $this->getCurrentUserTracking(),
+            $page,
+            $destinationSite->getSiteId(),
+            $page->getName()
+        );
 
-        $apiResponse = new SitePageApiResponse($newPage);
+//        $apiResponse = new SitePageApiResponse($newPage);
 
-        $apiResponse->populate($newPage->toArray());
+//        $apiResponse->populate($newPage->toArray());
 
-        return new ApiJsonModel($apiResponse, 0, "Success: Duplicated page to site {$data['destinationSiteId']}");
+        return new ApiJsonModel([], 0, "Success: Duplicated page to site {$data['destinationSiteId']}");
     }
 }
