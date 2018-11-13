@@ -1,4 +1,4 @@
-#Pages
+# Pages
 List of test cases in the current UI that MUST WORK:
 - [x] Page->New->notFromTemplate (RcmAdmin\Controller\PageController)
 - [x] Page->New->fromTemplate (RcmAdmin\Controller\PageController)
