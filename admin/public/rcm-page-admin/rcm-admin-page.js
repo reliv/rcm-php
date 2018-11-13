@@ -29,7 +29,7 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
      * @param name
      * @param amount
      */
-    self.setLoading = function (name, amount) {
+    self.setLoading = function(name, amount){
         rcmLoading.setLoading(
             name,
             amount
@@ -141,12 +141,7 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
                                 );
                                 //self.events.trigger('alert', {type:'success',message: 'Page saved'});
                                 if (msg.redirect) {
-                                    setTimeout(
-                                        function () {
-                                            window.location = msg.redirect;
-                                        },
-                                        10 //wait 10ms so response can be recorded by browser which helps with debugging
-                                    )
+                                    window.location = msg.redirect;
                                 } else {
 
                                     self.events.trigger(
