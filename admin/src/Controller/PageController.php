@@ -193,14 +193,14 @@ class PageController extends AbstractActionController
     {
         $request = $this->getRequest();
 
-        //HTTP method check
-        if (!$request->isPost()) {
-
-            $response = new Response();
-            $response->setStatusCode('405');
-
-            return $response;
-        }
+//        //HTTP method check //this was comented our because the current UI bizarly does an HTTP GET to this action
+//        if (!$request->isPost()) {
+//
+//            $response = new Response();
+//            $response->setStatusCode('405');
+//
+//            return $response;
+//        }
 
         //ACL access check
         if (!$this->rcmUserService->isAllowed(
@@ -297,7 +297,7 @@ class PageController extends AbstractActionController
                 'index'
             );
 
-        $pageRevision = $this->getEvent()
+        $originalRevisionId = $this->getEvent()
             ->getRouteMatch()
             ->getParam(
                 'rcmPageRevision',
@@ -317,12 +317,12 @@ class PageController extends AbstractActionController
             $this->pageMutationService->savePageDraft(
                 $this->rcmUserService->getCurrentUser(),
                 $pageName,
-                $pageRevision,
                 $pageType,
                 $request->getPost()->toArray(),
                 function ($pageName, $pageType = 'n', $pageRevision = null) {
                     return $this->urlToPage($pageName, $pageType, $pageRevision);
-                }
+                },
+                $originalRevisionId
             )
         );
     }

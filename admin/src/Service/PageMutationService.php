@@ -260,8 +260,14 @@ class PageMutationService
      *
      * @throws TrackingException
      */
-    public function savePageDraft($user, $pageName, $pageRevision, $pageType, $data, $urlToPageFunction)
-    {
+    public function savePageDraft(
+        UserInterface $user,
+        string $pageName,
+        string $pageType,
+        $data,
+        $urlToPageFunction,
+        int $originalRevisionId
+    ) {
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
@@ -271,7 +277,7 @@ class PageMutationService
         $resultRevisionId = $this->pageRepo->savePage(
             $this->currentSite,
             $pageName,
-            $pageRevision,
+            $originalRevisionId,
             $pageType,
             $data,
             $user->getId(),
@@ -320,7 +326,7 @@ class PageMutationService
             $return['redirect'] = $urlToPageFunction(
                 $pageName,
                 $pageType,
-                $pageRevision
+                $originalRevisionId
             );
         }
 
