@@ -77,7 +77,7 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
                 $this->getCurrentUserId(),
                 'Create new domain in ' . get_class($this),
                 null,
-                false
+                true
             );
         } catch (\Exception $e) {
             return new ApiJsonModel(null, 1, $e->getMessage());
@@ -99,8 +99,7 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
             $copySite = $siteManager->copySiteAndPopulate(
                 $existingSite,
                 $domain,
-                $data,
-                true
+                $data
             );
         } catch (\Exception $exception) {
             // Remove domain if error occurs

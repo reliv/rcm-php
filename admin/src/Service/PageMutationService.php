@@ -89,44 +89,55 @@ class PageMutationService
      *
      * Note: This code was moved pretty mush as-is from "PageController" and that is why it is a bit messy.
      *
-     * @return Response|ViewModel
+     * @param $user
+     * @param int $siteId
+     * @param string $name
+     * @param string $pageType
+     * @param $data
+     * @return Page
      * @throws TrackingException
+     * @throws \Rcm\Exception\PageException
      */
-    public function createNewPage($user, $data)
+    public function createNewPage($user, int $siteId, string $name, string $pageType, $data)
     {
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
         $validatedData = $data;
         $pageData = [
-            'name' => $validatedData['url'],
-            'pageTitle' => $validatedData['title'],
-            'pageType' => 'n', // "n" means "normal"
-            'siteLayoutOverride' => $validatedData['main-layout'],
+            'name' => $name,
+            'siteId' => $siteId,
+            'pageTitle' => $validatedData['pageTitle'],
+            'pageType' => $pageType, // "n" means "normal"
+            'siteLayoutOverride' => (
+            isset($validatedData['siteLayoutOverride']) ? $validatedData['siteLayoutOverride'] : null
+            ),
             'createdByUserId' => $user->getId(),
             'createdReason' => 'New page in ' . get_class($this),
             'author' => $user->getName(),
         ];
 
-        $createdPage = $resultRevisionId = $this->pageRepo->createPage(
-            $this->currentSite,
+        $createdPage = $this->pageRepo->createPage(
+            $this->entityManager->find(Site::class, $siteId),
             $pageData
         );
 
         $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
             new PageLocator(
-                $this->currentSite->getSiteId(),
+                $siteId,
                 $this->rcmPageNameToPathname->__invoke($createdPage->getName(), $createdPage->getPageType())
             ),
             $this->immutablePageContentFactory->__invoke(
                 $createdPage->getPageTitle(),
                 $createdPage->getDescription(),
                 $createdPage->getKeywords(),
-                $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
+                $this->revisionRepo->find($createdPage->getStagedRevision())->getPluginWrappers()->toArray()
             ),
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
         );
+
+        return $createdPage;
     }
 
     /**
@@ -159,8 +170,8 @@ class PageMutationService
         }
 
         $pageData = [
-            'name' => $validatedData['url'],
-            'pageTitle' => $validatedData['title'],
+            'name' => $validatedData['name'],
+            'pageTitle' => $validatedData['pageTitle'],
             'pageType' => 'n', // "n" means "normal"
             'createdByUserId' => $user->getId(),
             'createdReason' => 'New page from template in ' . get_class($this),
@@ -190,40 +201,41 @@ class PageMutationService
     }
 
     /**
-     * @param $siteId
-     * @param $pageName
-     * @param $pageType
-     * @param $pageRevision
+     * @param $user
+     * @param int $siteId
+     * @param string $pageName
+     * @param string $pageType
+     * @param int $pageRevisionId
      * @param $urlToPageFunction
      * @return mixed
      * @throws TrackingException
      */
-    public function publishPageRevision($user, $siteId, $pageName, $pageType, $pageRevision, $urlToPageFunction)
-    {
-        if (!is_numeric($pageRevision)) {
-            throw new InvalidArgumentException(
-                'Invalid Page Revision Id . '
-            );
-        }
-
+    public function publishPageRevision(
+        $user,
+        int $siteId,
+        string $pageName,
+        string $pageType,
+        int $pageRevisionId,
+        $urlToPageFunction
+    ) {
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
-
-        $siteId = $this->currentSite->getSiteId();
 
         $page = $this->pageRepo->publishPageRevision(
             $siteId,
             $pageName,
             $pageType,
-            $pageRevision,
+            $pageRevisionId,
             $user->getId(),
             'Publish page in ' . get_class($this)
         );
 
         $this->immuteblePageVersionRepo->publishFromNothing(
-            new PageLocator($this->currentSite->getSiteId(),
-                $this->rcmPageNameToPathname->__invoke($pageName, $pageType)),
+            new PageLocator(
+                $siteId,
+                $this->rcmPageNameToPathname->__invoke($pageName, $pageType)
+            ),
             $this->immutablePageContentFactory->__invoke(
                 $page->getPageTitle(),
                 $page->getDescription(),
@@ -344,12 +356,12 @@ class PageMutationService
     }
 
     public function duplicatePage(
-        $user,
+        UserInterface $user,
         Page $page,
         $destinationSiteId,
         $destinationPageName,
         $desitnationPageType = null
-    ) {
+    ): Page {
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
@@ -371,6 +383,7 @@ class PageMutationService
         $destinationPage->setSite($destinationSite);
         $destinationPage->setName($destinationPageName);
         $destinationPage->setAuthor($user->getName());
+        $destinationPage->setModifiedByUserId($user->getId());
 
         if ($desitnationPageType !== null) {
             $destinationPage->setPageType($desitnationPageType);
@@ -402,6 +415,8 @@ class PageMutationService
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
         );
+
+        return $destinationPage;
     }
 
     /**

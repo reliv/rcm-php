@@ -263,13 +263,13 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
 
     /**
      * @param string $createdByUserId <tracking>
-     * @param string $createdReason   <tracking>
+     * @param string $createdReason <tracking>
      */
     /**
-     * @param string        $createdByUserId
-     * @param string        $createdReason
-     * @param Domain|null   $domain
-     * @param Country|null  $country
+     * @param string $createdByUserId
+     * @param string $createdReason
+     * @param Domain|null $domain
+     * @param Country|null $country
      * @param Language|null $language
      */
     public function __construct(
@@ -311,7 +311,8 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
      */
     public function newInstance(
         string $createdByUserId,
-        string $createdReason = Tracking::UNKNOWN_REASON
+        string $createdReason = Tracking::UNKNOWN_REASON,
+        $copyPages = true
     ) {
         /** @var static $new */
         $new = parent::newInstance(
@@ -327,39 +328,41 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
         $new->siteId = null;
         $new->domain = null;
 
-        /* Get Cloned Pages */
-        $pages = $new->getPages();
+        if ($copyPages) {
+            /* Get Cloned Pages */
+            $pages = $new->getPages();
 
-        $clonedPages = [];
+            $clonedPages = [];
 
-        /** @var \Rcm\Entity\Page $page */
-        foreach ($pages as $page) {
-            $pageType = $page->getPageType();
+            /** @var \Rcm\Entity\Page $page */
+            foreach ($pages as $page) {
+                $pageType = $page->getPageType();
 
-            // Only clone if is supported
-            if (!isset($new->supportedPageTypes[$pageType])) {
-                continue;
+                // Only clone if is supported
+                if (!isset($new->supportedPageTypes[$pageType])) {
+                    continue;
+                }
+                // Only clone if is cloneable
+                if (!$new->supportedPageTypes[$pageType]['canClone']) {
+                    continue;
+                }
+
+                $clonedPage = $page->newInstanceIfHasRevision(
+                    $createdByUserId,
+                    $createdReason
+                );
+
+                if (!$clonedPage) {
+                    continue;
+                }
+
+                $clonedPage->setSite($new);
+
+                $clonedPages[] = $clonedPage;
             }
-            // Only clone if is cloneable
-            if (!$new->supportedPageTypes[$pageType]['canClone']) {
-                continue;
-            }
 
-            $clonedPage = $page->newInstanceIfHasRevision(
-                $createdByUserId,
-                $createdReason
-            );
-
-            if (!$clonedPage) {
-                continue;
-            }
-
-            $clonedPage->setSite($new);
-
-            $clonedPages[] = $clonedPage;
+            $new->pages = new ArrayCollection($clonedPages);
         }
-
-        $new->pages = new ArrayCollection($clonedPages);
 
         /* Get Cloned Containers */
         $containers = $this->getContainers();
@@ -1138,7 +1141,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
      * populateFromObject - @todo some properties are missing
      *
      * @param ApiPopulatableInterface $object
-     * @param array                   $ignore
+     * @param array $ignore
      *
      * @return void
      */

@@ -78,7 +78,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
 
     /**
      * @param string $resourceId
-     * @param null   $privilege
+     * @param null $privilege
      *
      * @return bool
      */
@@ -330,21 +330,17 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $siteManager = $this->getSiteManager();
         $userId = $this->getCurrentUserId();
 
-        try {
-            $data = $siteManager->prepareSiteData($data);
-            /** @var \Rcm\Repository\Domain $domainRepo */
-            $domainRepo = $this->getEntityManager()->getRepository(
-                \Rcm\Entity\Domain::class
-            );
+        $data = $siteManager->prepareSiteData($data);
+        /** @var \Rcm\Repository\Domain $domainRepo */
+        $domainRepo = $this->getEntityManager()->getRepository(
+            \Rcm\Entity\Domain::class
+        );
 
-            $data['domain'] = $domainRepo->createDomain(
-                $data['domainName'],
-                $userId,
-                'Create new domain in ' . get_class($this)
-            );
-        } catch (\Exception $e) {
-            return new ApiJsonModel(null, 1, $e->getMessage());
-        }
+        $data['domain'] = $domainRepo->createDomain(
+            $data['domainName'],
+            $userId,
+            'Create new domain in ' . get_class($this)
+        );
 
         /** @var \Rcm\Entity\Site $newSite */
         $newSite = new Site(
@@ -356,11 +352,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         // make sure we don't have a siteId
         $newSite->setSiteId(null);
 
-        try {
-            $newSite = $siteManager->createSite($newSite);
-        } catch (\Exception $e) {
-            return new ApiJsonModel(null, 1, $e->getMessage());
-        }
+        $newSite = $siteManager->createSite($newSite);
 
         return new ApiJsonModel($newSite, 0, 'Success');
     }

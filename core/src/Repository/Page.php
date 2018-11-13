@@ -595,19 +595,29 @@ class Page extends ContainerAbstract
             ->setParameter('siteId', $siteId)
             ->setParameter('revisionId', $revisionId);
 
-        /** @var \Rcm\Entity\Page $page */
-        $page = $pageQueryBuilder->getQuery()->getSingleResult();
-
-        if (empty($page)) {
+        try {
+            /** @var \Rcm\Entity\Page $page */
+            $page = $pageQueryBuilder->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
             throw new PageNotFoundException(
-                'Unable to locate page by revision ' . $revisionId
+                'Unable to locate page by revision. ' . json_encode([
+                    'revisionId' => $revisionId,
+                    'siteId' => $siteId,
+                    'pageName' => $pageName,
+                    'pageType' => $pageType,
+                ])
             );
         }
 
         $revision = $page->getRevisionById($revisionId);
 
         if (empty($revision)) {
-            throw new RuntimeException('Revision not found.');
+            throw new RuntimeException(
+                'Revision not found. ' . json_encode([
+                    'revisionId' => $revisionId,
+                    'pageId' => $page->getPageId()
+                ])
+            );
         }
 
         $page->setPublishedRevision($revision);
