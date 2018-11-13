@@ -11,7 +11,7 @@ use Rcm\Entity\Site;
 use Rcm\Tracking\Model\Tracking;
 
 /**
- * @author James Jervis - https://github.com/jerv13
+ * @deprecated Use SiteManager instead
  */
 class CopySite
 {
@@ -47,12 +47,13 @@ class CopySite
     }
 
     /**
-     * @param Site   $sourceSite
+     * @deprecated Use SiteManager instead
+     * @param Site $sourceSite
      * @param string $newDomainName
-     * @param array  $newSiteData
+     * @param array $newSiteData
      * @param string $createdByUserId
      * @param string $createdReason
-     * @param array  $options
+     * @param array $options
      *
      * @return Site
      * @throws \Exception
@@ -65,121 +66,127 @@ class CopySite
         string $createdReason = Tracking::UNKNOWN_REASON,
         array $options = []
     ) {
-        $doFlush = Options::get(
-            $options,
-            self::OPTION_DO_FLUSH,
-            false
+
+        throw new \Exception(
+            'This was disabled during audit project in 2018-11 because'
+            . ' didn\'t apear to be in use and doesn\'t follow audit log rules'
         );
-
-        $newDomain = $this->domainRepository->createDomain(
-            $newDomainName,
-            $createdByUserId,
-            $createdReason,
-            null,
-            false
-        );
-
-        try {
-            $copySite = $this->copySite(
-                $sourceSite,
-                $newDomain,
-                $createdByUserId,
-                $createdReason,
-                false
-            );
-        } catch (\Exception $exception) {
-            // Remove domain if error occurs
-            $this->entityManager->remove($newDomain);
-            throw $exception;
-        }
-
-        $copySite->populate($newSiteData);
-
-        if ($doFlush) {
-            $this->entityManager->flush($newDomain);
-            $this->entityManager->flush($copySite);
-            // @todo Missing pages publishedRevisions in flush
-            $this->entityManager->flush($copySite->getPages()->toArray());
-            // @todo Missing containers publishedRevisions in flush
-            $this->entityManager->flush($copySite->getContainers()->toArray());
-        }
-
-        return $copySite;
+//Disabled during audit project in 2018-11 because didn't apear to be in use and doesn't follow audit log rules
+//        $doFlush = Options::get(
+//            $options,
+//            self::OPTION_DO_FLUSH,
+//            false
+//        );
+//
+//        $newDomain = $this->domainRepository->createDomain(
+//            $newDomainName,
+//            $createdByUserId,
+//            $createdReason,
+//            null,
+//            false
+//        );
+//
+//        try {
+//            $copySite = $this->copySite(
+//                $sourceSite,
+//                $newDomain,
+//                $createdByUserId,
+//                $createdReason,
+//                false
+//            );
+//        } catch (\Exception $exception) {
+//            // Remove domain if error occurs
+//            $this->entityManager->remove($newDomain);
+//            throw $exception;
+//        }
+//
+//        $copySite->populate($newSiteData);
+//
+//        if ($doFlush) {
+//            $this->entityManager->flush($newDomain);
+//            $this->entityManager->flush($copySite);
+//            // @todo Missing pages publishedRevisions in flush
+//            $this->entityManager->flush($copySite->getPages()->toArray());
+//            // @todo Missing containers publishedRevisions in flush
+//            $this->entityManager->flush($copySite->getContainers()->toArray());
+//        }
+//
+//        return $copySite;
     }
-
-    /**
-     * @param Site   $sourceSite
-     * @param Domain $domain
-     * @param string $createdByUserId
-     * @param string $createdReason
-     * @param bool   $doFlush
-     *
-     * @return Site
-     */
-    protected function copySite(
-        Site $sourceSite,
-        Domain $domain,
-        string $createdByUserId,
-        string $createdReason,
-        $doFlush = false
-    ) {
-        $entityManager = $this->entityManager;
-
-        $domain->setModifiedByUserId(
-            $createdByUserId,
-            'Copy site modified domain in ' . get_class($this)
-            . ' for: ' . $createdReason
-        );
-
-        $copySite = $sourceSite->newInstance(
-            $createdByUserId,
-            'Copy site in ' . get_class($this)
-            . ' for: ' . $createdReason
-        );
-
-        $copySite->setSiteId(null);
-        $copySite->setDomain($domain);
-
-        // NOTE: site::newInstance() does page copy too
-        $pages = $copySite->getPages();
-        $pageRevisions = [];
-
-        /** @var Page $page */
-        foreach ($pages as $page) {
-            $page->setAuthor($createdByUserId);
-            $page->setModifiedByUserId(
-                $createdByUserId,
-                'Copy site modified page in ' . get_class($this)
-                . ' for: ' . $createdReason
-            );
-            $pageRevision = $page->getPublishedRevision();
-            $pageRevisions[] = $pageRevision;
-            $entityManager->persist($page);
-            $entityManager->persist($pageRevision);
-        }
-
-        $containers = $copySite->getContainers();
-        $containerRevisions = [];
-
-        /** @var Container $container */
-        foreach ($containers as $container) {
-            $containerRevision = $container->getPublishedRevision();
-            $containerRevisions[] = $containerRevision;
-            $entityManager->persist($container);
-            $entityManager->persist($containerRevision);
-        }
-
-        $entityManager->persist($copySite);
-
-        if ($doFlush) {
-            $entityManager->flush($domain);
-            $entityManager->flush($copySite);
-            $entityManager->flush($pages->toArray());
-            $entityManager->flush($pageRevisions);
-            $entityManager->flush($containers->toArray());
-            $entityManager->flush($containerRevisions);
-        }
-
-        return $copySite;
-    }
+//Disabled during audit project in 2018-11 because didn't apear to be in use and doesn't follow audit log rules
+//    /**
+//     * @param Site   $sourceSite
+//     * @param Domain $domain
+//     * @param string $createdByUserId
+//     * @param string $createdReason
+//     * @param bool   $doFlush
+//     *
+//     * @return Site
+//     */
+//    protected function copySite(
+//        Site $sourceSite,
+//        Domain $domain,
+//        string $createdByUserId,
+//        string $createdReason,
+//        $doFlush = false
+//    ) {
+//        $entityManager = $this->entityManager;
+//
+//        $domain->setModifiedByUserId(
+//            $createdByUserId,
+//            'Copy site modified domain in ' . get_class($this)
+//            . ' for: ' . $createdReason
+//        );
+//
+//        $copySite = $sourceSite->newInstance(
+//            $createdByUserId,
+//            'Copy site in ' . get_class($this)
+//            . ' for: ' . $createdReason
+//        );
+//
+//        $copySite->setSiteId(null);
+//        $copySite->setDomain($domain);
+//
+//        // NOTE: site::newInstance() does page copy too
+//        $pages = $copySite->getPages();
+//        $pageRevisions = [];
+//
+//        /** @var Page $page */
+//        foreach ($pages as $page) {
+//            $page->setAuthor($createdByUserId);
+//            $page->setModifiedByUserId(
+//                $createdByUserId,
+//                'Copy site modified page in ' . get_class($this)
+//                . ' for: ' . $createdReason
+//            );
+//            $pageRevision = $page->getPublishedRevision();
+//            $pageRevisions[] = $pageRevision;
+//            $entityManager->persist($page);
+//            $entityManager->persist($pageRevision);
+//        }
+//
+//        $containers = $copySite->getContainers();
+//        $containerRevisions = [];
+//
+//        /** @var Container $container */
+//        foreach ($containers as $container) {
+//            $containerRevision = $container->getPublishedRevision();
+//            $containerRevisions[] = $containerRevision;
+//            $entityManager->persist($container);
+//            $entityManager->persist($containerRevision);
+//        }
+//
+//        $entityManager->persist($copySite);
+//
+//        if ($doFlush) {
+//            $entityManager->flush($domain);
+//            $entityManager->flush($copySite);
+//            $entityManager->flush($pages->toArray());
+//            $entityManager->flush($pageRevisions);
+//            $entityManager->flush($containers->toArray());
+//            $entityManager->flush($containerRevisions);
+//        }
+//
+//        return $copySite;
+//    }
 }

@@ -394,6 +394,7 @@ return [
             'pages' => [
                 [
                     'name' => 'index',
+                    'pageType' => 'n',
                     'description' => 'Home Page.',
                     'pageTitle' => 'Home',
                     'plugins' => [
@@ -410,6 +411,7 @@ return [
                 ],
                 [
                     'name' => 'login',
+                    'pageType' => 'n',
                     'description' => 'Login Page.',
                     'pageTitle' => 'Login',
                     'plugins' => [
@@ -424,6 +426,7 @@ return [
                 ],
                 [
                     'name' => 'not-authorized',
+                    'pageType' => 'n',
                     'description' => 'Not Authorized Page.',
                     'pageTitle' => 'Not Authorized',
                     'plugins' => [
@@ -440,6 +443,7 @@ return [
                 ],
                 [
                     'name' => 'not-found',
+                    'pageType' => 'n',
                     'description' => 'Not Found Page.',
                     'pageTitle' => 'Not Found',
                     'plugins' => [
@@ -658,6 +662,7 @@ return [
                     'Config',
                     'Doctrine\ORM\EntityManager',
                     RcmUser\Service\RcmUserService::class,
+                    \RcmAdmin\Service\PageMutationService::class
                 ],
             ],
             \RcmAdmin\Api\GetPageData::class => [],

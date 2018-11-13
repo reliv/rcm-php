@@ -13,6 +13,7 @@ use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\PageLocator;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
+use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
 use RcmAdmin\Service\PageMutationService;
@@ -130,13 +131,21 @@ class PageController extends AbstractActionController
 
         if ($request->isPost() && $form->isValid()) {
             $validatedData = $form->getData();
+            $validatedData['name'] = $validatedData['url'];
+            $validatedData['pageTitle'] = $validatedData['title'];
+            $validatedData['siteId'] = $this->currentSite->getSiteId();
+            $validatedData['pageType'] = PageTypes::NORMAL;
 
             // Create a new page
             if (empty($validatedData['page-template'])
                 && !empty($validatedData['main-layout'])
             ) {
+                $validatedData['siteLayoutOverride'] = $validatedData['main-layout'];
                 $this->pageMutationService->createNewPage(
                     $this->rcmUserService->getCurrentUser(),
+                    $this->currentSite->getSiteId(),
+                    $validatedData['name'],
+                    $validatedData['pageType'],
                     $validatedData
                 );
             } elseif (!empty($validatedData['page-template'])) {

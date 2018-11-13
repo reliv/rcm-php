@@ -9,6 +9,7 @@ use Rcm\Entity\Domain;
 use Rcm\Entity\Language;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
+use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\Tracking\Model\Tracking;
 use RcmUser\Service\RcmUserService;
@@ -34,21 +35,25 @@ class SiteManager
      */
     protected $entityManager;
 
+    protected $pageMutationService;
+
     /**
      * SiteManager constructor.
      *
-     * @param array          $config
-     * @param EntityManager  $entityManager
+     * @param array $config
+     * @param EntityManager $entityManager
      * @param RcmUserService $rcmUserService
      */
     public function __construct(
         $config,
         EntityManager $entityManager,
-        RcmUserService $rcmUserService
+        RcmUserService $rcmUserService,
+        PageMutationService $pageMutationService
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->rcmUserService = $rcmUserService;
+        $this->pageMutationService = $pageMutationService;
     }
 
     /**
@@ -91,24 +96,33 @@ class SiteManager
 
         $user = $this->getCurrentUserTracking();
 
-        $pageRepo->createPages(
-            $newSite,
-            $this->getDefaultSitePageSettings($user),
-            true,
-            false
-        );
-
         $entityManager->persist($newSite);
-
         $entityManager->flush($newSite);
 
-        $this->createPagePlugins(
-            $newSite,
-            $user->getId(),
-            'New site creation in ' . get_class($this),
-            $this->getDefaultSitePageSettings($user),
-            true
-        );
+        foreach ($this->getDefaultSitePageSettings($user) as $name => $pageData) {
+            $createdPage = $this->pageMutationService->createNewPage(
+                $user,
+                $newSite->getSiteId(),
+                $pageData['name'],
+                $pageData['pageType'],
+                //Axosoft ticket #22776 was created to fix this @TODO. it is a pretty low priority issue
+                $pageData //@TODO this is probably not in the correct format for plugins/blocks/pluginWrapper data
+            );
+            $this->pageMutationService->publishPageRevision(
+                $user,
+                $newSite->getSiteId(),
+                $pageData['name'],
+                $pageData['pageType'],
+                $createdPage->getStagedRevision()->getRevisionId(),
+                function ($pageName, $pageType = PageTypes::NORMAL, $pageRevision = null) {
+                    if ($pageType !== PageTypes::NORMAL || $pageRevision !== null) {
+                        throw new \Exception('Unsupported Case');
+
+                        return '/' . $pageName;
+                    }
+                }
+            );
+        }
 
         return $newSite;
     }
@@ -118,33 +132,23 @@ class SiteManager
      * @deprecated Use Rcm\Repository\Site\CopySite
      * copySiteAndPopulate
      *
-     * @param Site   $existingSite
+     * @param Site $existingSite
      * @param Domain $domain
-     * @param array  $data
-     * @param bool   $doFlush
+     * @param array $data
+     * @param bool $doFlush
      *
      * @return Site
      */
     public function copySiteAndPopulate(
         Site $existingSite,
         Domain $domain,
-        $data = [],
-        $doFlush = false
+        $data = []
     ) {
         $entityManager = $this->getEntityManager();
 
-        $copySite = $this->copySite($existingSite, $domain, false);
+        $copySite = $this->copySite($existingSite, $domain);
 
         $copySite->populate($data);
-
-        if ($doFlush) {
-            $entityManager->flush($domain);
-            $entityManager->flush($copySite);
-            // @todo Missing pages publishedRevisions in flush
-            $entityManager->flush($copySite->getPages()->toArray());
-            // @todo Missing containers publishedRevisions in flush
-            $entityManager->flush($copySite->getContainers()->toArray());
-        }
 
         return $copySite;
     }
@@ -252,16 +256,14 @@ class SiteManager
      * @deprecated Use Rcm\Repository\Site\CopySite
      * copySite
      *
-     * @param Site   $existingSite
+     * @param Site $existingSite
      * @param Domain $domain
-     * @param bool   $doFlush
      *
      * @return Site
      */
     protected function copySite(
         Site $existingSite,
-        Domain $domain,
-        $doFlush = false
+        Domain $domain
     ) {
         $entityManager = $this->getEntityManager();
 
@@ -274,28 +276,16 @@ class SiteManager
 
         $copySite = $existingSite->newInstance(
             $user->getId(),
-            'Copy site in ' . get_class($this)
+            'Copy site in ' . get_class($this),
+            false
         );
+        $entityManager->persist($copySite);
 
         $copySite->setSiteId(null);
         $copySite->setDomain($domain);
 
         // NOTE: site::newInstance() does page copy too
-        $pages = $copySite->getPages();
-        $pageRevisions = [];
 
-        /** @var Page $page */
-        foreach ($pages as $page) {
-            $page->setAuthor($user->getName());
-            $page->setModifiedByUserId(
-                $user->getId(),
-                'Copy site in ' . get_class($this)
-            );
-            $pageRevision = $page->getPublishedRevision();
-            $pageRevisions[] = $pageRevision;
-            $entityManager->persist($page);
-            $entityManager->persist($pageRevision);
-        }
 
         $containers = $copySite->getContainers();
         $containerRevisions = [];
@@ -307,16 +297,22 @@ class SiteManager
             $entityManager->persist($container);
             $entityManager->persist($containerRevision);
         }
+        $entityManager->flush($containers->toArray());
+        $entityManager->flush($containerRevisions);
+        $entityManager->flush($domain);
+        $entityManager->flush($copySite);
 
-        $entityManager->persist($copySite);
-
-        if ($doFlush) {
-            $entityManager->flush($domain);
-            $entityManager->flush($copySite);
-            $entityManager->flush($pages->toArray());
-            $entityManager->flush($pageRevisions);
-            $entityManager->flush($containers->toArray());
-            $entityManager->flush($containerRevisions);
+        /** @var Page $page */
+        foreach ($existingSite->getPages() as $page) {
+            if (empty($page->getPublishedRevision())) {
+                continue; //Don't copy unpublished pages
+            }
+            $destinationPage = $this->pageMutationService->duplicatePage(
+                $user,
+                $page,
+                $copySite->getSiteId(),
+                $page->getName()
+            );
         }
 
         return $copySite;
@@ -486,11 +482,11 @@ class SiteManager
     }
 
     /**
-     * @param Site   $site
+     * @param Site $site
      * @param string $createdByUserId
      * @param string $createdReason
-     * @param array  $pagesData
-     * @param bool   $doFlush
+     * @param array $pagesData
+     * @param bool $doFlush
      *
      * @return void
      * @throws \Exception

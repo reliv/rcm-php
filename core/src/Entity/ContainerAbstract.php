@@ -89,7 +89,7 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
 
     /**
      * @param string $createdByUserId <tracking>
-     * @param string $createdReason   <tracking>
+     * @param string $createdReason <tracking>
      */
     public function __construct(
         string $createdByUserId,
@@ -540,7 +540,13 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
      */
     public function getRevisionById($revisionId)
     {
-        return $this->revisions->get($revisionId);
+        foreach ($this->revisions as $revision) {
+            if ($revision->getRevisionId() === $revisionId) {
+                return $revision;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -597,7 +603,7 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
      * populateFromObject
      *
      * @param ApiPopulatableInterface $object Object of THIS type
-     * @param array                   $ignore List of properties to skip population for
+     * @param array $ignore List of properties to skip population for
      *
      * @return void
      */
