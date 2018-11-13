@@ -297,7 +297,7 @@ class PageController extends AbstractActionController
                 'index'
             );
 
-        $pageRevision = $this->getEvent()
+        $originalRevisionId = $this->getEvent()
             ->getRouteMatch()
             ->getParam(
                 'rcmPageRevision',
@@ -317,12 +317,12 @@ class PageController extends AbstractActionController
             $this->pageMutationService->savePageDraft(
                 $this->rcmUserService->getCurrentUser(),
                 $pageName,
-                $pageRevision,
                 $pageType,
                 $request->getPost()->toArray(),
                 function ($pageName, $pageType = 'n', $pageRevision = null) {
                     return $this->urlToPage($pageName, $pageType, $pageRevision);
-                }
+                },
+                $originalRevisionId
             )
         );
     }

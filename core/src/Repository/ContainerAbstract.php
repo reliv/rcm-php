@@ -17,11 +17,11 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
 {
     /**
      * @param ContainerEntityInterface $container
-     * @param array                    $containerData
-     * @param string                   $modifiedByUserId
-     * @param string                   $modifiedReason
-     * @param string                   $author
-     * @param null                     $revisionNumber
+     * @param array $containerData
+     * @param string $modifiedByUserId
+     * @param string $modifiedReason
+     * @param string $author
+     * @param null $revisionNumber
      *
      * @return int|null
      */
@@ -139,7 +139,7 @@ abstract class ContainerAbstract extends EntityRepository implements ContainerIn
 
             $stagedRevision = $container->getStagedRevision();
 
-            if (!empty($stagedRevision)
+            if (!empty($stagedRevision) && !empty($revision)
                 && $revision->getRevisionId() == $stagedRevision->getRevisionId()
             ) {
                 $container->setStagedRevision($newRevision);

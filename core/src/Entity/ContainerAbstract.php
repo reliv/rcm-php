@@ -540,9 +540,15 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
      */
     public function getRevisionById($revisionId)
     {
+        $revision = $this->revisions->get($revisionId);
+
+        if ($revision !== null) {
+            return $revision; //We get here when rendering an unpublished page version
+        }
+
         foreach ($this->revisions as $revision) {
             if ($revision->getRevisionId() === $revisionId) {
-                return $revision;
+                return $revision; //We get here when publishing a new page version
             }
         }
 
