@@ -12,6 +12,7 @@ List of test cases in the current UI that MUST WORK:
 - [x] Site->ManageSites->duplicate (POST /api/admin/site-copy ApiAdminSitesCloneController)
 - [x] Site->Create? (POST /api/admin/manage-sites ApiAdminManageSitesController)
 - [x] InventoryManager->createProduct (POST /api/resource/rcm-page/9547/copy)
+- [ ] Page->Restore (405 error!) (GET /rcm-admin/page/publish-page-revision/n/our-founders/137582)
 
 Not doing right now but may exist in future:
 - [ ] Page->Edit Permissions (doesn't currently change the page resource, changes ACL rules instead)
