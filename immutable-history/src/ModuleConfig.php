@@ -76,6 +76,13 @@ class ModuleConfig
             ],
             'doctrine' => [
                 'driver' => [
+                    'Rcm\ImmutableHistory\Site' => [
+                        'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
+                        'cache' => 'array',
+                        'paths' => [
+                            __DIR__ . '/Site'
+                        ]
+                    ],
                     'Rcm\ImmutableHistory\Page' => [
                         'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
                         'cache' => 'array',
@@ -83,9 +90,18 @@ class ModuleConfig
                             __DIR__ . '/Page'
                         ]
                     ],
+                    'Rcm\ImmutableHistory\SiteWideContainer' => [
+                        'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
+                        'cache' => 'array',
+                        'paths' => [
+                            __DIR__ . '/SiteWideContainer'
+                        ]
+                    ],
                     'orm_default' => [
                         'drivers' => [
-                            'Rcm\ImmutableHistory\Page' => 'Rcm\ImmutableHistory\Page'
+                            'Rcm\ImmutableHistory\Site' => 'Rcm\ImmutableHistory\Site',
+                            'Rcm\ImmutableHistory\Page' => 'Rcm\ImmutableHistory\Page',
+                            'Rcm\ImmutableHistory\SiteWideContainer' => 'Rcm\ImmutableHistory\SiteWideContainer'
                         ]
                     ]
                 ],

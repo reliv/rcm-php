@@ -175,4 +175,9 @@ class ImmutableSiteVersionEntity implements VersionEntityInterface
     {
         return $this->host;
     }
+
+    public function getContentAsArray()
+    {
+        return []; //Sites don't really have content so just return an empty array
+    }
 }
