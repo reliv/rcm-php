@@ -141,7 +141,7 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
     /**
      * @return int
      */
-    public function getResourceId(): string
+    public function getResourceId(): int
     {
         return $this->resourceId;
     }

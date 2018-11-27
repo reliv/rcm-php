@@ -11,11 +11,21 @@ interface VersionRepositoryInterface
         $programmaticReason
     );
 
+    /**
+     * @param LocatorInterface $locator
+     * @param ContentInterface $content
+     * @param $userId
+     * @param $programmaticReason
+     * @param null $resourceIdOverride ONLY provide this if you're resource IDs come from an external system
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function publishFromNothing(
         LocatorInterface $locator,
         ContentInterface $content,
         $userId,
-        $programmaticReason
+        $programmaticReason,
+        $resourceIdOverride = null
     );
 
     public function depublish(LocatorInterface $locator, string $userId, string $programmaticReason);

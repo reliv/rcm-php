@@ -9,6 +9,9 @@ use Rcm\Entity\Domain;
 use Rcm\Entity\Language;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
+use Rcm\ImmutableHistory\Site\SiteContent;
+use Rcm\ImmutableHistory\Site\SiteLocator;
+use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\Tracking\Model\Tracking;
@@ -37,6 +40,8 @@ class SiteManager
 
     protected $pageMutationService;
 
+    protected $siteVersionRepo;
+
     /**
      * SiteManager constructor.
      *
@@ -48,12 +53,14 @@ class SiteManager
         $config,
         EntityManager $entityManager,
         RcmUserService $rcmUserService,
-        PageMutationService $pageMutationService
+        PageMutationService $pageMutationService,
+        VersionRepositoryInterface $siteVersionRepo
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->rcmUserService = $rcmUserService;
         $this->pageMutationService = $pageMutationService;
+        $this->siteVersionRepo = $siteVersionRepo;
     }
 
     /**
@@ -98,6 +105,14 @@ class SiteManager
 
         $entityManager->persist($newSite);
         $entityManager->flush($newSite);
+
+        $this->siteVersionRepo->publishFromNothing(
+            new SiteLocator($newSite->getDomainName()),
+            $this->siteToImmutableSiteContent($newSite),
+            $this->getCurrentUserTracking()->getId(),
+            __CLASS__ . '::' . __FUNCTION__,
+            $newSite->getSiteId()
+        );
 
         foreach ($this->getDefaultSitePageSettings($user) as $name => $pageData) {
             $createdPage = $this->pageMutationService->createNewPage(
@@ -150,9 +165,28 @@ class SiteManager
 
         $copySite->populate($data);
 
+        $this->siteVersionRepo->publishFromNothing(
+            new SiteLocator($copySite->getDomainName()),
+            $this->siteToImmutableSiteContent($copySite),
+            $this->getCurrentUserTracking()->getId(),
+            __CLASS__ . '::' . __FUNCTION__,
+            $copySite->getSiteId()
+        );
+
         return $copySite;
     }
 
+    public function siteToImmutableSiteContent(Site $site): SiteContent
+    {
+        return new SiteContent(
+            $site->getStatus(),
+            $site->getCountryIso3(),
+            $site->getLanguageId(),
+            $site->getTheme(),
+            $site->getSiteTitle(),
+            $site->getFavIcon()
+        );
+    }
 
     /**
      * getDefaultSiteSettings

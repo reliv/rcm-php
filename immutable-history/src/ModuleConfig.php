@@ -13,7 +13,9 @@ use Rcm\ImmutableHistory\Page\ImmutablePageVersionEntity;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\Page\RcmPluginWrappersToRcmImmutablePluginInstances;
+use Rcm\ImmutableHistory\Site\ImmutableSiteVersionEntity;
 use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
+use Rcm\ImmutableHistory\SiteWideContainer\ImmutableSiteWideContainerVersionEntity;
 use Rcm\ImmutableHistory\User\UserIdToUserFullName;
 use Rcm\ImmutableHistory\ResourceId\GenerateResourceIdInterface;
 use Rcm\ImmutableHistory\ResourceId\GenerateUuidV4;
@@ -26,10 +28,26 @@ class ModuleConfig
         return [
             'dependencies' => [
                 'config_factories' => [
+                    'Rcm\ImmutableHistory\SiteVersionRepo' => [
+                        'class' => VersionRepository::class,
+                        'arguments' => [
+                            ['literal' => ImmutableSiteVersionEntity::class],
+                            \Doctrine\ORM\EntityManager::class,
+                            GenerateResourceIdInterface::class
+                        ]
+                    ],
                     'Rcm\ImmutableHistory\PageVersionRepo' => [
                         'class' => VersionRepository::class,
                         'arguments' => [
                             ['literal' => ImmutablePageVersionEntity::class],
+                            \Doctrine\ORM\EntityManager::class,
+                            GenerateResourceIdInterface::class
+                        ]
+                    ],
+                    'Rcm\ImmutableHistory\SiteWideContainerVersionRepo' => [
+                        'class' => VersionRepository::class,
+                        'arguments' => [
+                            ['literal' => ImmutableSiteWideContainerVersionEntity::class],
                             \Doctrine\ORM\EntityManager::class,
                             GenerateResourceIdInterface::class
                         ]

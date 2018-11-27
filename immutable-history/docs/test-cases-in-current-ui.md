@@ -16,3 +16,10 @@ List of test cases in the current UI that MUST WORK:
 
 Not doing right now but may exist in future:
 - [ ] Page->Edit Permissions (doesn't currently change the page resource, changes ACL rules instead)
+
+# Sites
+List of test cases in the current UI that MUST WORK:
+- [x] Site->ManageSites->DisableSite (PUT /api/admin/manage-sites/6 ApiAdminManageSitesController)
+- [x] Site->ManageSites->EnableSite (PUT /api/admin/manage-sites/6 ApiAdminManageSitesController)
+- [x] Site->ManageSites->DuplicateSite (POST /api/admin/site-copy ApiAdminSitesCloneController)
+- [x] Site->CreateSite
