@@ -78,6 +78,7 @@ class ModuleConfig
                         'arguments' => [
                             EntityManager::class,
                             SiteIdToDomainName::class,
+                            ['literal' => ImmutablePageVersionEntity::class],
                             UserIdToUserFullName::class
                         ]
                     ],

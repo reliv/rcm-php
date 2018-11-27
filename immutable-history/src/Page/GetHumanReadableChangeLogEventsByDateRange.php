@@ -19,14 +19,15 @@ class GetHumanReadableChangeLogEventsByDateRange extends GetHumanReadableChangeL
     public function __construct(
         EntityManager $entityManger,
         SiteIdToDomainName $siteIdToDomainName,
+        string $versionEntityClassName,
         UserIdToUserFullName $userIdToUserFullName
     ) {
-        $this->siteIdToDomainName = $siteIdToDomainName;
         parent::__construct(
             $entityManger,
             $userIdToUserFullName,
-            ImmutablePageVersionEntity::class
+            $versionEntityClassName
         );
+        $this->siteIdToDomainName = $siteIdToDomainName;
     }
 
     protected function getResourceTypeDescription(VersionEntityInterface $version)
