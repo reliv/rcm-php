@@ -18,6 +18,16 @@ class PageContentFactory
      */
     public function __invoke(string $title, $description, $keywords, array $pluginWrappers)
     {
+        return new PageContent(
+            $title,
+            $description,
+            $keywords,
+            $this->pluginWrappersToFlatBlockInstances($pluginWrappers)
+        );
+    }
+
+    public function pluginWrappersToFlatBlockInstances(array $pluginWrappers)
+    {
         $pluginWrapperToImmutableFlatBlockInstanceData = function (PluginWrapper $wrapper) {
             /**
              * @var PluginInstance
@@ -34,11 +44,6 @@ class PageContentFactory
             ];
         };
 
-        return new PageContent(
-            $title,
-            $description,
-            $keywords,
-            array_map($pluginWrapperToImmutableFlatBlockInstanceData, $pluginWrappers)
-        );
+        return array_map($pluginWrapperToImmutableFlatBlockInstanceData, $pluginWrappers);
     }
 }

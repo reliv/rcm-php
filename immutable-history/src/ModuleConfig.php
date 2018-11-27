@@ -64,7 +64,11 @@ class ModuleConfig
                             ],
                             [
                                 'addChild',
-                                ['Rcm\ImmutableHistory\Site\GetHumanReadableChangeLogEventsByDateRange']
+                                [\Rcm\ImmutableHistory\Site\GetHumanReadableChangeLogEventsByDateRange::class]
+                            ],
+                            [
+                                'addChild',
+                                [\Rcm\ImmutableHistory\SiteWideContainer\GetHumanReadableChangeLogEventsByDateRange::class]
                             ]
                         ]
                     ],
@@ -72,6 +76,13 @@ class ModuleConfig
                         'arguments' => [
                             GetAllSortedChangeLogEventsByDateRange::class,
                             IsAllowed::class
+                        ]
+                    ],
+                    \Rcm\ImmutableHistory\Site\GetHumanReadableChangeLogEventsByDateRange::class => [
+                        'arguments' => [
+                            EntityManager::class,
+                            UserIdToUserFullName::class,
+                            ['literal' => ImmutableSiteVersionEntity::class]
                         ]
                     ],
                     \Rcm\ImmutableHistory\Page\GetHumanReadableChangeLogEventsByDateRange::class => [
@@ -82,11 +93,12 @@ class ModuleConfig
                             UserIdToUserFullName::class
                         ]
                     ],
-                    \Rcm\ImmutableHistory\Site\GetHumanReadableChangeLogEventsByDateRange::class => [
+                    \Rcm\ImmutableHistory\SiteWideContainer\GetHumanReadableChangeLogEventsByDateRange::class => [
                         'arguments' => [
                             EntityManager::class,
-                            UserIdToUserFullName::class,
-                            ['literal' => ImmutableSiteVersionEntity::class]
+                            SiteIdToDomainName::class,
+                            ['literal' => ImmutableSiteWideContainerVersionEntity::class],
+                            UserIdToUserFullName::class
                         ]
                     ],
                     PageContentFactory::class => [],

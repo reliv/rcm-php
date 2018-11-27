@@ -23,3 +23,7 @@ List of test cases in the current UI that MUST WORK:
 - [x] Site->ManageSites->EnableSite (PUT /api/admin/manage-sites/6 ApiAdminManageSitesController)
 - [x] Site->ManageSites->DuplicateSite (POST /api/admin/site-copy ApiAdminSitesCloneController)
 - [x] Site->CreateSite
+
+# Containers
+List of test cases in the current UI that MUST WORK:
+- [x] Page->Save (RcmAdmin\Controller\PageController)
