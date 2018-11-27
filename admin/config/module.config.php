@@ -663,7 +663,9 @@ return [
                     'Doctrine\ORM\EntityManager',
                     RcmUser\Service\RcmUserService::class,
                     \RcmAdmin\Service\PageMutationService::class,
-                    'Rcm\ImmutableHistory\SiteVersionRepo'
+                    'Rcm\ImmutableHistory\SiteVersionRepo',
+                    'Rcm\ImmutableHistory\SiteWideContainerVersionRepo',
+                    \Rcm\ImmutableHistory\Page\PageContentFactory::class
                 ],
             ],
             \RcmAdmin\Api\GetPageData::class => [],

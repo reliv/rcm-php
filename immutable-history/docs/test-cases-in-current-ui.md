@@ -27,5 +27,5 @@ List of test cases in the current UI that MUST WORK:
 # Containers
 List of test cases in the current UI that MUST WORK:
 - [x] Page->Save (RcmAdmin\Controller\PageController)
-- [ ] Site->ManageSites->duplicate (POST /api/admin/site-copy ApiAdminSitesCloneController)
+- [x] Site->ManageSites->duplicate (POST /api/admin/site-copy ApiAdminSitesCloneController)
 - [ ] Site->Create (POST /api/admin/manage-sites ApiAdminManageSitesController)
