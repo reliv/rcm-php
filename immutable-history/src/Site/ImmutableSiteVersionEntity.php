@@ -36,6 +36,13 @@ class ImmutableSiteVersionEntity implements VersionEntityInterface
     protected $host;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    protected $content;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string")
@@ -88,7 +95,8 @@ class ImmutableSiteVersionEntity implements VersionEntityInterface
         string $action,
         string $userId,
         string $programmaticReason,
-        SiteLocator $locator
+        SiteLocator $locator,
+        $content = null
     ) {
         $this->resourceId = $resourceId;
         $this->status = $status;
@@ -97,6 +105,15 @@ class ImmutableSiteVersionEntity implements VersionEntityInterface
         $this->programmaticReason = $programmaticReason;
         $this->host = $locator->getHost();
         $this->date = $date;
+        if ($content instanceof SiteContent) {
+            $this->content = $content->toArrayForLongTermStorage();
+        } elseif ($content === null) {
+            $this->content = null;
+        } elseif (is_array($content)) {
+            $this->content = $content;
+        } else {
+            throw new \Exception('Content must be null, instance of SiteContent, or an array');
+        }
     }
 
     public function getLocator(): LocatorInterface
@@ -176,8 +193,11 @@ class ImmutableSiteVersionEntity implements VersionEntityInterface
         return $this->host;
     }
 
+    /**
+     * @return array | null
+     */
     public function getContentAsArray()
     {
-        return []; //Sites don't really have content so just return an empty array
+        return $this->content;
     }
 }
