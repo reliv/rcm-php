@@ -8,6 +8,7 @@ use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEventToSentence;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllSortedChangeLogEventsByDateRange;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogByDateRangeComposite;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogListController;
+use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogEventsByDateRange;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersion;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersionEntity;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
@@ -57,7 +58,14 @@ class ModuleConfig
                     ],
                     GetAllSortedChangeLogEventsByDateRange::class => [
                         'calls' => [
-                            ['addChild', [\Rcm\ImmutableHistory\Page\GetHumanReadibleChangeLogEventsByDateRange::class]]
+                            [
+                                'addChild',
+                                [\Rcm\ImmutableHistory\Page\GetHumanReadableChangeLogEventsByDateRange::class]
+                            ],
+                            [
+                                'addChild',
+                                ['Rcm\ImmutableHistory\Site\GetHumanReadableChangeLogEventsByDateRange']
+                            ]
                         ]
                     ],
                     ChangeLogListController::class => [
@@ -66,11 +74,18 @@ class ModuleConfig
                             IsAllowed::class
                         ]
                     ],
-                    \Rcm\ImmutableHistory\Page\GetHumanReadibleChangeLogEventsByDateRange::class => [
+                    \Rcm\ImmutableHistory\Page\GetHumanReadableChangeLogEventsByDateRange::class => [
                         'arguments' => [
                             EntityManager::class,
                             SiteIdToDomainName::class,
                             UserIdToUserFullName::class
+                        ]
+                    ],
+                    \Rcm\ImmutableHistory\Site\GetHumanReadableChangeLogEventsByDateRange::class => [
+                        'arguments' => [
+                            EntityManager::class,
+                            UserIdToUserFullName::class,
+                            ['literal' => ImmutableSiteVersionEntity::class]
                         ]
                     ],
                     PageContentFactory::class => [],

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\ImmutableHistory\Page;
+namespace Rcm\ImmutableHistory\HumanReadableChangeLog;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
@@ -11,26 +11,25 @@ use Rcm\ImmutableHistory\User\UserIdToUserFullName;
 use Rcm\ImmutableHistory\VersionActions;
 use Rcm\ImmutableHistory\VersionEntityInterface;
 
-class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChangeLogEventsByDateRangeInterface
+abstract class GetHumanReadableChangeLogEventsByDateRangeAbstract implements GetHumanReadableChangeLogEventsByDateRangeInterface
 {
     protected $entityManager;
-
-    protected $siteIdToDomainName;
     protected $userIdToFullName;
+    protected $versionEntityClassName;
 
     public function __construct(
         EntityManager $entityManger,
-        SiteIdToDomainName $siteIdToDomainName,
-        UserIdToUserFullName $userIdToUserFullName
+        UserIdToUserFullName $userIdToUserFullName,
+        string $versionEntityClassName
     ) {
         $this->entityManager = $entityManger;
-        $this->siteIdToDomainName = $siteIdToDomainName;
         $this->userIdToFullName = $userIdToUserFullName;
+        $this->versionEntityClassName = $versionEntityClassName;
     }
 
     public function __invoke(\DateTime $greaterThanDate, \DateTime $lessThanDate): array
     {
-        $doctrineRepo = $this->entityManager->getRepository(ImmutablePageVersionEntity::class);
+        $doctrineRepo = $this->entityManager->getRepository($this->versionEntityClassName);
 
         $criteria = new \Doctrine\Common\Collections\Criteria();
         $criteria->where($criteria->expr()->gt('date', $greaterThanDate));
@@ -49,17 +48,23 @@ class GetHumanReadibleChangeLogEventsByDateRange implements GetHumanReadableChan
                 $event->versionId = $version->getId();
                 $event->userId = $version->getUserId();
                 $event->userDescription = $this->userIdToFullName->__invoke($version->getUserId());
-                $event->resourceTypeDescription = 'page';
+                $event->resourceTypeDescription = $this->getResourceTypeDescription($version);
                 $event->actionDescription = VersionActions::DEFAULT_ACTION_DESCRIPTIONS[$version->getAction()];
                 $event->resourceLocatorArray = $version->getLocator()->toArray();
-                $event->resourceLocationDescription = $version->getPathname();
-                $event->parentCurrentLocationDescription = $this->siteIdToDomainName->__invoke($version->getSiteId());
+                $event->resourceLocationDescription = $this->getResourceLocationDescription($version);
+                $event->parentCurrentLocationDescription = $this->getParentCurrentLocationDescription($version);
 
                 return $event;
             },
             $versions
         );
     }
+
+    abstract protected function getResourceTypeDescription(VersionEntityInterface $version);
+
+    abstract protected function getParentCurrentLocationDescription(VersionEntityInterface $version);
+
+    abstract protected function getResourceLocationDescription(VersionEntityInterface $version);
 
     /**
      * This will throw an exectpion if it finds anything wrong with the $version entity given to it.
