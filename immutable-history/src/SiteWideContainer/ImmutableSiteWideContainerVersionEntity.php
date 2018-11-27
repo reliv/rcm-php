@@ -100,14 +100,14 @@ class ImmutableSiteWideContainerVersionEntity implements VersionEntityInterface
         $this->action = $action;
         $this->userId = $userId;
         $this->programmaticReason = $programmaticReason;
-        if ($content instanceof PageContent) {
+        if ($content instanceof ContainerContent) {
             $this->content = $content->toArrayForLongTermStorage();
         } elseif ($content === null) {
             $this->content = null;
         } elseif (is_array($content)) {
             $this->content = $content;
         } else {
-            throw new \Exception('Content must be null, instance of PageContent, or an array');
+            throw new \Exception('Content must be null, instance of ContainerContent, or an array');
         }
         $this->siteId = $locator->getSiteId();
         $this->name = $locator->getName();
