@@ -71,6 +71,16 @@ class ImmutableSiteVersionEntity implements VersionEntityInterface
      */
     protected $programmaticReason;
 
+    /**
+     * ImmutableSiteVersionEntity constructor.
+     * @param string $resourceId
+     * @param \DateTime $date
+     * @param string $status
+     * @param string $action
+     * @param string $userId
+     * @param string $programmaticReason
+     * @param SiteLocator $locator
+     */
     public function __construct(
         string $resourceId,
         \DateTime $date,

@@ -11,10 +11,7 @@ class ContainerContent implements ContentInterface
     protected $blockInstances;
 
     /**
-     * PageContent constructor.
-     * @param string $title
-     * @param string | null $description
-     * @param string | null $keywords
+     * ContainerContent constructor.
      * @param array $blockInstances
      */
     public function __construct(array $blockInstances)

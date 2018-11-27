@@ -85,6 +85,18 @@ class ImmutableSiteWideContainerVersionEntity implements VersionEntityInterface
      */
     protected $programmaticReason;
 
+    /**
+     * ImmutableSiteWideContainerVersionEntity constructor.
+     * @param string $resourceId
+     * @param \DateTime $date
+     * @param string $status
+     * @param string $action
+     * @param string $userId
+     * @param string $programmaticReason
+     * @param SiteWideContainerLocator $locator
+     * @param null $content
+     * @throws \Exception
+     */
     public function __construct(
         string $resourceId,
         \DateTime $date,
