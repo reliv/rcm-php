@@ -15,7 +15,7 @@ List of test cases in the current UI that MUST WORK:
 - [x] InventoryManager->createProduct (POST /api/resource/rcm-page/9547/copy)
 
 Not doing right now but may exist in future:
-- [ ] Page->Edit Permissions (doesn't currently change the page resource, changes ACL rules instead)
+- Page->Edit Permissions (doesn't currently change the page resource, changes ACL rules instead)
 
 # Sites
 List of test cases in the current UI that MUST WORK:
@@ -28,4 +28,6 @@ List of test cases in the current UI that MUST WORK:
 List of test cases in the current UI that MUST WORK:
 - [x] Page->Save (RcmAdmin\Controller\PageController)
 - [x] Site->ManageSites->duplicate (POST /api/admin/site-copy ApiAdminSitesCloneController)
-- [ ] Site->Create (POST /api/admin/manage-sites ApiAdminManageSitesController)
+
+Not doing right now but may exist in future:
+- Site->Create (POST /api/admin/manage-sites) (doesn't modify containers currently so no logging needed)
