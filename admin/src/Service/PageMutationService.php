@@ -21,6 +21,7 @@ use Rcm\ImmutableHistory\SiteWideContainer\SiteWideContainerLocator;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
+use RcmAdmin\Exception\CannotDuplicateAnUnpublishedPageException;
 use RcmUser\Service\RcmUserService;
 use RcmUser\User\Entity\UserInterface;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -395,7 +396,7 @@ class PageMutationService
         }
 
         if (empty($page->getPublishedRevision())) {
-            throw new \CannotDuplicateAnUnpublishedPageException();
+            throw new CannotDuplicateAnUnpublishedPageException();
         }
 
         /**
