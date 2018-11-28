@@ -132,7 +132,7 @@ class ImmutableSiteVersionEntity implements VersionEntityInterface
     /**
      * @return int
      */
-    public function getResourceId(): int
+    public function getResourceId(): string
     {
         return $this->resourceId;
     }
