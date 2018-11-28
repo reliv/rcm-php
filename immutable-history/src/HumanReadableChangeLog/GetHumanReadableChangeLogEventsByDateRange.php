@@ -9,6 +9,7 @@ use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogEventsB
 use Rcm\ImmutableHistory\HumanReadableVersionDescriber;
 use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
 use Rcm\ImmutableHistory\User\UserIdToUserFullName;
+use Rcm\ImmutableHistory\User\UserIdToUserFullNameInterface;
 use Rcm\ImmutableHistory\VersionActions;
 use Rcm\ImmutableHistory\VersionEntityInterface;
 
@@ -20,7 +21,7 @@ class GetHumanReadableChangeLogEventsByDateRange implements GetHumanReadableChan
 
     public function __construct(
         EntityManager $entityManger,
-        UserIdToUserFullName $userIdToUserFullName
+        UserIdToUserFullNameInterface $userIdToUserFullName
     ) {
         $this->entityManager = $entityManger;
         $this->userIdToFullName = $userIdToUserFullName;
