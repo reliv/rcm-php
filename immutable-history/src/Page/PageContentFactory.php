@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Rcm\ImmutableHistory\Page;
-
 
 use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;

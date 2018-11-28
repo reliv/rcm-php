@@ -103,8 +103,7 @@ class GetHumanReadableChangeLogEventsByDateRange implements GetHumanReadableChan
         $content = $version->getContentAsArray();
         $action = $version->getAction();
 
-        if (
-            ($content == null || (is_array($content) && count($content) === 0))
+        if (($content == null || (is_array($content) && count($content) === 0))
             && $action !== VersionActions::DEPUBLISH
         ) {
             throw new \Exception('Found missing content for an action type that should have content');

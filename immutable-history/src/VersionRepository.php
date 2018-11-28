@@ -303,9 +303,11 @@ class VersionRepository implements VersionRepositoryInterface
     protected function findActiveVersionByLocator(LocatorInterface $locator)
     {
         $criteria = new Criteria();
-        $criteria->where($criteria->expr()->in(
-            'status',
-            [VersionStatuses::PUBLISHED, VersionStatuses::DEPUBLISHED])
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [VersionStatuses::PUBLISHED, VersionStatuses::DEPUBLISHED]
+            )
         );
         foreach ($locator->toArray() as $column => $value) {
             $criteria->andWhere($criteria->expr()->eq($column, $value));

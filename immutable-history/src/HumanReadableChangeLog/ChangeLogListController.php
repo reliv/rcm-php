@@ -78,7 +78,8 @@ class ChangeLogListController implements MiddlewareInterface
 
         $description = 'Content change log events for ' . $days . ' days'
             . ' from ' . $greaterThanYear->format('c') . ' to ' . $lessThanYear->format('c')
-            . '. Columns with "CURRENT" refer to values that were present at the time this report was generated, NOT at the time the event took place.';
+            . '. Columns with "CURRENT" refer to values that were present at the time this report was generated'
+            . ', NOT at the time the event took place.';
 
         $contentType = isset($queryParams['content-type'])
             ? html_entity_decode($queryParams['content-type'])

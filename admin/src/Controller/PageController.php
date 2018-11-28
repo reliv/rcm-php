@@ -266,7 +266,6 @@ class PageController extends AbstractActionController
 
         //HTTP method check
         if (!$request->isPost()) {
-
             $response = new Response();
             $response->setStatusCode('405');
 

@@ -250,7 +250,6 @@ class PageMutationService
             ),
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
-
         );
 
         return $urlToPageFunction(
