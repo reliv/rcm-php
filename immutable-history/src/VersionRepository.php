@@ -65,7 +65,7 @@ class VersionRepository implements VersionRepositoryInterface
      * @param ContentInterface $content
      * @param $userId
      * @param $programmaticReason
-     * @param null $resourceIdOverride ONLY provide this if you're resource IDs come from an external system
+     * @param string|null $resourceIdOverride ONLY provide this if you're resource IDs come from an external system
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -82,7 +82,7 @@ class VersionRepository implements VersionRepositoryInterface
             //This resource already exists in the history system so use its existing resource id
             $resourceId = $previousPublishedVersion->getResourceId();
 
-            if ($resourceIdOverride !== $resourceId) {
+            if ($resourceIdOverride !== null && (string)$resourceIdOverride !== $resourceId) {
                 //Ensure history doesn't get corrupted by unexpected resource-id-to-locator relations
                 throw new \RuntimeException(
                     'Cannot override resource ID to a different value than the value found by the locator.'

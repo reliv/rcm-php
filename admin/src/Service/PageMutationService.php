@@ -394,6 +394,10 @@ class PageMutationService
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
+        if (empty($page->getPublishedRevision())) {
+            throw new \CannotDuplicateAnUnpublishedPageException();
+        }
+
         /**
          * Site | null
          */
