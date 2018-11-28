@@ -71,17 +71,17 @@ class GetHumanReadableChangeLogEventsByDateRange implements GetHumanReadableChan
 
         return array_map(
             function (VersionEntityInterface $version) use ($versionDescriber): ChangeLogEvent {
-                $event = new ChangeLogEvent();
-                $event->date = $version->getDate();
-                $event->versionId = $version->getId();
-                $event->userId = $version->getUserId();
-                $event->userDescription = $this->userIdToFullName->__invoke($version->getUserId());
-                $event->resourceTypeDescription = $versionDescriber->getResourceTypeDescription($version);
-                $event->actionDescription = VersionActions::DEFAULT_ACTION_DESCRIPTIONS[$version->getAction()];
-                $event->resourceLocatorArray = $version->getLocator()->toArray();
-                $event->resourceLocationDescription = $versionDescriber->getResourceLocationDescription($version);
-                $event->parentCurrentLocationDescription
-                    = $versionDescriber->getParentCurrentLocationDescription($version);
+                $event = new ChangeLogEvent(
+                    $version->getDate(),
+                    $version->getUserId(),
+                    $this->userIdToFullName->__invoke($version->getUserId()),
+                    VersionActions::DEFAULT_ACTION_DESCRIPTIONS[$version->getAction()],
+                    $version->getLocator()->toArray(),
+                    $versionDescriber->getResourceLocationDescription($version),
+                    $versionDescriber->getParentCurrentLocationDescription($version),
+                    $versionDescriber->getResourceTypeDescription($version),
+                    $version->getId()
+                );
 
                 return $event;
             },

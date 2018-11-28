@@ -32,10 +32,10 @@ class GetAllSortedChangeLogEventsByDateRange
 
         //Sort by "date desc", then by "versionId desc" incase events happened in the same second
         usort($allEvents, function ($a, $b) {
-            if ($a->date == $b->date) { //Do not change this to "==="
-                return $a->versionId < $b->versionId;
+            if ($a->getDate() == $b->getDate()) { //Do not change this to "==="
+                return $a->getVersionId() < $b->getVersionId();
             } else {
-                return $a->date < $b->date;
+                return $a->getDate() < $b->getDate();
             }
         });
 

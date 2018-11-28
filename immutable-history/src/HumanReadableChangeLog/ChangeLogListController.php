@@ -138,15 +138,15 @@ class ChangeLogListController implements MiddlewareInterface
             array_map(
                 function (ChangeLogEvent $event) {
                     return [
-                        $event->date->format('c'),
-                        $event->userId,
-                        $event->userDescription,
-                        $event->resourceTypeDescription,
-                        $event->parentCurrentLocationDescription,
-                        $event->resourceLocationDescription,
-                        $event->actionDescription,
-                        json_encode($event->resourceLocatorArray),
-                        $event->versionId
+                        $event->getDate()->format('c'),
+                        $event->getUserId(),
+                        $event->getUserDescription(),
+                        $event->getResourceTypeDescription(),
+                        $event->getParentCurrentLocationDescription(),
+                        $event->getResourceLocationDescription(),
+                        $event->getActionDescription(),
+                        json_encode($event->getResourceLocatorArray()),
+                        $event->getVersionId()
                     ];
                 },
                 $events
