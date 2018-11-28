@@ -60,17 +60,38 @@ class VersionRepository implements VersionRepositoryInterface
         $this->entityManger->flush($newVersion);
     }
 
+    /**
+     * @param LocatorInterface $locator
+     * @param ContentInterface $content
+     * @param $userId
+     * @param $programmaticReason
+     * @param null $resourceIdOverride ONLY provide this if you're resource IDs come from an external system
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function publishFromNothing(
         LocatorInterface $locator,
         ContentInterface $content,
         $userId,
-        $programmaticReason
+        $programmaticReason,
+        $resourceIdOverride = null
     ) {
         $previousPublishedVersion = $this->findPublishedVersionByLocator($locator);
 
         if ($previousPublishedVersion !== null) {
             //This resource already exists in the history system so use its existing resource id
             $resourceId = $previousPublishedVersion->getResourceId();
+
+            if ($resourceIdOverride !== $resourceId) {
+                //Ensure history doesn't get corrupted by unexpected resource-id-to-locator relations
+                throw new \RuntimeException(
+                    'Cannot override resource ID to a different value than the value found by the locator.'
+                    . json_encode(['resourceIdFromLocator' => $resourceId, 'resourceIdOverride' => $resourceIdOverride])
+                );
+            }
+        } elseif ($resourceIdOverride !== null) {
+            //Resource ID couldn't be found by locator and an override ID was given so use it
+            $resourceId = $resourceIdOverride;
         } else {
             //This resource doesn't exist in the history system yet so make a new resource id for it
             $resourceId = $this->generateResourceId->__invoke();
@@ -282,9 +303,11 @@ class VersionRepository implements VersionRepositoryInterface
     protected function findActiveVersionByLocator(LocatorInterface $locator)
     {
         $criteria = new Criteria();
-        $criteria->where($criteria->expr()->in(
-            'status',
-            [VersionStatuses::PUBLISHED, VersionStatuses::DEPUBLISHED])
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [VersionStatuses::PUBLISHED, VersionStatuses::DEPUBLISHED]
+            )
         );
         foreach ($locator->toArray() as $column => $value) {
             $criteria->andWhere($criteria->expr()->eq($column, $value));

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Rcm\ImmutableHistory\Acl;
-
 
 class AclConstants
 {

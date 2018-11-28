@@ -4,6 +4,7 @@
 namespace RcmAdmin\Service;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\Entity\Container;
 use Rcm\Entity\Revision;
 use Rcm\Acl\ResourceName;
 use Rcm\Entity\Page;
@@ -15,6 +16,8 @@ use Rcm\ImmutableHistory\Page\PageContent;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\PageLocator;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
+use Rcm\ImmutableHistory\SiteWideContainer\ContainerContent;
+use Rcm\ImmutableHistory\SiteWideContainer\SiteWideContainerLocator;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
@@ -62,12 +65,14 @@ class PageMutationService
     protected $rcmPageNameToPathname;
 
     protected $entityManager;
+    protected $immutableSiteWideContainerRepo;
 
     public function __construct(
         Site $currentSite,
         RcmUserService $rcmUserService,
         EntityManager $entityManager,
         VersionRepositoryInterface $immuteblePageVersionRepo,
+        VersionRepositoryInterface $immutableSiteWideContainerRepo,
         PageContentFactory $immutablePageContentFactory,
         RcmPageNameToPathname $rcmPageNameToPathname
     ) {
@@ -77,6 +82,7 @@ class PageMutationService
         $this->revisionRepo = $entityManager->getRepository(Revision::class);
         $this->rcmUserService = $rcmUserService;
         $this->immuteblePageVersionRepo = $immuteblePageVersionRepo;
+        $this->immutableSiteWideContainerRepo = $immutableSiteWideContainerRepo;
         $this->immutablePageContentFactory = $immutablePageContentFactory;
         $this->rcmPageNameToPathname = $rcmPageNameToPathname;
 
@@ -244,7 +250,6 @@ class PageMutationService
             ),
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
-
         );
 
         return $urlToPageFunction(
@@ -274,7 +279,7 @@ class PageMutationService
 
         $this->prepSaveData($data);
 
-        $resultRevisionId = $this->pageRepo->savePage(
+        $result = $this->pageRepo->savePage(
             $this->currentSite,
             $pageName,
             $originalRevisionId,
@@ -288,9 +293,10 @@ class PageMutationService
         /**
          * If the pageRepo deterimins there was no change, it saves nothing a returns and empty $resultRevisionId.
          */
-        $savedANewVersion = !empty($resultRevisionId);
+        $savedANewVersion = !empty($result['newPageRevisionId']);
 
         if ($savedANewVersion) {
+            $resultPageRevisionId = $result['newPageRevisionId'];
             /**
              * @var Page
              */
@@ -309,7 +315,23 @@ class PageMutationService
                     $page->getPageTitle(),
                     $page->getDescription(),
                     $page->getKeywords(),
-                    $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
+                    $this->revisionRepo->find($resultPageRevisionId)->getPluginWrappers()->toArray()
+                ),
+                $user->getId(),
+                __CLASS__ . '::' . __FUNCTION__
+            );
+        }
+
+        /**
+         * @var $container Container
+         */
+        foreach ($result['modifiedSiteWideContainers'] as $revisionId => $container) {
+            $this->immutableSiteWideContainerRepo->publishFromNothing(
+                new SiteWideContainerLocator($container->getSiteId(), $container->getName()),
+                new ContainerContent(
+                    $this->immutablePageContentFactory->pluginWrappersToFlatBlockInstances(
+                        $this->revisionRepo->find($revisionId)->getPluginWrappers()->toArray()
+                    )
                 ),
                 $user->getId(),
                 __CLASS__ . '::' . __FUNCTION__
@@ -320,7 +342,7 @@ class PageMutationService
             $return['redirect'] = $urlToPageFunction(
                 $pageName,
                 $pageType,
-                $resultRevisionId
+                $resultPageRevisionId
             );
         } else {
             $return['redirect'] = $urlToPageFunction(

@@ -8,12 +8,16 @@ use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEventToSentence;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllSortedChangeLogEventsByDateRange;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogByDateRangeComposite;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogListController;
+use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogEventsByDateRange;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersion;
 use Rcm\ImmutableHistory\Page\ImmutablePageVersionEntity;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\Page\RcmPluginWrappersToRcmImmutablePluginInstances;
+use Rcm\ImmutableHistory\Site\HumanReadableDescriber;
+use Rcm\ImmutableHistory\Site\ImmutableSiteVersionEntity;
 use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
+use Rcm\ImmutableHistory\SiteWideContainer\ImmutableSiteWideContainerVersionEntity;
 use Rcm\ImmutableHistory\User\UserIdToUserFullName;
 use Rcm\ImmutableHistory\ResourceId\GenerateResourceIdInterface;
 use Rcm\ImmutableHistory\ResourceId\GenerateUuidV4;
@@ -26,10 +30,26 @@ class ModuleConfig
         return [
             'dependencies' => [
                 'config_factories' => [
+                    'Rcm\ImmutableHistory\SiteVersionRepo' => [
+                        'class' => VersionRepository::class,
+                        'arguments' => [
+                            ['literal' => ImmutableSiteVersionEntity::class],
+                            \Doctrine\ORM\EntityManager::class,
+                            GenerateResourceIdInterface::class
+                        ]
+                    ],
                     'Rcm\ImmutableHistory\PageVersionRepo' => [
                         'class' => VersionRepository::class,
                         'arguments' => [
                             ['literal' => ImmutablePageVersionEntity::class],
+                            \Doctrine\ORM\EntityManager::class,
+                            GenerateResourceIdInterface::class
+                        ]
+                    ],
+                    'Rcm\ImmutableHistory\SiteWideContainerVersionRepo' => [
+                        'class' => VersionRepository::class,
+                        'arguments' => [
+                            ['literal' => ImmutableSiteWideContainerVersionEntity::class],
                             \Doctrine\ORM\EntityManager::class,
                             GenerateResourceIdInterface::class
                         ]
@@ -39,7 +59,10 @@ class ModuleConfig
                     ],
                     GetAllSortedChangeLogEventsByDateRange::class => [
                         'calls' => [
-                            ['addChild', [\Rcm\ImmutableHistory\Page\GetHumanReadibleChangeLogEventsByDateRange::class]]
+                            [
+                                'addChild',
+                                [GetHumanReadableChangeLogEventsByDateRange::class]
+                            ],
                         ]
                     ],
                     ChangeLogListController::class => [
@@ -48,12 +71,41 @@ class ModuleConfig
                             IsAllowed::class
                         ]
                     ],
-                    \Rcm\ImmutableHistory\Page\GetHumanReadibleChangeLogEventsByDateRange::class => [
+                    GetHumanReadableChangeLogEventsByDateRange::class => [
                         'arguments' => [
                             EntityManager::class,
-                            SiteIdToDomainName::class,
                             UserIdToUserFullName::class
+                        ],
+                        'calls' => [
+                            [
+                                'addVersionType',
+                                [
+                                    ['literal' => ImmutableSiteVersionEntity::class],
+                                    \Rcm\ImmutableHistory\Site\HumanReadableDescriber::class
+                                ]
+                            ],
+                            [
+                                'addVersionType',
+                                [
+                                    ['literal' => ImmutablePageVersionEntity::class],
+                                    \Rcm\ImmutableHistory\Page\HumanReadableDescriber::class
+                                ]
+                            ],
+                            [
+                                'addVersionType',
+                                [
+                                    ['literal' => ImmutableSiteWideContainerVersionEntity::class],
+                                    \Rcm\ImmutableHistory\SiteWideContainer\HumanReadableDescriber::class
+                                ]
+                            ],
                         ]
+                    ],
+                    \Rcm\ImmutableHistory\Site\HumanReadableDescriber::class => [],
+                    \Rcm\ImmutableHistory\Page\HumanReadableDescriber::class=>[
+                        'arguments'=>[SiteIdToDomainName::class]
+                    ],
+                    \Rcm\ImmutableHistory\SiteWideContainer\HumanReadableDescriber::class=>[
+                        'arguments'=>[SiteIdToDomainName::class]
                     ],
                     PageContentFactory::class => [],
                     UserIdToUserFullName::class => [],
@@ -76,6 +128,13 @@ class ModuleConfig
             ],
             'doctrine' => [
                 'driver' => [
+                    'Rcm\ImmutableHistory\Site' => [
+                        'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
+                        'cache' => 'array',
+                        'paths' => [
+                            __DIR__ . '/Site'
+                        ]
+                    ],
                     'Rcm\ImmutableHistory\Page' => [
                         'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
                         'cache' => 'array',
@@ -83,9 +142,18 @@ class ModuleConfig
                             __DIR__ . '/Page'
                         ]
                     ],
+                    'Rcm\ImmutableHistory\SiteWideContainer' => [
+                        'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
+                        'cache' => 'array',
+                        'paths' => [
+                            __DIR__ . '/SiteWideContainer'
+                        ]
+                    ],
                     'orm_default' => [
                         'drivers' => [
-                            'Rcm\ImmutableHistory\Page' => 'Rcm\ImmutableHistory\Page'
+                            'Rcm\ImmutableHistory\Site' => 'Rcm\ImmutableHistory\Site',
+                            'Rcm\ImmutableHistory\Page' => 'Rcm\ImmutableHistory\Page',
+                            'Rcm\ImmutableHistory\SiteWideContainer' => 'Rcm\ImmutableHistory\SiteWideContainer'
                         ]
                     ]
                 ],

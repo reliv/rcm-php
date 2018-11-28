@@ -2,11 +2,17 @@
 
 namespace Rcm\ImmutableHistory\User;
 
-class UserIdToUserFullName
+/**
+ * This class provides default behavor. Over ride this class/service in your app outside RCM to lookup
+ * user ids from your system
+ *
+ * Class UserIdToUserFullName
+ * @package Rcm\ImmutableHistory\User
+ */
+class UserIdToUserFullName implements UserIdToUserFullNameInterface
 {
-    public function __invoke(string $siteId): string
+    public function __invoke(string $userId): string
     {
-        //In the future this can be implmented to look up the actual user full name. Some kind of caching will be needed
         return '_NOT_IMPLEMENTED_';
     }
 }

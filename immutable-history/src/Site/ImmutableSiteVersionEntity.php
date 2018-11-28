@@ -1,6 +1,6 @@
 <?php
 
-namespace Rcm\ImmutableHistory\Page;
+namespace Rcm\ImmutableHistory\Site;
 
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\ImmutableHistory\LocatorInterface;
@@ -8,9 +8,9 @@ use Rcm\ImmutableHistory\VersionEntityInterface;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="rcm_immutable_page_version")
+ * @ORM\Table(name="rcm_immutable_site_version")
  */
-class ImmutablePageVersionEntity implements VersionEntityInterface
+class ImmutableSiteVersionEntity implements VersionEntityInterface
 {
     /**
      * @var int Auto-Incremented Primary Key
@@ -29,18 +29,11 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
     protected $date;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer")
-     */
-    protected $siteId;
-
-    /**
      * @var string
      *
      * @ORM\Column(type="string")
      */
-    protected $pathname;
+    protected $host;
 
     /**
      * @var array
@@ -86,15 +79,14 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
     protected $programmaticReason;
 
     /**
-     * ImmutablePageVersion constructor.
+     * ImmutableSiteVersionEntity constructor.
      * @param string $resourceId
      * @param \DateTime $date
      * @param string $status
      * @param string $action
      * @param string $userId
      * @param string $programmaticReason
-     * @param PageLocator $locator
-     * @param ContentInterface | null $content
+     * @param SiteLocator $locator
      */
     public function __construct(
         string $resourceId,
@@ -103,7 +95,7 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
         string $action,
         string $userId,
         string $programmaticReason,
-        PageLocator $locator,
+        SiteLocator $locator,
         $content = null
     ) {
         $this->resourceId = $resourceId;
@@ -111,23 +103,22 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
         $this->action = $action;
         $this->userId = $userId;
         $this->programmaticReason = $programmaticReason;
-        if ($content instanceof PageContent) {
+        $this->host = $locator->getHost();
+        $this->date = $date;
+        if ($content instanceof SiteContent) {
             $this->content = $content->toArrayForLongTermStorage();
         } elseif ($content === null) {
             $this->content = null;
         } elseif (is_array($content)) {
             $this->content = $content;
         } else {
-            throw new \Exception('Content must be null, instance of PageContent, or an array');
+            throw new \Exception('Content must be null, instance of SiteContent, or an array');
         }
-        $this->siteId = $locator->getSiteId();
-        $this->pathname = $locator->getPathname();
-        $this->date = $date;
     }
 
     public function getLocator(): LocatorInterface
     {
-        return new PageLocator($this->siteId, $this->pathname);
+        return new SiteLocator($this->host);
     }
 
     /**
@@ -197,9 +188,9 @@ class ImmutablePageVersionEntity implements VersionEntityInterface
     /**
      * @return string
      */
-    public function getPathname(): string
+    public function getHost(): string
     {
-        return $this->pathname;
+        return $this->host;
     }
 
     /**

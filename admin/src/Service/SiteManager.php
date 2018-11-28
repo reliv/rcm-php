@@ -9,6 +9,12 @@ use Rcm\Entity\Domain;
 use Rcm\Entity\Language;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
+use Rcm\ImmutableHistory\Page\PageContentFactory;
+use Rcm\ImmutableHistory\Site\SiteContent;
+use Rcm\ImmutableHistory\Site\SiteLocator;
+use Rcm\ImmutableHistory\SiteWideContainer\ContainerContent;
+use Rcm\ImmutableHistory\SiteWideContainer\SiteWideContainerLocator;
+use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\Tracking\Model\Tracking;
@@ -37,6 +43,12 @@ class SiteManager
 
     protected $pageMutationService;
 
+    protected $siteVersionRepo;
+
+    protected $immutableSiteWideContainerRepo;
+
+    protected $pageContentFactory;
+
     /**
      * SiteManager constructor.
      *
@@ -48,12 +60,18 @@ class SiteManager
         $config,
         EntityManager $entityManager,
         RcmUserService $rcmUserService,
-        PageMutationService $pageMutationService
+        PageMutationService $pageMutationService,
+        VersionRepositoryInterface $siteVersionRepo,
+        VersionRepositoryInterface $immutableSiteWideContainerRepo,
+        PageContentFactory $pageContentFactory
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->rcmUserService = $rcmUserService;
         $this->pageMutationService = $pageMutationService;
+        $this->siteVersionRepo = $siteVersionRepo;
+        $this->immutableSiteWideContainerRepo = $immutableSiteWideContainerRepo;
+        $this->pageContentFactory = $pageContentFactory;
     }
 
     /**
@@ -98,6 +116,14 @@ class SiteManager
 
         $entityManager->persist($newSite);
         $entityManager->flush($newSite);
+
+        $this->siteVersionRepo->publishFromNothing(
+            new SiteLocator($newSite->getDomainName()),
+            $this->siteToImmutableSiteContent($newSite),
+            $this->getCurrentUserTracking()->getId(),
+            __CLASS__ . '::' . __FUNCTION__,
+            $newSite->getSiteId()
+        );
 
         foreach ($this->getDefaultSitePageSettings($user) as $name => $pageData) {
             $createdPage = $this->pageMutationService->createNewPage(
@@ -150,9 +176,28 @@ class SiteManager
 
         $copySite->populate($data);
 
+        $this->siteVersionRepo->publishFromNothing(
+            new SiteLocator($copySite->getDomainName()),
+            $this->siteToImmutableSiteContent($copySite),
+            $this->getCurrentUserTracking()->getId(),
+            __CLASS__ . '::' . __FUNCTION__,
+            $copySite->getSiteId()
+        );
+
         return $copySite;
     }
 
+    public function siteToImmutableSiteContent(Site $site): SiteContent
+    {
+        return new SiteContent(
+            $site->getStatus(),
+            $site->getCountryIso3(),
+            $site->getLanguageId(),
+            $site->getTheme(),
+            $site->getSiteTitle(),
+            $site->getFavIcon()
+        );
+    }
 
     /**
      * getDefaultSiteSettings
@@ -284,8 +329,10 @@ class SiteManager
         $copySite->setSiteId(null);
         $copySite->setDomain($domain);
 
-        // NOTE: site::newInstance() does page copy too
+//        $entityManager->flush($domain);
+//        $entityManager->flush($copySite);
 
+        // NOTE: site::newInstance() does page copy too
 
         $containers = $copySite->getContainers();
         $containerRevisions = [];
@@ -297,10 +344,24 @@ class SiteManager
             $entityManager->persist($container);
             $entityManager->persist($containerRevision);
         }
+
         $entityManager->flush($containers->toArray());
         $entityManager->flush($containerRevisions);
         $entityManager->flush($domain);
         $entityManager->flush($copySite);
+
+        foreach ($containers as $container) {
+            $this->immutableSiteWideContainerRepo->duplicateBc(
+                new SiteWideContainerLocator($existingSite->getSiteId(), $container->getName()),
+                new SiteWideContainerLocator($copySite->getSiteId(), $container->getName()),
+                new ContainerContent($this->pageContentFactory->pluginWrappersToFlatBlockInstances(
+                    $container->getPublishedRevision()->getPluginWrappers()->toArray()
+                )),
+                $this->getCurrentUserTracking()->getId(),
+                __CLASS__ . '::' . __FUNCTION__
+            );
+        }
+
 
         /** @var Page $page */
         foreach ($existingSite->getPages() as $page) {

@@ -814,7 +814,7 @@ class Page extends ContainerAbstract
      * @param string $modifiedReason
      * @param string $author
      *
-     * @return int|null
+     * @return array
      */
     public function savePage(
         SiteEntity $siteEntity,
@@ -825,10 +825,12 @@ class Page extends ContainerAbstract
         $modifiedByUserId,
         $modifiedReason = Tracking::UNKNOWN_REASON,
         $author = Tracking::UNKNOWN_AUTHOR
-    ) {
+    ): array {
         if (empty($pageType)) {
             $pageType = PageTypes::NORMAL;
         }
+
+        $modifiedSiteWideContainers = [];
 
         if (!empty($saveData['containers'])) {
             foreach ($saveData['containers'] as $containerName => $containerData) {
@@ -849,26 +851,38 @@ class Page extends ContainerAbstract
                     );
                 }
 
-                $this->saveContainer(
+                $resultRevisionId = $this->saveContainer(
                     $container,
                     $containerData,
                     $modifiedByUserId,
                     $modifiedReason,
                     $author
                 );
+
+                /**
+                 * If it deterimins there was no change, it saves nothing a returns an empty $resultRevisionId.
+                 */
+                $savedANewVersion = !empty($resultRevisionId);
+
+                if ($savedANewVersion) {
+                    $modifiedSiteWideContainers[$resultRevisionId] = $container;
+                }
             }
         }
 
         $page = $this->getPageByName($siteEntity, $pageName, $pageType);
 
-        return $this->saveContainer(
-            $page,
-            $saveData['pageContainer'],
-            $modifiedByUserId,
-            $modifiedReason,
-            $author,
-            $pageRevision
-        );
+        return [
+            'newPageRevisionId' => $this->saveContainer(
+                $page,
+                $saveData['pageContainer'],
+                $modifiedByUserId,
+                $modifiedReason,
+                $author,
+                $pageRevision
+            ),
+            'modifiedSiteWideContainers' => $modifiedSiteWideContainers
+        ];
     }
 
     /**

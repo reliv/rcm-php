@@ -78,7 +78,8 @@ class ChangeLogListController implements MiddlewareInterface
 
         $description = 'Content change log events for ' . $days . ' days'
             . ' from ' . $greaterThanYear->format('c') . ' to ' . $lessThanYear->format('c')
-            . '. Columns with "CURRENT" refer to values that were present at the time this report was generated, NOT at the time the event took place.';
+            . '. Columns with "CURRENT" refer to values that were present at the time this report was generated'
+            . ', NOT at the time the event took place.';
 
         $contentType = isset($queryParams['content-type'])
             ? html_entity_decode($queryParams['content-type'])
@@ -138,15 +139,15 @@ class ChangeLogListController implements MiddlewareInterface
             array_map(
                 function (ChangeLogEvent $event) {
                     return [
-                        $event->date->format('c'),
-                        $event->userId,
-                        $event->userDescription,
-                        $event->resourceTypeDescription,
-                        $event->parentCurrentLocationDescription,
-                        $event->resourceLocationDescription,
-                        $event->actionDescription,
-                        json_encode($event->resourceLocatorArray),
-                        $event->versionId
+                        $event->getDate()->format('c'),
+                        $event->getUserId(),
+                        $event->getUserDescription(),
+                        $event->getResourceTypeDescription(),
+                        $event->getParentCurrentLocationDescription(),
+                        $event->getResourceLocationDescription(),
+                        $event->getActionDescription(),
+                        json_encode($event->getResourceLocatorArray()),
+                        $event->getVersionId()
                     ];
                 },
                 $events

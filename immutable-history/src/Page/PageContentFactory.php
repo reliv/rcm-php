@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Rcm\ImmutableHistory\Page;
-
 
 use Rcm\Entity\PluginInstance;
 use Rcm\Entity\PluginWrapper;
@@ -17,6 +15,16 @@ class PageContentFactory
      * @return PageContent
      */
     public function __invoke(string $title, $description, $keywords, array $pluginWrappers)
+    {
+        return new PageContent(
+            $title,
+            $description,
+            $keywords,
+            $this->pluginWrappersToFlatBlockInstances($pluginWrappers)
+        );
+    }
+
+    public function pluginWrappersToFlatBlockInstances(array $pluginWrappers)
     {
         $pluginWrapperToImmutableFlatBlockInstanceData = function (PluginWrapper $wrapper) {
             /**
@@ -34,11 +42,6 @@ class PageContentFactory
             ];
         };
 
-        return new PageContent(
-            $title,
-            $description,
-            $keywords,
-            array_map($pluginWrapperToImmutableFlatBlockInstanceData, $pluginWrappers)
-        );
+        return array_map($pluginWrapperToImmutableFlatBlockInstanceData, $pluginWrappers);
     }
 }

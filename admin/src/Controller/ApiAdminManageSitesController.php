@@ -8,6 +8,8 @@ use Interop\Container\ContainerInterface;
 use Rcm\Acl\ResourceName;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
+use Rcm\ImmutableHistory\Site\SiteLocator;
+use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\InputFilter\SiteInputFilter;
@@ -32,12 +34,18 @@ use Zend\View\Model\JsonModel;
 class ApiAdminManageSitesController extends ApiAdminBaseController
 {
     /**
+     * @var VersionRepositoryInterface
+     */
+    protected $siteVersionRepo;
+
+    /**
      * @param ContainerInterface $serviceLocator
      */
     public function __construct(
         $serviceLocator
     ) {
         $this->serviceLocator = $serviceLocator;
+        $this->siteVersionRepo = $serviceLocator->get('Rcm\ImmutableHistory\SiteVersionRepo');
     }
 
     /**
@@ -292,6 +300,14 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
 
         $entityManager->persist($site);
         $entityManager->flush($site);
+
+        $this->siteVersionRepo->publishFromNothing(
+            new SiteLocator($site->getDomainName()),
+            $this->getSiteManager()->siteToImmutableSiteContent($site),
+            $this->getCurrentUserTracking()->getId(),
+            __CLASS__ . '::' . __FUNCTION__,
+            $site->getSiteId()
+        );
 
         return new JsonModel($site);
     }

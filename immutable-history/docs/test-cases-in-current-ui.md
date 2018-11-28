@@ -11,8 +11,23 @@ List of test cases in the current UI that MUST WORK:
 - [x] Site->CopyPages->withPageAlreadyInHistory (POST /api/admin/sites/12486/page-copy/5969)
 - [x] Site->CopyPages->withPageNotAlreadyInHistory (POST /api/admin/sites/12486/page-copy/5969)
 - [x] Site->ManageSites->duplicate (POST /api/admin/site-copy ApiAdminSitesCloneController)
-- [x] Site->Create? (POST /api/admin/manage-sites ApiAdminManageSitesController)
+- [x] Site->Create (POST /api/admin/manage-sites ApiAdminManageSitesController)
 - [x] InventoryManager->createProduct (POST /api/resource/rcm-page/9547/copy)
 
 Not doing right now but may exist in future:
-- [ ] Page->Edit Permissions (doesn't currently change the page resource, changes ACL rules instead)
+- Page->Edit Permissions (doesn't currently change the page resource, changes ACL rules instead)
+
+# Sites
+List of test cases in the current UI that MUST WORK:
+- [x] Site->ManageSites->DisableSite (PUT /api/admin/manage-sites/6 ApiAdminManageSitesController)
+- [x] Site->ManageSites->EnableSite (PUT /api/admin/manage-sites/6 ApiAdminManageSitesController)
+- [x] Site->ManageSites->DuplicateSite (POST /api/admin/site-copy ApiAdminSitesCloneController)
+- [x] Site->CreateSite
+
+# Containers
+List of test cases in the current UI that MUST WORK:
+- [x] Page->Save (RcmAdmin\Controller\PageController)
+- [x] Site->ManageSites->duplicate (POST /api/admin/site-copy ApiAdminSitesCloneController)
+
+Not doing right now but may exist in future:
+- Site->Create (POST /api/admin/manage-sites) (doesn't modify containers currently so no logging needed)
