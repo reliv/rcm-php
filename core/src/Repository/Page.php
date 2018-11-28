@@ -860,7 +860,7 @@ class Page extends ContainerAbstract
                 );
 
                 /**
-                 * If it deterimins there was no change, it saves nothing a returns and empty $resultRevisionId.
+                 * If it deterimins there was no change, it saves nothing a returns an empty $resultRevisionId.
                  */
                 $savedANewVersion = !empty($resultRevisionId);
 

@@ -14,6 +14,7 @@ use Rcm\ImmutableHistory\Page\ImmutablePageVersionEntity;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\Page\RcmPluginWrappersToRcmImmutablePluginInstances;
+use Rcm\ImmutableHistory\Site\HumanReadableDescriber;
 use Rcm\ImmutableHistory\Site\ImmutableSiteVersionEntity;
 use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
 use Rcm\ImmutableHistory\SiteWideContainer\ImmutableSiteWideContainerVersionEntity;
@@ -60,16 +61,8 @@ class ModuleConfig
                         'calls' => [
                             [
                                 'addChild',
-                                [\Rcm\ImmutableHistory\Page\GetHumanReadableChangeLogEventsByDateRange::class]
+                                [GetHumanReadableChangeLogEventsByDateRange::class]
                             ],
-                            [
-                                'addChild',
-                                [\Rcm\ImmutableHistory\Site\GetHumanReadableChangeLogEventsByDateRange::class]
-                            ],
-                            [
-                                'addChild',
-                                [\Rcm\ImmutableHistory\SiteWideContainer\GetHumanReadableChangeLogEventsByDateRange::class]
-                            ]
                         ]
                     ],
                     ChangeLogListController::class => [
@@ -78,28 +71,41 @@ class ModuleConfig
                             IsAllowed::class
                         ]
                     ],
-                    \Rcm\ImmutableHistory\Site\GetHumanReadableChangeLogEventsByDateRange::class => [
+                    GetHumanReadableChangeLogEventsByDateRange::class => [
                         'arguments' => [
                             EntityManager::class,
-                            UserIdToUserFullName::class,
-                            ['literal' => ImmutableSiteVersionEntity::class]
+                            UserIdToUserFullName::class
+                        ],
+                        'calls' => [
+                            [
+                                'addVersionType',
+                                [
+                                    ['literal' => ImmutableSiteVersionEntity::class],
+                                    \Rcm\ImmutableHistory\Site\HumanReadableDescriber::class
+                                ]
+                            ],
+                            [
+                                'addVersionType',
+                                [
+                                    ['literal' => ImmutablePageVersionEntity::class],
+                                    \Rcm\ImmutableHistory\Page\HumanReadableDescriber::class
+                                ]
+                            ],
+                            [
+                                'addVersionType',
+                                [
+                                    ['literal' => ImmutableSiteWideContainerVersionEntity::class],
+                                    \Rcm\ImmutableHistory\SiteWideContainer\HumanReadableDescriber::class
+                                ]
+                            ],
                         ]
                     ],
-                    \Rcm\ImmutableHistory\Page\GetHumanReadableChangeLogEventsByDateRange::class => [
-                        'arguments' => [
-                            EntityManager::class,
-                            SiteIdToDomainName::class,
-                            ['literal' => ImmutablePageVersionEntity::class],
-                            UserIdToUserFullName::class
-                        ]
+                    \Rcm\ImmutableHistory\Site\HumanReadableDescriber::class => [],
+                    \Rcm\ImmutableHistory\Page\HumanReadableDescriber::class=>[
+                        'arguments'=>[SiteIdToDomainName::class]
                     ],
-                    \Rcm\ImmutableHistory\SiteWideContainer\GetHumanReadableChangeLogEventsByDateRange::class => [
-                        'arguments' => [
-                            EntityManager::class,
-                            SiteIdToDomainName::class,
-                            ['literal' => ImmutableSiteWideContainerVersionEntity::class],
-                            UserIdToUserFullName::class
-                        ]
+                    \Rcm\ImmutableHistory\SiteWideContainer\HumanReadableDescriber::class=>[
+                        'arguments'=>[SiteIdToDomainName::class]
                     ],
                     PageContentFactory::class => [],
                     UserIdToUserFullName::class => [],

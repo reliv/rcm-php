@@ -1,47 +1,40 @@
 <?php
 
-namespace Rcm\ImmutableHistory\Page;
+namespace Rcm\ImmutableHistory\SiteWideContainer;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEvent;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogEventsByDateRangeAbstract;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogEventsByDateRangeInterface;
+use Rcm\ImmutableHistory\HumanReadableVersionDescriber;
 use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
 use Rcm\ImmutableHistory\User\UserIdToUserFullName;
 use Rcm\ImmutableHistory\VersionActions;
 use Rcm\ImmutableHistory\VersionEntityInterface;
 
-class GetHumanReadableChangeLogEventsByDateRange extends GetHumanReadableChangeLogEventsByDateRangeAbstract
+class HumanReadableDescriber implements HumanReadableVersionDescriber
 {
     protected $siteIdToDomainName;
 
     public function __construct(
-        EntityManager $entityManger,
-        SiteIdToDomainName $siteIdToDomainName,
-        string $versionEntityClassName,
-        UserIdToUserFullName $userIdToUserFullName
+        SiteIdToDomainName $siteIdToDomainName
     ) {
-        parent::__construct(
-            $entityManger,
-            $userIdToUserFullName,
-            $versionEntityClassName
-        );
         $this->siteIdToDomainName = $siteIdToDomainName;
     }
 
-    protected function getResourceTypeDescription(VersionEntityInterface $version)
+    public function getResourceTypeDescription(VersionEntityInterface $version): string
     {
-        return 'page';
+        return 'container';
     }
 
-    protected function getParentCurrentLocationDescription(VersionEntityInterface $version)
+    public function getParentCurrentLocationDescription(VersionEntityInterface $version): string
     {
         return $this->siteIdToDomainName->__invoke($version->getSiteId());
     }
 
-    protected function getResourceLocationDescription(VersionEntityInterface $version)
+    public function getResourceLocationDescription(VersionEntityInterface $version): string
     {
-        return $version->getPathName();
+        return $version->getName();
     }
 }

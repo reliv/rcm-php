@@ -6,30 +6,58 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEvent;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogEventsByDateRangeInterface;
+use Rcm\ImmutableHistory\HumanReadableVersionDescriber;
 use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
 use Rcm\ImmutableHistory\User\UserIdToUserFullName;
 use Rcm\ImmutableHistory\VersionActions;
 use Rcm\ImmutableHistory\VersionEntityInterface;
 
-abstract class GetHumanReadableChangeLogEventsByDateRangeAbstract implements GetHumanReadableChangeLogEventsByDateRangeInterface
+class GetHumanReadableChangeLogEventsByDateRange implements GetHumanReadableChangeLogEventsByDateRangeInterface
 {
     protected $entityManager;
     protected $userIdToFullName;
-    protected $versionEntityClassName;
+    protected $vesionTypes = [];
 
     public function __construct(
         EntityManager $entityManger,
-        UserIdToUserFullName $userIdToUserFullName,
-        string $versionEntityClassName
+        UserIdToUserFullName $userIdToUserFullName
     ) {
         $this->entityManager = $entityManger;
         $this->userIdToFullName = $userIdToUserFullName;
-        $this->versionEntityClassName = $versionEntityClassName;
+    }
+
+    public function addVersionType(
+        string $versionEntityClassName,
+        HumanReadableVersionDescriber $humanReadableDescriberService
+    ): void {
+        $this->vesionTypes[$versionEntityClassName] = $humanReadableDescriberService;
     }
 
     public function __invoke(\DateTime $greaterThanDate, \DateTime $lessThanDate): array
     {
-        $doctrineRepo = $this->entityManager->getRepository($this->versionEntityClassName);
+        $events = [];
+        foreach ($this->vesionTypes as $versionEntityClassName => $humanReadableDescriberService) {
+            $events = array_merge(
+                $events,
+                $this->getEventsForSingleVersionType(
+                    $greaterThanDate,
+                    $lessThanDate,
+                    $versionEntityClassName,
+                    $humanReadableDescriberService
+                )
+            );
+        }
+
+        return $events;
+    }
+
+    protected function getEventsForSingleVersionType(
+        \DateTime $greaterThanDate,
+        \DateTime $lessThanDate,
+        string $versionEntityClassName,
+        HumanReadableVersionDescriber $versionDescriber
+    ): array {
+        $doctrineRepo = $this->entityManager->getRepository($versionEntityClassName);
 
         $criteria = new \Doctrine\Common\Collections\Criteria();
         $criteria->where($criteria->expr()->gt('date', $greaterThanDate));
@@ -42,29 +70,24 @@ abstract class GetHumanReadableChangeLogEventsByDateRangeAbstract implements Get
         }
 
         return array_map(
-            function (VersionEntityInterface $version): ChangeLogEvent {
+            function (VersionEntityInterface $version) use ($versionDescriber): ChangeLogEvent {
                 $event = new ChangeLogEvent();
                 $event->date = $version->getDate();
                 $event->versionId = $version->getId();
                 $event->userId = $version->getUserId();
                 $event->userDescription = $this->userIdToFullName->__invoke($version->getUserId());
-                $event->resourceTypeDescription = $this->getResourceTypeDescription($version);
+                $event->resourceTypeDescription = $versionDescriber->getResourceTypeDescription($version);
                 $event->actionDescription = VersionActions::DEFAULT_ACTION_DESCRIPTIONS[$version->getAction()];
                 $event->resourceLocatorArray = $version->getLocator()->toArray();
-                $event->resourceLocationDescription = $this->getResourceLocationDescription($version);
-                $event->parentCurrentLocationDescription = $this->getParentCurrentLocationDescription($version);
+                $event->resourceLocationDescription = $versionDescriber->getResourceLocationDescription($version);
+                $event->parentCurrentLocationDescription
+                    = $versionDescriber->getParentCurrentLocationDescription($version);
 
                 return $event;
             },
             $versions
         );
     }
-
-    abstract protected function getResourceTypeDescription(VersionEntityInterface $version);
-
-    abstract protected function getParentCurrentLocationDescription(VersionEntityInterface $version);
-
-    abstract protected function getResourceLocationDescription(VersionEntityInterface $version);
 
     /**
      * This will throw an exectpion if it finds anything wrong with the $version entity given to it.
