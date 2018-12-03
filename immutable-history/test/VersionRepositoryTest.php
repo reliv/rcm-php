@@ -80,6 +80,5 @@ class VersionRepositoryTest extends TestCase
         $entityManager->shouldReceive('flush')->withArgs($checkNewVersionEntity);
 
         $unit->publish($locator, $content, $userId, $programaticReason);
-
     }
 }
