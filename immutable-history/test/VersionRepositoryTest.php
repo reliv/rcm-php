@@ -35,7 +35,7 @@ class VersionRepositoryTest extends TestCase
         $entityManager = Mockery::mock(EntityManager::class);
         $entityManager->expects('getRepository')->andReturns($entityRepo);
 
-        $generateRsourceId = Mockery::mock(GenerateResourceIdInterface::class);
+        $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
 
         $locatorAsArray = ['siteId' => '27', 'pathname' => '/p/bob'];
         $locator = Mockery::mock(PageLocator::class);
@@ -53,7 +53,7 @@ class VersionRepositoryTest extends TestCase
         $unit = new VersionRepository(
             ImmutablePageVersionEntity::class,
             $entityManager,
-            $generateRsourceId
+            $generateResourceId
         );
 
         $checkNewVersionEntity = function ($newVersion) use (
@@ -68,6 +68,66 @@ class VersionRepositoryTest extends TestCase
              */
             $this->assertInstanceOf(VersionEntityInterface::class, $newVersion);
             $this->assertEquals($previousVersionEntityResourceId, $newVersion->getResourceId());
+            $this->assertEquals($locatorAsArray, $newVersion->getLocator()->toArray());
+            $this->assertEquals($contentAsArray, $newVersion->getContentAsArray());
+            $this->assertEquals($userId, $newVersion->getUserId());
+            $this->assertEquals($programaticReason, $newVersion->getProgrammaticReason());
+
+            return true;
+        };
+
+        $entityManager->shouldReceive('persist')->withArgs($checkNewVersionEntity);
+        $entityManager->shouldReceive('flush')->withArgs($checkNewVersionEntity);
+
+        $unit->publish($locator, $content, $userId, $programaticReason);
+    }
+
+    public function testPublishWithoutResourceIdOverrideAndWithoutFindablePreviousPublishedVersion()
+    {
+        $entityRepoResults = Mockery::mock(ArrayCollection::class);
+        $entityRepoResults->expects('toArray')->andReturns([]);
+
+        $entityRepo = Mockery::mock(EntityRepository::class);
+        $entityRepo->expects('matching')->andReturns($entityRepoResults);
+
+        $entityManager = Mockery::mock(EntityManager::class);
+        $entityManager->expects('getRepository')->andReturns($entityRepo);
+
+        $generatedResourceId = 'f43b747a-63e6-4c8f-a05a-367220a9e30d';
+        $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
+        $generateResourceId->expects('__invoke')->andReturns($generatedResourceId);
+
+        $locatorAsArray = ['siteId' => '27', 'pathname' => '/p/bob'];
+        $locator = Mockery::mock(PageLocator::class);
+        $locator->expects('toArray')->andReturns($locatorAsArray);
+        $locator->expects('getSiteId')->andReturns($locatorAsArray['siteId']);
+        $locator->expects('getPathName')->andReturns($locatorAsArray['pathname']);
+
+        $contentAsArray = ['fun' => 'example', 'content' => 'yeah'];
+        $content = Mockery::mock(PageContent::class);
+        $content->expects('toArrayForLongTermStorage')->andReturns($contentAsArray);
+
+        $userId = 827364244;
+        $programaticReason = __CLASS__ . '::' . __FUNCTION__;
+
+        $unit = new VersionRepository(
+            ImmutablePageVersionEntity::class,
+            $entityManager,
+            $generateResourceId
+        );
+
+        $checkNewVersionEntity = function ($newVersion) use (
+            $generatedResourceId,
+            $locatorAsArray,
+            $contentAsArray,
+            $userId,
+            $programaticReason
+        ) {
+            /**
+             * @var VersionEntityInterface $newVersion
+             */
+            $this->assertInstanceOf(VersionEntityInterface::class, $newVersion);
+            $this->assertEquals($generatedResourceId, $newVersion->getResourceId());
             $this->assertEquals($locatorAsArray, $newVersion->getLocator()->toArray());
             $this->assertEquals($contentAsArray, $newVersion->getContentAsArray());
             $this->assertEquals($userId, $newVersion->getUserId());
