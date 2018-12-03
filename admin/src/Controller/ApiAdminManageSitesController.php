@@ -301,7 +301,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
         $entityManager->persist($site);
         $entityManager->flush($site);
 
-        $this->siteVersionRepo->publishFromNothing(
+        $this->siteVersionRepo->publish(
             new SiteLocator($site->getDomainName()),
             $this->getSiteManager()->siteToImmutableSiteContent($site),
             $this->getCurrentUserTracking()->getId(),

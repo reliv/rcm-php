@@ -29,7 +29,7 @@ class VersionRepository implements VersionRepositoryInterface
         $this->generateResourceId = $generateResourceId;
     }
 
-    public function createUnpublishedFromNothing(
+    public function createUnpublished(
         LocatorInterface $locator,
         ContentInterface $content,
         $userId,
@@ -69,7 +69,7 @@ class VersionRepository implements VersionRepositoryInterface
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function publishFromNothing(
+    public function publish(
         LocatorInterface $locator,
         ContentInterface $content,
         $userId,
@@ -189,7 +189,7 @@ class VersionRepository implements VersionRepositoryInterface
      *
      * This is needed because sometimes resources are duplicated-from which don't yet exist in the history
      * system because they are old data. This first trys to do a regular duplicate. If it cannot, it
-     * does something akin to "publishFromNothing" but with the "duplicate" action.
+     * does something akin to "publish" but with the "duplicate" action.
      *
      * @param LocatorInterface $locator
      * @param ContentInterface $content

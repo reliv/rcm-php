@@ -129,7 +129,7 @@ class PageMutationService
             $pageData
         );
 
-        $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
+        $this->immuteblePageVersionRepo->createUnpublished(
             new PageLocator(
                 $siteId,
                 $this->rcmPageNameToPathname->__invoke($createdPage->getName(), $createdPage->getPageType())
@@ -191,7 +191,7 @@ class PageMutationService
             $pageData
         );
 
-        $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
+        $this->immuteblePageVersionRepo->createUnpublished(
             new PageLocator(
                 $this->currentSite->getSiteId(),
                 $this->rcmPageNameToPathname->__invoke($createdPage->getName(), $createdPage->getPageType())
@@ -238,7 +238,7 @@ class PageMutationService
             'Publish page in ' . get_class($this)
         );
 
-        $this->immuteblePageVersionRepo->publishFromNothing(
+        $this->immuteblePageVersionRepo->publish(
             new PageLocator(
                 $siteId,
                 $this->rcmPageNameToPathname->__invoke($pageName, $pageType)
@@ -307,7 +307,7 @@ class PageMutationService
                 'pageType' => $pageType
             ]);
 
-            $this->immuteblePageVersionRepo->createUnpublishedFromNothing(
+            $this->immuteblePageVersionRepo->createUnpublished(
                 new PageLocator(
                     $this->currentSite->getSiteId(),
                     $this->rcmPageNameToPathname->__invoke($pageName, $pageType)
@@ -327,7 +327,7 @@ class PageMutationService
          * @var $container Container
          */
         foreach ($result['modifiedSiteWideContainers'] as $revisionId => $container) {
-            $this->immutableSiteWideContainerRepo->publishFromNothing(
+            $this->immutableSiteWideContainerRepo->publish(
                 new SiteWideContainerLocator($container->getSiteId(), $container->getName()),
                 new ContainerContent(
                     $this->immutablePageContentFactory->pluginWrappersToFlatBlockInstances(
@@ -481,7 +481,7 @@ class PageMutationService
             $pluginWrapperData = [];
         }
 
-        $this->immuteblePageVersionRepo->publishFromNothing(
+        $this->immuteblePageVersionRepo->publish(
             $originalLocator,
             $this->immutablePageContentFactory->__invoke(
                 $updatedPage->getPageTitle(),
