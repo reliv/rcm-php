@@ -117,7 +117,7 @@ class SiteManager
         $entityManager->persist($newSite);
         $entityManager->flush($newSite);
 
-        $this->siteVersionRepo->publishFromNothing(
+        $this->siteVersionRepo->publish(
             new SiteLocator($newSite->getDomainName()),
             $this->siteToImmutableSiteContent($newSite),
             $this->getCurrentUserTracking()->getId(),
@@ -176,7 +176,7 @@ class SiteManager
 
         $copySite->populate($data);
 
-        $this->siteVersionRepo->publishFromNothing(
+        $this->siteVersionRepo->publish(
             new SiteLocator($copySite->getDomainName()),
             $this->siteToImmutableSiteContent($copySite),
             $this->getCurrentUserTracking()->getId(),

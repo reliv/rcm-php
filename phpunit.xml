@@ -3,6 +3,7 @@
 <phpunit>
     <testsuites>
         <testsuite name="rcm">
+            <directory>*/test</directory>
             <directory>*/test/**</directory>
         </testsuite>
     </testsuites>

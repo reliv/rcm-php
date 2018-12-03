@@ -18,4 +18,14 @@ interface VersionEntityInterface
     public function getContentAsArray();
 
     public function getLocator(): LocatorInterface;
+
+    /**
+     * @return string
+     */
+    public function getUserId(): string;
+
+    /**
+     * @return string
+     */
+    public function getProgrammaticReason(): string;
 }
