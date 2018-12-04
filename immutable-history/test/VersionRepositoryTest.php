@@ -41,7 +41,7 @@ class VersionRepositoryTest extends TestCase
         $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->expects('getRepository')->andReturns($entityRepo);
+        $entityManager->allows('getRepository')->andReturns($entityRepo);
 
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
 
@@ -101,7 +101,7 @@ class VersionRepositoryTest extends TestCase
         $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->expects('getRepository')->andReturns($entityRepo);
+        $entityManager->allows('getRepository')->andReturns($entityRepo);
 
         $generatedResourceId = 'f43b747a-63e6-4c8f-a05a-367220a9e30d';
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
@@ -168,7 +168,7 @@ class VersionRepositoryTest extends TestCase
         $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->expects('getRepository')->andReturns($entityRepo);
+        $entityManager->allows('getRepository')->andReturns($entityRepo);
 
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
 
@@ -228,7 +228,7 @@ class VersionRepositoryTest extends TestCase
         $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->expects('getRepository')->andReturns($entityRepo);
+        $entityManager->allows('getRepository')->andReturns($entityRepo);
 
         $generatedResourceId = 'f43b747a-63e6-4c8f-a05a-367220a9e30d';
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
@@ -295,7 +295,7 @@ class VersionRepositoryTest extends TestCase
         $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->expects('getRepository')->andReturns($entityRepo);
+        $entityManager->allows('getRepository')->andReturns($entityRepo);
 
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
 
@@ -350,7 +350,7 @@ class VersionRepositoryTest extends TestCase
         $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->expects('getRepository')->andReturns($entityRepo);
+        $entityManager->allows('getRepository')->andReturns($entityRepo);
 
         $generatedResourceId = 'f43b747a-63e6-4c8f-a05a-367220a9e30d';
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
@@ -414,7 +414,7 @@ class VersionRepositoryTest extends TestCase
         $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->expects('getRepository')->andReturns($entityRepo);
+        $entityManager->allows('getRepository')->andReturns($entityRepo);
 
         $generatedResourceId = 'f43b747a-63e6-4c8f-a05a-367220a9e30d';
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
@@ -482,12 +482,10 @@ class VersionRepositoryTest extends TestCase
         $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManagerConnection = Mockery::mock(Connection::class);
-        $entityManagerConnection->allows('beginTransaction');
-        $entityManagerConnection->allows('commit');
 
         $entityManager = Mockery::spy(EntityManager::class);
-        $entityManager->expects('getRepository')->andReturns($entityRepo);
-        $entityManager->expects('getConnection')->andReturns($entityManagerConnection)->twice();
+        $entityManager->allows('getRepository')->andReturns($entityRepo);
+        $entityManager->allows('getConnection')->andReturns($entityManagerConnection)->twice();
 
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
 
@@ -534,8 +532,6 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->expects('persist')->withArgs($checkDepublishedVersionEntity)->ordered();
-        $entityManager->expects('flush')->withArgs($checkDepublishedVersionEntity)->ordered();
 
         $checkNewVersionEntity = function ($newVersion) use (
             $toLocatorAsArray,
@@ -559,8 +555,15 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
+        $entityManagerConnection->expects('beginTransaction')->ordered()->globally();
+
+        $entityManager->expects('persist')->withArgs($checkDepublishedVersionEntity)->ordered();
+        $entityManager->expects('flush')->withArgs($checkDepublishedVersionEntity)->ordered();
+
         $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->ordered();
         $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->ordered();
+
+        $entityManagerConnection->expects('commit')->ordered()->globally();
 
         $unit->relocate($fromLocator, $toLocator, $userId, $programaticReason);
     }
@@ -574,7 +577,7 @@ class VersionRepositoryTest extends TestCase
         $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->expects('getRepository')->andReturns($entityRepo);
+        $entityManager->allows('getRepository')->andReturns($entityRepo);
 
         $generatedResourceId = 'f43b747a-63e6-4c8f-a05a-367220a9e30d';
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
