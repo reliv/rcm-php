@@ -7,15 +7,6 @@ use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 
 class RcmPageNameToPathnameTest extends TestCase
 {
-    public function __invoke(string $pageName, string $pageType)
-    {
-        if ($pageName === 'index' && $pageType === 'n') {
-            return '/';
-        }
-
-        return '/' . ($pageType !== 'n' ? $pageType . '/' : '') . $pageName;
-    }
-
     public function testWithNormalPage()
     {
         $unit = new RcmPageNameToPathname();
