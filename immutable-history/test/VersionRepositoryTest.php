@@ -483,7 +483,7 @@ class VersionRepositoryTest extends TestCase
 
         $entityManagerConnection = Mockery::mock(Connection::class);
 
-        $entityManager = Mockery::spy(EntityManager::class);
+        $entityManager = Mockery::mock(EntityManager::class);
         $entityManager->allows('getRepository')->andReturns($entityRepo);
         $entityManager->allows('getConnection')->andReturns($entityManagerConnection)->twice();
 
