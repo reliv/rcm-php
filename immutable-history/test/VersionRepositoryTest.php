@@ -557,11 +557,11 @@ class VersionRepositoryTest extends TestCase
 
         $entityManagerConnection->expects('beginTransaction')->ordered()->globally();
 
-        $entityManager->expects('persist')->withArgs($checkDepublishedVersionEntity)->ordered();
-        $entityManager->expects('flush')->withArgs($checkDepublishedVersionEntity)->ordered();
+        $entityManager->expects('persist')->withArgs($checkDepublishedVersionEntity)->ordered()->globally();
+        $entityManager->expects('flush')->withArgs($checkDepublishedVersionEntity)->ordered()->globally();
 
-        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->ordered();
-        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->ordered();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->ordered()->globally();
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->ordered()->globally();
 
         $entityManagerConnection->expects('commit')->ordered()->globally();
 
