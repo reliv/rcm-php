@@ -86,8 +86,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity);
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity);
 
         $unit->publish($locator, $content, $userId, $programaticReason);
     }
@@ -148,8 +148,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity);
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity);
 
         $unit->publish($locator, $content, $userId, $programaticReason);
     }
@@ -213,8 +213,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity);
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity);
 
         $unit->createUnpublished($locator, $content, $userId, $programaticReason);
     }
@@ -275,8 +275,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity);
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity);
 
         $unit->createUnpublished($locator, $content, $userId, $programaticReason);
     }
@@ -335,8 +335,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity);
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity);
 
         $unit->depublish($locator, $userId, $programaticReason);
     }
@@ -392,8 +392,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity);
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity);
 
         $unit->depublish($locator, $userId, $programaticReason);
     }
@@ -460,8 +460,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity);
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity);
 
         $unit->duplicate($fromLocator, $toLocator, $userId, $programaticReason);
     }
@@ -534,8 +534,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->expects('persist')->withArgs($checkDepublishedVersionEntity)->once()->ordered();
-        $entityManager->expects('flush')->withArgs($checkDepublishedVersionEntity)->once()->ordered();
+        $entityManager->expects('persist')->withArgs($checkDepublishedVersionEntity)->ordered();
+        $entityManager->expects('flush')->withArgs($checkDepublishedVersionEntity)->ordered();
 
         $checkNewVersionEntity = function ($newVersion) use (
             $toLocatorAsArray,
@@ -559,8 +559,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once()->ordered();
-        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once()->ordered();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->ordered();
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->ordered();
 
         $unit->relocate($fromLocator, $toLocator, $userId, $programaticReason);
     }
@@ -627,8 +627,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity);
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity);
 
         $unit->duplicateBc($fromLocator, $toLocator, $content, $userId, $programaticReason);
     }
