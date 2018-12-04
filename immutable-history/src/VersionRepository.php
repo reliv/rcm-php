@@ -153,6 +153,8 @@ class VersionRepository implements VersionRepositoryInterface
         //We must use a transaction or two relcates in the same moment could corrupt the history data chain
         $this->entityManger->getConnection()->beginTransaction();
 
+        $previousPublishedVersionContent = $previousPublishedVersion->getContentAsArray();
+
         $resourceId = $previousPublishedVersion->getResourceId();
         $relocateDepublishVersion = new $this->entityClassName(
             $resourceId,
@@ -161,8 +163,8 @@ class VersionRepository implements VersionRepositoryInterface
             VersionActions::RELOCATE_DEPUBLISH,
             $userId,
             $programmaticReason,
-            $previousPublishedVersion->getLocator(),
-            $previousPublishedVersion->getContentAsArray()
+            $oldLocator,
+            $previousPublishedVersionContent
         );
         $this->entityManger->persist($relocateDepublishVersion);
         $this->entityManger->flush($relocateDepublishVersion);
@@ -175,7 +177,7 @@ class VersionRepository implements VersionRepositoryInterface
             $userId,
             $programmaticReason,
             $newLocator,
-            $previousPublishedVersion->getContentAsArray()
+            $previousPublishedVersionContent
         );
 
         $this->entityManger->persist($relocatePublishVersion);
