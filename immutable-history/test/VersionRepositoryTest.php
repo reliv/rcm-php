@@ -31,29 +31,29 @@ class VersionRepositoryTest extends TestCase
     {
         $previousVersionEntityResourceId = 2727;
         $previousVersionEntity = Mockery::mock(VersionEntityInterface::class);
-        $previousVersionEntity->shouldReceive('getResourceId')->andReturns($previousVersionEntityResourceId);
-        $previousVersionEntity->shouldReceive('getStatus')->andReturns(VersionStatuses::PUBLISHED);
+        $previousVersionEntity->allows('getResourceId')->andReturns($previousVersionEntityResourceId);
+        $previousVersionEntity->allows('getStatus')->andReturns(VersionStatuses::PUBLISHED);
 
         $entityRepoResults = Mockery::mock(ArrayCollection::class);
-        $entityRepoResults->shouldReceive('toArray')->andReturns([$previousVersionEntity]);
+        $entityRepoResults->allows('toArray')->andReturns([$previousVersionEntity]);
 
         $entityRepo = Mockery::mock(EntityRepository::class);
-        $entityRepo->shouldReceive('matching')->andReturns($entityRepoResults);
+        $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->shouldReceive('getRepository')->andReturns($entityRepo);
+        $entityManager->expects('getRepository')->andReturns($entityRepo);
 
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
 
         $locatorAsArray = ['siteId' => '27', 'pathname' => '/p/bob'];
         $locator = Mockery::mock(PageLocator::class);
-        $locator->shouldReceive('toArray')->andReturns($locatorAsArray);
-        $locator->shouldReceive('getSiteId')->andReturns($locatorAsArray['siteId']);
-        $locator->shouldReceive('getPathName')->andReturns($locatorAsArray['pathname']);
+        $locator->allows('toArray')->andReturns($locatorAsArray);
+        $locator->allows('getSiteId')->andReturns($locatorAsArray['siteId']);
+        $locator->allows('getPathName')->andReturns($locatorAsArray['pathname']);
 
         $contentAsArray = ['fun' => 'example', 'content' => 'yeah'];
         $content = Mockery::mock(PageContent::class);
-        $content->shouldReceive('toArrayForLongTermStorage')->andReturns($contentAsArray);
+        $content->allows('toArrayForLongTermStorage')->andReturns($contentAsArray);
 
         $userId = 827364244;
         $programaticReason = __CLASS__ . '::' . __FUNCTION__;
@@ -86,8 +86,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->shouldReceive('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->shouldReceive('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
 
         $unit->publish($locator, $content, $userId, $programaticReason);
     }
@@ -95,27 +95,27 @@ class VersionRepositoryTest extends TestCase
     public function testPublishWithoutResourceIdOverrideAndWithoutFindablePreviousPublishedVersion()
     {
         $entityRepoResults = Mockery::mock(ArrayCollection::class);
-        $entityRepoResults->shouldReceive('toArray')->andReturns([]);
+        $entityRepoResults->allows('toArray')->andReturns([]);
 
         $entityRepo = Mockery::mock(EntityRepository::class);
-        $entityRepo->shouldReceive('matching')->andReturns($entityRepoResults);
+        $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->shouldReceive('getRepository')->andReturns($entityRepo);
+        $entityManager->expects('getRepository')->andReturns($entityRepo);
 
         $generatedResourceId = 'f43b747a-63e6-4c8f-a05a-367220a9e30d';
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
-        $generateResourceId->shouldReceive('__invoke')->andReturns($generatedResourceId);
+        $generateResourceId->allows('__invoke')->andReturns($generatedResourceId);
 
         $locatorAsArray = ['siteId' => '27', 'pathname' => '/p/bob'];
         $locator = Mockery::mock(PageLocator::class);
-        $locator->shouldReceive('toArray')->andReturns($locatorAsArray);
-        $locator->shouldReceive('getSiteId')->andReturns($locatorAsArray['siteId']);
-        $locator->shouldReceive('getPathName')->andReturns($locatorAsArray['pathname']);
+        $locator->allows('toArray')->andReturns($locatorAsArray);
+        $locator->allows('getSiteId')->andReturns($locatorAsArray['siteId']);
+        $locator->allows('getPathName')->andReturns($locatorAsArray['pathname']);
 
         $contentAsArray = ['fun' => 'example', 'content' => 'yeah'];
         $content = Mockery::mock(PageContent::class);
-        $content->shouldReceive('toArrayForLongTermStorage')->andReturns($contentAsArray);
+        $content->allows('toArrayForLongTermStorage')->andReturns($contentAsArray);
 
         $userId = 827364244;
         $programaticReason = __CLASS__ . '::' . __FUNCTION__;
@@ -148,8 +148,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->shouldReceive('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->shouldReceive('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
 
         $unit->publish($locator, $content, $userId, $programaticReason);
     }
@@ -158,29 +158,29 @@ class VersionRepositoryTest extends TestCase
     {
         $previousVersionEntityResourceId = 2727;
         $previousVersionEntity = Mockery::mock(VersionEntityInterface::class);
-        $previousVersionEntity->shouldReceive('getResourceId')->andReturns($previousVersionEntityResourceId);
-        $previousVersionEntity->shouldReceive('getStatus')->andReturns(VersionStatuses::PUBLISHED);
+        $previousVersionEntity->allows('getResourceId')->andReturns($previousVersionEntityResourceId);
+        $previousVersionEntity->allows('getStatus')->andReturns(VersionStatuses::PUBLISHED);
 
         $entityRepoResults = Mockery::mock(ArrayCollection::class);
-        $entityRepoResults->shouldReceive('toArray')->andReturns([$previousVersionEntity]);
+        $entityRepoResults->allows('toArray')->andReturns([$previousVersionEntity]);
 
         $entityRepo = Mockery::mock(EntityRepository::class);
-        $entityRepo->shouldReceive('matching')->andReturns($entityRepoResults);
+        $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->shouldReceive('getRepository')->andReturns($entityRepo);
+        $entityManager->expects('getRepository')->andReturns($entityRepo);
 
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
 
         $locatorAsArray = ['siteId' => '27', 'pathname' => '/p/bob'];
         $locator = Mockery::mock(PageLocator::class);
-        $locator->shouldReceive('toArray')->andReturns($locatorAsArray);
-        $locator->shouldReceive('getSiteId')->andReturns($locatorAsArray['siteId']);
-        $locator->shouldReceive('getPathName')->andReturns($locatorAsArray['pathname']);
+        $locator->allows('toArray')->andReturns($locatorAsArray);
+        $locator->allows('getSiteId')->andReturns($locatorAsArray['siteId']);
+        $locator->allows('getPathName')->andReturns($locatorAsArray['pathname']);
 
         $contentAsArray = ['fun' => 'example', 'content' => 'yeah'];
         $content = Mockery::mock(PageContent::class);
-        $content->shouldReceive('toArrayForLongTermStorage')->andReturns($contentAsArray);
+        $content->allows('toArrayForLongTermStorage')->andReturns($contentAsArray);
 
         $userId = 827364244;
         $programaticReason = __CLASS__ . '::' . __FUNCTION__;
@@ -213,8 +213,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->shouldReceive('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->shouldReceive('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
 
         $unit->createUnpublished($locator, $content, $userId, $programaticReason);
     }
@@ -222,27 +222,27 @@ class VersionRepositoryTest extends TestCase
     public function testCreateUnpublishedWithoutFindablePreviousPublishedVersion()
     {
         $entityRepoResults = Mockery::mock(ArrayCollection::class);
-        $entityRepoResults->shouldReceive('toArray')->andReturns([]);
+        $entityRepoResults->allows('toArray')->andReturns([]);
 
         $entityRepo = Mockery::mock(EntityRepository::class);
-        $entityRepo->shouldReceive('matching')->andReturns($entityRepoResults);
+        $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->shouldReceive('getRepository')->andReturns($entityRepo);
+        $entityManager->expects('getRepository')->andReturns($entityRepo);
 
         $generatedResourceId = 'f43b747a-63e6-4c8f-a05a-367220a9e30d';
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
-        $generateResourceId->shouldReceive('__invoke')->andReturns($generatedResourceId);
+        $generateResourceId->allows('__invoke')->andReturns($generatedResourceId);
 
         $locatorAsArray = ['siteId' => '27', 'pathname' => '/p/bob'];
         $locator = Mockery::mock(PageLocator::class);
-        $locator->shouldReceive('toArray')->andReturns($locatorAsArray);
-        $locator->shouldReceive('getSiteId')->andReturns($locatorAsArray['siteId']);
-        $locator->shouldReceive('getPathName')->andReturns($locatorAsArray['pathname']);
+        $locator->allows('toArray')->andReturns($locatorAsArray);
+        $locator->allows('getSiteId')->andReturns($locatorAsArray['siteId']);
+        $locator->allows('getPathName')->andReturns($locatorAsArray['pathname']);
 
         $contentAsArray = ['fun' => 'example', 'content' => 'yeah'];
         $content = Mockery::mock(PageContent::class);
-        $content->shouldReceive('toArrayForLongTermStorage')->andReturns($contentAsArray);
+        $content->allows('toArrayForLongTermStorage')->andReturns($contentAsArray);
 
         $userId = 827364244;
         $programaticReason = __CLASS__ . '::' . __FUNCTION__;
@@ -275,8 +275,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->shouldReceive('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->shouldReceive('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
 
         $unit->createUnpublished($locator, $content, $userId, $programaticReason);
     }
@@ -285,25 +285,25 @@ class VersionRepositoryTest extends TestCase
     {
         $previousVersionEntityResourceId = 2727;
         $previousVersionEntity = Mockery::mock(VersionEntityInterface::class);
-        $previousVersionEntity->shouldReceive('getResourceId')->andReturns($previousVersionEntityResourceId);
-        $previousVersionEntity->shouldReceive('getStatus')->andReturns(VersionStatuses::PUBLISHED);
+        $previousVersionEntity->allows('getResourceId')->andReturns($previousVersionEntityResourceId);
+        $previousVersionEntity->allows('getStatus')->andReturns(VersionStatuses::PUBLISHED);
 
         $entityRepoResults = Mockery::mock(ArrayCollection::class);
-        $entityRepoResults->shouldReceive('toArray')->andReturns([$previousVersionEntity]);
+        $entityRepoResults->allows('toArray')->andReturns([$previousVersionEntity]);
 
         $entityRepo = Mockery::mock(EntityRepository::class);
-        $entityRepo->shouldReceive('matching')->andReturns($entityRepoResults);
+        $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->shouldReceive('getRepository')->andReturns($entityRepo);
+        $entityManager->expects('getRepository')->andReturns($entityRepo);
 
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
 
         $locatorAsArray = ['siteId' => '27', 'pathname' => '/p/bob'];
         $locator = Mockery::mock(PageLocator::class);
-        $locator->shouldReceive('toArray')->andReturns($locatorAsArray);
-        $locator->shouldReceive('getSiteId')->andReturns($locatorAsArray['siteId']);
-        $locator->shouldReceive('getPathName')->andReturns($locatorAsArray['pathname']);
+        $locator->allows('toArray')->andReturns($locatorAsArray);
+        $locator->allows('getSiteId')->andReturns($locatorAsArray['siteId']);
+        $locator->allows('getPathName')->andReturns($locatorAsArray['pathname']);
 
         $userId = 827364244;
         $programaticReason = __CLASS__ . '::' . __FUNCTION__;
@@ -335,8 +335,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->shouldReceive('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->shouldReceive('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
 
         $unit->depublish($locator, $userId, $programaticReason);
     }
@@ -344,23 +344,23 @@ class VersionRepositoryTest extends TestCase
     public function testDepublishWithoutFindablePreviousPublishedVersion()
     {
         $entityRepoResults = Mockery::mock(ArrayCollection::class);
-        $entityRepoResults->shouldReceive('toArray')->andReturns([]);
+        $entityRepoResults->allows('toArray')->andReturns([]);
 
         $entityRepo = Mockery::mock(EntityRepository::class);
-        $entityRepo->shouldReceive('matching')->andReturns($entityRepoResults);
+        $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->shouldReceive('getRepository')->andReturns($entityRepo);
+        $entityManager->expects('getRepository')->andReturns($entityRepo);
 
         $generatedResourceId = 'f43b747a-63e6-4c8f-a05a-367220a9e30d';
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
-        $generateResourceId->shouldReceive('__invoke')->andReturns($generatedResourceId);
+        $generateResourceId->allows('__invoke')->andReturns($generatedResourceId);
 
         $locatorAsArray = ['siteId' => '27', 'pathname' => '/p/bob'];
         $locator = Mockery::mock(PageLocator::class);
-        $locator->shouldReceive('toArray')->andReturns($locatorAsArray);
-        $locator->shouldReceive('getSiteId')->andReturns($locatorAsArray['siteId']);
-        $locator->shouldReceive('getPathName')->andReturns($locatorAsArray['pathname']);
+        $locator->allows('toArray')->andReturns($locatorAsArray);
+        $locator->allows('getSiteId')->andReturns($locatorAsArray['siteId']);
+        $locator->allows('getPathName')->andReturns($locatorAsArray['pathname']);
 
         $userId = 827364244;
         $programaticReason = __CLASS__ . '::' . __FUNCTION__;
@@ -392,8 +392,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->shouldReceive('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->shouldReceive('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
 
         $unit->depublish($locator, $userId, $programaticReason);
     }
@@ -403,31 +403,31 @@ class VersionRepositoryTest extends TestCase
         $previousVersionEntityResourceId = 2727;
         $previousVersionContentAsArray = ['fun' => 'example', 'content' => 'yeah'];
         $previousVersionEntity = Mockery::mock(VersionEntityInterface::class);
-//        $previousVersionEntity->shouldReceive('getResourceId')->andReturns($previousVersionEntityResourceId);
-        $previousVersionEntity->shouldReceive('getStatus')->andReturns(VersionStatuses::PUBLISHED);
-        $previousVersionEntity->shouldReceive('getContentAsArray')->andReturns($previousVersionContentAsArray);
+//        $previousVersionEntity->allows('getResourceId')->andReturns($previousVersionEntityResourceId);
+        $previousVersionEntity->allows('getStatus')->andReturns(VersionStatuses::PUBLISHED);
+        $previousVersionEntity->allows('getContentAsArray')->andReturns($previousVersionContentAsArray);
 
         $entityRepoResults = Mockery::mock(ArrayCollection::class);
-        $entityRepoResults->shouldReceive('toArray')->andReturns([$previousVersionEntity]);
+        $entityRepoResults->allows('toArray')->andReturns([$previousVersionEntity]);
 
         $entityRepo = Mockery::mock(EntityRepository::class);
-        $entityRepo->shouldReceive('matching')->andReturns($entityRepoResults);
+        $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->shouldReceive('getRepository')->andReturns($entityRepo);
+        $entityManager->expects('getRepository')->andReturns($entityRepo);
 
         $generatedResourceId = 'f43b747a-63e6-4c8f-a05a-367220a9e30d';
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
-        $generateResourceId->shouldReceive('__invoke')->andReturns($generatedResourceId);
+        $generateResourceId->allows('__invoke')->andReturns($generatedResourceId);
 
         $fromLocatorAsArray = ['siteId' => '27', 'pathname' => '/p/bob'];
         $fromLocator = Mockery::mock(PageLocator::class);
-        $fromLocator->shouldReceive('toArray')->andReturns($fromLocatorAsArray);
+        $fromLocator->allows('toArray')->andReturns($fromLocatorAsArray);
 
         $toLocatorAsArray = ['siteId' => '27', 'pathname' => '/p/new-bob'];
         $toLocator = Mockery::mock(PageLocator::class);
-        $toLocator->shouldReceive('getSiteId')->andReturns($toLocatorAsArray['siteId']);
-        $toLocator->shouldReceive('getPathName')->andReturns($toLocatorAsArray['pathname']);
+        $toLocator->allows('getSiteId')->andReturns($toLocatorAsArray['siteId']);
+        $toLocator->allows('getPathName')->andReturns($toLocatorAsArray['pathname']);
 
         $userId = 827364244;
         $programaticReason = __CLASS__ . '::' . __FUNCTION__;
@@ -460,8 +460,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->shouldReceive('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->shouldReceive('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
 
         $unit->duplicate($fromLocator, $toLocator, $userId, $programaticReason);
     }
@@ -471,36 +471,36 @@ class VersionRepositoryTest extends TestCase
         $previousVersionEntityResourceId = 2727;
         $previousVersionContentAsArray = ['fun' => 'example', 'content' => 'yeah'];
         $previousVersionEntity = Mockery::mock(VersionEntityInterface::class);
-        $previousVersionEntity->shouldReceive('getResourceId')->andReturns($previousVersionEntityResourceId);
-        $previousVersionEntity->shouldReceive('getStatus')->andReturns(VersionStatuses::PUBLISHED);
-        $previousVersionEntity->shouldReceive('getContentAsArray')->andReturns($previousVersionContentAsArray);
+        $previousVersionEntity->allows('getResourceId')->andReturns($previousVersionEntityResourceId);
+        $previousVersionEntity->allows('getStatus')->andReturns(VersionStatuses::PUBLISHED);
+        $previousVersionEntity->allows('getContentAsArray')->andReturns($previousVersionContentAsArray);
 
         $entityRepoResults = Mockery::mock(ArrayCollection::class);
-        $entityRepoResults->shouldReceive('toArray')->andReturns([$previousVersionEntity]);
+        $entityRepoResults->allows('toArray')->andReturns([$previousVersionEntity]);
 
         $entityRepo = Mockery::mock(EntityRepository::class);
-        $entityRepo->shouldReceive('matching')->andReturns($entityRepoResults);
+        $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManagerConnection = Mockery::mock(Connection::class);
-        $entityManagerConnection->shouldReceive('beginTransaction');
-        $entityManagerConnection->shouldReceive('commit');
+        $entityManagerConnection->allows('beginTransaction');
+        $entityManagerConnection->allows('commit');
 
         $entityManager = Mockery::spy(EntityManager::class);
-        $entityManager->shouldReceive('getRepository')->andReturns($entityRepo);
-        $entityManager->shouldReceive('getConnection')->andReturns($entityManagerConnection)->twice();
+        $entityManager->expects('getRepository')->andReturns($entityRepo);
+        $entityManager->expects('getConnection')->andReturns($entityManagerConnection)->twice();
 
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
 
         $fromLocatorAsArray = ['siteId' => '27', 'pathname' => '/p/bob'];
         $fromLocator = Mockery::mock(PageLocator::class);
-        $fromLocator->shouldReceive('toArray')->andReturns($fromLocatorAsArray);
-        $fromLocator->shouldReceive('getSiteId')->andReturns($fromLocatorAsArray['siteId']);
-        $fromLocator->shouldReceive('getPathName')->andReturns($fromLocatorAsArray['pathname']);
+        $fromLocator->allows('toArray')->andReturns($fromLocatorAsArray);
+        $fromLocator->allows('getSiteId')->andReturns($fromLocatorAsArray['siteId']);
+        $fromLocator->allows('getPathName')->andReturns($fromLocatorAsArray['pathname']);
 
         $toLocatorAsArray = ['siteId' => '27', 'pathname' => '/p/new-bob'];
         $toLocator = Mockery::mock(PageLocator::class);
-        $toLocator->shouldReceive('getSiteId')->andReturns($toLocatorAsArray['siteId']);
-        $toLocator->shouldReceive('getPathName')->andReturns($toLocatorAsArray['pathname']);
+        $toLocator->allows('getSiteId')->andReturns($toLocatorAsArray['siteId']);
+        $toLocator->allows('getPathName')->andReturns($toLocatorAsArray['pathname']);
 
         $userId = 827364244;
         $programaticReason = __CLASS__ . '::' . __FUNCTION__;
@@ -534,8 +534,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->shouldReceive('persist')->withArgs($checkDepublishedVersionEntity)->once()->ordered();
-        $entityManager->shouldReceive('flush')->withArgs($checkDepublishedVersionEntity)->once()->ordered();
+        $entityManager->expects('persist')->withArgs($checkDepublishedVersionEntity)->once()->ordered();
+        $entityManager->expects('flush')->withArgs($checkDepublishedVersionEntity)->once()->ordered();
 
         $checkNewVersionEntity = function ($newVersion) use (
             $toLocatorAsArray,
@@ -559,8 +559,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->shouldReceive('persist')->withArgs($checkNewVersionEntity)->once()->ordered();
-        $entityManager->shouldReceive('flush')->withArgs($checkNewVersionEntity)->once()->ordered();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once()->ordered();
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once()->ordered();
 
         $unit->relocate($fromLocator, $toLocator, $userId, $programaticReason);
     }
@@ -568,30 +568,30 @@ class VersionRepositoryTest extends TestCase
     public function testDuplicateBcWithoutFindablePreviousVersion()
     {
         $entityRepoResults = Mockery::mock(ArrayCollection::class);
-        $entityRepoResults->shouldReceive('toArray')->andReturns([]);
+        $entityRepoResults->allows('toArray')->andReturns([]);
 
         $entityRepo = Mockery::mock(EntityRepository::class);
-        $entityRepo->shouldReceive('matching')->andReturns($entityRepoResults);
+        $entityRepo->allows('matching')->andReturns($entityRepoResults);
 
         $entityManager = Mockery::mock(EntityManager::class);
-        $entityManager->shouldReceive('getRepository')->andReturns($entityRepo);
+        $entityManager->expects('getRepository')->andReturns($entityRepo);
 
         $generatedResourceId = 'f43b747a-63e6-4c8f-a05a-367220a9e30d';
         $generateResourceId = Mockery::mock(GenerateResourceIdInterface::class);
-        $generateResourceId->shouldReceive('__invoke')->andReturns($generatedResourceId);
+        $generateResourceId->allows('__invoke')->andReturns($generatedResourceId);
 
         $fromLocatorAsArray = ['siteId' => '27', 'pathname' => '/p/bob'];
         $fromLocator = Mockery::mock(PageLocator::class);
-        $fromLocator->shouldReceive('toArray')->andReturns($fromLocatorAsArray);
+        $fromLocator->allows('toArray')->andReturns($fromLocatorAsArray);
 
         $toLocatorAsArray = ['siteId' => '27', 'pathname' => '/p/new-bob'];
         $toLocator = Mockery::mock(PageLocator::class);
-        $toLocator->shouldReceive('getSiteId')->andReturns($toLocatorAsArray['siteId']);
-        $toLocator->shouldReceive('getPathName')->andReturns($toLocatorAsArray['pathname']);
+        $toLocator->allows('getSiteId')->andReturns($toLocatorAsArray['siteId']);
+        $toLocator->allows('getPathName')->andReturns($toLocatorAsArray['pathname']);
 
         $contentAsArray = ['fun' => 'example', 'content' => 'yeah'];
         $content = Mockery::mock(PageContent::class);
-        $content->shouldReceive('toArrayForLongTermStorage')->andReturns($contentAsArray);
+        $content->allows('toArrayForLongTermStorage')->andReturns($contentAsArray);
 
         $userId = 827364244;
         $programaticReason = __CLASS__ . '::' . __FUNCTION__;
@@ -627,8 +627,8 @@ class VersionRepositoryTest extends TestCase
             return true;
         };
 
-        $entityManager->shouldReceive('persist')->withArgs($checkNewVersionEntity)->once();
-        $entityManager->shouldReceive('flush')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('persist')->withArgs($checkNewVersionEntity)->once();
+        $entityManager->expects('flush')->withArgs($checkNewVersionEntity)->once();
 
         $unit->duplicateBc($fromLocator, $toLocator, $content, $userId, $programaticReason);
     }
