@@ -1,4 +1,4 @@
-var rcmColunmResize = new function () {
+var rcmColumnResize = new function () {
     var self = this;
 
     self.totalWidthColumns = 12;
@@ -256,7 +256,7 @@ var rcmColunmResize = new function () {
      */
     self.destroy = function (elm) {
         elm.parent().unbind('mousemove');
-        var controls = elm.find('.rcm-colunm-resize-control');
+        var controls = elm.find('.rcm-column-resize-control');
         controls.unbind('mousedown');
         controls.remove();
     };
@@ -276,9 +276,9 @@ var rcmColunmResize = new function () {
             // nothing
         }
 
-        var controlOffset = jQuery('<div class="rcm-colunm-resize-control offset"><div>&nbsp;</div></div>');
+        var controlOffset = jQuery('<div class="rcm-column-resize-control offset"><div>&nbsp;</div></div>');
 
-        var controlWidth = jQuery('<div class="rcm-colunm-resize-control width"><div>&nbsp;</div></div>');
+        var controlWidth = jQuery('<div class="rcm-column-resize-control width"><div>&nbsp;</div></div>');
 
         elm.prepend(controlWidth);
         elm.prepend(controlOffset);
@@ -287,11 +287,11 @@ var rcmColunmResize = new function () {
             function (e) {
                 e.preventDefault();
                 elm.currentColumnData = self.getElmColumnData(elm);
-                elm.offsetStartPositonX = e.pageX;
+                elm.offsetStartPositionX = e.pageX;
 
                 elm.parent().mousemove(
                     function (e) {
-                        var changePx = e.pageX - elm.offsetStartPositonX;
+                        var changePx = e.pageX - elm.offsetStartPositionX;
 
                         var changeCols = self.getPartWidthColumns(
                             elm.parent().width(),
@@ -312,11 +312,11 @@ var rcmColunmResize = new function () {
             function (e) {
                 e.preventDefault();
                 elm.currentColumnData = self.getElmColumnData(elm);
-                elm.widthStartPositonX = e.pageX;
+                elm.widthStartPositionX = e.pageX;
 
                 elm.parent().mousemove(
                     function (e) {
-                        var changePx = e.pageX - elm.widthStartPositonX;
+                        var changePx = e.pageX - elm.widthStartPositionX;
 
                         var changeCols = self.getPartWidthColumns(
                             elm.parent().width(),

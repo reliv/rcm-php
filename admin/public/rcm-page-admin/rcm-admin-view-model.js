@@ -15,7 +15,7 @@ var RcmAdminViewModel = function (config, model, page) {
 
     self.page = page;
 
-    self.rcmColunmResize = rcmColunmResize;
+    self.rcmColumnResize = rcmColumnResize;
 
     self.rcmPluginDrag = RcmPluginDrag;
 
@@ -170,7 +170,7 @@ var RcmAdminViewModel = function (config, model, page) {
          */
         enableResize: function (elm, onComplete) {
 
-            self.rcmColunmResize.init(elm);
+            self.rcmColumnResize.init(elm);
 
             if (typeof onComplete === 'function') {
                 onComplete(elm);
@@ -351,9 +351,9 @@ var RcmAdminViewModel = function (config, model, page) {
 
             elm.find(".rcmResetSizePluginMenuItem").click(
                 function (e) {
-                    self.rcmColunmResize.setClass(
+                    self.rcmColumnResize.setClass(
                         elm,
-                        self.rcmColunmResize.defaultClass
+                        self.rcmColumnResize.defaultClass
                     );
                     e.preventDefault();
                 }

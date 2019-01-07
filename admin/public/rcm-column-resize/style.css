@@ -1,4 +1,4 @@
-.rcm-colunm-resize-control {
+.rcm-column-resize-control {
     background-color: rgba(0, 0, 0, 0);
     color: #000000;
     color: rgba(0, 0, 0, 0);
@@ -10,11 +10,11 @@
     height: 100%;
 }
 
-.rcm-colunm-resize-control.width {
+.rcm-column-resize-control.width {
     right: 0px;
 }
 
-.rcm-colunm-resize-control.width:hover {
+.rcm-column-resize-control.width:hover {
     box-shadow: 0px 0px 1px 1px rgba(127,127,127,1);
     background: -moz-linear-gradient(left,  rgba(0,0,0,0.1) 0%, rgba(255,255,255,0.5) 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(0,0,0,0.1)), color-stop(100%,rgba(255,255,255,0.5))); /* Chrome,Safari4+ */
@@ -27,11 +27,11 @@
     color: rgba(0, 0, 0, 1);
 }
 
-.rcm-colunm-resize-control.offset {
+.rcm-column-resize-control.offset {
     left: 0px;
 }
 
-.rcm-colunm-resize-control.offset:hover {
+.rcm-column-resize-control.offset:hover {
     box-shadow: 0px 0px 1px 1px rgba(127,127,127,1);
     background: -moz-linear-gradient(left,  rgba(255,255,255,0.5) 0%, rgba(0,0,0,0.1) 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0.5)), color-stop(100%,rgba(0,0,0,0.1))); /* Chrome,Safari4+ */
@@ -44,7 +44,7 @@
     color: rgba(0, 0, 0, 1);
 }
 
-.rcm-colunm-resize-control .div {
+.rcm-column-resize-control .div {
     display: table-cell;
     vertical-align:middle;
     text-align: center;
