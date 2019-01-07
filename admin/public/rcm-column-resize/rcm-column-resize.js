@@ -1,4 +1,4 @@
-var rcmColunmResize = new function () {
+var rcmColumnResize = new function () {
     var self = this;
 
     self.totalWidthColumns = 12;
