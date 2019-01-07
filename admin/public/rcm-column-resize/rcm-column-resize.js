@@ -256,7 +256,7 @@ var rcmColunmResize = new function () {
      */
     self.destroy = function (elm) {
         elm.parent().unbind('mousemove');
-        var controls = elm.find('.rcm-colunm-resize-control');
+        var controls = elm.find('.rcm-column-resize-control');
         controls.unbind('mousedown');
         controls.remove();
     };
@@ -276,9 +276,9 @@ var rcmColunmResize = new function () {
             // nothing
         }
 
-        var controlOffset = jQuery('<div class="rcm-colunm-resize-control offset"><div>&nbsp;</div></div>');
+        var controlOffset = jQuery('<div class="rcm-column-resize-control offset"><div>&nbsp;</div></div>');
 
-        var controlWidth = jQuery('<div class="rcm-colunm-resize-control width"><div>&nbsp;</div></div>');
+        var controlWidth = jQuery('<div class="rcm-column-resize-control width"><div>&nbsp;</div></div>');
 
         elm.prepend(controlWidth);
         elm.prepend(controlOffset);
