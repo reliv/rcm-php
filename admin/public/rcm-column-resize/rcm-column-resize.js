@@ -1,4 +1,5 @@
 var rcmColumnResize = new /** @class */ function RcmColumnResize () {
+
     var self = this;
 
     this.totalWidthColumns = 12;
@@ -7,7 +8,7 @@ var rcmColumnResize = new /** @class */ function RcmColumnResize () {
 
     /**
      * getColumnWidth
-     * @param totalWidth
+     * @param {number} totalWidth
      * @returns {number}
      */
     this.getColumnWidthPx = function (totalWidth) {
@@ -16,15 +17,15 @@ var rcmColumnResize = new /** @class */ function RcmColumnResize () {
 
     /**
      * getPartWidthColumns
-     * @param totalWidthPx
-     * @param partWidthPx
+     * @param {number} totalWidthPx
+     * @param {number} partWidthPx
      * @returns {number}
      */
     this.getPartWidthColumns = function (totalWidthPx, partWidthPx) {
 
         var columnWidthPx = self.getColumnWidthPx(totalWidthPx);
 
-        var partWidthColumns = Math.ceil(partWidthPx / columnWidthPx);
+        var partWidthColumns = Math.ceil((partWidthPx - (columnWidthPx * 0.5)) / columnWidthPx);
 
         return partWidthColumns;
     };
@@ -262,11 +263,11 @@ var rcmColumnResize = new /** @class */ function RcmColumnResize () {
 
     /**
      * Add draggy controls
-     * @param elm
+     * @param {HTMLElement|JQLite} domElm
      */
-    this.addControls = function (elm) {
+    this.addControls = function (domElm) {
 
-        elm = jQuery(elm);
+        var elm = jQuery(domElm);
 
         try {
             // prevent duplicate create
@@ -285,12 +286,12 @@ var rcmColumnResize = new /** @class */ function RcmColumnResize () {
         controlOffset.mousedown(
             function (e) {
                 e.preventDefault();
-                elm.currentColumnData = self.getElmColumnData(elm);
-                elm.offsetStartPositionX = e.pageX;
+                var currentColumnData = self.getElmColumnData(elm);
+                var offsetStartPositionX = e.pageX;
 
                 jQuery(window).mousemove(
                     function (e) {
-                        var changePx = e.pageX - elm.offsetStartPositionX;
+                        var changePx = e.pageX - offsetStartPositionX;
 
                         var changeCols = self.getPartWidthColumns(
                             elm.parent().width(),
@@ -299,7 +300,7 @@ var rcmColumnResize = new /** @class */ function RcmColumnResize () {
 
                         var mediaView = self.getMediaView();
 
-                        var cols = elm.currentColumnData[mediaView].offset + changeCols;
+                        var cols = currentColumnData[mediaView].offset + changeCols;
 
                         self.setOffset(elm, cols);
                     }
@@ -310,12 +311,12 @@ var rcmColumnResize = new /** @class */ function RcmColumnResize () {
         controlWidth.mousedown(
             function (e) {
                 e.preventDefault();
-                elm.currentColumnData = self.getElmColumnData(elm);
-                elm.widthStartPositionX = e.pageX;
+                var currentColumnData = self.getElmColumnData(elm);
+                var widthStartPositionX = e.pageX;
 
                 jQuery(window).mousemove(
                     function (e) {
-                        var changePx = e.pageX - elm.widthStartPositionX;
+                        var changePx = e.pageX - widthStartPositionX;
 
                         var changeCols = self.getPartWidthColumns(
                             elm.parent().width(),
@@ -324,7 +325,7 @@ var rcmColumnResize = new /** @class */ function RcmColumnResize () {
 
                         var mediaView = self.getMediaView();
 
-                        var cols = elm.currentColumnData[mediaView].width + changeCols;
+                        var cols = currentColumnData[mediaView].width + changeCols;
 
                         self.setWidth(elm, cols);
                     }
