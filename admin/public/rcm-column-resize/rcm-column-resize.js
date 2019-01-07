@@ -287,11 +287,11 @@ var rcmColumnResize = new function () {
             function (e) {
                 e.preventDefault();
                 elm.currentColumnData = self.getElmColumnData(elm);
-                elm.offsetStartPositonX = e.pageX;
+                elm.offsetStartPositionX = e.pageX;
 
                 elm.parent().mousemove(
                     function (e) {
-                        var changePx = e.pageX - elm.offsetStartPositonX;
+                        var changePx = e.pageX - elm.offsetStartPositionX;
 
                         var changeCols = self.getPartWidthColumns(
                             elm.parent().width(),
@@ -312,11 +312,11 @@ var rcmColumnResize = new function () {
             function (e) {
                 e.preventDefault();
                 elm.currentColumnData = self.getElmColumnData(elm);
-                elm.widthStartPositonX = e.pageX;
+                elm.widthStartPositionX = e.pageX;
 
                 elm.parent().mousemove(
                     function (e) {
-                        var changePx = e.pageX - elm.widthStartPositonX;
+                        var changePx = e.pageX - elm.widthStartPositionX;
 
                         var changeCols = self.getPartWidthColumns(
                             elm.parent().width(),
