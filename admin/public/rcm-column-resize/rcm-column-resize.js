@@ -1,39 +1,39 @@
-var rcmColumnResize = new function () {
+var rcmColumnResize = new /** @class */ function RcmColumnResize () {
+
     var self = this;
 
-    self.totalWidthColumns = 12;
+    this.totalWidthColumns = 12;
 
-    self.defaultClass = 'col-sm-12';
+    this.defaultClass = 'col-sm-12';
 
     /**
      * getColumnWidth
-     * @param totalWidth
+     * @param {number} totalWidth
      * @returns {number}
      */
-    self.getColumnWidthPx = function (totalWidth) {
+    this.getColumnWidthPx = function (totalWidth) {
         return (totalWidth / self.totalWidthColumns);
     };
 
     /**
-     * getPartWidthColumns
-     * @param totalWidthPx
-     * @param partWidthPx
+     * NOTE: This can return fractional column widths (ex. 1.5 cols, 2.7 cols,
+     * etc.). The value will have to be rounded either up or down depending on
+     * the use case, as it's not possible to determine the correct rounding
+     * method using the given inputs.
+     *
+     * @param {number} totalWidthPx
+     * @param {number} partWidthPx
      * @returns {number}
      */
-    self.getPartWidthColumns = function (totalWidthPx, partWidthPx) {
-
-        var columnWidthPx = self.getColumnWidthPx(totalWidthPx);
-
-        var partWidthColumns = Math.ceil(partWidthPx / columnWidthPx);
-
-        return partWidthColumns;
+    this.getPartWidthColumns = function (totalWidthPx, partWidthPx) {
+        return partWidthPx / self.getColumnWidthPx(totalWidthPx);
     };
 
     /**
      * getMediaView
      * @returns {string}
      */
-    self.getMediaView = function () {
+    this.getMediaView = function () {
         // @todo Make this work by getting the data from some source
         return 'sm'
     };
@@ -43,7 +43,7 @@ var rcmColumnResize = new function () {
      * @param elm
      * @param widthCols
      */
-    self.setWidth = function (elm, widthCols) {
+    this.setWidth = function (elm, widthCols) {
 
         var mediaView = self.getMediaView();
 
@@ -78,7 +78,7 @@ var rcmColumnResize = new function () {
      * @param elm
      * @param offsetCols
      */
-    self.setOffset = function (elm, offsetCols) {
+    this.setOffset = function (elm, offsetCols) {
 
         var mediaView = self.getMediaView();
 
@@ -113,7 +113,7 @@ var rcmColumnResize = new function () {
      * @param elm
      * @param visible
      */
-    self.setVisible = function (elm, visible) {
+    this.setVisible = function (elm, visible) {
 
         var mediaView = self.getMediaView();
 
@@ -130,7 +130,7 @@ var rcmColumnResize = new function () {
      * getVisible
      * @param elm
      */
-    self.getVisible = function (elm) {
+    this.getVisible = function (elm) {
 
         var columnData = self.getElmColumnData(elm);
 
@@ -144,7 +144,7 @@ var rcmColumnResize = new function () {
      * @param elm
      * @param hidden bool
      */
-    self.setHidden = function (elm, hidden) {
+    this.setHidden = function (elm, hidden) {
 
         var mediaView = self.getMediaView();
 
@@ -161,7 +161,7 @@ var rcmColumnResize = new function () {
      * getHidden
      * @param elm
      */
-    self.getHidden = function (elm) {
+    this.getHidden = function (elm) {
 
         var columnData = self.getElmColumnData(elm);
 
@@ -175,7 +175,7 @@ var rcmColumnResize = new function () {
      * @param elm
      * @returns {{xs: {width: number, offset: number}, sm: {width: number, offset: number}, md: {width: number, offset: number}, lg: {width: number, offset: number}}}
      */
-    self.getElmColumnData = function (elm) {
+    this.getElmColumnData = function (elm) {
 
         var currentClass = self.getCurrentClass(elm);
 
@@ -254,20 +254,20 @@ var rcmColumnResize = new function () {
      * Destroy resize bits
      * @param elm
      */
-    self.destroy = function (elm) {
-        elm.parent().unbind('mousemove');
+    this.destroy = function (elm) {
+        jQuery(document).find('html').removeClass('isResizing');
+        jQuery(window).unbind('mousemove').unbind('mousedown');
         var controls = elm.find('.rcm-column-resize-control');
-        controls.unbind('mousedown');
         controls.remove();
     };
 
     /**
      * Add draggy controls
-     * @param elm
+     * @param {HTMLElement|JQLite} domElm
      */
-    self.addControls = function (elm) {
+    this.addControls = function (domElm) {
 
-        elm = jQuery(elm);
+        var elm = jQuery(domElm);
 
         try {
             // prevent duplicate create
@@ -286,21 +286,24 @@ var rcmColumnResize = new function () {
         controlOffset.mousedown(
             function (e) {
                 e.preventDefault();
-                elm.currentColumnData = self.getElmColumnData(elm);
-                elm.offsetStartPositionX = e.pageX;
 
-                elm.parent().mousemove(
+                jQuery(document).find('html').addClass('isResizing');
+
+                var currentColumnData = self.getElmColumnData(elm);
+                var offsetStartPositionX = e.pageX;
+
+                jQuery(window).mousemove(
                     function (e) {
-                        var changePx = e.pageX - elm.offsetStartPositionX;
+                        var changePx = e.pageX - offsetStartPositionX;
 
-                        var changeCols = self.getPartWidthColumns(
+                        var changeCols = Math.floor(self.getPartWidthColumns(
                             elm.parent().width(),
                             changePx
-                        );
+                        ));
 
                         var mediaView = self.getMediaView();
 
-                        var cols = elm.currentColumnData[mediaView].offset + changeCols;
+                        var cols = currentColumnData[mediaView].offset + changeCols;
 
                         self.setOffset(elm, cols);
                     }
@@ -311,21 +314,24 @@ var rcmColumnResize = new function () {
         controlWidth.mousedown(
             function (e) {
                 e.preventDefault();
-                elm.currentColumnData = self.getElmColumnData(elm);
-                elm.widthStartPositionX = e.pageX;
 
-                elm.parent().mousemove(
+                jQuery(document).find('html').addClass('isResizing');
+
+                var currentColumnData = self.getElmColumnData(elm);
+                var widthStartPositionX = e.pageX;
+
+                jQuery(window).mousemove(
                     function (e) {
-                        var changePx = e.pageX - elm.widthStartPositionX;
+                        var changePx = e.pageX - widthStartPositionX;
 
-                        var changeCols = self.getPartWidthColumns(
+                        var changeCols = Math.ceil(self.getPartWidthColumns(
                             elm.parent().width(),
                             changePx
-                        );
+                        ));
 
                         var mediaView = self.getMediaView();
 
-                        var cols = elm.currentColumnData[mediaView].width + changeCols;
+                        var cols = currentColumnData[mediaView].width + changeCols;
 
                         self.setWidth(elm, cols);
                     }
@@ -333,9 +339,10 @@ var rcmColumnResize = new function () {
             }
         );
 
-        jQuery(document).mouseup(
+        jQuery(window).mouseup(
             function (e) {
-                elm.parent().unbind('mousemove');
+                jQuery(document).find('html').removeClass('isResizing');
+                jQuery(window).unbind('mousemove');
             }
         );
     };
@@ -345,7 +352,7 @@ var rcmColumnResize = new function () {
      * @param columnData
      * @returns {string}
      */
-    self.buildClass = function (columnData) {
+    this.buildClass = function (columnData) {
 
         var classes = '';
 
@@ -395,7 +402,7 @@ var rcmColumnResize = new function () {
      * @param elm
      * @param columnData
      */
-    self.updateColumnClass = function (elm, columnData) {
+    this.updateColumnClass = function (elm, columnData) {
         var newClass = self.buildClass(columnData);
         self.setClass(elm, newClass);
     };
@@ -404,7 +411,7 @@ var rcmColumnResize = new function () {
      * clearClass
      * @param elm
      */
-    self.clearClass = function (elm) {
+    this.clearClass = function (elm) {
 
         self.setClass(elm, self.defaultClass);
     };
@@ -414,7 +421,7 @@ var rcmColumnResize = new function () {
      * @param elm
      * @returns {*}
      */
-    self.getCurrentClass = function (elm) {
+    this.getCurrentClass = function (elm) {
 
         return rcmAdminService.model.RcmPluginModel.getColumnClass(elm);
     };
@@ -424,11 +431,11 @@ var rcmColumnResize = new function () {
      * @param elm
      * @param newClass
      */
-    self.setClass = function (elm, newClass) {
+    this.setClass = function (elm, newClass) {
         rcmAdminService.model.RcmPluginModel.setColumnClass(elm, newClass);
         jQuery(window).trigger('resize');
     };
 
-    self.init = self.addControls;
+    this.init = self.addControls;
 };
 

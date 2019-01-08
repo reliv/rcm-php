@@ -228,6 +228,11 @@ html.rcmArrangingPlugins .rcmPlugin {
     border-color: transparent;
 }
 
+html.rcmArrangingPlugins.isResizing {
+  cursor: col-resize;
+}
+
+
 /* Unknown */
 .layoutPluginContainerIcon {
     height: 40px;
