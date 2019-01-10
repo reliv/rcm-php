@@ -273,12 +273,12 @@ return [
             'post-libraries' => [],
             'pre-rcm' => [],
             'rcm' => [
-                '/modules/rcm/rcm.css' => [],
+                '/modules/rcm/rcm.css' => ['media' => 'screen,print'],
             ],
             'post-rcm' => [],
             'pre-modules' => [],
             'modules' => [
-                '/modules/rcm/modules.css' => [],
+                '/modules/rcm/modules.css' => ['media' => 'screen,print'],
             ],
             'post-modules' => [],
         ],
