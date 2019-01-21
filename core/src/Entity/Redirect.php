@@ -69,61 +69,42 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
     /**
      * @var int|null $siteId
      *
-     * @ORM\Column(type="integer", nullable=true)
      */
     protected $siteId = null;
 
     /**
-     * <tracking>
-     *
+     * @deprecated This will no longer be stored. Tracking will be done via the immutable history system
      * @var \DateTime Date object was first created
-     *
-     * @ORM\Column(type="datetime")
      */
     protected $createdDate;
 
     /**
-     * <tracking>
-     *
+     * @deprecated This will no longer be stored. Tracking will be done via the immutable history system
      * @var string User ID of creator
-     *
-     * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $createdByUserId;
 
     /**
-     * <tracking>
-     *
+     * @deprecated This will no longer be stored. Tracking will be done via the immutable history system
      * @var string Short description of create reason
-     *
-     * @ORM\Column(type="string", length=512, nullable=false)
      */
     protected $createdReason = Tracking::UNKNOWN_REASON;
 
     /**
-     * <tracking>
-     *
+     * @deprecated This will no longer be stored. Tracking will be done via the immutable history system
      * @var \DateTime Date object was modified
-     *
-     * @ORM\Column(type="datetime")
      */
     protected $modifiedDate;
 
     /**
-     * <tracking>
-     *
+     * @deprecated This will no longer be stored. Tracking will be done via the immutable history system
      * @var string User ID of modifier
-     *
-     * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $modifiedByUserId;
 
     /**
-     * <tracking>
-     *
+     * @deprecated This will no longer be stored. Tracking will be done via the immutable history system
      * @var string Short description of create reason
-     *
-     * @ORM\Column(type="string", length=512, nullable=false)
      */
     protected $modifiedReason = Tracking::UNKNOWN_REASON;
 
