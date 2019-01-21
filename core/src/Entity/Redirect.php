@@ -69,6 +69,7 @@ class Redirect extends ApiModelTrackingAbstract implements Tracking
     /**
      * @var int|null $siteId
      *
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $siteId = null;
 
