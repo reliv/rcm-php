@@ -5,9 +5,7 @@ namespace Rcm\Middleware;
 use Interop\Container\ContainerInterface;
 use Rcm\Api\GetSiteIdByRequest;
 
-/**
- * @author James Jervis - https://github.com/jerv13
- */
+
 class SiteExistsCheckFactory
 {
     /**
@@ -20,7 +18,8 @@ class SiteExistsCheckFactory
     public function __invoke($container)
     {
         return new SiteExistsCheck(
-            $container->get(GetSiteIdByRequest::class)
+            $container->get(GetSiteIdByRequest::class),
+            $container->get('config')['Rcm']['siteExistsCheckIgnoredUrls']
         );
     }
 }
