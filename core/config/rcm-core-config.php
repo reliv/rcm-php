@@ -282,5 +282,6 @@ return [
             ],
             'post-modules' => [],
         ],
-    ]
+    ],
+    'siteExistsCheckIgnoredUrls' => []
 ];
