@@ -197,7 +197,6 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
 
     /**
      * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
-     * 
      * @var \DateTime Date object was first created
      *
      */
@@ -217,21 +216,21 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
 
     /**
      * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
-     * 
+     *
      * @var \DateTime Date object was modified
      **/
     protected $modifiedDate;
 
     /**
      * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
-     * 
+     *
      * @var string User ID of modifier
      */
     protected $modifiedByUserId;
 
     /**
      * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
-     * 
+     *
      * @var string Short description of create reason
      */
     protected $modifiedReason = Tracking::UNKNOWN_REASON;

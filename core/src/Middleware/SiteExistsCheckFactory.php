@@ -5,7 +5,6 @@ namespace Rcm\Middleware;
 use Interop\Container\ContainerInterface;
 use Rcm\Api\GetSiteIdByRequest;
 
-
 class SiteExistsCheckFactory
 {
     /**
