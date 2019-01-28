@@ -7,7 +7,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Rcm\Api\GetSiteIdByRequest;
 use Zend\Diactoros\Response\HtmlResponse;
 
-
 class SiteExistsCheck
 {
     protected $getSiteIdByRequest;

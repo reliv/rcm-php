@@ -215,6 +215,8 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
+     *
      * Gets the Author property
      *
      * @return string Author
@@ -225,6 +227,8 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
+     *
      * Sets the Author property
      *
      * @param string $author ID of Author.
@@ -237,6 +241,8 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
+     *
      * Gets the CreatedDate property
      *
      * @return \DateTime CreatedDate
@@ -244,7 +250,12 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
      */
     public function getCreatedDate(): \DateTime
     {
-        return $this->createdDate;
+        /**
+         * In-accurate date returned just to make old code happy.
+         *
+         * This function is deprecated and should not be used.
+         */
+        return new \DateTime();
     }
 
     /**

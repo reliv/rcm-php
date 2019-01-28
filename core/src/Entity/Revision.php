@@ -93,56 +93,50 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
     protected $pluginWrappers;
 
     /**
-     * <tracking>
-     *
      * @var \DateTime Date object was first created
      *
      * @ORM\Column(type="datetime")
+     *
      */
     protected $createdDate;
 
     /**
-     * <tracking>
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string User ID of creator
      *
-     * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $createdByUserId;
 
     /**
-     * <tracking>
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string Short description of create reason
      *
-     * @ORM\Column(type="string", length=512, nullable=false)
      */
     protected $createdReason = Tracking::UNKNOWN_REASON;
 
     /**
-     * <tracking>
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var \DateTime Date object was modified
      *
-     * @ORM\Column(type="datetime")
      */
     protected $modifiedDate;
 
     /**
-     * <tracking>
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string User ID of modifier
      *
-     * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $modifiedByUserId;
 
     /**
-     * <tracking>
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string Short description of create reason
      *
-     * @ORM\Column(type="string", length=512, nullable=false)
      */
     protected $modifiedReason = Tracking::UNKNOWN_REASON;
 
@@ -171,6 +165,7 @@ class Revision extends ApiModelTrackingAbstract implements Tracking
     ) {
         $this->pluginWrappers = new ArrayCollection();
         parent::__construct($createdByUserId, $createdReason);
+        $this->createdDate = new \DateTime();
     }
 
     /**
