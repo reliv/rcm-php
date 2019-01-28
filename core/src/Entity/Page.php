@@ -201,7 +201,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     protected $parentId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var \DateTime Date object was first created
      *
@@ -209,7 +209,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     protected $createdDate;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string User ID of creator
      *
@@ -217,7 +217,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     protected $createdByUserId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string Short description of create reason
      *
@@ -225,7 +225,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     protected $createdReason = Tracking::UNKNOWN_REASON;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var \DateTime Date object was modified
      *
@@ -233,7 +233,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     protected $modifiedDate;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string User ID of modifier
      *
@@ -241,7 +241,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     protected $modifiedByUserId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string Short description of create reason
      *

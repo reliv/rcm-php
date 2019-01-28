@@ -5,7 +5,7 @@ namespace Rcm\Tracking\Model;
 use Rcm\Tracking\Exception\TrackingException;
 
 /**
- * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+ * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
  *
  * Trait TrackingTrait
  * @package Rcm\Tracking\Model
@@ -69,7 +69,7 @@ trait TrackingTrait
     protected $modifiedByUserIdUpdated = false;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * Get a clone with special logic
      *
@@ -93,7 +93,7 @@ trait TrackingTrait
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return \DateTime
      * @throws TrackingException
@@ -104,7 +104,7 @@ trait TrackingTrait
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return string
      * @throws TrackingException
@@ -115,7 +115,7 @@ trait TrackingTrait
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return string
      */
@@ -125,7 +125,7 @@ trait TrackingTrait
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @todo this should be protected
      * <tracking> WARNING: this should only be used on creation
@@ -146,7 +146,7 @@ trait TrackingTrait
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return \DateTime
      * @throws TrackingException
@@ -157,7 +157,7 @@ trait TrackingTrait
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      * <tracking>
      *
      * @return string
@@ -169,7 +169,7 @@ trait TrackingTrait
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return string
      */
@@ -179,7 +179,7 @@ trait TrackingTrait
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @param string $modifiedByUserId
      * @param string $modifiedReason
@@ -199,7 +199,7 @@ trait TrackingTrait
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return void
      * @throws TrackingException
@@ -210,7 +210,7 @@ trait TrackingTrait
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return void
      * @throws TrackingException

@@ -106,7 +106,7 @@ class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializabl
     protected $pluginInstanceId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var \DateTime Date object was first created
      *
@@ -114,7 +114,7 @@ class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializabl
     protected $createdDate;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string User ID of creator
      *
@@ -122,7 +122,7 @@ class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializabl
     protected $createdByUserId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string Short description of create reason
      *
@@ -130,7 +130,7 @@ class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializabl
     protected $createdReason = Tracking::UNKNOWN_REASON;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var \DateTime Date object was modified
      *
@@ -138,7 +138,7 @@ class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializabl
     protected $modifiedDate;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string User ID of modifier
      *
@@ -146,7 +146,7 @@ class PluginWrapper extends ApiModelTrackingAbstract implements \JsonSerializabl
     protected $modifiedByUserId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string Short description of create reason
      *

@@ -96,7 +96,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     protected $domainValidatorOptions;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var \DateTime Date object was first created
      *
@@ -104,7 +104,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     protected $createdDate;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string User ID of creator
      *
@@ -112,7 +112,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     protected $createdByUserId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string Short description of create reason
      *
@@ -120,7 +120,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     protected $createdReason = Tracking::UNKNOWN_REASON;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var \DateTime Date object was modified
      *
@@ -128,7 +128,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     protected $modifiedDate;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string User ID of modifier
      *
@@ -136,7 +136,7 @@ class Domain extends ApiModelTrackingAbstract implements \IteratorAggregate, Tra
     protected $modifiedByUserId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string Short description of create reason
      */

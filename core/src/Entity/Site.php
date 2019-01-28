@@ -196,40 +196,40 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
     protected $notFoundPage = 'not-found';
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      * @var \DateTime Date object was first created
      *
      */
     protected $createdDate;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      */
     protected $createdByUserId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      */
     protected $createdReason = Tracking::UNKNOWN_REASON;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var \DateTime Date object was modified
      **/
     protected $modifiedDate;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string User ID of modifier
      */
     protected $modifiedByUserId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string Short description of create reason
      */

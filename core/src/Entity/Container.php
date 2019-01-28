@@ -140,7 +140,7 @@ class Container extends ContainerAbstract implements Tracking
     protected $revisions;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var \DateTime Date object was first created
      *
@@ -148,7 +148,7 @@ class Container extends ContainerAbstract implements Tracking
     protected $createdDate;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string User ID of creator
      *
@@ -156,7 +156,7 @@ class Container extends ContainerAbstract implements Tracking
     protected $createdByUserId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string Short description of create reason
      *
@@ -164,7 +164,7 @@ class Container extends ContainerAbstract implements Tracking
     protected $createdReason = Tracking::UNKNOWN_REASON;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var \DateTime Date object was modified
      *
@@ -172,7 +172,7 @@ class Container extends ContainerAbstract implements Tracking
     protected $modifiedDate;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string User ID of modifier
      *
@@ -180,7 +180,7 @@ class Container extends ContainerAbstract implements Tracking
     protected $modifiedByUserId;
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * @var string Short description of create reason
      *

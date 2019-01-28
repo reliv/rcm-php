@@ -215,7 +215,7 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * Gets the Author property
      *
@@ -227,7 +227,7 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * Sets the Author property
      *
@@ -241,7 +241,7 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
-     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     * @deprecated This sometimes-inaccurate system was replaced by the immutably history system
      *
      * Gets the CreatedDate property
      *
