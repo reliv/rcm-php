@@ -5,7 +5,10 @@ namespace Rcm\Tracking\Model;
 use Rcm\Tracking\Exception\TrackingException;
 
 /**
- * @author James Jervis - https://github.com/jerv13
+ * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+ *
+ * Trait TrackingTrait
+ * @package Rcm\Tracking\Model
  */
 trait TrackingTrait
 {
@@ -66,6 +69,8 @@ trait TrackingTrait
     protected $modifiedByUserIdUpdated = false;
 
     /**
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     *
      * Get a clone with special logic
      *
      * @param string $createdByUserId
@@ -78,10 +83,6 @@ trait TrackingTrait
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
         $new = clone($this);
-        // Reset the clone
-        $new->createdByUserId = null;
-        $new->createdDate = null;
-        $new->createdReason = Tracking::UNKNOWN_REASON;
 
         $new->setCreatedByUserId(
             $createdByUserId,
@@ -92,7 +93,7 @@ trait TrackingTrait
     }
 
     /**
-     * <tracking>
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return \DateTime
      * @throws TrackingException
@@ -108,7 +109,7 @@ trait TrackingTrait
     }
 
     /**
-     * <tracking>
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return string
      * @throws TrackingException
@@ -124,7 +125,7 @@ trait TrackingTrait
     }
 
     /**
-     * <tracking>
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return string
      */
@@ -134,6 +135,8 @@ trait TrackingTrait
     }
 
     /**
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     *
      * @todo this should be protected
      * <tracking> WARNING: this should only be used on creation
      *
@@ -147,49 +150,24 @@ trait TrackingTrait
         string $createdByUserId,
         string $createdReason = Tracking::UNKNOWN_REASON
     ) {
-        // invalid
-        if (strlen($createdByUserId) < 1) {
-            throw new TrackingException('Invalid createdByUserId in ' . get_class($this));
-        }
-
-        // already set
-        if (!empty($this->createdByUserId)) {
-            throw new TrackingException('Can not change createdByUserId in ' . get_class($this));
-        }
-
-        $this->createdByUserId = $createdByUserId;
-
-        // already set
-        if (!empty($this->createdDate)) {
-            throw new TrackingException('Can not change createdDate in ' . get_class($this));
-        }
-
+        $createdByUserId = '_DEPRECATED';
+        $createdReason = '_DEPRECATED';
         $this->createdDate = new \DateTime();
-        $this->createdReason = $createdReason;
-
-        $this->setModifiedByUserId(
-            $createdByUserId,
-            $createdReason
-        );
     }
 
     /**
-     * <tracking>
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return \DateTime
      * @throws TrackingException
      */
     public function getModifiedDate(): \DateTime
     {
-        // not set
-        if (empty($this->modifiedDate)) {
-            throw new TrackingException('Value not set for modifiedDate in ' . get_class($this));
-        }
-
-        return $this->modifiedDate;
+        return new \DateTime();
     }
 
     /**
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
      * <tracking>
      *
      * @return string
@@ -197,26 +175,21 @@ trait TrackingTrait
      */
     public function getModifiedByUserId(): string
     {
-        // not set
-        if (empty($this->modifiedByUserId)) {
-            throw new TrackingException('Value not set for modifiedByUserId in ' . get_class($this));
-        }
-
-        return $this->modifiedByUserId;
+        return '_DEPRECATED';
     }
 
     /**
-     * <tracking>
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return string
      */
     public function getModifiedReason(): string
     {
-        return $this->modifiedReason;
+        return '_DEPRECATED';
     }
 
     /**
-     * <tracking>
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
      *
      * @param string $modifiedByUserId
      * @param string $modifiedReason
@@ -228,56 +201,32 @@ trait TrackingTrait
         string $modifiedByUserId,
         string $modifiedReason = Tracking::UNKNOWN_REASON
     ) {
-        // invalid
-        if (strlen($modifiedByUserId) < 1) {
-            throw new TrackingException('Invalid modifiedByUserId in ' . get_class($this));
-        }
-
         $this->modifiedByUserIdUpdated = true;
-        $this->modifiedByUserId = $modifiedByUserId;
+        $this->modifiedByUserId = '_DEPRECATED';
 
+        $this->modifiedReason = '_DEPRECATED';
         $this->modifiedDate = new \DateTime();
-
-        $this->modifiedReason = $modifiedReason;
     }
 
     /**
-     * <tracking>
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return void
      * @throws TrackingException
      */
     public function assertHasTrackingData()
     {
-        if (empty($this->createdDate)) {
-            throw new TrackingException('Value not set for createdDate in ' . get_class($this));
-        }
-
-        if (empty($this->createdByUserId)) {
-            throw new TrackingException('Value not set for createdByUserId in ' . get_class($this));
-        }
-
-        if (empty($this->modifiedByUserId)) {
-            throw new TrackingException('Value not set for modifiedByUserId in ' . get_class($this));
-        }
-
-        if (empty($this->modifiedDate)) {
-            throw new TrackingException('Value not set for modifiedDate in ' . get_class($this));
-        }
+        //Throw no exceptions to signal that everythign is ok.
     }
 
     /**
-     * <tracking>
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
      *
      * @return void
      * @throws TrackingException
      */
     public function assertHasNewModifiedData()
     {
-        if (!$this->modifiedByUserIdUpdated) {
-            throw new TrackingException('Modified data has not been updated in ' . get_class($this));
-        }
-
-        $this->assertHasTrackingData();
+        //Throw no exceptions to signal that everythign is ok.
     }
 }
