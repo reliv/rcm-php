@@ -100,12 +100,7 @@ trait TrackingTrait
      */
     public function getCreatedDate(): \DateTime
     {
-        // not set
-        if (empty($this->createdDate)) {
-            throw new TrackingException('Value not set for createdDate in ' . get_class($this));
-        }
-
-        return $this->createdDate;
+        return new \DateTime();
     }
 
     /**
@@ -116,12 +111,7 @@ trait TrackingTrait
      */
     public function getCreatedByUserId(): string
     {
-        // not set
-        if (empty($this->createdByUserId)) {
-            throw new TrackingException('Value not set for createdByUserId in ' . get_class($this));
-        }
-
-        return $this->createdByUserId;
+        return '_DEPRECATED';
     }
 
     /**
@@ -131,7 +121,7 @@ trait TrackingTrait
      */
     public function getCreatedReason(): string
     {
-        return $this->createdReason;
+        return '_DEPRECATED';
     }
 
     /**
