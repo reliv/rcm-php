@@ -215,6 +215,8 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     *
      * Gets the Author property
      *
      * @return string Author
@@ -225,6 +227,8 @@ abstract class ContainerAbstract extends TrackingAbstract implements ContainerIn
     }
 
     /**
+     * @deprecated This was sometimes-inaccurate system was replaced by the immutably history system
+     *
      * Sets the Author property
      *
      * @param string $author ID of Author.
