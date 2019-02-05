@@ -123,7 +123,7 @@ class PluginManager
      */
     public function prepPluginForDisplay(PluginInstance $instance)
     {
-        $cacheId = $instance->getInstanceId() !== '' ? 
+        $cacheId = $instance->getInstanceId() !== '' ?
             'rcmPluginInstance_viewData_' . $instance->getInstanceId() :
             '';
 
@@ -172,11 +172,7 @@ class PluginManager
 
         $blockConfig = $this->blockConfigRepository->findById($pluginName);
 
-        if (
-            $pluginInstanceId === '' ||
-            $pluginInstanceId === null ||
-            $pluginInstanceId < 0
-        ) {
+        if ($pluginInstanceId === '' || $pluginInstanceId === null || $pluginInstanceId < 0) {
             $instanceWithData = new InstanceWithDataBasic(
                 $pluginInstanceId,
                 $pluginName,
