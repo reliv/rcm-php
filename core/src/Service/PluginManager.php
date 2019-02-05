@@ -17,6 +17,7 @@ use Rcm\Exception\RuntimeException;
 use Rcm\Http\Response;
 use Rcm\Plugin\PluginInterface;
 use Zend\Cache\Storage\StorageInterface;
+use Zend\Diactoros\ServerRequestFactory;
 use Zend\EventManager\EventManagerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\RequestInterface;
@@ -24,7 +25,6 @@ use Zend\Stdlib\ResponseInterface;
 use Zend\View\Helper\Placeholder\Container;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\ViewEvent;
-use Zend\Diactoros\ServerRequestFactory;
 
 /**
  * Rcm Plugin Manager
@@ -123,9 +123,11 @@ class PluginManager
      */
     public function prepPluginForDisplay(PluginInstance $instance)
     {
-        $cacheId = 'rcmPluginInstance_viewData_' . $instance->getInstanceId();
+        $cacheId = $instance->getInstanceId() !== '' ? 
+            'rcmPluginInstance_viewData_' . $instance->getInstanceId() :
+            '';
 
-        if ($this->cache->hasItem($cacheId)) {
+        if ($cacheId && $this->cache->hasItem($cacheId)) {
             $viewData = $this->cache->getItem($cacheId);
         } else {
             $viewData = $this->getPluginViewData(
@@ -133,7 +135,7 @@ class PluginManager
                 $instance->getInstanceId()
             );
 
-            if ($viewData['canCache']) {
+            if ($cacheId && $viewData['canCache']) {
                 $this->cache->setItem($cacheId, $viewData);
             }
         }
@@ -145,7 +147,7 @@ class PluginManager
         $instance->setEditCss($viewData['editCss']);
         $instance->setTooltip($viewData['tooltip']);
         $instance->setIcon($viewData['icon']);
-        $instance->setCanCache($viewData['canCache']);
+        $instance->setCanCache($cacheId && $viewData['canCache']);
 
         return;
     }
@@ -170,7 +172,11 @@ class PluginManager
 
         $blockConfig = $this->blockConfigRepository->findById($pluginName);
 
-        if ($pluginInstanceId < 0) {
+        if (
+            $pluginInstanceId === '' ||
+            $pluginInstanceId === null ||
+            $pluginInstanceId < 0
+        ) {
             $instanceWithData = new InstanceWithDataBasic(
                 $pluginInstanceId,
                 $pluginName,
