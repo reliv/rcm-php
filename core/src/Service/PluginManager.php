@@ -170,7 +170,7 @@ class PluginManager
 
         $blockConfig = $this->blockConfigRepository->findById($pluginName);
 
-        if ($pluginInstanceId === '' || $pluginInstanceId === null || $pluginInstanceId < 0) {
+        if ($pluginInstanceId < 0) {
             $instanceWithData = new InstanceWithDataBasic(
                 $pluginInstanceId,
                 $pluginName,
