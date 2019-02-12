@@ -17,6 +17,7 @@ use Rcm\Exception\RuntimeException;
 use Rcm\Http\Response;
 use Rcm\Plugin\PluginInterface;
 use Zend\Cache\Storage\StorageInterface;
+use Zend\Diactoros\ServerRequestFactory;
 use Zend\EventManager\EventManagerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\RequestInterface;
@@ -24,7 +25,6 @@ use Zend\Stdlib\ResponseInterface;
 use Zend\View\Helper\Placeholder\Container;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\ViewEvent;
-use Zend\Diactoros\ServerRequestFactory;
 
 /**
  * Rcm Plugin Manager
@@ -125,7 +125,7 @@ class PluginManager
     {
         $cacheId = 'rcmPluginInstance_viewData_' . $instance->getInstanceId();
 
-        if ($this->cache->hasItem($cacheId)) {
+        if ($instance->getInstanceId() >= 0 && $this->cache->hasItem($cacheId)) {
             $viewData = $this->cache->getItem($cacheId);
         } else {
             $viewData = $this->getPluginViewData(
@@ -145,7 +145,7 @@ class PluginManager
         $instance->setEditCss($viewData['editCss']);
         $instance->setTooltip($viewData['tooltip']);
         $instance->setIcon($viewData['icon']);
-        $instance->setCanCache($viewData['canCache']);
+        $instance->setCanCache($instance->getInstanceId() >= 0 && $viewData['canCache']);
 
         return;
     }
