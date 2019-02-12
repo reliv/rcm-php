@@ -117,7 +117,7 @@ var RcmAdminPlugin = function (
 
     /**
      * getInstanceConfig
-     * @param onComplete
+     * @param onCompletez
      *
      * @return {Promise}
      */

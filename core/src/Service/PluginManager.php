@@ -123,11 +123,9 @@ class PluginManager
      */
     public function prepPluginForDisplay(PluginInstance $instance)
     {
-        $cacheId = $instance->getInstanceId() !== '' ?
-            'rcmPluginInstance_viewData_' . $instance->getInstanceId() :
-            '';
+        $cacheId = 'rcmPluginInstance_viewData_' . $instance->getInstanceId();
 
-        if ($cacheId && $this->cache->hasItem($cacheId)) {
+        if ($instance->getInstanceId() >= 0 && $this->cache->hasItem($cacheId)) {
             $viewData = $this->cache->getItem($cacheId);
         } else {
             $viewData = $this->getPluginViewData(
@@ -135,7 +133,7 @@ class PluginManager
                 $instance->getInstanceId()
             );
 
-            if ($cacheId && $viewData['canCache']) {
+            if ($viewData['canCache']) {
                 $this->cache->setItem($cacheId, $viewData);
             }
         }
@@ -147,7 +145,7 @@ class PluginManager
         $instance->setEditCss($viewData['editCss']);
         $instance->setTooltip($viewData['tooltip']);
         $instance->setIcon($viewData['icon']);
-        $instance->setCanCache($cacheId && $viewData['canCache']);
+        $instance->setCanCache($instance->getInstanceId() >= 0 && $viewData['canCache']);
 
         return;
     }
