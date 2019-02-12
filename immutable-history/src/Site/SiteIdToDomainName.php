@@ -30,7 +30,12 @@ class SiteIdToDomainName
         $domain = 'DOMAIN_NAME_UNKNOWN_BECAUSE_SITE_ID_NOT_FOUND';
 
         if ($siteEntity) {
-            $domain = $siteEntity->getDomain()->getDomainName();
+            $domainEntity = $siteEntity->getDomain();
+            if ($domainEntity === null) {
+                $domain = 'SITE_HAS_NO_DOMAN_NAME';
+            } else {
+                $domain = $domainEntity->getDomainName();
+            }
         }
 
         $this->cache[$siteId] = $domain;
