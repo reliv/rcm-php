@@ -14,6 +14,7 @@ use Rcm\ImmutableHistory\Page\ImmutablePageVersionEntity;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\Page\RcmPluginWrappersToRcmImmutablePluginInstances;
+use Rcm\ImmutableHistory\Redirect\ImmutableRedirectVersionEntity;
 use Rcm\ImmutableHistory\Site\HumanReadableDescriber;
 use Rcm\ImmutableHistory\Site\ImmutableSiteVersionEntity;
 use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
@@ -50,6 +51,15 @@ class ModuleConfig
                         'class' => VersionRepository::class,
                         'arguments' => [
                             ['literal' => ImmutableSiteWideContainerVersionEntity::class],
+                            \Doctrine\ORM\EntityManager::class,
+                            GenerateResourceIdInterface::class
+                        ]
+                    ],
+
+                    'Rcm\ImmutableHistory\RedirectVersionRepo' => [
+                        'class' => VersionRepository::class,
+                        'arguments' => [
+                            ['literal' => ImmutableRedirectVersionEntity::class],
                             \Doctrine\ORM\EntityManager::class,
                             GenerateResourceIdInterface::class
                         ]
@@ -98,14 +108,24 @@ class ModuleConfig
                                     \Rcm\ImmutableHistory\SiteWideContainer\HumanReadableDescriber::class
                                 ]
                             ],
+                            [
+                                'addVersionType',
+                                [
+                                    ['literal' => ImmutableRedirectVersionEntity::class],
+                                    \Rcm\ImmutableHistory\Redirect\HumanReadableDescriber::class
+                                ]
+                            ],
                         ]
                     ],
                     \Rcm\ImmutableHistory\Site\HumanReadableDescriber::class => [],
-                    \Rcm\ImmutableHistory\Page\HumanReadableDescriber::class=>[
-                        'arguments'=>[SiteIdToDomainName::class]
+                    \Rcm\ImmutableHistory\Page\HumanReadableDescriber::class => [
+                        'arguments' => [SiteIdToDomainName::class]
                     ],
-                    \Rcm\ImmutableHistory\SiteWideContainer\HumanReadableDescriber::class=>[
-                        'arguments'=>[SiteIdToDomainName::class]
+                    \Rcm\ImmutableHistory\SiteWideContainer\HumanReadableDescriber::class => [
+                        'arguments' => [SiteIdToDomainName::class]
+                    ],
+                    \Rcm\ImmutableHistory\Redirect\HumanReadableDescriber::class => [
+                        'arguments' => [SiteIdToDomainName::class]
                     ],
                     PageContentFactory::class => [],
                     UserIdToUserFullName::class => [],
@@ -149,11 +169,19 @@ class ModuleConfig
                             __DIR__ . '/SiteWideContainer'
                         ]
                     ],
+                    'Rcm\ImmutableHistory\Redirect' => [
+                        'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
+                        'cache' => 'array',
+                        'paths' => [
+                            __DIR__ . '/Redirect'
+                        ]
+                    ],
                     'orm_default' => [
                         'drivers' => [
                             'Rcm\ImmutableHistory\Site' => 'Rcm\ImmutableHistory\Site',
                             'Rcm\ImmutableHistory\Page' => 'Rcm\ImmutableHistory\Page',
-                            'Rcm\ImmutableHistory\SiteWideContainer' => 'Rcm\ImmutableHistory\SiteWideContainer'
+                            'Rcm\ImmutableHistory\SiteWideContainer' => 'Rcm\ImmutableHistory\SiteWideContainer',
+                            'Rcm\ImmutableHistory\Redirect' => 'Rcm\ImmutableHistory\Redirect'
                         ]
                     ]
                 ],
