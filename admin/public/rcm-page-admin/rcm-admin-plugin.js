@@ -117,7 +117,7 @@ var RcmAdminPlugin = function (
 
     /**
      * getInstanceConfig
-     * @param onCompletez
+     * @param onComplete
      *
      * @return {Promise}
      */
@@ -217,7 +217,7 @@ var RcmAdminPlugin = function (
                                 onComplete(self);
                             }
                         }
-                    )
+                    );
                 }
             );
         }
@@ -324,7 +324,7 @@ var RcmAdminPlugin = function (
 
         self.pluginMenu[optionId] = {
             title: title,
-            method: method
+            method: method,
         };
 
         return self.pluginMenu;
@@ -472,7 +472,7 @@ var RcmAdminPlugin = function (
             function (plugin) {
 
                 if (!elm) {
-                    elm = plugin.getElm()
+                    elm = plugin.getElm();
                 }
 
                 self.angularCompile(
@@ -507,13 +507,13 @@ var RcmAdminPlugin = function (
                 // @todo This should be in a model
                 $.ajax
                 ({
-                    type: "POST",
+                    type: 'POST',
                     url: '/rcm/core/rpc/render-plugin-instance-preview',
                     dataType: 'json',
                     data: JSON.stringify({
                         pluginType: name,
                         instanceId: id,
-                        instanceConfig: self.instanceConfig
+                        instanceConfig: self.instanceConfig,
                     }),
                     success: function (data) {
                         pluginContainer.html(data.html);
@@ -522,8 +522,8 @@ var RcmAdminPlugin = function (
                                 self.initEdit(onComplete, true);
                             }
                         );
-                    }
-                })
+                    },
+                });
             }
         );
     };
