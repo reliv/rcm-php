@@ -38,9 +38,9 @@ class DataService implements DataProvider
      * @param Instance               $instance
      * @param ServerRequestInterface $request
      *
-     * @return array
+     * @return array | null
      */
-    public function __invoke(Instance $instance, ServerRequestInterface $request) : array
+    public function __invoke(Instance $instance, ServerRequestInterface $request)
     {
         $provider = $this->providerRepository->findByName($instance->getName());
 

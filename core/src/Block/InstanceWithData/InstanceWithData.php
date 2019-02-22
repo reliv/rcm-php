@@ -13,7 +13,7 @@ use Rcm\Block\Instance\Instance;
 interface InstanceWithData extends Instance
 {
     /**
-     * @return array Any custom data that was delivered by a registered block data service. this is optional
+     * @return array | null Any custom data that was delivered by a registered block data service. this is optional
      */
     public function getData();
 }
