@@ -175,7 +175,7 @@ class PluginManager
                 $pluginInstanceId,
                 $pluginName,
                 $blockConfig->getDefaultConfig(),
-                [] //@TODO run the dataprovider here instead of returning empty array
+                null //@TODO run the dataprovider here instead of returning null
             );
         } else {
             $instanceWithData = $this->instanceWithDataService->__invoke($pluginInstanceId, $request);

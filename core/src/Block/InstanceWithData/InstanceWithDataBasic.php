@@ -13,9 +13,9 @@ use Rcm\Block\Instance\InstanceBasic;
 class InstanceWithDataBasic extends InstanceBasic implements InstanceWithData
 {
     /**
-     * @var array
+     * @var array | null
      */
-    protected $data = [];
+    protected $data;
 
     /**
      * Constructor.
@@ -23,9 +23,9 @@ class InstanceWithDataBasic extends InstanceBasic implements InstanceWithData
      * @param string $id
      * @param string $config
      * @param array  $name
-     * @param array  $data
+     * @param array | null $data
      */
-    public function __construct($id, $name, $config, $data = [])
+    public function __construct($id, $name, $config, $data = null)
     {
         $this->data = $data;
         parent::__construct($id, $name, $config);
