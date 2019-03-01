@@ -645,7 +645,7 @@ class SiteManager
         }
     }
 
-    function changeSiteDomainName(Site $site, $newHost, string $userId)
+    public function changeSiteDomainName(Site $site, $newHost, string $userId)
     {
         $domainObject = $site->getDomain();
         $oldHost = $domainObject->getDomainName();
