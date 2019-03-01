@@ -57,7 +57,7 @@ class SiteDomainNameController implements MiddlewareInterface
             || !$user->getId()
         ) {
             return new JsonResponse(['error' => 'uauthorized'], 401);
-        } //@TODO!
+        }
         $body = $request->getParsedBody();
         if (!isset($body['host'])) {
             return new JsonResponse(['error' => '"host" field is required'], 401);
