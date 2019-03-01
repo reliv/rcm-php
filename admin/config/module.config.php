@@ -461,6 +461,16 @@ return [
             ],
         ],
     ],
+    'routes' => [
+        [
+            'path' => '/api/rcm/site/current/domain',
+            'middleware' => [
+                \Reliv\App\HttpMiddleware\JsonBodyParserMiddleware::class,
+                \RcmAdmin\Controller\SiteDomainNameController::class,
+            ],
+            'allowed_methods' => ['PUT'],
+        ],
+    ],
     /* router */
     'router' => [
         'routes' => [
@@ -657,6 +667,14 @@ return [
     /* service_manager */
     'service_manager' => [
         'config_factories' => [
+            \RcmAdmin\Controller\SiteDomainNameController::class => [
+                'arguments' => [
+                    \Rcm\Service\CurrentSite::class,
+                    \RcmUser\Api\Acl\IsAllowed::class,
+                    \RcmAdmin\Service\SiteManager::class,
+                    \RcmUser\Api\Authentication\GetIdentity::class
+                ],
+            ],
             RcmAdmin\Service\SiteManager::class => [
                 'arguments' => [
                     'Config',
