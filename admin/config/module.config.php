@@ -99,6 +99,9 @@ return [
     ],
     /* controllers */
     'controllers' => [
+        'config_factories' => [
+            \RcmAdmin\Controller\ReactAdminHtmlRootController::class => []
+        ],
         'factories' => [
             RcmAdmin\Controller\ApiAdminSitesCloneController::class
             => RcmAdmin\Factory\ApiAdminSitesCloneControllerFactory::class,
@@ -325,6 +328,10 @@ return [
                         'uri' => '/modules/rcm-admin/site-page-copy/site-page-copy.html',
                         'title' => 'Copy Pages',
                     ],
+                    'Change Domain Name' => [
+                        'label' => 'Change Domain Name',
+                        'uri' => '/rcm-admin/react-admin#/change-current-site-host',
+                    ],
                 ]
             ],
             'User' => [
@@ -481,6 +488,16 @@ return [
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\PageController::class,
                         'action' => 'new',
+                    ],
+                ],
+            ],
+            '/rcm-admin/react-admin' => [
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/rcm-admin/react-admin',
+                    'defaults' => [
+                        'controller' => \RcmAdmin\Controller\ReactAdminHtmlRootController::class,
+                        'action' => 'index',
                     ],
                 ],
             ],
