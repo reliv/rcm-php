@@ -2,23 +2,22 @@
 
 namespace RcmAdmin\Controller;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Rcm\Entity\Site;
-use Rcm\ImmutableHistory\VersionRepositoryInterface;
-use RcmAdmin\Service\SiteManager;
-use RcmUser\Api\Authentication\GetIdentity;
-use Zend\Diactoros\Response\JsonResponse;
 use \Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use \Zend\Mvc\Controller\AbstractRestfulController;
+use Rcm\Acl\ResourceName;
 use RcmUser\Api\Acl\IsAllowed;
+use RcmUser\Service\RcmUserService;
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class ReactAdminHtmlRootController extends AbstractActionController
 {
+    protected $rcmUserService;
+
+    public function __construct(RcmUserService $rcmUserService)
+    {
+        $this->rcmUserService = $rcmUserService;
+    }
+
     /**
      * indexAction
      *
@@ -26,6 +25,12 @@ class ReactAdminHtmlRootController extends AbstractActionController
      */
     public function indexAction()
     {
+        if (!$this->rcmUserService->isAllowed(ResourceName::RESOURCE_SITES, 'admin')) {
+            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+
+            return $this->getResponse();
+        }
+
         $this->layout()->setTemplate('layout/blank');
 
         return new ViewModel();

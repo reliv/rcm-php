@@ -100,7 +100,11 @@ return [
     /* controllers */
     'controllers' => [
         'config_factories' => [
-            \RcmAdmin\Controller\ReactAdminHtmlRootController::class => []
+            \RcmAdmin\Controller\ReactAdminHtmlRootController::class => [
+                'arguments' => [
+                    RcmUser\Service\RcmUserService::class,
+                ],
+            ],
         ],
         'factories' => [
             RcmAdmin\Controller\ApiAdminSitesCloneController::class
@@ -150,7 +154,7 @@ return [
             => RcmAdmin\Controller\RpcAdminKeepAlive::class,
 
             RcmAdmin\Controller\ApiAdminCheckPermissionsController::class
-            => RcmAdmin\Controller\ApiAdminCheckPermissionsController::class
+            => RcmAdmin\Controller\ApiAdminCheckPermissionsController::class,
         ],
     ],
     /* form_elements */
@@ -162,8 +166,8 @@ return [
             RcmAdmin\Form\NewPageForm::class
             => RcmAdmin\Factory\NewPageFormFactory::class,
 //Disabled durring immutable history project in 2018-10 since no-one is using it
-//            RcmAdmin\Form\CreateTemplateFromPageForm::class
-//            => RcmAdmin\Factory\CreateTemplateFromPageFormFactory::class,
+            //            RcmAdmin\Form\CreateTemplateFromPageForm::class
+            //            => RcmAdmin\Factory\CreateTemplateFromPageFormFactory::class,
         ],
     ],
     /* includeFileManager */
@@ -176,7 +180,7 @@ return [
             'editStyle.css' => [
                 'destination' => __DIR__ . '/../../../../public/css',
                 'header' =>
-                    __DIR__ . '/../../../../public/css/editStyleHeader.css',
+                __DIR__ . '/../../../../public/css/editStyleHeader.css',
             ],
             'script.js' => [
                 'destination' => __DIR__ . '/../../../../public/js',
@@ -185,7 +189,7 @@ return [
             'editScript.js' => [
                 'destination' => __DIR__ . '/../../../../public/js',
                 'header' =>
-                    __DIR__ . '/../../../../public/js/editScriptHeader.js',
+                __DIR__ . '/../../../../public/js/editScriptHeader.js',
             ],
         ],
     ],
@@ -227,33 +231,33 @@ return [
                                     'rcmPageType' => ':rcmPageType',
                                 ],
                             ],
-                        ]
+                        ],
                     ],
 //Disabled durring immutable history project since no-one is using it
-//                    'Copy To' => [
-//                        'label' => 'Copy To...',
-//                        'uri' => '#',
-//                        'rcmOnly' => true,
-//                        'pages' => [
-//                            'Page' => [
-//                                'label' => 'Template',
-//                                'route' => 'RcmAdmin\Page\CreateTemplateFromPage',
-//                                'class' => 'rcmAdminMenu RcmFormDialog',
-//                                'title' => 'Copy To Template',
-//                                'params' => [
-//                                    'rcmPageName' => ':rcmPageName',
-//                                    'rcmPageType' => ':rcmPageType',
-//                                    'rcmPageRevision' => ':rcmPageRevision'
-//                                ],
-//                                'acl' => [
-//                                    'providerId' => \Rcm\Acl\ResourceProvider::class,
-//                                    'resource'
-//                                    => \Rcm\Acl\ResourceName::RESOURCE_SITES . '.:siteId'
-//                                        . '.' . \Rcm\Acl\ResourceName::RESOURCE_PAGES . '.create'
-//                                ]
-//                            ],
-//                        ],
-//                    ],
+                    //                    'Copy To' => [
+                    //                        'label' => 'Copy To...',
+                    //                        'uri' => '#',
+                    //                        'rcmOnly' => true,
+                    //                        'pages' => [
+                    //                            'Page' => [
+                    //                                'label' => 'Template',
+                    //                                'route' => 'RcmAdmin\Page\CreateTemplateFromPage',
+                    //                                'class' => 'rcmAdminMenu RcmFormDialog',
+                    //                                'title' => 'Copy To Template',
+                    //                                'params' => [
+                    //                                    'rcmPageName' => ':rcmPageName',
+                    //                                    'rcmPageType' => ':rcmPageType',
+                    //                                    'rcmPageRevision' => ':rcmPageRevision'
+                    //                                ],
+                    //                                'acl' => [
+                    //                                    'providerId' => \Rcm\Acl\ResourceProvider::class,
+                    //                                    'resource'
+                    //                                    => \Rcm\Acl\ResourceName::RESOURCE_SITES . '.:siteId'
+                    //                                        . '.' . \Rcm\Acl\ResourceName::RESOURCE_PAGES . '.create'
+                    //                                ]
+                    //                            ],
+                    //                        ],
+                    //                    ],
                     'Drafts' => [
                         'label' => 'Drafts',
                         'uri' => '#',
@@ -271,9 +275,9 @@ return [
                                         'page' => ':rcmPageName',
                                         'pageType' => ':rcmPageType',
                                         'revision' => ':rcmPageRevision',
-                                    ]
-                                ]
-                            ]
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     'Restore' => [
@@ -293,9 +297,9 @@ return [
                                         'rcmPageName' => ':rcmPageName',
                                         'rcmPageType' => ':rcmPageType',
                                         'rcmPageRevision' => ':rcmPageRevision',
-                                    ]
-                                ]
-                            ]
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     'Delete' => [
@@ -330,9 +334,9 @@ return [
                     ],
                     'Change Domain Name' => [
                         'label' => 'Change Domain Name',
-                        'uri' => '/admin#/change-current-site-host',
+                        'uri' => '/admin#/site/change-current-host',
                     ],
-                ]
+                ],
             ],
             'User' => [
                 'label' => 'Users',
@@ -346,40 +350,29 @@ return [
     /* rcmAdmin Config */
     'rcmAdmin' => [
         'createBlankPagesErrors' => [
-            'missingItems'
-            => 'Please make sure to include a Page Name and select the'
-                . 'layout you wish to use.',
-            'pageExists'
-            => 'The page URL provided already exists'
+            'missingItems' => 'Please make sure to include a Page Name and select the'
+            . 'layout you wish to use.',
+            'pageExists' => 'The page URL provided already exists',
         ],
         'saveAsTemplateErrors' => [
-            'missingItems'
-            => 'Please make sure to include a Page Name',
-            'pageExists'
-            => 'The page URL provided already exists',
-            'revisionNotFound'
-            => 'Unable to locate page revision.  '
-                . 'Please contact the administrator.'
+            'missingItems' => 'Please make sure to include a Page Name',
+            'pageExists' => 'The page URL provided already exists',
+            'revisionNotFound' => 'Unable to locate page revision.  '
+            . 'Please contact the administrator.',
         ],
         'createSiteErrors' => [
-            'missingItems'
-            => 'Some needed information is missing.  '
-                . 'Please check and make sure to include'
-                . ' a domain, country, and language.',
-            'countryNotFound'
-            => 'Unable to locate country to save.  '
-                . 'Please contact and administrator or try again.',
-            'languageNotFound'
-            => 'Unable to locate language to save.  '
-                . 'Please contact and administrator or try again.',
-            'domainInvalid'
-            => 'Domain exists or is invalid.',
-            'newSiteNotImplemented'
-            => 'Creating a new blank site has not'
-                . ' been implemented yet.',
-            'siteNotFound'
-            => 'Unable to locate the site to clone.  '
-                . 'Please contact and administrator or try again.',
+            'missingItems' => 'Some needed information is missing.  '
+            . 'Please check and make sure to include'
+            . ' a domain, country, and language.',
+            'countryNotFound' => 'Unable to locate country to save.  '
+            . 'Please contact and administrator or try again.',
+            'languageNotFound' => 'Unable to locate language to save.  '
+            . 'Please contact and administrator or try again.',
+            'domainInvalid' => 'Domain exists or is invalid.',
+            'newSiteNotImplemented' => 'Creating a new blank site has not'
+            . ' been implemented yet.',
+            'siteNotFound' => 'Unable to locate the site to clone.  '
+            . 'Please contact and administrator or try again.',
         ],
         'adminRichEditor' => 'tinyMce',
         'defaultSiteSettings' => [
@@ -412,7 +405,7 @@ return [
                             'layoutContainer' => '4',
                             'saveData' => [
                                 'html' => '<h1>Home</h1>',
-                            ]
+                            ],
                         ],
                     ],
                 ],
@@ -444,7 +437,7 @@ return [
                             'layoutContainer' => '4',
                             'saveData' => [
                                 'html' => '<h1>Access Denied</h1>',
-                            ]
+                            ],
                         ],
                     ],
                 ],
@@ -461,7 +454,7 @@ return [
                             'layoutContainer' => '4',
                             'saveData' => [
                                 'html' => '<h1>Page Not Found</h1>',
-                            ]
+                            ],
                         ],
                     ],
                 ],
@@ -502,17 +495,17 @@ return [
                 ],
             ],
 //Disabled durring immutable history project since no-one is using it
-//            'RcmAdmin\Page\CreateTemplateFromPage' => [
-//                'type' => 'Zend\Mvc\Router\Http\Segment',
-//                'options' => [
-//                    'route'
-//                    => '/rcm-admin/page/create-template-from-page/:rcmPageType/:rcmPageName[/[:rcmPageRevision]]',
-//                    'defaults' => [
-//                        'controller' => RcmAdmin\Controller\PageController::class,
-//                        'action' => 'createTemplateFromPage',
-//                    ],
-//                ],
-//            ],
+            //            'RcmAdmin\Page\CreateTemplateFromPage' => [
+            //                'type' => 'Zend\Mvc\Router\Http\Segment',
+            //                'options' => [
+            //                    'route'
+            //                    => '/rcm-admin/page/create-template-from-page/:rcmPageType/:rcmPageName[/[:rcmPageRevision]]',
+            //                    'defaults' => [
+            //                        'controller' => RcmAdmin\Controller\PageController::class,
+            //                        'action' => 'createTemplateFromPage',
+            //                    ],
+            //                ],
+            //            ],
             'RcmAdmin\Page\PublishPageRevision' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
@@ -530,7 +523,7 @@ return [
                     'defaults' => [
                         'id' => 'current',
                         'controller' => RcmAdmin\Controller\ApiAdminCurrentSiteController::class,
-                    ]
+                    ],
                 ],
             ],
             'ApiAdminManageSitesController' => [
@@ -539,7 +532,7 @@ return [
                     'route' => '/api/admin/manage-sites[/:id]',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminManageSitesController::class,
-                    ]
+                    ],
                 ],
             ],
             'ApiAdminSitesCloneController' => [
@@ -548,7 +541,7 @@ return [
                     'route' => '/api/admin/site-copy[/:id]',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminSitesCloneController::class,
-                    ]
+                    ],
                 ],
             ],
             'ApiAdminLanguageController' => [
@@ -557,7 +550,7 @@ return [
                     'route' => '/api/admin/language[/:id]',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminLanguageController::class,
-                    ]
+                    ],
                 ],
             ],
             'ApiAdminThemeController' => [
@@ -566,7 +559,7 @@ return [
                     'route' => '/api/admin/theme[/:id]',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminThemeController::class,
-                    ]
+                    ],
                 ],
             ],
             'ApiAdminCountryController' => [
@@ -575,7 +568,7 @@ return [
                     'route' => '/api/admin/country[/:id]',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminCountryController::class,
-                    ]
+                    ],
                 ],
             ],
             'ApiAdminSitePageController' => [
@@ -584,7 +577,7 @@ return [
                     'route' => '/api/admin/sites/:siteId/pages[/:id]',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminSitePageController::class,
-                    ]
+                    ],
                 ],
             ],
             'ApiAdminSitePageCloneController' => [
@@ -593,7 +586,7 @@ return [
                     'route' => '/api/admin/sites/:siteId/page-copy[/:id]',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminSitePageCloneController::class,
-                    ]
+                    ],
                 ],
             ],
             'ApiAdminPageTypesController' => [
@@ -602,7 +595,7 @@ return [
                     'route' => '/api/admin/pagetypes[/:id]',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminPageTypesController::class,
-                    ]
+                    ],
                 ],
             ],
             'RcmAdmin\\RpcAdminCanEdit' => [
@@ -611,7 +604,7 @@ return [
                     'route' => '/api/rpc/rcm-admin/can-edit[/:id]',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\RpcAdminCanEdit::class,
-                    ]
+                    ],
                 ],
             ],
             'RcmAdmin\\RpcAdminKeepAlive' => [
@@ -620,7 +613,7 @@ return [
                     'route' => '/api/rpc/rcm-admin/keep-alive[/:id]',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\RpcAdminKeepAlive::class,
-                    ]
+                    ],
                 ],
             ],
             'RcmAdmin\Page\SavePage' => [
@@ -689,7 +682,7 @@ return [
                     \Rcm\Service\CurrentSite::class,
                     \RcmUser\Api\Acl\IsAllowed::class,
                     \RcmAdmin\Service\SiteManager::class,
-                    \RcmUser\Api\Authentication\GetIdentity::class
+                    \RcmUser\Api\Authentication\GetIdentity::class,
                 ],
             ],
             RcmAdmin\Service\SiteManager::class => [
@@ -700,7 +693,7 @@ return [
                     \RcmAdmin\Service\PageMutationService::class,
                     'Rcm\ImmutableHistory\SiteVersionRepo',
                     'Rcm\ImmutableHistory\SiteWideContainerVersionRepo',
-                    \Rcm\ImmutableHistory\Page\PageContentFactory::class
+                    \Rcm\ImmutableHistory\Page\PageContentFactory::class,
                 ],
             ],
             \RcmAdmin\Api\GetPageData::class => [],
@@ -712,9 +705,9 @@ return [
                     'Rcm\ImmutableHistory\PageVersionRepo',
                     'Rcm\ImmutableHistory\SiteWideContainerVersionRepo',
                     \Rcm\ImmutableHistory\Page\PageContentFactory::class,
-                    \Rcm\ImmutableHistory\Page\RcmPageNameToPathname::class
-                ]
-            ]
+                    \Rcm\ImmutableHistory\Page\RcmPageNameToPathname::class,
+                ],
+            ],
         ],
         'factories' => [
             RcmAdmin\EventListener\DispatchListener::class
@@ -723,8 +716,7 @@ return [
             RcmAdmin\Controller\AdminPanelController::class
             => RcmAdmin\Factory\AdminPanelControllerFactory::class,
 
-            'RcmAdminNavigation'
-            => RcmAdmin\Factory\AdminNavigationFactory::class,
+            'RcmAdminNavigation' => RcmAdmin\Factory\AdminNavigationFactory::class,
 
             RcmAdmin\Service\RendererAvailableBlocksJs::class
             => RcmAdmin\Service\RendererAvailableBlocksJsFactory::class,
@@ -744,6 +736,6 @@ return [
         'invokables' => [
             'formPageLayout' => RcmAdmin\View\Helper\FormPageLayout::class,
             'displayErrors' => RcmAdmin\View\Helper\DisplayErrors::class,
-        ]
+        ],
     ],
 ];
