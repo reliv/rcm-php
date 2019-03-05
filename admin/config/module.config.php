@@ -330,7 +330,7 @@ return [
                     ],
                     'Change Domain Name' => [
                         'label' => 'Change Domain Name',
-                        'uri' => '/rcm-admin/react-admin#/change-current-site-host',
+                        'uri' => '/admin#/change-current-site-host',
                     ],
                 ]
             ],
@@ -491,10 +491,10 @@ return [
                     ],
                 ],
             ],
-            '/rcm-admin/react-admin' => [
+            '/admin' => [
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => [
-                    'route' => '/rcm-admin/react-admin',
+                    'route' => '/admin',
                     'defaults' => [
                         'controller' => \RcmAdmin\Controller\ReactAdminHtmlRootController::class,
                         'action' => 'index',
