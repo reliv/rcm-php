@@ -644,4 +644,36 @@ class SiteManager
             $entityManager->flush($pageRevisions);
         }
     }
+
+    public function changeSiteDomainName(Site $site, $newHost, string $userId)
+    {
+        $domainObject = $site->getDomain();
+        $oldHost = $domainObject->getDomainName();
+        $oldLocator = new SiteLocator($oldHost);
+
+        /**
+         * For BC support, ensure we have a published version of the site in history
+         * before trying to rename it. This wouldn't be needed if all sites were
+         * created after the immutable history system was launched.
+         */
+        $this->siteVersionRepo->publish(
+            $oldLocator,
+            $this->siteToImmutableSiteContent($site),
+            $userId,
+            __CLASS__ . '::' . __FUNCTION__,
+            $site->getSiteId()
+        );
+
+        //Change the domain name in RCM core
+        $domainObject->setDomainName($newHost);
+        $this->entityManager->flush($domainObject);
+
+        //Change the domain name in the immutable history system
+        $this->siteVersionRepo->relocate(
+            $oldLocator,
+            new SiteLocator($newHost),
+            $userId,
+            __CLASS__ . '::' . __FUNCTION__
+        );
+    }
 }

@@ -10,7 +10,7 @@ return [
                 'route' => '/api/admin/instance-configs/:pluginType/:id',
                 'defaults' => [
                     'controller' => \Rcm\Controller\InstanceConfigApiController::class,
-                ]
+                ],
             ],
         ],
         /* @deprecated */
@@ -21,7 +21,7 @@ return [
                 'defaults' => [
                     'controller' => \Rcm\Controller\IndexController::class,
                     'action' => 'index',
-                ]
+                ],
             ],
         ],
         /* CmsRoute Example*/
@@ -49,7 +49,7 @@ return [
                 'defaults' => [
                     'controller' => \Rcm\Controller\IndexController::class,
                     'action' => 'index',
-                ]
+                ],
             ],
         ],
         'blog' => [
@@ -59,7 +59,7 @@ return [
                 'defaults' => [
                     'controller' => \Rcm\Controller\IndexController::class,
                     'action' => 'index',
-                ]
+                ],
             ],
         ],
         'contentManagerNewInstanceAjax' => [
@@ -89,7 +89,7 @@ return [
                 'defaults' => [
                     'controller' => \Rcm\Controller\PageSearchApiController::class,
                     'action' => 'siteTitleSearch',
-                ]
+                ],
             ],
         ],
         'rcm-page-search' => [
@@ -99,7 +99,7 @@ return [
                 'defaults' => [
                     'controller' => \Rcm\Controller\PageSearchApiController::class,
                     'action' => 'allSitePages',
-                ]
+                ],
             ],
         ],
         'Rcm\Api\Page\Check' => [
@@ -120,7 +120,6 @@ return [
                     'action' => 'flush',
                 ],
             ],
-        ]
-
+        ],
     ],
 ];

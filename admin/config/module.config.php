@@ -99,6 +99,9 @@ return [
     ],
     /* controllers */
     'controllers' => [
+        'config_factories' => [
+            \RcmAdmin\Controller\ReactAdminHtmlRootController::class => []
+        ],
         'factories' => [
             RcmAdmin\Controller\ApiAdminSitesCloneController::class
             => RcmAdmin\Factory\ApiAdminSitesCloneControllerFactory::class,
@@ -325,6 +328,10 @@ return [
                         'uri' => '/modules/rcm-admin/site-page-copy/site-page-copy.html',
                         'title' => 'Copy Pages',
                     ],
+                    'Change Domain Name' => [
+                        'label' => 'Change Domain Name',
+                        'uri' => '/admin#/change-current-site-host',
+                    ],
                 ]
             ],
             'User' => [
@@ -461,6 +468,16 @@ return [
             ],
         ],
     ],
+    'routes' => [
+        [
+            'path' => '/api/rcm/site/current/domain',
+            'middleware' => [
+                \Reliv\App\HttpMiddleware\JsonBodyParserMiddleware::class,
+                \RcmAdmin\Controller\SiteDomainNameController::class,
+            ],
+            'allowed_methods' => ['PUT'],
+        ],
+    ],
     /* router */
     'router' => [
         'routes' => [
@@ -471,6 +488,16 @@ return [
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\PageController::class,
                         'action' => 'new',
+                    ],
+                ],
+            ],
+            '/admin' => [
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/admin',
+                    'defaults' => [
+                        'controller' => \RcmAdmin\Controller\ReactAdminHtmlRootController::class,
+                        'action' => 'index',
                     ],
                 ],
             ],
@@ -657,6 +684,14 @@ return [
     /* service_manager */
     'service_manager' => [
         'config_factories' => [
+            \RcmAdmin\Controller\SiteDomainNameController::class => [
+                'arguments' => [
+                    \Rcm\Service\CurrentSite::class,
+                    \RcmUser\Api\Acl\IsAllowed::class,
+                    \RcmAdmin\Service\SiteManager::class,
+                    \RcmUser\Api\Authentication\GetIdentity::class
+                ],
+            ],
             RcmAdmin\Service\SiteManager::class => [
                 'arguments' => [
                     'Config',
