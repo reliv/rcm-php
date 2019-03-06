@@ -26,7 +26,7 @@ class HumanReadableDescriber implements HumanReadableVersionDescriber
 
     public function getResourceTypeDescription(VersionEntityInterface $version): string
     {
-        return 'SiteSettingsSection';
+        return 'site-settings-section';
     }
 
     public function getParentCurrentLocationDescription(VersionEntityInterface $version): string
