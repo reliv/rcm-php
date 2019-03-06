@@ -59,7 +59,8 @@
       "Rcm\\ImmutableHistory\\": "immutable-history/src/",
       "Rcm\\ImmutableHistory\\Test\\": "immutable-history/test/",
       "RcmAdmin\\": "admin/src/",
-      "Rcm\\": "core/src/"
+      "Rcm\\": "core/src/",
+      "Rcm\\HttpLib\\": "http-lib/src/"
     }
   }
 }

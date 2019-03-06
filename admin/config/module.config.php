@@ -465,7 +465,7 @@ return [
         [
             'path' => '/api/rcm/site/current/domain',
             'middleware' => [
-                \Reliv\App\HttpMiddleware\JsonBodyParserMiddleware::class,
+                \Rcm\HttpLib\JsonBodyParserMiddleware::class,
                 \RcmAdmin\Controller\SiteDomainNameController::class,
             ],
             'allowed_methods' => ['PUT'],
