@@ -102,7 +102,8 @@ return [
         'config_factories' => [
             \RcmAdmin\Controller\ReactAdminHtmlRootController::class => [
                 'arguments' => [
-                    RcmUser\Service\RcmUserService::class,
+                    \RcmUser\Service\RcmUserService::class,
+                    \Rcm\SiteSettingsSections\GetSectionDefinitions::class
                 ],
             ],
         ],
