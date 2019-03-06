@@ -58,6 +58,7 @@
     "psr-4": {
       "Rcm\\ImmutableHistory\\": "immutable-history/src/",
       "Rcm\\ImmutableHistory\\Test\\": "immutable-history/test/",
+      "Rcm\\SiteSettingsSections\\": "site-settings-sections/src/",
       "RcmAdmin\\": "admin/src/",
       "Rcm\\": "core/src/",
       "Rcm\\HttpLib\\": "http-lib/src/"
