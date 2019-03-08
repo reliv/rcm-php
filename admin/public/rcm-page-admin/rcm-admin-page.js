@@ -29,7 +29,7 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
      * @param name
      * @param amount
      */
-    self.setLoading = function(name, amount){
+    self.setLoading = function (name, amount) {
         rcmLoading.setLoading(
             name,
             amount
@@ -131,9 +131,15 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
                     promiseArray
                 ).then(
                     function () {
-                        jQuery.post(
-                            self.saveUrl + '/' + data.type + '/' + data.name + '/' + data.revision,
-                            data,
+                        jQuery.ajax(
+                            {
+                                url: self.saveUrl + '/' + data.type + '/' + data.name + '/' + data.revision,
+                                type: "POST",
+                                data: JSON.stringify(data),
+                                contentType: 'application/json',
+                                dataType: "json",
+                            }
+                        ).done(
                             function (msg) {
                                 self.setLoading(
                                     'RcmAdminPage',
@@ -152,8 +158,7 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
                                     );
                                 }
 
-                            },
-                            'json'
+                            }
                         ).fail(
                             function (msg) {
                                 self.setLoading(
@@ -263,7 +268,7 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
 
             self.plugins[pluginId].remove(
                 function (plugin) {
-                    delete(self.plugins[pluginId]);
+                    delete (self.plugins[pluginId]);
                     self.events.trigger('removePlugin', pluginId);
                 }
             );

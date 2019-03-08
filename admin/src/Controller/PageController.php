@@ -310,14 +310,15 @@ class PageController extends AbstractActionController
                 'n'
             );
 
-        $data = $request->getPost();
+        //Note: This should probably come out of the ZF2 request instead but that didn't seem to work
+        $data = json_decode(file_get_contents('php://input'), true);
 
         return $this->getJsonResponse(
             $this->pageMutationService->savePageDraft(
                 $this->rcmUserService->getCurrentUser(),
                 $pageName,
                 $pageType,
-                $request->getPost()->toArray(),
+                $data,
                 function ($pageName, $pageType = 'n', $pageRevision = null) {
                     return $this->urlToPage($pageName, $pageType, $pageRevision);
                 },
