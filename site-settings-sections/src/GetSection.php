@@ -7,8 +7,10 @@ use Rcm\Entity\Site;
 
 class GetSection
 {
+    /** @var GetSectionDefinitions */
     protected $getSectionDefinitions;
 
+    /** @var EntityManager */
     protected $entityManager;
 
     public function __construct(
@@ -29,7 +31,8 @@ class GetSection
      */
     public function __invoke(Site $site, string $sectionName)
     {
-        if (!array_key_exists($sectionName, $this->getSectionDefinitions->__invoke())) {
+        $definitions = $this->getSectionDefinitions->__invoke();
+        if (!array_key_exists($sectionName, $definitions)) {
             throw new InvalidSectionNameException();
         }
 
@@ -40,9 +43,21 @@ class GetSection
          */
         $entity = $repository->findOneBy(['site' => $site, 'sectionName' => $sectionName]);
         if ($entity === null) {
-            return null;
+            return $this->getDefaults($definitions[$sectionName]);
         }
 
         return $entity->getSettings();
+    }
+
+    protected function getDefaults(array $definition)
+    {
+        $defaults = [];
+        foreach ($definition['fields'] as $field) {
+            if (empty($field['name'])) {
+                continue;
+            }
+            $defaults[$field['name']] = $field['default'] ?? null;
+        }
+        return $defaults;
     }
 }
