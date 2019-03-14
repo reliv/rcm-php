@@ -13,9 +13,16 @@ use Zend\Diactoros\Response\JsonResponse;
 
 class HttpGetSiteSettingsSectionController implements MiddlewareInterface
 {
+    /** @var GetSection */
     protected $getSection;
+
+    /** @var EntityManager */
     protected $entityManager;
+
+    /** @var Site */
     protected $currentSite;
+
+    /** @var IsAllowed */
     protected $isAllowed;
 
     public function __construct(
@@ -36,10 +43,12 @@ class HttpGetSiteSettingsSectionController implements MiddlewareInterface
      *
      * @param ServerRequestInterface $request
      * @param DelegateInterface $delegate
-     * @return \Psr\Http\Message\ResponseInterface|JsonResponse
+     * @return JsonResponse
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
-    {
+    public function process(
+        ServerRequestInterface $request,
+        DelegateInterface $delegate
+    ): JsonResponse {
         if (!$this->isAllowed->__invoke($request, 'sites', 'admin')) {
             return new JsonResponse(['error' => 'unauthorized'], 401);
         }
@@ -47,7 +56,10 @@ class HttpGetSiteSettingsSectionController implements MiddlewareInterface
         $sectionName = $request->getAttribute('sectionName');
 
         try {
-            $settings = $this->getSection->__invoke($this->currentSite, $sectionName);
+            $settings = $this->getSection->__invoke(
+                $this->currentSite,
+                $sectionName
+            );
         } catch (InvalidSectionNameException $e) {
             return new JsonResponse(['error' => 'invalid section name'], 400);
         }
