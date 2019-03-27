@@ -3,6 +3,14 @@
  * service_manager.php
  */
 return [
+    'config_factories' => [
+        \Rcm\Service\RedirectService::class => [
+            'arguments' => [
+                \Doctrine\ORM\EntityManager::class,
+                \Rcm\Service\SiteService::class
+            ]
+        ]
+    ],
     'factories' => [
         'doctrine.cache.doctrine_cache'
         => \Rcm\Factory\DoctrineCacheFactory::class,
@@ -294,9 +302,6 @@ return [
 
         \Rcm\Service\RcmUser::class
         => \Rcm\Factory\RcmUserFactory::class,
-
-        \Rcm\Service\RedirectService::class
-        => \Rcm\Factory\ServiceRedirectServiceFactory::class,
 
         \Rcm\Service\ResponseHandler::class
         => \Rcm\Factory\ResponseHandlerFactory::class,

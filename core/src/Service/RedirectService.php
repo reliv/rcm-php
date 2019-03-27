@@ -5,15 +5,7 @@ namespace Rcm\Service;
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Redirect;
 
-/**
- * Class RedirectService
- *
- * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2016 Reliv International
- * @license   License.txt
- * @link      https://github.com/reliv
- */
-class RedirectService
+class RedirectService implements RedirectServiceInterface
 {
     /**
      * @var \Rcm\Repository\Redirect
@@ -29,7 +21,7 @@ class RedirectService
      * RedirectService constructor.
      *
      * @param EntityManager $entityManager
-     * @param SiteService   $siteService
+     * @param SiteService $siteService
      */
     public function __construct(
         EntityManager $entityManager,
@@ -40,11 +32,21 @@ class RedirectService
     }
 
     /**
+     * Gets the current siteId. This can be overridden in classes that extend this class.
+     *
+     * @return int
+     */
+    protected function getSiteId()
+    {
+        return $this->siteService->getCurrentSite()->getSiteId();
+    }
+
+    /**
      * getRequestUrl
      *
      * @return string
      */
-    public function getRequestUrl()
+    protected function getRequestUrl()
     {
         $requestUri = PhpServer::getRequestUri();
         $baseUri = explode('?', $requestUri);
@@ -55,24 +57,13 @@ class RedirectService
     /**
      * getRedirectUrl
      *
-     * @param int|null    $siteId
-     * @param string|null $requestUrl
-     *
      * @return null
      */
-    public function getRedirectUrl($siteId = null, $requestUrl = null)
+    public function getRedirectUrl()
     {
-        if (empty($siteId)) {
-            $siteId = $this->siteService->getCurrentSite()->getSiteId();
-        }
+        $siteId = $this->getSiteId();
 
-        if (empty($siteId)) {
-            return null;
-        }
-
-        if (empty($requestUrl)) {
-            $requestUrl = $this->getRequestUrl();
-        }
+        $requestUrl = $this->getRequestUrl();
 
         $redirect = $this->redirectRepo->getRedirect($requestUrl, $siteId);
 
