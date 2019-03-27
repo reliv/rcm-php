@@ -29,7 +29,7 @@ class RedirectService
      * RedirectService constructor.
      *
      * @param EntityManager $entityManager
-     * @param SiteService   $siteService
+     * @param SiteService $siteService
      */
     public function __construct(
         EntityManager $entityManager,
@@ -55,24 +55,16 @@ class RedirectService
     /**
      * getRedirectUrl
      *
-     * @param int|null    $siteId
+     * @param int|null $siteId
      * @param string|null $requestUrl
      *
      * @return null
      */
-    public function getRedirectUrl($siteId = null, $requestUrl = null)
+    public function getRedirectUrl()
     {
-        if (empty($siteId)) {
-            $siteId = $this->siteService->getCurrentSite()->getSiteId();
-        }
+        $siteId = $this->siteService->getCurrentSite()->getSiteId();
 
-        if (empty($siteId)) {
-            return null;
-        }
-
-        if (empty($requestUrl)) {
-            $requestUrl = $this->getRequestUrl();
-        }
+        $requestUrl = $this->getRequestUrl();
 
         $redirect = $this->redirectRepo->getRedirect($requestUrl, $siteId);
 
