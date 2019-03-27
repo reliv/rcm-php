@@ -6,8 +6,8 @@ return [
     'config_factories' => [
         \Rcm\Service\RedirectService::class => [
             'arguments' => [
-                \Doctrine\ORM\EntityManager::class,
-                \Rcm\Service\SiteService::class
+                \Doctrine\ORM\EntityManager::class => \Doctrine\ORM\EntityManager::class,
+                \Rcm\Service\SiteService::class => \Rcm\Service\SiteService::class
             ]
         ]
     ],
