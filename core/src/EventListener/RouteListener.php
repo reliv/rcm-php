@@ -5,6 +5,7 @@ namespace Rcm\EventListener;
 use Rcm\Service\DomainRedirectService;
 use Rcm\Service\LocaleService;
 use Rcm\Service\RedirectService;
+use Rcm\Service\RedirectServiceInterface;
 use Rcm\Service\SiteService;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
@@ -51,7 +52,7 @@ class RouteListener
      */
     public function __construct(
         SiteService $siteService,
-        RedirectService $redirectService,
+        RedirectServiceInterface $redirectService,
         DomainRedirectService $domainRedirectService,
         LocaleService $localeService
     ) {

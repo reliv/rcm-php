@@ -5,15 +5,7 @@ namespace Rcm\Service;
 use Doctrine\ORM\EntityManager;
 use Rcm\Entity\Redirect;
 
-/**
- * Class RedirectService
- *
- * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2016 Reliv International
- * @license   License.txt
- * @link      https://github.com/reliv
- */
-class RedirectService
+class RedirectService implements RedirectServiceInterface
 {
     /**
      * @var \Rcm\Repository\Redirect
@@ -54,9 +46,6 @@ class RedirectService
 
     /**
      * getRedirectUrl
-     *
-     * @param int|null $siteId
-     * @param string|null $requestUrl
      *
      * @return null
      */
