@@ -32,11 +32,21 @@ class RedirectService implements RedirectServiceInterface
     }
 
     /**
+     * Gets the current siteId. This can be overridden in classes that extend this class.
+     *
+     * @return int
+     */
+    protected function getSiteId()
+    {
+        return $this->siteService->getCurrentSite()->getSiteId();
+    }
+
+    /**
      * getRequestUrl
      *
      * @return string
      */
-    public function getRequestUrl()
+    protected function getRequestUrl()
     {
         $requestUri = PhpServer::getRequestUri();
         $baseUri = explode('?', $requestUri);
@@ -51,7 +61,7 @@ class RedirectService implements RedirectServiceInterface
      */
     public function getRedirectUrl()
     {
-        $siteId = $this->siteService->getCurrentSite()->getSiteId();
+        $siteId = $this->getSiteId();
 
         $requestUrl = $this->getRequestUrl();
 

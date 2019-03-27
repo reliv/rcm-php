@@ -279,6 +279,9 @@ return [
         \Rcm\Service\CurrentSite::class
         => \Rcm\Factory\CurrentSiteFactory::class,
 
+        \Rcm\Service\DomainRedirectService::class
+        => \Rcm\Factory\ServiceDomainRedirectServiceFactory::class,
+
         \Rcm\Service\DomainService::class
         => \Rcm\Factory\ServiceDomainServiceFactory::class,
 
@@ -299,9 +302,6 @@ return [
 
         \Rcm\Service\RcmUser::class
         => \Rcm\Factory\RcmUserFactory::class,
-
-        \Rcm\Service\RedirectService::class
-        => \Rcm\Factory\ServiceRedirectServiceFactory::class,
 
         \Rcm\Service\ResponseHandler::class
         => \Rcm\Factory\ResponseHandlerFactory::class,
