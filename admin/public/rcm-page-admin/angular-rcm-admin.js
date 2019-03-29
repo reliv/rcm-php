@@ -93,7 +93,7 @@ angular.module(
     ]
 )
 /**
- * rcmAdmin.rcmAdminEditButton rcm-admin-edit-button
+ * rcmAdmin.rcmAdminEditButton data-rcm-admin-edit-button
  */
     .directive(
     'rcmAdminEditButton',

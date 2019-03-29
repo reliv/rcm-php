@@ -462,7 +462,7 @@ var RcmAdminPlugin = function (
 
     /**
      * @todo return {Promise}
-     * updateView - ONLY use this if needed - may cause issues with ng-repeat and possibly other
+     * updateView - ONLY use this if needed - may cause issues with data-ng-repeat and possibly other
      * @param elm
      * @param onComplete
      */

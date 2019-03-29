@@ -308,12 +308,12 @@ class Container extends AbstractHelper
         $html
             = '<div class="content-block rcmPlugin ' . $plugin->getPlugin() . $displayName
             . ' ' . $pluginWrapper->getColumnClass() . '"'
-            . ' block-name="' . $plugin->getPlugin() . '"'
-            . ' default-class="content-block rcmPlugin ' . $plugin->getPlugin() . '"'
-            . ' column-class="' . $pluginWrapper->getColumnClass() . '"'
-            . ' row-number="' . $pluginWrapper->getRowNumber() . '"'
-            . ' render-order="' . $pluginWrapper->getRenderOrder() . '"'
-            . ' instance-id="' . $plugin->getInstanceId() . '"'
+            . ' data-block-name="' . $plugin->getPlugin() . '"'
+//            . ' data-default-class="content-block rcmPlugin ' . $plugin->getPlugin() . '"'
+//            . ' data-column-class="' . $pluginWrapper->getColumnClass() . '"'
+//            . ' data-row-number="' . $pluginWrapper->getRowNumber() . '"'
+//            . ' data-render-order="' . $pluginWrapper->getRenderOrder() . '"'
+            . ' data-instance-id="' . $plugin->getInstanceId() . '"'
             . ' data-rcmPluginName="' . $plugin->getPlugin() . '"'
             . ' data-rcmPluginDefaultClass="content-block rcmPlugin ' . $plugin->getPlugin()
             . $displayName . '"'

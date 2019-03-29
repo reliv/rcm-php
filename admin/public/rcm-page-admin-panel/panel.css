@@ -113,27 +113,27 @@
 }
 
 /* <REVISION LIST> */
-#rcmRevisionList {
+.rcmRevisionList {
     display: inline-block;
     float: right;
     margin: 0 .2em 0 .2em;
 }
 
-#rcmRevisionList button {
+.rcmRevisionList button {
     text-align: left;
     min-width: 25em;
 }
 
-#rcmRevisionList button .caret {
+.rcmRevisionList button .caret {
     float: right;
     margin-top: .5em;
 }
 
-#rcmRevisionList .dropdown-menu {
+.rcmRevisionList .dropdown-menu {
     min-width: 25em;
 }
 
-#rcmRevisionList .dropdown-menu a {
+.rcmRevisionList .dropdown-menu a {
     padding: .2em 1em;
 }
 /* </REVISION LIST> */
@@ -164,11 +164,11 @@
     /*float:right;*/
 }
 
-.rcm-admin-panel .rcmPanelRightButtons #unlockPermissionsEditMode {
+.rcm-admin-panel .rcmPanelRightButtons .unlockPermissionsEditMode {
     /*float:right;*/
 }
 
-.rcm-admin-panel .rcmPanelRightButtons #lockPermissionsEditMode {
+.rcm-admin-panel .rcmPanelRightButtons .lockPermissionsEditMode {
     /*float:right;*/
 }
 /* </BUTTONS> */

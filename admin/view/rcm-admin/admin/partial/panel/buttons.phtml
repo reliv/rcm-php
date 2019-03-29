@@ -36,7 +36,7 @@ if($restrictions) {
         <div class="col-sm-12 rcm-admin-menu-col">
             <!-- <publish> -->
             <?php if ($wasPublished !== true) : ?>
-            <div class="panel-button-container" ng-hide="rcmAdminPage.editMode">
+            <div class="panel-button-container" data-ng-hide="rcmAdminPage.editMode">
                 <button
                     class="btn btn-primary btn-xs rcmMenuPost publishBtn"
                     type="button"
@@ -58,11 +58,11 @@ if($restrictions) {
             <!-- </publish> -->
 
             <!-- <edit> -->
-            <div class="panel-button-container" ng-hide="rcmAdminPage.editMode">
+            <div class="panel-button-container" data-ng-hide="rcmAdminPage.editMode">
                 <button
                     class="btn btn-warning btn-xs"
-                    rcm-admin-edit-button="page"
-                    ng-disabled="loading"
+                    data-rcm-admin-edit-button="page"
+                    data-ng-disabled="loading"
                     type="button"
                 >
                     <span class="glyphicon glyphicon-edit"></span>
@@ -72,11 +72,11 @@ if($restrictions) {
             <!-- </edit> -->
 
             <!-- <save-draft> -->
-            <div class="panel-button-container" ng-show="rcmAdminPage.editMode">
+            <div class="panel-button-container" data-ng-show="rcmAdminPage.editMode">
                 <button
                     class="btn btn-primary btn-xs"
-                    rcm-admin-edit-button="save"
-                    ng-disabled="loading"
+                    data-rcm-admin-edit-button="save"
+                    data-ng-disabled="loading"
                     type="button"
                 >
                     <span class="glyphicon glyphicon glyphicon glyphicon-ok"></span>
@@ -86,11 +86,11 @@ if($restrictions) {
             <!-- </save-draft> -->
 
             <!-- <cancel> -->
-            <div class="panel-button-container" ng-show="rcmAdminPage.editMode">
+            <div class="panel-button-container" data-ng-show="rcmAdminPage.editMode">
                 <button
                     class="btn btn-xs"
-                    rcm-admin-edit-button="cancel"
-                    ng-disabled="loading"
+                    data-rcm-admin-edit-button="cancel"
+                    data-ng-disabled="loading"
                     type="button"
                 >
                     <span class="glyphicon glyphicon glyphicon-remove"></span>
@@ -100,28 +100,28 @@ if($restrictions) {
             <!-- </cancel> -->
 
             <!-- <lock-permissions> -->
-            <div class="panel-button-container" id="lockPermissionsEditMode" style="<?= $lockedStyle ?>">
+            <div class="panel-button-container lockPermissionsEditMode" style="<?= $lockedStyle ?>">
                 <div class="rcmAdminMenu RcmBlankDialog">
                     <a title="Page Permissions Lock"
                        href="/rcm-admin/page-permissions/<?= $pageType ?>/<?= $pageName ?>"
-                       id="lockPermissionsEditModeLink">
-                        <button class="btn btn-default btn-xs">
+                       class="lockPermissionsEditModeLink">
+                        <div class="btn btn-default btn-xs">
                             <span class="glyphicon glyphicon-lock panel-button-icon"></span>
-                        </button>
+                        </div>
                     </a>
                 </div>
             </div>
             <!-- </lock-permissions> -->
 
             <!-- <unlock-permissions> -->
-            <div class="panel-button-container" id="unlockPermissionsEditMode" style="<?= $unlockedStyle ?>">
+            <div class="panel-button-container unlockPermissionsEditMode" style="<?= $unlockedStyle ?>">
                 <div class="rcmAdminMenu RcmBlankDialog">
                     <a title="Page Permissions Unlock"
                        href="/rcm-admin/page-permissions/<?= $pageType ?>/<?= $pageName ?>"
-                       id="unlockPermissionsEditModeLink">
-                        <button class="btn btn-default btn-xs">
+                       class="unlockPermissionsEditModeLink">
+                        <div class="btn btn-default btn-xs">
                             <img class="panel-button-icon" src="/modules/rcm-admin/img/glyphicons_unlock.png"/>
-                        </button>
+                        </div>
                     </a>
                 </div>
             </div>
