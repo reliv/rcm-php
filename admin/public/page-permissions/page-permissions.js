@@ -84,20 +84,20 @@ angular.module('pagePermissions', ['rcmUserRoleSelector'])
                         if (hasRoles && !selectedAll && guest == false) {
                             $("#unlockPermissionsNonEdit").hide();
                             $("#lockPermissionsNonEdit").show();
-                            $("#unlockPermissionsEditMode").hide();
-                            $("#lockPermissionsEditMode").show();
+                            $(".unlockPermissionsEditMode").hide();
+                            $(".lockPermissionsEditMode").show();
 
                         } else if (selectedAll || guest == true) {
                             $("#lockPermissionsNonEdit").hide();
                             $("#unlockPermissionsNonEdit").show();
-                            $("#lockPermissionsEditMode").hide();
-                            $("#unlockPermissionsEditMode").show();
+                            $(".lockPermissionsEditMode").hide();
+                            $(".unlockPermissionsEditMode").show();
 
                         } else {
                             $("#lockPermissionsNonEdit").hide();
                             $("#unlockPermissionsNonEdit").show();
-                            $("#lockPermissionsEditMode").hide();
-                            $("#unlockPermissionsEditMode").show();
+                            $(".lockPermissionsEditMode").hide();
+                            $(".unlockPermissionsEditMode").show();
                         }
 
                     };

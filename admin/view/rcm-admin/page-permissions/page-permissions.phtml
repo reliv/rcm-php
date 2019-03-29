@@ -13,7 +13,7 @@
                     </h1>
                 </div>
                 <div class="modal-body">
-                    <div class="permissionsBody" ng-if="isEditable">
+                    <div class="permissionsBody" data-ng-if="isEditable">
                         <div class="wrapperPagePerm">
                             <div rcm-user-role-selector="pagePermissions"
                                  rcm-user-role-selector-id-property="roleId"
@@ -29,7 +29,7 @@
                         </div>
                     </div>
 
-                    <div class="alert alert-danger" role="alert" ng-hide="isEditable">
+                    <div class="alert alert-danger" role="alert" data-ng-hide="isEditable">
                         <p>Feature is not available: Page can not be edited</p>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                     <button type="button" class="btn btn-default"
                             data-dismiss="modal">Close
                     </button>
-                    <button type="button" ng-click="savePermissions()"
+                    <button type="button" data-ng-click="savePermissions()"
                             class="btn btn-primary saveBtn"
                             data-dismiss="modal">Save
                     </button>

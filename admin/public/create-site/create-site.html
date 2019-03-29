@@ -3,25 +3,25 @@
 
         <h2>Create Site</h2>
 
-        <div ng-hide="done">
-            <div class="alert alert-danger" ng-show="errorMessage">
+        <div data-ng-hide="done">
+            <div class="alert alert-danger" data-ng-show="errorMessage">
                 <div>{{errorMessage}}</div>
             </div>
-            <div class="alert alert-success" ng-show="message">
+            <div class="alert alert-success" data-ng-show="message">
                 <div>{{message}}</div>
             </div>
             <div class="container-fluid">
                 <form class="form-horizontal" role="form">
 
                     <div class="form-group"
-                         ng-class="{'has-error': createResult.errors.siteTitle}">
+                         data-ng-class="{'has-error': createResult.errors.siteTitle}">
                         <label class="col-sm-4 control-label"
                                for="site-siteTitle">Site Title</label>
 
                         <div class="col-sm-8">
                             <input class="form-control"
                                    id="site-siteTitle"
-                                   ng-model="site.siteTitle"
+                                   data-ng-model="site.siteTitle"
                                    type="text"/>
 
                             <div class="help-block with-errors">{{createResult.errors.siteTitle}}</div>
@@ -29,15 +29,15 @@
                     </div>
 
                     <div class="form-group"
-                         ng-class="{'has-error': createResult.errors.domainName}">
+                         data-ng-class="{'has-error': createResult.errors.domainName}">
                         <label class="col-sm-4 control-label"
                                for="site-domain">Domain</label>
 
                         <div class="col-sm-8">
                             <input class="form-control"
                                    id="site-domain"
-                                   ng-model="site.domainName"
-                                   ng-required
+                                   data-ng-model="site.domainName"
+                                   data-ng-required
                                    type="text"/>
 
                             <div class="help-block with-errors">{{createResult.errors.domainName}}</div>
@@ -45,15 +45,15 @@
                     </div>
 
                     <div class="form-group"
-                         ng-class="{'has-error': createResult.errors.theme}">
+                         data-ng-class="{'has-error': createResult.errors.theme}">
                         <label class="col-sm-4 control-label"
                                for="site-theme">Theme</label>
 
                         <div class="col-sm-8">
                             <select class="form-control"
                                     id="site-theme"
-                                    ng-model="site.theme"
-                                    ng-options="k as v.display for (k, v) in themes">
+                                    data-ng-model="site.theme"
+                                    data-ng-options="k as v.display for (k, v) in themes">
                                 <option value="" selected>--Select a Theme--</option>
                             </select>
 
@@ -62,33 +62,33 @@
                     </div>
 
                     <!-- Not available at this time - forcing default
-                    <div class="form-group" ng-class="{'has-error': createResult.errors.siteLayout}">
+                    <div class="form-group" data-ng-class="{'has-error': createResult.errors.siteLayout}">
                         <label class="col-sm-4 control-label"
                                for="site-siteLayout">Default Page Layout</label>
 
                         <div class="col-sm-8">
                             <select class="form-control"
                                     id="site-siteLayout"
-                                    ng-model="site.siteLayout"
-                                    ng-options="k as v.display for (k, v) in themes[site.theme].layouts">
+                                    data-ng-model="site.siteLayout"
+                                    data-ng-options="k as v.display for (k, v) in themes[site.theme].layouts">
                                 <option value="default" selected>{{themes[site.theme].layouts.default}} (default)</option>
                             </select>
                             <div class="help-block with-errors">{{createResult.errors.siteLayout}}</div>
                         </div>
                     </div>
                     -->
-                    <input ng-model="site.siteLayout" type="hidden" value="default"/>
+                    <input data-ng-model="site.siteLayout" type="hidden" value="default"/>
 
                     <div class="form-group"
-                         ng-class="{'has-error': createResult.errors.countryId}">
+                         data-ng-class="{'has-error': createResult.errors.countryId}">
                         <label class="col-sm-4 control-label"
                                for="site-country-iso3">Site Country</label>
 
                         <div class="col-sm-8">
                             <select class="form-control"
                                     id="site-country-iso3"
-                                    ng-model="site.countryId"
-                                    ng-options="v.iso3 as v.countryName for (k, v) in countries"
+                                    data-ng-model="site.countryId"
+                                    data-ng-options="v.iso3 as v.countryName for (k, v) in countries"
                                     >
                             </select>
 
@@ -97,15 +97,15 @@
                     </div>
 
                     <div class="form-group"
-                         ng-class="{'has-error': createResult.errors.languageIso6392t}">
+                         data-ng-class="{'has-error': createResult.errors.languageIso6392t}">
                         <label class="col-sm-4 control-label"
                                for="site-language-iso639_2t">Site Language</label>
 
                         <div class="col-sm-8">
                             <select class="form-control"
                                     id="site-language-iso639_2t"
-                                    ng-model="site.languageIso6392t"
-                                    ng-options="v.iso639_2t as v.languageName for (k, v) in languages"
+                                    data-ng-model="site.languageIso6392t"
+                                    data-ng-options="v.iso639_2t as v.languageName for (k, v) in languages"
                                     >
                             </select>
 
@@ -114,7 +114,7 @@
                     </div>
 
                     <!-- Advanced -->
-                    <div class="form-group" ng-hide="showAdvanced">
+                    <div class="form-group" data-ng-hide="showAdvanced">
                         <div class="col-sm-4">
                             <button class="btn btn-info btn-xs"
                                     data-ng-click="showAdvanced = true">Show Advanced Options
@@ -122,16 +122,16 @@
                         </div>
                     </div>
 
-                    <div ng-show="showAdvanced">
+                    <div data-ng-show="showAdvanced">
                         <div class="form-group"
-                             ng-class="{'has-error': createResult.errors.status}">
+                             data-ng-class="{'has-error': createResult.errors.status}">
                             <label class="col-sm-4 control-label"
                                    for="site-status">Site Status</label>
 
                             <div class="col-sm-8">
                                 <select class="form-control"
                                         id="site-status"
-                                        ng-model="site.status">
+                                        data-ng-model="site.status">
                                     <option value="A" selected>Active</option>
                                     <option value="D">Disabled</option>
                                 </select>
@@ -142,31 +142,31 @@
 
                         <!-- Not available at this time - forcing null
                         <div class="form-group"
-                             ng-class="{'has-error': createResult.errors.favIcon}">
+                             data-ng-class="{'has-error': createResult.errors.favIcon}">
                             <label class="col-sm-4 control-label"
                                    for="site-favIcon">Site favIcon</label>
 
                             <div class="col-sm-8">
                                 <input class="form-control"
                                        id="site-favIcon"
-                                       ng-model="site.favIcon"
+                                       data-ng-model="site.favIcon"
                                        type="text"/>
 
                                 <div class="help-block with-errors">{{createResult.errors.favIcon}}</div>
                             </div>
                         </div>
                         -->
-                        <input ng-model="site.favIcon" type="hidden" value="" />
+                        <input data-ng-model="site.favIcon" type="hidden" value="" />
 
                         <div class="form-group"
-                             ng-class="{'has-error': createResult.errors.loginPage}">
+                             data-ng-class="{'has-error': createResult.errors.loginPage}">
                             <label class="col-sm-4 control-label"
                                    for="site-loginPage">Site Login Page</label>
 
                             <div class="col-sm-8">
                                 <input class="form-control"
                                        id="site-loginPage"
-                                       ng-model="site.loginPage"
+                                       data-ng-model="site.loginPage"
                                        type="text"/>
 
                                 <div class="help-block with-errors">{{createResult.errors.loginPage}}</div>
@@ -175,14 +175,14 @@
                         </div>
 
                         <div class="form-group"
-                             ng-class="{'has-error': createResult.errors.notAuthorizedPage}">
+                             data-ng-class="{'has-error': createResult.errors.notAuthorizedPage}">
                             <label class="col-sm-4 control-label"
                                    for="site-notAuthorizedPage">Site Not Authorized Page</label>
 
                             <div class="col-sm-8">
                                 <input class="form-control"
                                        id="site-notAuthorizedPage"
-                                       ng-model="site.notAuthorizedPage"
+                                       data-ng-model="site.notAuthorizedPage"
                                        type="text"/>
 
                                 <div class="help-block with-errors">{{createResult.errors.notAuthorizedPage}}</div>
@@ -190,14 +190,14 @@
                         </div>
 
                         <div class="form-group"
-                             ng-class="{'has-error': createResult.errors.notFoundPage}">
+                             data-ng-class="{'has-error': createResult.errors.notFoundPage}">
                             <label class="col-sm-4 control-label"
                                    for="site-notFoundPage">Site Not Found Page</label>
 
                             <div class="col-sm-8">
                                 <input class="form-control"
                                        id="site-notFoundPage"
-                                       ng-model="site.notFoundPage"
+                                       data-ng-model="site.notFoundPage"
                                        type="text"/>
 
                                 <div class="help-block with-errors">{{createResult.errors.notFoundPage}}</div>
@@ -224,13 +224,13 @@
             </div>
         </div>
 
-        <div class="alert alert-danger" ng-show="errorMessage">
+        <div class="alert alert-danger" data-ng-show="errorMessage">
             <div>{{errorMessage}}</div>
         </div>
-        <div class="alert alert-success" ng-show="message">
+        <div class="alert alert-success" data-ng-show="message">
             <div>{{message}}</div>
         </div>
-        <div ng-show="done" class="container-fluid">
+        <div data-ng-show="done" class="container-fluid">
             <form class="form-horizontal" role="form">
                 <div class="form-group">
                     <div class="col-sm-offset-10 col-sm-1">

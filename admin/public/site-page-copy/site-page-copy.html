@@ -8,18 +8,18 @@
         <h2>Copy Pages</h2>
 
         <div>
-            <div class="alert alert-danger" ng-show="errorMessage">
+            <div class="alert alert-danger" data-ng-show="errorMessage">
                 <div>{{errorMessage}}</div>
             </div>
-            <div class="alert alert-success" ng-show="message">
+            <div class="alert alert-success" data-ng-show="message">
                 <div>{{message}}</div>
             </div>
 
             <!-- STEP 1 -->
-            <div class="container-fluid" ng-show="step==1">
+            <div class="container-fluid" data-ng-show="step==1">
                 <form class="form-horizontal" role="form">
 
-                    <div class="form-group" ng-hide="loadings.sourceSite">
+                    <div class="form-group" data-ng-hide="loadings.sourceSite">
                         <label class="col-sm-3 control-label">Source Site</label>
 
                         <div class="col-sm-8">
@@ -33,21 +33,21 @@
                         <label class="col-sm-3 control-label"
                                for="destinationSite">Destination Site</label>
                         <div class="col-sm-8">
-                            <input type="text" ng-model="destinationSiteSearch" ng-change="handleDestSearchChange()"
+                            <input type="text" data-ng-model="destinationSiteSearch" data-ng-change="handleDestSearchChange()"
                                    class="form-control" placeholder="Search here">
                         </div>
 
                         <div class="radio col-sm-8 col-sm-offset-3">
-                            <label ng-repeat="site in destinationSites" style="display: block">
+                            <label data-ng-repeat="site in destinationSites" style="display: block">
                                 <input type="radio"
-                                       ng-model="$parent.destinationSite"
+                                       data-ng-model="$parent.destinationSite"
                                        name="destinationSite"
-                                       ng-value="site">{{site.domainName}}</label>
+                                       data-ng-value="site">{{site.domainName}}</label>
                         </div>
                     </div>
                 </form>
 
-                <div class="pageSelection" ng-hide="loadings.pageTypes || loadings.sourcePages">
+                <div class="pageSelection" data-ng-hide="loadings.pageTypes || loadings.sourcePages">
                     <form class="form-inline page-search"
                           role="form">
                         <div class="form-group">
@@ -56,9 +56,9 @@
 
                             <select class="form-control aria-labelledby"
                                     id="pageTypes"
-                                    ng-model="selectedPageType"
-                                    ng-options="v.type as v.title + ' (' + v.type + ')' for (k, v) in pageTypes"
-                                    ng-change="clearSelectedPages()"
+                                    data-ng-model="selectedPageType"
+                                    data-ng-options="v.type as v.title + ' (' + v.type + ')' for (k, v) in pageTypes"
+                                    data-ng-change="clearSelectedPages()"
                             >
                                 <option value="">-All-</option>
                             </select>
@@ -68,9 +68,9 @@
                                    for="pageNameSearch">Search by Name and Title</label>
                             <input class="form-control"
                                    id="pageNameSearch"
-                                   ng-change="clearSelectedPages()"
+                                   data-ng-change="clearSelectedPages()"
                                    type="text"
-                                   ng-model="pageNameSearch"/>
+                                   data-ng-model="pageNameSearch"/>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-default btn-xs"
@@ -94,16 +94,16 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="form-group" ng-hide="loadings.sourcePages">
+                        <div class="form-group" data-ng-hide="loadings.sourcePages">
                             <div class="col-sm-12">
                                 <div class=""
                                      data-ng-repeat="page in (filteredPages = (sourcePages | rcmAdminPageTypeFilter:selectedPageType | rcmAdminPageNameFilter:pageNameSearch))">
                                     <div class="pageSelect">
                                         <label class="checkbox-inline">
                                             <input type="checkbox"
-                                                   ng-model="selectedStuff"
-                                                   ng-change="toggleSelectPage(page)"
-                                                   ng-checked="(selectedPages.indexOf(page) > -1)"
+                                                   data-ng-model="selectedStuff"
+                                                   data-ng-change="toggleSelectPage(page)"
+                                                   data-ng-checked="(selectedPages.indexOf(page) > -1)"
                                             />
 
                                             <div>
@@ -130,7 +130,7 @@
             </div>
 
             <!-- STEP 2 -->
-            <div class="container-fluid" ng-show="step==2">
+            <div class="container-fluid" data-ng-show="step==2">
 
                 <form role="form">
                     <div class="form-group">
@@ -179,14 +179,14 @@
             </div>
 
             <!-- STEP 3 -->
-            <div class="container-fluid" ng-show="step==3">
+            <div class="container-fluid" data-ng-show="step==3">
 
                 <div class="col-sm-11">
 
                     <div>Copying pages {{copyMessages.count}} of {{selectedPages.length}}</div>
 
                     <div class="page-copy error"
-                         ng-show="copyMessages.error.length > 0">
+                         data-ng-show="copyMessages.error.length > 0">
                         <div class="message">
                             {{copyMessages.error.length}} pages could not be copied:
                             <button class="btn btn-default btn-xs"
@@ -194,7 +194,7 @@
                             </button>
                         </div>
 
-                        <div ng-show="showCopyErrors">
+                        <div data-ng-show="showCopyErrors">
                             <div class="alert alert-danger"
                                  data-ng-repeat="result in copyMessages.error">
                                 <div>
@@ -220,7 +220,7 @@
                     </div>
 
                     <div class="page-copy success"
-                         ng-show="copyMessages.success.length > 0">
+                         data-ng-show="copyMessages.success.length > 0">
                         <div class="message">
                             {{copyMessages.success.length}} pages copied successfully:
                             <button class="btn btn-default btn-xs"
@@ -228,7 +228,7 @@
                             </button>
                         </div>
 
-                        <div ng-show="showCopySuccesses">
+                        <div data-ng-show="showCopySuccesses">
                             <div class="alert alert-success"
                                  data-ng-repeat="result in copyMessages.success">
                                 <div>
@@ -254,7 +254,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-11" ng-show="copyMessages.count == selectedPages.length">
+                <div class="col-sm-11" data-ng-show="copyMessages.count == selectedPages.length">
                     <div class="complete-message">Copying Complete!</div>
                     <button class="btn btn-default btn-sm"
                             data-ng-click="step=1">Back

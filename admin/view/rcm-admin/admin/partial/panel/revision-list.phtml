@@ -8,12 +8,11 @@ if (empty($page)) {
 
 if (!$page->getPageId()) {
     ?>
-    <div id="rcmRevisionList" class="container-fluid">
+    <div class="container-fluid rcmRevisionList">
         <div class="dropdown">
-            <button class="btn btn-xs btn-default"
+            <button class="btn btn-xs btn-default revisionsList"
                     disabled="disabled"
-                    type="button"
-                    id="revisionsList">
+                    type="button">
                 Not an Editable Page
             </button>
         </div>
@@ -61,18 +60,17 @@ if ($lastSavedDraftRevision instanceof \Rcm\Entity\Revision) {
 }
 
 ?>
-<div id="rcmRevisionList" class="container-fluid">
+<div class="container-fluid rcmRevisionList">
     <div class="row">
         <div class="col-sm-12 rcm-admin-menu-col">
             <div class="dropdown">
-                <button class="btn btn-xs btn-default"
+                <button class="btn btn-xs btn-default revisionsList"
                         type="button"
-                        id="revisionsList"
                         data-toggle="dropdown">
                     <?= $currentRevisionType; ?>
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="revisionsList">
+                <ul class="dropdown-menu" role="menu">
                     <?php
                     if (!empty($publishedRevision)) {
                         ?>
