@@ -241,7 +241,7 @@ return [
                 '/bower_components/rcm-loading/dist/rcm-loading.min.js' => [],
                 '/bower_components/rcm-loading/dist/angular-rcm-loading.min.js' => [],
                 '/bower_components/rcm-loading/dist/jquery-loader.min.js' => [],
-                'modules/rcm/core-js//dist/rcm-core-js.js' => [],
+                '/modules/rcm/core-js/dist/rcm-core-js.js' => [],
             ],
             'post-libraries' => [],
             'pre-rcm' => [],

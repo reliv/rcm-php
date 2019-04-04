@@ -27,7 +27,6 @@
     "psr/http-message": "^1.0",
     "rcm/user": "~1.5",
     "rcm/api-lib": "~0.11",
-    "rcm/core-js": "~1.1",
     "rcm/user-ui": "1.*",
     "reliv/pipe-rat": "~0.5",
     "reliv/white-rat": "^0.2.0",
