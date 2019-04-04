@@ -250,7 +250,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
 
     /**
      * @param string $createdByUserId <tracking>
-     * @param string $createdReason   <tracking>
+     * @param string $createdReason <tracking>
      */
     public function __construct(
         string $createdByUserId,
@@ -642,7 +642,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
      * populateFromObject
      *
      * @param ApiPopulatableInterface $object
-     * @param array                   $ignore
+     * @param array $ignore
      *
      * @return void
      */
@@ -685,8 +685,7 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
      * @return mixed
      */
     public function toArray(
-        $ignore
-        = [
+        $ignore = [
             'parent',
             'site',
             'revisions',
