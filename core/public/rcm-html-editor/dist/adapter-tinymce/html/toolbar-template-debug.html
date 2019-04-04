@@ -1,0 +1,74 @@
+<!-- </htmlEditorToolbar.debug> //|| !rcmHtmlEditorService.hasEditors -->
+<div class="htmlEditorToolbar" ng-cloak>
+    <div class="loading" ng-show="rcmHtmlEditorService.toolbarLoading">
+        Loading...
+    </div>
+    <div ng-hide="rcmHtmlEditorService.toolbarLoading">
+        <div class="mce-fake"
+             ng-show="(rcmHtmlEditorService.showFixedToolbar || !rcmHtmlEditorService.fixedToolbarToggle) && !rcmHtmlEditorService.isEditing">
+            <div class="mce-tinymce mce-tinymce-inline mce-container mce-panel"
+                 role="presentation">
+                <div class="mce-container-body mce-abs-layout">
+                    <div class="mce-toolbar-grp mce-container mce-panel mce-first mce-last">
+                        <div class="mce-container-body mce-stack-layout">
+                            <div class="mce-container mce-toolbar mce-first mce-last mce-stack-layout-item">
+                                <div class="mce-container-body mce-flow-layout">
+                                    <div class="mce-container mce-first mce-flow-layout-item mce-btn-group">
+                                        <div>
+                                            <div class="mce-widget mce-btn mce-first mce-disabled mce-active"
+                                                 tabindex="-1" aria-labelledby=""
+                                                 role="button"
+                                                 aria-label="Source code">
+                                                <button role="presentation"
+                                                        type="button"
+                                                        disabled
+                                                        tabindex="-1">FAKE
+                                                </button>
+                                            </div>
+                                            <div class="mce-widget mce-btn mce-disabled"
+                                                 tabindex="-1" aria-labelledby=""
+                                                 role="button"
+                                                 aria-label="Source code">
+                                                <button role="presentation"
+                                                        type="button"
+                                                        disabled
+                                                        tabindex="-1">TOOL
+                                                </button>
+                                            </div>
+                                            <div class="mce-widget mce-btn mce-last mce-disabled"
+                                                 tabindex="-1" aria-labelledby=""
+                                                 role="button"
+                                                 aria-label="Source code">
+                                                <button role="presentation"
+                                                        type="button"
+                                                        disabled
+                                                        tabindex="-1">BAR
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="externalToolbarWrapper"></div>
+    </div>
+    <div style="display:block; position: absolute; top: 150px; left: 0px;">
+<pre>
+--- htmlEditorToolbar.debug ---
+
+    isEditing: {{rcmHtmlEditorService.isEditing | json}}
+    toolbarLoading: {{rcmHtmlEditorService.toolbarLoading | json}}
+    showFixedToolbar: {{rcmHtmlEditorService.showFixedToolbar | json}}
+    hasEditors: {{rcmHtmlEditorService.hasEditors | json}}
+    editors.length:   {{rcmHtmlEditorService.editors.length}}
+    editorsLoading: {{rcmHtmlEditorService.editorsLoading | json}}
+</pre>
+    </div>
+</div>
+<!-- </htmlEditorToolbar.debug> -->
+
+

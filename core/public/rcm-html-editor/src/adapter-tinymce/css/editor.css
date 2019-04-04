@@ -1,0 +1,15 @@
+.htmlEditorToolbar .mce-tinymce {
+    position: relative;
+}
+.htmlEditorToolbar .mce-tinymce.mce-tinymce-inline.mce-container.mce-panel {
+    width: 100% !important; /* ie8 support */
+    width: calc(100% - 4px) !important;
+}
+.htmlEditorToolbar .mce-fake .mce-tinymce.mce-tinymce-inline.mce-container.mce-panel {
+    position: absolute;
+    border-width: 1px;
+    left: 0px;
+    top: 0px;
+    height: 36px;
+    margin-bottom: -2px;
+}

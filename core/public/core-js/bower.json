@@ -1,0 +1,26 @@
+{
+  "name": "rcm-core-js",
+  "--version": "1.0.0",
+  "homepage": "https://github.com/reliv/RcmCoreJs",
+  "description": "Reliv Content Management System Standard JS",
+  "keywords": [
+    "javascipt",
+    "library",
+    "rcm",
+    "core"
+  ],
+  "authors": [
+    "James Jervis"
+  ],
+  "license": "BSD-3-Clause",
+  "dependencies": {
+  },
+  "devDependencies": {},
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,0 +1,51 @@
+/* To help with responsive design */
+.htmlEditorToolbar {
+    color: #666666;
+}
+
+.htmlEditorToolbar .loading {
+    background-color: rgba(255, 255, 255, .7);
+}
+
+.mce-tinymce {
+    position: relative !important;
+    float: left !important;;
+    width: 100% !important; /* ie8 support */
+    width: calc(100% - 4px) !important;
+}
+
+.mce-toolbar-grp {
+    float: left !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+.mce-container {
+    float: left !important;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mce-container .mce-menubtn {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.mce-btn-group {
+    float: left !important;
+}
+
+.mce-fake .mce-tinymce {
+    border-width: 1px;
+    height: 34px;
+}
+
+/* */
+.defaultSkin td.mceToolbar {
+    background-color: transparent !important;
+}
+
+.defaultSkin .mceButton, .defaultSkin table.mceLayout tr.mceFirst td,
+.defaultSkin table.mceLayout tr.mceLast td, .defaultSkin table.mceLayout {
+    border: none !important;
+}
