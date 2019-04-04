@@ -33,7 +33,6 @@ rcmAdminService.getHtmlEditorLink = function (rcmHtmlEditorInit, rcmHtmlEditorDe
                 }
 
                 if (page.plugins[pluginId].canEdit()) {
-
                     rcmHtmlEditorInit(
                         scope,
                         elm,
