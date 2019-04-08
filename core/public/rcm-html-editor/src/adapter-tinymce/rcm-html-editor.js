@@ -26,7 +26,6 @@ var RcmHtmlEditor = function (id, rcmHtmlEditorService) {
      * @param settings
      */
     self.init = function (scope, elm, attrs, ngModel, settings) {
-        console.log('temp-console-log rcm-html-editor init', self.id); //will remove later if all is well
         self.scope = scope;
         self.elm = elm;
         self.ngModel = ngModel;
@@ -40,7 +39,6 @@ var RcmHtmlEditor = function (id, rcmHtmlEditorService) {
      * onInit
      */
     self.onInit = function (editor) {
-        console.log('temp-console-log rcm-html-editor onInit', self.id); //will remove later if all is well
         rcmHtmlEditorService.eventManager.trigger(
             'RcmHtmlEditor.onInit',
             {

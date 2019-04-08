@@ -21,9 +21,9 @@ return [
             'modules/rcm/rcm.js' => [
                 'modules/rcm/place-holder.js'
             ],
-            'modules/rcm/rcm.css' => [
-                'modules/rcm/place-holder.css'
-            ],
+//            'modules/rcm/rcm.css' => [
+//                'modules/rcm/place-holder.css'
+//            ],
             /**
              * Extended JS and css
              * (features for modules and lower level services)
@@ -39,7 +39,7 @@ return [
              * (core features)
              */
             'modules/rcm/rcm.js' => [],
-            'modules/rcm/rcm.css' => [],
+//            'modules/rcm/rcm.css' => [],
             /**
              * Extended JS and css
              * (features for modules and lower level services)

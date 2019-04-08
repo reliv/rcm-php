@@ -299,7 +299,7 @@ return [
                 '/bower_components/jquery-bootstrap-theme/css/custom-theme/jquery-ui-1.10.3.custom.css' => [],
             ],
             'rcm' => [
-                '/modules/rcm/rcm.css' => ['media' => 'screen,print'],
+//                '/modules/rcm/rcm.css' => ['media' => 'screen,print'],
             ],
             'post-rcm' => [
                 '/modules/rcm/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.css' => [],
