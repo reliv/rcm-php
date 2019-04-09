@@ -246,7 +246,7 @@ return [
             'post-libraries' => [],
             'pre-rcm' => [],
             'rcm' => [
-                '/modules/rcm/rcm.js' => [],
+//                '/modules/rcm/rcm.js' => [],
             ],
             'post-rcm' => [
                 '/bower_components/angular-utils-pagination/dirPagination.js' => [],
