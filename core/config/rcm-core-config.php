@@ -231,7 +231,7 @@ return [
                 '/bower_components/jquery-migrate/jquery-migrate.min.js' => [],
                 // @todo Move this config to the modules that use it
                 '/bower_components/jquery-ui/jquery-ui.min.js' => [],
-//                '/node_modules/angular/angular.min.js' => [], (moved to app webpack build)
+//                '/node_modules/angular/angular.min.js' => [], //moved to app webpack build
                 '/bower_components/angular-route/angular-route.min.js' => [],
                 '/bower_components/bootbox/bootbox.js' => [],
                 '/bower_components/bootstrap/dist/js/bootstrap.min.js' => [],
@@ -241,7 +241,7 @@ return [
                 '/bower_components/rcm-loading/dist/rcm-loading.min.js' => [],
                 '/bower_components/rcm-loading/dist/angular-rcm-loading.min.js' => [],
                 '/bower_components/rcm-loading/dist/jquery-loader.min.js' => [],
-                '/modules/rcm/core-js/dist/rcm-core-js.js' => [],
+//                '/modules/rcm/core-js/dist/rcm-core-js.js' => [], //moved to webpack
             ],
             'post-libraries' => [],
             'pre-rcm' => [],
@@ -253,8 +253,8 @@ return [
             ],
             'pre-modules' => [
                 '/bower_components/rcm-dialog/dist/rcm-dialog.min.js' => [],
-                '/modules/rcm/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.js' => [],
-                '/modules/rcm/rcm-html-editor/dist/rcm-html-editor.min.js' => [],
+//                '/modules/rcm/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.js' => [], //moved to webpack
+//                '/modules/rcm/rcm-html-editor/dist/rcm-html-editor.min.js' => [],// moved to webpack
             ],
             'modules' => [
                 '/modules/rcm/modules.js' => [],
@@ -302,7 +302,7 @@ return [
 //                '/modules/rcm/rcm.css' => ['media' => 'screen,print'],
             ],
             'post-rcm' => [
-                '/modules/rcm/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.css' => [],
+//                '/modules/rcm/rcm-html-editor/dist/adapter-tinymce/rcm-html-editor.min.css' => [],// moved to webpack
             ],
             'pre-modules' => [],
             'modules' => [

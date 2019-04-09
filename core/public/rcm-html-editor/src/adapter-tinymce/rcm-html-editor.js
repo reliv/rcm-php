@@ -4,7 +4,7 @@
  * @param rcmHtmlEditorService
  * @constructor
  */
-var RcmHtmlEditor = function (id, rcmHtmlEditorService) {
+window.RcmHtmlEditor = function (id, rcmHtmlEditorService) {
 
     var self = this;
     self.id = id;
