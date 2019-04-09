@@ -233,4 +233,4 @@ var RcmCore = function () {
     self.init(document);
 };
 
-var rcm = new RcmCore();
+window.rcm = new RcmCore();

@@ -2,7 +2,7 @@
  * RcmHtmlEditorOptions
  * @param rcmHtmlEditorConfig
  */
-var RcmHtmlEditorOptions = function (rcmHtmlEditorConfig) {
+window.RcmHtmlEditorOptions = function (rcmHtmlEditorConfig) {
 
     var self = this;
 

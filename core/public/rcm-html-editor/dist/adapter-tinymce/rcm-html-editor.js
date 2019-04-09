@@ -14,7 +14,7 @@ var rcmHtmlEditorGlobalConfig = {
  * rcmHtmlEditorConfig
  * @type {{htmlEditorOptions: {defaults: {link_list: string, relative_urls: boolean, optionsName: string, force_br_newlines: boolean, force_p_newlines: boolean, forced_root_block: string, paste_as_text: boolean, inline: boolean, encoding: string, fixed_toolbar_container: (*|$scope.tinymceOptions.fixed_toolbar_container|string|settings.fixed_toolbar_container), language: *, menubar: boolean, plugins: string, document_base_url: (string|l.baseUrl|*|j.baseUrl|settings.baseUrl|baseUrl), statusbar: boolean, style_formats_merge: boolean, style_formats: {title: string, items: {title: string, selector: string, styles: {float: string, margin: string}}[]}[], image_advtab: boolean, toolbar: *[]}, text: {link_list: string, relative_urls: boolean, optionsName: string, force_br_newlines: boolean, force_p_newlines: boolean, forced_root_block: string, paste_as_text: boolean, inline: boolean, encoding: string, fixed_toolbar_container: (*|$scope.tinymceOptions.fixed_toolbar_container|string|settings.fixed_toolbar_container), language: *, menubar: boolean, plugins: string, document_base_url: (string|l.baseUrl|*|j.baseUrl|settings.baseUrl|baseUrl), statusbar: boolean, image_advtab: boolean, toolbar: *[]}, simpleText: {link_list: string, relative_urls: boolean, optionsName: string, force_br_newlines: boolean, force_p_newlines: boolean, forced_root_block: string, paste_as_text: boolean, inline: boolean, encoding: string, fixed_toolbar_container: (*|$scope.tinymceOptions.fixed_toolbar_container|string|settings.fixed_toolbar_container), language: *, menubar: boolean, plugins: string, document_base_url: (string|l.baseUrl|*|j.baseUrl|settings.baseUrl|baseUrl), statusbar: boolean, toolbar: *[]}}}}
  */
-var rcmHtmlEditorConfig = {
+window.rcmHtmlEditorConfig = {
 
     toolbar_container_prefix: '#htmlEditorToolbar-',
 
@@ -145,7 +145,7 @@ var rcmHtmlEditorConfig = {
  * RcmHtmlEditorOptions
  * @param rcmHtmlEditorConfig
  */
-var RcmHtmlEditorOptions = function (rcmHtmlEditorConfig) {
+window.RcmHtmlEditorOptions = function (rcmHtmlEditorConfig) {
 
     var self = this;
 
@@ -233,13 +233,14 @@ var RcmHtmlEditorOptions = function (rcmHtmlEditorConfig) {
         return settings
     };
 };
+
 /**
  * RcmHtmlEditor - Main adapter to an actual tinymce
  * @param id
  * @param rcmHtmlEditorService
  * @constructor
  */
-var RcmHtmlEditor = function (id, rcmHtmlEditorService) {
+window.RcmHtmlEditor = function (id, rcmHtmlEditorService) {
 
     var self = this;
     self.id = id;

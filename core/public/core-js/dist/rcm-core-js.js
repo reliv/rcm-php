@@ -233,7 +233,7 @@ var RcmCore = function () {
     self.init(document);
 };
 
-var rcm = new RcmCore();
+window.rcm = new RcmCore();
 
 /**
  * General service to wrap standard API JSON returns from RCM
