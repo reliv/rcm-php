@@ -14,9 +14,9 @@ return [
                 'modules/rcm-admin/' => __DIR__ . '/../public/',
             ],
             'collections' => [
-                'modules/rcm/rcm.js' => [
-                    'vendor/angular-utils-pagination/dirPagination.js',
-                ],
+//                'modules/rcm/rcm.js' => [
+//                    'vendor/angular-utils-pagination/dirPagination.js',
+//                ],
                 'modules/rcm-admin/admin.js' => [
 
                     /* <core> */
