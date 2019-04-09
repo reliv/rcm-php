@@ -37,22 +37,22 @@ var RcmAvailablePluginsMenu = {
 
             var pluginListEle = $('<div class="panel-group panel-minified-hide" id="availablePluginsGroup">');
             menu.append(pluginListEle);
-            menu.draggable({cancel: '.panel-group'});
+            menu.draggable({ cancel: '.panel-group' });
             var categoryIndex = 0;
             var newInstanceId = 0;
-
             $.each(
                 Object.values(window.rcmBlockConfigs).sort(function (a, b) {
-                    var textA = a.label.toUpperCase();
-                    var textB = b.label.toUpperCase();
-                    if (a.name == 'RcmHtmlArea') {
-                        /**
-                         * Is a bit wierd but this puts the most used plugin at the top
-                         * so admins don't freak out. The next version of the CMS will have
-                         * a search box that should aleviate problems like this.
-                         */
+                    /**
+                     * Put the most used CMS block at the top.
+                     */
+                    if (a.name === 'RcmHtmlArea') {
                         return -1;
                     }
+                    if (b.name === 'RcmHtmlArea') {
+                        return 1;
+                    }
+                    var textA = a.label.toUpperCase();
+                    var textB = b.label.toUpperCase();
                     return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
                 }),
                 function (pluginInfoIndex, pluginInfo) {
