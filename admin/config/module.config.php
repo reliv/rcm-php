@@ -181,7 +181,7 @@ return [
             'editStyle.css' => [
                 'destination' => __DIR__ . '/../../../../public/css',
                 'header' =>
-                __DIR__ . '/../../../../public/css/editStyleHeader.css',
+                    __DIR__ . '/../../../../public/css/editStyleHeader.css',
             ],
             'script.js' => [
                 'destination' => __DIR__ . '/../../../../public/js',
@@ -190,7 +190,7 @@ return [
             'editScript.js' => [
                 'destination' => __DIR__ . '/../../../../public/js',
                 'header' =>
-                __DIR__ . '/../../../../public/js/editScriptHeader.js',
+                    __DIR__ . '/../../../../public/js/editScriptHeader.js',
             ],
         ],
     ],
@@ -352,28 +352,28 @@ return [
     'rcmAdmin' => [
         'createBlankPagesErrors' => [
             'missingItems' => 'Please make sure to include a Page Name and select the'
-            . 'layout you wish to use.',
+                . 'layout you wish to use.',
             'pageExists' => 'The page URL provided already exists',
         ],
         'saveAsTemplateErrors' => [
             'missingItems' => 'Please make sure to include a Page Name',
             'pageExists' => 'The page URL provided already exists',
             'revisionNotFound' => 'Unable to locate page revision.  '
-            . 'Please contact the administrator.',
+                . 'Please contact the administrator.',
         ],
         'createSiteErrors' => [
             'missingItems' => 'Some needed information is missing.  '
-            . 'Please check and make sure to include'
-            . ' a domain, country, and language.',
+                . 'Please check and make sure to include'
+                . ' a domain, country, and language.',
             'countryNotFound' => 'Unable to locate country to save.  '
-            . 'Please contact and administrator or try again.',
+                . 'Please contact and administrator or try again.',
             'languageNotFound' => 'Unable to locate language to save.  '
-            . 'Please contact and administrator or try again.',
+                . 'Please contact and administrator or try again.',
             'domainInvalid' => 'Domain exists or is invalid.',
             'newSiteNotImplemented' => 'Creating a new blank site has not'
-            . ' been implemented yet.',
+                . ' been implemented yet.',
             'siteNotFound' => 'Unable to locate the site to clone.  '
-            . 'Please contact and administrator or try again.',
+                . 'Please contact and administrator or try again.',
         ],
         'adminRichEditor' => 'tinyMce',
         'defaultSiteSettings' => [
@@ -470,6 +470,13 @@ return [
                 \RcmAdmin\Controller\SiteDomainNameController::class,
             ],
             'allowed_methods' => ['PUT'],
+        ],
+        [
+            'path' => '/api/rcm/layout-choices',
+            'middleware' => [
+                \RcmAdmin\Controller\LayoutChoicesController::class,
+            ],
+            'allowed_methods' => ['GET'],
         ],
     ],
     /* router */
@@ -678,6 +685,13 @@ return [
     /* service_manager */
     'service_manager' => [
         'config_factories' => [
+            \RcmAdmin\Controller\LayoutChoicesController::class => [
+                'arguments' => [
+                    \Rcm\Service\LayoutManager::class,
+                    \Rcm\Api\GetSiteByRequest::class,
+                    \RcmUser\Api\Acl\IsAllowed::class
+                ],
+            ],
             \RcmAdmin\Controller\SiteDomainNameController::class => [
                 'arguments' => [
                     \Rcm\Service\CurrentSite::class,

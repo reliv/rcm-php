@@ -11,8 +11,8 @@ use Rcm\Entity\Site;
 class GetPageData
 {
     /**
-     * @param Page  $page
-     * @param Site  $site
+     * @param Page $page
+     * @param Site $site
      * @param array $requestedPageData
      *
      * @return array
@@ -40,6 +40,7 @@ class GetPageData
                 'keywords' => $this->getKeywords($page),
                 'description' => $this->getPageDescription($page),
                 'siteId' => $siteId,
+                'siteLayoutOverride' => $page->getSiteLayoutOverride()
             ],
             'requestedPage' => $requestedPageData,
         ];
