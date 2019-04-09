@@ -26,8 +26,16 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                 $scope.saveOk = false;
                 $scope.saveFail = false;
                 $scope.message = '';
+                $scope.layoutChoices = [];
 
                 $scope.isEditable = rcmAdminService.model.RcmPageModel.isEditable();
+
+                fetch('/api/rcm/layout-choices').then(function (response) {
+                    response.json().then(function (responseData) {
+                        $scope.layoutChoices = responseData;
+                        $scope.$apply()
+                    })
+                });
 
                 if (!$scope.isEditable) {
                     $scope.message = 'This page can not be edited';
@@ -46,6 +54,7 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                     $scope.description = data.description;
                     $scope.keywords = data.keywords;
                     $scope.name = data.name;
+                    $scope.siteLayoutOverride = data.siteLayoutOverride;
                 };
 
                 /**
@@ -57,10 +66,12 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                     $scope.description = data.description;
                     $scope.keywords = data.keywords;
                     $scope.name = data.name;
+                    $scope.siteLayoutOverride = data.siteLayoutOverride;
                     pageData.page.title = data.pageTitle;
                     pageData.page.description = data.description;
                     pageData.page.keywords = data.keywords;
                     pageData.page.name = data.name;
+                    pageData.page.siteLayoutOverride = data.siteLayoutOverride;
                 };
 
                 /**
@@ -108,7 +119,8 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                         pageTitle: $scope.title,
                         description: $scope.description,
                         keywords: $scope.keywords,
-                        name: $scope.name
+                        name: $scope.name,
+                        siteLayoutOverride: $scope.siteLayoutOverride
                     };
 
                     var confirmNameChange = true;
@@ -125,6 +137,8 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                         loading(false);
                         return;
                     }
+
+                    var changedLayout = (requestData.siteLayoutOverride !== pageData.page.siteLayoutOverride)
 
                     var apiParams = {
                         url: rcmAdminApiUrlService.sitePage,
