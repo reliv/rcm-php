@@ -62,11 +62,11 @@ angular.module('RcmHtmlEditor', [])
                 self.build = function (id, scope, elm, attrs, ngModel, settings) {
 
                     if (typeof rcmHtmlEditorService.editors[id] == 'object') {
-                        console.warn(
-                            'Tried to build the same RcmHtmlEditor more than once for editor id '
-                            + id +
-                            ' This subsequent build request will be ignored'
-                        );
+                        // console.warn(
+                        //     'Tried to build the same RcmHtmlEditor more than once for editor id '
+                        //     + id +
+                        //     ' This subsequent build request will be ignored'
+                        // );
                         return;
                     }
 
