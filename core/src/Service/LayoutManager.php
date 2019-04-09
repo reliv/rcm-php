@@ -109,6 +109,16 @@ class LayoutManager
         return $rcmThemeConfig['layouts'];
     }
 
+    public function siteThemeLayoutsConfigToAssociativeArray($layoutsConfig)
+    {
+        $array = [];
+        foreach ($layoutsConfig as $key => $data) {
+            $array[$key] = $data['display'];
+        }
+
+        return $array;
+    }
+
     /**
      * Get Layout method will attempt to locate and fetch the correct layout
      * for the site and page.  If found it will pass back the path to correct
@@ -116,7 +126,7 @@ class LayoutManager
      * renderer.
      *
      * @param string|null $layout Layout to find
-     * @param Site        $site   Site to lookup
+     * @param Site $site Site to lookup
      *
      * @return string
      * @throws RuntimeException
@@ -174,7 +184,7 @@ class LayoutManager
      * config for the page.  Default page template is set by the themes
      * configuration and can also be set per page.
      *
-     * @param Site        $site     Site to lookup
+     * @param Site $site Site to lookup
      * @param string|null $template Template to find
      *
      *
@@ -202,7 +212,7 @@ class LayoutManager
      * renderer.  Default page template is set by the themes configuration and can
      * also be set per page.
      *
-     * @param Site        $site     Site to lookup
+     * @param Site $site Site to lookup
      * @param string|null $template Template to find
      *
      * @return string
@@ -223,7 +233,7 @@ class LayoutManager
     /**
      * Check to see if a layout is valid and available for a theme
      *
-     * @param Site   $site      Site to lookup
+     * @param Site $site Site to lookup
      * @param string $layoutKey Layout name to search
      *
      * @return boolean

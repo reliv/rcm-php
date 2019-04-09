@@ -735,7 +735,6 @@ return [
     /* view_helpers */
     'view_helpers' => [
         'invokables' => [
-            'formPageLayout' => RcmAdmin\View\Helper\FormPageLayout::class,
             'displayErrors' => RcmAdmin\View\Helper\DisplayErrors::class,
         ],
     ],
