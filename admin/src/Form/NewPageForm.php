@@ -57,26 +57,26 @@ class NewPageForm extends Form implements ElementInterface
     /**
      * Constructor
      *
-     * @param Site          $currentSite       Rcm Site
-     * @param Page          $pageRepo          Rcm Page Repository
-     * @param LayoutManager $layoutManager     Rcm Page Manager
-     * @param MainLayout    $layoutValidator   Zend Layout Validator
-     * @param PageValidator $pageValidator     Zend Page Validator
-     * @param PageTemplate  $templateValidator Zend Page Template Validator
+     * @param Site $currentSite Rcm Site
+     * @param Page $pageRepo Rcm Page Repository
+     * @param LayoutManager $layoutManager Rcm Page Manager
+     * @param MainLayout $layoutValidator Zend Layout Validator
+     * @param PageValidator $pageValidator Zend Page Validator
+     * @param PageTemplate $templateValidator Zend Page Template Validator
      */
     public function __construct(
-        Site          $currentSite,
-        Page          $pageRepo,
+        Site $currentSite,
+        Page $pageRepo,
         LayoutManager $layoutManager,
-        MainLayout    $layoutValidator,
+        MainLayout $layoutValidator,
         PageValidator $pageValidator,
-        PageTemplate  $templateValidator
+        PageTemplate $templateValidator
     ) {
-        $this->currentSite       = $currentSite;
-        $this->pageRepo          = $pageRepo;
-        $this->layoutManager     = $layoutManager;
-        $this->layoutValidator   = $layoutValidator;
-        $this->pageValidator     = $pageValidator;
+        $this->currentSite = $currentSite;
+        $this->pageRepo = $pageRepo;
+        $this->layoutManager = $layoutManager;
+        $this->layoutValidator = $layoutValidator;
+        $this->pageValidator = $pageValidator;
         $this->templateValidator = $templateValidator;
 
         $this->buildSafeValidators();
@@ -102,6 +102,7 @@ class NewPageForm extends Form implements ElementInterface
     public function setData($data)
     {
         $this->buildSafeValidators();
+
         return parent::setData($data);
     }
 
@@ -115,7 +116,11 @@ class NewPageForm extends Form implements ElementInterface
     {
         $pageList = $this->pageRepo->getAllPageIdsAndNamesBySiteThenType($this->currentSite->getSiteId(), 't');
 
-        $pageList['blank'] = 'Blank Page (Experts Only)';
+        $pageList['blank'] = 'Blank Page';
+
+        $layoutChoices = $this->layoutManager->siteThemeLayoutsConfigToAssociativeArray(
+            $this->layoutManager->getSiteThemeLayoutsConfig($this->currentSite->getTheme())
+        );
 
         $filter = new InputFilter();
 
@@ -209,9 +214,9 @@ class NewPageForm extends Form implements ElementInterface
                 'name' => 'main-layout',
                 'options' => [
                     'label' => 'Main Layout',
-                    'layouts' => $this->layoutManager->getSiteThemeLayoutsConfig($this->currentSite->getTheme()),
+                    'options' => $layoutChoices,
                 ],
-                'type' => 'mainLayout',
+                'type' => 'Zend\Form\Element\Select',
             ]
         );
 
@@ -256,6 +261,7 @@ class NewPageForm extends Form implements ElementInterface
                 ]
             );
         }
+
         return parent::isValid();
     }
 }

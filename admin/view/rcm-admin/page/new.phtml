@@ -1,12 +1,12 @@
 <link rel="stylesheet" type="text/css"
       href="<?=
       $this->basePath(); ?>/modules/rcm-admin/page-new/form.css"
-    />
+/>
 
 <script type="text/javascript"
         src="<?=
         $this->basePath(); ?>/modules/rcm-admin/page-new/form.js"
-    >
+>
 
 </script>
 
@@ -40,7 +40,7 @@ $form->setAttribute('method', 'post');
 $formLabel = $this->plugin('formLabel');
 ?>
 <div id="rcmNewPageErrorLine"><?= $this->displayErrors($this->errors); ?></div>
-
+<div class="rcmNewPageFormWrapper" style="width:90%">
 <?= $this->form()->openTag($form); ?>
 
 <?= $this->message; ?><br/>
@@ -58,30 +58,27 @@ $formLabel = $this->plugin('formLabel');
 
 <?=
 $formLabel->openTag($elements['pageTitle']['attributes'])
-. $elements['pageTitle']['element']->getOption('label'); ?> &nbsp;
+. $elements['pageTitle']['element']->getOption('label'); ?>
 <?= $this->formInput($elements['pageTitle']['element']); ?>
 <?= $formLabel->closeTag(); ?>
 
 <br/>
 
 <div id="pageTemplate">
-    <?=
-    $formLabel->openTag($elements['pageTemplate']['attributes'])
-    . $elements['pageTemplate']['element']->getOption('label'); ?> &nbsp;
+    <?= $formLabel->openTag($elements['pageTemplate']['attributes'])
+    . $elements['pageTemplate']['element']->getOption('label'); ?>
     <?= $this->formSelect($elements['pageTemplate']['element']); ?>
     <?= $formLabel->closeTag(); ?>
 </div>
 
 <div id="pageLayout">
-    <?= $formLabel->openTag($elements['mainLayouts']['attributes']); ?>
-    <div class="PageLayoutLabelDiv">
-        <?= $elements['mainLayouts']['element']->getOption('label'); ?>
-    </div>
-    <?= $this->formPageLayout($elements['mainLayouts']['element']); ?>
+    <?= $formLabel->openTag($elements['mainLayouts']['attributes'])
+    . $elements['mainLayouts']['element']->getOption('label'); ?>
+    <?= $this->formSelect($elements['mainLayouts']['element']); ?>
     <?= $formLabel->closeTag(); ?>
     <div style="clear: both;"></div>
 </div>
 
 
-
 <?= $this->form()->closeTag(); ?>
+</div>
