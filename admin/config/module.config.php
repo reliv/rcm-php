@@ -211,11 +211,6 @@ return [
                         'label' => 'Edit',
                         'uri' => '#',
                         'pages' => [
-                            'AddRemoveArrangePlugins' => [
-                                'label' => 'Add/Remove/Arrange Plugins',
-                                'class' => 'rcmAdminEditButton',
-                                'uri' => "javascript:rcmAdminService.rcmAdminEditButtonAction('arrange');",
-                            ],
                             'PageProperties' => [
                                 'label' => 'Page Properties',
                                 'class' => 'rcmAdminMenu RcmBlankDialog',
