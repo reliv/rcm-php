@@ -229,7 +229,7 @@ html.rcmArrangingPlugins .rcmPlugin {
 }
 
 html.rcmArrangingPlugins.isResizing {
-  cursor: col-resize;
+    cursor: col-resize;
 }
 
 
@@ -240,4 +240,12 @@ html.rcmArrangingPlugins.isResizing {
 
 .rcmPlugin.ui-draggable-dragging {
     max-width: 300px;
+}
+
+.rcmPluginDrag{
+    cursor: move;
+}
+
+.rcmPluginDrag:hover{
+    background-color: lightblue;
 }

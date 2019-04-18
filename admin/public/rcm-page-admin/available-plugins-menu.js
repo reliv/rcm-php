@@ -22,22 +22,23 @@ var RcmAvailablePluginsMenu = {
             menu.css('top', $('.rcmAdminPanelWrapper').height());
             /* HEADER */
             var header = $('<div class="panel-header"></div>');
-            var minify = $('<div class="panel-minify"></div>');
-            var plus = $('<div class="glyphicon glyphicon-plus panel-minified-show"></div>');
-            plus.click(menu.toggleMinified);
-            var minus = $('<div class="glyphicon glyphicon-minus panel-minified-hide"></div>');
-            minus.click(menu.toggleMinified);
-            minify.append(plus);
-            minify.append(minus);
-            header.append(minify);
-
-            var heading = $('<div class="panel-heading"><h1>Available Plugins</h1></div>');
+            var heading = $('<div class="panel-heading"></div>');
             header.append(heading);
             menu.append(header);
 
+            var headingH = $(
+                '<span role="button">'
+                + '<span role="button" class="glyphicon glyphicon-menu-right panel-minified-show"></span>'
+                + '<span role="button" class="glyphicon glyphicon-menu-down panel-minified-hide"></span>'
+                + '&nbsp;Blocks (drag onto page)'
+                + '</span>'
+            );
+            headingH.click(menu.toggleMinified);
+            heading.append(headingH)
+
             var pluginListEle = $('<div class="panel-group panel-minified-hide" id="availablePluginsGroup">');
             menu.append(pluginListEle);
-            menu.draggable({ cancel: '.panel-group' });
+            menu.draggable({cancel: '.panel-group'});
             var categoryIndex = 0;
             var newInstanceId = 0;
             $.each(
@@ -63,13 +64,13 @@ var RcmAvailablePluginsMenu = {
                     plugin.appendTo(pluginListEle);
                     plugin.data('pluginName', pluginInfo.name);
 
-                    var icon = $('<img>');
-                    var iconSrc = pluginInfo.icon;
-                    if (!iconSrc) {
-                        iconSrc = '/modules/rcm/images/no-plugin-icon.png';
-                    }
-                    icon.attr('src', iconSrc);
-                    icon.appendTo(plugin);
+                    // var icon = $('<img>');
+                    // var iconSrc = pluginInfo.icon;
+                    // if (!iconSrc) {
+                    //     iconSrc = '/modules/rcm/images/no-plugin-icon.png';
+                    // }
+                    // icon.attr('src', iconSrc);
+                    // icon.appendTo(plugin);
                     var displayName = $('<span></span>');
                     displayName.appendTo(plugin);
                     displayName.html(pluginInfo.label);
@@ -115,7 +116,7 @@ var RcmAvailablePluginsMenu = {
                     innerContainer.appendTo(outerContainer);
                 }
             );
-
+            menu.toggleMinified();// make it start out minimized so its out of the way for most edits
         } else {
 
             RcmAvailablePluginsMenu.menu.remove();
