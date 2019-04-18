@@ -61,7 +61,7 @@ if($restrictions) {
             <div class="panel-button-container" data-ng-hide="rcmAdminPage.editMode">
                 <button
                     class="btn btn-warning btn-xs"
-                    data-rcm-admin-edit-button="page"
+                    onclick="rcmAdminService.rcmAdminEditButtonAction('arrange')"
                     data-ng-disabled="loading"
                     type="button"
                 >
