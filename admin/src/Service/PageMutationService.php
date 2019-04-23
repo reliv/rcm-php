@@ -4,10 +4,10 @@
 namespace RcmAdmin\Service;
 
 use Doctrine\ORM\EntityManager;
-use Rcm\Entity\Container;
-use Rcm\Entity\Revision;
 use Rcm\Acl\ResourceName;
+use Rcm\Entity\Container;
 use Rcm\Entity\Page;
+use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
 use Rcm\Exception\InvalidArgumentException;
 use Rcm\Exception\PageNotFoundException;
@@ -117,7 +117,7 @@ class PageMutationService
             'pageTitle' => $validatedData['pageTitle'],
             'pageType' => $pageType, // "n" means "normal"
             'siteLayoutOverride' => (
-            isset($validatedData['siteLayoutOverride']) ? $validatedData['siteLayoutOverride'] : null
+                isset($validatedData['siteLayoutOverride']) ? $validatedData['siteLayoutOverride'] : null
             ),
             'createdByUserId' => $user->getId(),
             'createdReason' => 'New page in ' . get_class($this),
@@ -389,7 +389,7 @@ class PageMutationService
         Page $page,
         $destinationSiteId,
         $destinationPageName,
-        $desitnationPageType = null
+        $destinationPageType = null
     ): Page {
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
@@ -418,8 +418,8 @@ class PageMutationService
         $destinationPage->setAuthor($user->getName());
         $destinationPage->setModifiedByUserId($user->getId());
 
-        if ($desitnationPageType !== null) {
-            $destinationPage->setPageType($desitnationPageType);
+        if ($destinationPageType !== null) {
+            $destinationPage->setPageType($destinationPageType);
         }
 
         $destinationPage = $this->pageRepo->copyPage(
