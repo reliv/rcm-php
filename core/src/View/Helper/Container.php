@@ -286,8 +286,10 @@ class Container extends AbstractHelper
      */
     protected function getPluginHtml(PluginWrapper $pluginWrapper)
     {
+        $view = $this->getView();
         $this->pluginManager->prepPluginForDisplay(
-            $pluginWrapper->getInstance()
+            $pluginWrapper->getInstance(),
+            $view->useInstanceConfig ?? false
         );
         $this->getPluginCss($pluginWrapper->getInstance());
         $this->getPluginHeadScript($pluginWrapper->getInstance());

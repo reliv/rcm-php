@@ -3,6 +3,7 @@
 namespace Rcm\Service;
 
 use Rcm\Block\Config\ConfigRepository;
+use Rcm\Block\DataProvider\DataProviderRepository;
 use Rcm\Block\Instance\InstanceRepository;
 use Rcm\Block\InstanceWithData\InstanceWithDataService;
 use Rcm\Block\Renderer\RendererService;
@@ -28,7 +29,8 @@ class PluginManagerFactory
             $serviceLocator->get(RendererService::class),
             $serviceLocator->get(InstanceWithDataService::class),
             $serviceLocator->get(InstanceRepository::class),
-            $serviceLocator->get(ConfigRepository::class)
+            $serviceLocator->get(ConfigRepository::class),
+            $serviceLocator->get(DataProviderRepository::class)
         );
     }
 }
