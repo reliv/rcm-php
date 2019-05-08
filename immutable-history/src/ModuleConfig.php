@@ -15,6 +15,7 @@ use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\Page\RcmPluginWrappersToRcmImmutablePluginInstances;
 use Rcm\ImmutableHistory\Redirect\ImmutableRedirectVersionEntity;
+use Rcm\ImmutableHistory\I18nMessage\ImmutableI18nMessageVersionEntity;
 use Rcm\ImmutableHistory\Site\HumanReadableDescriber;
 use Rcm\ImmutableHistory\Site\ImmutableSiteVersionEntity;
 use Rcm\ImmutableHistory\Site\SiteIdToDomainName;
@@ -64,11 +65,18 @@ class ModuleConfig
                             GenerateResourceIdInterface::class
                         ]
                     ],
-
                     'Rcm\ImmutableHistory\SiteSettingsSectionVersionRepo' => [
                         'class' => VersionRepository::class,
                         'arguments' => [
                             ['literal' => ImmutableSiteSettingsSectionVersionEntity::class],
+                            \Doctrine\ORM\EntityManager::class,
+                            GenerateResourceIdInterface::class
+                        ]
+                    ],
+                    'Rcm\ImmutableHistory\I18nMessageRepo' => [
+                        'class' => VersionRepository::class,
+                        'arguments' => [
+                            ['literal' => ImmutableI18nMessageVersionEntity::class],
                             \Doctrine\ORM\EntityManager::class,
                             GenerateResourceIdInterface::class
                         ]
@@ -131,6 +139,13 @@ class ModuleConfig
                                     \Rcm\ImmutableHistory\SiteSettingsSection\HumanReadableDescriber::class
                                 ]
                             ],
+                            [
+                                'addVersionType',
+                                [
+                                    ['literal' => ImmutableI18nMessageVersionEntity::class],
+                                    \Rcm\ImmutableHistory\I18nMessage\HumanReadableDescriber::class
+                                ]
+                            ],
                         ]
                     ],
                     \Rcm\ImmutableHistory\Site\HumanReadableDescriber::class => [],
@@ -146,6 +161,7 @@ class ModuleConfig
                     \Rcm\ImmutableHistory\SiteSettingsSection\HumanReadableDescriber::class => [
                         'arguments' => [SiteIdToDomainName::class]
                     ],
+                    \Rcm\ImmutableHistory\I18nMessage\HumanReadableDescriber::class => [],
                     PageContentFactory::class => [],
                     UserIdToUserFullName::class => [],
                     SiteIdToDomainName::class => [
@@ -202,13 +218,21 @@ class ModuleConfig
                             __DIR__ . '/SiteSettingsSection'
                         ]
                     ],
+                    'Rcm\ImmutableHistory\I18nMessage' => [
+                        'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
+                        'cache' => 'array',
+                        'paths' => [
+                            __DIR__ . '/I18nMessage'
+                        ]
+                    ],
                     'orm_default' => [
                         'drivers' => [
                             'Rcm\ImmutableHistory\Site' => 'Rcm\ImmutableHistory\Site',
                             'Rcm\ImmutableHistory\Page' => 'Rcm\ImmutableHistory\Page',
                             'Rcm\ImmutableHistory\SiteWideContainer' => 'Rcm\ImmutableHistory\SiteWideContainer',
                             'Rcm\ImmutableHistory\Redirect' => 'Rcm\ImmutableHistory\Redirect',
-                            'Rcm\ImmutableHistory\SiteSettingsSection' => 'Rcm\ImmutableHistory\SiteSettingsSection'
+                            'Rcm\ImmutableHistory\SiteSettingsSection' => 'Rcm\ImmutableHistory\SiteSettingsSection',
+                            'Rcm\ImmutableHistory\I18nMessage' => 'Rcm\ImmutableHistory\I18nMessage'
                         ]
                     ]
                 ],
