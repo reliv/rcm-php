@@ -131,6 +131,10 @@ class PageRendererBc
             'httpStatus',
             $httpStatus
         );
+        $viewModel->setVariable(
+            'useInstanceConfig',
+            true
+        );
 
         $viewModel->setTemplate(
             'pages/'
