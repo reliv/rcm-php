@@ -129,7 +129,7 @@ class PluginManager
      *
      * @return void
      */
-    public function prepPluginForDisplay(PluginInstance $instance)
+    public function prepPluginForDisplay(PluginInstance $instance, $useInstanceConfig = false)
     {
         $cacheId = 'rcmPluginInstance_viewData_' . $instance->getInstanceId();
 
@@ -138,7 +138,8 @@ class PluginManager
         } else {
             $viewData = $this->getPluginViewData(
                 $instance->getPlugin(),
-                $instance->getInstanceId()
+                $instance->getInstanceId(),
+                $useInstanceConfig ? $instance->getInstanceConfig() : null
             );
 
             if ($viewData['canCache']) {
@@ -189,7 +190,7 @@ class PluginManager
             $instanceWithData = new InstanceWithDataBasic(
                 $pluginInstanceId,
                 $pluginName,
-                $blockConfig->getDefaultConfig(),
+                $cfg,
                 $provider->__invoke($instance, $request)
             );
         } else {
