@@ -170,6 +170,10 @@ class PluginManager
 
         $blockConfig = $this->blockConfigRepository->findById($pluginName);
 
+        if (empty($blockConfig)) {
+            $blockConfig = $this->blockConfigRepository->findById('MissingBlock');
+        }
+
         if ($pluginInstanceId < 0) {
             $instanceWithData = new InstanceWithDataBasic(
                 $pluginInstanceId,

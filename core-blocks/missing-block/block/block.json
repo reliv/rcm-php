@@ -1,0 +1,11 @@
+{
+  "name": "MissingBlock",
+  "category": "Core",
+  "label": "Missing Block",
+  "description": "This CMS block takes the place of any block that is no longer installed.",
+  "renderer": "mustache",
+  "icon": "",
+  "cache": false,
+  "editor": "noop",
+  "fields": []
+}
