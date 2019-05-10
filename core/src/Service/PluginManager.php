@@ -5,7 +5,10 @@ namespace Rcm\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Rcm\Block\Config\Config;
 use Rcm\Block\Config\ConfigRepository;
+use Rcm\Block\DataProvider\DataProviderRepository;
 use Rcm\Block\Instance\InstanceRepository;
+use Rcm\Block\Instance\InstanceBasic;
+
 use Rcm\Block\InstanceWithData\InstanceWithData;
 use Rcm\Block\InstanceWithData\InstanceWithDataBasic;
 use Rcm\Block\InstanceWithData\InstanceWithDataService;
@@ -74,6 +77,9 @@ class PluginManager
 
     protected $instanceWithDataService;
 
+    /** @var DataProviderRepository */
+    protected $dataProviderRepository;
+
     protected $blockConfigRepository;
 
     protected $instanceRepository;
@@ -99,7 +105,8 @@ class PluginManager
         Renderer $blockRendererService,
         InstanceWithDataService $instanceWithDataService,
         InstanceRepository $instanceRepository,
-        ConfigRepository $blockConfigRepository
+        ConfigRepository $blockConfigRepository,
+        DataProviderRepository $dataProviderRepository
     ) {
         $this->serviceManager = $serviceManager;
         $this->request = $request;
@@ -112,6 +119,7 @@ class PluginManager
         $this->instanceWithDataService = $instanceWithDataService;
         $this->blockConfigRepository = $blockConfigRepository;
         $this->instanceRepository = $instanceRepository;
+        $this->dataProviderRepository = $dataProviderRepository;
     }
 
     /**
@@ -121,7 +129,7 @@ class PluginManager
      *
      * @return void
      */
-    public function prepPluginForDisplay(PluginInstance $instance)
+    public function prepPluginForDisplay(PluginInstance $instance, $useInstanceConfig = false)
     {
         $cacheId = 'rcmPluginInstance_viewData_' . $instance->getInstanceId();
 
@@ -130,7 +138,8 @@ class PluginManager
         } else {
             $viewData = $this->getPluginViewData(
                 $instance->getPlugin(),
-                $instance->getInstanceId()
+                $instance->getInstanceId(),
+                $useInstanceConfig ? $instance->getInstanceConfig() : null
             );
 
             if ($viewData['canCache']) {
@@ -175,24 +184,30 @@ class PluginManager
         }
 
         if ($pluginInstanceId < 0) {
+            $cfg = $forcedAlternativeInstanceConfig ?? $blockConfig->getDefaultConfig();
+            $instance = new InstanceBasic(
+                $pluginInstanceId,
+                $pluginName,
+                $cfg
+            );
+            $provider = $this->dataProviderRepository->findByName($pluginName);
             $instanceWithData = new InstanceWithDataBasic(
                 $pluginInstanceId,
                 $pluginName,
-                $blockConfig->getDefaultConfig(),
-                null //@TODO run the dataprovider here instead of returning null
+                $cfg,
+                $provider->__invoke($instance, $request)
             );
         } else {
             $instanceWithData = $this->instanceWithDataService->__invoke($pluginInstanceId, $request);
-        }
-
-        if ($forcedAlternativeInstanceConfig !== null) {
-            $instanceWithData = new InstanceWithDataBasic(
-                $instanceWithData->getId(),
-                $instanceWithData->getName(),
-                $forcedAlternativeInstanceConfig,
-                //@TODO we should have got the data from the data provider with the forced instance config as an input
-                $instanceWithData->getData()
-            );
+            if ($forcedAlternativeInstanceConfig !== null) {
+                $instanceWithData = new InstanceWithDataBasic(
+                    $instanceWithData->getId(),
+                    $instanceWithData->getName(),
+                    $forcedAlternativeInstanceConfig,
+                    //@TODO we should have got the data from the data provider with the forced instance config as an input
+                    $instanceWithData->getData()
+                );
+            }
         }
 
         $html = $this->blockRendererService->__invoke($instanceWithData);

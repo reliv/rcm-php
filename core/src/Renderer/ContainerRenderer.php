@@ -98,7 +98,8 @@ class ContainerRenderer
     public function renderContainer(
         PhpRenderer $view,
         $name,
-        $revisionId = null
+        $revisionId = null,
+        $useInstanceConfig = false
     ) {
         $site = $this->getSite($view);
 
@@ -116,7 +117,11 @@ class ContainerRenderer
             $pluginWrapperRows = $revision->getPluginWrappersByRow();
 
             if (!empty($pluginWrapperRows)) {
-                $pluginHtml = $this->getPluginRowsHtml($view, $pluginWrapperRows);
+                $pluginHtml = $this->getPluginRowsHtml(
+                    $view,
+                    $pluginWrapperRows,
+                    $useInstanceConfig
+                );
             }
 
             $revisionId = $revision->getRevisionId();
@@ -215,7 +220,6 @@ class ContainerRenderer
         $pluginsHtml,
         $pageContainer = false
     ) {
-
         $html = '<div class="content-container container-fluid rcmContainer"'
             . ' data-containerId="' . $containerName . '"'
             . ' data-containerRevision="'
@@ -245,13 +249,15 @@ class ContainerRenderer
      */
     protected function getPluginRowsHtml(
         PhpRenderer $view,
-        $pluginWrapperRows
+        $pluginWrapperRows,
+        $useInstanceConfig = false
     ) {
         $html = '';
         foreach ($pluginWrapperRows as $pluginRow) {
             $html .= $this->getPluginRowHtml(
                 $view,
-                $pluginRow
+                $pluginRow,
+                $useInstanceConfig
             );
         }
 
@@ -267,7 +273,8 @@ class ContainerRenderer
      */
     protected function getPluginRowHtml(
         PhpRenderer $view,
-        $pluginWrapperRow
+        $pluginWrapperRow,
+        $useInstanceConfig = false
     ) {
         $values = array_values($pluginWrapperRow);
         if (empty($values[0])) {
@@ -279,7 +286,8 @@ class ContainerRenderer
         foreach ($pluginWrapperRow as $wrapper) {
             $html .= $this->getPluginHtml(
                 $view,
-                $wrapper
+                $wrapper,
+                $useInstanceConfig
             );
         }
 
@@ -298,10 +306,12 @@ class ContainerRenderer
      */
     protected function getPluginHtml(
         PhpRenderer $view,
-        PluginWrapper $pluginWrapper
+        PluginWrapper $pluginWrapper,
+        $useInstanceConfig = false
     ) {
         $this->pluginManager->prepPluginForDisplay(
-            $pluginWrapper->getInstance()
+            $pluginWrapper->getInstance(),
+            $useInstanceConfig
         );
 
         $this->getPluginCss(

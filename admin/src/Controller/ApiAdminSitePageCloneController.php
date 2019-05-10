@@ -108,6 +108,13 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
             );
         }
 
+        if (empty($page->getPublishedRevision())) {
+            return new ApiJsonModel(
+                null,
+                1,
+                'Cannot duplicate an unpublished revision'
+            );
+        }
 
         $this->pageMutationService->duplicatePage(
             $this->getCurrentUserTracking(),
