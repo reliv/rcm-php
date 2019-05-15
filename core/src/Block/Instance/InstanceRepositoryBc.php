@@ -81,9 +81,8 @@ class InstanceRepositoryBc extends AbstractRepository implements InstanceReposit
         $blockConfig = $this->blockConfigRepository->findById($pluginInstance->getPlugin());
 
         if (empty($blockConfig)) {
-            throw new \Exception(
-                'Block Config not found for: ' . $pluginInstance->getPlugin()
-            );
+            $pluginInstance->setPlugin('MissingBlock');
+            $blockConfig = $this->blockConfigRepository->findById('MissingBlock');
         }
 
         $defaultConfig = $blockConfig->getDefaultConfig();

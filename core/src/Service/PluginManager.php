@@ -179,6 +179,10 @@ class PluginManager
 
         $blockConfig = $this->blockConfigRepository->findById($pluginName);
 
+        if (empty($blockConfig)) {
+            $blockConfig = $this->blockConfigRepository->findById('MissingBlock');
+        }
+
         if ($pluginInstanceId < 0) {
             $cfg = $forcedAlternativeInstanceConfig ?? $blockConfig->getDefaultConfig();
             $instance = new InstanceBasic(
@@ -200,7 +204,10 @@ class PluginManager
                     $instanceWithData->getId(),
                     $instanceWithData->getName(),
                     $forcedAlternativeInstanceConfig,
-                    //@TODO we should have got the data from the data provider with the forced instance config as an input
+                    /**
+                     * //@TODO we should have got the data from the data provider with the forced instance config as an
+                     * input
+                     */
                     $instanceWithData->getData()
                 );
             }
