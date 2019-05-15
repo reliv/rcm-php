@@ -7,6 +7,7 @@ return [
      * @GammaRelease
      */
     'blocks' => [
+        __DIR__ . '/../../core-blocks/missing-block/block'
         // 'module/path/', to block.json
     ],
     /**
