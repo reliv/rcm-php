@@ -99,14 +99,6 @@ return [
     ],
     /* controllers */
     'controllers' => [
-        'config_factories' => [
-            \RcmAdmin\Controller\ReactAdminHtmlRootController::class => [
-                'arguments' => [
-                    \RcmUser\Service\RcmUserService::class,
-                    \Rcm\SiteSettingsSections\GetSectionDefinitions::class
-                ],
-            ],
-        ],
         'factories' => [
             RcmAdmin\Controller\ApiAdminSitesCloneController::class
             => RcmAdmin\Factory\ApiAdminSitesCloneControllerFactory::class,
@@ -318,19 +310,19 @@ return [
                     ],
                     'Create Site' => [
                         'label' => 'Create Site',
-                        'class' => 'rcmAdminMenu rcmStandardDialog icon-after create-site',
+                        'class' => '',
                         'uri' => '/modules/rcm-admin/create-site/create-site.html',
                         'title' => 'Create Site',
                     ],
                     'Copy Pages' => [
                         'label' => 'Copy Pages',
-                        'class' => 'rcmAdminMenu rcmStandardDialog icon-after copy-pages',
-                        'uri' => '/modules/rcm-admin/site-page-copy/site-page-copy.html',
+                        'class' => '',
+                        'uri' => '#/admin/copy-pages',
                         'title' => 'Copy Pages',
                     ],
                     'Change Domain Name' => [
                         'label' => 'Change Domain Name',
-                        'uri' => '/admin#/site/change-current-host',
+                        'uri' => '#/admin/change-current-host',
                     ],
                 ],
             ],
@@ -484,16 +476,6 @@ return [
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\PageController::class,
                         'action' => 'new',
-                    ],
-                ],
-            ],
-            '/admin' => [
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => [
-                    'route' => '/admin',
-                    'defaults' => [
-                        'controller' => \RcmAdmin\Controller\ReactAdminHtmlRootController::class,
-                        'action' => 'index',
                     ],
                 ],
             ],
