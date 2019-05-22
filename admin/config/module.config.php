@@ -310,7 +310,7 @@ return [
                     ],
                     'Create Site' => [
                         'label' => 'Create Site',
-                        'class' => '',
+                        'class' => 'rcmAdminMenu rcmStandardDialog icon-after create-site',
                         'uri' => '/modules/rcm-admin/create-site/create-site.html',
                         'title' => 'Create Site',
                     ],
