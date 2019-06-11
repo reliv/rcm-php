@@ -702,8 +702,8 @@ return [
             ],
         ],
         'factories' => [
-//            RcmAdmin\EventListener\DispatchListener::class
-//            => RcmAdmin\Factory\DispatchListenerFactory::class,
+            RcmAdmin\EventListener\DispatchListener::class
+            => RcmAdmin\Factory\DispatchListenerFactory::class,
 
             RcmAdmin\Controller\AdminPanelController::class
             => RcmAdmin\Factory\AdminPanelControllerFactory::class,
