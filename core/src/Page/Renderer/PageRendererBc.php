@@ -150,8 +150,6 @@ class PageRendererBc
             )
         );
 
-        return $viewModel;
-
         $layoutView->addChild($viewModel);
 
         $renderedHtml = $this->viewRenderer->render($layoutView);
