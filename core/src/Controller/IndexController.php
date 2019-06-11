@@ -106,6 +106,7 @@ class IndexController extends AbstractActionController
             $layoutView,
             $viewModel,
             $site,
+            $this->getEvent(),
             $pageName,
             $pageType,
             $revisionId
