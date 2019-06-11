@@ -22,39 +22,39 @@ use Zend\Mvc\MvcEvent;
 class Module
 {
 
-    /**
-     * Add Listeners to the bootstrap
-     *
-     * @param MvcEvent $e Event Manager
-     *
-     * @return null
-     */
-    public function onBootstrap(MvcEvent $e)
-    {
-        $serviceManager = $e->getApplication()->getServiceManager();
-
-        // Don't break console routes
-        if ($e->getRequest() instanceof Request) {
-            return;
-        }
-
-        //Add Domain Checker
-        $onDispatchListener = $serviceManager->get(
-            \RcmAdmin\EventListener\DispatchListener::class
-        );
-
-        /** @var \Zend\EventManager\EventManager $eventManager */
-        $eventManager = $e->getApplication()->getEventManager();
-
-        $eventManager->attach(
-            MvcEvent::EVENT_DISPATCH,
-            [
-                $onDispatchListener,
-                'getAdminPanel'
-            ],
-            10001
-        );
-    }
+//    /**
+//     * Add Listeners to the bootstrap
+//     *
+//     * @param MvcEvent $e Event Manager
+//     *
+//     * @return null
+//     */
+//    public function onBootstrap(MvcEvent $e)
+//    {
+//        $serviceManager = $e->getApplication()->getServiceManager();
+//
+//        // Don't break console routes
+//        if ($e->getRequest() instanceof Request) {
+//            return;
+//        }
+//
+//        //Add Domain Checker
+//        $onDispatchListener = $serviceManager->get(
+//            \RcmAdmin\EventListener\DispatchListener::class
+//        );
+//
+//        /** @var \Zend\EventManager\EventManager $eventManager */
+//        $eventManager = $e->getApplication()->getEventManager();
+//
+//        $eventManager->attach(
+//            MvcEvent::EVENT_DISPATCH,
+//            [
+//                $onDispatchListener,
+//                'getAdminPanel'
+//            ],
+//            10001
+//        );
+//    }
 
     /**
      * getConfig() is a requirement for all Modules in ZF2.  This

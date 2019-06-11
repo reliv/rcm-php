@@ -10,6 +10,7 @@ use Rcm\Page\PageData\PageDataService;
 use Rcm\Page\PageStatus\PageStatus;
 use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Service\LayoutManager;
+use RcmAdmin\Controller\AdminPanelController;
 use Zend\Expressive\ZendView\ZendViewRenderer;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
@@ -36,6 +37,8 @@ class PageRendererBc
 
     protected $viewRenderer;
 
+    protected $adminPanelController;
+
     /**
      * Constructor.
      *
@@ -47,12 +50,14 @@ class PageRendererBc
         LayoutManager $layoutManager,
         PageDataService $pageDataService,
         PageStatus $pageStatus,
-        PhpRenderer $viewRenderer
+        PhpRenderer $viewRenderer,
+        AdminPanelController $adminPanelController
     ) {
         $this->layoutManager = $layoutManager;
         $this->pageDataService = $pageDataService;
         $this->pageStatus = $pageStatus;
         $this->viewRenderer = $viewRenderer;
+        $this->adminPanelController = $adminPanelController;
     }
 
     /**
@@ -79,7 +84,8 @@ class PageRendererBc
         Response $response,
         ModelInterface $layoutView,
         ViewModel $viewModel,
-        PageDataBc $pageData
+        PageDataBc $pageData,
+        $event
     ) {
         if (empty($pageData->getPage())) {
             $response->setStatusCode($this->pageStatus->getNotFoundStatus());
@@ -129,36 +135,61 @@ class PageRendererBc
             $requestedPageData
         );
 
-        $viewModel->setVariable(
-            'page',
-            $page
-        );
-        $viewModel->setVariable(
-            'httpStatus',
-            $httpStatus
-        );
-        $viewModel->setVariable(
-            'useInstanceConfig',
-            true
-        );
+//        $viewModel->setVariable(
+//            'page',
+//            $page
+//        );
+//        $viewModel->setVariable(
+//            'httpStatus',
+//            $httpStatus
+//        );
+//        $viewModel->setVariable(
+//            'useInstanceConfig',
+//            true
+//        );
+//
+//        $viewModel->setTemplate(
+//            'pages/'
+//            . $this->getLayoutManager()->getSitePageTemplate(
+//                $site,
+//                $page->getPageLayout()
+//            )
+//        );
 
-        $viewModel->setTemplate(
-            'pages/'
-            . $this->getLayoutManager()->getSitePageTemplate(
-                $site,
-                $page->getPageLayout()
-            )
-        );
+//        return $viewModel;
 
         $layoutView->addChild($viewModel);
 
-        $renderedHtml = $this->viewRenderer->render($layoutView);
-
+        $renderedHtml = str_replace(
+            '<body>',
+            "<body>\n" . $this->renderRcmAdminPanel($event, $layoutView),
+            $this->viewRenderer->render($layoutView)
+        );
         $response = new Response();
         $response->setStatusCode($httpStatus);
         $response->setContent($renderedHtml);
 
         return $response;
+    }
+
+    protected function renderRcmAdminPanel($event, ViewModel $layoutViewModel)
+    {
+        $matchRoute = $event->getRouteMatch();
+
+        if (empty($matchRoute)) {
+            return '';
+        }
+
+        $this->adminPanelController->setEvent($event);
+
+        $adminWrapper = $this->adminPanelController->getAdminWrapperAction();
+
+        if (!$adminWrapper instanceof ViewModel) {
+            return '';
+        }
+
+//        $layoutViewModel->addChild($adminWrapper, 'rcmAdminPanel');
+        return $this->viewRenderer->render($adminWrapper);
     }
 
     /**
@@ -179,6 +210,7 @@ class PageRendererBc
         ModelInterface $layoutView,
         ViewModel $viewModel,
         Site $site,
+        $event,
         $pageName,
         $pageType = PageTypes::NORMAL,
         $revisionId = null
@@ -194,7 +226,8 @@ class PageRendererBc
             $response,
             $layoutView,
             $viewModel,
-            $pageData
+            $pageData,
+            $event
         );
     }
 
