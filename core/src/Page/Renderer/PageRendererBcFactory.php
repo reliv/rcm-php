@@ -5,8 +5,14 @@ namespace Rcm\Page\Renderer;
 use Interop\Container\ContainerInterface;
 use Rcm\Page\PageData\PageDataService;
 use Rcm\Page\PageStatus\PageStatus;
-use Zend\Expressive\ZendView\ZendViewRenderer;
 
+/**
+ * Class PageRendererBcFactory
+ *
+ * @author    James Jervis
+ * @license   License.txt
+ * @link      https://github.com/jerv13
+ */
 class PageRendererBcFactory
 {
     /**
@@ -21,9 +27,7 @@ class PageRendererBcFactory
         return new PageRendererBc(
             $container->get(\Rcm\Service\LayoutManager::class),
             $container->get(PageDataService::class),
-            $container->get(PageStatus::class),
-            $container->get('viewrenderer'),
-            $container->get(\RcmAdmin\Controller\AdminPanelController::class)
+            $container->get(PageStatus::class)
         );
     }
 }

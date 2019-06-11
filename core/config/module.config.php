@@ -49,11 +49,11 @@ return [
     /* RcmUser Config */
     'RcmUser' => require __DIR__ . '/rcm-user-config.php',
     /* route_manager */
-//    'route_manager' => [
-//        'invokables' => [
-//            \Rcm\Route\Cms::class => \Rcm\Route\Cms::class
-//        ],
-//    ],
+    'route_manager' => [
+        'invokables' => [
+            \Rcm\Route\Cms::class => \Rcm\Route\Cms::class
+        ],
+    ],
     /* router */
     'router' => require __DIR__ . '/router.php',
     /* service_manager */

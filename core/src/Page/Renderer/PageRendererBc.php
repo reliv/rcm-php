@@ -10,11 +10,8 @@ use Rcm\Page\PageData\PageDataService;
 use Rcm\Page\PageStatus\PageStatus;
 use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Service\LayoutManager;
-use RcmAdmin\Controller\AdminPanelController;
-use Zend\Expressive\ZendView\ZendViewRenderer;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
 
 /**
  * Class PageRenderer
@@ -35,29 +32,21 @@ class PageRendererBc
      */
     protected $pageStatus;
 
-    protected $viewRenderer;
-
-    protected $adminPanelController;
-
     /**
      * Constructor.
      *
-     * @param LayoutManager $layoutManager
+     * @param LayoutManager         $layoutManager
      * @param PageDataService $pageDataService
-     * @param PageStatus $pageStatus
+     * @param PageStatus            $pageStatus
      */
     public function __construct(
         LayoutManager $layoutManager,
         PageDataService $pageDataService,
-        PageStatus $pageStatus,
-        PhpRenderer $viewRenderer,
-        AdminPanelController $adminPanelController
+        PageStatus $pageStatus
     ) {
         $this->layoutManager = $layoutManager;
         $this->pageDataService = $pageDataService;
         $this->pageStatus = $pageStatus;
-        $this->viewRenderer = $viewRenderer;
-        $this->adminPanelController = $adminPanelController;
     }
 
     /**
@@ -73,10 +62,10 @@ class PageRendererBc
     /**
      * renderZf2
      *
-     * @param Response $response
+     * @param Response       $response
      * @param ModelInterface $layoutView
-     * @param ViewModel $viewModel
-     * @param PageDataBc $pageData
+     * @param ViewModel      $viewModel
+     * @param PageDataBc       $pageData
      *
      * @return Response|ViewModel
      */
@@ -84,8 +73,7 @@ class PageRendererBc
         Response $response,
         ModelInterface $layoutView,
         ViewModel $viewModel,
-        PageDataBc $pageData,
-        $event
+        PageDataBc $pageData
     ) {
         if (empty($pageData->getPage())) {
             $response->setStatusCode($this->pageStatus->getNotFoundStatus());
@@ -135,73 +123,40 @@ class PageRendererBc
             $requestedPageData
         );
 
-//        $viewModel->setVariable(
-//            'page',
-//            $page
-//        );
-//        $viewModel->setVariable(
-//            'httpStatus',
-//            $httpStatus
-//        );
-//        $viewModel->setVariable(
-//            'useInstanceConfig',
-//            true
-//        );
-//
-//        $viewModel->setTemplate(
-//            'pages/'
-//            . $this->getLayoutManager()->getSitePageTemplate(
-//                $site,
-//                $page->getPageLayout()
-//            )
-//        );
-
-//        return $viewModel;
-
-        $layoutView->addChild($viewModel);
-
-        $renderedHtml = str_replace(
-            '<body>',
-            "<body>\n" . $this->renderRcmAdminPanel($event, $layoutView),
-            $this->viewRenderer->render($layoutView)
+        $viewModel->setVariable(
+            'page',
+            $page
         );
-        $response = new Response();
-        $response->setStatusCode($httpStatus);
-        $response->setContent($renderedHtml);
+        $viewModel->setVariable(
+            'httpStatus',
+            $httpStatus
+        );
+        $viewModel->setVariable(
+            'useInstanceConfig',
+            true
+        );
 
-        return $response;
-    }
+        $viewModel->setTemplate(
+            'pages/'
+            . $this->getLayoutManager()->getSitePageTemplate(
+                $site,
+                $page->getPageLayout()
+            )
+        );
 
-    protected function renderRcmAdminPanel($event, ViewModel $layoutViewModel)
-    {
-        $matchRoute = $event->getRouteMatch();
-
-        if (empty($matchRoute)) {
-            return '';
-        }
-
-        $this->adminPanelController->setEvent($event);
-
-        $adminWrapper = $this->adminPanelController->getAdminWrapperAction();
-
-        if (!$adminWrapper instanceof ViewModel) {
-            return '';
-        }
-
-//        $layoutViewModel->addChild($adminWrapper, 'rcmAdminPanel');
-        return $this->viewRenderer->render($adminWrapper);
+        return $viewModel;
     }
 
     /**
      * renderZf2ByName
      *
-     * @param Response $response
+     * @param Response       $response
      * @param ModelInterface $layoutView
-     * @param ViewModel $viewModel
-     * @param Site $site
-     * @param string $pageName
-     * @param string $pageType
-     * @param null $revisionId
+     * @param ViewModel      $viewModel
+     * @param Site           $site
+     * @param string         $pageName
+     * @param string         $pageType
+     * @param null           $revisionId
      *
      * @return Response|ViewModel
      */
@@ -210,7 +165,6 @@ class PageRendererBc
         ModelInterface $layoutView,
         ViewModel $viewModel,
         Site $site,
-        $event,
         $pageName,
         $pageType = PageTypes::NORMAL,
         $revisionId = null
@@ -226,8 +180,7 @@ class PageRendererBc
             $response,
             $layoutView,
             $viewModel,
-            $pageData,
-            $event
+            $pageData
         );
     }
 
@@ -235,8 +188,8 @@ class PageRendererBc
      * prepareLayoutView
      *
      * @param ModelInterface $layoutView
-     * @param Site $site
-     * @param Page $page
+     * @param Site           $site
+     * @param Page           $page
      *
      * @return ModelInterface
      */
