@@ -10,7 +10,6 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Class IndexController
- * @deprecated  PLEASE USE CmsController Instead
  *
  * @author    James Jervis
  * @license   License.txt

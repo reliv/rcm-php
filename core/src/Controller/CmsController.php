@@ -98,7 +98,6 @@
 //            $layoutView,
 //            $viewModel,
 //            $site,
-//            $this->getEvent(),
 //            $page->getName(),
 //            $page->getPageType(),
 //            $revisionId
