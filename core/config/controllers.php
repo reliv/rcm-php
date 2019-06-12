@@ -31,6 +31,6 @@ return [
     ],
     'factories' => [
         Rcm\Controller\IndexController::class => Rcm\Factory\IndexControllerFactory::class,
-//        Rcm\Controller\CmsController::class => Rcm\Factory\CmsControllerFactory::class,
+        Rcm\Controller\CmsController::class => Rcm\Factory\CmsControllerFactory::class,
     ],
 ];
