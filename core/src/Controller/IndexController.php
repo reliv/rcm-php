@@ -3,14 +3,17 @@
 namespace Rcm\Controller;
 
 use Rcm\Entity\Site;
+use Rcm\Exception\RuntimeException;
 use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Page\Renderer\PageRendererBc;
+use Rcm\Renderer\RenderViewModelWithChildren;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
 
 /**
  * Class IndexController
- * @deprecated  PLEASE USE CmsController Instead
  *
  * @author    James Jervis
  * @license   License.txt
@@ -28,18 +31,22 @@ class IndexController extends AbstractActionController
      */
     protected $pageRenderer;
 
+    protected $renderViewModelWithChildren;
+
     /**
      * Constructor.
      *
      * @param PageRendererBc $pageRenderer
-     * @param Site       $currentSite
+     * @param Site $currentSite
      */
     public function __construct(
         PageRendererBc $pageRenderer,
-        Site $currentSite
+        Site $currentSite,
+        RenderViewModelWithChildren $renderViewModelWithChildren
     ) {
         $this->pageRenderer = $pageRenderer;
         $this->currentSite = $currentSite;
+        $this->renderViewModelWithChildren = $renderViewModelWithChildren;
     }
 
     /**
@@ -82,10 +89,10 @@ class IndexController extends AbstractActionController
     /**
      * getCmsResponse
      *
-     * @param Site   $site
+     * @param Site $site
      * @param        $pageName
      * @param string $pageType
-     * @param null   $revisionId
+     * @param null $revisionId
      *
      * @return \Rcm\Http\Response|ViewModel
      */
@@ -101,7 +108,7 @@ class IndexController extends AbstractActionController
         $layoutView = $this->layout();
         $viewModel = new ViewModel();
 
-        return $pageRenderer->renderZf2ByName(
+        $result = $pageRenderer->renderZf2ByName(
             $response,
             $layoutView,
             $viewModel,
@@ -110,5 +117,33 @@ class IndexController extends AbstractActionController
             $pageType,
             $revisionId
         );
+
+        /**
+         * This has the following goals:
+         * 1) Have not-found pages return HTTP status code 404
+         * 2) Don't break the admin menu
+         * 3) Don't break product detail pages
+         *
+         * In order to accomplish these goals, this code returns a response if 404ing
+         * but returns the "content child view" otherwise. This is because other
+         * older parts of the system expect a "child content view" to be returned here
+         * so they can manipulate it for custom features.
+         */
+        if ($result instanceof ViewModel) {
+            if ($result->getVariable('httpStatus') === 404) {
+                $renderedHtml = $this->renderViewModelWithChildren->__invoke($result);
+                $response = new Response();
+                $response->setStatusCode($result->getVariable('httpStatus'));
+                $response->setContent($renderedHtml);
+
+                return $response;
+            } else {
+                $contentView = $result->getChildrenByCaptureTo('content')[0];
+
+                return $contentView;
+            }
+        }
+
+        return $result;
     }
 }

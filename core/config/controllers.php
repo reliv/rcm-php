@@ -4,10 +4,10 @@ return [
         \Rcm\Factory\AbstractPluginControllerFactory::class
     ],
     'config_factories' => [
-        \Rcm\Controller\CacheController::class => [
-            'class' => \Rcm\Controller\CacheController::class,
-            'arguments' => ['ServiceManager'],
-        ],
+//        \Rcm\Controller\CacheController::class => [
+//            'class' => \Rcm\Controller\CacheController::class,
+//            'arguments' => ['ServiceManager'],
+//        ],
         \Rcm\Controller\InstanceConfigApiController::class => [
             'class' => \Rcm\Controller\InstanceConfigApiController::class,
             'arguments' => ['ServiceManager'],

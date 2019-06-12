@@ -111,15 +111,15 @@ return [
                 ],
             ],
         ],
-        'Rcm\Cache\Flush' => [
-            'type' => 'Zend\Mvc\Router\Http\Literal',
-            'options' => [
-                'route' => '/rcm/cache/flush',
-                'defaults' => [
-                    'controller' => \Rcm\Controller\CacheController::class,
-                    'action' => 'flush',
-                ],
-            ],
-        ],
+//        'Rcm\Cache\Flush' => [
+//            'type' => 'Zend\Mvc\Router\Http\Literal',
+//            'options' => [
+//                'route' => '/rcm/cache/flush',
+//                'defaults' => [
+//                    'controller' => \Rcm\Controller\CacheController::class,
+//                    'action' => 'flush',
+//                ],
+//            ],
+//        ],
     ],
 ];

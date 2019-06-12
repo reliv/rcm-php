@@ -10,8 +10,11 @@ use Rcm\Page\PageData\PageDataService;
 use Rcm\Page\PageStatus\PageStatus;
 use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Service\LayoutManager;
+use RcmAdmin\Controller\AdminPanelController;
+use Zend\Expressive\ZendView\ZendViewRenderer;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
 
 /**
  * Class PageRenderer
@@ -35,9 +38,9 @@ class PageRendererBc
     /**
      * Constructor.
      *
-     * @param LayoutManager         $layoutManager
+     * @param LayoutManager $layoutManager
      * @param PageDataService $pageDataService
-     * @param PageStatus            $pageStatus
+     * @param PageStatus $pageStatus
      */
     public function __construct(
         LayoutManager $layoutManager,
@@ -62,10 +65,10 @@ class PageRendererBc
     /**
      * renderZf2
      *
-     * @param Response       $response
+     * @param Response $response
      * @param ModelInterface $layoutView
-     * @param ViewModel      $viewModel
-     * @param PageDataBc       $pageData
+     * @param ViewModel $viewModel
+     * @param PageDataBc $pageData
      *
      * @return Response|ViewModel
      */
@@ -144,19 +147,22 @@ class PageRendererBc
             )
         );
 
-        return $viewModel;
+        $layoutView->addChild($viewModel);
+
+        return $layoutView;
     }
+
 
     /**
      * renderZf2ByName
      *
-     * @param Response       $response
+     * @param Response $response
      * @param ModelInterface $layoutView
-     * @param ViewModel      $viewModel
-     * @param Site           $site
-     * @param string         $pageName
-     * @param string         $pageType
-     * @param null           $revisionId
+     * @param ViewModel $viewModel
+     * @param Site $site
+     * @param string $pageName
+     * @param string $pageType
+     * @param null $revisionId
      *
      * @return Response|ViewModel
      */
@@ -188,8 +194,8 @@ class PageRendererBc
      * prepareLayoutView
      *
      * @param ModelInterface $layoutView
-     * @param Site           $site
-     * @param Page           $page
+     * @param Site $site
+     * @param Page $page
      *
      * @return ModelInterface
      */

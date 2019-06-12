@@ -4,6 +4,7 @@ namespace Rcm\Factory;
 
 use Rcm\Controller\IndexController;
 use Rcm\Page\Renderer\PageRendererBc;
+use Rcm\Renderer\RenderViewModelWithChildren;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -46,7 +47,8 @@ class IndexControllerFactory
 
         return new IndexController(
             $pageRenderer,
-            $currentSite
+            $currentSite,
+            $container->get(RenderViewModelWithChildren::class),
         );
     }
 }
