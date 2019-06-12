@@ -76,8 +76,7 @@ class PageRendererBc
         Response $response,
         ModelInterface $layoutView,
         ViewModel $viewModel,
-        PageDataBc $pageData,
-        $event
+        PageDataBc $pageData
     ) {
         if (empty($pageData->getPage())) {
             $response->setStatusCode($this->pageStatus->getNotFoundStatus());
@@ -148,32 +147,11 @@ class PageRendererBc
             )
         );
 
-//        return $viewModel;
-
         $layoutView->addChild($viewModel);
 
         return $layoutView;
     }
 
-//    protected function renderRcmAdminPanel($event, ViewModel $layoutViewModel)
-//    {
-//        $matchRoute = $event->getRouteMatch();
-//
-//        if (empty($matchRoute)) {
-//            return '';
-//        }
-//
-//        $this->adminPanelController->setEvent($event);
-//
-//        $adminWrapper = $this->adminPanelController->getAdminWrapperAction();
-//
-//        if (!$adminWrapper instanceof ViewModel) {
-//            return '';
-//        }
-//
-////        $layoutViewModel->addChild($adminWrapper, 'rcmAdminPanel');
-//        return $this->viewRenderer->render($adminWrapper);
-//    }
 
     /**
      * renderZf2ByName
@@ -193,7 +171,6 @@ class PageRendererBc
         ModelInterface $layoutView,
         ViewModel $viewModel,
         Site $site,
-        $event,
         $pageName,
         $pageType = PageTypes::NORMAL,
         $revisionId = null
@@ -209,8 +186,7 @@ class PageRendererBc
             $response,
             $layoutView,
             $viewModel,
-            $pageData,
-            $event
+            $pageData
         );
     }
 
