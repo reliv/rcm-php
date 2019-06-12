@@ -100,7 +100,7 @@ class IndexController extends AbstractActionController
         $layoutView = $this->layout();
         $viewModel = new ViewModel();
 
-        return $pageRenderer->renderZf2ByName(
+        $result= $pageRenderer->renderZf2ByName(
             $response,
             $layoutView,
             $viewModel,
@@ -110,5 +110,6 @@ class IndexController extends AbstractActionController
             $pageType,
             $revisionId
         );
+        return $result;
     }
 }
