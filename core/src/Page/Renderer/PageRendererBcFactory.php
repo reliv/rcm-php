@@ -21,9 +21,7 @@ class PageRendererBcFactory
         return new PageRendererBc(
             $container->get(\Rcm\Service\LayoutManager::class),
             $container->get(PageDataService::class),
-            $container->get(PageStatus::class),
-            $container->get('viewrenderer'),
-            $container->get(\RcmAdmin\Controller\AdminPanelController::class)
+            $container->get(PageStatus::class)
         );
     }
 }

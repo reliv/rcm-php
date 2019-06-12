@@ -9,6 +9,11 @@ return [
                 \Doctrine\ORM\EntityManager::class => \Doctrine\ORM\EntityManager::class,
                 \Rcm\Service\SiteService::class => \Rcm\Service\SiteService::class
             ]
+        ],
+        \Rcm\Renderer\RenderViewModelWithChildren::class => [
+            'arguments' => [
+                'viewrenderer'
+            ]
         ]
     ],
     'factories' => [

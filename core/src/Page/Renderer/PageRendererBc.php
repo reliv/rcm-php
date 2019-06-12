@@ -35,10 +35,6 @@ class PageRendererBc
      */
     protected $pageStatus;
 
-    protected $viewRenderer;
-
-    protected $adminPanelController;
-
     /**
      * Constructor.
      *
@@ -49,15 +45,11 @@ class PageRendererBc
     public function __construct(
         LayoutManager $layoutManager,
         PageDataService $pageDataService,
-        PageStatus $pageStatus,
-        PhpRenderer $viewRenderer,
-        AdminPanelController $adminPanelController
+        PageStatus $pageStatus
     ) {
         $this->layoutManager = $layoutManager;
         $this->pageDataService = $pageDataService;
         $this->pageStatus = $pageStatus;
-        $this->viewRenderer = $viewRenderer;
-        $this->adminPanelController = $adminPanelController;
     }
 
     /**
@@ -135,62 +127,53 @@ class PageRendererBc
             $requestedPageData
         );
 
-//        $viewModel->setVariable(
-//            'page',
-//            $page
-//        );
-//        $viewModel->setVariable(
-//            'httpStatus',
-//            $httpStatus
-//        );
-//        $viewModel->setVariable(
-//            'useInstanceConfig',
-//            true
-//        );
-//
-//        $viewModel->setTemplate(
-//            'pages/'
-//            . $this->getLayoutManager()->getSitePageTemplate(
-//                $site,
-//                $page->getPageLayout()
-//            )
-//        );
+        $viewModel->setVariable(
+            'page',
+            $page
+        );
+        $viewModel->setVariable(
+            'httpStatus',
+            $httpStatus
+        );
+        $viewModel->setVariable(
+            'useInstanceConfig',
+            true
+        );
+
+        $viewModel->setTemplate(
+            'pages/'
+            . $this->getLayoutManager()->getSitePageTemplate(
+                $site,
+                $page->getPageLayout()
+            )
+        );
 
 //        return $viewModel;
 
         $layoutView->addChild($viewModel);
 
-        $renderedHtml = str_replace(
-            '<body>',
-            "<body>\n" . $this->renderRcmAdminPanel($event, $layoutView),
-            $this->viewRenderer->render($layoutView)
-        );
-        $response = new Response();
-        $response->setStatusCode($httpStatus);
-        $response->setContent($renderedHtml);
-
-        return $response;
+        return $layoutView;
     }
 
-    protected function renderRcmAdminPanel($event, ViewModel $layoutViewModel)
-    {
-        $matchRoute = $event->getRouteMatch();
-
-        if (empty($matchRoute)) {
-            return '';
-        }
-
-        $this->adminPanelController->setEvent($event);
-
-        $adminWrapper = $this->adminPanelController->getAdminWrapperAction();
-
-        if (!$adminWrapper instanceof ViewModel) {
-            return '';
-        }
-
-//        $layoutViewModel->addChild($adminWrapper, 'rcmAdminPanel');
-        return $this->viewRenderer->render($adminWrapper);
-    }
+//    protected function renderRcmAdminPanel($event, ViewModel $layoutViewModel)
+//    {
+//        $matchRoute = $event->getRouteMatch();
+//
+//        if (empty($matchRoute)) {
+//            return '';
+//        }
+//
+//        $this->adminPanelController->setEvent($event);
+//
+//        $adminWrapper = $this->adminPanelController->getAdminWrapperAction();
+//
+//        if (!$adminWrapper instanceof ViewModel) {
+//            return '';
+//        }
+//
+////        $layoutViewModel->addChild($adminWrapper, 'rcmAdminPanel');
+//        return $this->viewRenderer->render($adminWrapper);
+//    }
 
     /**
      * renderZf2ByName
