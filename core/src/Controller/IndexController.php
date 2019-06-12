@@ -31,7 +31,7 @@ class IndexController extends AbstractActionController
      * Constructor.
      *
      * @param PageRendererBc $pageRenderer
-     * @param Site       $currentSite
+     * @param Site $currentSite
      */
     public function __construct(
         PageRendererBc $pageRenderer,
@@ -81,10 +81,10 @@ class IndexController extends AbstractActionController
     /**
      * getCmsResponse
      *
-     * @param Site   $site
+     * @param Site $site
      * @param        $pageName
      * @param string $pageType
-     * @param null   $revisionId
+     * @param null $revisionId
      *
      * @return \Rcm\Http\Response|ViewModel
      */
@@ -100,7 +100,7 @@ class IndexController extends AbstractActionController
         $layoutView = $this->layout();
         $viewModel = new ViewModel();
 
-        $result= $pageRenderer->renderZf2ByName(
+        $result = $pageRenderer->renderZf2ByName(
             $response,
             $layoutView,
             $viewModel,
@@ -110,6 +110,7 @@ class IndexController extends AbstractActionController
             $pageType,
             $revisionId
         );
+
         return $result;
     }
 }
