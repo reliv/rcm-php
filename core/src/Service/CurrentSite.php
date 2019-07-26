@@ -5,10 +5,8 @@ namespace Rcm\Service;
 use Rcm\Entity\Site;
 
 /**
- * @deprecated This service is stateful per request
- *
- * Place holder for service
- * @author James Jervis - https://github.com/jerv13
+ * Place holder for "current site" service which automatically gets the current site entity
+ * from the current request context.
  */
 class CurrentSite extends Site
 {
