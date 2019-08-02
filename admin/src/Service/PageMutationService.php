@@ -4,6 +4,7 @@
 namespace RcmAdmin\Service;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\Acl\GetCurrentUser;
 use Rcm\Acl\ResourceName;
 use Rcm\Entity\Container;
 use Rcm\Entity\Page;
@@ -22,6 +23,7 @@ use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
 use RcmAdmin\Exception\CannotDuplicateAnUnpublishedPageException;
+use RcmMessage\Api\GetCurrentUserId;
 use RcmUser\Service\RcmUserService;
 use RcmUser\User\Entity\UserInterface;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -69,13 +71,14 @@ class PageMutationService
     protected $immutableSiteWideContainerRepo;
 
     public function __construct(
-        Site $currentSite,
         RcmUserService $rcmUserService,
         EntityManager $entityManager,
         VersionRepositoryInterface $immuteblePageVersionRepo,
         VersionRepositoryInterface $immutableSiteWideContainerRepo,
         PageContentFactory $immutablePageContentFactory,
-        RcmPageNameToPathname $rcmPageNameToPathname
+        RcmPageNameToPathname $rcmPageNameToPathname,
+        Site $currentSite,
+        GetCurrentUser $getCurrentUser
     ) {
         $this->currentSite = $currentSite;
         $this->entityManager = $entityManager;

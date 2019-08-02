@@ -16,6 +16,12 @@ class ModuleConfig
                         ]
                     ],
                 ]
+            ],
+            // This makes ZfConfigFactories work with the requst_context container/service-manager
+            RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY => [
+                'abstract_factories' => [
+                    \Rcm\RequestContext\ZfConfigFactoriesRequestContextFactory::class
+                ],
             ]
         ];
     }
