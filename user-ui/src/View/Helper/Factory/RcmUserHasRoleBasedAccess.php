@@ -39,7 +39,8 @@ class RcmUserHasRoleBasedAccess implements FactoryInterface
         );
 
         $service = new \RcmUser\Ui\View\Helper\RcmUserHasRoleBasedAccess(
-            $authorizeService, $userAuthService
+            $authorizeService,
+            $userAuthService
         );
 
         return $service;

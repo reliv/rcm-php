@@ -39,7 +39,8 @@ class RcmUserIsAllowed implements FactoryInterface
         );
 
         $service = new \RcmUser\Ui\Controller\Plugin\RcmUserIsAllowed(
-            $authorizeService, $userAuthService
+            $authorizeService,
+            $userAuthService
         );
 
         return $service;
