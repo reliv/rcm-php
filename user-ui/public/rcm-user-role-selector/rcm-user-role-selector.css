@@ -1,0 +1,62 @@
+.rcm-selector {
+    position: relative;
+}
+
+.rcm-selector .hide {
+    display: none;
+}
+
+.rcm-selector .search {
+    float: right;
+}
+
+.rcm-selector .selector {
+    border: .1em solid #EEEEEE;
+    clear: both;
+    overflow: scroll;
+    overflow-x: auto;
+    overflow-y: scroll;
+    max-height: 20em;
+}
+
+.rcm-selector ul {
+    padding: 0;
+    margin: 0;
+}
+
+.rcm-selector ul li {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.rcm-selector .selector .selected {
+    background-color: #DDDDDD;
+}
+
+.rcm-selector .selector .item {
+    border: .1em solid transparent;
+    margin: .2em;
+    padding: .2em;
+    position: relative;
+}
+
+.rcm-selector .selector .item:hover {
+    border: .1em solid #666666;
+}
+
+.rcm-selector .selector .item .tickMark:after {
+    content: "\2714";
+}
+
+.rcm-selector .selector .item .tickMark {
+    display: inline-block;
+    position: absolute;
+    right: 1em;
+    font-size: 1em;
+}
+
+.rcm-selector .selector .item .tickMark.hide {
+    display: none;
+}
+

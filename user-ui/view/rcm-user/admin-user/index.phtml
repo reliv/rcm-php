@@ -1,0 +1,328 @@
+<?php
+
+// builds js and css dependencies
+$this->rcmUserBuildHtmlHead();
+$this->headLink()->appendStylesheet('/modules/rcm-user/admin.css');
+$this->headScript()->appendFile('/modules/rcm-user/core.js');
+$this->headScript()->appendFile('/modules/rcm-user/admin-users-app.js');
+
+?>
+
+<div xx-ng-app="rcmuserAdminUsersApp">
+    <div class="rcmuser" ng-controller="rcmuserAdminUsers">
+        <div class="container-fluid admin-users">
+            <div class="container-fluid">
+                <h1>Users
+                    <small>Edit and create users</small>
+                </h1>
+                <p class="lead">Set up new users or edit existing.</p>
+            </div>
+
+
+            <form class="search-header form-horizontal" role="userSearch">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <input
+                            class="form-control input-sm"
+                            name="userSearch"
+                            ng-model="userQuery"
+                            placeholder="search"
+                            type="text"
+                        />
+                    </div>
+                    <div class="col-sm-offset-7 col-sm-2">
+                        <button type="button"
+                                class="btn btn-primary btn-xs"
+                                ng-click="addUser()"
+                                ng-disabled="loading">
+                            <i class="glyphicon glyphicon-plus"></i> add user
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div rcm-user-loading-directive="loading"></div>
+
+            <div class="useraccordion" close-others="oneAtATime" ng-hide="loading">
+
+                <div
+                    class="panel panel-default"
+                    ng-repeat="user in users | userFilter:userQuery"
+                >
+
+                    <div class="panel-heading"
+                         ng-click="userPanelBodyShow = !userPanelBodyShow">
+                        <div class="panel-title">
+                            <span class="user-name">{{user.name}}</span>
+                            -
+                            <span class="user-username">{{user.username}}</span>
+                            <span class="use-id"
+                                  ng-show="user.id">({{user.id}})
+                            </span>
+                            <span class="use-id" ng-hide="user.id">(NEW USER)</span>
+                            <i
+                                class="opener glyphicon"
+                                ng-class="{'glyphicon-chevron-down': userPanelBodyShow, 'glyphicon-chevron-right': !userPanelBodyShow}"
+                            >
+                            </i>
+                        </div>
+                    </div>
+
+                    <div class="panel-body" ng-show="userPanelBodyShow">
+                        <div class="" ng-controller="rcmuserAdminUser"
+                             ng-init="user=user; users=users; index=$index;">
+                            <div rcm-user-loading-directive="loading"></div>
+
+                            <div>
+                                <section class="user">
+                                    <div class="userDetails">
+                                        <form role="form">
+                                            <div class="form-group">
+                                                <label for="id">Id: </label>
+
+                                                <div id="id">
+                                                    {{user.id}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="username">Username: </label>
+                                                <input
+                                                    class="form-control"
+                                                    id="username"
+                                                    ng-model="user.username"
+                                                    placeholder="Username"
+                                                    type="text"
+                                                />
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="password">Password: </label>
+                                                <input
+                                                    class="form-control"
+                                                    id="password"
+                                                    ng-model="user.password"
+                                                    placeholder="********"
+                                                    type="password"
+                                                />
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="state">User state: </label>
+
+                                                <select
+                                                    class="form-control"
+                                                    id="state"
+                                                    ng-model="user.state"
+                                                    ng-options="state as state for state in availableStates"
+                                                >
+                                                    <option value="">n/a</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="email">Email:</label>
+                                                <input
+                                                    class="form-control"
+                                                    id="email"
+                                                    ng-model="user.email"
+                                                    placeholder="email@example.com"
+                                                    type="email"
+                                                />
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="name">Display name: </label>
+                                                <input
+                                                    class="form-control"
+                                                    id="name"
+                                                    ng-model="user.name"
+                                                    placeholder=""
+                                                    type="text"
+                                                />
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="roles">Roles: </label>
+
+                                                <div class="container-fluid user_roles">
+                                                    <div class="row" id="roles">
+
+                                                        <div class="col-sm-12" ng-show="user.properties[rolePropertyId].length > 1">
+                                                            <div class="alert alert-warning" role="alert">
+                                                                WARNING:
+                                                                <br/>Multiple roles is not fully supported and my cause security issues for DENY rules!
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-6">
+                                                            <div class="input-group"
+                                                                 ng-init="user"
+                                                                 ng-repeat="roleId in user.properties[rolePropertyId]">
+                                                                <input type="text"
+                                                                       class="form-control"
+                                                                       disabled="disabled"
+                                                                       ng-value="roleId"/>
+                                                                <span
+                                                                    class="input-group-btn">
+                                                                    <button
+                                                                        class="btn btn-warning btn-xs"
+                                                                        ng-click="removeRole(roleId)"
+                                                                        ng-disabled="isDefaultRole(roleId) || loading"
+                                                                        type="button"
+                                                                    >
+                                                                        <span
+                                                                            ng-hide="isDefaultRole(roleId)">remove role
+                                                                        </span>
+                                                                        <span
+                                                                            ng-show="isDefaultRole(roleId)">default role
+                                                                        </span>
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-offset-2 col-sm-3">
+                                                            <div class="btn-group dropdown"
+                                                                 is-open="status.isopen">
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn btn-primary btn-xs dropdown-toggle"
+                                                                    ng-click="rolesSelect[user.id] = !rolesSelect[user.id]"
+                                                                    ng-disabled="loading"
+                                                                >
+                                                                    <i class="glyphicon glyphicon-edit"></i>
+                                                                    + add role
+                                                                    <span class="caret"></span>
+                                                                </button>
+                                                                <div ng-class="{'open': rolesSelect[user.id]}">
+                                                                    <ul class="dropdown-menu"
+                                                                        role="menu">
+                                                                        <li ng-repeat="(roleNs, role) in roles">
+                                                                            <a
+                                                                                href="javascript:void(0)"
+                                                                                ng-click="addRole(role.roleId); rolesSelect[user.id] = false"
+                                                                                ng-hide="isDefaultRole(role.roleId)">
+                                                                                {{getNamespaceRepeatString(roleNs,
+                                                                                '..')}} {{role.roleId}}
+                                                                            </a>
+                                                                            <a
+                                                                                href="javascript:void(0)"
+                                                                                ng-show="isDefaultRole(role.roleId)">
+                                                                                {{getNamespaceRepeatString(roleNs,
+                                                                                '..')}} {{role.roleId}}
+                                                                                (default role)
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="">
+                                        <div rcm-alerts
+                                             rcm-results="rcmUserHttp.alerts"
+                                             alert-title-error="'An error occured:'"
+                                             alert-title-success="'Success:'"></div>
+
+                                        <button
+                                            class="btn btn-primary btn-xs"
+                                            ng-click="updateUser(user)"
+                                            ng-disabled="loading"
+                                            ng-hide="user.isNew"
+                                            type="button"
+                                        >
+                                            <i class="glyphicon glyphicon-edit"></i> save user
+                                        </button>
+                                        <button
+                                            class="btn btn-primary btn-xs"
+                                            ng-click="createUser(user)"
+                                            ng-disabled="loading"
+                                            ng-show="user.isNew"
+                                            type="button"
+                                        >
+                                            <i class="glyphicon glyphicon-edit"></i> create user
+                                        </button>
+                                        <button
+                                            class="btn btn-warning btn-xs"
+                                            ng-click="removeUserDialog = true"
+                                            ng-disabled="loading"
+                                            ng-hide="removeUserDialog || user.isNew"
+                                            type="button"
+                                        >
+                                            <i class="glyphicon glyphicon-minus"></i> remove user
+                                        </button>
+                                        <div class="btn-group-vertical btn-group-xs"
+                                             ng-show="removeUserDialog">
+                                            <button type="button" class="btn btn-xs"
+                                                    ng-click="removeUserDialog = false"
+                                                    ng-disabled="loading">
+                                                keep user
+                                            </button>
+                                            <button type="button"
+                                                    class="btn btn-danger btn-xs"
+                                                    ng-click="removeUser(user)"
+                                                    ng-disabled="loading">
+                                                <i class="glyphicon glyphicon-minus"></i> remove
+                                                user
+                                            </button>
+                                        </div>
+                                        <button
+                                            class="btn btn-xs"
+                                            ng-click="resetUser()"
+                                            ng-disabled="loading"
+                                            ng-hide="user.isNew || !orgUser.id"
+                                            type="button"
+                                        >
+                                            reset
+                                        </button>
+                                        <button
+                                            class="btn btn-xs"
+                                            ng-click="cancelCreateUser()"
+                                            ng-disabled="loading"
+                                            ng-show="user.isNew"
+                                            type="button"
+                                        >
+                                            cancel
+                                        </button>
+                                        <div rcm-user-loading-directive="loading"></div>
+                                    </div>
+                                </section>
+
+                                <section class="userProperties">
+                                    <div class="userEdit" ng-show="showEdit">
+                                        <!--@future: Load links to other edit pages-->
+                                    </div>
+                                </section>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <button type="button"
+                class="btn btn-danger btn-xs"
+                ng-click="showMessages = !showMessages"
+                ng-show="messages.length">
+            <i class="glyphicon glyphicon-edit"></i>
+            <span ng-hide="showMessages">show errors</span>
+            <span ng-show="showMessages">hide errors</span>
+        </button>
+
+        <div class="messages" ng-show="showMessages">
+            <div class="alert alert-danger">
+                <ul>
+                    <li ng-repeat="message in messages">{{message}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+{
+  "name": "rcm/user-ui",
+  "description": "RCM User HTML views/pages",
+  "type": "library",
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "rcm",
+    "module",
+    "zf2"
+  ],
+  "minimum-stability": "stable",
+  "homepage": "https://github.com/reliv/rcm-user-ui",
+  "authors": [
+    {
+      "name": "James Jervis",
+      "email": "jjervis@relivinc.com",
+      "homepage": "https://github.com/reliv"
+    }
+  ],
+  "suggest":{
+    "bower-asset/jquery": "3.*",
+    "bower-asset/angular": "~1",
+    "bower-asset/bootstrap": "~3.3"
+  },
+  "require": {
+    "php": ">=5.5",
+    "zendframework/zendframework": "2.*",
+    "rcm/user-api": "1.*",
+    "rwoverdijk/assetmanager": "1.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "RcmUser\\Ui\\": "src/"
+    }
+  }
+}

@@ -1,0 +1,120 @@
+<!-- <Add Rule Modal> -->
+<div class="modal fade"
+     id="addRule"
+     tabindex="-1"
+     role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add rule: </h3>
+            </div>
+            <div class="modal-body">
+                <div rcm-alerts="true"
+                     rcm-results="rcmUserHttp.alerts"
+                     alert-title-error="'An error occured:'"
+                     alert-title-success="'Success:'">
+                </div>
+                <form name="addRuleForm" role="form">
+                    <div class="form-group">
+                        <label for="rule">Rule: </label>
+                        <select class="form-control" name="rule"
+                                ng-model="ruleData.rule" required="true">
+                            <option selected="true"
+                                    value="allow">allow
+                            </option>
+                            <!-- @todo Implement when ready
+                            <option value="deny">deny (unstable)</option>
+                            <option value="ignore">ignore</option>
+                            -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="roleId">Role: </label>
+
+                        <div name="roleId"
+                             class="roleId">{{ruleData.roleId}}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="resource">Resource: </label>
+                        <input
+                                class="form-control"
+                                name="resourceQuery"
+                                ng-focus="toggleDropdown($event, true)"
+                                ng-click="toggleDropdown($event, true)"
+                                ng-model="ruleData.resourceId"
+                                placeholder="Enter resource id"
+                                required="true"
+                                type="text"
+                        />
+
+                        <div class="list-dropdown"
+                             ng-show="status.isopen"
+                             ng-mouseleave="toggleDropdown($event, false)">
+                            <ul class="list-group">
+                                <li class="list-group-item"
+                                    ng-repeat="resource in resources | resourceFilter:ruleData.resourceId">
+                                    <a href
+                                       ng-click="ruleData.resourceId = resource.resource.resourceId; toggleDropdown($event, false)">
+                                        <div class="title">
+                                            {{resource.resource.name}}
+                                        </div>
+                                        <div>
+                                            ({{resource.resource.description}})
+                                        </div>
+                                        <div>
+                                            Resource: {{resource.resource.resourceId}}
+                                        </div>
+                                        <div>
+                                            NameSpace: {{resource.resourceNs}}
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label for="privilege">Privileges:</label>
+                        </div>
+                        <div class="container">
+                            <div class="row resource-privilege">
+                                <input type="checkbox"
+                                       name="privilegeAll"
+                                       ng-model="selected.allPrivileges"
+                                       ng-change="allRulePrivileges(selected.allPrivileges)"/>
+                                <label for="privilegeAll">*ALL*</label>
+                            </div>
+                            <div class="row resource-privilege"
+                                 ng-repeat="privilege in resources[ruleData.resourceId].resource.privileges">
+                                <input type="checkbox"
+                                       name="privilege{{privilege}}"
+                                       ng-model="selected.privileges[privilege]"
+                                       ng-change="toggleRulePrivilege(privilege, selected.privileges[privilege])"/>
+                                <label for="privilege{{privilege}}">{{privilege}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <div rcm-user-loading-directive="loading"></div>
+                <div ng-hide="loading">
+                    <button class="btn btn-primary btn-xs"
+                            ng-disabled="loading"
+                            ng-click="addRule()">Add Rule
+                    </button>
+                    <button class="btn btn-warning btn-xs"
+                            ng-disabled="loading"
+                            data-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- </Add Rule Modal> -->

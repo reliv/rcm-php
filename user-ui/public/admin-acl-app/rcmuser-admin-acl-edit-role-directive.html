@@ -1,0 +1,52 @@
+<!-- EDIT ROLE TEMPLATE -->
+<script type="text/ng-template" id="editRole.html">
+    <div class="rcmuser">
+        <div class="admin-acl">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit role: </h3>
+            </div>
+            <div class="modal-body">
+                <div rcm-alerts rcm-results="rcmUserHttp.alerts"
+                     alert-title-error="'An error occured:'"
+                     alert-title-success="'Success:'"></div>
+                <!-- @todo create me
+                <form name="editRoleForm" role="form">
+                    <div class="form-group">
+                        <label for="roleId">Role Id: </label>
+                        <input class="form-control" name="roleId" ng-model="roleData.roleId" required="true" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="roleId">Parent Role: </label>
+                        <select class="form-control" name="parentRoleId" ng-model="roleData.parentRoleId" required="true">
+                            <option selected="selected" value="">-- choose parent role --</option>
+                            <option selected="selected" value="">*root*</option>
+                            <option ng-repeat="roleObj in roles" value="{{roleObj.role.roleId}}">{{roleObj.role.roleId}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description: </label>
+                        <textarea
+                            class="form-control"
+                            name="description"
+                            ng-model="roleData.description"
+                            ng-required="true"
+                            ng-minlength="5"
+                            ng-maxlength="255"
+                            required="true"
+                            >
+                        </textarea>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <div class="loading" ng-show="loading">LOADING...</div>
+                <div ng-hide="loading">
+                    <button class="btn btn-primary btn-xs" ng-disabled="loading" ng-click="editRole()">Save Role</button>
+                    <button class="btn btn-warning btn-xs" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+            -->
+            </div>
+        </div>
+</script>

@@ -1,0 +1,62 @@
+<script type="text/javascript"
+        src="/vendor/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript"
+        src="/vendor/jquery-migrate/jquery-migrate.min.js"></script>
+<script type="text/javascript"
+        src="/vendor/angular/angular.min.js"></script>
+<script type="text/javascript"
+        src="/modules/rcm-twitter-bootstrap/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="/modules/rcm/rcm-core.js"></script>
+
+<script type="text/javascript" src="/modules/rcm-user/core.js"></script>
+
+<!-- -->
+<script type="text/javascript"
+        src="/modules/rcm-user/rcm-user-roles-service.js"></script>
+
+<script type="text/javascript"
+        src="/modules/rcm-user/rcm-user-role-selector.js"></script>
+
+<link href="/modules/rcm-user/rcm-user-role-selector.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript">
+
+    rcmUser.eventManager.on(
+            'rcmUserRolesService.onRoleReady',
+            function (roles) {
+                rcmUser.rcmUserRolesService.service.setSelectedRoles(
+                        'roles',
+                        {
+                            "customer": {
+                                "roleId": "customer",
+                                "description": null,
+                                "parentRoleId": "user"
+                            },
+                            "distributor": {
+                                "roleId": "distributor",
+                                "description": null,
+                                "parentRoleId": "customer"
+                            }
+                        }
+                );
+            }
+    );
+
+    rcmUser.rcmUserRolesService.service.requestRoles();
+
+</script>
+
+<div ng-app="rcmUserRoleSelector">
+    <div rcm-user-role-selector="pagePermissions"
+         rcm-user-role-selector-id-property="roleId"
+         rcm-user-role-selector-title-property="roleId"
+         rcm-user-role-selector-namespace-property="namespace"
+
+         rcm-user-role-selector-show-nesting="-"
+         rcm-user-role-selector-save-label="Save"
+         rcm-user-role-selector-search-label="Search"
+         rcm-user-role-selector-search-placeholder="Search..."
+         rcm-user-role-selector-save="mySave()"
+            >
+    </div>
+</div>

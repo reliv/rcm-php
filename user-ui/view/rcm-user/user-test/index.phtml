@@ -1,0 +1,47 @@
+<?php
+?>
+<pre>
+<?php
+if ($dumpUser) {
+
+    var_dump($this->rcmUserGetCurrentUser());
+}
+if ($doTest) {
+
+    /* Implementation test */
+    require_once(dirname(__FILE__)
+        . '../../../../../../user/ImplementationTest/Tester.php');
+    echo "TESTING\n";
+    try {
+
+        $params = array();
+
+        //$params['user'] = new \RcmUser\User\Entity\User();
+        //$params['user']->setUsername('7');
+        //$params['user']->setPassword('123123123');
+        //
+        //$params['userPlainTextPassword'] = '123123123';
+
+        echo \RcmUser\ImplementationTest\Tester::testAll(
+            $userController->getServiceLocator()
+        );
+
+        //echo \RcmUser\ImplementationTest\Tester::testCase2($userController->getServiceLocator(), $params);
+
+    } catch (\Exception $e) {
+
+        echo "\nERROR: " . $e->getMessage();
+        echo "\n-code: " . $e->getCode();
+        echo "\n-line: " . $e->getLine();
+        echo "\n-file: " . $e->getFile();
+        echo "\n-trace: \n" . $e->getTraceAsString();
+    }
+}
+/* */
+
+?>
+
+
+
+
+</pre>

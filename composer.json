@@ -63,7 +63,9 @@
       "Rcm\\HttpLib\\": "http-lib/src/",
       "Rcm\\Acl\\": "acl/src",
       "Rcm\\RequestContext\\": "request-context/src",
-      "Rcm\\CurrentRequest\\": "current-request/src"
+      "Rcm\\CurrentRequest\\": "current-request/src",
+      "RcmUser\\Ui\\": "user-ui/src/",
+      "RcmUser\\": "user/src/"
     }
   }
 }

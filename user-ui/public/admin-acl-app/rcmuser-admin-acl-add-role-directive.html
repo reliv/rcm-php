@@ -1,0 +1,69 @@
+<!-- <Add Role Modal> -->
+<div class="modal fade"
+     id="addRole"
+     tabindex="-1"
+     role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add role: </h3>
+            </div>
+            <div class="modal-body">
+                <div rcm-alerts
+                     rcm-results="rcmUserHttp.alerts"
+                     alert-title-error="'An error occured:'"
+                     alert-title-success="'Success:'">
+                </div>
+                <form name="addRoleForm" role="form">
+                    <div class="form-group">
+                        <label for="roleId">Role Id: </label>
+                        <input class="form-control"
+                               name="roleId"
+                               ng-model="roleData.roleId"
+                               required="true"
+                               type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="roleId">Parent Role: </label>
+                        <select class="form-control" name="parentRoleId"
+                                ng-model="roleData.parentRoleId"
+                                ng-options="roleObj.role.roleId as roleObj.repeatString + roleObj.role.roleId for roleObj in roles"
+                                required="true"
+                        >
+                            <option selected="selected" value="null">*root*</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description: </label>
+                        <textarea
+                                class="form-control"
+                                name="description"
+                                ng-model="roleData.description"
+                                ng-required="true"
+                                minlength="5"
+                                ng-maxlength="255"
+                                required="true"
+                                value=""
+                        >
+                        </textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div rcm-user-loading-directive="loading"></div>
+                <div ng-hide="loading">
+                    <button class="btn btn-primary btn-xs"
+                            ng-disabled="loading"
+                            ng-click="addRole()">Add Role
+                    </button>
+                    <button class="btn btn-warning btn-xs"
+                            ng-disabled="loading"
+                            ng-click="cancel()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- </Add Role Modal> -->

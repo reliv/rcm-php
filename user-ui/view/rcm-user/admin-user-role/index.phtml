@@ -1,0 +1,23 @@
+<?php
+
+// builds js and css dependencies
+$this->rcmUserBuildHtmlHead();
+$this->headLink()->appendStylesheet('/modules/rcm-user/admin.css');
+$this->headLink()->appendStylesheet('/modules/rcm-user/rcm-user-role-selector.css');
+$this->headScript()->appendFile('/modules/rcm-user/core.js');
+$this->headScript()->appendFile('/modules/rcm-user/rcm-user-roles-service.js');
+$this->headScript()->appendFile('/modules/rcm-user/rcm-user-role-selector.js');
+
+?>
+<div xx-ng-app="rcmuserAdminUserRoleApp">
+    <div class="rcmuser" ng-controller="rcmuserAdminUserRole">
+        <div class="container-fluid admin-users">
+            <div class="container-fluid">
+                <h1>User Roles for {{user.username}}
+                    <small>Set up access roles.</small>
+                </h1>
+                <p class="lead">Edit and create user roles.</p>
+            </div>
+        </div>
+    </div>
+</div>
