@@ -37,18 +37,18 @@ class IndexControllerFactory
         $controllerMgr = $controllerManager;
 
         /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
-        $serviceLocator = $controllerMgr->getServiceLocator();
+        $container = $controllerMgr->getServiceLocator();
 
         /** @var PageRendererBc $pageRendererer */
-        $pageRenderer = $serviceLocator->get(PageRendererBc::class);
+        $pageRenderer = $container->get(PageRendererBc::class);
 
         /** @var \Rcm\Entity\Site $currentSite */
-        $currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
+        $currentSite = $container->get(\Rcm\Service\CurrentSite::class);
 
         return new IndexController(
             $pageRenderer,
             $currentSite,
-            $container->get(RenderViewModelWithChildren::class),
+            $container->get(RenderViewModelWithChildren::class)
         );
     }
 }
