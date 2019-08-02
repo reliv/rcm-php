@@ -54,7 +54,7 @@ class PageRendererBc
         $this->layoutManager = $layoutManager;
         $this->pageDataService = $pageDataService;
         $this->pageStatus = $pageStatus;
-        $this->renderViewModelWithChildren=$renderViewModelWithChildren;
+        $this->renderViewModelWithChildren = $renderViewModelWithChildren;
     }
 
     /**
