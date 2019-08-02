@@ -19,6 +19,10 @@
     "bower-asset/rcm-html-editor": ">=0.4.0",
     "bower-asset/rcm-dialog": ">=0.2.0"
   },
+  "replace": {
+    "rcm/user": "~1.5",
+    "rcm/user-api": "1.*"
+  },
   "require": {
     "php": ">=7",
     "container-interop/container-interop": "^1",
