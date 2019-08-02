@@ -60,7 +60,10 @@
       "Rcm\\SiteSettingsSections\\": "site-settings-sections/src/",
       "RcmAdmin\\": "admin/src/",
       "Rcm\\": "core/src/",
-      "Rcm\\HttpLib\\": "http-lib/src/"
+      "Rcm\\HttpLib\\": "http-lib/src/",
+      "Rcm\\Acl\\": "acl/src",
+      "Rcm\\RequestContext\\": "request-context/src",
+      "Rcm\\CurrentRequest\\": "current-request/src"
     }
   }
 }
