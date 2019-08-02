@@ -1,0 +1,67 @@
+{
+  "name": "rcm/user",
+  "description": "User management, auth and ACL",
+  "type": "library",
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "reliv",
+    "user",
+    "manager",
+    "module",
+    "zf2"
+  ],
+  "homepage": "https://github.com/reliv/RcmUser",
+  "authors": [
+    {
+      "name": "James Jervis",
+      "email": "jjervis@relivinc.com",
+      "homepage": "https://github.com/reliv"
+    },
+    {
+      "name": "Westin Shafer",
+      "email": "wshafer@relivinc.com",
+      "homepage": "https://github.com/reliv"
+    },
+    {
+      "name": "Rod McNew",
+      "email": "rmcnew@relivinc.com",
+      "homepage": "https://github.com/reliv"
+    },
+    {
+      "name": "Brian Janish",
+      "email": "bjanish@relivinc.com",
+      "homepage": "https://github.com/reliv"
+    }
+  ],
+  "require": {
+    "php": ">=5.3",
+    "zendframework/zend-authentication": "^2",
+    "zendframework/zend-cache": "^2",
+    "zendframework/zend-crypt": "^2",
+    "zendframework/zend-eventmanager": "^2",
+    "zendframework/zend-filter": "^2",
+    "zendframework/zend-inputfilter": "^2",
+    "zendframework/zend-log": "^2",
+    "zendframework/zend-permissions-acl": "^2",
+    "zendframework/zend-servicemanager": "2.* || 3.*",
+    "zendframework/zend-session": "^2",
+    "zendframework/zend-validator": "^2"
+  },
+  "require-dev": {
+    "doctrine/doctrine-orm-module": "^0|^1",
+    "phpunit/phpunit": "^5",
+    "squizlabs/php_codesniffer": "^2",
+    "zendframework/zend-loader": "^2.5",
+    "zendframework/zend-modulemanager": "^2.5",
+    "zendframework/zend-mvc": "^2.5",
+    "zendframework/zend-stdlib": "^2.5"
+  },
+  "suggest": {
+    "doctrine/doctrine-orm-module": "By default this module uses the Doctrine DataMappers"
+  },
+  "autoload": {
+    "psr-4": {
+      "RcmUser\\": "src/"
+    }
+  }
+}

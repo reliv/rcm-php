@@ -1,0 +1,42 @@
+<!-- <Remove Role Modal> -->
+<div class="modal fade"
+     id="removeRole"
+     tabindex="-1"
+     role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Are you sure you want to delete: </h3>
+            </div>
+            <div class="modal-body">
+                <div rcm-alerts rcm-results="rcmUserHttp.alerts"
+                     alert-title-error="'An error occured:'"
+                     alert-title-success="'Success:'"></div>
+                <div>
+                    <div>Role:</div>
+                    <div class="roleId" ng-show="roleData.role.roleId">{{roleData.role.roleId}}</div>
+                    <div class="roleId" ng-hide="roleData.role.roleId">{{rootPlaceHolder}}</div>
+                    <div>{{roleData.role.description}}</div>
+                    <div>With parent:</div>
+                    <div class="roleId" ng-show="roleData.role.parentRoleId">{{roleData.role.parentRoleId}}</div>
+                    <div class="roleId" ng-hide="roleData.role.parentRoleId">{{rootPlaceHolder}}</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div rcm-user-loading-directive="loading"></div>
+                <div ng-hide="loading">
+                    <button class="btn btn-primary btn-xs"
+                            ng-disabled="loading"
+                            ng-click="removeRole()">Remove Role
+                    </button>
+                    <button class="btn btn-warning btn-xs"
+                            ng-disabled="loading"
+                            ng-click="cancel()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- </Remove Role Modal> -->

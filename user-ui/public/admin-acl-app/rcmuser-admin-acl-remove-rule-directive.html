@@ -1,0 +1,65 @@
+<!-- <Remove Rule Modal> -->
+<div class="modal fade"
+     id="removeRule"
+     tabindex="-1"
+     role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Are you sure you want to delete
+                    rule: </h3>
+            </div>
+            <div class="modal-body">
+                <div rcm-alerts
+                     rcm-results="rcmUserHttp.alerts"
+                     alert-title-error="'An error occured:'"
+                     alert-title-success="'Success:'"></div>
+                <div>
+                    <div class="rule">{{ruleData.rule}}</div>
+                    <div>Role of:</div>
+                    <div class="roleId">{{ruleData.roleId}}</div>
+                </div>
+                <div>
+                    <div>Access to resource:</div>
+                    <div class="resource-name">{{resourceData.resource.name}}
+                    </div>
+                </div>
+                <div>
+                    <div>For privileges:</div>
+                    <div class="resource-privilege"
+                         ng-hide="ruleData.privileges.length">
+                        *ALL*
+                    </div>
+                    <div class="resource-privilege"
+                         ng-show="ruleData.privileges.length"
+                         ng-repeat="privilege in ruleData.privileges">
+                        - {{privilege}}
+                    </div>
+                </div>
+                <div>
+                    <div class="resource-details">
+                        {{resourceData.resource.description}}<br/><br/>
+                        Resource: {{resourceData.resource.resourceId}}<br/>
+                        NameSpace: {{resourceData.resourceNs}}
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div rcm-user-loading-directive="loading"></div>
+                <div ng-hide="loading">
+                    <button class="btn btn-primary btn-xs"
+                            ng-disabled="loading"
+                            ng-click="removeRule()">Remove Rule
+                    </button>
+                    <button class="btn btn-warning btn-xs"
+                            ng-disabled="loading"
+                            ng-click="cancel()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- </Remove Rule Modal> -->
