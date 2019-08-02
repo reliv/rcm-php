@@ -9,6 +9,7 @@ use Rcm\Page\PageData\PageDataBc;
 use Rcm\Page\PageData\PageDataService;
 use Rcm\Page\PageStatus\PageStatus;
 use Rcm\Page\PageTypes\PageTypes;
+use Rcm\Renderer\RenderViewModelWithChildren;
 use Rcm\Service\LayoutManager;
 use RcmAdmin\Controller\AdminPanelController;
 use Zend\Expressive\ZendView\ZendViewRenderer;
@@ -35,6 +36,8 @@ class PageRendererBc
      */
     protected $pageStatus;
 
+    protected $renderViewModelWithChildren;
+
     /**
      * Constructor.
      *
@@ -45,11 +48,13 @@ class PageRendererBc
     public function __construct(
         LayoutManager $layoutManager,
         PageDataService $pageDataService,
-        PageStatus $pageStatus
+        PageStatus $pageStatus,
+        RenderViewModelWithChildren $renderViewModelWithChildren
     ) {
         $this->layoutManager = $layoutManager;
         $this->pageDataService = $pageDataService;
         $this->pageStatus = $pageStatus;
+        $this->renderViewModelWithChildren=$renderViewModelWithChildren;
     }
 
     /**
@@ -147,9 +152,20 @@ class PageRendererBc
             )
         );
 
-        $layoutView->addChild($viewModel);
+        /**
+         * Make sure the response has status code 404 if we are 404ing
+         */
+        if ($httpStatus === 404) {
+            $layoutView->addChild($viewModel);
+            $renderedHtml = $this->renderViewModelWithChildren->__invoke($layoutView);
+            $response = new Response();
+            $response->setStatusCode($viewModel->getVariable('httpStatus'));
+            $response->setContent($renderedHtml);
 
-        return $layoutView;
+            return $response;
+        }
+
+        return $viewModel;
     }
 
 
