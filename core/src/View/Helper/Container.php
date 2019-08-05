@@ -158,14 +158,6 @@ class Container extends AbstractHelper
      */
     public function renderPageContainer($name = '')
     {
-//        exec('echo "' . json_encode([
-////                'time' => microtime(true),
-//                'uri'=>$_SERVER['REQUEST_URI'],
-////                'location' => '__invoke',
-//                'containerName' => $name,
-//                'trace'=>debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)
-//            ]) . '" >> /www/web/data/cache/rod.text', $output);
-
         $name = $this->prepareContainerName($name);
 
         /** @var \Zend\View\Renderer\PhpRenderer $view */
