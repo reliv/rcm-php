@@ -47,8 +47,7 @@ class IndexControllerFactory
 
         return new IndexController(
             $pageRenderer,
-            $currentSite,
-            $container->get(RenderViewModelWithChildren::class)
+            $currentSite
         );
     }
 }
