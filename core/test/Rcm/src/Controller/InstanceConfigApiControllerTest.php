@@ -15,7 +15,7 @@
 
 namespace RcmTest\Controller;
 
-require_once __DIR__ . '/../../../autoload.php';
+
 
 use phpDocumentor\Reflection\Types\Resource;
 use Rcm\Acl\ResourceName;

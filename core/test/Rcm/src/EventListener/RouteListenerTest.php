@@ -2,7 +2,7 @@
 
 namespace RcmTest\EventListener;
 
-require_once __DIR__ . '/../../../autoload.php';
+
 
 use Rcm\Entity\Domain;
 use Rcm\Entity\Redirect;

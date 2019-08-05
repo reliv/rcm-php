@@ -18,7 +18,7 @@
  */
 namespace RcmTest\Controller;
 
-require_once __DIR__ . '/../../../autoload.php';
+
 
 use Rcm\Controller\PageCheckController;
 use Rcm\Page\PageTypes\PageTypes;

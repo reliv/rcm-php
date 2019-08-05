@@ -20,7 +20,7 @@
 //
 //namespace RcmTest\Controller;
 //
-//require_once __DIR__ . '/../../../autoload.php';
+//
 //
 //use Rcm\Controller\CmsController;
 //use Rcm\Entity\Page;

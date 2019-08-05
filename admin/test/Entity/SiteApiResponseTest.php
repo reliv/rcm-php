@@ -6,7 +6,7 @@ use Rcm\Entity\Country;
 use Rcm\Entity\Domain;
 use Rcm\Entity\Language;
 
-require_once __DIR__ . '/../autoload.php';
+
 
 /**
  * Class SiteApiResponseTest

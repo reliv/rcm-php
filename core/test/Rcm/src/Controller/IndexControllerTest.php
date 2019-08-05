@@ -3,7 +3,7 @@
 //
 //namespace RcmTest\Controller;
 //
-//require_once __DIR__ . '/../../../autoload.php';
+//
 //
 //use Rcm\Controller\IndexController;
 //use Rcm\Entity\Site;

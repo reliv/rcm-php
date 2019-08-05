@@ -25,7 +25,7 @@ use Zend\Mvc\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel;
 
-require_once __DIR__ . '/../autoload.php';
+
 
 /**
  * Unit Test for Dispatch Listener Event

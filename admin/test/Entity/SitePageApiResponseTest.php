@@ -6,7 +6,7 @@ namespace RcmAdmin\Entity;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 
-require_once __DIR__ . '/../autoload.php';
+
 
 /**
  * Class SitePageApiResponseTest

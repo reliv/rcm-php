@@ -23,7 +23,7 @@ use Rcm\Entity\Site;
 use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Validator\PageTemplate;
 
-require_once __DIR__ . '/../../../autoload.php';
+
 
 /**
  * Unit Test for the PageTemplate Validator

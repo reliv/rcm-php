@@ -1,8 +1,6 @@
 <?php
 
-
 namespace RcmLogin\Test\RcmLogin\Controller;
-
 
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use PHPUnit\Framework\TestCase;
