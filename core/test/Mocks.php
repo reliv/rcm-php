@@ -18,8 +18,6 @@ namespace Rcm\Test;
  * @link      https://github.com/reliv
  */
 
-require_once __DIR__ . '/autoload.php';
-
 class Mocks extends \PHPUnit_Framework_TestCase
 {
 

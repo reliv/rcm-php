@@ -22,7 +22,7 @@ namespace RcmTest\Validator;
 use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Validator\Page;
 
-require_once __DIR__ . '/../../../autoload.php';
+
 
 /**
  * Unit Test for the Page Validator

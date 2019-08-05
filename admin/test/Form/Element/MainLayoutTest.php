@@ -21,8 +21,6 @@ namespace RcmAdminTest\Form\Element;
 
 use RcmAdmin\Form\Element\MainLayout;
 
-require_once __DIR__ . '/../../autoload.php';
-
 /**
  * Unit Test for Form Element Main Layout
  *

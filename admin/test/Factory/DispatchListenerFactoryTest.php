@@ -19,7 +19,7 @@
 
 namespace RcmAdminTest\Factory;
 
-require_once __DIR__ . '/../autoload.php';
+
 
 use RcmAdmin\EventListener\DispatchListener;
 use RcmAdmin\Factory\DispatchListenerFactory;

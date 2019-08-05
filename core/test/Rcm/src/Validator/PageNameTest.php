@@ -21,7 +21,7 @@ namespace RcmTest\Validator;
 
 use Rcm\Validator\PageName;
 
-require_once __DIR__ . '/../../../autoload.php';
+
 
 /**
  * Unit Test for the PageName Validator

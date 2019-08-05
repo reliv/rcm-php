@@ -19,7 +19,7 @@
 
 namespace RcmTest\Entity;
 
-require_once __DIR__ . '/../../../autoload.php';
+
 
 use Rcm\Entity\Country;
 

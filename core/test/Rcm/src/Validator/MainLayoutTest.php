@@ -22,7 +22,7 @@ namespace RcmTest\Validator;
 use Rcm\Entity\Site;
 use Rcm\Validator\MainLayout;
 
-require_once __DIR__ . '/../../../autoload.php';
+
 
 /**
  * Unit Test for the MainLayout Validator

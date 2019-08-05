@@ -8,7 +8,7 @@ use Rcm\Entity\Domain;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 
-require_once __DIR__ . '/../../../autoload.php';
+
 
 /**
  * Unit Test for the ResourceProviderTest

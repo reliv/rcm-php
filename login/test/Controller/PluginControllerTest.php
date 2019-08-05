@@ -7,8 +7,6 @@ use RcmLogin\Controller\PluginController;
 use \Mockery;
 use RcmLogin\Csrf\CsrfValidator;
 
-require_once __DIR__ . '/../autoload.php';
-
 class PluginControllerTest extends TestCase
 {
     public function testRenderInstance()
