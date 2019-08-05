@@ -69,6 +69,7 @@ class PageMutationService
 
     protected $entityManager;
     protected $immutableSiteWideContainerRepo;
+    protected $currentUser;
 
     public function __construct(
         RcmUserService $rcmUserService,
@@ -89,6 +90,7 @@ class PageMutationService
         $this->immutableSiteWideContainerRepo = $immutableSiteWideContainerRepo;
         $this->immutablePageContentFactory = $immutablePageContentFactory;
         $this->rcmPageNameToPathname = $rcmPageNameToPathname;
+        $this->currentUser = $getCurrentUser->__invoke();
 
         $this->view = new ViewModel();
         $this->view->setTerminal(true);
@@ -108,8 +110,9 @@ class PageMutationService
      * @throws TrackingException
      * @throws \Rcm\Exception\PageException
      */
-    public function createNewPage($user, int $siteId, string $name, string $pageType, $data)
+    public function createNewPage(int $siteId, string $name, string $pageType, $data)
     {
+        $user = $this->currentUser;
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
@@ -120,7 +123,7 @@ class PageMutationService
             'pageTitle' => $validatedData['pageTitle'],
             'pageType' => $pageType, // "n" means "normal"
             'siteLayoutOverride' => (
-                isset($validatedData['siteLayoutOverride']) ? $validatedData['siteLayoutOverride'] : null
+            isset($validatedData['siteLayoutOverride']) ? $validatedData['siteLayoutOverride'] : null
             ),
             'createdByUserId' => $user->getId(),
             'createdReason' => 'New page in ' . get_class($this),
@@ -158,8 +161,9 @@ class PageMutationService
      * @return Response|ViewModel
      * @throws TrackingException
      */
-    public function createNewPageFromTemplate($user, $data)
+    public function createNewPageFromTemplate($data)
     {
+        $user = $this->currentUser;
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
@@ -221,13 +225,14 @@ class PageMutationService
      * @throws TrackingException
      */
     public function publishPageRevision(
-        $user,
         int $siteId,
         string $pageName,
         string $pageType,
         int $pageRevisionId,
         $urlToPageFunction
     ) {
+        $user = $this->currentUser;
+
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
@@ -270,18 +275,19 @@ class PageMutationService
      * @throws TrackingException
      */
     public function savePageDraft(
-        UserInterface $user,
         string $pageName,
         string $pageType,
         $data,
         $urlToPageFunction,
         int $originalRevisionId
     ) {
+        $user = $this->currentUser;
+
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
 
-        $this->prepSaveData($data);
+        self::prepSaveData($data);
 
         $result = $this->pageRepo->savePage(
             $this->currentSite,
@@ -359,8 +365,10 @@ class PageMutationService
         return $return;
     }
 
-    public function depublishPage($user, Page $page)
+    public function depublishPage(Page $page)
     {
+        $user = $this->currentUser;
+
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
@@ -388,12 +396,13 @@ class PageMutationService
     }
 
     public function duplicatePage(
-        UserInterface $user,
         Page $page,
         $destinationSiteId,
         $destinationPageName,
         $destinationPageType = null
     ): Page {
+        $user = $this->currentUser;
+
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
         }
@@ -463,8 +472,10 @@ class PageMutationService
      * @param Page $page
      * @param $data
      */
-    public function updatePublishedVersionOfPage($user, Page $page, $data)
+    public function updatePublishedVersionOfPage(Page $page, $data)
     {
+        $user = $this->currentUser;
+
         $originalLocator = new PageLocator(
             $this->currentSite->getSiteId(),
             $this->rcmPageNameToPathname->__invoke($page->getName(), $page->getPageType())
@@ -512,7 +523,7 @@ class PageMutationService
      *
      * @throws InvalidArgumentException
      */
-    protected function prepSaveData(&$data)
+    protected static function prepSaveData(&$data)
     {
         if (!is_array($data)) {
             $data = [];
@@ -532,7 +543,7 @@ class PageMutationService
         }
 
         foreach ($data['plugins'] as &$plugin) {
-            $this->cleanSaveData($plugin['saveData']);
+            self::cleanSaveData($plugin['saveData']);
 
             /* Patch for a Json Bug */
             if (!empty($plugin['isSitewide'])
@@ -567,7 +578,7 @@ class PageMutationService
      *
      * @param $data
      */
-    protected function cleanSaveData(
+    protected static function cleanSaveData(
         &$data
     ) {
         if (empty($data)) {
@@ -578,7 +589,7 @@ class PageMutationService
             ksort($data);
 
             foreach ($data as &$arrayData) {
-                $this->cleanSaveData($arrayData);
+                self::cleanSaveData($arrayData);
             }
 
             return;

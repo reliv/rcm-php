@@ -147,7 +147,6 @@ class PageController extends AbstractActionController
             ) {
                 $validatedData['siteLayoutOverride'] = $validatedData['main-layout'];
                 $this->pageMutationService->createNewPage(
-                    $this->rcmUserService->getCurrentUser(),
                     $this->currentSite->getSiteId(),
                     $validatedData['name'],
                     $validatedData['pageType'],
@@ -155,7 +154,6 @@ class PageController extends AbstractActionController
                 );
             } elseif (!empty($validatedData['page-template'])) {
                 $this->pageMutationService->createNewPageFromTemplate(
-                    $this->rcmUserService->getCurrentUser(),
                     $validatedData
                 );
             } else {
@@ -246,7 +244,6 @@ class PageController extends AbstractActionController
 
         return $this->redirect()->toUrl(
             $this->pageMutationService->publishPageRevision(
-                $this->rcmUserService->getCurrentUser(),
                 $this->currentSite->getSiteId(),
                 $pageName,
                 $pageType,
@@ -320,7 +317,6 @@ class PageController extends AbstractActionController
 
         return $this->getJsonResponse(
             $this->pageMutationService->savePageDraft(
-                $this->rcmUserService->getCurrentUser(),
                 $pageName,
                 $pageType,
                 $data,
