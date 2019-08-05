@@ -40,7 +40,7 @@ class InitRequestContextMiddleware implements MiddlewareInterface
         $requestContextContainer->setService(AppContext::class, $this->container);
         $requestContextContainer->setService(CurrentRequest::class, $request);
         $request = $request->withAttribute(RequestContextBindings::REQUEST_ATTRIBUTE, $requestContextContainer);
-        $this->container->setService(CurrentRequestContext::class, $requestContextContainer);
+        $this->container->setService(RequestContext::class, $requestContextContainer);
 
         return $delegate->process($request);
     }
