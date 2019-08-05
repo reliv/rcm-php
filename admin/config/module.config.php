@@ -659,6 +659,11 @@ return [
             ],
         ],
     ],
+    \Rcm\RequestContext\RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY => [
+        'factories' => [
+            \RcmAdmin\Service\PageMutationService::class => \RcmAdmin\Service\PageMutationServiceFactory::class
+        ]
+    ],
     /* service_manager */
     'service_manager' => [
         'config_factories' => [
@@ -689,17 +694,17 @@ return [
                 ],
             ],
             \RcmAdmin\Api\GetPageData::class => [],
-            \RcmAdmin\Service\PageMutationService::class => [
-                'arguments' => [
-                    \Rcm\Service\CurrentSite::class,
-                    \RcmUser\Service\RcmUserService::class,
-                    \Doctrine\ORM\EntityManager::class,
-                    'Rcm\ImmutableHistory\PageVersionRepo',
-                    'Rcm\ImmutableHistory\SiteWideContainerVersionRepo',
-                    \Rcm\ImmutableHistory\Page\PageContentFactory::class,
-                    \Rcm\ImmutableHistory\Page\RcmPageNameToPathname::class,
-                ],
-            ],
+//            \RcmAdmin\Service\PageMutationService::class => [
+//                'arguments' => [
+//                    \Rcm\Service\CurrentSite::class,
+//                    \RcmUser\Service\RcmUserService::class,
+//                    \Doctrine\ORM\EntityManager::class,
+//                    'Rcm\ImmutableHistory\PageVersionRepo',
+//                    'Rcm\ImmutableHistory\SiteWideContainerVersionRepo',
+//                    \Rcm\ImmutableHistory\Page\PageContentFactory::class,
+//                    \Rcm\ImmutableHistory\Page\RcmPageNameToPathname::class,
+//                ],
+//            ],
         ],
         'factories' => [
             RcmAdmin\EventListener\DispatchListener::class

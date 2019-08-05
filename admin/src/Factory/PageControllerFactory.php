@@ -7,6 +7,7 @@ use Interop\Container\ContainerInterface;
 use Rcm\Entity\Revision;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
+use Rcm\RequestContext\CurrentRequestContext;
 use Rcm\Service\CurrentSite;
 use RcmAdmin\Controller\PageController;
 use RcmAdmin\Service\PageMutationService;
@@ -45,7 +46,7 @@ class PageControllerFactory
         }
 
         return new PageController(
-            $container->get(PageMutationService::class),
+            $container->get(CurrentRequestContext::class),
             $container->get(CurrentSite::class),
             $container->get(RcmUserService::class),
             $container->get(EntityManager::class)->getRepository(\Rcm\Entity\Page::class),

@@ -2,6 +2,7 @@
 
 namespace RcmAdmin\Controller;
 
+use Psr\Container\ContainerInterface;
 use Rcm\Acl\ResourceName;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
@@ -71,7 +72,9 @@ class PageController extends AbstractActionController
     protected $revisionRepo;
 
 
-    protected $pageMutationService;
+//    protected $pageMutationService;
+
+    protected $currentRequestContext;
 
     /**
      * @param Site $currentSite
@@ -79,13 +82,15 @@ class PageController extends AbstractActionController
      * @param PageRepo $pageRepo
      */
     public function __construct(
-        PageMutationService $pageMutationService,
+//        PageMutationService $pageMutationService,
+        ContainerInterface $currentRequestContext,
         Site $currentSite,
         RcmUserService $rcmUserService
     ) {
-        $this->pageMutationService = $pageMutationService;
+        $this->pageMutationService = $currentRequestContext->get(PageMutationService::class);
         $this->currentSite = $currentSite;
         $this->rcmUserService = $rcmUserService;
+        $this->currentRequestContext = $currentRequestContext;
 
         $this->view = new ViewModel();
         $this->view->setTerminal(true);
