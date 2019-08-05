@@ -1,8 +1,6 @@
 <?php
 
-
 namespace RcmAdmin\Service;
-
 
 use Psr\Container\ContainerInterface;
 use Rcm\ImmutableHistory\Page\PageContentFactory;

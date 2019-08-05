@@ -71,9 +71,6 @@ class PageController extends AbstractActionController
 
     protected $revisionRepo;
 
-
-//    protected $pageMutationService;
-
     protected $currentRequestContext;
 
     /**
@@ -82,7 +79,6 @@ class PageController extends AbstractActionController
      * @param PageRepo $pageRepo
      */
     public function __construct(
-//        PageMutationService $pageMutationService,
         ContainerInterface $currentRequestContext,
         Site $currentSite,
         RcmUserService $rcmUserService
