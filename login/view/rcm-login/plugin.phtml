@@ -1,0 +1,50 @@
+<?= isset($error) ? '<div class="alert alert-warning">' . $this->escapeHtml($error) . '</div>' : '' ?>
+<?=
+$this->rcmTextEdit(
+    'loginHeader',
+    'Login',
+    'h1'
+)
+?>
+
+<div class="loginContent">
+    <form class="loginForm  rcm-login-form"
+          action="/rcm-login/login-form-submit-handler"
+          method="post"
+    >
+        <?=
+        $this->rcmTextEdit(
+            'userNameCopy',
+            'Username:',
+            'label',
+            array('for' => 'rcmLoginUsername')
+        ) ?>
+        <br>
+        <input type="hidden" name="redirect" value="<?= $this->escapeHtmlAttr($redirect) ?>"/>
+        <input type="hidden" name="csrf" value="<?= $this->escapeHtmlAttr($csrf) ?>"/>
+        <input autofocus type="text" name="username" value="<?= $this->escapeHtmlAttr($username) ?>"/>
+        <br>
+        <?=
+        $this->rcmTextEdit(
+            'loginPasswordCopy',
+            'Password:',
+            'label',
+            array('for' => 'rcmLoginPassword')
+        ) ?>
+        <br>
+        <input type="password" name="password"/>
+        <br>
+        <br>
+        <button class="loginButton btn btn-primary" type="submit">
+            <?= $this->translate('Login') ?>
+        </button>
+    </form>
+</div>
+<div class="loginFooter">
+    <?=
+    $this->rcmRichEdit(
+        'bottomLoginText',
+        '<a href="/reset-password">Forgot your password?</a><br>'
+    )
+    ?>
+</div>

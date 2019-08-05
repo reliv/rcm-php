@@ -1,0 +1,41 @@
+{
+  "name": "rcm/login",
+  "description": "Provides all the basic login functions for the Reliv Content Manager",
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "reliv",
+    "content",
+    "manager",
+    "plugin",
+    "rcm"
+  ],
+  "homepage": "http://www.reliv.com/",
+  "suggest": {
+    "bower-asset/jquery": "3.*"
+  },
+  "require": {
+    "php": ">=5.4.0",
+    "container-interop/container-interop": "1.*",
+    "psr/log": "1.*",
+    "rcm/core": "^1.7.0",
+    "rcm/core-js": "^1.0.0",
+    "rcm/user": "~1.5",
+    "http-interop/http-middleware": "^0.4.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.0",
+    "squizlabs/php_codesniffer": "2.*",
+    "mockery/mockery": "^1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "RcmLogin\\": "src/"
+    }
+  },
+  "extra": {
+    "asset-pattern-skip-version": "(-patch*)",
+    "asset-installer-paths": {
+      "bower-asset-library": "public/bower_components"
+    }
+  }
+}

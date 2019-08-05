@@ -1,0 +1,21 @@
+
+.RcmResetPassword label {
+    display: block;
+}
+
+.RcmResetPassword .checkBoxWrap label {
+    display: inline;
+}
+
+.RcmCreateNewPassword label {
+    display: block;
+}
+
+.RcmCreateNewPassword .checkBoxWrap label {
+    display: inline;
+}
+
+.RcmCreateNewPassword textarea {
+    width: 675px;
+    height: 50px;
+}
