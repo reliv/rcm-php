@@ -330,7 +330,10 @@ return [
                 'label' => 'Users',
                 'uri' => '#',
                 'pages' => [
-
+                    'Content Change Log' => [
+                        'label' => 'Content Change Log',
+                        'uri' => '/rcm/change-log?days=30&content-type=text%2Fhtml',
+                    ],
                 ],
             ],
         ],
