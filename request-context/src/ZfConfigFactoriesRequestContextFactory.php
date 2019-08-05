@@ -20,7 +20,7 @@ class ZfConfigFactoriesRequestContextFactory extends AbstractConfigFactory imple
     protected $serviceMgrKey = RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY;
 
     /**
-     * @var bool used know it we must look for the real service locator inside the given service locator
+     * @var bool used to know it we must look for the real service locator inside the given service locator
      */
     protected $serviceMgrIsRoot = true;
 }
