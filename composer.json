@@ -22,7 +22,8 @@
   "replace": {
     "rcm/user": "1.6.0",
     "rcm/user-api": "1.6.0",
-    "rcm/user-ui": "1.7.0"
+    "rcm/user-ui": "1.7.0",
+    "rcm/login": "1.9.1"
   },
   "require": {
     "php": ">=7",
@@ -74,7 +75,9 @@
       "Rcm\\CurrentRequest\\": "current-request/src",
       "RcmUser\\Ui\\": "user-ui/src/",
       "RcmUser\\": "user/src/",
-      "RcmUser\\Api\\": "user-api/src/"
+      "RcmUser\\Api\\": "user-api/src/",
+      "Reliv\\App\\RcmApi": "reliv-app-rcm-api/src/",
+      "RcmLogin\\": "login/src/"
     }
   }
 }
