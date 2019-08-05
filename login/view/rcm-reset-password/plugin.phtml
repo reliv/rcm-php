@@ -1,0 +1,76 @@
+<?php
+
+$this->headLink()->appendStylesheet(
+    $this->basePath() . '/modules/rcm-login/style.css'
+);
+$form = $this->form;
+$form->prepare();
+?>
+
+<div class="error"></div>
+
+<form method="post" action="/forgot-password" class="rcm-reset-password-form ng-pristine ng-valid">
+    <input name="rcmPluginName" type="hidden" value="RcmResetPassword">
+
+    <table width="60%">
+        <?php if ($this->postSuccess): ?>
+
+            <tr>
+                <td>
+                    <br><br><strong>
+                        <?= $this->translate(
+                            'You will receive an email shortly that you can use to reset your password.'
+                            . ' Don\'t forget to check your spam folder.') ?>
+                    </strong>
+                </td>
+            </tr>
+
+        <?php else: ?>
+            <tr>
+                <td>
+                    <div data-richEdit="top">
+                        <?= $this->instanceConfig['top'] ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td height="10px">
+                    <div class="error">
+                        <?= isset($error) ? $this->translate($error) : '' ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="userId" data-textedit="userIdLabel"><?= $this->instanceConfig['userIdLabel'] ?></label>
+                    <input name="userId" type="text"/>
+                <td>
+            </tr>
+            <tr>
+                <td>
+                    <p>&nbsp;</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <button class="btn btn-primary" type="submit">
+                        <?= $this->translate('Reset Password') ?>
+                    </button>
+                </td>
+            </tr>
+
+        <?php endif ?>
+
+    </table>
+</form>

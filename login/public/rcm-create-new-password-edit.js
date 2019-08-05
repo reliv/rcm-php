@@ -1,0 +1,129 @@
+/**
+ * requires AjaxPluginEditHelper which should be included by rcm-admin
+ * RcmCallToActionBox
+ *
+ * JS for editing RcmCallToActionBox
+ *
+ * PHP version 5.3
+ *
+ * LICENSE: No License yet
+ *
+ * @category  Reliv
+ * @author    Rod McNew <rmcnew@relivinc.com>
+ * @copyright 2012 Reliv International
+ * @license   License.txt New BSD License
+ * @version   GIT: <git_id>
+ */
+var RcmCreateNewPasswordEdit = function (instanceId, container, pluginHandler) {
+
+    /**
+     * Always refers to this object unlike the 'this' JS variable;
+     *
+     * @type {RcmCreateNewPasswordEdit}
+     */
+    var me = this;
+
+    /**
+     * Settings from db
+     * @type {Object}
+     */
+    var data;
+
+    /**
+     * Default settings from config json file
+     * @type {Object}
+     */
+    var defaultData;
+
+    /**
+     * @type {AjaxPluginEditHelper}
+     */
+    var ajaxEditHelper = new AjaxPluginEditHelper(instanceId, container, pluginHandler);
+
+    /**
+     * Called by content management system to make this plugin user-editable
+     */
+    this.initEdit = function () {
+        container.find('form').unbind('submit');
+        container.find('form').submit(function () {
+            return false;
+        });
+
+        ajaxEditHelper.ajaxGetInstanceConfigs(
+            function (returnedData, returnedDefaultData) {
+                data = returnedData;
+                defaultData = returnedDefaultData;
+
+                ajaxEditHelper.attachPropertiesDialog(me.showEditDialog);
+            }
+        );
+    };
+
+    /**
+     * Called by content management system to get this plugins data for saving
+     * on the server
+     *
+     * @return {Object}
+     */
+    this.getSaveData = function () {
+        return data;
+    };
+
+    /**
+     * Displays a dialog box to edit href and image src
+     */
+    this.showEditDialog = function () {
+
+        var inputGroups = ajaxEditHelper.buildInputGroups(
+            [
+                'translate'
+            ],
+            data,
+            defaultData
+        );
+
+        var tabsDiv = $('' +
+            '<div id="tabs">' +
+            '    <ul>' +
+            '       <li><a href="#tabs-form">Form Text</a></li>' +
+            '       <li><a href="#tabs-thank">Thanks Page</a></li>' +
+            '   </ul>' +
+            '   <div id="tabs-form">' +
+            '   </div>' +
+            '   <div id="tabs-thank">' +
+            '   </div>' +
+            '</div>'
+        );
+
+        tabsDiv.find('#tabs-form')
+            .append('<h2>Translations:</h2>')
+            .appendMulti(inputGroups['translate'])
+
+        tabsDiv.tabs();
+
+        var thankYouInput =
+            $.dialogIn('richEdit', 'Thank You Message', data['thankYou']);
+        tabsDiv.find('#tabs-thank').append(thankYouInput);
+
+        var form = $('<form></form>')
+            .addClass('simple').append(tabsDiv)
+            .dialog({
+                title: 'Properties',
+                modal: true,
+                width: 620,
+                buttons: {
+                    Cancel: function () {
+                        $(this).dialog("close");
+                    },
+                    Ok: function () {
+
+                        data = ajaxEditHelper
+                            .captureInputGroups(inputGroups, data);
+
+                        $(this).dialog('close');
+                    }
+                }
+            }
+        );
+    };
+};
