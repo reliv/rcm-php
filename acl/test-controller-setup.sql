@@ -3,3 +3,11 @@ INSERT INTO rcm_acl_group (id, rules) VALUES ('1', '[{\"effect\":\"allow\",\"act
 INSERT INTO rcm_acl_group (id, rules) VALUES ('2', '[{\"effect\": \"deny\", \"actions\": [\"readTest\"], \"properties\": {\"testPropKey1\": \"testPropValue1\"}}]');
 INSERT INTO rcm_acl_user_group (id, group_id, userId) VALUES (NULL, '1', '4057510001');
 INSERT INTO rcm_acl_user_group (id, group_id, userId) VALUES (NULL, '2', '8451706301');
+
+
+
+
+
+/* more test queiries */
+INSERT INTO `wespresslocal`.`rcm_acl_group` (`id`, `rules`)
+VALUES ('' 3 '', ''[{\"effect\": \"allow\", \"actions\": [\"read\",\"write\"], \"properties\": {\"type\": \"page\",\"country\":\"USA\"}}]'');

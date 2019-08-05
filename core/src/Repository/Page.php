@@ -4,6 +4,9 @@ namespace Rcm\Repository;
 
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Rcm\Acl\Exception\NotAllowedBySecurityPropGenerationFailure;
+use Rcm\Acl\SecurityPropertiesProviderInterface;
+use Rcm\AclTypes;
 use Rcm\Entity\Page as PageEntity;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site as SiteEntity;
@@ -30,7 +33,7 @@ use Rcm\Tracking\Model\Tracking;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-class Page extends ContainerAbstract
+class Page extends ContainerAbstract implements SecurityPropertiesProviderInterface
 {
     /**
      * PAGE_TYPE_DELETED
@@ -1097,5 +1100,32 @@ class Page extends ContainerAbstract
             "Duplicate page names not allowed for name: ({$pageName}) type: ({$pageType}) siteId: " .
             '(' . $site->getSiteId() . ')'
         );
+    }
+
+    public function findSecurityProperties($dataData): array
+    {
+        if (!array_key_exists('siteId', $dataData)) {
+            throw new NotAllowedBySecurityPropGenerationFailure('siteId not passed.');
+        }
+
+        /**
+         * @var \Rcm\Entity\Site|null $site
+         */
+        $site = $this->getEntityManager()->getRepository(\Rcm\Entity\Site::class)->find($dataData['siteId']);
+
+        if ($site === null) {
+            throw new NotAllowedBySecurityPropGenerationFailure('Site not found.');
+        }
+
+        return [
+            'type' => AclTypes::PAGE,
+            'country' => $site->getCountryIso3(),
+            'siteId' => $site->getSiteId()
+        ];
+    }
+
+    public function findSecurityPropertiesFromCreationData($dataData): array
+    {
+        return $this->findSecurityProperties($dataData);
     }
 }

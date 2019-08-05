@@ -8,15 +8,14 @@ use Rcm\Acl\Service\GetGroupIdsByUserId;
 use Rcm\RequestContext\AppContext;
 use Rcm\RequestContext\RequestContextBindings;
 
-class IsAllowedFactory
+class AssertIsAllowedFactory
 {
     public function __invoke(ContainerInterface $requestContext)
     {
         $appContext = $requestContext->get(AppContext::class);
 
-        return new IsAllowed(
-            $requestContext->get(GetCurrentUser::class),
-            $appContext->get(IsAllowedByUser::class)
+        return new AssertIsAllowed(
+            $requestContext->get(IsAllowed::class)
         );
     }
 }

@@ -3,6 +3,7 @@
 namespace RcmAdmin\Controller;
 
 use Psr\Container\ContainerInterface;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
@@ -92,6 +93,14 @@ class PageController extends AbstractActionController
         $this->view->setTerminal(true);
     }
 
+    protected function getNotAllowedResponse()
+    {
+        $response = new Response();
+        $response->setStatusCode('401');
+
+        return $response;
+    }
+
     /**
      * @return Response|ViewModel
      * @throws TrackingException
@@ -108,7 +117,7 @@ class PageController extends AbstractActionController
         )
         ) {
             $response = new Response();
-            $response->setStatusCode('401');
+            $response->setStatusCode('403');
 
             return $response;
         }
@@ -142,16 +151,24 @@ class PageController extends AbstractActionController
                 && !empty($validatedData['main-layout'])
             ) {
                 $validatedData['siteLayoutOverride'] = $validatedData['main-layout'];
-                $this->pageMutationService->createNewPage(
-                    $this->currentSite->getSiteId(),
-                    $validatedData['name'],
-                    $validatedData['pageType'],
-                    $validatedData
-                );
+                try {
+                    $this->pageMutationService->createNewPage(
+                        $this->currentSite->getSiteId(),
+                        $validatedData['name'],
+                        $validatedData['pageType'],
+                        $validatedData
+                    );
+                } catch (NotAllowedException $e) {
+                    return $this->getNotAllowedResponse();
+                }
             } elseif (!empty($validatedData['page-template'])) {
-                $this->pageMutationService->createNewPageFromTemplate(
-                    $validatedData
-                );
+                try {
+                    $this->pageMutationService->createNewPageFromTemplate(
+                        $validatedData
+                    );
+                } catch (NotAllowedException $e) {
+                    return $this->getNotAllowedResponse();
+                }
             } else {
                 throw new \Exception('Could not figure out creation method from request properties');
             }
@@ -209,8 +226,7 @@ class PageController extends AbstractActionController
                 ResourceName::RESOURCE_PAGES
             ),
             'edit'
-        )
-        ) {
+        )) {
             $response = new Response();
             $response->setStatusCode('401');
 
@@ -238,8 +254,8 @@ class PageController extends AbstractActionController
                 'n'
             );
 
-        return $this->redirect()->toUrl(
-            $this->pageMutationService->publishPageRevision(
+        try {
+            $newUrl = $this->pageMutationService->publishPageRevision(
                 $this->currentSite->getSiteId(),
                 $pageName,
                 $pageType,
@@ -247,8 +263,12 @@ class PageController extends AbstractActionController
                 function ($pageName, $pageType = 'n', $pageRevision = null) {
                     return $this->urlToPage($pageName, $pageType, $pageRevision);
                 }
-            )
-        );
+            );
+        } catch (NotAllowedException $e) {
+            return $this->getNotAllowedResponse();
+        }
+
+        return $this->redirect()->toUrl($newUrl);
     }
 
     /**
@@ -311,8 +331,8 @@ class PageController extends AbstractActionController
         //Note: This should probably come out of the ZF2 request instead but that didn't seem to work
         $data = json_decode(file_get_contents('php://input'), true);
 
-        return $this->getJsonResponse(
-            $this->pageMutationService->savePageDraft(
+        try {
+            $responseData = $this->pageMutationService->savePageDraft(
                 $pageName,
                 $pageType,
                 $data,
@@ -320,8 +340,12 @@ class PageController extends AbstractActionController
                     return $this->urlToPage($pageName, $pageType, $pageRevision);
                 },
                 $originalRevisionId
-            )
-        );
+            );
+        } catch (NotAllowedException $e) {
+            return $this->getNotAllowedResponse();
+        }
+
+        return $this->getJsonResponse($responseData);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace RcmAdmin\Controller;
 
 use Interop\Container\ContainerInterface;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
 use Rcm\Entity\Page;
 use Rcm\Http\Response;
@@ -116,11 +117,17 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
             );
         }
 
-        $this->pageMutationService->duplicatePage(
-            $page,
-            $destinationSite->getSiteId(),
-            $page->getName()
-        );
+        try {
+            $this->pageMutationService->duplicatePage(
+                $page,
+                $destinationSite->getSiteId(),
+                $page->getName()
+            );
+        } catch (NotAllowedException $e) {
+            $this->getResponse()->setStatusCode(Response::STATUS_CODE_403);
+
+            return $this->getResponse();
+        }
 
 //        $apiResponse = new SitePageApiResponse($newPage);
 

@@ -13,3 +13,5 @@ CREATE TABLE `rcm_acl_user_group` (
 `groupId` JSON NOT NULL,
 PRIMARY KEY (`id`),
 UNIQUE INDEX `userId_groupId_UNIQUE` (`userId`,`groupId` ASC));
+
+

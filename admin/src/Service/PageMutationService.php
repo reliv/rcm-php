@@ -4,8 +4,14 @@
 namespace RcmAdmin\Service;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\Exception\NotAllowedByBusinessLogicException;
+use Rcm\Acl\Exception\NotAllowedBySecurityPropGenerationFailure;
 use Rcm\Acl\GetCurrentUser;
+use Rcm\Acl\IsAllowed;
 use Rcm\Acl\ResourceName;
+use Rcm\Acl\SecurityPropertiesProviderInterface;
 use Rcm\Entity\Container;
 use Rcm\Entity\Page;
 use Rcm\Entity\Revision;
@@ -70,6 +76,8 @@ class PageMutationService
     protected $entityManager;
     protected $immutableSiteWideContainerRepo;
     protected $currentUser;
+    protected $assertIsAllowed;
+    protected $pageSecurityPropertiesProvider;
 
     public function __construct(
         RcmUserService $rcmUserService,
@@ -78,8 +86,10 @@ class PageMutationService
         VersionRepositoryInterface $immutableSiteWideContainerRepo,
         PageContentFactory $immutablePageContentFactory,
         RcmPageNameToPathname $rcmPageNameToPathname,
+        SecurityPropertiesProviderInterface $pageSecurityPropertiesProvider,
         Site $currentSite,
-        GetCurrentUser $getCurrentUser
+        GetCurrentUser $getCurrentUser,
+        AssertIsAllowed $assertIsAllowed
     ) {
         $this->currentSite = $currentSite;
         $this->entityManager = $entityManager;
@@ -90,7 +100,9 @@ class PageMutationService
         $this->immutableSiteWideContainerRepo = $immutableSiteWideContainerRepo;
         $this->immutablePageContentFactory = $immutablePageContentFactory;
         $this->rcmPageNameToPathname = $rcmPageNameToPathname;
+        $this->pageSecurityPropertiesProvider = $pageSecurityPropertiesProvider;
         $this->currentUser = $getCurrentUser->__invoke();
+        $this->assertIsAllowed = $assertIsAllowed;
 
         $this->view = new ViewModel();
         $this->view->setTerminal(true);
@@ -112,6 +124,12 @@ class PageMutationService
      */
     public function createNewPage(int $siteId, string $name, string $pageType, $data)
     {
+        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the new page
+            AclActions::WRITE,
+            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'siteId' => $siteId,
+            ])
+        );
         $user = $this->currentUser;
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
@@ -163,6 +181,12 @@ class PageMutationService
      */
     public function createNewPageFromTemplate($data)
     {
+        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the new page
+            AclActions::WRITE,
+            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'siteId' => $siteId,
+            ])
+        );
         $user = $this->currentUser;
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
@@ -177,11 +201,18 @@ class PageMutationService
         );
 
         if (empty($page)) {
-            throw new PageNotFoundException(
+            throw new NotAllowedBySecurityPropGenerationFailure(
                 'No template found for page id: '
                 . $validatedData['page-template']
             );
         }
+
+        $this->assertIsAllowed->__invoke(// Check if we have access to READ the template
+            AclActions::READ,
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
+                'siteId' => $page->getSiteId(),
+            ])
+        );
 
         $pageData = [
             'name' => $validatedData['name'],
@@ -231,6 +262,19 @@ class PageMutationService
         int $pageRevisionId,
         $urlToPageFunction
     ) {
+        $this->assertIsAllowed->__invoke(// Check if we have access to READ the page we are publishing
+            AclActions::READ,
+            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'siteId' => $siteId,
+            ])
+        );
+        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the page we are publishing
+            AclActions::WRITE,
+            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'siteId' => $siteId,
+            ])
+        );
+
         $user = $this->currentUser;
 
         if (empty($user)) {
@@ -281,6 +325,14 @@ class PageMutationService
         $urlToPageFunction,
         int $originalRevisionId
     ) {
+        $site = $this->currentSite;// @TODO ideall convert this to be a method arg
+        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the page we are saving
+            AclActions::WRITE,
+            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'siteId' => $site->getSiteId(),
+            ])
+        );
+
         $user = $this->currentUser;
 
         if (empty($user)) {
@@ -290,7 +342,7 @@ class PageMutationService
         self::prepSaveData($data);
 
         $result = $this->pageRepo->savePage(
-            $this->currentSite,
+            $site,
             $pageName,
             $originalRevisionId,
             $pageType,
@@ -311,14 +363,14 @@ class PageMutationService
              * @var Page
              */
             $page = $this->pageRepo->findOneBy([
-                'site' => $this->currentSite,
+                'site' => $site,
                 'name' => $pageName,
                 'pageType' => $pageType
             ]);
 
             $this->immuteblePageVersionRepo->createUnpublished(
                 new PageLocator(
-                    $this->currentSite->getSiteId(),
+                    $site->getSiteId(),
                     $this->rcmPageNameToPathname->__invoke($pageName, $pageType)
                 ),
                 $this->immutablePageContentFactory->__invoke(
@@ -367,6 +419,13 @@ class PageMutationService
 
     public function depublishPage(Page $page)
     {
+        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the page we are deleting
+            AclActions::WRITE,
+            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'siteId' => $page->getSite()->getSiteId(),
+            ])
+        );
+
         $user = $this->currentUser;
 
         if (empty($user)) {
@@ -401,6 +460,13 @@ class PageMutationService
         $destinationPageName,
         $destinationPageType = null
     ): Page {
+        $this->assertIsAllowed->__invoke(// Check if we have access to READ the page we are copying from
+            AclActions::READ,
+            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'siteId' => $page->getSite()->getSiteId(),
+            ])
+        );
+
         $user = $this->currentUser;
 
         if (empty($user)) {
@@ -416,8 +482,16 @@ class PageMutationService
          */
         $destinationSite = $this->entityManager->find(Site::class, $destinationSiteId);
         if (!$destinationSite) {
-            throw new \Exception('Site could not be found for id "' . $destinationSiteId . '")');
+            throw new NotAllowedBySecurityPropGenerationFailure('Site could not be found for id "' . $destinationSiteId . '")');
         }
+
+        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the page we are copying to
+            AclActions::WRITE,
+            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'siteId' => $siteId,
+            ])
+        );
+
         $destinationPage = new Page(
             $user->getId(),
             'New page in ' . get_class($this)
@@ -474,6 +548,26 @@ class PageMutationService
      */
     public function updatePublishedVersionOfPage(Page $page, $data)
     {
+        $sourceSite = $page->getSite();
+        if (array_key_exists('site', $data) || array_key_exists('siteId', $data)) {
+            //Disallow this to make ACL lookups simpler.
+            throw new NotAllowedByBusinessLogicException('Cannot change site of page.');
+        }
+
+        $this->assertIsAllowed->__invoke(// Check if we have access to READ the page we are updating
+            AclActions::READ,
+            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'siteId' => $sourceSite->getSiteId(),
+            ])
+        );
+
+        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the page we are updating
+            AclActions::WRITE,
+            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'siteId' => $sourceSite->getSiteId(),
+            ])
+        );
+
         $user = $this->currentUser;
 
         $originalLocator = new PageLocator(

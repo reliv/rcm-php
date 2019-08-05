@@ -11,18 +11,15 @@ use Rcm\Acl\Service\GetGroupIdsByUserId;
  */
 class IsAllowed
 {
-    protected $runQuery;
-    protected $getGroupsByUserId;
-    protected $getCurrentUserId;
+    protected $getCurrentUser;
+    protected $isAllowedByUser;
 
     public function __construct(
-        RunQuery $runQuery,
-        GetCurrentUserId $getCurrentUserId,
-        GetGroupIdsByUserId $getGroupsByUserId
+        GetCurrentUser $getCurrentUser,
+        IsAllowedByUser $isAllowedByUser
     ) {
-        $this->runQuery = $runQuery;
-        $this->getGroupsByUserId = $getGroupsByUserId;
-        $this->getCurrentUserId = $getCurrentUserId;
+        $this->getCurrentUser = $getCurrentUser;
+        $this->isAllowedByUser = $isAllowedByUser;
     }
 
     /**
@@ -36,12 +33,6 @@ class IsAllowed
      */
     public function __invoke(string $action, array $properties): bool
     {
-        $queryWithGroups = new Query(
-            $action,
-            $this->getGroupsByUserId->__invoke($this->getCurrentUserId->__invoke()),
-            $properties
-        );
-
-        return $this->runQuery->__invoke($queryWithGroups)->getEffect() === Effects::ALLOW;
+        return $this->isAllowedByUser->__invoke($action, $properties, $this->getCurrentUser->__invoke());
     }
 }

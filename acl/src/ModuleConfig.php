@@ -22,8 +22,16 @@ class ModuleConfig
                 'factories' => [
                     IsAllowed::class => IsAllowedFactory::class,
                     GetCurrentUserId::class => GetCurrentUserIdFactory::class,
-                    GetCurrentUser::class => GetCurrentUserFactory::class
+                    GetCurrentUser::class => GetCurrentUserFactory::class,
+                    AssertIsAllowed::class => AssertIsAllowedFactory::class
                 ],
+//                'config_factories' => [
+//                    AssertIsAllowed::class => [
+//                        'arguments' => [
+//                            IsAllowed::class
+//                        ]
+//                    ]
+//                ]
             ],
             'dependencies' => [
                 'config_factories' => [
@@ -42,6 +50,11 @@ class ModuleConfig
 //                            GetGroupIdsByUserId::class
 //                        ]
 //                    ],
+                    IsAllowedByUser::class => [
+                        'arguments' => [
+                            IsAllowedByUserId::class
+                        ]
+                    ],
                     IsAllowedByUserId::class => [
                         'arguments' => [
                             RunQuery::class,
