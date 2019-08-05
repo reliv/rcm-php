@@ -1,27 +1,21 @@
 <?php
 
-namespace Rcm\Acl\Service;
+namespace Rcm\Acl;
 
 use Psr\Container\ContainerInterface;
 use Rcm\RequestContext\AppContext;
 use Rcm\RequestContext\RequestContextBindings;
-use RcmUser\Api\Authentication\GetCurrentUser;
+use RcmUser\Api\Authentication\GetCurrentUser as GetUserByRequest;
 
-/**
- *  @deprecated use Rcm\Acl\GetCurrentUser instead
- *
- * Class GetCurrentUserIdFactory
- * @package Rcm\Acl\Service
- */
-class GetCurrentUserIdFactory
+class GetCurrentUserFactory
 {
     public function __invoke(ContainerInterface $requestContext)
     {
         $appContext = $requestContext->get(AppContext::class);
 
-        return new GetCurrentUserId(
+        return new GetCurrentUser(
             $requestContext->get(RequestContextBindings::CURRENT_REQUEST),
-            $appContext->get(GetCurrentUser::class)
+            $appContext->get(GetUserByRequest::class)
         );
     }
 }

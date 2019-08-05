@@ -127,7 +127,6 @@ class SiteManager
 
         foreach ($this->getDefaultSitePageSettings($user) as $name => $pageData) {
             $createdPage = $this->pageMutationService->createNewPage(
-                $user,
                 $newSite->getSiteId(),
                 $pageData['name'],
                 $pageData['pageType'],
@@ -135,7 +134,6 @@ class SiteManager
                 $pageData //@TODO this is probably not in the correct format for plugins/blocks/pluginWrapper data
             );
             $this->pageMutationService->publishPageRevision(
-                $user,
                 $newSite->getSiteId(),
                 $pageData['name'],
                 $pageData['pageType'],
@@ -369,7 +367,6 @@ class SiteManager
                 continue; //Don't copy unpublished pages
             }
             $destinationPage = $this->pageMutationService->duplicatePage(
-                $user,
                 $page,
                 $copySite->getSiteId(),
                 $page->getName()

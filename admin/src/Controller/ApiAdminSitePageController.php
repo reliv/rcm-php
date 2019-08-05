@@ -362,7 +362,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         $page = $this->getPage($site, $id);
 
-        $this->pageMutationService->updatePublishedVersionOfPage($this->getCurrentUser(), $page, $data);
+        $this->pageMutationService->updatePublishedVersionOfPage($page, $data);
 
         $apiResponse = new SitePageApiResponse($page);
 
@@ -501,7 +501,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
             );
         }
 
-        $this->pageMutationService->depublishPage($this->getCurrentUser(), $page);
+        $this->pageMutationService->depublishPage($page);
 
         return new ApiJsonModel([true], 0, 'Page deleted');
     }
