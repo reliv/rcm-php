@@ -24,7 +24,6 @@ class CopyPage implements MiddlewareInterface
     public function __construct(
         FindPageById $findPageById,
         PageExists $pageExists
-        // GetCurrentUser and PageMutationService were removed from here
     ) {
         $this->findPageById = $findPageById;
         $this->pageExists = $pageExists;
