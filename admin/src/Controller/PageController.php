@@ -2,6 +2,7 @@
 
 namespace RcmAdmin\Controller;
 
+use Psr\Container\ContainerInterface;
 use Rcm\Acl\ResourceName;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
@@ -70,8 +71,7 @@ class PageController extends AbstractActionController
 
     protected $revisionRepo;
 
-
-    protected $pageMutationService;
+    protected $currentRequestContext;
 
     /**
      * @param Site $currentSite
@@ -79,13 +79,14 @@ class PageController extends AbstractActionController
      * @param PageRepo $pageRepo
      */
     public function __construct(
-        PageMutationService $pageMutationService,
+        ContainerInterface $currentRequestContext,
         Site $currentSite,
         RcmUserService $rcmUserService
     ) {
-        $this->pageMutationService = $pageMutationService;
+        $this->pageMutationService = $currentRequestContext->get(PageMutationService::class);
         $this->currentSite = $currentSite;
         $this->rcmUserService = $rcmUserService;
+        $this->currentRequestContext = $currentRequestContext;
 
         $this->view = new ViewModel();
         $this->view->setTerminal(true);
@@ -142,7 +143,6 @@ class PageController extends AbstractActionController
             ) {
                 $validatedData['siteLayoutOverride'] = $validatedData['main-layout'];
                 $this->pageMutationService->createNewPage(
-                    $this->rcmUserService->getCurrentUser(),
                     $this->currentSite->getSiteId(),
                     $validatedData['name'],
                     $validatedData['pageType'],
@@ -150,7 +150,6 @@ class PageController extends AbstractActionController
                 );
             } elseif (!empty($validatedData['page-template'])) {
                 $this->pageMutationService->createNewPageFromTemplate(
-                    $this->rcmUserService->getCurrentUser(),
                     $validatedData
                 );
             } else {
@@ -241,7 +240,6 @@ class PageController extends AbstractActionController
 
         return $this->redirect()->toUrl(
             $this->pageMutationService->publishPageRevision(
-                $this->rcmUserService->getCurrentUser(),
                 $this->currentSite->getSiteId(),
                 $pageName,
                 $pageType,
@@ -315,7 +313,6 @@ class PageController extends AbstractActionController
 
         return $this->getJsonResponse(
             $this->pageMutationService->savePageDraft(
-                $this->rcmUserService->getCurrentUser(),
                 $pageName,
                 $pageType,
                 $data,

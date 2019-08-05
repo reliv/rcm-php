@@ -330,7 +330,10 @@ return [
                 'label' => 'Users',
                 'uri' => '#',
                 'pages' => [
-
+                    'Content Change Log' => [
+                        'label' => 'Content Change Log',
+                        'uri' => '/rcm/change-log?days=30&content-type=text%2Fhtml',
+                    ],
                 ],
             ],
         ],
@@ -659,6 +662,12 @@ return [
             ],
         ],
     ],
+    \Rcm\RequestContext\RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY => [
+        'factories' => [
+            \RcmAdmin\Service\PageMutationService::class => \RcmAdmin\Service\PageMutationServiceFactory::class,
+            RcmAdmin\Service\SiteManager::class => \RcmAdmin\Service\SiteManagerFactory::class
+        ]
+    ],
     /* service_manager */
     'service_manager' => [
         'config_factories' => [
@@ -673,33 +682,11 @@ return [
                 'arguments' => [
                     \Rcm\Service\CurrentSite::class,
                     \RcmUser\Api\Acl\IsAllowed::class,
-                    \RcmAdmin\Service\SiteManager::class,
+                    \Rcm\RequestContext\RequestContext::class,
                     \RcmUser\Api\Authentication\GetIdentity::class,
                 ],
             ],
-            RcmAdmin\Service\SiteManager::class => [
-                'arguments' => [
-                    'Config',
-                    'Doctrine\ORM\EntityManager',
-                    RcmUser\Service\RcmUserService::class,
-                    \RcmAdmin\Service\PageMutationService::class,
-                    'Rcm\ImmutableHistory\SiteVersionRepo',
-                    'Rcm\ImmutableHistory\SiteWideContainerVersionRepo',
-                    \Rcm\ImmutableHistory\Page\PageContentFactory::class,
-                ],
-            ],
             \RcmAdmin\Api\GetPageData::class => [],
-            \RcmAdmin\Service\PageMutationService::class => [
-                'arguments' => [
-                    \Rcm\Service\CurrentSite::class,
-                    \RcmUser\Service\RcmUserService::class,
-                    \Doctrine\ORM\EntityManager::class,
-                    'Rcm\ImmutableHistory\PageVersionRepo',
-                    'Rcm\ImmutableHistory\SiteWideContainerVersionRepo',
-                    \Rcm\ImmutableHistory\Page\PageContentFactory::class,
-                    \Rcm\ImmutableHistory\Page\RcmPageNameToPathname::class,
-                ],
-            ],
         ],
         'factories' => [
             RcmAdmin\EventListener\DispatchListener::class

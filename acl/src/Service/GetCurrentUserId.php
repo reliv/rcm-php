@@ -5,6 +5,12 @@ namespace Rcm\Acl\Service;
 use Psr\Http\Message\ServerRequestInterface;
 use RcmUser\Api\Authentication\GetCurrentUser;
 
+/**
+ * @deprecated use Rcm\Acl\GetCurrentUser instead
+ *
+ * Class GetCurrentUserId
+ * @package Rcm\Acl\Service
+ */
 class GetCurrentUserId
 {
     protected $getUserByRequest;

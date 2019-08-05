@@ -7,6 +7,7 @@ use Rcm\Acl\ResourceName;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
 use Rcm\Http\Response;
+use Rcm\RequestContext\RequestContext;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\Entity\SitePageApiResponse;
@@ -45,7 +46,11 @@ class ApiAdminSitePageController extends ApiAdminBaseController
         $serviceLocator
     ) {
         $this->serviceLocator = $serviceLocator;
-        $this->pageMutationService = $serviceLocator->get(PageMutationService::class);
+        /**
+         * @var $requestContext ContainerInterface
+         */
+        $requestContext = $serviceLocator->get(RequestContext::class);
+        $this->pageMutationService = $requestContext->get(PageMutationService::class);
     }
 
     /**
@@ -362,7 +367,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
 
         $page = $this->getPage($site, $id);
 
-        $this->pageMutationService->updatePublishedVersionOfPage($this->getCurrentUser(), $page, $data);
+        $this->pageMutationService->updatePublishedVersionOfPage($page, $data);
 
         $apiResponse = new SitePageApiResponse($page);
 
@@ -501,7 +506,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
             );
         }
 
-        $this->pageMutationService->depublishPage($this->getCurrentUser(), $page);
+        $this->pageMutationService->depublishPage($page);
 
         return new ApiJsonModel([true], 0, 'Page deleted');
     }

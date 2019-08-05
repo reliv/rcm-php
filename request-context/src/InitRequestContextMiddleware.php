@@ -34,12 +34,13 @@ class InitRequestContextMiddleware implements MiddlewareInterface
     {
         $requestContextContainer = new ServiceManager(
             new Config(
-                $this->config[RequestContextBindings::REQUEST_CONTEXT_CONFIG_KEY]
+                $this->config[RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY]
             )
         );
-        $requestContextContainer->setService(RequestContextBindings::SERVICE_MANAGER, $this->container);
-        $requestContextContainer->setService(RequestContextBindings::CURRENT_REQUEST, $request);
+        $requestContextContainer->setService(AppContext::class, $this->container);
+        $requestContextContainer->setService(CurrentRequest::class, $request);
         $request = $request->withAttribute(RequestContextBindings::REQUEST_ATTRIBUTE, $requestContextContainer);
+        $this->container->setService(RequestContext::class, $requestContextContainer);
 
         return $delegate->process($request);
     }

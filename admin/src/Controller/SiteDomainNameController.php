@@ -4,10 +4,12 @@ namespace RcmAdmin\Controller;
 
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Rcm\Entity\Site;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
+use RcmAdmin\Service\PageMutationService;
 use RcmAdmin\Service\SiteManager;
 use RcmUser\Api\Authentication\GetIdentity;
 use Zend\Diactoros\Response\JsonResponse;
@@ -28,12 +30,12 @@ class SiteDomainNameController implements MiddlewareInterface
     public function __construct(
         Site $currentSite,
         IsAllowed $isAllowed,
-        SiteManager $siteManager,
+        ContainerInterface $requestContext,
         GetIdentity $getIdentity
     ) {
         $this->currentSite = $currentSite;
         $this->isAllowed = $isAllowed;
-        $this->siteManager = $siteManager;
+        $this->siteManager = $requestContext->get(PageMutationService::class);
         $this->getIdentity = $getIdentity;
     }
 

@@ -281,8 +281,6 @@ class ModuleConfigPipeRat2Page
                         'arguments' => [
                             FindPageById::class,
                             PageExists::class,
-                            GetCurrentUser::class,
-                            PageMutationService::class
                         ],
                     ],
                 ],

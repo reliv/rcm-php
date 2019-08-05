@@ -11,16 +11,18 @@ use Rcm\Acl\Service\GetGroupIdsByUserId;
 use Rcm\Acl\Service\GroupsAndQueryToApplicableRules;
 use Rcm\Acl\Service\GroupsAndQueryToQueryResult;
 use Rcm\Acl\Service\RulesAndQueryToResult;
+use Rcm\RequestContext\RequestContextBindings;
 
 class ModuleConfig
 {
     public function __invoke()
     {
         return [
-            'request_context' => [
+            RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY => [
                 'factories' => [
                     IsAllowed::class => IsAllowedFactory::class,
-                    GetCurrentUserId::class => GetCurrentUserIdFactory::class
+                    GetCurrentUserId::class => GetCurrentUserIdFactory::class,
+                    GetCurrentUser::class => GetCurrentUserFactory::class
                 ],
             ],
             'dependencies' => [

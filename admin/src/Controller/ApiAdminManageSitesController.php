@@ -10,6 +10,7 @@ use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use Rcm\ImmutableHistory\Site\SiteLocator;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
+use Rcm\RequestContext\RequestContext;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\InputFilter\SiteInputFilter;
@@ -55,7 +56,7 @@ class ApiAdminManageSitesController extends ApiAdminBaseController
      */
     protected function getSiteManager()
     {
-        return $this->serviceLocator->get(SiteManager::class);
+        return $this->serviceLocator->get(RequestContext::class)->get(SiteManager::class);
     }
 
     /**

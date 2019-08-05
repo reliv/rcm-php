@@ -4,10 +4,12 @@ namespace Reliv\App\RcmApi\Page\PipeRat2\Http;
 
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Rcm\Api\Repository\Page\FindPageById;
 use Rcm\Api\Repository\Page\PageExists;
+use Rcm\RequestContext\RequestContext;
 use RcmAdmin\Service\PageMutationService;
 use RcmUser\Api\Authentication\GetCurrentUser;
 use Reliv\PipeRat2\Core\Api\ResponseWithDataBody;
@@ -18,19 +20,13 @@ class CopyPage implements MiddlewareInterface
 {
     protected $findPageById;
     protected $pageExists;
-    protected $getCurrentUser;
-    protected $pageMutationService;
 
     public function __construct(
         FindPageById $findPageById,
-        PageExists $pageExists,
-        GetCurrentUser $getCurrentUser,
-        PageMutationService $pageMutationService
+        PageExists $pageExists
     ) {
         $this->findPageById = $findPageById;
         $this->pageExists = $pageExists;
-        $this->getCurrentUser = $getCurrentUser;
-        $this->pageMutationService = $pageMutationService;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
@@ -89,14 +85,17 @@ class CopyPage implements MiddlewareInterface
             );
         }
 
-        $currentUser = $this->getCurrentUser->__invoke($request);
+        /**
+         * @var $requestContext ContainerInterface
+         */
+        $requestContext = $request->getAttribute(RequestContext::class);
 
-        if (empty($currentUser)) {
-            throw new \Exception('A valid user is required in ' . self::class);
-        }
+        /**
+         * @var $pageMutationService PageMutationService
+         */
+        $pageMutationService = $requestContext->get(PageMutationService::class);
 
-        $this->pageMutationService->duplicatePage(
-            $currentUser,
+        $pageMutationService->duplicatePage(
             $sourcePage,
             $destinationSite->getSiteId(),
             $data['name'],

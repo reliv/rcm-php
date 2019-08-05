@@ -117,7 +117,6 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
         }
 
         $this->pageMutationService->duplicatePage(
-            $this->getCurrentUserTracking(),
             $page,
             $destinationSite->getSiteId(),
             $page->getName()
