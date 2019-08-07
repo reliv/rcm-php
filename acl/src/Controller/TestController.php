@@ -20,8 +20,8 @@ class TestController implements MiddlewareInterface
     {
         $isAllowed = $request->getAttribute(RequestContext::class)->get(IsAllowed::class);
         if (!$isAllowed->__invoke(
-            'readTest',
-            ['testPropKey1' => 'testPropValue1'])
+            'read',
+            ['contentType' => 'page', 'country' => 'USA', 'type' => 'content'])
         ) {
             return new HtmlResponse('access denied', 401);
         }

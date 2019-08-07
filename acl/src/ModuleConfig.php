@@ -6,35 +6,54 @@ use Doctrine\ORM\EntityManager;
 use Rcm\Acl\Controller\TestController;
 use Rcm\Acl\Service\GetAllGroups;
 use Rcm\Acl\Service\GetCurrentUserId;
-use Rcm\Acl\Service\GetCurrentUserIdFactory;
-use Rcm\Acl\Service\GetGroupIdsByUserId;
+use Rcm\Acl\GetGroupNamesByUser;
 use Rcm\Acl\Service\GroupsAndQueryToApplicableRules;
 use Rcm\Acl\Service\GroupsAndQueryToQueryResult;
 use Rcm\Acl\Service\RulesAndQueryToResult;
+use Rcm\RequestContext\CurrentRequest;
 use Rcm\RequestContext\RequestContextBindings;
+use \RcmUser\Api\Authentication\GetCurrentUser as GetUserByRequest;
 
 class ModuleConfig
 {
     public function __invoke()
     {
         return [
-            RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY => [
-                'factories' => [
-                    IsAllowed::class => IsAllowedFactory::class,
-                    GetCurrentUserId::class => GetCurrentUserIdFactory::class,
-                    GetCurrentUser::class => GetCurrentUserFactory::class,
-                    AssertIsAllowed::class => AssertIsAllowedFactory::class
-                ],
-//                'config_factories' => [
-//                    AssertIsAllowed::class => [
-//                        'arguments' => [
-//                            IsAllowed::class
-//                        ]
-//                    ]
-//                ]
+            'request_context' => [
+                'config_factories' => [
+                    AssertIsAllowed::class => [
+                        'arguments' => [
+                            IsAllowed::class
+                        ]
+                    ],
+                    IsAllowed::class => [
+                        'arguments' => [
+                            GetCurrentUser::class,
+                            IsAllowedByUser::class
+                        ]
+                    ],
+                    GetCurrentUserId::class => [
+                        'arguments' => [
+                            CurrentRequest::class,
+                            GetCurrentUser::class
+                        ]
+                    ],
+                    GetCurrentUser::class => [
+                        'arguments' => [
+                            CurrentRequest::class,
+                            GetUserByRequest::class
+                        ]
+                    ],
+                ]
             ],
             'dependencies' => [
                 'config_factories' => [
+                    GetGroupNamesByUserInterface::class => [
+                        'class' => GetGroupNamesByUser::class,
+                        'arguments' => [
+                            EntityManager::class
+                        ]
+                    ],
                     GroupsAndQueryToQueryResult::class => [
                         'arguments' => [
                             GroupsAndQueryToApplicableRules::class,
@@ -47,18 +66,13 @@ class ModuleConfig
 //                        'arguments' => [
 //                            RunQuery::class,
 //                            GetCurrentUserId::class,
-//                            GetGroupIdsByUserId::class
+//                            GroupNamesByUser::class
 //                        ]
 //                    ],
                     IsAllowedByUser::class => [
                         'arguments' => [
-                            IsAllowedByUserId::class
-                        ]
-                    ],
-                    IsAllowedByUserId::class => [
-                        'arguments' => [
                             RunQuery::class,
-                            GetGroupIdsByUserId::class
+                            GetGroupNamesByUserInterface::class
                         ]
                     ],
                     RunQuery::class => [
@@ -67,7 +81,7 @@ class ModuleConfig
                             GroupsAndQueryToQueryResult::class
                         ]
                     ],
-                    GetGroupIdsByUserId::class => [
+                    GroupNamesByUser::class => [
                         'arguments' => [
                             EntityManager::class,
                             GroupsAndQueryToQueryResult::class
@@ -75,7 +89,7 @@ class ModuleConfig
                     ],
                     GetAllGroups::class => [
                         'arguments' => [
-                            EntityManager::class,
+                            ['literal' => __DIR__ . '/../../../../../acl/groups'],
                         ]
                     ],
                     TestController::class => [

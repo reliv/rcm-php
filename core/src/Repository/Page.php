@@ -1118,9 +1118,9 @@ class Page extends ContainerAbstract implements SecurityPropertiesProviderInterf
         }
 
         return [
-            'type' => AclTypes::PAGE,
-            'country' => $site->getCountryIso3(),
-            'siteId' => $site->getSiteId()
+            'type' => 'content',
+            'contentType' => 'page',
+            'country' => $site->getCountryIso3()
         ];
     }
 

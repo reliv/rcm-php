@@ -9,25 +9,27 @@ class GroupsAndQueryToApplicableRules
 {
 
     /**
-     * @param Group[] $groupPolicies
+     * @param Group[] $groups
      * @param Query $query
      * @return Rule[]
      */
-    public function __invoke(array $groupPolicies, Query $query): array
+    public function __invoke(array $groups, Query $query): array
     {
-        // Filter out policies that are not for the groups indicated in the query
+        // Filter out groups that are not for the groups indicated in the query
+        $applicableGroups = array_filter($groups, function (Group $group) use ($query) {
 
-        $applicablePolicies = array_filter($groupPolicies, function (Group $policy) use ($query) {
-            return in_array($policy->getId(), $query->getGroupIds());
+            return in_array($group->getName(), $query->getGroupNames());
         });
 
-        // Concat the rules of all the applicable policies and return the rules
-        return array_reduce(
-            $applicablePolicies,
-            function ($accumulator, Group $policy) {
-                return array_merge($accumulator, $policy->getRules());
+        // Concat the rules of all the applicable Groups and return the rules
+        $applicableRules= array_reduce(
+            $applicableGroups,
+            function ($accumulator, Group $group) {
+                return array_merge($accumulator, $group->getRules());
             },
             []
         );
+
+        return $applicableRules;
     }
 }

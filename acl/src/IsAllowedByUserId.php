@@ -3,7 +3,7 @@
 namespace Rcm\Acl;
 
 use Rcm\Acl\Service\GetCurrentUserId;
-use Rcm\Acl\Service\GetGroupIdsByUserId;
+use Rcm\Acl\Service\GroupNamesByUser;
 
 class IsAllowedByUserId
 {
@@ -12,7 +12,7 @@ class IsAllowedByUserId
 
     public function __construct(
         RunQuery $runQuery,
-        GetGroupIdsByUserId $getGroupsByUserId
+        GroupNamesByUser $getGroupsByUserId
     ) {
         $this->runQuery = $runQuery;
         $this->getGroupsByUserId = $getGroupsByUserId;
@@ -24,10 +24,10 @@ class IsAllowedByUserId
      *
      * @param string $action
      * @param array $properties
-     * @param string $userId
+     * @param string|null $userId
      * @return bool
      */
-    public function __invoke(string $action, array $properties, string $userId): bool
+    public function __invoke(string $action, array $properties, $userId): bool
     {
         $queryWithGroups = new Query(
             $action,

@@ -6,41 +6,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rcm\Acl\Rule;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="rcm_acl_group")
- */
 class Group
 {
-    /**
-     * @var integer
-     *
-     * @ORM\GeneratedValue
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
+    protected $name;
 
-    /**
-     * @var array
-     *
-     * @ORM\Column(type="json")
-     */
     protected $rules;
 
+    protected $customProps;
+
     /**
-     * @ORM\OneToMany(targetEntity="Rcm\Acl\Entity\UserGroup", mappedBy="group")
+     * Group constructor.
+     * @param $name
+     * @param $rules
      */
-    protected $userGroups;
-
-    public function __construct()
+    public function __construct($name, array $rules, array $customProps)
     {
-        $this->userGroups = new ArrayCollection();
-    }
-
-    protected static function ruleJsonToRuleObject($ruleJson)
-    {
-        return new Rule($ruleJson['effect'], $ruleJson['actions'], $ruleJson['properties']);
+        $this->name = $name;
+        $this->rules = $rules;
+        $this->customProps = $customProps;
     }
 
     /**
@@ -52,10 +35,23 @@ class Group
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId(): int
+    public function getName(): string
     {
-        return $this->id;
+        return $this->name;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCustomProps(): array
+    {
+        return $this->customProps;
+    }
+
+    protected static function ruleJsonToRuleObject($ruleJson)
+    {
+        return new Rule($ruleJson['effect'], $ruleJson['actions'], $ruleJson['properties']);
     }
 }

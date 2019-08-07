@@ -2,6 +2,7 @@
 
 namespace Rcm\Acl\Service;
 
+use Rcm\Acl\Effects;
 use Rcm\Acl\Entity\Group;
 use Rcm\Acl\Query;
 use Rcm\Acl\QueryResult;

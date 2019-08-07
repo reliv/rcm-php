@@ -4,7 +4,7 @@ namespace Rcm\Acl;
 
 use Rcm\Acl\Exception\NotAllowedByQueryRunException;
 use Rcm\Acl\Service\GetCurrentUserId;
-use Rcm\Acl\Service\GetGroupIdsByUserId;
+use Rcm\Acl\Service\GroupNamesByUser;
 
 /**
  * Class IsAllowed

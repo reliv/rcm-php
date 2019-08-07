@@ -20,14 +20,14 @@ class InitRequestContextMiddleware implements MiddlewareInterface
 
     protected $config;
 
-    protected $container;
+    protected $appContextContainer;
 
     public function __construct(
         array $config,
-        ContainerInterface $container
+        ContainerInterface $appContextContainer
     ) {
         $this->config = $config;
-        $this->container = $container;
+        $this->appContextContainer = $appContextContainer;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
@@ -37,10 +37,25 @@ class InitRequestContextMiddleware implements MiddlewareInterface
                 $this->config[RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY]
             )
         );
-        $requestContextContainer->setService(AppContext::class, $this->container);
+
+        //Allow calls to requesetContext for services that are only in appContext to work
+        $requestContextContainer->addAbstractFactory(
+            new PsrContainerToZendAbstractFactory($this->appContextContainer)
+        );
+
+        //Add the current request as a service to requestContext incase anyone needs it
         $requestContextContainer->setService(CurrentRequest::class, $request);
-        $request = $request->withAttribute(RequestContextBindings::REQUEST_ATTRIBUTE, $requestContextContainer);
-        $this->container->setService(RequestContext::class, $requestContextContainer);
+
+        $request = $request->withAttribute(
+            RequestContextBindings::REQUEST_ATTRIBUTE,
+            $requestContextContainer
+        );
+
+        //Put the requestContext in the appContext. This is ONLY for BC support for non-PSR-middleware code.
+        $this->appContextContainer->setService(
+            RequestContext::class,
+            $requestContextContainer
+        );
 
         return $delegate->process($request);
     }
