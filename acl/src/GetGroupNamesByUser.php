@@ -25,17 +25,19 @@ class GetGroupNamesByUser implements GetGroupNamesByUserInterface
     public function __invoke($user): array
     {
         if ($user === null) {
-            return HardCodedGroups::GUEST_GROUPS;
+            return [HardCodedGroups::EVERYONE, HardCodedGroups::GUEST];
         }
 
         $userGroupsEntities = $this->entityManager->getRepository(UserGroup::class)
             ->findBy(['userId' => $user->getId()]);
 
-        return array_map(
+        $groupNames = array_map(
             function (UserGroup $userGroupRelation) {
                 return $userGroupRelation->getGroup();
             },
             $userGroupsEntities
         );
+        $groupNames[] = HardCodedGroups::EVERYONE;
+        return $groupNames;
     }
 }

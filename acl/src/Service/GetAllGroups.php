@@ -36,10 +36,13 @@ class GetAllGroups
                     if (!is_file($fullFilePath)) {
                         continue;
                     }
+                    $groupName = basename($fileName, '.json');
                     $fileContent = file_get_contents($fullFilePath);
                     $fileContentDecoded = json_decode($fileContent, true);
                     if (json_last_error() !== JSON_ERROR_NONE) {
-                        throw new \RuntimeException('invalid json in file: ' . $file);
+                        throw new \RuntimeException(
+                            'Group file "' . $groupName . '" contains invalid JSON.'
+                        );
                     }
                     $customProps = [];
                     foreach ($fileContentDecoded as $key => $value) {
@@ -48,7 +51,7 @@ class GetAllGroups
                         }
                     }
                     $this->cachedAllGroups[] = new Group(
-                        basename($fileName, '.json'),
+                        $groupName,
                         $fileContentDecoded['rules'],
                         $customProps
                     );
