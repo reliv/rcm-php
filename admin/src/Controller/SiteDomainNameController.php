@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Rcm\Entity\Site;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
-use RcmAdmin\Service\PageMutationService;
+use RcmAdmin\Service\PageSecureRepo;
 use RcmAdmin\Service\SiteManager;
 use RcmUser\Api\Authentication\GetIdentity;
 use Zend\Diactoros\Response\JsonResponse;
@@ -35,7 +35,7 @@ class SiteDomainNameController implements MiddlewareInterface
     ) {
         $this->currentSite = $currentSite;
         $this->isAllowed = $isAllowed;
-        $this->siteManager = $requestContext->get(PageMutationService::class);
+        $this->siteManager = $requestContext->get(PageSecureRepo::class);
         $this->getIdentity = $getIdentity;
     }
 

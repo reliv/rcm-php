@@ -60,7 +60,7 @@ class SiteManager
         $config,
         EntityManager $entityManager,
         RcmUserService $rcmUserService,
-        PageMutationService $pageMutationService,
+        PageSecureRepo $pageMutationService,
         VersionRepositoryInterface $siteVersionRepo,
         VersionRepositoryInterface $immutableSiteWideContainerRepo,
         PageContentFactory $pageContentFactory

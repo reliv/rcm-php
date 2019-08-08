@@ -10,7 +10,7 @@ use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\RequestContext\RequestContext;
 use Rcm\Service\CurrentSite;
 use RcmAdmin\Controller\PageController;
-use RcmAdmin\Service\PageMutationService;
+use RcmAdmin\Service\PageSecureRepo;
 use RcmUser\Service\RcmUserService;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceLocatorInterface;

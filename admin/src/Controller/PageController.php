@@ -18,7 +18,7 @@ use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
-use RcmAdmin\Service\PageMutationService;
+use RcmAdmin\Service\PageSecureRepo;
 use RcmUser\Service\RcmUserService;
 use RcmUser\User\Entity\UserInterface;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -84,7 +84,7 @@ class PageController extends AbstractActionController
         Site $currentSite,
         RcmUserService $rcmUserService
     ) {
-        $this->pageMutationService = $currentRequestContext->get(PageMutationService::class);
+        $this->pageMutationService = $currentRequestContext->get(PageSecureRepo::class);
         $this->currentSite = $currentSite;
         $this->rcmUserService = $rcmUserService;
         $this->currentRequestContext = $currentRequestContext;

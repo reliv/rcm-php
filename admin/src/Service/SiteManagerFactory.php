@@ -14,7 +14,7 @@ class SiteManagerFactory
             $requestContext->get('Config'),
             $requestContext->get('Doctrine\ORM\EntityManager'),
             $requestContext->get(RcmUserService::class),
-            $requestContext->get(PageMutationService::class),
+            $requestContext->get(PageSecureRepo::class),
             $requestContext->get('Rcm\ImmutableHistory\SiteVersionRepo'),
             $requestContext->get('Rcm\ImmutableHistory\SiteWideContainerVersionRepo'),
             $requestContext->get(PageContentFactory::class)

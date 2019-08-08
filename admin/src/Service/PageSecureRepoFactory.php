@@ -7,11 +7,11 @@ use Rcm\Acl\AssertIsAllowed;
 use Rcm\Entity\Page;
 use Rcm\RequestContext\RequestContextBindings;
 
-class PageMutationServiceFactory
+class PageSecureRepoFactory
 {
     public function __invoke(ContainerInterface $requestContext)
     {
-        return new PageMutationService(
+        return new PageSecureRepo(
             $requestContext->get(\RcmUser\Service\RcmUserService::class),
             $requestContext->get(\Doctrine\ORM\EntityManager::class),
             $requestContext->get('Rcm\ImmutableHistory\PageVersionRepo'),

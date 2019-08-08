@@ -40,10 +40,10 @@ use Zend\View\Model\ViewModel;
 /**
  * ALL PAGE MUTATIONS MUST BE DONE THROUGH THIS SERVICE TO ENSURE THEY ARE LOGGED PROPERLY!
  *
- * Class PageMutationService
+ * Class PageSecureRepo
  * @package RcmAdmin\Service
  */
-class PageMutationService
+class PageSecureRepo
 {
     /**
      * @var \Rcm\Entity\Site

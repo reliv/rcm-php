@@ -11,7 +11,7 @@ use Rcm\Acl\NotAllowedException;
 use Rcm\Api\Repository\Page\FindPageById;
 use Rcm\Api\Repository\Page\PageExists;
 use Rcm\RequestContext\RequestContext;
-use RcmAdmin\Service\PageMutationService;
+use RcmAdmin\Service\PageSecureRepo;
 use RcmUser\Api\Authentication\GetCurrentUser;
 use Reliv\PipeRat2\Core\Api\ResponseWithDataBody;
 use Reliv\PipeRat2\Core\DataResponseBasic;
@@ -93,9 +93,9 @@ class CopyPage implements MiddlewareInterface
         $requestContext = $request->getAttribute(RequestContext::class);
 
         /**
-         * @var $pageMutationService PageMutationService
+         * @var $pageMutationService PageSecureRepo
          */
-        $pageMutationService = $requestContext->get(PageMutationService::class);
+        $pageMutationService = $requestContext->get(PageSecureRepo::class);
 
         try {
             $pageMutationService->duplicatePage(

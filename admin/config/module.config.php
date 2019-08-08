@@ -664,7 +664,7 @@ return [
     ],
     \Rcm\RequestContext\RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY => [
         'factories' => [
-            \RcmAdmin\Service\PageMutationService::class => \RcmAdmin\Service\PageMutationServiceFactory::class,
+            \RcmAdmin\Service\PageSecureRepo::class => \RcmAdmin\Service\PageSecureRepoFactory::class,
             RcmAdmin\Service\SiteManager::class => \RcmAdmin\Service\SiteManagerFactory::class
         ]
     ],
