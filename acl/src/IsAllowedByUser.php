@@ -39,5 +39,4 @@ class IsAllowedByUser
 
         return $this->runQuery->__invoke($queryWithGroups)->getEffect() === Effects::ALLOW;
     }
-
 }

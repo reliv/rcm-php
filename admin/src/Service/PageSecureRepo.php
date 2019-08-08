@@ -482,7 +482,9 @@ class PageSecureRepo
          */
         $destinationSite = $this->entityManager->find(Site::class, $destinationSiteId);
         if (!$destinationSite) {
-            throw new NotAllowedBySecurityPropGenerationFailure('Site could not be found for id "' . $destinationSiteId . '")');
+            throw new NotAllowedBySecurityPropGenerationFailure(
+                'Site could not be found for id "' . $destinationSiteId . '")'
+            );
         }
 
         $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the page we are copying to
