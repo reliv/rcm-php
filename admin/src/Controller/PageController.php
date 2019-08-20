@@ -96,7 +96,8 @@ class PageController extends AbstractActionController
     protected function getNotAllowedResponse()
     {
         $response = new Response();
-        $response->setStatusCode('401');
+        $response->setStatusCode('404');
+        $response->setContent('404 - Not Found');
 
         return $response;
     }
