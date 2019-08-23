@@ -443,7 +443,7 @@ class SiteSecureRepo
                 $newSite->getSiteId(),
                 $pageData['name'],
                 $pageData['pageType'],
-                $createdPage->getStagedRevision()->getRevisionId(),
+                $createdPage->getStagedRevision()->getRevisionId()
             );
         }
 
