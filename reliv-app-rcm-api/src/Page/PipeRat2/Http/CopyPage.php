@@ -11,7 +11,7 @@ use Rcm\Acl\NotAllowedException;
 use Rcm\Api\Repository\Page\FindPageById;
 use Rcm\Api\Repository\Page\PageExists;
 use Rcm\RequestContext\RequestContext;
-use RcmAdmin\Service\PageSecureRepo;
+use Rcm\SecureRepo\PageSecureRepo;
 use RcmUser\Api\Authentication\GetCurrentUser;
 use Reliv\PipeRat2\Core\Api\ResponseWithDataBody;
 use Reliv\PipeRat2\Core\DataResponseBasic;

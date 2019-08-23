@@ -2,7 +2,11 @@
 
 namespace RcmAdmin\Factory;
 
+use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Rcm\Acl\GetCurrentUser;
+use Rcm\RequestContext\RequestContext;
+use Rcm\SecureRepo\SiteSecureRepo;
 use RcmAdmin\Controller\ApiAdminManageSitesController;
 use RcmAdmin\Controller\ApiAdminSitesCloneController;
 use Zend\Mvc\Controller\ControllerManager;
@@ -27,6 +31,10 @@ class ApiAdminSitesCloneControllerFactory
             $container = $container->getServiceLocator();
         }
 
-        return new ApiAdminSitesCloneController($container);
+        return new ApiAdminSitesCloneController(
+            $container->get(RequestContext::class)->get(SiteSecureRepo::class),
+            $container->get(EntityManager::class),
+            $container->get(RequestContext::class)->get(GetCurrentUser::class)
+        );
     }
 }

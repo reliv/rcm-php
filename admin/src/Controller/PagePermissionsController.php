@@ -6,21 +6,6 @@ use Rcm\Acl\ResourceName;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-/**
- * PagePermissions
- *
- * Page Permissions controller
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   RcmAdmin\Controller
- * @author    Inna Davis <idavis@relivinc.com>
- * @copyright 2017 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: <package_version>
- * @link      https://github.com/reliv
- */
 class PagePermissionsController extends AbstractActionController
 {
     /**
@@ -35,7 +20,6 @@ class PagePermissionsController extends AbstractActionController
      */
     public function pagePermissionsAction()
     {
-
         $view = new ViewModel();
         //fixes rendering site's header and footer in the dialog
         $view->setTerminal(true);

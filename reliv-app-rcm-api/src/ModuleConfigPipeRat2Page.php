@@ -5,7 +5,7 @@ namespace Reliv\App\RcmApi;
 use Rcm\Acl\ResourceProvider;
 use Rcm\Api\Repository\Page\FindPageById;
 use Rcm\Api\Repository\Page\PageExists;
-use RcmAdmin\Service\PageSecureRepo;
+use Rcm\SecureRepo\PageSecureRepo;
 use RcmUser\Api\Authentication\GetCurrentUser;
 use Reliv\App\RcmApi\Page\PipeRat2\Api\FindOnePage;
 use Reliv\App\RcmApi\Page\PipeRat2\Http\CopyPage;

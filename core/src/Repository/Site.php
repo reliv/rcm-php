@@ -7,6 +7,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Rcm\Acl\PropertiesProviderInterface;
 use Rcm\Acl\SecurityPropertiesProviderInterface;
+use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\SiteNotFoundException;
 use Rcm\Tracking\Model\Tracking;
@@ -25,7 +26,7 @@ use Rcm\Tracking\Model\Tracking;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-class Site extends EntityRepository //implements SecurityPropertiesProviderInterface
+class Site extends EntityRepository
 {
     /**
      * @var array
@@ -295,14 +296,4 @@ class Site extends EntityRepository //implements SecurityPropertiesProviderInter
     {
         return $this->_em;
     }
-
-//    public function findSecurityProperties($site): array
-//    {
-//        // TODO: Implement findSecurityProperties() method.
-//    }
-//
-//    public function findSecurityPropertiesFromCreationData($data): array
-//    {
-//        // TODO: Implement findSecurityPropertiesFromCreationData() method.
-//    }
 }

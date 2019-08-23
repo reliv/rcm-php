@@ -11,43 +11,43 @@ use Rcm\Entity\Site;
 use Rcm\Tracking\Model\Tracking;
 
 /**
- * @deprecated Use SiteManager instead
+ * @deprecated Use SiteSecureRepo instead
  */
 class CopySite
 {
-    const OPTION_DO_FLUSH = 'doFlush';
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+//    const OPTION_DO_FLUSH = 'doFlush';
+//    /**
+//     * @var EntityManager
+//     */
+//    protected $entityManager;
+//
+//    /**
+//     * @var \Rcm\Repository\Site
+//     */
+//    protected $repository;
+//
+//    /**
+//     * @var \Rcm\Repository\Domain
+//     */
+//    protected $domainRepository;
+
+//    /**
+//     * @param EntityManager $entityManager
+//     */
+//    public function __construct(
+//        EntityManager $entityManager
+//    ) {
+////        $this->entityManager = $entityManager;
+////        $this->repository = $entityManager->getRepository(
+////            Site::class
+////        );
+////        $this->domainRepository = $entityManager->getRepository(
+////            Domain::class
+////        );
+//    }
 
     /**
-     * @var \Rcm\Repository\Site
-     */
-    protected $repository;
-
-    /**
-     * @var \Rcm\Repository\Domain
-     */
-    protected $domainRepository;
-
-    /**
-     * @param EntityManager $entityManager
-     */
-    public function __construct(
-        EntityManager $entityManager
-    ) {
-        $this->entityManager = $entityManager;
-        $this->repository = $entityManager->getRepository(
-            Site::class
-        );
-        $this->domainRepository = $entityManager->getRepository(
-            Domain::class
-        );
-    }
-
-    /**
-     * @deprecated Use SiteManager instead
+     * @deprecated Use SiteSecureRepo instead
      * @param Site $sourceSite
      * @param string $newDomainName
      * @param array $newSiteData

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace RcmAdmin\Service;
+namespace Rcm\SecureRepo;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Acl\AclActions;
@@ -124,8 +124,8 @@ class PageSecureRepo
      */
     public function createNewPage(int $siteId, string $name, string $pageType, $data)
     {
-        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the new page
-            AclActions::WRITE,
+        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new page
+            AclActions::CREATE,
             $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
                 'siteId' => $siteId,
             ])
@@ -181,8 +181,8 @@ class PageSecureRepo
      */
     public function createNewPageFromTemplate($data)
     {
-        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the new page
-            AclActions::WRITE,
+        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new page
+            AclActions::CREATE,
             $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
                 'siteId' => $siteId,
             ])
@@ -268,8 +268,8 @@ class PageSecureRepo
                 'siteId' => $siteId,
             ])
         );
-        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the page we are publishing
-            AclActions::WRITE,
+        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the page we are publishing
+            AclActions::UPDATE,
             $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
                 'siteId' => $siteId,
             ])
@@ -326,8 +326,8 @@ class PageSecureRepo
         int $originalRevisionId
     ) {
         $site = $this->currentSite;// @TODO ideall convert this to be a method arg
-        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the page we are saving
-            AclActions::WRITE,
+        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the page we are saving
+            AclActions::UPDATE,
             $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
                 'siteId' => $site->getSiteId(),
             ])
@@ -419,8 +419,8 @@ class PageSecureRepo
 
     public function depublishPage(Page $page)
     {
-        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the page we are deleting
-            AclActions::WRITE,
+        $this->assertIsAllowed->__invoke(// Check if we have access to DELETE the page we are deleting
+            AclActions::DELETE,
             $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
                 'siteId' => $page->getSite()->getSiteId(),
             ])
@@ -460,10 +460,11 @@ class PageSecureRepo
         $destinationPageName,
         $destinationPageType = null
     ): Page {
+        $siteId = $page->getSite()->getSiteId();
         $this->assertIsAllowed->__invoke(// Check if we have access to READ the page we are copying from
             AclActions::READ,
             $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
-                'siteId' => $page->getSite()->getSiteId(),
+                'siteId' => $siteId,
             ])
         );
 
@@ -487,8 +488,8 @@ class PageSecureRepo
             );
         }
 
-        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the page we are copying to
-            AclActions::WRITE,
+        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the page we are copying to
+            AclActions::CREATE,
             $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
                 'siteId' => $siteId,
             ])
@@ -563,8 +564,8 @@ class PageSecureRepo
             ])
         );
 
-        $this->assertIsAllowed->__invoke(// Check if we have access to WRITE the page we are updating
-            AclActions::WRITE,
+        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the page we are updating
+            AclActions::UPDATE,
             $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
                 'siteId' => $sourceSite->getSiteId(),
             ])

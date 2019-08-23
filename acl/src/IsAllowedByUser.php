@@ -36,7 +36,6 @@ class IsAllowedByUser
             $this->getGroupsByUser->__invoke($user),
             $properties
         );
-
         return $this->runQuery->__invoke($queryWithGroups)->getEffect() === Effects::ALLOW;
     }
 }

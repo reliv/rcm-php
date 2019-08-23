@@ -9,8 +9,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Rcm\Entity\Site;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
-use RcmAdmin\Service\PageSecureRepo;
-use RcmAdmin\Service\SiteManager;
+use Rcm\SecureRepo\PageSecureRepo;
+use Rcm\SecureRepo\SiteSecureRepo;
 use RcmUser\Api\Authentication\GetIdentity;
 use Zend\Diactoros\Response\JsonResponse;
 use \Zend\Http\Response;
@@ -23,7 +23,7 @@ class SiteDomainNameController implements MiddlewareInterface
 
     protected $isAllowed;
 
-    protected $siteManager;
+    protected $siteSecureRepo;
 
     protected $getIdentity;
 
@@ -35,7 +35,7 @@ class SiteDomainNameController implements MiddlewareInterface
     ) {
         $this->currentSite = $currentSite;
         $this->isAllowed = $isAllowed;
-        $this->siteManager = $requestContext->get(PageSecureRepo::class);
+        $this->siteSecureRepo = $requestContext->get(PageSecureRepo::class);
         $this->getIdentity = $getIdentity;
     }
 
@@ -54,18 +54,24 @@ class SiteDomainNameController implements MiddlewareInterface
     {
         $user = $this->getIdentity->__invoke($request);
 
-        if (!$this->isAllowed->__invoke($request, 'sites', 'admin')
-            || !$user
-            || !$user->getId()
-        ) {
-            return new JsonResponse(['error' => 'uauthorized'], 401);
-        }
+        /** @oldControllerAclAccessCheckReplacedWithDeeperSecureRepoCheck */
+
         $body = $request->getParsedBody();
+
         if (!isset($body['host'])) {
-            return new JsonResponse(['error' => '"host" field is required'], 401);
+            return new JsonResponse(['error' => '"host" field is required'], 400);
         }
-        $this->siteManager->changeSiteDomainName($this->currentSite, $body['host'], $user->getId());
+        try {
+            $this->siteSecureRepo->changeSiteDomainName($this->currentSite, $body['host'], $user->getId());
+        } catch (NotAllowedException $e) {
+            return $this->buildNotFoundOrAccessDeniedResponse();
+        }
 
         return new JsonResponse(['host' => $this->currentSite->getDomain()->getDomainName()]);
+    }
+
+    protected function buildNotFoundOrAccessDeniedResponse()
+    {
+        return new JsonResponse(['errorMessage' => 'site not found', 404]);
     }
 }

@@ -13,7 +13,7 @@ use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\Entity\SitePageApiResponse;
 use RcmAdmin\InputFilter\SitePageCreateInputFilter;
 use RcmAdmin\InputFilter\SitePageUpdateInputFilter;
-use RcmAdmin\Service\PageSecureRepo;
+use Rcm\SecureRepo\PageSecureRepo;
 use RcmUser\Service\RcmUserService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

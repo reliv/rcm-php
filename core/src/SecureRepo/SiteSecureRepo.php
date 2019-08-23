@@ -1,8 +1,14 @@
 <?php
 
-namespace RcmAdmin\Service;
+namespace Rcm\SecureRepo;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\Exception\NotAllowedBySecurityPropGenerationFailure;
+use Rcm\Acl\GetCurrentUser;
+use Rcm\Acl\NotAllowedException;
+use Rcm\Acl\SecurityPropertiesProviderInterface;
 use Rcm\Entity\Container;
 use Rcm\Entity\Country;
 use Rcm\Entity\Domain;
@@ -18,18 +24,22 @@ use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\Tracking\Model\Tracking;
+use RcmAdmin\InputFilter\SiteInputFilter;
 use RcmUser\Service\RcmUserService;
 use RcmUser\User\Entity\UserInterface;
+use Rcm\Exception\InputFilterFoundInvalidDataException;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
+use Interop\Container\ContainerInterface;
+use Rcm\Acl\ResourceName;
+use Rcm\Http\Response;
+use Rcm\RequestContext\RequestContext;
+use Rcm\View\Model\ApiJsonModel;
+use Rcm\Http\NotAllowedResponseJsonZf2;
+use Zend\Paginator\Paginator;
+use Zend\View\Model\JsonModel;
 
-/**
- * Class ManageSites
- *
- * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2016 Reliv International
- * @license   License.txt
- * @link      https://github.com/reliv
- */
-class SiteManager
+class SiteSecureRepo
 {
     /**
      * @var array
@@ -48,14 +58,10 @@ class SiteManager
     protected $immutableSiteWideContainerRepo;
 
     protected $pageContentFactory;
+    protected $getCurrentUser;
+    protected $siteSecurityPropertiesProvider;
+    protected $assertIsAllowed;
 
-    /**
-     * SiteManager constructor.
-     *
-     * @param array $config
-     * @param EntityManager $entityManager
-     * @param RcmUserService $rcmUserService
-     */
     public function __construct(
         $config,
         EntityManager $entityManager,
@@ -63,7 +69,10 @@ class SiteManager
         PageSecureRepo $pageMutationService,
         VersionRepositoryInterface $siteVersionRepo,
         VersionRepositoryInterface $immutableSiteWideContainerRepo,
-        PageContentFactory $pageContentFactory
+        PageContentFactory $pageContentFactory,
+        GetCurrentUser $getCurrentUser,
+        SecurityPropertiesProviderInterface $siteSecurityPropertiesProvider,
+        AssertIsAllowed $assertIsAllowed
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
@@ -72,6 +81,297 @@ class SiteManager
         $this->siteVersionRepo = $siteVersionRepo;
         $this->immutableSiteWideContainerRepo = $immutableSiteWideContainerRepo;
         $this->pageContentFactory = $pageContentFactory;
+        $this->getCurrentUser = $getCurrentUser;
+        $this->siteSecurityPropertiesProvider = $siteSecurityPropertiesProvider;
+        $this->assertIsAllowed = $assertIsAllowed;
+
+    }
+
+    /**
+     * Note: this code was moved here durring the ACL2 project from ApiAdminManageSitesController
+     *
+     * Note: this function will omit any sites the user doesn't have access to read from the returned list
+     *
+     * @return mixed|JsonModel
+     */
+    public function getList($searchQuery, $page, $pageSize)
+    {
+        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
+        $entityManager = $this->getEntityManager();
+
+        /** @var \Rcm\Repository\Site $siteRepo */
+        $siteRepo = $entityManager->getRepository(\Rcm\Entity\Site::class);
+        $createQueryBuilder = $siteRepo->createQueryBuilder('site')
+            ->select('site')
+            ->leftJoin('site.domain', 'domain')
+            ->leftJoin('site.country', 'country')
+            ->leftJoin('site.language', 'language');
+        // @todo This is broken in doctrine 1.* with MySQL 5.7
+        //->orderBy('domain.domain', 'ASC');
+
+        $query = $createQueryBuilder->getQuery();
+
+        if ($searchQuery) {
+            $createQueryBuilder->where(
+                $createQueryBuilder->expr()->like(
+                    'domain.domain',
+                    ':searchQuery'
+                )
+            );
+            $query = $createQueryBuilder->getQuery();
+            $query->setParameter('searchQuery', $searchQuery . '%');
+        }
+
+        $adaptor = new DoctrinePaginator(
+            new ORMPaginator($query)
+        );
+        $paginator = new Paginator($adaptor);
+        $paginator->setDefaultItemCountPerPage(10);
+
+        if ($page) {
+            $paginator->setCurrentPageNumber($page);
+        }
+
+        if ($pageSize) {
+            $paginator->setItemCountPerPage($pageSize);
+        }
+
+        $sitesObjects = $paginator->getCurrentItems();
+
+        $sites = [];
+
+        /** @var \Rcm\Entity\Site $site */
+        foreach ($sitesObjects as $site) {
+            try {
+                $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
+                    AclActions::READ,
+                    $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                        'countryIso3' => $site->getCountryIso3()
+                    ])
+                );
+                $sites[] = $site->toArray();
+            } catch (NotAllowedException $e) {
+                continue; //If the user is not allowed to read the site, omit it from the returned list.
+            }
+        }
+
+        $list['items'] = $sites;
+        $list['itemCount'] = $paginator->getTotalItemCount();
+        $list['pageCount'] = $paginator->count();
+        $list['currentPage'] = $paginator->getCurrentPageNumber();
+
+        return $list;
+    }
+
+    /**
+     * Note: this code was moved here durring the ACL2 project from ApiAdminManageSitesController
+     *
+     * @param mixed $id
+     *
+     * @return mixed|ApiJsonModel|\Zend\Stdlib\ResponseInterface
+     */
+    public function get($id): Site
+    {
+        // get default site data - kinda hacky, but keeps us to one controller
+        if ($id == 'default') {
+            $data = $this->getDefaultSiteValues();
+
+            $user = $this->getCurrentUser->__invoke();
+
+            if ($user === null) {
+                throw new NotAllowedBySecurityPropGenerationFailure('user cannot be null');
+            }
+
+            $userId = $user->getId();
+
+            $site = new Site(
+                $userId,
+                'Get default site values in ' . get_class($this)
+            );
+
+            $site->populate($data);
+
+            $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
+                AclActions::READ,
+                $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                    'countryIso3' => $site->getCountryIso3()
+                ])
+            );
+
+            return $site;
+        }
+
+        // get current site data - kinda hacky, but keeps us to one controller
+        if ($id == 'current') {
+            $site = $this->getCurrentSite(); //@TODO missing getCurrentSite //@TODO missing getCurrentSite
+
+            $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
+                AclActions::READ,
+                $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                    'countryIso3' => $site->getCountryIso3()
+                ])
+            );
+
+            return $site;
+        }
+
+        /** @var \Rcm\Repository\Site $siteRepo */
+        $siteRepo = $this->getEntityManager()->getRepository(
+            \Rcm\Entity\Site::class
+        );
+
+        $site = $siteRepo->find($id);
+
+        if ($site === null) {
+            throw new NotAllowedBySecurityPropGenerationFailure('site not found');
+        }
+
+        $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
+            AclActions::READ,
+            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'countryIso3' => $site->getCountryIso3()
+            ])
+        );
+
+        return $site;
+    }
+
+    /**
+     * Note: this code was moved here durring the ACL2 project from ApiAdminManageSitesController
+     *
+     * @param $data
+     * @return ApiJsonModel
+     * @throws TrackingException
+     */
+    public function createSingleFromArray($data)
+    {
+        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new site
+            AclActions::CREATE,
+            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'countryIso3' => $data['countryId']
+            ])
+        );
+
+        $inputFilter = new SiteInputFilter();
+        $inputFilter->setData($data);
+
+        if (!$inputFilter->isValid()) {
+            throw new InputFilterFoundInvalidDataException(
+                'Some values are missing or invalid.',
+                $inputFilter->getMessages()
+            );
+        }
+
+        $data = $inputFilter->getValues();
+
+        $user = $this->getCurrentUser->__invoke();
+
+        if ($user === null) {
+            throw new NotAllowedBySecurityPropGenerationFailure('user cannot be null');
+        }
+
+        $userId = $user->getId();
+
+        $data = $this->prepareSiteData($data);
+        /** @var \Rcm\Repository\Domain $domainRepo */
+        $domainRepo = $this->getEntityManager()->getRepository(
+            \Rcm\Entity\Domain::class
+        );
+
+        $data['domain'] = $domainRepo->createDomain(
+            $data['domainName'],
+            $userId,
+            'Create new domain in ' . get_class($this)
+        );
+
+        /** @var \Rcm\Entity\Site $newSite */
+        $newSite = new Site(
+            $userId,
+            'Create new site in ' . get_class($this)
+        );
+
+        $newSite->populate($data);
+        // make sure we don't have a siteId
+        $newSite->setSiteId(null);
+
+        $newSite = $this->createSite($newSite);
+
+        return $newSite;
+    }
+
+    /**
+     * NoteL this code was moved here durring the ACL2 project from ApiAdminManageSitesController
+     *
+     * update @todo - allow update of all properties and filter input
+     *
+     * @param mixed $siteId
+     * @param mixed $data
+     *
+     * @return mixed|JsonModel
+     * @throws \Exception
+     */
+    public function update($siteId, $data)
+    {
+        if (!is_array($data)) {
+            throw new NotAllowedBySecurityPropGenerationFailure('data is not an array');
+        }
+
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = $this->getEntityManager();
+
+        /** @var \Rcm\Repository\Site $siteRepo */
+        $siteRepo = $entityManager->getRepository(\Rcm\Entity\Site::class);
+
+        if (!$siteRepo->isValidSiteId($siteId)) {
+            throw new NotAllowedBySecurityPropGenerationFailure('invalid siteId');
+        }
+
+        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the new site
+            AclActions::UPDATE,
+            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'countryIso3' => $data['countryId']
+            ])
+        );
+
+        /** @var \Rcm\Entity\Site $site */
+        $site = $siteRepo->findOneBy(['siteId' => $siteId]);
+
+        $newStatus = $site->getStatus();
+
+        if ($data['status'] == 'D') {
+            $newStatus = 'D';
+        }
+        if ($data['status'] == 'A') {
+            $newStatus = 'A';
+        }
+
+        $site->setStatus($newStatus);
+
+        $user = $this->getCurrentUser->__invoke();
+
+        if ($user === null) {
+            throw new NotAllowedBySecurityPropGenerationFailure('user cannot be null');
+        }
+
+        $userId = $user->getId();
+
+        $site->setModifiedByUserId(
+            $userId,
+            "Update site status to {$newStatus} in " . get_class($this)
+        );
+
+        $entityManager->persist($site);
+        $entityManager->flush($site);
+
+        $this->siteVersionRepo->publish(
+            new SiteLocator($site->getDomainName()),
+            $this->siteToImmutableSiteContent($site),
+            $this->getCurrentUserTracking()->getId(),
+            __CLASS__ . '::' . __FUNCTION__,
+            $site->getSiteId()
+        );
+
+        return $site;
     }
 
     /**
@@ -84,7 +384,7 @@ class SiteManager
      */
     public function getCurrentAuthor($default = 'Unknown Author')
     {
-        $user = $this->getCurrentUser();
+        $user = $this->getCurrentUserBc();
 
         if (empty($user)) {
             return $default;
@@ -105,6 +405,12 @@ class SiteManager
     public function createSite(
         Site $newSite
     ) {
+        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new site
+            AclActions::CREATE,
+            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'countryIso3' => $newSite->getCountryIso3()
+            ])
+        );
         $newSite = $this->prepareNewSite($newSite);
 
         $entityManager = $this->getEntityManager();
@@ -152,27 +458,64 @@ class SiteManager
     }
 
 
-    /**
-     * @deprecated Use Rcm\Repository\Site\CopySite
-     * copySiteAndPopulate
-     *
-     * @param Site $existingSite
-     * @param Domain $domain
-     * @param array $data
-     * @param bool $doFlush
-     *
-     * @return Site
-     */
-    public function copySiteAndPopulate(
+    public function duplicateAndUpdate(
         Site $existingSite,
-        Domain $domain,
+        string $newDomainName,
         $data = []
     ) {
+
         $entityManager = $this->getEntityManager();
 
-        $copySite = $this->copySite($existingSite, $domain);
+        $this->assertIsAllowed->__invoke(// Check if we have access to READ the source site
+            AclActions::READ,
+            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'countryIso3' => $existingSite->getCountryIso3()
+            ])
+        );
 
-        $copySite->populate($data);
+        if (!array_key_exists('countryId', $data)) {
+            throw new NotAllowedBySecurityPropGenerationFailure(
+                'No countryId provided in copySiteAndPopulate data'
+            );
+        }
+
+        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new site
+            AclActions::CREATE,
+            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'countryIso3' => $data['countryId']
+            ])
+        );
+
+        $data = $this->prepareSiteData($data);
+        /** @var \Rcm\Repository\Domain $domainRepo */
+        $domainRepo = $this->entityManager->getRepository(
+            \Rcm\Entity\Domain::class
+        );
+
+        $user = $this->getCurrentUser->__invoke();
+
+        if ($user === null) {
+            throw new NotAllowedBySecurityPropGenerationFailure('user cannot be null');
+        }
+
+        $userId = $user->getId();
+
+        $domain = $domainRepo->createDomain(
+            $newDomainName,
+            $userId,
+            'Create new domain in ' . get_class($this),
+            null,
+            true
+        );
+
+        try {
+            $copySite = $this->copySite($existingSite, $domain);
+            $copySite->populate($data);
+        } catch (\Exception $e) {
+            //If something went wrong, delete the orphaned domain we created.
+            $this->entityManager->remove($domain);
+            $this->entityManager->flush($domain);
+        }
 
         $this->siteVersionRepo->publish(
             new SiteLocator($copySite->getDomainName()),
@@ -275,9 +618,9 @@ class SiteManager
      *
      * @return null|\RcmUser\User\Entity\UserInterface
      */
-    protected function getCurrentUser()
+    protected function getCurrentUserBc()
     {
-        return $this->rcmUserService->getCurrentUser();
+        return $this->getCurrentUser->__invoke();
     }
 
     /**
@@ -286,7 +629,7 @@ class SiteManager
      */
     protected function getCurrentUserTracking()
     {
-        $user = $this->getCurrentUser();
+        $user = $this->getCurrentUserBc();
 
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
@@ -296,8 +639,7 @@ class SiteManager
     }
 
     /**
-     * @deprecated Use Rcm\Repository\Site\CopySite
-     * copySite
+     * Warning: This does not enforce ACL and MUST REMAIN A PRIVATE METHOD!
      *
      * @param Site $existingSite
      * @param Domain $domain
@@ -310,7 +652,11 @@ class SiteManager
     ) {
         $entityManager = $this->getEntityManager();
 
-        $user = $this->getCurrentUserTracking();
+        $user = $this->getCurrentUser->__invoke();
+
+        if ($user === null) {
+            throw new NotAllowedBySecurityPropGenerationFailure('user cannot be null');
+        }
 
         $domain->setModifiedByUserId(
             $user->getId(),
@@ -644,6 +990,13 @@ class SiteManager
 
     public function changeSiteDomainName(Site $site, $newHost, string $userId)
     {
+        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the site
+            AclActions::UPDATE,
+            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                'countryIso3' => $site->getCountryIso3()
+            ])
+        );
+
         $domainObject = $site->getDomain();
         $oldHost = $domainObject->getDomainName();
         $oldLocator = new SiteLocator($oldHost);

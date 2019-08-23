@@ -4,6 +4,8 @@ namespace Rcm\Acl;
 
 class AclActions
 {
-    const WRITE = 'write';
+    const CREATE = 'create';
     const READ = 'read';
+    const UPDATE = 'update';
+    const DELETE = 'delete';
 }
