@@ -84,7 +84,6 @@ class SiteSecureRepo
         $this->getCurrentUser = $getCurrentUser;
         $this->siteSecurityPropertiesProvider = $siteSecurityPropertiesProvider;
         $this->assertIsAllowed = $assertIsAllowed;
-
     }
 
     /**

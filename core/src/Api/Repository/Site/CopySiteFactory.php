@@ -17,8 +17,6 @@ class CopySiteFactory
      */
     public function __invoke($serviceContainer)
     {
-        return new CopySite(
-//            $serviceContainer->get(EntityManager::class)
-        );
+        return new CopySite();
     }
 }
