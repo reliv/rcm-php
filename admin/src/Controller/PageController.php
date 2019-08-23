@@ -205,18 +205,16 @@ class PageController extends AbstractActionController
             );
 
         try {
-            $newUrl = $this->pageSecureRepo->publishPageRevision(
+            $page = $this->pageSecureRepo->publishPageRevision(
                 $this->currentSite->getSiteId(),
                 $pageName,
                 $pageType,
-                $pageRevision,
-                function ($pageName, $pageType = 'n', $pageRevision = null) {
-                    return $this->urlToPage($pageName, $pageType, $pageRevision);
-                }
+                $pageRevision
             );
         } catch (NotAllowedException $e) {
             return new NotAllowedResponseJsonZf2();
         }
+        $newUrl = $this->urlToPage($page->getName(), $page->getType(), $pageRevision);
 
         return $this->redirect()->toUrl($newUrl);
     }

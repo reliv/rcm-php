@@ -13,7 +13,6 @@ class PageSecureRepoFactory
     public function __invoke(ContainerInterface $requestContext)
     {
         return new PageSecureRepo(
-            $requestContext->get(\RcmUser\Service\RcmUserService::class),
             $requestContext->get(\Doctrine\ORM\EntityManager::class),
             $requestContext->get('Rcm\ImmutableHistory\PageVersionRepo'),
             $requestContext->get('Rcm\ImmutableHistory\SiteWideContainerVersionRepo'),

@@ -55,16 +55,6 @@ class PageSecureRepo
      */
     protected $pageRepo;
 
-    /**
-     * @var \Zend\View\Model\ViewModel
-     */
-    protected $view;
-
-    /**
-     * @var RcmUserService
-     */
-    protected $rcmUserService;
-
     protected $immuteblePageVersionRepo;
 
     protected $revisionRepo;
@@ -80,7 +70,6 @@ class PageSecureRepo
     protected $pageSecurityPropertiesProvider;
 
     public function __construct(
-        RcmUserService $rcmUserService,
         EntityManager $entityManager,
         VersionRepositoryInterface $immuteblePageVersionRepo,
         VersionRepositoryInterface $immutableSiteWideContainerRepo,
@@ -95,7 +84,6 @@ class PageSecureRepo
         $this->entityManager = $entityManager;
         $this->pageRepo = $entityManager->getRepository(Page::class);
         $this->revisionRepo = $entityManager->getRepository(Revision::class);
-        $this->rcmUserService = $rcmUserService;
         $this->immuteblePageVersionRepo = $immuteblePageVersionRepo;
         $this->immutableSiteWideContainerRepo = $immutableSiteWideContainerRepo;
         $this->immutablePageContentFactory = $immutablePageContentFactory;
@@ -103,9 +91,6 @@ class PageSecureRepo
         $this->pageSecurityPropertiesProvider = $pageSecurityPropertiesProvider;
         $this->currentUser = $getCurrentUser->__invoke();
         $this->assertIsAllowed = $assertIsAllowed;
-
-        $this->view = new ViewModel();
-        $this->view->setTerminal(true);
     }
 
     /**
@@ -251,7 +236,6 @@ class PageSecureRepo
      * @param string $pageName
      * @param string $pageType
      * @param int $pageRevisionId
-     * @param $urlToPageFunction
      * @return mixed
      * @throws TrackingException
      */
@@ -259,8 +243,7 @@ class PageSecureRepo
         int $siteId,
         string $pageName,
         string $pageType,
-        int $pageRevisionId,
-        $urlToPageFunction
+        int $pageRevisionId
     ) {
         $this->assertIsAllowed->__invoke(// Check if we have access to READ the page we are publishing
             AclActions::READ,
@@ -305,10 +288,7 @@ class PageSecureRepo
             __CLASS__ . '::' . __FUNCTION__
         );
 
-        return $urlToPageFunction(
-            $pageName,
-            $pageType
-        );
+        return $page;
     }
 
     /**

@@ -61,6 +61,7 @@ class SiteSecureRepo
     protected $getCurrentUser;
     protected $siteSecurityPropertiesProvider;
     protected $assertIsAllowed;
+    protected $currentUser;
 
     public function __construct(
         $config,
@@ -81,7 +82,7 @@ class SiteSecureRepo
         $this->siteVersionRepo = $siteVersionRepo;
         $this->immutableSiteWideContainerRepo = $immutableSiteWideContainerRepo;
         $this->pageContentFactory = $pageContentFactory;
-        $this->getCurrentUser = $getCurrentUser;
+        $this->currentUser = $getCurrentUser->__invoke();
         $this->siteSecurityPropertiesProvider = $siteSecurityPropertiesProvider;
         $this->assertIsAllowed = $assertIsAllowed;
     }
@@ -175,7 +176,7 @@ class SiteSecureRepo
         if ($id == 'default') {
             $data = $this->getDefaultSiteValues();
 
-            $user = $this->getCurrentUser->__invoke();
+            $user = $this->currentUser;
 
             if ($user === null) {
                 throw new NotAllowedBySecurityPropGenerationFailure('user cannot be null');
@@ -263,7 +264,7 @@ class SiteSecureRepo
 
         $data = $inputFilter->getValues();
 
-        $user = $this->getCurrentUser->__invoke();
+        $user = $this->currentUser;
 
         if ($user === null) {
             throw new NotAllowedBySecurityPropGenerationFailure('user cannot be null');
@@ -346,7 +347,7 @@ class SiteSecureRepo
 
         $site->setStatus($newStatus);
 
-        $user = $this->getCurrentUser->__invoke();
+        $user = $this->currentUser;
 
         if ($user === null) {
             throw new NotAllowedBySecurityPropGenerationFailure('user cannot be null');
@@ -443,19 +444,19 @@ class SiteSecureRepo
                 $pageData['name'],
                 $pageData['pageType'],
                 $createdPage->getStagedRevision()->getRevisionId(),
-                function ($pageName, $pageType = PageTypes::NORMAL, $pageRevision = null) {
-                    if ($pageType !== PageTypes::NORMAL || $pageRevision !== null) {
-                        throw new \Exception('Unsupported Case');
-
-                        return '/' . $pageName;
-                    }
-                }
             );
         }
 
         return $newSite;
     }
 
+//    protected function urlToPage(Page $page){
+//        if ($page->getPageType() !== PageTypes::NORMAL || $pageRevision !== null) {
+//            throw new \Exception('Unsupported Case');
+//
+//            return '/' . $page->getName();
+//        }
+//    }
 
     public function duplicateAndUpdate(
         Site $existingSite,
@@ -491,7 +492,7 @@ class SiteSecureRepo
             \Rcm\Entity\Domain::class
         );
 
-        $user = $this->getCurrentUser->__invoke();
+        $user = $this->currentUser;
 
         if ($user === null) {
             throw new NotAllowedBySecurityPropGenerationFailure('user cannot be null');
@@ -619,7 +620,7 @@ class SiteSecureRepo
      */
     protected function getCurrentUserBc()
     {
-        return $this->getCurrentUser->__invoke();
+        return $this->currentUser;
     }
 
     /**
@@ -651,7 +652,7 @@ class SiteSecureRepo
     ) {
         $entityManager = $this->getEntityManager();
 
-        $user = $this->getCurrentUser->__invoke();
+        $user = $this->currentUser;
 
         if ($user === null) {
             throw new NotAllowedBySecurityPropGenerationFailure('user cannot be null');
