@@ -3,19 +3,21 @@
 namespace Rcm\Acl;
 
 use Rcm\Acl\Service\GetCurrentUserId;
-use Rcm\Acl\Service\GetGroupIdsByUserId;
+use Rcm\Acl\GetGroupNamesByUserInterface;
+use Rcm\Acl\Service\GroupNamesByUser;
+use RcmUser\User\Entity\UserInterface;
 
-class IsAllowedByUserId
+class IsAllowedByUser
 {
     protected $runQuery;
-    protected $getGroupsByUserId;
+    protected $getGroupsByUser;
 
     public function __construct(
         RunQuery $runQuery,
-        GetGroupIdsByUserId $getGroupsByUserId
+        GetGroupNamesByUserInterface $getGroupsByUser
     ) {
         $this->runQuery = $runQuery;
-        $this->getGroupsByUserId = $getGroupsByUserId;
+        $this->getGroupsByUser = $getGroupsByUser;
     }
 
     /**
@@ -24,17 +26,16 @@ class IsAllowedByUserId
      *
      * @param string $action
      * @param array $properties
-     * @param string $userId
+     * @param UserInterface|null $user
      * @return bool
      */
-    public function __invoke(string $action, array $properties, string $userId): bool
+    public function __invoke(string $action, array $properties, $user): bool
     {
         $queryWithGroups = new Query(
             $action,
-            $this->getGroupsByUserId->__invoke($userId),
+            $this->getGroupsByUser->__invoke($user),
             $properties
         );
-
         return $this->runQuery->__invoke($queryWithGroups)->getEffect() === Effects::ALLOW;
     }
 }

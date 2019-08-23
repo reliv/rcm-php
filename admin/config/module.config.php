@@ -664,13 +664,21 @@ return [
     ],
     \Rcm\RequestContext\RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY => [
         'factories' => [
-            \RcmAdmin\Service\PageMutationService::class => \RcmAdmin\Service\PageMutationServiceFactory::class,
-            RcmAdmin\Service\SiteManager::class => \RcmAdmin\Service\SiteManagerFactory::class
+            \Rcm\SecureRepo\PageSecureRepo::class
+            => \Rcm\SecureRepo\PageSecureRepoFactory::class,
+            \Rcm\SecureRepo\SiteSecureRepo::class
+            => \Rcm\SecureRepo\SiteSecureRepoFactory::class
         ]
     ],
     /* service_manager */
     'service_manager' => [
         'config_factories' => [
+            \Rcm\SecurityPropertyProvider\SiteSecurityPropertyProvider::class => [],
+            \Rcm\SecurityPropertyProvider\PageSecurityPropertyProvider::class => [
+                'arguments' => [
+                    \Doctrine\ORM\EntityManager::class
+                ]
+            ],
             \RcmAdmin\Controller\LayoutChoicesController::class => [
                 'arguments' => [
                     \Rcm\Service\LayoutManager::class,

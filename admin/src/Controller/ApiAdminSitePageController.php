@@ -13,7 +13,7 @@ use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\Entity\SitePageApiResponse;
 use RcmAdmin\InputFilter\SitePageCreateInputFilter;
 use RcmAdmin\InputFilter\SitePageUpdateInputFilter;
-use RcmAdmin\Service\PageMutationService;
+use Rcm\SecureRepo\PageSecureRepo;
 use RcmUser\Service\RcmUserService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -33,7 +33,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ApiAdminSitePageController extends ApiAdminBaseController
 {
     /**
-     * @var PageMutationService
+     * @var PageSecureRepo
      */
     protected $pageMutationService;
 
@@ -50,7 +50,7 @@ class ApiAdminSitePageController extends ApiAdminBaseController
          * @var $requestContext ContainerInterface
          */
         $requestContext = $serviceLocator->get(RequestContext::class);
-        $this->pageMutationService = $requestContext->get(PageMutationService::class);
+        $this->pageMutationService = $requestContext->get(PageSecureRepo::class);
     }
 
     /**

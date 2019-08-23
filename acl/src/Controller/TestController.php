@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Rcm\Acl\IsAllowed;
 use Rcm\RequestContext\GetRequestContext;
+use Rcm\RequestContext\RequestContext;
 use Zend\Diactoros\Response\HtmlResponse;
 
 /**
@@ -17,10 +18,10 @@ class TestController implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $isAllowed = GetRequestContext::invoke($request)->get(IsAllowed::class);
+        $isAllowed = $request->getAttribute(RequestContext::class)->get(IsAllowed::class);
         if (!$isAllowed->__invoke(
-            'readTest',
-            ['testPropKey1' => 'testPropValue1'])
+            'read',
+            ['contentType' => 'page', 'country' => 'USA', 'type' => 'content'])
         ) {
             return new HtmlResponse('access denied', 401);
         }

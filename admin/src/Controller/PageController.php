@@ -3,6 +3,7 @@
 namespace RcmAdmin\Controller;
 
 use Psr\Container\ContainerInterface;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
 use Rcm\Entity\Page;
 use Rcm\Entity\Site;
@@ -17,7 +18,8 @@ use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Page\PageTypes\PageTypes;
 use Rcm\Repository\Page as PageRepo;
 use Rcm\Tracking\Exception\TrackingException;
-use RcmAdmin\Service\PageMutationService;
+use Rcm\Http\NotAllowedResponseJsonZf2;
+use Rcm\SecureRepo\PageSecureRepo;
 use RcmUser\Service\RcmUserService;
 use RcmUser\User\Entity\UserInterface;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -30,14 +32,6 @@ use Zend\View\Model\ViewModel;
  *
  * This is Admin Page Controller for the CMS.  This should extend from
  * the base class and should need no further modification.
- *
- * @category  Reliv
- * @package   RcmAdmin
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: 1.0
- * @link      http://github.com/reliv
  *
  * @method Response redirectToPage($pageName, $pageType) Redirect to CMS
  *                                                                  Page
@@ -62,16 +56,9 @@ class PageController extends AbstractActionController
      */
     protected $view;
 
-    /**
-     * @var RcmUserService
-     */
-    protected $rcmUserService;
-
     protected $immuteblePageVersionRepo;
 
     protected $revisionRepo;
-
-    protected $currentRequestContext;
 
     /**
      * @param Site $currentSite
@@ -79,14 +66,11 @@ class PageController extends AbstractActionController
      * @param PageRepo $pageRepo
      */
     public function __construct(
-        ContainerInterface $currentRequestContext,
-        Site $currentSite,
-        RcmUserService $rcmUserService
+        PageSecureRepo $pageSecureRepo,
+        Site $currentSite
     ) {
-        $this->pageMutationService = $currentRequestContext->get(PageMutationService::class);
+        $this->pageSecureRepo = $pageSecureRepo;
         $this->currentSite = $currentSite;
-        $this->rcmUserService = $rcmUserService;
-        $this->currentRequestContext = $currentRequestContext;
 
         $this->view = new ViewModel();
         $this->view->setTerminal(true);
@@ -98,20 +82,8 @@ class PageController extends AbstractActionController
      */
     public function newAction()
     {
-        if (!$this->rcmUserService->isAllowed(
-            $this->getServiceLocator()->get(ResourceName::class)->get(
-                ResourceName::RESOURCE_SITES,
-                $this->currentSite->getSiteId(),
-                ResourceName::RESOURCE_PAGES
-            ),
-            'create'
-        )
-        ) {
-            $response = new Response();
-            $response->setStatusCode('401');
+        /** @oldControllerAclAccessCheckReplacedWithDeeperSecureRepoCheck */
 
-            return $response;
-        }
 
         /** @var \RcmAdmin\Form\NewPageForm $form */
         $form = $this->getServiceLocator()
@@ -142,16 +114,24 @@ class PageController extends AbstractActionController
                 && !empty($validatedData['main-layout'])
             ) {
                 $validatedData['siteLayoutOverride'] = $validatedData['main-layout'];
-                $this->pageMutationService->createNewPage(
-                    $this->currentSite->getSiteId(),
-                    $validatedData['name'],
-                    $validatedData['pageType'],
-                    $validatedData
-                );
+                try {
+                    $this->pageSecureRepo->createNewPage(
+                        $this->currentSite->getSiteId(),
+                        $validatedData['name'],
+                        $validatedData['pageType'],
+                        $validatedData
+                    );
+                } catch (NotAllowedException $e) {
+                    return new NotAllowedResponseJsonZf2();
+                }
             } elseif (!empty($validatedData['page-template'])) {
-                $this->pageMutationService->createNewPageFromTemplate(
-                    $validatedData
-                );
+                try {
+                    $this->pageSecureRepo->createNewPageFromTemplate(
+                        $validatedData
+                    );
+                } catch (NotAllowedException $e) {
+                    return new NotAllowedResponseJsonZf2();
+                }
             } else {
                 throw new \Exception('Could not figure out creation method from request properties');
             }
@@ -201,21 +181,7 @@ class PageController extends AbstractActionController
 //            return $response;
 //        }
 
-        //ACL access check
-        if (!$this->rcmUserService->isAllowed(
-            $this->getServiceLocator()->get(ResourceName::class)->get(
-                ResourceName::RESOURCE_SITES,
-                $this->currentSite->getSiteId(),
-                ResourceName::RESOURCE_PAGES
-            ),
-            'edit'
-        )
-        ) {
-            $response = new Response();
-            $response->setStatusCode('401');
-
-            return $response;
-        }
+        /** @oldControllerAclAccessCheckReplacedWithDeeperSecureRepoCheck */
 
         $pageName = $this->getEvent()
             ->getRouteMatch()
@@ -238,8 +204,8 @@ class PageController extends AbstractActionController
                 'n'
             );
 
-        return $this->redirect()->toUrl(
-            $this->pageMutationService->publishPageRevision(
+        try {
+            $newUrl = $this->pageSecureRepo->publishPageRevision(
                 $this->currentSite->getSiteId(),
                 $pageName,
                 $pageType,
@@ -247,8 +213,12 @@ class PageController extends AbstractActionController
                 function ($pageName, $pageType = 'n', $pageRevision = null) {
                     return $this->urlToPage($pageName, $pageType, $pageRevision);
                 }
-            )
-        );
+            );
+        } catch (NotAllowedException $e) {
+            return new NotAllowedResponseJsonZf2();
+        }
+
+        return $this->redirect()->toUrl($newUrl);
     }
 
     /**
@@ -270,21 +240,7 @@ class PageController extends AbstractActionController
             return $response;
         }
 
-        //ACL access check
-        if (!$this->rcmUserService->isAllowed(
-            $this->getServiceLocator()->get(ResourceName::class)->get(
-                ResourceName::RESOURCE_SITES,
-                $this->currentSite->getSiteId(),
-                ResourceName::RESOURCE_PAGES
-            ),
-            'edit'
-        )
-        ) {
-            $response = new Response();
-            $response->setStatusCode('401');
-
-            return $response;
-        }
+        /** @oldControllerAclAccessCheckReplacedWithDeeperSecureRepoCheck */
 
         // @todo - might validate these against the data coming in
         $pageName = $this->getEvent()
@@ -311,8 +267,8 @@ class PageController extends AbstractActionController
         //Note: This should probably come out of the ZF2 request instead but that didn't seem to work
         $data = json_decode(file_get_contents('php://input'), true);
 
-        return $this->getJsonResponse(
-            $this->pageMutationService->savePageDraft(
+        try {
+            $responseData = $this->pageSecureRepo->savePageDraft(
                 $pageName,
                 $pageType,
                 $data,
@@ -320,8 +276,12 @@ class PageController extends AbstractActionController
                     return $this->urlToPage($pageName, $pageType, $pageRevision);
                 },
                 $originalRevisionId
-            )
-        );
+            );
+        } catch (NotAllowedException $e) {
+            return new NotAllowedResponseJsonZf2();
+        }
+
+        return $this->getJsonResponse($responseData);
     }
 
     /**

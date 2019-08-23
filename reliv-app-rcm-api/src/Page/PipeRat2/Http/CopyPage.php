@@ -7,13 +7,15 @@ use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Api\Repository\Page\FindPageById;
 use Rcm\Api\Repository\Page\PageExists;
 use Rcm\RequestContext\RequestContext;
-use RcmAdmin\Service\PageMutationService;
+use Rcm\SecureRepo\PageSecureRepo;
 use RcmUser\Api\Authentication\GetCurrentUser;
 use Reliv\PipeRat2\Core\Api\ResponseWithDataBody;
 use Reliv\PipeRat2\Core\DataResponseBasic;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 
 class CopyPage implements MiddlewareInterface
@@ -91,16 +93,20 @@ class CopyPage implements MiddlewareInterface
         $requestContext = $request->getAttribute(RequestContext::class);
 
         /**
-         * @var $pageMutationService PageMutationService
+         * @var $pageMutationService PageSecureRepo
          */
-        $pageMutationService = $requestContext->get(PageMutationService::class);
+        $pageMutationService = $requestContext->get(PageSecureRepo::class);
 
-        $pageMutationService->duplicatePage(
-            $sourcePage,
-            $destinationSite->getSiteId(),
-            $data['name'],
-            $pageType
-        );
+        try {
+            $pageMutationService->duplicatePage(
+                $sourcePage,
+                $destinationSite->getSiteId(),
+                $data['name'],
+                $pageType
+            );
+        } catch (NotAllowedException $e) {
+            return new HtmlResponse('Forbidden', 403);
+        }
 
         return new JsonResponse(['success' => true]);
     }
