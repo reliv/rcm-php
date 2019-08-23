@@ -72,6 +72,18 @@ class PageSecureRepoTest extends TestCase
             ->with()
             ->andReturn($this->currentUser);
         $this->assertIsAllowed = m::mock(AssertIsAllowed::class);
+
+        $this->pageSecureRepo = new PageSecureRepo(
+            $this->entityManager,
+            $this->immuteblePageVersionRepo,
+            $this->immutableSiteWideContainerRepo,
+            $this->immutablePageContentFactory,
+            $this->rcmPageNameToPathname,
+            $this->pageSecurityPropertiesProvider,
+            $this->currentSite,
+            $this->getCurrentUser,
+            $this->assertIsAllowed
+        );
     }
 
     public function tearDown()
@@ -112,18 +124,6 @@ class PageSecureRepoTest extends TestCase
 
         $this->expectException(NotAllowedByQueryRunException::class);
 
-        $this->pageSecureRepo = new PageSecureRepo(
-            $this->entityManager,
-            $this->immuteblePageVersionRepo,
-            $this->immutableSiteWideContainerRepo,
-            $this->immutablePageContentFactory,
-            $this->rcmPageNameToPathname,
-            $this->pageSecurityPropertiesProvider,
-            $this->currentSite,
-            $this->getCurrentUser,
-            $this->assertIsAllowed
-        );
-
         $this->pageSecureRepo->publishPageRevision($siteId, 'fun-page-1', 'p', $pageRevisionId);
     }
 
@@ -157,19 +157,45 @@ class PageSecureRepoTest extends TestCase
 
         $this->expectException(NotAllowedByQueryRunException::class);
 
-        $this->pageSecureRepo = new PageSecureRepo(
-            $this->entityManager,
-            $this->immuteblePageVersionRepo,
-            $this->immutableSiteWideContainerRepo,
-            $this->immutablePageContentFactory,
-            $this->rcmPageNameToPathname,
-            $this->pageSecurityPropertiesProvider,
-            $this->currentSite,
-            $this->getCurrentUser,
-            $this->assertIsAllowed
-        );
-
         $this->pageSecureRepo->publishPageRevision($siteId, 'fun-page-1', 'p', $pageRevisionId);
+    }
+
+    public function testUpdatePublishedVersionOfPageRunsTheCorrectAclQueryAndThrowsIfAclSaysNoUpdateAccess()
+    {
+
+        $siteId = 7789;
+        $pageRevisionId = 98769;
+
+        $securityProperties = ['somePropKey' => 'somePropValue'];
+
+        $this->pageSecurityPropertiesProvider->allows('findSecurityPropertiesFromCreationData')
+            ->with(['siteId' => $siteId])
+            ->andReturn($securityProperties);
+
+        $this->assertIsAllowed->allows('__invoke')
+            ->withArgs(function ($action, $props) use ($securityProperties) {
+                return $action === AclActions::READ
+                    && $this->arraysEqual($props, $securityProperties);
+            });
+
+        $this->assertIsAllowed->shouldReceive('__invoke')
+            ->withArgs(function ($action, $props) use ($securityProperties) {
+                return $action === AclActions::UPDATE
+                    && $this->arraysEqual($props, $securityProperties);
+            })
+            ->andThrow(new NotAllowedByQueryRunException());
+
+        $this->pageRepo->shouldNotReceive('publishPageRevision');
+        $this->immuteblePageVersionRepo->shouldNotReceive('publish');
+
+        $this->expectException(NotAllowedByQueryRunException::class);
+
+        $pageSite = m::mock(Site::class);
+        $pageSite->allows('getSiteId')->andReturns($siteId);
+        $page = m::mock(Page::class);
+        $page->allows('getSite')->andReturns($pageSite);
+
+        $this->pageSecureRepo->updatePublishedVersionOfPage($page, []);
     }
 
     public function testSavePageDraftRunsTheCorrectAclQueryAndThrowsIfAclSaysNoUpdateAccess()
@@ -200,18 +226,6 @@ class PageSecureRepoTest extends TestCase
 
         $this->expectException(NotAllowedByQueryRunException::class);
 
-        $this->pageSecureRepo = new PageSecureRepo(
-            $this->entityManager,
-            $this->immuteblePageVersionRepo,
-            $this->immutableSiteWideContainerRepo,
-            $this->immutablePageContentFactory,
-            $this->rcmPageNameToPathname,
-            $this->pageSecurityPropertiesProvider,
-            $this->currentSite,
-            $this->getCurrentUser,
-            $this->assertIsAllowed
-        );
-
         $this->pageSecureRepo->savePageDraft(
             'fun-page-name',
             'p',
@@ -220,5 +234,91 @@ class PageSecureRepoTest extends TestCase
             },
             $pageRevisionId
         );
+    }
+
+    public function testCreateNewPageRunsTheCorrectAclQueryAndThrowsIfAclSaysNoCreateAccess()
+    {
+
+        $siteId = 7789;
+        $pageRevisionId = 98769;
+
+        $securityProperties = ['somePropKey' => 'somePropValue'];
+
+        $this->pageSecurityPropertiesProvider->allows('findSecurityPropertiesFromCreationData')
+            ->with(['siteId' => $siteId])
+            ->andReturn($securityProperties);
+
+        $this->assertIsAllowed->shouldReceive('__invoke')
+            ->withArgs(function ($action, $props) use ($securityProperties) {
+                return $action === AclActions::CREATE
+                    && $this->arraysEqual($props, $securityProperties);
+            })
+            ->andThrow(new NotAllowedByQueryRunException());
+
+        $this->pageRepo->shouldNotReceive('savePage');
+        $this->immuteblePageVersionRepo->shouldNotReceive('createUnpublished');
+
+        $this->expectException(NotAllowedByQueryRunException::class);
+
+        $this->pageSecureRepo->createNewPage($siteId, 'fun-page', 'p', []);
+    }
+
+    public function testCreateNewPageFromTemplateeRunsTheCorrectAclQueryAndThrowsIfAclSaysNoCreateAccess()
+    {
+
+        $siteId = 7789;
+        $pageRevisionId = 98769;
+
+        $securityProperties = ['somePropKey' => 'somePropValue'];
+
+        $this->pageSecurityPropertiesProvider->allows('findSecurityPropertiesFromCreationData')
+            ->with(['siteId' => $siteId])
+            ->andReturn($securityProperties);
+
+        $this->assertIsAllowed->shouldReceive('__invoke')
+            ->withArgs(function ($action, $props) use ($securityProperties) {
+                return $action === AclActions::CREATE
+                    && $this->arraysEqual($props, $securityProperties);
+            })
+            ->andThrow(new NotAllowedByQueryRunException());
+
+        $this->pageRepo->shouldNotReceive('savePage');
+        $this->immuteblePageVersionRepo->shouldNotReceive('createUnpublished');
+
+        $this->expectException(NotAllowedByQueryRunException::class);
+
+        $this->pageSecureRepo->createNewPageFromTemplate(['siteId' => $siteId]);
+    }
+
+    public function testDepublishPageRunsTheCorrectAclQueryAndThrowsIfAclSaysNoDeleteAccess()
+    {
+
+        $siteId = 7789;
+        $pageRevisionId = 98769;
+
+        $securityProperties = ['somePropKey' => 'somePropValue'];
+
+        $this->pageSecurityPropertiesProvider->allows('findSecurityPropertiesFromCreationData')
+            ->with(['siteId' => $siteId])
+            ->andReturn($securityProperties);
+
+        $this->assertIsAllowed->shouldReceive('__invoke')
+            ->withArgs(function ($action, $props) use ($securityProperties) {
+                return $action === AclActions::DELETE
+                    && $this->arraysEqual($props, $securityProperties);
+            })
+            ->andThrow(new NotAllowedByQueryRunException());
+
+        $this->pageRepo->shouldNotReceive('savePage');
+        $this->immuteblePageVersionRepo->shouldNotReceive('createUnpublished');
+
+        $this->expectException(NotAllowedByQueryRunException::class);
+
+        $pageSite = m::mock(Site::class);
+        $pageSite->allows('getSiteId')->andReturns($siteId);
+        $page = m::mock(Page::class);
+        $page->allows('getSite')->andReturns($pageSite);
+
+        $this->pageSecureRepo->depublishPage($page);
     }
 }

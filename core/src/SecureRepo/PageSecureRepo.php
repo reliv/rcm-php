@@ -169,7 +169,7 @@ class PageSecureRepo
         $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new page
             AclActions::CREATE,
             $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
-                'siteId' => $siteId,
+                'siteId' => $data['siteId'],
             ])
         );
         $user = $this->currentUser;
