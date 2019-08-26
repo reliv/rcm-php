@@ -94,8 +94,7 @@ class ModuleConfig
                     ],
                     ChangeLogListController::class => [
                         'arguments' => [
-                            GetAllSortedChangeLogEventsByDateRange::class,
-                            IsAllowed::class
+                            GetAllSortedChangeLogEventsByDateRange::class
                         ]
                     ],
                     GetHumanReadableChangeLogEventsByDateRange::class => [

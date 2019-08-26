@@ -35,17 +35,14 @@ class ChangeLogListController implements MiddlewareInterface
     protected $getHumanReadableChangeLogByDateRange;
 
     protected $defaultNumberOfDays = 30;
-    protected $isAllowed;
 
     /**
      * @param GetHumanReadableChangeLogByDateRange $getHumanReadableChangeLogByDateRange
      */
     public function __construct(
-        GetAllSortedChangeLogEventsByDateRange $getHumanReadableChangeLogByDateRange,
-        IsAllowed $isAllowed
+        GetAllSortedChangeLogEventsByDateRange $getHumanReadableChangeLogByDateRange
     ) {
         $this->getHumanReadableChangeLogByDateRange = $getHumanReadableChangeLogByDateRange;
-        $this->isAllowed = $isAllowed;
     }
 
     /**
