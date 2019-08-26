@@ -138,13 +138,13 @@ class ModuleConfig
                                     \Rcm\ImmutableHistory\SiteSettingsSection\HumanReadableDescriber::class
                                 ]
                             ],
-//                            [ //@TODO re-enable (temporarily disabled because was breaking local environment)
-//                                'addVersionType',
-//                                [
-//                                    ['literal' => ImmutableI18nMessageVersionEntity::class],
-//                                    \Rcm\ImmutableHistory\I18nMessage\HumanReadableDescriber::class
-//                                ]
-//                            ],
+                            [
+                                'addVersionType',
+                                [
+                                    ['literal' => ImmutableI18nMessageVersionEntity::class],
+                                    \Rcm\ImmutableHistory\I18nMessage\HumanReadableDescriber::class
+                                ]
+                            ],
                         ]
                     ],
                     \Rcm\ImmutableHistory\Site\HumanReadableDescriber::class => [],

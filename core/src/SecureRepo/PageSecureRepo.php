@@ -348,7 +348,7 @@ class PageSecureRepo
         $urlToPageFunction,
         int $originalRevisionId
     ) {
-        $site = $this->currentSite;// @TODO ideall convert this to be a method arg
+        $site = $this->currentSite;
         $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the page we are saving
             AclActions::UPDATE,
             $this->pageSecurityPropertiesProvider->findSecurityProperties([
