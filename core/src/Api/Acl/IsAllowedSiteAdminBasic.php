@@ -13,7 +13,6 @@ use Rcm\Api\GetPsrRequest;
 use Rcm\Entity\Site;
 use RcmUser\Api\Acl\IsAllowed;
 
-
 class IsAllowedSiteAdminBasic implements IsAllowedSiteAdmin
 {
     protected $assertIsAllowed;
