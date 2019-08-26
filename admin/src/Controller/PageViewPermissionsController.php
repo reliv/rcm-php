@@ -3,12 +3,15 @@
 namespace RcmAdmin\Controller;
 
 use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
 use Rcm\Acl\IsAllowed;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
+use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Http\NotAllowedResponseJsonZf2;
 use Rcm\Http\Response;
 use Rcm\RequestContext\RequestContext;
-use Rcm\SecurityPropertyProvider\PageSecurityPropertyProvider;
+use Rcm\SecurityPropertiesProvider\PageSecurityPropertiesProvider;
 use RcmUser\Acl\Entity\AclRule;
 use RcmUser\Service\RcmUserService;
 use Zend\Mvc\Controller\AbstractRestfulController;
@@ -97,10 +100,10 @@ class PageViewPermissionsController extends AbstractRestfulController
 
         $page = $this->pageRepo->getPageByName($currentSite, $pageName, $pageType);
         $isAllowed = $this->serviceLocator->get(RequestContext::class)->get(IsAllowed::class);
-        $pageSecurityPropertyProvider = $this->serviceLocator->get(PageSecurityPropertyProvider::class);
+        $pageSecurityPropertiesProvider = $this->serviceLocator->get(PageSecurityPropertiesProvider::class);
         if (!$isAllowed->__invoke(// Check if we have access to CREATE the new site
             AclActions::UPDATE,
-            $pageSecurityPropertyProvider->findSecurityProperties([
+            $pageSecurityPropertiesProvider->findSecurityProperties([
                 'siteId' => $page->getSiteId()
             ])
         )) {
@@ -133,15 +136,25 @@ class PageViewPermissionsController extends AbstractRestfulController
             RcmUserService::class
         );
 
-        if (!$rcmUserService->isAllowed($resourceId, 'edit')
-            && !$rcmUserService->isAllowed(
-                ResourceName::RESOURCE_PAGES,
-                'edit'
-            )
-        ) {
-            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+        /** @oldControllerAclAccessCheckReplaced */
 
-            return $this->getResponse();
+        /**
+         * @var AssertIsAllowed $assertIsAllowed
+         */
+        $assertIsAllowed = $this->getServiceLocator()->get(RequestContext::class)
+            ->get(AssertIsAllowed::class);
+
+        try {
+            $assertIsAllowed->__invoke(
+                AclActions::UPDATE,
+                [
+                    'type' => SecurityPropertyConstants::TYPE_CONTENT,
+                    'country' => $currentSite->getCountryIso3(),
+                    SecurityPropertyConstants::CONTENT_TYPE_PAGE
+                ]
+            );
+        } catch (NotAllowedException $e) {
+            return new NotAllowedResponseJsonZf2();
         }
 
         //IS PAGE VALID?

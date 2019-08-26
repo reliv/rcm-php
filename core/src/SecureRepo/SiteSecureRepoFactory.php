@@ -5,8 +5,9 @@ namespace Rcm\SecureRepo;
 use Psr\Container\ContainerInterface;
 use Rcm\Acl\AssertIsAllowed;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
-use Rcm\SecurityPropertyProvider\SiteSecurityPropertyProvider;
+use Rcm\SecurityPropertiesProvider\SiteSecurityPropertiesProvider;
 use Rcm\Service\CurrentSite;
+use Rcm\Service\LayoutManager;
 use RcmUser\Service\RcmUserService;
 
 class SiteSecureRepoFactory
@@ -21,10 +22,11 @@ class SiteSecureRepoFactory
             $requestContext->get('Rcm\ImmutableHistory\SiteWideContainerVersionRepo'),
             $requestContext->get(PageContentFactory::class),
             $requestContext->get(\Rcm\Acl\GetCurrentUser::class),
-            $requestContext->get(SiteSecurityPropertyProvider::class),
+            $requestContext->get(SiteSecurityPropertiesProvider::class),
             $requestContext->get(AssertIsAllowed::class),
             new SiteSecureRepoPaginatorFactory(),
-            $requestContext->get(CurrentSite::class)
+            $requestContext->get(CurrentSite::class),
+            $requestContext->get(LayoutManager::class)
         );
     }
 }

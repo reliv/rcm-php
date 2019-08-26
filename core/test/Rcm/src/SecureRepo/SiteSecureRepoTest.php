@@ -23,6 +23,8 @@ use Rcm\SecureRepo\PageSecureRepo;
 use Rcm\SecureRepo\SiteSecureRepo;
 use \Mockery as m;
 use Rcm\SecureRepo\SiteSecureRepoPaginatorFactory;
+use Rcm\SecurityPropertiesProvider\SiteSecurityPropertiesProvider;
+use Rcm\Service\LayoutManager;
 use RcmUser\User\Entity\UserInterface;
 use Zend\Paginator\Paginator;
 
@@ -82,7 +84,7 @@ class SiteSecureRepoTest extends TestCase
         $this->immutebleSiteVersionRepo = m::mock(VersionRepositoryInterface::class);
         $this->immutableSiteWideContainerRepo = m::mock(VersionRepositoryInterface::class);
         $this->immutablePageContentFactory = m::mock(PageContentFactory::class);
-        $this->siteSecurityPropertiesProvider = m::mock(SecurityPropertiesProviderInterface::class);
+        $this->siteSecurityPropertiesProvider = m::mock(SiteSecurityPropertiesProvider::class);
         $this->currentSite = m::mock(Site::class);
         $this->currentUser = m::mock(UserInterface::class);
         $this->getCurrentUser = m::mock(GetCurrentUser::class);
@@ -113,7 +115,8 @@ class SiteSecureRepoTest extends TestCase
             $this->siteSecurityPropertiesProvider,
             $this->assertIsAllowed,
             $this->paginatorFactory,
-            $this->currentSite
+            $this->currentSite,
+            m::mock(LayoutManager::class)
         );
     }
 

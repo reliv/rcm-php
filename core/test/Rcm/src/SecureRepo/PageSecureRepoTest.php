@@ -18,6 +18,7 @@ use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\SecureRepo\PageSecureRepo;
 use \Mockery as m;
+use Rcm\SecurityPropertiesProvider\PageSecurityPropertiesProvider;
 use RcmUser\User\Entity\UserInterface;
 
 class PageSecureRepoTest extends TestCase
@@ -64,7 +65,7 @@ class PageSecureRepoTest extends TestCase
         $this->immutableSiteWideContainerRepo = m::mock(VersionRepositoryInterface::class);
         $this->immutablePageContentFactory = m::mock(PageContentFactory::class);
         $this->rcmPageNameToPathname = m::mock(RcmPageNameToPathname::class);
-        $this->pageSecurityPropertiesProvider = m::mock(SecurityPropertiesProviderInterface::class);
+        $this->pageSecurityPropertiesProvider = m::mock(PageSecurityPropertiesProvider::class);
         $this->currentSite = m::mock(Site::class);
         $this->currentUser = m::mock(UserInterface::class);
         $this->getCurrentUser = m::mock(GetCurrentUser::class);

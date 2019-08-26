@@ -1,11 +1,11 @@
 <?php
 
-namespace Rcm\SecurityPropertyProvider;
+namespace Rcm\SecurityPropertiesProvider;
 
 use Rcm\Acl\SecurityPropertiesProviderInterface;
 use Rcm\Acl2\SecurityPropertyConstants;
 
-class SiteSecurityPropertyProvider implements SecurityPropertiesProviderInterface
+class SiteSecurityPropertiesProvider implements SecurityPropertiesProviderInterface
 {
     public function findSecurityProperties($data): array
     {

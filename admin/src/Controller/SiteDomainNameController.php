@@ -19,24 +19,15 @@ use RcmUser\Api\Acl\IsAllowed;
 
 class SiteDomainNameController implements MiddlewareInterface
 {
-    protected $currentSite;
-
-    protected $isAllowed;
-
+    /**
+     * @var SiteSecureRepo $siteSecureRepo
+     */
     protected $siteSecureRepo;
 
-    protected $getIdentity;
-
     public function __construct(
-        Site $currentSite,
-        IsAllowed $isAllowed,
-        ContainerInterface $requestContext,
-        GetIdentity $getIdentity
+        ContainerInterface $requestContext
     ) {
-        $this->currentSite = $currentSite;
-        $this->isAllowed = $isAllowed;
-        $this->siteSecureRepo = $requestContext->get(PageSecureRepo::class);
-        $this->getIdentity = $getIdentity;
+        $this->siteSecureRepo = $requestContext->get(SiteSecureRepo::class);
     }
 
     /**
@@ -56,16 +47,18 @@ class SiteDomainNameController implements MiddlewareInterface
 
         $body = $request->getParsedBody();
 
-        if (!isset($body['host'])) {
+        $newHost = $body['host'];
+
+        if (!isset($newHost)) {
             return new JsonResponse(['error' => '"host" field is required'], 400);
         }
         try {
-            $this->siteSecureRepo->changeSiteDomainName($this->currentSite, $body['host']);
+            $this->siteSecureRepo->changeSiteDomainName($this->currentSite, $newHost);
         } catch (NotAllowedException $e) {
             return $this->buildNotFoundOrAccessDeniedResponse();
         }
 
-        return new JsonResponse(['host' => $this->currentSite->getDomain()->getDomainName()]);
+        return new JsonResponse(['host' => (string)$newHost]);
     }
 
     protected function buildNotFoundOrAccessDeniedResponse()

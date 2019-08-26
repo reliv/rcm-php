@@ -27,6 +27,7 @@ use Rcm\ImmutableHistory\SiteWideContainer\ContainerContent;
 use Rcm\ImmutableHistory\SiteWideContainer\SiteWideContainerLocator;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Repository\Page as PageRepo;
+use Rcm\SecurityPropertiesProvider\PageSecurityPropertiesProvider;
 use Rcm\Tracking\Exception\TrackingException;
 use RcmAdmin\Exception\CannotDuplicateAnUnpublishedPageException;
 use RcmMessage\Api\GetCurrentUserId;
@@ -75,7 +76,7 @@ class PageSecureRepo
         VersionRepositoryInterface $immutableSiteWideContainerRepo,
         PageContentFactory $immutablePageContentFactory,
         RcmPageNameToPathname $rcmPageNameToPathname,
-        SecurityPropertiesProviderInterface $pageSecurityPropertiesProvider,
+        PageSecurityPropertiesProvider $pageSecurityPropertiesProvider,
         Site $currentSite,
         GetCurrentUser $getCurrentUser,
         AssertIsAllowed $assertIsAllowed
@@ -91,6 +92,48 @@ class PageSecureRepo
         $this->pageSecurityPropertiesProvider = $pageSecurityPropertiesProvider;
         $this->currentUser = $getCurrentUser->__invoke();
         $this->assertIsAllowed = $assertIsAllowed;
+    }
+
+    /**
+     * @TODO add unit test for ACL assertIsAllowed throw
+     */
+    public function findPagesBySiteId($siteId)
+    {
+        $this->assertIsAllowed->__invoke(// Check if we have access to READ pages for the given site
+            AclActions::READ,
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
+                'siteId' => $siteId,
+            ])
+        );
+
+        $site = $this->entityManager->getRepository(Site::class)->find($siteId);
+
+        if (empty($siteId)) {
+            return [];
+        }
+
+        return $site->getPages();
+    }
+
+    public function find($pageId)
+    {
+        /**
+         * @var Page|null $page
+         */
+        $page = $this->pageRepo->find($pageId);
+
+        if (empty($page)) {
+            throw new NotAllowedBySecurityPropGenerationFailure('page not found');
+        }
+
+        $this->assertIsAllowed->__invoke(// Check if we have access to READ the page
+            AclActions::READ,
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
+                'siteId' => $page->getSiteId(),
+            ])
+        );
+
+        return $page;
     }
 
     /**
@@ -434,6 +477,10 @@ class PageSecureRepo
         );
     }
 
+    /**
+     * @TODO add unit test for assertIsAllowed(READ) throw
+     * @TODO add unit test for assertIsAllowed(CREATE) throw
+     */
     public function duplicatePage(
         Page $page,
         $destinationSiteId,
@@ -471,7 +518,7 @@ class PageSecureRepo
         $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the page we are copying to
             AclActions::CREATE,
             $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $siteId,
+                'siteId' => $destinationSiteId,
             ])
         );
 

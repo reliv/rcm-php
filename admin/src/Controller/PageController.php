@@ -214,7 +214,7 @@ class PageController extends AbstractActionController
         } catch (NotAllowedException $e) {
             return new NotAllowedResponseJsonZf2();
         }
-        $newUrl = $this->urlToPage($page->getName(), $page->getType(), $pageRevision);
+        $newUrl = $this->urlToPage($page->getName(), $page->getPageType(), $pageRevision);
 
         return $this->redirect()->toUrl($newUrl);
     }

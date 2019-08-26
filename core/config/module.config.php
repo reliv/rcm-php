@@ -57,6 +57,40 @@ return [
     /* router */
     'router' => require __DIR__ . '/router.php',
     /* service_manager */
+    \Rcm\RequestContext\RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY => [
+        'config_factories' => [
+            \Rcm\SecureRepo\CountrySecureRepo::class => [
+                'arguments' => [
+                    \Doctrine\ORM\EntityManager::class,
+                    \Rcm\Acl\AssertIsAllowed::class
+                ]
+            ],
+            \Rcm\SecureRepo\LanguageSecureRepo::class => [
+                'arguments' => [
+                    \Doctrine\ORM\EntityManager::class,
+                    \Rcm\Acl\AssertIsAllowed::class
+                ]
+            ],
+            \Rcm\SecureRepo\PageTypeSecureRepo::class => [
+                'arguments' => [
+                    \Rcm\Acl\AssertIsAllowed::class,
+                    'config'
+                ]
+            ],
+            \Rcm\SecureRepo\ThemeSecureRepo::class => [
+                'arguments' => [
+                    \Rcm\Acl\AssertIsAllowed::class,
+                    'config'
+                ]
+            ],
+        ],
+        'factories' => [
+            \Rcm\SecureRepo\PageSecureRepo::class
+            => \Rcm\SecureRepo\PageSecureRepoFactory::class,
+            \Rcm\SecureRepo\SiteSecureRepo::class
+            => \Rcm\SecureRepo\SiteSecureRepoFactory::class,
+        ]
+    ],
     'service_manager' => require __DIR__ . '/service_manager.php',
     /* view_helpers */
     'view_helpers' => [

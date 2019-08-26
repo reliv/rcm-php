@@ -1,12 +1,12 @@
 <?php
 
-namespace Rcm\SecurityPropertyProvider;
+namespace Rcm\SecurityPropertiesProvider;
 
 use Doctrine\ORM\EntityManager;
 use Rcm\Acl\SecurityPropertiesProviderInterface;
 use Rcm\Acl2\SecurityPropertyConstants;
 
-class PageSecurityPropertyProvider implements SecurityPropertiesProviderInterface
+class PageSecurityPropertiesProvider implements SecurityPropertiesProviderInterface
 {
     protected $entityManager;
 

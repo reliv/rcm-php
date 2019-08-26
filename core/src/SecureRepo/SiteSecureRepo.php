@@ -22,6 +22,8 @@ use Rcm\ImmutableHistory\SiteWideContainer\ContainerContent;
 use Rcm\ImmutableHistory\SiteWideContainer\SiteWideContainerLocator;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Page\PageTypes\PageTypes;
+use Rcm\SecurityPropertiesProvider\SiteSecurityPropertiesProvider;
+use Rcm\Service\LayoutManager;
 use Rcm\Tracking\Exception\TrackingException;
 use Rcm\Tracking\Model\Tracking;
 use RcmAdmin\InputFilter\SiteInputFilter;
@@ -64,6 +66,7 @@ class SiteSecureRepo
     protected $currentUser;
     protected $siteSecureRepoPaginatorFactory;
     protected $currentSite;
+    protected $layoutManager;
 
     public function __construct(
         $config,
@@ -73,10 +76,11 @@ class SiteSecureRepo
         VersionRepositoryInterface $immutableSiteWideContainerRepo,
         PageContentFactory $pageContentFactory,
         GetCurrentUser $getCurrentUser,
-        SecurityPropertiesProviderInterface $siteSecurityPropertiesProvider,
+        SiteSecurityPropertiesProvider $siteSecurityPropertiesProvider,
         AssertIsAllowed $assertIsAllowed,
         SiteSecureRepoPaginatorFactory $siteSecureRepoPaginatorFactory,
-        Site $currentSite
+        Site $currentSite,
+        LayoutManager $layoutManager
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
@@ -89,6 +93,7 @@ class SiteSecureRepo
         $this->assertIsAllowed = $assertIsAllowed;
         $this->siteSecureRepoPaginatorFactory = $siteSecureRepoPaginatorFactory;
         $this->currentSite = $currentSite;
+        $this->layoutManager = $layoutManager;
     }
 
     /**
@@ -652,6 +657,22 @@ class SiteSecureRepo
         }
 
         return $data;
+    }
+
+    public function getLayoutChoicesBySite(Site $site)
+    {
+        $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
+            AclActions::READ,
+            $this->siteSecurityPropertiesProvider->findSecurityProperties([
+                'countryIso3' => $site->getCountryIso3()
+            ])
+        );
+
+        $theme = $site->getTheme();
+
+        return $this->layoutManager->siteThemeLayoutsConfigToAssociativeArray(
+            $this->layoutManager->getSiteThemeLayoutsConfig($theme)
+        );
     }
 
     /**

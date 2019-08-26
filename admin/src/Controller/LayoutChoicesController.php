@@ -6,7 +6,10 @@ use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Api\GetSiteByRequest;
+use Rcm\RequestContext\RequestContext;
+use Rcm\SecureRepo\SiteSecureRepo;
 use Rcm\Service\CurrentSite;
 use Rcm\Service\LayoutManager;
 use RcmUser\Api\Acl\IsAllowed;
@@ -14,31 +17,26 @@ use Zend\Diactoros\Response\JsonResponse;
 
 class LayoutChoicesController implements MiddlewareInterface
 {
-    protected $layoutManager;
     protected $getSiteByRequest;
-    protected $isAllowed;
 
     public function __construct(
-        LayoutManager $layoutManager,
-        GetSiteByRequest $getSiteByRequest,
-        IsAllowed $isAllowed
+        GetSiteByRequest $getSiteByRequest
     ) {
-        $this->layoutManager = $layoutManager;
         $this->getSiteByRequest = $getSiteByRequest;
-        $this->isAllowed = $isAllowed;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        if (!$this->isAllowed->__invoke($request, 'sites', 'admin')) {
-            return new JsonResponse('Unauthorized', 401);
+        $siteSecureRepo = $request->getAttribute(RequestContext::class)->get(SiteSecureRepo::class);
+
+        try {
+            $layoutChoices = $siteSecureRepo->getLayoutChoicesBySite(
+                $this->getSiteByRequest->__invoke($request)
+            );
+        } catch (NotAllowedException $e) {
+            return new JsonResponse(['errorMessage' => 'Not Found'], 404);
         }
 
-        $site = $this->getSiteByRequest->__invoke($request);
-        $theme = $site->getTheme();
-        $layoutChoices = $this->layoutManager->siteThemeLayoutsConfigToAssociativeArray(
-            $this->layoutManager->getSiteThemeLayoutsConfig($theme)
-        );
         $layoutChoicesArray = [];
         foreach ($layoutChoices as $value => $label) {
             $layoutChoicesArray[] = [
