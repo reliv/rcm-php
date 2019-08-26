@@ -71,5 +71,4 @@ class ThemeSecureRepo implements SecurityPropertiesProviderInterface
             => SecurityPropertyConstants::ADMIN_TOOL_TYPE_PAGE_THEME
         ];
     }
-
 }
