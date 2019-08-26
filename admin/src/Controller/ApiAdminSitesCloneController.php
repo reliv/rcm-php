@@ -108,15 +108,9 @@ class ApiAdminSitesCloneController extends ApiAdminBaseController
             );
         } catch (NotAllowedException $e) {
             throw $e;
+
             return new NotAllowedResponseJsonZf2();
         }
-//        } catch (\Exception $exception) {
-//            // Remove domain if error occurs
-//            if ($entityManager->contains($domain)) {
-//                $entityManager->remove($domain);
-//            }
-//            throw $exception;
-//        }
 
         return new ApiJsonModel($copySite, 0, 'Success');
     }
