@@ -28,9 +28,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class AdminNavigationFactory extends AbstractNavigationFactory
 {
-    /** @var  IsAllowed */
-    protected $isAllowed;
-
     /** @var \Rcm\Entity\Site */
     protected $currentSite;
 
@@ -56,10 +53,6 @@ class AdminNavigationFactory extends AbstractNavigationFactory
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->isAllowed = $serviceLocator->get(
-            IsAllowed::class
-        );
-
         $this->currentSite = $serviceLocator->get(\Rcm\Service\CurrentSite::class);
 
         $config = $serviceLocator->get('config');
@@ -114,10 +107,10 @@ class AdminNavigationFactory extends AbstractNavigationFactory
     }
 
     /**
-     * @param array           $pages
+     * @param array $pages
      * @param RouteMatch|null $routeMatch
-     * @param Router|null     $router
-     * @param null            $request
+     * @param Router|null $router
+     * @param null $request
      *
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -221,15 +214,6 @@ class AdminNavigationFactory extends AbstractNavigationFactory
                     [$this->currentSite->getSiteId()],
                     $resource
                 );
-            }
-
-            if (!$this->isAllowed->__invoke(
-                GetPsrRequest::invoke(),
-                $resource,
-                $privilege
-            )
-            ) {
-                return false;
             }
         }
 
@@ -343,7 +327,7 @@ class AdminNavigationFactory extends AbstractNavigationFactory
 
     /**
      * @param bool $published
-     * @param int  $limit
+     * @param int $limit
      *
      * @return array|mixed
      * @throws \Doctrine\ORM\NonUniqueResultException

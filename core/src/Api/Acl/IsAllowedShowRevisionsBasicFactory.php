@@ -2,8 +2,10 @@
 
 namespace Rcm\Api\Acl;
 
+use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Rcm\Acl\ResourceName;
+use Rcm\RequestContext\RequestContext;
 use RcmUser\Api\Acl\IsAllowed;
 
 /**
@@ -19,8 +21,8 @@ class IsAllowedShowRevisionsBasicFactory
     public function __invoke($serviceContainer)
     {
         return new IsAllowedShowRevisionsBasic(
-            $serviceContainer->get(ResourceName::class),
-            $serviceContainer->get(IsAllowed::class)
+            $serviceContainer->get(EntityManager::class),
+            $serviceContainer->get(RequestContext::class)
         );
     }
 }

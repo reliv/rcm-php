@@ -2,51 +2,54 @@
 
 namespace Rcm\Api\Acl;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
+use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Api\GetPsrRequest;
 use Rcm\Entity\Site;
 use RcmUser\Api\Acl\IsAllowed;
 
-/**
- * @author James Jervis - https://github.com/jerv13
- */
+
 class IsAllowedSiteAdminBasic implements IsAllowedSiteAdmin
 {
-    protected $resourceName;
-    protected $isAllowed;
+    protected $assertIsAllowed;
 
-    /**
-     * @param ResourceName $resourceName
-     * @param IsAllowed    $isAllowed
-     */
     public function __construct(
-        ResourceName $resourceName,
-        IsAllowed $isAllowed
+        ContainerInterface $requestContext
     ) {
-        $this->resourceName = $resourceName;
-        $this->isAllowed = $isAllowed;
+        $this->assertIsAllowed = $requestContext->get(AssertIsAllowed::class);
     }
 
     /**
      * @param ServerRequestInterface $request
-     * @param Site                   $site
+     * @param Site $site
      *
      * @return bool
      */
     public function __invoke(
         ServerRequestInterface $request,
         Site $site
-    ):bool {
-        $resourceId = $this->resourceName->get(
-            ResourceName::RESOURCE_SITES,
-            $site->getSiteId()
-        );
+    ): bool {
+        /** @oldAclAccessCheckReplaced */
 
-        return $this->isAllowed->__invoke(
-            GetPsrRequest::invoke(),
-            $resourceId,
-            'admin'
-        );
+        try {
+            $this->assertIsAllowed->__invoke(
+                AclActions::UPDATE,
+                [
+                    'type' => SecurityPropertyConstants::TYPE_CONTENT,
+                    SecurityPropertyConstants::CONTENT_TYPE_KEY
+                    => SecurityPropertyConstants::CONTENT_TYPE_SITE,
+                    'country' => $site->getCountryIso3()
+                ]
+            );
+        } catch (NotAllowedException $e) {
+            return false;
+        }
+
+        return true;
     }
 }

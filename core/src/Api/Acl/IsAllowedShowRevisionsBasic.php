@@ -2,35 +2,36 @@
 
 namespace Rcm\Api\Acl;
 
+use Doctrine\ORM\EntityManager;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
+use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Api\GetPsrRequest;
+use Rcm\Entity\Site;
+use Rcm\RequestContext\RequestContext;
 use RcmUser\Api\Acl\IsAllowed;
 
-/**
- * @author James Jervis - https://github.com/jerv13
- */
 class IsAllowedShowRevisionsBasic implements IsAllowedShowRevisions
 {
-    protected $resourceName;
-    protected $isAllowed;
+    protected $entityManager;
+    protected $assertIsAllowed;
 
-    /**
-     * @param ResourceName $resourceName
-     * @param IsAllowed    $isAllowed
-     */
     public function __construct(
-        ResourceName $resourceName,
-        IsAllowed $isAllowed
+        EntityManager $entityManager,
+        ContainerInterface $requestContext
     ) {
-        $this->resourceName = $resourceName;
-        $this->isAllowed = $isAllowed;
+        $this->entityManager = $entityManager;
+        $this->assertIsAllowed = $requestContext->get(AssertIsAllowed::class);
     }
 
     /**
      * @param int|string $siteId
-     * @param string     $pageType
-     * @param string     $pageName
+     * @param string $pageType
+     * @param string $pageName
      *
      * @return bool
      */
@@ -40,60 +41,28 @@ class IsAllowedShowRevisionsBasic implements IsAllowedShowRevisions
         string $pageType,
         string $pageName
     ): bool {
-        $resourceId = $this->resourceName->get(
-            ResourceName::RESOURCE_SITES,
-            $siteId,
-            ResourceName::RESOURCE_PAGES,
-            $pageType,
-            $pageName
-        );
 
-        $allowedRevisions = $this->isAllowed->__invoke(
-            $request,
-            $resourceId,
-            'edit'
-        );
+        $site = $this->entityManager->getRepository(Site::class)->find($siteId);
 
-        if ($allowedRevisions) {
-            return true;
+        if (!$site) {
+            return false;
         }
 
-        $allowedRevisions = $this->isAllowed->__invoke(
-            $request,
-            $resourceId,
-            'approve'
-        );
+        /** @oldAclAccessCheckReplaced */
 
-        if ($allowedRevisions) {
-            return true;
+        try {
+            $this->assertIsAllowed->__invoke(
+                AclActions::UPDATE,
+                [
+                    'type' => SecurityPropertyConstants::TYPE_CONTENT,
+                    'country' => $site->getCountryIso3(),
+                    SecurityPropertyConstants::CONTENT_TYPE_PAGE_HISTORY
+                ]
+            );
+        } catch (NotAllowedException $e) {
+            return false;
         }
 
-        $allowedRevisions = $this->isAllowed->__invoke(
-            $request,
-            $resourceId,
-            'revisions'
-        );
-
-        if ($allowedRevisions) {
-            return true;
-        }
-
-        $pagesResourceId = $this->resourceName->get(
-            ResourceName::RESOURCE_SITES,
-            $siteId,
-            ResourceName::RESOURCE_PAGES
-        );
-
-        $allowedRevisions = $this->isAllowed->__invoke(
-            $request,
-            $pagesResourceId,
-            'create'
-        );
-
-        if ($allowedRevisions) {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }

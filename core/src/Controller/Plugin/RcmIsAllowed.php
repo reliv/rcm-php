@@ -52,6 +52,7 @@ class RcmIsAllowed extends AbstractPlugin
         $privilege = null,
         $providerId = \Rcm\Acl\ResourceProvider::class
     ) {
+        /** @TODO AclByCountryPlanToDeleteAfterFixingClosedSourceDependers */
         return $this->rcmUserService->isAllowed(
             $resourceId,
             $privilege,
