@@ -111,7 +111,7 @@ class PageSecureRepo
     {
         $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new page
             AclActions::CREATE,
-            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
                 'siteId' => $siteId,
             ])
         );
@@ -168,7 +168,7 @@ class PageSecureRepo
     {
         $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new page
             AclActions::CREATE,
-            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
                 'siteId' => $data['siteId'],
             ])
         );
@@ -247,13 +247,13 @@ class PageSecureRepo
     ) {
         $this->assertIsAllowed->__invoke(// Check if we have access to READ the page we are publishing
             AclActions::READ,
-            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
                 'siteId' => $siteId,
             ])
         );
         $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the page we are publishing
             AclActions::UPDATE,
-            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
                 'siteId' => $siteId,
             ])
         );
@@ -308,7 +308,7 @@ class PageSecureRepo
         $site = $this->currentSite;// @TODO ideall convert this to be a method arg
         $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the page we are saving
             AclActions::UPDATE,
-            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
                 'siteId' => $site->getSiteId(),
             ])
         );
@@ -401,7 +401,7 @@ class PageSecureRepo
     {
         $this->assertIsAllowed->__invoke(// Check if we have access to DELETE the page we are deleting
             AclActions::DELETE,
-            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
                 'siteId' => $page->getSite()->getSiteId(),
             ])
         );
@@ -443,7 +443,7 @@ class PageSecureRepo
         $siteId = $page->getSite()->getSiteId();
         $this->assertIsAllowed->__invoke(// Check if we have access to READ the page we are copying from
             AclActions::READ,
-            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
                 'siteId' => $siteId,
             ])
         );
@@ -470,7 +470,7 @@ class PageSecureRepo
 
         $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the page we are copying to
             AclActions::CREATE,
-            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
                 'siteId' => $siteId,
             ])
         );
@@ -539,14 +539,14 @@ class PageSecureRepo
 
         $this->assertIsAllowed->__invoke(// Check if we have access to READ the page we are updating
             AclActions::READ,
-            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
                 'siteId' => $sourceSite->getSiteId(),
             ])
         );
 
         $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the page we are updating
             AclActions::UPDATE,
-            $this->pageSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->pageSecurityPropertiesProvider->findSecurityProperties([
                 'siteId' => $sourceSite->getSiteId(),
             ])
         );

@@ -91,16 +91,6 @@ class PageSecureRepoTest extends TestCase
         m::close();
     }
 
-    protected function arraysEqual($a, $b)
-    {
-        return (
-            is_array($a)
-            && is_array($b)
-            && count($a) == count($b)
-            && array_diff($a, $b) === array_diff($b, $a)
-        );
-    }
-
     public function testPublishPageRevisionRunsTheCorrectAclQueryAndThrowsIfAclSaysNoReadAccess()
     {
 
@@ -109,7 +99,7 @@ class PageSecureRepoTest extends TestCase
 
         $securityProperties = ['somePropKey' => 'somePropValue'];
 
-        $this->pageSecurityPropertiesProvider->allows('findSecurityPropertiesFromCreationData')
+        $this->pageSecurityPropertiesProvider->allows('findSecurityProperties')
             ->with(['siteId' => $siteId])
             ->andReturn($securityProperties);
 
@@ -117,12 +107,16 @@ class PageSecureRepoTest extends TestCase
             ->withArgs(function ($action, $props) use ($securityProperties) {
                 return $action === AclActions::READ
                     && $this->arraysEqual($props, $securityProperties);
-            })->andThrow(new NotAllowedByQueryRunException());
+            })
+            ->once()
+            ->andThrow(new NotAllowedByQueryRunException());
 
         $this->pageRepo->shouldNotReceive('publishPageRevision');
         $this->immuteblePageVersionRepo->shouldNotReceive('publish');
 
         $this->expectException(NotAllowedByQueryRunException::class);
+
+        $this->entityManager->shouldNotReceive('flush');
 
         $this->pageSecureRepo->publishPageRevision($siteId, 'fun-page-1', 'p', $pageRevisionId);
     }
@@ -135,7 +129,7 @@ class PageSecureRepoTest extends TestCase
 
         $securityProperties = ['somePropKey' => 'somePropValue'];
 
-        $this->pageSecurityPropertiesProvider->allows('findSecurityPropertiesFromCreationData')
+        $this->pageSecurityPropertiesProvider->allows('findSecurityProperties')
             ->with(['siteId' => $siteId])
             ->andReturn($securityProperties);
 
@@ -150,12 +144,15 @@ class PageSecureRepoTest extends TestCase
                 return $action === AclActions::UPDATE
                     && $this->arraysEqual($props, $securityProperties);
             })
+            ->once()
             ->andThrow(new NotAllowedByQueryRunException());
 
         $this->pageRepo->shouldNotReceive('publishPageRevision');
         $this->immuteblePageVersionRepo->shouldNotReceive('publish');
 
         $this->expectException(NotAllowedByQueryRunException::class);
+
+        $this->entityManager->shouldNotReceive('flush');
 
         $this->pageSecureRepo->publishPageRevision($siteId, 'fun-page-1', 'p', $pageRevisionId);
     }
@@ -168,7 +165,7 @@ class PageSecureRepoTest extends TestCase
 
         $securityProperties = ['somePropKey' => 'somePropValue'];
 
-        $this->pageSecurityPropertiesProvider->allows('findSecurityPropertiesFromCreationData')
+        $this->pageSecurityPropertiesProvider->allows('findSecurityProperties')
             ->with(['siteId' => $siteId])
             ->andReturn($securityProperties);
 
@@ -183,12 +180,15 @@ class PageSecureRepoTest extends TestCase
                 return $action === AclActions::UPDATE
                     && $this->arraysEqual($props, $securityProperties);
             })
+            ->once()
             ->andThrow(new NotAllowedByQueryRunException());
 
         $this->pageRepo->shouldNotReceive('publishPageRevision');
         $this->immuteblePageVersionRepo->shouldNotReceive('publish');
 
         $this->expectException(NotAllowedByQueryRunException::class);
+
+        $this->entityManager->shouldNotReceive('flush');
 
         $pageSite = m::mock(Site::class);
         $pageSite->allows('getSiteId')->andReturns($siteId);
@@ -206,7 +206,7 @@ class PageSecureRepoTest extends TestCase
 
         $securityProperties = ['somePropKey' => 'somePropValue'];
 
-        $this->pageSecurityPropertiesProvider->allows('findSecurityPropertiesFromCreationData')
+        $this->pageSecurityPropertiesProvider->allows('findSecurityProperties')
             ->with(['siteId' => $siteId])
             ->andReturn($securityProperties);
 
@@ -219,10 +219,13 @@ class PageSecureRepoTest extends TestCase
                 return $action === AclActions::UPDATE
                     && $this->arraysEqual($props, $securityProperties);
             })
+            ->once()
             ->andThrow(new NotAllowedByQueryRunException());
 
         $this->pageRepo->shouldNotReceive('savePage');
         $this->immuteblePageVersionRepo->shouldNotReceive('createUnpublished');
+
+        $this->entityManager->shouldNotReceive('flush');
 
         $this->expectException(NotAllowedByQueryRunException::class);
 
@@ -244,7 +247,7 @@ class PageSecureRepoTest extends TestCase
 
         $securityProperties = ['somePropKey' => 'somePropValue'];
 
-        $this->pageSecurityPropertiesProvider->allows('findSecurityPropertiesFromCreationData')
+        $this->pageSecurityPropertiesProvider->allows('findSecurityProperties')
             ->with(['siteId' => $siteId])
             ->andReturn($securityProperties);
 
@@ -253,10 +256,13 @@ class PageSecureRepoTest extends TestCase
                 return $action === AclActions::CREATE
                     && $this->arraysEqual($props, $securityProperties);
             })
+            ->once()
             ->andThrow(new NotAllowedByQueryRunException());
 
         $this->pageRepo->shouldNotReceive('savePage');
         $this->immuteblePageVersionRepo->shouldNotReceive('createUnpublished');
+
+        $this->entityManager->shouldNotReceive('flush');
 
         $this->expectException(NotAllowedByQueryRunException::class);
 
@@ -271,7 +277,7 @@ class PageSecureRepoTest extends TestCase
 
         $securityProperties = ['somePropKey' => 'somePropValue'];
 
-        $this->pageSecurityPropertiesProvider->allows('findSecurityPropertiesFromCreationData')
+        $this->pageSecurityPropertiesProvider->allows('findSecurityProperties')
             ->with(['siteId' => $siteId])
             ->andReturn($securityProperties);
 
@@ -280,10 +286,13 @@ class PageSecureRepoTest extends TestCase
                 return $action === AclActions::CREATE
                     && $this->arraysEqual($props, $securityProperties);
             })
+            ->once()
             ->andThrow(new NotAllowedByQueryRunException());
 
         $this->pageRepo->shouldNotReceive('savePage');
         $this->immuteblePageVersionRepo->shouldNotReceive('createUnpublished');
+
+        $this->entityManager->shouldNotReceive('flush');
 
         $this->expectException(NotAllowedByQueryRunException::class);
 
@@ -298,7 +307,7 @@ class PageSecureRepoTest extends TestCase
 
         $securityProperties = ['somePropKey' => 'somePropValue'];
 
-        $this->pageSecurityPropertiesProvider->allows('findSecurityPropertiesFromCreationData')
+        $this->pageSecurityPropertiesProvider->allows('findSecurityProperties')
             ->with(['siteId' => $siteId])
             ->andReturn($securityProperties);
 
@@ -307,10 +316,13 @@ class PageSecureRepoTest extends TestCase
                 return $action === AclActions::DELETE
                     && $this->arraysEqual($props, $securityProperties);
             })
+            ->once()
             ->andThrow(new NotAllowedByQueryRunException());
 
         $this->pageRepo->shouldNotReceive('savePage');
         $this->immuteblePageVersionRepo->shouldNotReceive('createUnpublished');
+
+        $this->entityManager->shouldNotReceive('flush');
 
         $this->expectException(NotAllowedByQueryRunException::class);
 
@@ -320,5 +332,15 @@ class PageSecureRepoTest extends TestCase
         $page->allows('getSite')->andReturns($pageSite);
 
         $this->pageSecureRepo->depublishPage($page);
+    }
+
+    protected function arraysEqual($a, $b)
+    {
+        return (
+            is_array($a)
+            && is_array($b)
+            && count($a) == count($b)
+            && array_diff($a, $b) === array_diff($b, $a)
+        );
     }
 }

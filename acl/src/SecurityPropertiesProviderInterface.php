@@ -9,10 +9,4 @@ interface SecurityPropertiesProviderInterface
      * @return array
      */
     public function findSecurityProperties($site): array;
-
-    /**
-     * @param Object|array $data
-     * @return array
-     */
-    public function findSecurityPropertiesFromCreationData($data): array;
 }

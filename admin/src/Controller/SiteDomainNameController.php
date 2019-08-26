@@ -52,8 +52,6 @@ class SiteDomainNameController implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $user = $this->getIdentity->__invoke($request);
-
         /** @oldControllerAclAccessCheckReplacedWithDeeperSecureRepoCheck */
 
         $body = $request->getParsedBody();
@@ -62,7 +60,7 @@ class SiteDomainNameController implements MiddlewareInterface
             return new JsonResponse(['error' => '"host" field is required'], 400);
         }
         try {
-            $this->siteSecureRepo->changeSiteDomainName($this->currentSite, $body['host'], $user->getId());
+            $this->siteSecureRepo->changeSiteDomainName($this->currentSite, $body['host']);
         } catch (NotAllowedException $e) {
             return $this->buildNotFoundOrAccessDeniedResponse();
         }

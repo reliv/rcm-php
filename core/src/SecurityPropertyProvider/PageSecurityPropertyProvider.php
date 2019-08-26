@@ -36,9 +36,4 @@ class PageSecurityPropertyProvider implements SecurityPropertiesProviderInterfac
             'country' => $site->getCountryIso3()
         ];
     }
-
-    public function findSecurityPropertiesFromCreationData($data): array
-    {
-        return $this->findSecurityProperties($data);
-    }
 }

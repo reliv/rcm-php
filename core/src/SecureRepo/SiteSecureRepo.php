@@ -62,22 +62,24 @@ class SiteSecureRepo
     protected $siteSecurityPropertiesProvider;
     protected $assertIsAllowed;
     protected $currentUser;
+    protected $siteSecureRepoPaginatorFactory;
+    protected $currentSite;
 
     public function __construct(
         $config,
         EntityManager $entityManager,
-        RcmUserService $rcmUserService,
         PageSecureRepo $pageMutationService,
         VersionRepositoryInterface $siteVersionRepo,
         VersionRepositoryInterface $immutableSiteWideContainerRepo,
         PageContentFactory $pageContentFactory,
         GetCurrentUser $getCurrentUser,
         SecurityPropertiesProviderInterface $siteSecurityPropertiesProvider,
-        AssertIsAllowed $assertIsAllowed
+        AssertIsAllowed $assertIsAllowed,
+        SiteSecureRepoPaginatorFactory $siteSecureRepoPaginatorFactory,
+        Site $currentSite
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
-        $this->rcmUserService = $rcmUserService;
         $this->pageMutationService = $pageMutationService;
         $this->siteVersionRepo = $siteVersionRepo;
         $this->immutableSiteWideContainerRepo = $immutableSiteWideContainerRepo;
@@ -85,6 +87,8 @@ class SiteSecureRepo
         $this->currentUser = $getCurrentUser->__invoke();
         $this->siteSecurityPropertiesProvider = $siteSecurityPropertiesProvider;
         $this->assertIsAllowed = $assertIsAllowed;
+        $this->siteSecureRepoPaginatorFactory = $siteSecureRepoPaginatorFactory;
+        $this->currentSite = $currentSite;
     }
 
     /**
@@ -122,10 +126,7 @@ class SiteSecureRepo
             $query->setParameter('searchQuery', $searchQuery . '%');
         }
 
-        $adaptor = new DoctrinePaginator(
-            new ORMPaginator($query)
-        );
-        $paginator = new Paginator($adaptor);
+        $paginator = $this->siteSecureRepoPaginatorFactory->__invoke($query);
         $paginator->setDefaultItemCountPerPage(10);
 
         if ($page) {
@@ -139,18 +140,22 @@ class SiteSecureRepo
         $sitesObjects = $paginator->getCurrentItems();
 
         $sites = [];
-
         /** @var \Rcm\Entity\Site $site */
         foreach ($sitesObjects as $site) {
             try {
                 $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
                     AclActions::READ,
-                    $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                    $this->siteSecurityPropertiesProvider->findSecurityProperties([
                         'countryIso3' => $site->getCountryIso3()
                     ])
                 );
                 $sites[] = $site->toArray();
             } catch (NotAllowedException $e) {
+                /**
+                 * Possbile future improvment: Ideally filtering out things that we don't have access
+                 * to should happen BEFORE pagination, not after. Either that or pagination should
+                 * just be removed (which would require other changes to keep decent UI performance).
+                 */
                 continue; //If the user is not allowed to read the site, omit it from the returned list.
             }
         }
@@ -193,7 +198,7 @@ class SiteSecureRepo
 
             $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
                 AclActions::READ,
-                $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                $this->siteSecurityPropertiesProvider->findSecurityProperties([
                     'countryIso3' => $site->getCountryIso3()
                 ])
             );
@@ -203,11 +208,11 @@ class SiteSecureRepo
 
         // get current site data - kinda hacky, but keeps us to one controller
         if ($id == 'current') {
-            $site = $this->getCurrentSite(); //@TODO missing getCurrentSite //@TODO missing getCurrentSite
+            $site = $this->currentSite;
 
             $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
                 AclActions::READ,
-                $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+                $this->siteSecurityPropertiesProvider->findSecurityProperties([
                     'countryIso3' => $site->getCountryIso3()
                 ])
             );
@@ -228,7 +233,7 @@ class SiteSecureRepo
 
         $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
             AclActions::READ,
-            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->siteSecurityPropertiesProvider->findSecurityProperties([
                 'countryIso3' => $site->getCountryIso3()
             ])
         );
@@ -247,7 +252,7 @@ class SiteSecureRepo
     {
         $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new site
             AclActions::CREATE,
-            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->siteSecurityPropertiesProvider->findSecurityProperties([
                 'countryIso3' => $data['countryId']
             ])
         );
@@ -326,15 +331,24 @@ class SiteSecureRepo
             throw new NotAllowedBySecurityPropGenerationFailure('invalid siteId');
         }
 
-        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the new site
+        // Check if we have access to UPDATE the new version of the site
+        $this->assertIsAllowed->__invoke(
             AclActions::UPDATE,
-            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->siteSecurityPropertiesProvider->findSecurityProperties([
                 'countryIso3' => $data['countryId']
             ])
         );
 
         /** @var \Rcm\Entity\Site $site */
-        $site = $siteRepo->findOneBy(['siteId' => $siteId]);
+        $site = $siteRepo->find($siteId);
+
+        // Check if we have access to UPDATE the existing version of the site
+        $this->assertIsAllowed->__invoke(
+            AclActions::UPDATE,
+            $this->siteSecurityPropertiesProvider->findSecurityProperties([
+                'countryIso3' => $site->getCountryIso3()
+            ])
+        );
 
         $newStatus = $site->getStatus();
 
@@ -407,7 +421,7 @@ class SiteSecureRepo
     ) {
         $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new site
             AclActions::CREATE,
-            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->siteSecurityPropertiesProvider->findSecurityProperties([
                 'countryIso3' => $newSite->getCountryIso3()
             ])
         );
@@ -468,7 +482,7 @@ class SiteSecureRepo
 
         $this->assertIsAllowed->__invoke(// Check if we have access to READ the source site
             AclActions::READ,
-            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->siteSecurityPropertiesProvider->findSecurityProperties([
                 'countryIso3' => $existingSite->getCountryIso3()
             ])
         );
@@ -481,7 +495,7 @@ class SiteSecureRepo
 
         $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new site
             AclActions::CREATE,
-            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
+            $this->siteSecurityPropertiesProvider->findSecurityProperties([
                 'countryIso3' => $data['countryId']
             ])
         );
@@ -526,6 +540,53 @@ class SiteSecureRepo
         );
 
         return $copySite;
+    }
+
+    public function changeSiteDomainName(Site $site, $newHost)
+    {
+        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the site
+            AclActions::UPDATE,
+            $this->siteSecurityPropertiesProvider->findSecurityProperties([
+                'countryIso3' => $site->getCountryIso3()
+            ])
+        );
+
+        $user = $this->currentUser;
+
+        if ($user === null) {
+            throw new NotAllowedBySecurityPropGenerationFailure('user cannot be null');
+        }
+
+        $userId = $user->getId();
+
+        $domainObject = $site->getDomain();
+        $oldHost = $domainObject->getDomainName();
+        $oldLocator = new SiteLocator($oldHost);
+
+        /**
+         * For BC support, ensure we have a published version of the site in history
+         * before trying to rename it. This wouldn't be needed if all sites were
+         * created after the immutable history system was launched.
+         */
+        $this->siteVersionRepo->publish(
+            $oldLocator,
+            $this->siteToImmutableSiteContent($site),
+            $userId,
+            __CLASS__ . '::' . __FUNCTION__,
+            $site->getSiteId()
+        );
+
+        //Change the domain name in RCM core
+        $domainObject->setDomainName($newHost);
+        $this->entityManager->flush($domainObject);
+
+        //Change the domain name in the immutable history system
+        $this->siteVersionRepo->relocate(
+            $oldLocator,
+            new SiteLocator($newHost),
+            $userId,
+            __CLASS__ . '::' . __FUNCTION__
+        );
     }
 
     public function siteToImmutableSiteContent(Site $site): SiteContent
@@ -986,44 +1047,5 @@ class SiteSecureRepo
             $entityManager->flush($pages);
             $entityManager->flush($pageRevisions);
         }
-    }
-
-    public function changeSiteDomainName(Site $site, $newHost, string $userId)
-    {
-        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the site
-            AclActions::UPDATE,
-            $this->siteSecurityPropertiesProvider->findSecurityPropertiesFromCreationData([
-                'countryIso3' => $site->getCountryIso3()
-            ])
-        );
-
-        $domainObject = $site->getDomain();
-        $oldHost = $domainObject->getDomainName();
-        $oldLocator = new SiteLocator($oldHost);
-
-        /**
-         * For BC support, ensure we have a published version of the site in history
-         * before trying to rename it. This wouldn't be needed if all sites were
-         * created after the immutable history system was launched.
-         */
-        $this->siteVersionRepo->publish(
-            $oldLocator,
-            $this->siteToImmutableSiteContent($site),
-            $userId,
-            __CLASS__ . '::' . __FUNCTION__,
-            $site->getSiteId()
-        );
-
-        //Change the domain name in RCM core
-        $domainObject->setDomainName($newHost);
-        $this->entityManager->flush($domainObject);
-
-        //Change the domain name in the immutable history system
-        $this->siteVersionRepo->relocate(
-            $oldLocator,
-            new SiteLocator($newHost),
-            $userId,
-            __CLASS__ . '::' . __FUNCTION__
-        );
     }
 }

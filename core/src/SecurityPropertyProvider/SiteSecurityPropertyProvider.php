@@ -19,9 +19,4 @@ class SiteSecurityPropertyProvider implements SecurityPropertiesProviderInterfac
             'country' => $data['countryIso3']
         ];
     }
-
-    public function findSecurityPropertiesFromCreationData($data): array
-    {
-        return $this->findSecurityProperties($data);
-    }
 }

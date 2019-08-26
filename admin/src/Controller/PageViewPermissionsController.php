@@ -100,7 +100,7 @@ class PageViewPermissionsController extends AbstractRestfulController
         $pageSecurityPropertyProvider = $this->serviceLocator->get(PageSecurityPropertyProvider::class);
         if (!$isAllowed->__invoke(// Check if we have access to CREATE the new site
             AclActions::UPDATE,
-            $pageSecurityPropertyProvider->findSecurityPropertiesFromCreationData([
+            $pageSecurityPropertyProvider->findSecurityProperties([
                 'siteId' => $page->getSiteId()
             ])
         )) {
