@@ -24,7 +24,7 @@ class SiteSecureRepoFactory
             $requestContext->get(SiteSecurityPropertyProvider::class),
             $requestContext->get(AssertIsAllowed::class),
             new SiteSecureRepoPaginatorFactory(),
-            $requestContext->get(CurrentSite::class),
+            $requestContext->get(CurrentSite::class)
         );
     }
 }
