@@ -92,17 +92,8 @@ class ModuleConfig
                             ['literal' => __DIR__ . '/../../../../../acl/groups'],
                         ]
                     ],
-                    TestController::class => [
-//                        'arguments' => [
-//                            IsAllowed::class
-//                        ]
-                    ],
-//                    GetCurrentUserId::class => [
-//                        'arguments' => [
-//                            CurrentRequest::class,
-//                            GetCurrentUser::class
-//                        ]
-//                    ]
+//                    TestController::class => [],
+
                 ]
             ],
             'routes' => [
