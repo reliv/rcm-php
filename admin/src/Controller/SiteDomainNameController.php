@@ -7,6 +7,7 @@ use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Entity\Site;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\SecureRepo\PageSecureRepo;
@@ -23,11 +24,14 @@ class SiteDomainNameController implements MiddlewareInterface
      * @var SiteSecureRepo $siteSecureRepo
      */
     protected $siteSecureRepo;
+    protected $currentSite;
 
     public function __construct(
-        ContainerInterface $requestContext
+        ContainerInterface $requestContext,
+        Site $currentSite
     ) {
         $this->siteSecureRepo = $requestContext->get(SiteSecureRepo::class);
+        $this->currentSite = $currentSite;
     }
 
     /**
@@ -63,6 +67,6 @@ class SiteDomainNameController implements MiddlewareInterface
 
     protected function buildNotFoundOrAccessDeniedResponse()
     {
-        return new JsonResponse(['errorMessage' => 'site not found', 404]);
+        return new JsonResponse(['errorMessage' => 'site not found'], 404);
     }
 }

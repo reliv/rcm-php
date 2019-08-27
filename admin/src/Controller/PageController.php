@@ -3,6 +3,7 @@
 namespace RcmAdmin\Controller;
 
 use Psr\Container\ContainerInterface;
+use Rcm\Acl\AclActions;
 use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
 use Rcm\Entity\Page;
@@ -84,6 +85,18 @@ class PageController extends AbstractActionController
     {
         /** @oldControllerAclAccessCheckReplacedWithDeeperSecureRepoCheck */
 
+        /**
+         * This earlier redundant check keeps people out who have invalid form data, rather than
+         * telling them about the form
+         */
+        try {
+            $this->pageSecureRepo->assertIsAllowed(
+                AclActions::CREATE,
+                ['siteId' => $this->currentSite->getSiteId()]
+            );
+        } catch (NotAllowedException $e) {
+            return new NotAllowedResponseJsonZf2();
+        }
 
         /** @var \RcmAdmin\Form\NewPageForm $form */
         $form = $this->getServiceLocator()

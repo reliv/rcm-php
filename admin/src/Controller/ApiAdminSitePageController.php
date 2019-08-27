@@ -116,6 +116,10 @@ class ApiAdminSitePageController extends ApiAdminBaseController
      */
     public function update($id, $data)
     {
+        if ($this->getCurrentUser() === null) {
+            return new NotAllowedResponseJsonZf2();
+        }
+
         $siteId = $this->getRequestSiteId();
 
         /** @oldControllerAclAccessCheckReplacedWithDeeperSecureRepoCheck */

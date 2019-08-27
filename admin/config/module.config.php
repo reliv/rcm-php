@@ -679,6 +679,7 @@ return [
             \RcmAdmin\Controller\SiteDomainNameController::class => [
                 'arguments' => [
                     \Rcm\RequestContext\RequestContext::class,
+                    \Rcm\Service\CurrentSite::class
                 ],
             ],
             \RcmAdmin\Api\GetPageData::class => [],

@@ -2,25 +2,15 @@
 
 namespace Rcm\Controller;
 
+use Rcm\Acl\AclActions;
+use Rcm\Acl\NotAllowedException;
+use Rcm\Http\NotAllowedResponseJsonZf2;
 use Rcm\Page\PageTypes\PageTypes;
+use Rcm\RequestContext\RequestContext;
+use Rcm\SecureRepo\PageSecureRepo;
+use Rcm\Service\CurrentSite;
 use Zend\View\Model\JsonModel;
 
-/**
- * Page Check API Controller
- *
- * Page Check API Controller.  This API will validate
- * a page name and is generally used by the admin screens
- * to make sure the page name is valid and does not currently
- * exist.
- *
- * @category  Reliv
- * @package   Rcm
- * @author    Westin Shafer <wshafer@relivinc.com>
- * @copyright 2012 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: 1.0
- * @link      http://github.com/reliv
- */
 class PageCheckController extends AbstractRestfulController
 {
     /**
@@ -30,6 +20,17 @@ class PageCheckController extends AbstractRestfulController
      */
     public function getList()
     {
+        $currentSite = $this->serviceLocator->get(CurrentSite::class);
+        $pageSecureRepo = $this->serviceLocator->get(RequestContext::class)->get(PageSecureRepo::class);
+        try {
+            $pageSecureRepo->assertIsAllowed(
+                AclActions::READ,
+                ['siteId' => $currentSite->getSiteId()]
+            );
+        } catch (NotAllowedException $e) {
+            return new NotAllowedResponseJsonZf2();
+        }
+
         $pageType = $this->params('pageType', PageTypes::NORMAL);
         $pageId = $this->params('pageId', null);
 
