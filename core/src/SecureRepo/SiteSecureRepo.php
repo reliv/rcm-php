@@ -99,7 +99,8 @@ class SiteSecureRepo
     public function assertIsAllowed(string $action, $resourceData)
     {
         $this->assertIsAllowed->__invoke(
-            $action, $this->siteSecurityPropertiesProvider->findSecurityProperties($resourceData)
+            $action,
+            $this->siteSecurityPropertiesProvider->findSecurityProperties($resourceData)
         );
     }
 
