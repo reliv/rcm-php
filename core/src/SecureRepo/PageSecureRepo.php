@@ -481,10 +481,6 @@ class PageSecureRepo
         );
     }
 
-    /**
-     * @TODO add unit test for assertIsAllowed(READ) throw
-     * @TODO add unit test for assertIsAllowed(CREATE) throw
-     */
     public function duplicatePage(
         Page $page,
         $destinationSiteId,
@@ -510,7 +506,7 @@ class PageSecureRepo
         /**
          * Site | null
          */
-        $destinationSite = $this->entityManager->find(Site::class, $destinationSiteId);
+        $destinationSite = $this->entityManager->getRepository(Site::class)->find($destinationSiteId);
         if (!$destinationSite) {
             throw new NotAllowedBySecurityPropGenerationFailure(
                 'Site could not be found for id "' . $destinationSiteId . '")'

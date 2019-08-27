@@ -51,7 +51,8 @@ class PageSecureRepoTest extends TestCase
     protected $currentUser;
     protected $siteRepo;
     protected $siteRepoSite;
-    protected $siteRepoSiteId = 5578;
+    protected $siteRepoSiteId = 1111223;
+    protected $notSiteRepoSiteId = 88887766;
     protected $siteRepoCountryIso3 = 'RUS';
 
     public function setup()
@@ -329,6 +330,71 @@ class PageSecureRepoTest extends TestCase
         $this->expectException(NotAllowedByQueryRunException::class);
 
         $this->pageSecureRepo->findPagesBySiteId($this->siteRepoSiteId);
+    }
+
+    public function testDuplicatePageRunsTheCorrectAclQueryAndThrowsIfAclSaysNoReadAccess()
+    {
+        $this->assertIsAllowed->shouldReceive('__invoke')
+            ->withArgs(function ($action, $props) {
+                return $action === AclActions::READ
+                    && $this->arraysEqual(
+                        $props,
+                        ['type' => 'content', 'contentType' => 'page', 'country' => $this->siteRepoCountryIso3]
+                    );
+            })
+            ->once()
+            ->andThrow(new NotAllowedByQueryRunException());
+
+        $pageSite = m::mock(Site::class);
+        $pageSite->allows('getSiteId')->andReturns($this->siteRepoSiteId);
+        $page = m::mock(Page::class);
+        $page->allows('getSite')->andReturns($pageSite);
+
+        $this->entityManager->shouldNotReceive('flush');
+
+        $this->expectException(NotAllowedByQueryRunException::class);
+
+        $this->pageSecureRepo->duplicatePage(
+            $page, $this->siteRepoSiteId, 'bobson1', 'p'
+        );
+    }
+
+    public function testDuplicatePageRunsTheCorrectAclQueryAndThrowsIfAclSaysNoCreateAccess()
+    {
+        $this->assertIsAllowed->allows('__invoke')
+            ->withArgs(function ($action, $props) {
+                return $action === AclActions::READ
+                    && $this->arraysEqual(
+                        $props,
+                        ['type' => 'content', 'contentType' => 'page', 'country' => $this->siteRepoCountryIso3]
+                    );
+            });
+
+        $this->assertIsAllowed->shouldReceive('__invoke')
+            ->withArgs(function ($action, $props) {
+                return $action === AclActions::CREATE
+                    && $this->arraysEqual(
+                        $props,
+                        ['type' => 'content', 'contentType' => 'page', 'country' => $this->siteRepoCountryIso3]
+                    );
+            })
+            ->once()
+            ->andThrow(new NotAllowedByQueryRunException());
+
+
+        $pageSite = m::mock(Site::class);
+        $pageSite->allows('getSiteId')->andReturns($this->siteRepoSiteId);
+        $page = m::mock(Page::class);
+        $page->allows('getSite')->andReturns($pageSite);
+        $page->allows('getPublishedRevision')->andReturns(234243);
+
+        $this->entityManager->shouldNotReceive('flush');
+
+        $this->expectException(NotAllowedByQueryRunException::class);
+
+        $this->pageSecureRepo->duplicatePage(
+            $page, $this->siteRepoSiteId, 'bobson1', 'p'
+        );
     }
 
     protected function arraysEqual($a, $b)
