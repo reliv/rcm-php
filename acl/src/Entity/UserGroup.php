@@ -23,8 +23,6 @@ class UserGroup
     protected $id;
 
     /**
-     * @TODO add an index to this
-     *
      * @var string
      *
      * @ORM\Column(type="string")
