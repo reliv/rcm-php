@@ -18,7 +18,6 @@ class PageSecureRepoFactory
             $requestContext->get('Rcm\ImmutableHistory\SiteWideContainerVersionRepo'),
             $requestContext->get(\Rcm\ImmutableHistory\Page\PageContentFactory::class),
             $requestContext->get(\Rcm\ImmutableHistory\Page\RcmPageNameToPathname::class),
-            $requestContext->get(PageSecurityPropertiesProvider::class),
             $requestContext->get(\Rcm\Service\CurrentSite::class), //ideally should come from $requestContext instead
             $requestContext->get(\Rcm\Acl\GetCurrentUser::class),
             $requestContext->get(AssertIsAllowed::class)

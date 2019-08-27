@@ -141,6 +141,7 @@ class SiteSecureRepoTest extends TestCase
         $queryBuilder->allows('select')->andReturn($queryBuilder);
         $queryBuilder->allows('leftJoin')->andReturn($queryBuilder);
         $queryBuilder->allows('getQuery')->andReturn($queryBuilder);
+        $queryBuilder->allows('orderBy')->andReturn($queryBuilder);
         $this->siteRepo->allows('createQueryBuilder')->andReturn($queryBuilder);
         $this->paginator->allows('setDefaultItemCountPerPage');
 

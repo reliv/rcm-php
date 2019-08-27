@@ -12,6 +12,7 @@ use Rcm\Acl\GetCurrentUser;
 use Rcm\Acl\IsAllowed;
 use Rcm\Acl\ResourceName;
 use Rcm\Acl\SecurityPropertiesProviderInterface;
+use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Entity\Container;
 use Rcm\Entity\Page;
 use Rcm\Entity\Revision;
@@ -68,7 +69,6 @@ class PageSecureRepo
     protected $immutableSiteWideContainerRepo;
     protected $currentUser;
     protected $assertIsAllowed;
-    protected $pageSecurityPropertiesProvider;
 
     public function __construct(
         EntityManager $entityManager,
@@ -76,7 +76,6 @@ class PageSecureRepo
         VersionRepositoryInterface $immutableSiteWideContainerRepo,
         PageContentFactory $immutablePageContentFactory,
         RcmPageNameToPathname $rcmPageNameToPathname,
-        PageSecurityPropertiesProvider $pageSecurityPropertiesProvider,
         Site $currentSite,
         GetCurrentUser $getCurrentUser,
         AssertIsAllowed $assertIsAllowed
@@ -89,21 +88,42 @@ class PageSecureRepo
         $this->immutableSiteWideContainerRepo = $immutableSiteWideContainerRepo;
         $this->immutablePageContentFactory = $immutablePageContentFactory;
         $this->rcmPageNameToPathname = $rcmPageNameToPathname;
-        $this->pageSecurityPropertiesProvider = $pageSecurityPropertiesProvider;
         $this->currentUser = $getCurrentUser->__invoke();
         $this->assertIsAllowed = $assertIsAllowed;
     }
 
-    /**
-     * @TODO add unit test for ACL assertIsAllowed throw
-     */
+    public function findSecurityProperties($data): array
+    {
+        if (!array_key_exists('siteId', $data)) {
+            throw new NotAllowedBySecurityPropGenerationFailure('siteId not passed.');
+        }
+
+        /**
+         * @var \Rcm\Entity\Site|null $site
+         */
+        $site = $this->entityManager->getRepository(Site::class)->find($data['siteId']);
+
+        if ($site === null) {
+            throw new NotAllowedBySecurityPropGenerationFailure('Site not found.');
+        }
+
+        return [
+            'type' => SecurityPropertyConstants::TYPE_CONTENT,
+            SecurityPropertyConstants::CONTENT_TYPE_KEY => SecurityPropertyConstants::CONTENT_TYPE_PAGE,
+            'country' => $site->getCountryIso3()
+        ];
+    }
+
+    public function assertIsAllowed(string $action, $resourceData)
+    {
+        $this->assertIsAllowed->__invoke($action, $this->findSecurityProperties($resourceData));
+    }
+
     public function findPagesBySiteId($siteId)
     {
-        $this->assertIsAllowed->__invoke(// Check if we have access to READ pages for the given site
+        $this->assertIsAllowed(// Check if we have access to READ pages for the given site
             AclActions::READ,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $siteId,
-            ])
+            ['siteId' => $siteId]
         );
 
         $site = $this->entityManager->getRepository(Site::class)->find($siteId);
@@ -126,11 +146,9 @@ class PageSecureRepo
             throw new NotAllowedBySecurityPropGenerationFailure('page not found');
         }
 
-        $this->assertIsAllowed->__invoke(// Check if we have access to READ the page
+        $this->assertIsAllowed(// Check if we have access to READ the page
             AclActions::READ,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $page->getSiteId(),
-            ])
+            ['siteId' => $page->getSiteId()]
         );
 
         return $page;
@@ -152,11 +170,9 @@ class PageSecureRepo
      */
     public function createNewPage(int $siteId, string $name, string $pageType, $data)
     {
-        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new page
+        $this->assertIsAllowed(// Check if we have access to CREATE the new page
             AclActions::CREATE,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $siteId,
-            ])
+            ['siteId' => $siteId,]
         );
         $user = $this->currentUser;
         if (empty($user)) {
@@ -209,11 +225,9 @@ class PageSecureRepo
      */
     public function createNewPageFromTemplate($data)
     {
-        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new page
+        $this->assertIsAllowed(// Check if we have access to CREATE the new page
             AclActions::CREATE,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $data['siteId'],
-            ])
+            ['siteId' => $data['siteId']]
         );
         $user = $this->currentUser;
         if (empty($user)) {
@@ -235,11 +249,9 @@ class PageSecureRepo
             );
         }
 
-        $this->assertIsAllowed->__invoke(// Check if we have access to READ the template
+        $this->assertIsAllowed(// Check if we have access to READ the template
             AclActions::READ,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $page->getSiteId(),
-            ])
+            ['siteId' => $page->getSiteId()]
         );
 
         $pageData = [
@@ -288,17 +300,13 @@ class PageSecureRepo
         string $pageType,
         int $pageRevisionId
     ) {
-        $this->assertIsAllowed->__invoke(// Check if we have access to READ the page we are publishing
+        $this->assertIsAllowed(// Check if we have access to READ the page we are publishing
             AclActions::READ,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $siteId,
-            ])
+            ['siteId' => $siteId]
         );
-        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the page we are publishing
+        $this->assertIsAllowed(// Check if we have access to UPDATE the page we are publishing
             AclActions::UPDATE,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $siteId,
-            ])
+            ['siteId' => $siteId]
         );
 
         $user = $this->currentUser;
@@ -349,11 +357,9 @@ class PageSecureRepo
         int $originalRevisionId
     ) {
         $site = $this->currentSite;
-        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the page we are saving
+        $this->assertIsAllowed(// Check if we have access to UPDATE the page we are saving
             AclActions::UPDATE,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $site->getSiteId(),
-            ])
+            ['siteId' => $site->getSiteId()]
         );
 
         $user = $this->currentUser;
@@ -442,11 +448,9 @@ class PageSecureRepo
 
     public function depublishPage(Page $page)
     {
-        $this->assertIsAllowed->__invoke(// Check if we have access to DELETE the page we are deleting
+        $this->assertIsAllowed(// Check if we have access to DELETE the page we are deleting
             AclActions::DELETE,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $page->getSite()->getSiteId(),
-            ])
+            ['siteId' => $page->getSite()->getSiteId()]
         );
 
         $user = $this->currentUser;
@@ -488,11 +492,9 @@ class PageSecureRepo
         $destinationPageType = null
     ): Page {
         $siteId = $page->getSite()->getSiteId();
-        $this->assertIsAllowed->__invoke(// Check if we have access to READ the page we are copying from
+        $this->assertIsAllowed(// Check if we have access to READ the page we are copying from
             AclActions::READ,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $siteId,
-            ])
+            ['siteId' => $siteId]
         );
 
         $user = $this->currentUser;
@@ -515,11 +517,9 @@ class PageSecureRepo
             );
         }
 
-        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the page we are copying to
+        $this->assertIsAllowed(// Check if we have access to CREATE the page we are copying to
             AclActions::CREATE,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $destinationSiteId,
-            ])
+            ['siteId' => $destinationSiteId,]
         );
 
         $destinationPage = new Page(
@@ -584,18 +584,14 @@ class PageSecureRepo
             throw new NotAllowedByBusinessLogicException('Cannot change site of page.');
         }
 
-        $this->assertIsAllowed->__invoke(// Check if we have access to READ the page we are updating
+        $this->assertIsAllowed(// Check if we have access to READ the page we are updating
             AclActions::READ,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $sourceSite->getSiteId(),
-            ])
+            ['siteId' => $sourceSite->getSiteId()]
         );
 
-        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the page we are updating
+        $this->assertIsAllowed(// Check if we have access to UPDATE the page we are updating
             AclActions::UPDATE,
-            $this->pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $sourceSite->getSiteId(),
-            ])
+            ['siteId' => $sourceSite->getSiteId()]
         );
 
         $user = $this->currentUser;

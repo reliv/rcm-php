@@ -240,7 +240,6 @@ class PageController extends AbstractActionController
 
         /** @oldControllerAclAccessCheckReplacedWithDeeperSecureRepoCheck */
 
-        // @todo - might validate these against the data coming in
         $pageName = $this->getEvent()
             ->getRouteMatch()
             ->getParam(

@@ -6,7 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="rcm_acl_user_group")
+ * @ORM\Table(
+ *     name="rcm_acl_user_group",
+ *     indexes={@ORM\Index(name="userIdIndex", columns={"userId"})})
+ * )
  */
 class UserGroup
 {
