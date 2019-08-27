@@ -92,17 +92,8 @@ class ModuleConfig
                             ['literal' => __DIR__ . '/../../../../../acl/groups'],
                         ]
                     ],
-//                    TestController::class => [],
 
                 ]
-            ],
-            'routes' => [
-//                '/temp-test-rcm-acl' => [
-//                    // @TODO Delete this test controller eventually (it is safe to keep for now though)
-//                    'path' => '/temp-test-rcm-acl',
-//                    'middleware' => TestController::class,
-//                    'allowed_methods' => ['GET'],
-//                ],
             ],
             'doctrine' => [
                 'driver' => [
