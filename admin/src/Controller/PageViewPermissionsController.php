@@ -11,7 +11,7 @@ use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Http\NotAllowedResponseJsonZf2;
 use Rcm\Http\Response;
 use Rcm\RequestContext\RequestContext;
-use Rcm\SecurityPropertiesProvider\PageSecurityPropertiesProvider;
+use Rcm\SecureRepo\PageSecureRepo;
 use RcmUser\Acl\Entity\AclRule;
 use RcmUser\Service\RcmUserService;
 use Zend\Mvc\Controller\AbstractRestfulController;
@@ -99,14 +99,13 @@ class PageViewPermissionsController extends AbstractRestfulController
         }
 
         $page = $this->pageRepo->getPageByName($currentSite, $pageName, $pageType);
-        $isAllowed = $this->serviceLocator->get(RequestContext::class)->get(IsAllowed::class);
-        $pageSecurityPropertiesProvider = $this->serviceLocator->get(PageSecurityPropertiesProvider::class);
-        if (!$isAllowed->__invoke(// Check if we have access to CREATE the new site
-            AclActions::UPDATE,
-            $pageSecurityPropertiesProvider->findSecurityProperties([
-                'siteId' => $page->getSiteId()
-            ])
-        )) {
+        $pageSecureRepo = $this->serviceLocator->get(RequestContext::class)->get(PageSecureRepo::class);
+        try {
+            $pageSecureRepo->assertIsAllowed(
+                AclActions::UPDATE,
+                ['siteId' => $page->getSiteId()]
+            );
+        } catch (NotAllowedException $e) {
             return new NotAllowedResponseJsonZf2();
         }
 
@@ -141,17 +140,13 @@ class PageViewPermissionsController extends AbstractRestfulController
         /**
          * @var AssertIsAllowed $assertIsAllowed
          */
-        $assertIsAllowed = $this->getServiceLocator()->get(RequestContext::class)
-            ->get(AssertIsAllowed::class);
+        $pageSecureRepo = $this->getServiceLocator()->get(RequestContext::class)
+            ->get(PageSecureRepo::class);
 
         try {
-            $assertIsAllowed->__invoke(
+            $pageSecureRepo->assertIsAllowed(
                 AclActions::UPDATE,
-                [
-                    'type' => SecurityPropertyConstants::TYPE_CONTENT,
-                    'country' => $currentSite->getCountryIso3(),
-                    SecurityPropertyConstants::CONTENT_TYPE_PAGE
-                ]
+                ['siteId' => $currentSite->getSiteId()]
             );
         } catch (NotAllowedException $e) {
             return new NotAllowedResponseJsonZf2();
