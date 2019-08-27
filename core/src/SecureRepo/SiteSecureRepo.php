@@ -96,6 +96,13 @@ class SiteSecureRepo
         $this->layoutManager = $layoutManager;
     }
 
+    public function assertIsAllowed(string $action, $resourceData)
+    {
+        $this->assertIsAllowed->__invoke(
+            $action, $this->siteSecurityPropertiesProvider->findSecurityProperties($resourceData)
+        );
+    }
+
     /**
      * Note: this code was moved here durring the ACL2 project from ApiAdminManageSitesController
      *
@@ -147,11 +154,9 @@ class SiteSecureRepo
         /** @var \Rcm\Entity\Site $site */
         foreach ($sitesObjects as $site) {
             try {
-                $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
+                $this->assertIsAllowed(// Check if we have access to READ the site
                     AclActions::READ,
-                    $this->siteSecurityPropertiesProvider->findSecurityProperties([
-                        'countryIso3' => $site->getCountryIso3()
-                    ])
+                    ['countryIso3' => $site->getCountryIso3()]
                 );
                 $sites[] = $site->toArray();
             } catch (NotAllowedException $e) {
@@ -200,11 +205,9 @@ class SiteSecureRepo
 
             $site->populate($data);
 
-            $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
+            $this->assertIsAllowed(// Check if we have access to READ the site
                 AclActions::READ,
-                $this->siteSecurityPropertiesProvider->findSecurityProperties([
-                    'countryIso3' => $site->getCountryIso3()
-                ])
+                ['countryIso3' => $site->getCountryIso3()]
             );
 
             return $site;
@@ -214,11 +217,9 @@ class SiteSecureRepo
         if ($id == 'current') {
             $site = $this->currentSite;
 
-            $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
+            $this->assertIsAllowed(// Check if we have access to READ the site
                 AclActions::READ,
-                $this->siteSecurityPropertiesProvider->findSecurityProperties([
-                    'countryIso3' => $site->getCountryIso3()
-                ])
+                ['countryIso3' => $site->getCountryIso3()]
             );
 
             return $site;
@@ -235,11 +236,9 @@ class SiteSecureRepo
             throw new NotAllowedBySecurityPropGenerationFailure('site not found');
         }
 
-        $this->assertIsAllowed->__invoke(// Check if we have access to READ the site
+        $this->assertIsAllowed(// Check if we have access to READ the site
             AclActions::READ,
-            $this->siteSecurityPropertiesProvider->findSecurityProperties([
-                'countryIso3' => $site->getCountryIso3()
-            ])
+            ['countryIso3' => $site->getCountryIso3()]
         );
 
         return $site;
@@ -254,11 +253,9 @@ class SiteSecureRepo
      */
     public function createSingleFromArray($data)
     {
-        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new site
+        $this->assertIsAllowed(// Check if we have access to CREATE the new site
             AclActions::CREATE,
-            $this->siteSecurityPropertiesProvider->findSecurityProperties([
-                'countryIso3' => $data['countryId']
-            ])
+            ['countryIso3' => $data['countryId']]
         );
 
         $inputFilter = new SiteInputFilter();
@@ -336,22 +333,18 @@ class SiteSecureRepo
         }
 
         // Check if we have access to UPDATE the new version of the site
-        $this->assertIsAllowed->__invoke(
+        $this->assertIsAllowed(
             AclActions::UPDATE,
-            $this->siteSecurityPropertiesProvider->findSecurityProperties([
-                'countryIso3' => $data['countryId']
-            ])
+            ['countryIso3' => $data['countryId']]
         );
 
         /** @var \Rcm\Entity\Site $site */
         $site = $siteRepo->find($siteId);
 
         // Check if we have access to UPDATE the existing version of the site
-        $this->assertIsAllowed->__invoke(
+        $this->assertIsAllowed(
             AclActions::UPDATE,
-            $this->siteSecurityPropertiesProvider->findSecurityProperties([
-                'countryIso3' => $site->getCountryIso3()
-            ])
+            ['countryIso3' => $site->getCountryIso3()]
         );
 
         $newStatus = $site->getStatus();
@@ -423,11 +416,9 @@ class SiteSecureRepo
     public function createSite(
         Site $newSite
     ) {
-        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new site
+        $this->assertIsAllowed(// Check if we have access to CREATE the new site
             AclActions::CREATE,
-            $this->siteSecurityPropertiesProvider->findSecurityProperties([
-                'countryIso3' => $newSite->getCountryIso3()
-            ])
+            ['countryIso3' => $newSite->getCountryIso3()]
         );
         $newSite = $this->prepareNewSite($newSite);
 
@@ -484,11 +475,9 @@ class SiteSecureRepo
 
         $entityManager = $this->getEntityManager();
 
-        $this->assertIsAllowed->__invoke(// Check if we have access to READ the source site
+        $this->assertIsAllowed(// Check if we have access to READ the source site
             AclActions::READ,
-            $this->siteSecurityPropertiesProvider->findSecurityProperties([
-                'countryIso3' => $existingSite->getCountryIso3()
-            ])
+            ['countryIso3' => $existingSite->getCountryIso3()]
         );
 
         if (!array_key_exists('countryId', $data)) {
@@ -497,11 +486,9 @@ class SiteSecureRepo
             );
         }
 
-        $this->assertIsAllowed->__invoke(// Check if we have access to CREATE the new site
+        $this->assertIsAllowed(// Check if we have access to CREATE the new site
             AclActions::CREATE,
-            $this->siteSecurityPropertiesProvider->findSecurityProperties([
-                'countryIso3' => $data['countryId']
-            ])
+            ['countryIso3' => $data['countryId']]
         );
 
         $data = $this->prepareSiteData($data);
@@ -548,11 +535,9 @@ class SiteSecureRepo
 
     public function changeSiteDomainName(Site $site, $newHost)
     {
-        $this->assertIsAllowed->__invoke(// Check if we have access to UPDATE the site
+        $this->assertIsAllowed(// Check if we have access to UPDATE the site
             AclActions::UPDATE,
-            $this->siteSecurityPropertiesProvider->findSecurityProperties([
-                'countryIso3' => $site->getCountryIso3()
-            ])
+            ['countryIso3' => $site->getCountryIso3()]
         );
 
         $user = $this->currentUser;
