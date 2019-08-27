@@ -16,18 +16,24 @@
  * @version   GIT: <git_id>
  * @link      http://github.com/reliv
  */
+
 namespace RcmTest\Controller;
 
 
-
+use Psr\Container\ContainerInterface;
 use Rcm\Controller\PageCheckController;
+use Rcm\Entity\Site;
 use Rcm\Page\PageTypes\PageTypes;
+use Rcm\RequestContext\RequestContext;
+use Rcm\SecureRepo\PageSecureRepo;
+use Rcm\Service\CurrentSite;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceManager;
+use \Mockery as m;
 
 /**
  * Unit Test for the IndexController
@@ -86,11 +92,27 @@ class PageCheckControllerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $pageSecureRepo = m::mock(PageSecureRepo::class);
+        $pageSecureRepo->allows('assertIsAllowed');
+        $currentSite = m::mock(Site::class);
+        $currentSite->allows('getSiteId')->andReturn(876);
+        $requestContext = m::mock(ContainerInterface::class);
+        $requestContext->allows('get')->with(PageSecureRepo::class)->andReturn($pageSecureRepo);
+
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
             \Rcm\Validator\Page::class,
             $this->mockPageValidator
         );
+        $serviceManager->setService(
+            RequestContext::class,
+            $requestContext
+        );
+        $serviceManager->setService(
+            CurrentSite::class,
+            $currentSite
+        );
+
 
         /** @var \Rcm\Service\LayoutManager $mockLayoutManager */
         $this->controller = new PageCheckController($serviceManager);
