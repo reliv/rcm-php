@@ -5,8 +5,8 @@ namespace Rcm\Acl;
 interface SecurityPropertiesProviderInterface
 {
     /**
-     * @param Object|array $site
+     * @param Object|array $resourceData
      * @return array
      */
-    public function findSecurityProperties($site): array;
+    public function findSecurityProperties($resourceData): array;
 }

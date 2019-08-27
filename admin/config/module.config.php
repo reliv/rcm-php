@@ -145,9 +145,6 @@ return [
 
             RcmAdmin\Controller\RpcAdminKeepAlive::class
             => RcmAdmin\Controller\RpcAdminKeepAlive::class,
-
-//            RcmAdmin\Controller\ApiAdminCheckPermissionsController::class
-//            => RcmAdmin\Controller\ApiAdminCheckPermissionsController::class,
         ],
     ],
     /* form_elements */
@@ -158,9 +155,6 @@ return [
         'factories' => [
             RcmAdmin\Form\NewPageForm::class
             => RcmAdmin\Factory\NewPageFormFactory::class,
-//Disabled durring immutable history project in 2018-10 since no-one is using it
-            //            RcmAdmin\Form\CreateTemplateFromPageForm::class
-            //            => RcmAdmin\Factory\CreateTemplateFromPageFormFactory::class,
         ],
     ],
     /* includeFileManager */
@@ -636,20 +630,6 @@ return [
                     ],
                 ],
             ],
-//            'RcmAdmin\ApiAdminCheckPermissions' => [
-//                'type' => 'Zend\Mvc\Router\Http\Segment',
-//                'options' => [
-//                    'route' => '/api/admin/check-permissions/:resourceId/:privileges/:id',
-//                    'constraints' => [
-//                        'id' => '[a-zA-Z0-9._-]+',
-//                        'resourceId' => '[a-zA-Z0-9._-]+',
-//                        'privileges' => '[a-zA-Z0-9._-]+',
-//                    ],
-//                    'defaults' => [
-//                        'controller' => RcmAdmin\Controller\ApiAdminCheckPermissionsController::class,
-//                    ],
-//                ],
-//            ],
             'rcm-admin.available-block.js' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
