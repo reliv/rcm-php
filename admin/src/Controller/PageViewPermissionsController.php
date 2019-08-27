@@ -2,28 +2,21 @@
 
 namespace RcmAdmin\Controller;
 
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\IsAllowed;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
+use Rcm\Acl2\SecurityPropertyConstants;
+use Rcm\Http\NotAllowedResponseJsonZf2;
 use Rcm\Http\Response;
+use Rcm\RequestContext\RequestContext;
+use Rcm\SecureRepo\PageSecureRepo;
 use RcmUser\Acl\Entity\AclRule;
 use RcmUser\Service\RcmUserService;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
-/**
- * PageViewPermissionsController
- *
- * Page Permissions CRUD controller
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   RcmAdmin\Controller
- * @author    author Brian Janish <bjanish@relivinc.com>
- * @copyright 2017 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: 1.0
- * @link      https://github.com/reliv
- */
 class PageViewPermissionsController extends AbstractRestfulController
 {
     /**
@@ -50,7 +43,7 @@ class PageViewPermissionsController extends AbstractRestfulController
      * Update an existing resource
      *
      * @param  string $id $pageName
-     * @param  array  $data $roles
+     * @param  array $data $roles
      *
      * @return mixed
      */
@@ -105,6 +98,17 @@ class PageViewPermissionsController extends AbstractRestfulController
             return $this->getResponse();
         }
 
+        $page = $this->pageRepo->getPageByName($currentSite, $pageName, $pageType);
+        $pageSecureRepo = $this->serviceLocator->get(RequestContext::class)->get(PageSecureRepo::class);
+        try {
+            $pageSecureRepo->assertIsAllowed(
+                AclActions::UPDATE,
+                ['siteId' => $page->getSiteId()]
+            );
+        } catch (NotAllowedException $e) {
+            return new NotAllowedResponseJsonZf2();
+        }
+
         if (is_array($data['selectedRoles'])) {
             $selectedRoles = $data['selectedRoles'];
         } else {
@@ -131,15 +135,21 @@ class PageViewPermissionsController extends AbstractRestfulController
             RcmUserService::class
         );
 
-        if (!$rcmUserService->isAllowed($resourceId, 'edit')
-            && !$rcmUserService->isAllowed(
-                ResourceName::RESOURCE_PAGES,
-                'edit'
-            )
-        ) {
-            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+        /** @oldControllerAclAccessCheckReplaced */
 
-            return $this->getResponse();
+        /**
+         * @var AssertIsAllowed $assertIsAllowed
+         */
+        $pageSecureRepo = $this->getServiceLocator()->get(RequestContext::class)
+            ->get(PageSecureRepo::class);
+
+        try {
+            $pageSecureRepo->assertIsAllowed(
+                AclActions::UPDATE,
+                ['siteId' => $currentSite->getSiteId()]
+            );
+        } catch (NotAllowedException $e) {
+            return new NotAllowedResponseJsonZf2();
         }
 
         //IS PAGE VALID?
@@ -178,7 +188,7 @@ class PageViewPermissionsController extends AbstractRestfulController
      *
      * @return boolean
      */
-    public function deletePermissions($resourceId)
+    private function deletePermissions($resourceId)
     {
         $rules = $this->aclDataService->getRulesByResource($resourceId)
             ->getData();
@@ -202,7 +212,7 @@ class PageViewPermissionsController extends AbstractRestfulController
      *
      * @return mixed|void
      */
-    public function addPermissions($roles, $resourceId)
+    private function addPermissions($roles, $resourceId)
     {
         if (empty($roles)) {
             return;
@@ -237,7 +247,7 @@ class PageViewPermissionsController extends AbstractRestfulController
      *
      * @return void
      */
-    public function addPermission($roleId, $resourceId)
+    private function addPermission($roleId, $resourceId)
     {
         $this->aclDataService->createRule(
             $this->getAclRule($roleId, $resourceId)
@@ -272,7 +282,7 @@ class PageViewPermissionsController extends AbstractRestfulController
      *
      * @return bool
      */
-    public function isValidResourceId($resourceId)
+    private function isValidResourceId($resourceId)
     {
         $resource = $this->resourceProvider->getResource($resourceId);
 

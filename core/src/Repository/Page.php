@@ -4,6 +4,10 @@ namespace Rcm\Repository;
 
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Rcm\Acl\Exception\NotAllowedBySecurityPropGenerationFailure;
+use Rcm\Acl\SecurityPropertiesProviderInterface;
+use Rcm\Acl2\SecurityPropertyConstants;
+use Rcm\AclTypes;
 use Rcm\Entity\Page as PageEntity;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site as SiteEntity;

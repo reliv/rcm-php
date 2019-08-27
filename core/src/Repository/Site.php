@@ -5,6 +5,9 @@ namespace Rcm\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Rcm\Acl\PropertiesProviderInterface;
+use Rcm\Acl\SecurityPropertiesProviderInterface;
+use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Entity\Site as SiteEntity;
 use Rcm\Exception\SiteNotFoundException;
 use Rcm\Tracking\Model\Tracking;
@@ -91,7 +94,7 @@ class Site extends EntityRepository
     /**
      * Is Valid Site Id
      *
-     * @param integer $siteId      Site Id To Check
+     * @param integer $siteId Site Id To Check
      * @param boolean $checkActive Should only check active sites.  Default: true
      *
      * @return boolean
@@ -223,11 +226,10 @@ class Site extends EntityRepository
     }
 
     /**
-     * @todo Fix Me
      * createNewSite
      *
-     * @param string   $createdByUserId
-     * @param string   $createdReason
+     * @param string $createdByUserId
+     * @param string $createdReason
      * @param null|int $siteId
      *
      * @return SiteEntity
@@ -255,10 +257,9 @@ class Site extends EntityRepository
     }
 
     /**
-     * @todo Fix Me
      * copySite
      *
-     * @param int    $siteId
+     * @param int $siteId
      * @param string $createdByUserId
      * @param string $createdReason
      *

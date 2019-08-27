@@ -1,11 +1,18 @@
 <?php
 
 
-namespace RcmAdmin\Service;
+namespace Rcm\SecureRepo;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\Exception\NotAllowedByBusinessLogicException;
+use Rcm\Acl\Exception\NotAllowedBySecurityPropGenerationFailure;
 use Rcm\Acl\GetCurrentUser;
+use Rcm\Acl\IsAllowed;
 use Rcm\Acl\ResourceName;
+use Rcm\Acl\SecurityPropertiesProviderInterface;
+use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Entity\Container;
 use Rcm\Entity\Page;
 use Rcm\Entity\Revision;
@@ -21,6 +28,7 @@ use Rcm\ImmutableHistory\SiteWideContainer\ContainerContent;
 use Rcm\ImmutableHistory\SiteWideContainer\SiteWideContainerLocator;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
 use Rcm\Repository\Page as PageRepo;
+use Rcm\SecurityPropertiesProvider\PageSecurityPropertiesProvider;
 use Rcm\Tracking\Exception\TrackingException;
 use RcmAdmin\Exception\CannotDuplicateAnUnpublishedPageException;
 use RcmMessage\Api\GetCurrentUserId;
@@ -34,10 +42,10 @@ use Zend\View\Model\ViewModel;
 /**
  * ALL PAGE MUTATIONS MUST BE DONE THROUGH THIS SERVICE TO ENSURE THEY ARE LOGGED PROPERLY!
  *
- * Class PageMutationService
+ * Class PageSecureRepo
  * @package RcmAdmin\Service
  */
-class PageMutationService
+class PageSecureRepo
 {
     /**
      * @var \Rcm\Entity\Site
@@ -48,16 +56,6 @@ class PageMutationService
      * @var \Rcm\Repository\Page
      */
     protected $pageRepo;
-
-    /**
-     * @var \Zend\View\Model\ViewModel
-     */
-    protected $view;
-
-    /**
-     * @var RcmUserService
-     */
-    protected $rcmUserService;
 
     protected $immuteblePageVersionRepo;
 
@@ -70,30 +68,90 @@ class PageMutationService
     protected $entityManager;
     protected $immutableSiteWideContainerRepo;
     protected $currentUser;
+    protected $assertIsAllowed;
 
     public function __construct(
-        RcmUserService $rcmUserService,
         EntityManager $entityManager,
         VersionRepositoryInterface $immuteblePageVersionRepo,
         VersionRepositoryInterface $immutableSiteWideContainerRepo,
         PageContentFactory $immutablePageContentFactory,
         RcmPageNameToPathname $rcmPageNameToPathname,
         Site $currentSite,
-        GetCurrentUser $getCurrentUser
+        GetCurrentUser $getCurrentUser,
+        AssertIsAllowed $assertIsAllowed
     ) {
         $this->currentSite = $currentSite;
         $this->entityManager = $entityManager;
         $this->pageRepo = $entityManager->getRepository(Page::class);
         $this->revisionRepo = $entityManager->getRepository(Revision::class);
-        $this->rcmUserService = $rcmUserService;
         $this->immuteblePageVersionRepo = $immuteblePageVersionRepo;
         $this->immutableSiteWideContainerRepo = $immutableSiteWideContainerRepo;
         $this->immutablePageContentFactory = $immutablePageContentFactory;
         $this->rcmPageNameToPathname = $rcmPageNameToPathname;
         $this->currentUser = $getCurrentUser->__invoke();
+        $this->assertIsAllowed = $assertIsAllowed;
+    }
 
-        $this->view = new ViewModel();
-        $this->view->setTerminal(true);
+    public function findSecurityProperties($data): array
+    {
+        if (!array_key_exists('siteId', $data)) {
+            throw new NotAllowedBySecurityPropGenerationFailure('siteId not passed.');
+        }
+
+        /**
+         * @var \Rcm\Entity\Site|null $site
+         */
+        $site = $this->entityManager->getRepository(Site::class)->find($data['siteId']);
+
+        if ($site === null) {
+            throw new NotAllowedBySecurityPropGenerationFailure('Site not found.');
+        }
+
+        return [
+            'type' => SecurityPropertyConstants::TYPE_CONTENT,
+            SecurityPropertyConstants::CONTENT_TYPE_KEY => SecurityPropertyConstants::CONTENT_TYPE_PAGE,
+            'country' => $site->getCountryIso3()
+        ];
+    }
+
+    public function assertIsAllowed(string $action, $resourceData)
+    {
+        $this->assertIsAllowed->__invoke($action, $this->findSecurityProperties($resourceData));
+    }
+
+    public function findPagesBySiteId($siteId)
+    {
+        $this->assertIsAllowed(// Check if we have access to READ pages for the given site
+            AclActions::READ,
+            ['siteId' => $siteId]
+        );
+
+        $site = $this->entityManager->getRepository(Site::class)->find($siteId);
+
+        if (empty($siteId)) {
+            return [];
+        }
+
+        return $site->getPages();
+    }
+
+    public function find($pageId)
+    {
+        /**
+         * @var Page|null $page
+         */
+        $page = $this->pageRepo->find($pageId);
+
+        if (empty($page)) {
+            throw new NotAllowedBySecurityPropGenerationFailure('page not found');
+        }
+
+        $this->assertIsAllowed(// Check if we have access to READ the page
+            AclActions::READ,
+            ['siteId' => $page->getSiteId()]
+        );
+
+        return $page;
     }
 
     /**
@@ -112,6 +170,10 @@ class PageMutationService
      */
     public function createNewPage(int $siteId, string $name, string $pageType, $data)
     {
+        $this->assertIsAllowed(// Check if we have access to CREATE the new page
+            AclActions::CREATE,
+            ['siteId' => $siteId,]
+        );
         $user = $this->currentUser;
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
@@ -163,6 +225,10 @@ class PageMutationService
      */
     public function createNewPageFromTemplate($data)
     {
+        $this->assertIsAllowed(// Check if we have access to CREATE the new page
+            AclActions::CREATE,
+            ['siteId' => $data['siteId']]
+        );
         $user = $this->currentUser;
         if (empty($user)) {
             throw new TrackingException('A valid user is required in ' . get_class($this));
@@ -177,11 +243,16 @@ class PageMutationService
         );
 
         if (empty($page)) {
-            throw new PageNotFoundException(
+            throw new NotAllowedBySecurityPropGenerationFailure(
                 'No template found for page id: '
                 . $validatedData['page-template']
             );
         }
+
+        $this->assertIsAllowed(// Check if we have access to READ the template
+            AclActions::READ,
+            ['siteId' => $page->getSiteId()]
+        );
 
         $pageData = [
             'name' => $validatedData['name'],
@@ -220,7 +291,6 @@ class PageMutationService
      * @param string $pageName
      * @param string $pageType
      * @param int $pageRevisionId
-     * @param $urlToPageFunction
      * @return mixed
      * @throws TrackingException
      */
@@ -228,9 +298,17 @@ class PageMutationService
         int $siteId,
         string $pageName,
         string $pageType,
-        int $pageRevisionId,
-        $urlToPageFunction
+        int $pageRevisionId
     ) {
+        $this->assertIsAllowed(// Check if we have access to READ the page we are publishing
+            AclActions::READ,
+            ['siteId' => $siteId]
+        );
+        $this->assertIsAllowed(// Check if we have access to UPDATE the page we are publishing
+            AclActions::UPDATE,
+            ['siteId' => $siteId]
+        );
+
         $user = $this->currentUser;
 
         if (empty($user)) {
@@ -261,10 +339,7 @@ class PageMutationService
             __CLASS__ . '::' . __FUNCTION__
         );
 
-        return $urlToPageFunction(
-            $pageName,
-            $pageType
-        );
+        return $page;
     }
 
     /**
@@ -281,6 +356,12 @@ class PageMutationService
         $urlToPageFunction,
         int $originalRevisionId
     ) {
+        $site = $this->currentSite;
+        $this->assertIsAllowed(// Check if we have access to UPDATE the page we are saving
+            AclActions::UPDATE,
+            ['siteId' => $site->getSiteId()]
+        );
+
         $user = $this->currentUser;
 
         if (empty($user)) {
@@ -290,7 +371,7 @@ class PageMutationService
         self::prepSaveData($data);
 
         $result = $this->pageRepo->savePage(
-            $this->currentSite,
+            $site,
             $pageName,
             $originalRevisionId,
             $pageType,
@@ -311,14 +392,14 @@ class PageMutationService
              * @var Page
              */
             $page = $this->pageRepo->findOneBy([
-                'site' => $this->currentSite,
+                'site' => $site,
                 'name' => $pageName,
                 'pageType' => $pageType
             ]);
 
             $this->immuteblePageVersionRepo->createUnpublished(
                 new PageLocator(
-                    $this->currentSite->getSiteId(),
+                    $site->getSiteId(),
                     $this->rcmPageNameToPathname->__invoke($pageName, $pageType)
                 ),
                 $this->immutablePageContentFactory->__invoke(
@@ -367,6 +448,11 @@ class PageMutationService
 
     public function depublishPage(Page $page)
     {
+        $this->assertIsAllowed(// Check if we have access to DELETE the page we are deleting
+            AclActions::DELETE,
+            ['siteId' => $page->getSite()->getSiteId()]
+        );
+
         $user = $this->currentUser;
 
         if (empty($user)) {
@@ -401,6 +487,12 @@ class PageMutationService
         $destinationPageName,
         $destinationPageType = null
     ): Page {
+        $siteId = $page->getSite()->getSiteId();
+        $this->assertIsAllowed(// Check if we have access to READ the page we are copying from
+            AclActions::READ,
+            ['siteId' => $siteId]
+        );
+
         $user = $this->currentUser;
 
         if (empty($user)) {
@@ -414,10 +506,18 @@ class PageMutationService
         /**
          * Site | null
          */
-        $destinationSite = $this->entityManager->find(Site::class, $destinationSiteId);
+        $destinationSite = $this->entityManager->getRepository(Site::class)->find($destinationSiteId);
         if (!$destinationSite) {
-            throw new \Exception('Site could not be found for id "' . $destinationSiteId . '")');
+            throw new NotAllowedBySecurityPropGenerationFailure(
+                'Site could not be found for id "' . $destinationSiteId . '")'
+            );
         }
+
+        $this->assertIsAllowed(// Check if we have access to CREATE the page we are copying to
+            AclActions::CREATE,
+            ['siteId' => $destinationSiteId,]
+        );
+
         $destinationPage = new Page(
             $user->getId(),
             'New page in ' . get_class($this)
@@ -474,6 +574,22 @@ class PageMutationService
      */
     public function updatePublishedVersionOfPage(Page $page, $data)
     {
+        $sourceSite = $page->getSite();
+        if (array_key_exists('site', $data) || array_key_exists('siteId', $data)) {
+            //Disallow this to make ACL lookups simpler.
+            throw new NotAllowedByBusinessLogicException('Cannot change site of page.');
+        }
+
+        $this->assertIsAllowed(// Check if we have access to READ the page we are updating
+            AclActions::READ,
+            ['siteId' => $sourceSite->getSiteId()]
+        );
+
+        $this->assertIsAllowed(// Check if we have access to UPDATE the page we are updating
+            AclActions::UPDATE,
+            ['siteId' => $sourceSite->getSiteId()]
+        );
+
         $user = $this->currentUser;
 
         $originalLocator = new PageLocator(

@@ -4,6 +4,7 @@ namespace Rcm\Api\Acl;
 
 use Interop\Container\ContainerInterface;
 use Rcm\Acl\ResourceName;
+use Rcm\RequestContext\RequestContext;
 use RcmUser\Api\Acl\IsAllowed;
 
 /**
@@ -19,8 +20,7 @@ class IsAllowedSiteAdminBasicFactory
     public function __invoke($serviceContainer)
     {
         return new IsAllowedSiteAdminBasic(
-            $serviceContainer->get(ResourceName::class),
-            $serviceContainer->get(IsAllowed::class)
+            $serviceContainer->get(RequestContext::class)
         );
     }
 }

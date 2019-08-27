@@ -6,7 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="rcm_acl_user_group")
+ * @ORM\Table(
+ *     name="rcm_acl_user_group",
+ *     indexes={@ORM\Index(name="userIdIndex", columns={"userId"})})
+ * )
  */
 class UserGroup
 {
@@ -27,10 +30,41 @@ class UserGroup
     protected $userId;
 
     /**
-     * @var Group
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Rcm\Acl\Entity\Group")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string")
      */
     protected $group;
+
+    /**
+     * @return string
+     */
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param string $userId
+     */
+    public function setUserId(string $userId): void
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGroup(): string
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param string $group
+     */
+    public function setGroup(string $group): void
+    {
+        $this->group = $group;
+    }
 }

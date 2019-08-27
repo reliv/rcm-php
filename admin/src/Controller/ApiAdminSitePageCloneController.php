@@ -3,8 +3,10 @@
 namespace RcmAdmin\Controller;
 
 use Interop\Container\ContainerInterface;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
 use Rcm\Entity\Page;
+use Rcm\Http\NotAllowedResponseJsonZf2;
 use Rcm\Http\Response;
 use Rcm\View\Model\ApiJsonModel;
 use RcmAdmin\Entity\SitePageApiResponse;
@@ -45,12 +47,7 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
      */
     public function create($data)
     {
-        //ACCESS CHECK
-        if (!$this->getRcmUserService()->isAllowed(ResourceName::RESOURCE_SITES, 'admin')) {
-            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
-
-            return $this->getResponse();
-        }
+        /** @oldControllerAclAccessCheckReplacedWithDeeperSecureRepoCheck */
 
         $siteId = $this->getRequestSiteId();
 
@@ -116,11 +113,15 @@ class ApiAdminSitePageCloneController extends ApiAdminSitePageController
             );
         }
 
-        $this->pageMutationService->duplicatePage(
-            $page,
-            $destinationSite->getSiteId(),
-            $page->getName()
-        );
+        try {
+            $this->pageSecureRepo->duplicatePage(
+                $page,
+                $destinationSite->getSiteId(),
+                $page->getName()
+            );
+        } catch (NotAllowedException $e) {
+            return new NotAllowedResponseJsonZf2();
+        }
 
 //        $apiResponse = new SitePageApiResponse($newPage);
 

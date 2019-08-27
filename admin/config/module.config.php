@@ -145,9 +145,6 @@ return [
 
             RcmAdmin\Controller\RpcAdminKeepAlive::class
             => RcmAdmin\Controller\RpcAdminKeepAlive::class,
-
-            RcmAdmin\Controller\ApiAdminCheckPermissionsController::class
-            => RcmAdmin\Controller\ApiAdminCheckPermissionsController::class,
         ],
     ],
     /* form_elements */
@@ -158,9 +155,6 @@ return [
         'factories' => [
             RcmAdmin\Form\NewPageForm::class
             => RcmAdmin\Factory\NewPageFormFactory::class,
-//Disabled durring immutable history project in 2018-10 since no-one is using it
-            //            RcmAdmin\Form\CreateTemplateFromPageForm::class
-            //            => RcmAdmin\Factory\CreateTemplateFromPageFormFactory::class,
         ],
     ],
     /* includeFileManager */
@@ -535,7 +529,7 @@ return [
             'ApiAdminLanguageController' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
-                    'route' => '/api/admin/language[/:id]',
+                    'route' => '/api/admin/language',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminLanguageController::class,
                     ],
@@ -544,7 +538,7 @@ return [
             'ApiAdminThemeController' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
-                    'route' => '/api/admin/theme[/:id]',
+                    'route' => '/api/admin/theme',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminThemeController::class,
                     ],
@@ -553,7 +547,7 @@ return [
             'ApiAdminCountryController' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
-                    'route' => '/api/admin/country[/:id]',
+                    'route' => '/api/admin/country',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminCountryController::class,
                     ],
@@ -580,7 +574,7 @@ return [
             'ApiAdminPageTypesController' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
-                    'route' => '/api/admin/pagetypes[/:id]',
+                    'route' => '/api/admin/pagetypes',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\ApiAdminPageTypesController::class,
                     ],
@@ -589,7 +583,7 @@ return [
             'RcmAdmin\\RpcAdminCanEdit' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
-                    'route' => '/api/rpc/rcm-admin/can-edit[/:id]',
+                    'route' => '/api/rpc/rcm-admin/can-edit',
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\RpcAdminCanEdit::class,
                     ],
@@ -636,20 +630,6 @@ return [
                     ],
                 ],
             ],
-            'RcmAdmin\ApiAdminCheckPermissions' => [
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => [
-                    'route' => '/api/admin/check-permissions/:resourceId/:privileges/:id',
-                    'constraints' => [
-                        'id' => '[a-zA-Z0-9._-]+',
-                        'resourceId' => '[a-zA-Z0-9._-]+',
-                        'privileges' => '[a-zA-Z0-9._-]+',
-                    ],
-                    'defaults' => [
-                        'controller' => RcmAdmin\Controller\ApiAdminCheckPermissionsController::class,
-                    ],
-                ],
-            ],
             'rcm-admin.available-block.js' => [
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
@@ -662,28 +642,24 @@ return [
             ],
         ],
     ],
-    \Rcm\RequestContext\RequestContextBindings::REQUEST_CONTEXT_CONTAINER_CONFIG_KEY => [
-        'factories' => [
-            \RcmAdmin\Service\PageMutationService::class => \RcmAdmin\Service\PageMutationServiceFactory::class,
-            RcmAdmin\Service\SiteManager::class => \RcmAdmin\Service\SiteManagerFactory::class
-        ]
-    ],
     /* service_manager */
     'service_manager' => [
         'config_factories' => [
+            \Rcm\SecurityPropertiesProvider\SiteSecurityPropertiesProvider::class => [],
+            \Rcm\SecurityPropertiesProvider\PageSecurityPropertiesProvider::class => [
+                'arguments' => [
+                    \Doctrine\ORM\EntityManager::class
+                ]
+            ],
             \RcmAdmin\Controller\LayoutChoicesController::class => [
                 'arguments' => [
-                    \Rcm\Service\LayoutManager::class,
-                    \Rcm\Api\GetSiteByRequest::class,
-                    \RcmUser\Api\Acl\IsAllowed::class
+                    \Rcm\Api\GetSiteByRequest::class
                 ],
             ],
             \RcmAdmin\Controller\SiteDomainNameController::class => [
                 'arguments' => [
-                    \Rcm\Service\CurrentSite::class,
-                    \RcmUser\Api\Acl\IsAllowed::class,
                     \Rcm\RequestContext\RequestContext::class,
-                    \RcmUser\Api\Authentication\GetIdentity::class,
+                    \Rcm\Service\CurrentSite::class
                 ],
             ],
             \RcmAdmin\Api\GetPageData::class => [],

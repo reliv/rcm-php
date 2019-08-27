@@ -4,6 +4,6 @@ namespace Rcm\Acl;
 
 class HardCodedGroups
 {
-    const GUEST = 'guest';
-    const GUEST_GROUPS = [self::GUEST];
+    const GUEST = 'guest'; // non-logged-in people have this group
+    const EVERYONE = 'everyone'; // everybody has this group whether logged in or not
 }

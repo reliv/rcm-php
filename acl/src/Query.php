@@ -41,7 +41,7 @@ class Query
     /**
      * @return mixed
      */
-    public function getGroupIds()
+    public function getGroupNames()
     {
         return $this->groupIds;
     }

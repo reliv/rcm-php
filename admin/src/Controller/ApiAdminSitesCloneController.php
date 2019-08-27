@@ -2,34 +2,35 @@
 
 namespace RcmAdmin\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Rcm\Acl\GetCurrentUser;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
+use Rcm\Http\NotFoundResponseJsonZf2;
 use Rcm\Http\Response;
+use Rcm\SecureRepo\SiteSecureRepo;
 use Rcm\View\Model\ApiJsonModel;
+use Rcm\Http\NotAllowedResponseJsonZf2;
 use RcmAdmin\InputFilter\SiteDuplicateInputFilter;
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\Model\JsonModel;
 
-/**
- * ApiAdminSitesCloneController
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   Rcm\Controller\Plugin
- * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2017 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: <package_version>
- * @link      https://github.com/reliv
- */
-class ApiAdminSitesCloneController extends ApiAdminManageSitesController
+class ApiAdminSitesCloneController extends ApiAdminBaseController
 {
-    /**
-     * @param ContainerInterface|ServiceLocatorInterface $serviceLocator
-     */
-    public function __construct($serviceLocator)
-    {
-        parent::__construct($serviceLocator);
+    protected $siteSecureRepo;
+    protected $entityManager;
+    protected $getCurrentUser;
+
+    public function __construct(
+        SiteSecureRepo $siteSecureRepo,
+        EntityManager $entityManager,
+        GetCurrentUser $getCurrentUser
+    ) {
+        $this->siteSecureRepo = $siteSecureRepo;
+        $this->entityManager = $entityManager;
+        $this->getCurrentUser = $getCurrentUser;
     }
 
     /**
@@ -42,12 +43,8 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
      */
     public function create($data)
     {
-        /* ACCESS CHECK */
-        if (!$this->isAllowed(ResourceName::RESOURCE_SITES, 'admin')) {
-            $this->getResponse()->setStatusCode(Response::STATUS_CODE_401);
+        /** @oldControllerAclAccessCheckReplacedWithDeeperSecureRepoCheck */
 
-            return $this->getResponse();
-        }
         /* */
         $inputFilter = new SiteDuplicateInputFilter();
         $inputFilter->setData($data);
@@ -63,25 +60,33 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
 
         $data = $inputFilter->getValues();
 
-        $siteManager = $this->getSiteManager();
+        $user = $this->getCurrentUser->__invoke();
 
-        try {
-            $data = $siteManager->prepareSiteData($data);
-            /** @var \Rcm\Repository\Domain $domainRepo */
-            $domainRepo = $this->getEntityManager()->getRepository(
-                \Rcm\Entity\Domain::class
-            );
-
-            $domain = $domainRepo->createDomain(
-                $data['domainName'],
-                $this->getCurrentUserId(),
-                'Create new domain in ' . get_class($this),
-                null,
-                true
-            );
-        } catch (\Exception $e) {
-            return new ApiJsonModel(null, 1, $e->getMessage());
+        if ($user === null) {
+            return new NotFoundResponseJsonZf2();
         }
+
+        $userId = $user->getId();
+
+//        try {
+        $data = $this->siteSecureRepo->prepareSiteData($data);
+//            /** @var \Rcm\Repository\Domain $domainRepo */
+//            $domainRepo = $this->entityManager->getRepository(
+//                \Rcm\Entity\Domain::class
+//            );
+//
+//            $domain = $domainRepo->createDomain(
+//                $data['domainName'],
+//                $userId,
+//                'Create new domain in ' . get_class($this),
+//                null,
+//                true
+//            );
+//        } catch (NotAllowedException $e) {
+//            return new NotAllowedResponseJsonZf2();
+//        } catch (\Exception $e) {
+//            return new ApiJsonModel(null, 1, $e->getMessage());
+//        }
 
         $entityManager = $this->getEntityManager();
 
@@ -92,21 +97,19 @@ class ApiAdminSitesCloneController extends ApiAdminManageSitesController
         $existingSite = $siteRepo->find($data['siteId']);
 
         if (empty($existingSite)) {
-            return new ApiJsonModel(null, 1, "Site {$data['siteId']} not found.");
+            return new NotFoundResponseJsonZf2();
         }
 
         try {
-            $copySite = $siteManager->copySiteAndPopulate(
+            $copySite = $this->siteSecureRepo->duplicateAndUpdate(
                 $existingSite,
-                $domain,
+                $data['domainName'],
                 $data
             );
-        } catch (\Exception $exception) {
-            // Remove domain if error occurs
-            if ($entityManager->contains($domain)) {
-                $entityManager->remove($domain);
-            }
-            throw $exception;
+        } catch (NotAllowedException $e) {
+            throw $e;
+
+            return new NotAllowedResponseJsonZf2();
         }
 
         return new ApiJsonModel($copySite, 0, 'Success');

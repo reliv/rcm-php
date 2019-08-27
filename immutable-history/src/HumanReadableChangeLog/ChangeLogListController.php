@@ -5,11 +5,16 @@ namespace Rcm\ImmutableHistory\HumanReadableChangeLog;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\NotAllowedException;
+use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\ImmutableHistory\Acl\AclConstants;
 use Rcm\ImmutableHistory\Http\CsvResponse;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEvent;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllSortedChangeLogEventsByDateRange;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogByDateRangeComposite;
+use Rcm\RequestContext\RequestContext;
 use RcmUser\Api\Acl\IsAllowed;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -30,17 +35,14 @@ class ChangeLogListController implements MiddlewareInterface
     protected $getHumanReadableChangeLogByDateRange;
 
     protected $defaultNumberOfDays = 30;
-    protected $isAllowed;
 
     /**
      * @param GetHumanReadableChangeLogByDateRange $getHumanReadableChangeLogByDateRange
      */
     public function __construct(
-        GetAllSortedChangeLogEventsByDateRange $getHumanReadableChangeLogByDateRange,
-        IsAllowed $isAllowed
+        GetAllSortedChangeLogEventsByDateRange $getHumanReadableChangeLogByDateRange
     ) {
         $this->getHumanReadableChangeLogByDateRange = $getHumanReadableChangeLogByDateRange;
-        $this->isAllowed = $isAllowed;
     }
 
     /**
@@ -52,7 +54,22 @@ class ChangeLogListController implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        if (!$this->isAllowed->__invoke($request, AclConstants::CONTENT_CHANGE_LOG, AclConstants::READ)) {
+        $assertIsAllowed = $request->getAttribute(RequestContext::class)->get(AssertIsAllowed::class);
+
+        /** @oldControllerAclAccessCheckReplaced */
+
+        /**
+         * @var AssertIsAllowed $assertIsAllowed
+         */
+        $assertIsAllowed = $request->getAttribute(RequestContext::class)
+            ->get(AssertIsAllowed::class);
+
+        try {
+            $assertIsAllowed->__invoke(
+                AclActions::READ,
+                ['type' => SecurityPropertyConstants::TYPE_CONTENT_CHANGE_LOG]
+            );
+        } catch (NotAllowedException $e) {
             $loginUrl = '/login?redirect=' . urlencode($request->getUri()->getPath()
                     . '?' . http_build_query($request->getQueryParams()));
             $response = new HtmlResponse('Access denied. Try <a href="' . $loginUrl . '">logging in</a>.');

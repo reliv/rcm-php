@@ -2,25 +2,15 @@
 
 namespace RcmAdmin\Controller;
 
+use Rcm\Acl\AclActions;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
+use Rcm\Http\NotAllowedResponseJsonZf2;
+use Rcm\RequestContext\RequestContext;
+use Rcm\SecureRepo\PageSecureRepo;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-/**
- * PagePermissions
- *
- * Page Permissions controller
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   RcmAdmin\Controller
- * @author    Inna Davis <idavis@relivinc.com>
- * @copyright 2017 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: <package_version>
- * @link      https://github.com/reliv
- */
 class PagePermissionsController extends AbstractActionController
 {
     /**
@@ -36,14 +26,24 @@ class PagePermissionsController extends AbstractActionController
     public function pagePermissionsAction()
     {
 
-        $view = new ViewModel();
-        //fixes rendering site's header and footer in the dialog
-        $view->setTerminal(true);
-
         /** @var \Rcm\Entity\Site $currentSite */
         $currentSite = $this->getServiceLocator()->get(
             \Rcm\Service\CurrentSite::class
         );
+
+        $pageSecureRepo = $this->getServiceLocator()->get(RequestContext::class)->get(PageSecureRepo::class);
+        try {
+            $pageSecureRepo->assertIsAllowed(
+                AclActions::READ,
+                ['siteId' => $currentSite->getSiteId()]
+            );
+        } catch (NotAllowedException $e) {
+            return new NotAllowedResponseJsonZf2();
+        }
+
+        $view = new ViewModel();
+        //fixes rendering site's header and footer in the dialog
+        $view->setTerminal(true);
 
         $currentSiteId = $currentSite->getSiteId();
 

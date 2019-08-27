@@ -3,46 +3,59 @@
 
 namespace RcmAdmin\Controller;
 
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
+use Rcm\Acl2\SecurityPropertyConstants;
+use Rcm\RequestContext\RequestContext;
+use Rcm\SecureRepo\PageSecureRepo;
+use Rcm\Service\CurrentSite;
 use Rcm\View\Model\ApiJsonModel;
 use RcmUser\Service\RcmUserService;
 use Zend\Http\Response;
 use Zend\View\Model\JsonModel;
 
-/**
- * Class RpcAdminCanEdit
- *
- * RpcAdminCanEdit
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   RcmAdmin\Controller
- * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2017 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: <package_version>
- * @link      https://github.com/reliv
- */
-
 class RpcAdminCanEdit extends ApiAdminBaseController
 {
     /**
-     * create
+     * @possibleFutureImprovement the client ideally should warn the user they can edit but not save when this
+     * this returns ['canEdit' => true, 'canSave' => false]
      *
      * @return mixed|JsonModel
      */
     public function create($data)
     {
-        /** @var RcmUserService $rcmUserService */
-        $rcmUserService = $this->serviceLocator->get(RcmUserService::class);
+        $currentSite = $this->getServiceLocator()->get(CurrentSite::class);
 
-        //ACCESS CHECK
-        $result = $rcmUserService->isAllowed(
-            ResourceName::RESOURCE_SITES,
-            'admin'
-        );
+        /** @oldControllerAclAccessCheckReplaced */
 
-        return new ApiJsonModel(['canEdit' => $result]);
+        /**
+         * @var PageSecureRepo $assertIsAllowed
+         */
+        $pageSecureRepo = $this->getServiceLocator()->get(RequestContext::class)
+            ->get(PageSecureRepo::class);
+
+        $canRead = true;
+        $canUpdate = true;
+        try {
+            $pageSecureRepo->assertIsAllowed(
+                AclActions::READ,
+                ['siteId' => $currentSite->getSiteId()]
+            );
+        } catch (NotAllowedException $e) {
+            $canRead = false;
+        }
+
+        try {
+            $pageSecureRepo->assertIsAllowed(
+                AclActions::UPDATE,
+                ['siteId' => $currentSite->getSiteId()]
+            );
+        } catch (NotAllowedException $e) {
+            $canUpdate = false;
+        }
+
+        return new ApiJsonModel(['canEdit' => $canRead, 'canSave' => $canUpdate]);
     }
 }

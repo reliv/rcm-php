@@ -52,7 +52,7 @@ class GroupPoliciesAndQueryToApplicableRulesTest extends TestCase
     protected static function createMockGroup($id, $rules)
     {
         $group = M::mock(Group::class);
-        $group->allows()->getId()->andReturns($id);
+        $group->allows()->getName()->andReturns($id);
         $group->allows()->getRules()->andReturns($rules);
 
         return $group;

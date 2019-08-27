@@ -2,25 +2,18 @@
 
 namespace Rcm\Controller;
 
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
+use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Exception\PluginInstanceNotFoundException;
+use Rcm\Http\NotAllowedResponseJsonZf2;
+use Rcm\RequestContext\RequestContext;
 use Rcm\Service\PluginManager;
 use RcmUser\Service\RcmUserService;
 use Zend\View\Model\JsonModel;
 
-/**
- * InstanceConfigApiController
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   Rcm\Controller\Plugin
- * @author    Rod Mcnew <rmcnew@relivinc.com>
- * @copyright 2017 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: <package_version>
- * @link      https://github.com/reliv
- */
 class InstanceConfigApiController extends AbstractRestfulController
 {
     /**
@@ -42,16 +35,25 @@ class InstanceConfigApiController extends AbstractRestfulController
             ResourceName::class
         );
 
-        $allowed = $rcmUserService->isAllowed(
-            $resourceName->get(ResourceName::RESOURCE_SITES, $siteId),
-            'admin',
-            \Rcm\Acl\ResourceProvider::class
-        );
+        /** @oldControllerAclAccessCheckReplaced */
 
-        if (!$allowed) {
-            $this->getResponse()->setStatusCode(401);
+        /**
+         * @var AssertIsAllowed $assertIsAllowed
+         */
+        $assertIsAllowed = $this->getServiceLocator()->get(RequestContext::class)
+            ->get(AssertIsAllowed::class);
 
-            return $this->getResponse();
+        try {
+            $assertIsAllowed->__invoke(
+                AclActions::READ,
+                [
+                    'type' => SecurityPropertyConstants::TYPE_ADMIN_TOOL,
+                    SecurityPropertyConstants::ADMIN_TOOL_TYPE_KEY =>
+                        SecurityPropertyConstants::ADMIN_TOOL_TYPE_BLOCK_INSTANCE_CONFIG
+                ]
+            );
+        } catch (NotAllowedException $e) {
+            return new NotAllowedResponseJsonZf2();
         }
 
         $routeMatch = $this->getEvent()->getRouteMatch();

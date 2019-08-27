@@ -3,6 +3,8 @@
 namespace RcmAdmin\Factory;
 
 use Interop\Container\ContainerInterface;
+use Rcm\RequestContext\RequestContext;
+use Rcm\SecureRepo\SiteSecureRepo;
 use RcmAdmin\Controller\ApiAdminManageSitesController;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -26,6 +28,6 @@ class ApiAdminManageSitesControllerFactory
             $container = $container->getServiceLocator();
         }
 
-        return new ApiAdminManageSitesController($container);
+        return new ApiAdminManageSitesController($container->get(RequestContext::class)->get(SiteSecureRepo::class));
     }
 }
