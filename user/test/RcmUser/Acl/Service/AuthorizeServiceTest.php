@@ -104,19 +104,4 @@ class AuthorizeServiceTest extends Zf2TestCase
             $authServ->getAclDataService()
         );
     }
-
-    public function testGetRoles()
-    {
-    }
-
-    public function testIsAllowed()
-    {
-        /* @todo Fix Me
-         * $resource = "some.resource";
-         *
-         * $result = $this->getAuthorizeService()->isAllowed($resource);
-         *
-         * $this->assertTrue($result, 'True not returned.');
-         * */
-    }
 }

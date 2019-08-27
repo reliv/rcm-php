@@ -114,9 +114,8 @@ class SiteSecureRepo
             ->select('site')
             ->leftJoin('site.domain', 'domain')
             ->leftJoin('site.country', 'country')
-            ->leftJoin('site.language', 'language');
-        // @todo This is broken in doctrine 1.* with MySQL 5.7
-        //->orderBy('domain.domain', 'ASC');
+            ->leftJoin('site.language', 'language')
+            ->orderBy('domain.domain', 'ASC');
 
         $query = $createQueryBuilder->getQuery();
 

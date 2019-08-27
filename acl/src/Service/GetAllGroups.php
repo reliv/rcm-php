@@ -20,7 +20,7 @@ class GetAllGroups
     /**
      * Note: This may do some short-term caching in the future
      *
-     * @TODO cache all these file system reads across requests?
+     * @possiblePerformanceImprovement Cache all these file system reads across requests?
      *
      * @return Group[]
      */

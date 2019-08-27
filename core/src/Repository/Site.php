@@ -226,7 +226,6 @@ class Site extends EntityRepository
     }
 
     /**
-     * @todo Fix Me
      * createNewSite
      *
      * @param string $createdByUserId
@@ -258,7 +257,6 @@ class Site extends EntityRepository
     }
 
     /**
-     * @todo Fix Me
      * copySite
      *
      * @param int $siteId
