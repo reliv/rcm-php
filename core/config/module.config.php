@@ -14,9 +14,6 @@ return [
             'shouldShowRevisions'
             => Rcm\Factory\ShouldShowRevisionsPluginFactory::class,
 
-            'rcmIsAllowed'
-            => Rcm\Factory\RcmIsAllowedFactory::class,
-
             'rcmIsSiteAdmin'
             => Rcm\Factory\IsSiteAdminPluginFactory::class,
 
