@@ -16,14 +16,18 @@ $currentRevisionId = '';
 $pageType = $page->getPageType();
 $pageName = $page->getName();
 $currentRevision = $page->getCurrentRevision();
+$publishedRevision = $page->getPublishedRevision();
 if ($currentRevision instanceof \Rcm\Entity\Revision) {
     $wasPublished = $currentRevision->wasPublished();
     $currentRevisionId = $currentRevision->getRevisionId();
 }
 
+$showPublishButton = empty($publishedRevision)
+    || $currentRevision->getRevisionId() !== $publishedRevision->getRevisionId();
+
 /** @var \Rcm\Entity\Site $site */
 $site = $layout->site;
-if($restrictions) {
+if ($restrictions) {
     $unlockedStyle = 'display: none;';
     $lockedStyle = '';
 } else {
@@ -35,35 +39,35 @@ if($restrictions) {
     <div class="row">
         <div class="col-sm-12 rcm-admin-menu-col">
             <!-- <publish> -->
-            <?php if ($wasPublished !== true) : ?>
-            <div class="panel-button-container" data-ng-hide="rcmAdminPage.editMode">
-                <button
-                    class="btn btn-primary btn-xs rcmMenuPost publishBtn"
-                    type="button"
-                    publish-url="<?=
-                    $this->url(
-                        'RcmAdmin\Page\PublishPageRevision',
-                        array(
-                            'rcmPageRevision' => $currentRevisionId,
-                            'rcmPageType' => $pageType,
-                            'rcmPageName' => $pageName,
-                        )
-                    ); ?>"
-                >
-                    <span class="glyphicon glyphicon-check"></span>
-                    Publish
-                </button>
-            </div>
+            <?php if ($showPublishButton) : ?>
+                <div class="panel-button-container" data-ng-hide="rcmAdminPage.editMode">
+                    <button
+                            class="btn btn-primary btn-xs rcmMenuPost publishBtn"
+                            type="button"
+                            publish-url="<?=
+                            $this->url(
+                                'RcmAdmin\Page\PublishPageRevision',
+                                array(
+                                    'rcmPageRevision' => $currentRevisionId,
+                                    'rcmPageType' => $pageType,
+                                    'rcmPageName' => $pageName,
+                                )
+                            ); ?>"
+                    >
+                        <span class="glyphicon glyphicon-check"></span>
+                        Publish
+                    </button>
+                </div>
             <?php endif; ?>
             <!-- </publish> -->
 
             <!-- <edit> -->
             <div class="panel-button-container" data-ng-hide="rcmAdminPage.editMode">
                 <button
-                    class="btn btn-warning btn-xs"
-                    onclick="rcmAdminService.rcmAdminEditButtonAction('arrange')"
-                    data-ng-disabled="loading"
-                    type="button"
+                        class="btn btn-warning btn-xs"
+                        onclick="rcmAdminService.rcmAdminEditButtonAction('arrange')"
+                        data-ng-disabled="loading"
+                        type="button"
                 >
                     <span class="glyphicon glyphicon-edit"></span>
                     Edit
@@ -74,10 +78,10 @@ if($restrictions) {
             <!-- <save-draft> -->
             <div class="panel-button-container" data-ng-show="rcmAdminPage.editMode">
                 <button
-                    class="btn btn-primary btn-xs"
-                    data-rcm-admin-edit-button="save"
-                    data-ng-disabled="loading"
-                    type="button"
+                        class="btn btn-primary btn-xs"
+                        data-rcm-admin-edit-button="save"
+                        data-ng-disabled="loading"
+                        type="button"
                 >
                     <span class="glyphicon glyphicon glyphicon glyphicon-ok"></span>
                     Save Draft
@@ -88,10 +92,10 @@ if($restrictions) {
             <!-- <cancel> -->
             <div class="panel-button-container" data-ng-show="rcmAdminPage.editMode">
                 <button
-                    class="btn btn-xs"
-                    data-rcm-admin-edit-button="cancel"
-                    data-ng-disabled="loading"
-                    type="button"
+                        class="btn btn-xs"
+                        data-rcm-admin-edit-button="cancel"
+                        data-ng-disabled="loading"
+                        type="button"
                 >
                     <span class="glyphicon glyphicon glyphicon-remove"></span>
                     Cancel

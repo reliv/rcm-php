@@ -272,13 +272,13 @@ return [
                                 'limit' => 10,
                                 'page' => [
                                     'label' => ':revisionPublishedDate - :revisionAuthor',
-                                    'route' => 'RcmAdmin\Page\PublishPageRevision',
+                                    'route' => 'contentManagerWithPageType',
                                     'class' => 'icon-before restore-page',
                                     'text_domain' => 'DO_NOT_TRANSLATE',
                                     'params' => [
-                                        'rcmPageName' => ':rcmPageName',
-                                        'rcmPageType' => ':rcmPageType',
-                                        'rcmPageRevision' => ':rcmPageRevision',
+                                        'page' => ':rcmPageName',
+                                        'pageType' => ':rcmPageType',
+                                        'revision' => ':rcmPageRevision',
                                     ],
                                 ],
                             ],

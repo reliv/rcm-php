@@ -185,14 +185,9 @@ class PageController extends AbstractActionController
     {
         $request = $this->getRequest();
 
-//        //HTTP method check //this was comented our because the current UI bizarly does an HTTP GET to this action
-//        if (!$request->isPost()) {
-//
-//            $response = new Response();
-//            $response->setStatusCode('405');
-//
-//            return $response;
-//        }
+        if (!$request->isPost()) {
+            return new NotAllowedResponseJsonZf2();
+        }
 
         /** @oldControllerAclAccessCheckReplacedWithDeeperSecureRepoCheck */
 
