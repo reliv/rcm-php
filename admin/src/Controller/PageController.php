@@ -186,7 +186,6 @@ class PageController extends AbstractActionController
         $request = $this->getRequest();
 
         if (!$request->isPost()) {
-
             return new NotAllowedResponseJsonZf2();
         }
 
