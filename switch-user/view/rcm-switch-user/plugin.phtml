@@ -1,0 +1,25 @@
+<?php
+$showSwitchToUserNameField = json_encode($this->instanceConfig['showSwitchToUserNameField']);
+$switchToUserNamePlaceholder = $this->instanceConfig['switchToUserNamePlaceholder'];
+$switchToUserNameButtonLabel = $this->instanceConfig['switchToUserNameButtonLabel'];
+$switchBackButtonLabel = $this->instanceConfig['switchBackButtonLabel'];
+$switchUserInfoContentPrefix = $this->instanceConfig['switchUserInfoContentPrefix'];
+?>
+
+<div class="switch-user panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Switch User</h3>
+    </div>
+    <div class="panel-body">
+        <div rcm-switch-user-admin-simple=""
+             show-switch-to-user-name-field="<?= $showSwitchToUserNameField ?>"
+             switch-to-user-name="''"
+             switch-to-user-name-placeholder="'<?= $switchToUserNamePlaceholder ?>'"
+             switch-to-user-name-button-label="'<?= $switchToUserNameButtonLabel ?>'"
+             switch-back-button-label="'<?= $switchBackButtonLabel ?>'"
+             switch-user-info-content-prefix="'<?= $switchUserInfoContentPrefix ?>'"
+        >
+            Switch User
+        </div>
+    </div>
+</div>

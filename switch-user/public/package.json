@@ -1,0 +1,15 @@
+{
+  "name": "rcm-switch-user",
+  "version": "1.0.0",
+  "description": "rcm-switch-user",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-uglify": "^0.10.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-inline-template": "0.0.1"
+  },
+  "dependencies": {
+    "grunt-forever": "^0.4.7"
+  }
+}

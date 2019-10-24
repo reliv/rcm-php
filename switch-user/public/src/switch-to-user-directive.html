@@ -1,0 +1,43 @@
+<style type="text/css">
+    .switch-user.default label,
+    .switch-user.default p {
+        margin: 5px 0px 5px 0px;
+    }
+</style>
+<div class="switch-user default container-fluid" ng-hide="propLoading">
+    <div class="row form-inline">
+        <div class="col-md-12" ng-show="propMessage">
+            <div class="alert alert-warning" role="alert">
+                {{propMessage.value}}
+            </div>
+        </div>
+        <div class="col-md-3" ng-show="propIsSu">
+            <label class="switch-user-info-content">
+                {{propSwitchUserInfoContentPrefix}} {{propImpersonatedUser.id}} {{propImpersonatedUser.username}}
+            </label>
+        </div>
+        <div class="col-md-4" ng-show="propShowSwitchToUserNameField">
+            <form ng-submit="propOnSwitchTo()">
+                <input class="form-control input-sm switchToUserName"
+                       placeholder="{{propSwitchToUserNamePlaceholder}}"
+                       ng-model="propSwitchToUserName"
+                       type="text"/>
+                <button class="btn btn-default btn-sm"
+                        type="submit">{{propSwitchToUserNameButtonLabel}}
+                </button>
+            </form>
+        </div>
+        <div class="col-md-4" ng-show="propIsSu">
+            <form ng-submit="propOnSwitchBack()">
+                <input class="form-control input-sm suUserPassword"
+                       placeholder="password"
+                       ng-model="propSuUserPassword"
+                       ng-show="propSwitchBackMethod == 'auth'"
+                       type="password"/>
+                <button class="btn btn-primary btn-sm"
+                        type="submit">{{propSwitchBackButtonLabel}}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

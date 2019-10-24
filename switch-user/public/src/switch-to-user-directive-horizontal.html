@@ -1,0 +1,71 @@
+<style type="text/css">
+    .switch-user.horizontal {
+        min-height: 20px;
+    }
+    .switch-user.horizontal label {
+        margin: .3em;
+    }
+    /* show full borders */
+    .switch-user.horizontal .input-group-btn button {
+        margin-right: 1px;
+    }
+</style>
+<div class="switch-user horizontal">
+    <div class="row" ng-show="propMessage">
+        <div class="col-sm-12">
+            <div class="alert alert-warning" role="alert">
+                {{propMessage.value}}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4" ng-show="propIsSu">
+            <label>
+                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                <span class="switch-user-info-content">{{propSwitchUserInfoContentPrefix}} {{propImpersonatedUser.id}} {{propImpersonatedUser.username}}</span>
+            </label>
+        </div>
+        <div ng-class="{'col-sm-4': propSwitchBackMethod == 'auth', 'col-sm-4 col-md-offset-4': propSwitchBackMethod != 'auth'}">
+            <form ng-submit="propOnSwitchTo()">
+                <div class="input-group input-group-sm">
+                    <input class="form-control switchToUserName"
+                           placeholder="{{propSwitchToUserNamePlaceholder}}"
+                           ng-model="propSwitchToUserName"
+                           type="text"
+                    >
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary"
+                                type="submit">
+                            {{propSwitchToUserNameButtonLabel}}
+                        </button>
+                        <button class="btn btn-warning"
+                                ng-click="propOnSwitchBack()"
+                                ng-show="propSwitchBackMethod != 'auth' && propIsSu"
+                                type="button">
+                            {{propSwitchBackButtonLabel}}
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-4" ng-show="propSwitchBackMethod == 'auth' && propIsSu">
+            <form ng-submit="propOnSwitchBack()">
+                <div class="input-group input-group-sm">
+                    <input class="form-control suUserPassword"
+                           placeholder="password"
+                           ng-model="propSuUserPassword"
+                           type="password"
+                    >
+                    <span class="input-group-btn">
+                        <button class="btn btn-warning"
+                                ng-show="propIsSu"
+                                type="submit">
+                            {{propSwitchBackButtonLabel}}
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
