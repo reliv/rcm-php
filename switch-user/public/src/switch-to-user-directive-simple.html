@@ -1,0 +1,74 @@
+<style type="text/css">
+    /* show full borders */
+    .switch-user.simple .input-group-btn button {
+        margin-right: 1px;
+    }
+</style>
+<div class="switch-user simple">
+    <div class="row" ng-show="propMessage">
+        <div class="col-sm-12">
+            <div class="alert alert-warning" role="alert">
+                {{propMessage.value}}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <form ng-submit="propOnSwitchTo()">
+                <div class="input-group input-group-sm">
+                    <input class="form-control switchToUserName"
+                           placeholder="{{propSwitchToUserNamePlaceholder}}"
+                           ng-model="propSwitchToUserName"
+                           type="text"
+                    >
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary"
+                                type="submit">
+                            {{propSwitchToUserNameButtonLabel}}
+                        </button>
+                        <button class="btn btn-warning"
+                                ng-click="propOnSwitchBack()"
+                                ng-if="propSwitchBackMethod != 'auth' && propIsSu"
+                                type="button">
+                            {{propSwitchBackButtonLabel}}
+                        </button>
+                        <button class="btn btn-default"
+                                ng-click="toggleImpersonatorDetails()"
+                                ng-if="propSwitchBackMethod != 'auth' && propIsSu"
+                                type="button">
+                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                </div>
+            </form>
+            <form ng-show="propSwitchBackMethod == 'auth' && propIsSu"
+                  ng-submit="propOnSwitchBack()">
+                <div class="input-group  input-group-sm">
+                    <input class="form-control suUserPassword"
+                           placeholder="password"
+                           ng-model="propSuUserPassword"
+                           type="password"
+                    >
+                    <span class="input-group-btn">
+                        <button class="btn btn-warning"
+                                type="submit">
+                            {{propSwitchBackButtonLabel}}
+                        </button>
+                        <button class="btn btn-default"
+                                ng-click="showImpersonatorDetails = !showImpersonatorDetails"
+                                type="button">
+                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                </div>
+            </form>
+            <rcm-switch-user-tooltip
+                    content="propSwitchUserInfoContentPrefix + ' ' + propImpersonatedUser.id + ' ' + propImpersonatedUser.username"
+                    show="showImpersonatorDetails && propIsSu"
+            >
+                tooltip
+            </rcm-switch-user-tooltip>
+        </div>
+    </div>
+</div>
+
