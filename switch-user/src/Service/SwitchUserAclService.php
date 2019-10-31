@@ -67,7 +67,7 @@ class SwitchUserAclService
     }
 
     /**
-     * isImpersonatorUserAllowed
+     * @deprecated USES OLD ACL SYSTEM THAT WILL BE REMOVED!
      *
      * @param string $resourceId
      * @param string $privilege
@@ -96,6 +96,8 @@ class SwitchUserAclService
     }
 
     /**
+     * @deprecated USES OLD ACL SYSTEM THAT WILL BE REMOVED!
+     *
      * isCurrentImpersonatorUserAllowed
      *
      * @param $resourceId

@@ -16,7 +16,6 @@ use RcmUser\Api\Authentication\GetIdentity;
 use Zend\Diactoros\Response\JsonResponse;
 use \Zend\Http\Response;
 use \Zend\Mvc\Controller\AbstractRestfulController;
-use RcmUser\Api\Acl\IsAllowed;
 
 class SiteDomainNameController implements MiddlewareInterface
 {

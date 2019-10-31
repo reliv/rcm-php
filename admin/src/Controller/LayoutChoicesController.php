@@ -12,7 +12,6 @@ use Rcm\RequestContext\RequestContext;
 use Rcm\SecureRepo\SiteSecureRepo;
 use Rcm\Service\CurrentSite;
 use Rcm\Service\LayoutManager;
-use RcmUser\Api\Acl\IsAllowed;
 use Zend\Diactoros\Response\JsonResponse;
 
 class LayoutChoicesController implements MiddlewareInterface

@@ -15,7 +15,6 @@ use Rcm\ImmutableHistory\HumanReadableChangeLog\ChangeLogEvent;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetAllSortedChangeLogEventsByDateRange;
 use Rcm\ImmutableHistory\HumanReadableChangeLog\GetHumanReadableChangeLogByDateRangeComposite;
 use Rcm\RequestContext\RequestContext;
-use RcmUser\Api\Acl\IsAllowed;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
