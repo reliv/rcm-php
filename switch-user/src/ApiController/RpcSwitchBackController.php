@@ -2,6 +2,7 @@
 
 namespace Rcm\SwitchUser\ApiController;
 
+use Rcm\Http\NotAllowedResponseJsonZf2;
 use Reliv\RcmApiLib\Model\ApiMessage;
 use Reliv\RcmApiLib\Model\ExceptionApiMessage;
 
@@ -24,13 +25,13 @@ class RpcSwitchBackController extends BaseApiController
         $currentUser = $this->getCurrentUser();
 
         if (empty($currentUser)) {
-            return $this->getApiResponse(null, 401);
+            return new NotAllowedResponseJsonZf2();
         }
 
         $suUser = $service->getImpersonatorUser($currentUser, $currentUser);
 
         if (!$this->isAllowed($suUser)) {
-            return $this->getApiResponse(null, 401);
+            return new NotAllowedResponseJsonZf2();
         }
 
         // The switch back method used will determine what the API requires

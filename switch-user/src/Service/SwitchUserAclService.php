@@ -2,6 +2,8 @@
 
 namespace Rcm\SwitchUser\Service;
 
+use Rcm\Acl\IsAllowedByUser;
+use Rcm\SwitchUser\Acl\DoesAclSayUserCanSU;
 use RcmUser\Api\Acl\IsUserAllowed;
 use RcmUser\Api\Authentication\GetIdentity;
 use RcmUser\Api\GetPsrRequest;
@@ -13,14 +15,9 @@ use RcmUser\User\Entity\UserInterface;
 class SwitchUserAclService
 {
     /**
-     * @var array
+     * @var DoesAclSayUserCanSU
      */
-    protected $aclConfig;
-
-    /**
-     * @var IsUserAllowed
-     */
-    protected $isUserAllowed;
+    protected $doesAclSayUserCanSU;
 
     /**
      * @var GetIdentity
@@ -32,22 +29,18 @@ class SwitchUserAclService
      */
     protected $switchUserService;
 
-    /**
-     * @param array             $config
-     * @param IsUserAllowed     $isUserAllowed
-     * @param GetIdentity       $getIdentity
-     * @param SwitchUserService $switchUserService
-     */
+    protected $isUserAllowed;
+
     public function __construct(
-        $config,
-        IsUserAllowed $isUserAllowed,
+        DoesAclSayUserCanSU $doesAclSayUserCanSU,
         GetIdentity $getIdentity,
-        SwitchUserService $switchUserService
+        SwitchUserService $switchUserService,
+        IsUserAllowed $isUserAllowed //This should be removed eventually as it uses the OLD ACL system
     ) {
-        $this->aclConfig = $config['Rcm\\SwitchUser']['acl'];
-        $this->isUserAllowed = $isUserAllowed;
+        $this->doesAclSayUserCanSU = $doesAclSayUserCanSU;
         $this->getIdentity = $getIdentity;
         $this->switchUserService = $switchUserService;
+        $this->isUserAllowed = $isUserAllowed;
     }
 
     /**
@@ -74,61 +67,11 @@ class SwitchUserAclService
     }
 
     /**
-     * isAllowed
-     *
-     * @param string        $resourceId
-     * @param string        $privilege
-     * @param null          $providerId // @deprecated
-     * @param UserInterface $user
-     *
-     * @return bool|mixed
-     */
-    public function isUserAllowed($resourceId, $privilege, $providerId = null, $user)
-    {
-        $suUser = $this->getAclUser($user);
-
-        if (empty($suUser)) {
-            return false;
-        }
-
-        return $this->isUserAllowed->__invoke(
-            $suUser,
-            $resourceId,
-            $privilege
-        );
-    }
-
-    /**
-     * currentUserIsAllowed
-     *
-     * @param $resourceId
-     * @param $privilege
-     * @param $providerId
-     *
-     * @return bool|mixed
-     */
-    public function currentUserIsAllowed($resourceId, $privilege, $providerId = null)
-    {
-        $psrRequest = GetPsrRequest::invoke();
-
-        $user = $this->getIdentity->__invoke($psrRequest);
-
-        $adminUser = $this->getAclUser($user);
-
-        return $this->isUserAllowed(
-            $resourceId,
-            $privilege,
-            $providerId,
-            $adminUser
-        );
-    }
-
-    /**
      * isImpersonatorUserAllowed
      *
-     * @param string        $resourceId
-     * @param string        $privilege
-     * @param null          $providerId // @deprecated
+     * @param string $resourceId
+     * @param string $privilege
+     * @param null $providerId // @deprecated
      * @param UserInterface $user
      *
      * @return bool|mixed
@@ -136,8 +79,8 @@ class SwitchUserAclService
     public function isImpersonatorUserAllowed(
         $resourceId,
         $privilege,
-        $providerId = null,
-        $user
+        $user,
+        $providerId = null
     ) {
         $user = $this->switchUserService->getImpersonatorUser($user);
 
@@ -173,8 +116,8 @@ class SwitchUserAclService
         return $this->isImpersonatorUserAllowed(
             $resourceId,
             $privilege,
-            $providerId,
-            $user
+            $user,
+            $providerId
         );
     }
 
@@ -190,25 +133,35 @@ class SwitchUserAclService
      */
     public function isSuAllowed($suUser)
     {
-        return $this->isUserAllowed(
-            $this->aclConfig['resourceId'],
-            $this->aclConfig['privilege'],
-            $this->aclConfig['providerId'],
-            $suUser
-        );
+        return $this->doesAclSayUserCanSU->__invoke($suUser);
     }
 
     /**
-     * currentUserIsAllowed
+     * @deprecated USES OLD ACL SYSTEM THAT WILL BE REMOVED!
      *
-     * @return bool|mixed
+     * This is here for BC support of a closed source conference registration system and should be removed eventually.
+     *
+     * This runs an ACL check against the user who SU'd if they exist, otherwise it runs against the current user.
+     *
+     * @param $resourceId
+     * @param $privilege
+     * @param null $providerId
+     * @return mixed
      */
-    public function currentUserIsSuAllowed()
+    public function currentUserIsAllowed($resourceId, $privilege, $providerId = null)
     {
-        return $this->currentUserIsAllowed(
-            $this->aclConfig['resourceId'],
-            $this->aclConfig['privilege'],
-            $this->aclConfig['providerId']
+        $checkUser = $this->getIdentity->__invoke(GetPsrRequest::invoke());
+
+        $adminUser = $this->getAclUser($checkUser);
+
+        if (!empty($adminUser)) {
+            $checkUser = $adminUser;
+        }
+
+        return $this->isUserAllowed->__invoke(
+            $checkUser,
+            $resourceId,
+            $privilege
         );
     }
 }

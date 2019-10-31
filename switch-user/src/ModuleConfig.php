@@ -2,6 +2,11 @@
 
 namespace Rcm\SwitchUser;
 
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\IsAllowedByUser;
+use Rcm\SwitchUser\Acl\AssertCurrentUserIsAllowedToSwitchUser;
+use Rcm\SwitchUser\Acl\DoesAclSayUserCanSU;
+use Rcm\SwitchUser\Service\SwitchUserAclService;
 use RcmUser\Api\Acl\IsUserAllowed;
 use RcmUser\Api\Authentication\Authenticate;
 use RcmUser\Api\Authentication\GetIdentity;
@@ -59,11 +64,6 @@ class ModuleConfig
                     \Rcm\SwitchUser\Restriction\AclRestriction::class,
                     \Rcm\SwitchUser\Restriction\SuUserRestriction::class,
                 ],
-                'acl' => [
-                    'resourceId' => 'switchuser',
-                    'privilege' => 'execute',
-                    'providerId' => 'Rcm\SwitchUser\Acl\ResourceProvider'
-                ],
                 /*
                  * 'basic' = no auth required
                  * 'auth'  = password auth required to switch back to admin
@@ -97,23 +97,12 @@ class ModuleConfig
                 ],
             ],
 
-            /* RcmUser Config */
-            'RcmUser' => [
-                'Acl\Config' => [
-                    'ResourceProviders' => [
-                        'Rcm\SwitchUser\Acl\ResourceProvider' => [
-                            'switchuser' => [
-                                'resourceId' => 'switchuser',
-                                'parentResourceId' => null,
-                                'privileges' => [
-                                    'execute',
-                                ],
-                                'name' => 'RCM Switch User.',
-                                'description' => 'Switch user ACL resource.',
-                            ],
-                        ],
-                    ],
-                ],
+            'request_context' => [
+                'config_factories' => [
+                    AssertCurrentUserIsAllowedToSwitchUser::class => [
+                        'arguments' => AssertIsAllowed::class
+                    ]
+                ]
             ],
 
             /* SERVICE MANAGER */
@@ -124,26 +113,29 @@ class ModuleConfig
                             \Rcm\SwitchUser\Service\SwitchUserAclService::class,
                         ]
                     ],
+                    DoesAclSayUserCanSU::class => [
+                        'arguments' => [
+                            IsAllowedByUser::class,
+                        ]
+                    ],
                     \Rcm\SwitchUser\Restriction\AclRestriction::class => [
                         'arguments' => [
-                            'config',
-                            IsUserAllowed::class,
+                            DoesAclSayUserCanSU::class,
                         ]
                     ],
                     \Rcm\SwitchUser\Restriction\SuUserRestriction::class => [
                         'arguments' => [
-                            'config',
-                            IsUserAllowed::class,
+                            DoesAclSayUserCanSU::class,
                         ]
                     ],
 
                     /* Services */
                     \Rcm\SwitchUser\Service\SwitchUserAclService::class => [
                         'arguments' => [
-                            'config',
-                            IsUserAllowed::class,
+                            DoesAclSayUserCanSU::class,
                             GetIdentity::class,
                             \Rcm\SwitchUser\Service\SwitchUserService::class,
+                            IsUserAllowed::class//This should be removed eventually as it uses the OLD ACL system
                         ]
                     ],
                     \Rcm\SwitchUser\Service\SwitchUserLogService::class => [
@@ -153,10 +145,9 @@ class ModuleConfig
                     ],
                     \Rcm\SwitchUser\Service\SwitchUserService::class => [
                         'arguments' => [
-                            'config',
                             GetUserByUsername::class,
                             GetIdentity::class,
-                            IsUserAllowed::class,
+                            DoesAclSayUserCanSU::class,
                             \Rcm\SwitchUser\Restriction\Restriction::class,
                             \Rcm\SwitchUser\Switcher\Switcher::class,
                             \Rcm\SwitchUser\Service\SwitchUserLogService::class,

@@ -25,15 +25,15 @@ class ArrayStorage extends AbstractAdapter
      * internalGetItem
      *
      * @param string $normalizedKey
-     * @param null   $success
-     * @param null   $casToken
+     * @param null $success
+     * @param null $casToken
      *
      * @return mixed
      */
     protected function internalGetItem(
-        & $normalizedKey,
-        & $success = null,
-        & $casToken = null
+        &$normalizedKey,
+        &$success = null,
+        &$casToken = null
     ) {
         if (array_key_exists($normalizedKey, $this->storageArray)) {
             return $this->storageArray[$normalizedKey];
@@ -46,11 +46,11 @@ class ArrayStorage extends AbstractAdapter
      * internalSetItem
      *
      * @param string $normalizedKey
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return void
      */
-    protected function internalSetItem(& $normalizedKey, & $value)
+    protected function internalSetItem(&$normalizedKey, &$value)
     {
         $this->storageArray[$normalizedKey] = $value;
     }
@@ -62,7 +62,7 @@ class ArrayStorage extends AbstractAdapter
      *
      * @return void
      */
-    protected function internalRemoveItem(& $normalizedKey)
+    protected function internalRemoveItem(&$normalizedKey)
     {
         unset($this->storageArray[$normalizedKey]);
     }

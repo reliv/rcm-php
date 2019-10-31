@@ -2,6 +2,7 @@
 
 namespace Rcm\SwitchUser\Controller;
 
+use Rcm\Http\NotAllowedResponseJsonZf2;
 use RcmUser\Api\Authentication\GetIdentity;
 use RcmUser\Api\GetPsrRequest;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -96,9 +97,7 @@ class AdminController extends AbstractActionController
         }
 
         if (!$this->isAllowed($adminUser)) {
-            $this->getResponse()->setStatusCode(401);
-
-            return $this->getResponse();
+            return new NotAllowedResponseJsonZf2();
         }
 
         $view->setVariable('adminUser', $adminUser);

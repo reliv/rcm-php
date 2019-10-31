@@ -385,16 +385,11 @@ var RcmSwitchUserService = function (rcmLoading, rcmApiLibService, rcmEventManag
      * @param onSuccess
      * @param onError
      */
-    self.switchUserBack = function (suUserPassword, onSuccess, onError) {
-
-        var data = {
-            suUserPassword: suUserPassword
-        };
-
+    self.switchUserBack = function (onSuccess, onError) {
         rcmApiLibService.post(
             {
                 url: apiPaths.switchUserBack,
-                data: data,
+                data: {},
                 loading: function (loading) {
                     var loadingInt = Number(!loading);
                     rcmLoading.setLoading(
@@ -583,7 +578,6 @@ var RcmSwitchUserAdminService = function (
             if ($scope.isSu) {
                 apiInit();
                 rcmSwitchUserService.switchUserBack(
-                    $scope.propSwitchToUserName,
                     onSwitchBackAndToSuccess,
                     onSwitchBackError
                 );
@@ -599,7 +593,6 @@ var RcmSwitchUserAdminService = function (
         $scope.switchBack = function () {
             apiInit();
             rcmSwitchUserService.switchUserBack(
-                $scope.suUserPassword,
                 onSwitchBackSuccess,
                 onSwitchBackError
             );

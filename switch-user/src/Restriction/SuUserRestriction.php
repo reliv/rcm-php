@@ -2,36 +2,24 @@
 
 namespace Rcm\SwitchUser\Restriction;
 
-use RcmUser\Api\Acl\IsUserAllowed;
+use Rcm\SwitchUser\Acl\DoesAclSayUserCanSU;
 use RcmUser\User\Entity\UserInterface;
 
-/**
- * @author James Jervis - https://github.com/jerv13
- */
 class SuUserRestriction implements Restriction
 {
     /**
-     * @var array
+     * @var DoesAclSayUserCanSU
      */
-    protected $aclConfig;
+    protected $doesAclSayUserCanSU;
 
-    /**
-     * @var IsUserAllowed
-     */
-    protected $isUserAllowed;
-
-    /**
-     * @param               $config
-     * @param IsUserAllowed $isUserAllowed
-     */
-    public function __construct($config, IsUserAllowed $isUserAllowed)
+    public function __construct(DoesAclSayUserCanSU $doesAclSayUserCanSU)
     {
-        $this->aclConfig = $config['Rcm\\SwitchUser']['acl'];
-        $this->isUserAllowed = $isUserAllowed;
+        $this->doesAclSayUserCanSU = $doesAclSayUserCanSU;
     }
 
     /**
-     * allowed
+     * Returns true if the target user does NOT have permissions to SU.
+     * This effectivly enforces "you cannot SU to someone who can SU".
      *
      * @param UserInterface $adminUser
      * @param UserInterface $targetUser
@@ -40,13 +28,7 @@ class SuUserRestriction implements Restriction
      */
     public function allowed(UserInterface $adminUser, UserInterface $targetUser)
     {
-        $isAllowed = $this->isUserAllowed->__invoke(
-            $targetUser,
-            $this->aclConfig['resourceId'],
-            $this->aclConfig['privilege']
-        );
-
-        if ($isAllowed) {
+        if ($this->doesAclSayUserCanSU->__invoke($targetUser)) {
             return new RestrictionResult(false, 'Cannot switch to this user');
         }
 
