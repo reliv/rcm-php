@@ -7,6 +7,7 @@ use Rcm\Acl\IsAllowedByUser;
 use Rcm\SwitchUser\Acl\AssertCurrentUserIsAllowedToSwitchUser;
 use Rcm\SwitchUser\Acl\DoesAclSayUserCanSU;
 use Rcm\SwitchUser\Service\SwitchUserAclService;
+use RcmUser\Api\Acl\IsUserAllowed;
 use RcmUser\Api\Authentication\Authenticate;
 use RcmUser\Api\Authentication\GetIdentity;
 use RcmUser\Api\Authentication\SetIdentityInsecure;
@@ -134,6 +135,7 @@ class ModuleConfig
                             DoesAclSayUserCanSU::class,
                             GetIdentity::class,
                             \Rcm\SwitchUser\Service\SwitchUserService::class,
+                            IsUserAllowed::class//This should be removed eventually as it uses the OLD ACL system
                         ]
                     ],
                     \Rcm\SwitchUser\Service\SwitchUserLogService::class => [

@@ -403,11 +403,11 @@ class AuthorizeService extends EventProvider
                 . ' with exception: ' . get_class($e) . '::message: ' . $e->getMessage();
 
             $params = [
-                'definedRoles' => $this->getRoles(),
                 'error' => $error,
+                'resourceId' => $resourceId,
                 'privilege' => $privilege,
                 'providerId' => $providerId,
-                'resourceId' => $resourceId,
+                'definedRoles' => $this->getRoles(),
                 'result' => $result,
                 'user' => $user,
                 'userRoles' => $userRoles,
