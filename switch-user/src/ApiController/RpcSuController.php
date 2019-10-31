@@ -2,6 +2,7 @@
 
 namespace Rcm\SwitchUser\ApiController;
 
+use Rcm\Http\NotAllowedResponseJsonZf2;
 use RcmUser\User\Entity\UserInterface;
 use Reliv\RcmApiLib\Model\ApiMessage;
 use Reliv\RcmApiLib\Model\ExceptionApiMessage;
@@ -53,7 +54,7 @@ class RpcSuController extends BaseApiController
         $currentUser = $this->getCurrentUser();
 
         if (!$this->isAllowed($currentUser)) {
-            return $this->getApiResponse(null, 401);
+            return new NotAllowedResponseJsonZf2();
         }
 
         $service = $this->getSwitchUserService();

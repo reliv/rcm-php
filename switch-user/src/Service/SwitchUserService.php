@@ -2,11 +2,11 @@
 
 namespace Rcm\SwitchUser\Service;
 
+use Rcm\SwitchUser\Acl\DoesAclSayUserCanSU;
 use Rcm\SwitchUser\Model\SuProperty;
 use Rcm\SwitchUser\Restriction\Restriction;
 use Rcm\SwitchUser\Result;
 use Rcm\SwitchUser\Switcher\Switcher;
-use RcmUser\Api\Acl\IsUserAllowed;
 use RcmUser\Api\Authentication\GetIdentity;
 use RcmUser\Api\GetPsrRequest;
 use RcmUser\Api\User\GetUserByUsername;
@@ -28,19 +28,14 @@ class SwitchUserService
     protected $getIdentity;
 
     /**
-     * @var IsUserAllowed
+     * @var DoesAclSayUserCanSU
      */
-    protected $isUserAllowed;
+    protected $doesAclSayUserCanSU;
 
     /**
      * @var Restriction
      */
     protected $restriction;
-
-    /**
-     * @var array
-     */
-    protected $aclConfig;
 
     /**
      * @var Switcher
@@ -52,28 +47,18 @@ class SwitchUserService
      */
     protected $switchUserLogService;
 
-    /**
-     * @param array                $config
-     * @param GetUserByUsername    $getUserByUsername
-     * @param GetIdentity          $getIdentity
-     * @param Restriction          $restriction
-     * @param Switcher             $switcher
-     * @param SwitchUserLogService $switchUserLogService
-     */
     public function __construct(
-        $config,
         GetUserByUsername $getUserByUsername,
         GetIdentity $getIdentity,
-        IsUserAllowed $isUserAllowed,
+        DoesAclSayUserCanSU $doesAclSayUserCanSU,
         Restriction $restriction,
         Switcher $switcher,
         SwitchUserLogService $switchUserLogService
     ) {
         $this->getUserByUsername = $getUserByUsername;
         $this->getIdentity = $getIdentity;
-        $this->isUserAllowed = $isUserAllowed;
+        $this->doesAclSayUserCanSU = $doesAclSayUserCanSU;
         $this->restriction = $restriction;
-        $this->aclConfig = $config['Rcm\\SwitchUser']['acl'];
         $this->switcher = $switcher;
         $this->switchUserLogService = $switchUserLogService;
     }
@@ -263,49 +248,44 @@ class SwitchUserService
         return $suUser;
     }
 
-    /**
-     * @deprecated use SwitchUserAclService::isSuAllowed
-     * isAllowed
-     *
-     * this is only a basic access check,
-     * the restrictions should catch and log any access attempts
-     *
-     * @param $suUser
-     *
-     * @return bool|mixed
-     */
-    public function isAllowed($suUser)
-    {
-        if (empty($suUser)) {
-            return false;
-        }
-        $aclConfig = $this->aclConfig;
+//    /**
+//     * isAllowed
+//     *
+//     * this is only a basic access check,
+//     * the restrictions should catch and log any access attempts
+//     *
+//     * @param $suUser
+//     *
+//     * @return bool|mixed
+//     */
+//    public function isAllowed($suUser)
+//    {
+//        if (empty($suUser)) {
+//            return false;
+//        }
+//        $aclConfig = $this->aclConfig;
+//
+//        return $this->doesAclSayUserCanSU->__invoke('execute', ['type' => 'switchUser'], $suUser);
+//    }
 
-        return $this->isUserAllowed->__invoke(
-            $suUser,
-            $aclConfig['resourceId'],
-            $aclConfig['privilege']
-        );
-    }
-
-    /**
-     * @deprecated use SwitchUserAclService::currentUserIsSuAllowed
-     * currentUserIsAllowed
-     *
-     * @return bool|mixed
-     */
-    public function currentUserIsAllowed()
-    {
-        $adminUser = $this->getCurrentImpersonatorUser();
-        $psrRequest = GetPsrRequest::invoke();
-
-        // Get current user
-        $targetUser = $this->getIdentity->__invoke($psrRequest);
-
-        if (empty($adminUser)) {
-            $adminUser = $targetUser;
-        }
-
-        return $this->isAllowed($adminUser);
-    }
+//    /**
+//     * @deprecated use SwitchUserAclService::currentUserIsSuAllowed
+//     * currentUserIsAllowed
+//     *
+//     * @return bool|mixed
+//     */
+//    public function currentUserIsAllowed()
+//    {
+//        $adminUser = $this->getCurrentImpersonatorUser();
+//        $psrRequest = GetPsrRequest::invoke();
+//
+//        // Get current user
+//        $targetUser = $this->getIdentity->__invoke($psrRequest);
+//
+//        if (empty($adminUser)) {
+//            $adminUser = $targetUser;
+//        }
+//
+//        return $this->isAllowed($adminUser);
+//    }
 }

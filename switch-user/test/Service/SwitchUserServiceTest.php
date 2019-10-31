@@ -4,12 +4,12 @@ namespace Rcm\SwitchUser\Test\Service;
 
 require_once(__DIR__ . '/../autoload.php');
 
+use Rcm\SwitchUser\Acl\DoesAclSayUserCanSU;
 use Rcm\SwitchUser\Model\SuProperty;
 use Rcm\SwitchUser\Restriction\Result;
 use Rcm\SwitchUser\Service\SwitchUserLogService;
 use Rcm\SwitchUser\Service\SwitchUserService;
 use Rcm\SwitchUser\Switcher\Switcher;
-use RcmUser\Api\Acl\IsUserAllowed;
 use RcmUser\Api\Authentication\GetIdentity;
 use RcmUser\Api\Authentication\SetIdentity;
 use RcmUser\Api\User\GetUserByUsername;
@@ -21,18 +21,7 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
     public $getIdentityMock;
     public $getUserByUsernameMock;
     public $setIdentityMock;
-    public $isUserAllowed;
-
-    public $configMock
-        = [
-            'Rcm\\SwitchUser' => [
-                'acl' => [
-                    'resourceId' => 'switchuser',
-                    'privilege' => 'execute',
-                    'providerId' => 'Rcm\SwitchUser\Acl\ResourceProvider'
-                ],
-            ],
-        ];
+    public $doesAclSayUserCanSu;
 
     /**
      * getUnit HAPPY PATH
@@ -74,13 +63,13 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
         $this->setIdentityMock->method('__invoke')
             ->will($this->returnValue(null));
 
-        $this->isUserAllowed = $this->getMockBuilder(
-            IsUserAllowed::class
+        $this->doesAclSayUserCanSu = $this->getMockBuilder(
+            DoesAclSayUserCanSU::class
         )
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->isUserAllowed->method('__invoke')
+        $this->doesAclSayUserCanSu->method('__invoke')
             ->will($this->returnValue(true));
 
         /** @var Result $this ->restrictionResultMock */
@@ -134,10 +123,9 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $unit = new SwitchUserService(
-            $this->configMock,
             $this->getUserByUsernameMock,
             $this->getIdentityMock,
-            $this->isUserAllowed,
+            $this->doesAclSayUserCanSu,
             $this->restrictionMock,
             $this->switcherMock,
             $this->switchUserLogService
@@ -189,13 +177,13 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
         $this->setIdentityMock->method('__invoke')
             ->will($this->returnValue(null));
 
-        $this->isUserAllowed = $this->getMockBuilder(
-            IsUserAllowed::class
+        $this->doesAclSayUserCanSu = $this->getMockBuilder(
+            doesAclSayUserCanSu::class
         )
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->isUserAllowed->method('__invoke')
+        $this->doesAclSayUserCanSu->method('__invoke')
             ->will($this->returnValue(true));
 
 
@@ -250,10 +238,9 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $unit = new SwitchUserService(
-            $this->configMock,
             $this->getUserByUsernameMock,
             $this->getIdentityMock,
-            $this->isUserAllowed,
+            $this->doesAclSayUserCanSu,
             $this->restrictionMock,
             $this->switcherMock,
             $this->switchUserLogService
@@ -269,10 +256,6 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function getUnitBasicSwitchBack()
     {
-        $config = $this->configMock;
-
-        $config['Rcm\\SwitchUser']['switchBackMethod'] = 'basic';
-
         /** @var \RcmUser\User\Entity\UserInterface $rcmUserMock */
         $this->rcmUserMock
             = $this->getMockBuilder(User::class)
@@ -306,13 +289,13 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
         $this->setIdentityMock->method('__invoke')
             ->will($this->returnValue(null));
 
-        $this->isUserAllowed = $this->getMockBuilder(
-            IsUserAllowed::class
+        $this->doesAclSayUserCanSu = $this->getMockBuilder(
+            doesAclSayUserCanSu::class
         )
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->isUserAllowed->method('__invoke')
+        $this->doesAclSayUserCanSu->method('__invoke')
             ->will($this->returnValue(true));
 
 
@@ -370,10 +353,9 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $unit = new SwitchUserService(
-            $this->configMock,
             $this->getUserByUsernameMock,
             $this->getIdentityMock,
-            $this->isUserAllowed,
+            $this->doesAclSayUserCanSu,
             $this->restrictionMock,
             $this->switcherMock,
             $this->switchUserLogService
@@ -422,13 +404,13 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
         $this->setIdentityMock->method('__invoke')
             ->will($this->returnValue(null));
 
-        $this->isUserAllowed = $this->getMockBuilder(
-            IsUserAllowed::class
+        $this->doesAclSayUserCanSu = $this->getMockBuilder(
+            doesAclSayUserCanSu::class
         )
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->isUserAllowed->method('__invoke')
+        $this->doesAclSayUserCanSu->method('__invoke')
             ->will($this->returnValue(true));
 
         /** @var Result $this ->restrictionResultMock */
@@ -485,10 +467,9 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $unit = new SwitchUserService(
-            $this->configMock,
             $this->getUserByUsernameMock,
             $this->getIdentityMock,
-            $this->isUserAllowed,
+            $this->doesAclSayUserCanSu,
             $this->restrictionMock,
             $this->switcherMock,
             $this->switchUserLogService
@@ -537,13 +518,13 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
         $this->setIdentityMock->method('__invoke')
             ->will($this->returnValue(null));
 
-        $this->isUserAllowed = $this->getMockBuilder(
-            IsUserAllowed::class
+        $this->doesAclSayUserCanSu = $this->getMockBuilder(
+            doesAclSayUserCanSu::class
         )
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->isUserAllowed->method('__invoke')
+        $this->doesAclSayUserCanSu->method('__invoke')
             ->will($this->returnValue(true));
 
         /** @var Result $this ->restrictionResultMock */
@@ -600,10 +581,9 @@ class SwitchUserServiceTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $unit = new SwitchUserService(
-            $this->configMock,
             $this->getUserByUsernameMock,
             $this->getIdentityMock,
-            $this->isUserAllowed,
+            $this->doesAclSayUserCanSu,
             $this->restrictionMock,
             $this->switcherMock,
             $this->switchUserLogService
