@@ -24,7 +24,6 @@ use Rcm\ImmutableHistory\SiteWideContainer\ImmutableSiteWideContainerVersionEnti
 use Rcm\ImmutableHistory\User\UserIdToUserFullName;
 use Rcm\ImmutableHistory\ResourceId\GenerateResourceIdInterface;
 use Rcm\ImmutableHistory\ResourceId\GenerateUuidV4;
-use RcmUser\Api\Acl\IsAllowed;
 
 class ModuleConfig
 {

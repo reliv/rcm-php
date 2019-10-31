@@ -5,7 +5,6 @@ namespace RcmAdmin\Factory;
 use Rcm\Api\Repository\Page\FindPage;
 use Rcm\Api\Repository\Page\FindRevisionList;
 use Rcm\Entity\Page;
-use RcmUser\Api\Acl\IsAllowed;
 use RcmUser\Api\GetPsrRequest;
 use Zend\Http\Request;
 use Zend\Mvc\Router\RouteMatch;
