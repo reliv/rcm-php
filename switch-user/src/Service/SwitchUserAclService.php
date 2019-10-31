@@ -36,8 +36,7 @@ class SwitchUserAclService
         GetIdentity $getIdentity,
         SwitchUserService $switchUserService,
         IsUserAllowed $isUserAllowed //This should be removed eventually as it uses the OLD ACL system
-    )
-    {
+    ) {
         $this->doesAclSayUserCanSU = $doesAclSayUserCanSU;
         $this->getIdentity = $getIdentity;
         $this->switchUserService = $switchUserService;
@@ -80,8 +79,8 @@ class SwitchUserAclService
     public function isImpersonatorUserAllowed(
         $resourceId,
         $privilege,
-        $providerId = null,
-        $user
+        $user,
+        $providerId = null
     ) {
         $user = $this->switchUserService->getImpersonatorUser($user);
 
@@ -117,8 +116,8 @@ class SwitchUserAclService
         return $this->isImpersonatorUserAllowed(
             $resourceId,
             $privilege,
-            $providerId,
-            $user
+            $user,
+            $providerId
         );
     }
 

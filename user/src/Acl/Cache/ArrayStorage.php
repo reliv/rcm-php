@@ -25,8 +25,8 @@ class ArrayStorage extends AbstractAdapter
      * internalGetItem
      *
      * @param string $normalizedKey
-     * @param null   $success
-     * @param null   $casToken
+     * @param null $success
+     * @param null $casToken
      *
      * @return mixed
      */
@@ -46,7 +46,7 @@ class ArrayStorage extends AbstractAdapter
      * internalSetItem
      *
      * @param string $normalizedKey
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return void
      */
