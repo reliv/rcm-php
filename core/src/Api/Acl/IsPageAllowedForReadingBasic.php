@@ -60,13 +60,11 @@ class IsPageAllowedForReadingBasic implements IsPageAllowedForReading
             return true; //BC Support: These 3 page types apperently always have public read access.
         }
 
-        $newAclSystemSaysAllowed = true;
-
-        if ($page->allowsPublicReadAccess() !== true) {
-            $newAclSystemSaysAllowed = $this->currentUserHasReadAccessToPageAccordingToNewAclSystem($page);
+        if ($page->allowsPublicReadAccess() == true) {
+            return true;
         }
 
-        return $newAclSystemSaysAllowed;
+        return $this->currentUserHasReadAccessToPageAccordingToNewAclSystem($page);
     }
 
     protected function currentUserHasReadAccessToPageAccordingToNewAclSystem($page)

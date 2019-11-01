@@ -759,17 +759,17 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getReadAccessGroups(): array
+    public function getReadAccessGroups()
     {
         return $this->readAccessGroups;
     }
 
     /**
-     * @param array $readAccessGroups
+     * @param array|null $readAccessGroups
      */
-    public function setReadAccessGroups(array $readAccessGroups): void
+    public function setReadAccessGroups($readAccessGroups): void
     {
         $this->readAccessGroups = $readAccessGroups;
     }
