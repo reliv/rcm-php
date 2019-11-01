@@ -14,13 +14,9 @@ use Rcm\Entity\Page;
 use RcmUser\Api\Acl\IsAllowed;
 use RcmUser\Api\Authentication\GetIdentity;
 
-/**
- * @author James Jervis - https://github.com/jerv13
- */
 class IsPageAllowedForReadingBasic implements IsPageAllowedForReading
 {
     protected $resourceName;
-    protected $isAllowed; //@TODO //@TODOACL remove eventually as this uses OLD ACL system
     protected $getGroupNamesByUser;
     protected $getIdentity;
     protected $requestContext;
@@ -31,13 +27,11 @@ class IsPageAllowedForReadingBasic implements IsPageAllowedForReading
      */
     public function __construct(
         ResourceName $resourceName,
-        IsAllowed $isAllowed, //@TODO //@TODOACL remove eventually as this uses OLD ACL system
         GetGroupNamesByUserInterface $getGroupNamesByUser,
         GetIdentity $getIdentity,
         ContainerInterface $requestContext
     ) {
         $this->resourceName = $resourceName;
-        $this->isAllowed = $isAllowed;
         $this->getGroupNamesByUser = $getGroupNamesByUser;
         $this->getIdentity = $getIdentity;
         $this->requestContext = $requestContext;
@@ -72,24 +66,7 @@ class IsPageAllowedForReadingBasic implements IsPageAllowedForReading
             $newAclSystemSaysAllowed = $this->currentUserHasReadAccessToPageAccordingToNewAclSystem($page);
         }
 
-        // @TODO @TODOACL - - - - - - BELOW IS THE OLD ACL SYSTEM CODE THAT SHOULD BE REMOVED EVENTUALLY - - - - - -
-//        $resourceId = $this->resourceName->get(
-//            ResourceName::RESOURCE_SITES,
-//            $page->getSiteId(),
-//            ResourceName::RESOURCE_PAGES,
-//            $page->getPageType(),
-//            $page->getName()
-//        );
-//
-//        $oldAclSystemSaysIsAllowed = $this->isAllowed->__invoke(
-//            $request,
-//            $resourceId,
-//            'read'
-//        );
-
-        // @TODO @TODOACL - - - - - - ABOVE IS THE OLD ACL SYSTEM CODE THAT SHOULD BE REMOVED EVENTUALLY - - - - - -
-
-        return $newAclSystemSaysAllowed;// && $oldAclSystemSaysIsAllowed;
+        return $newAclSystemSaysAllowed;
     }
 
     protected function currentUserHasReadAccessToPageAccordingToNewAclSystem($page)

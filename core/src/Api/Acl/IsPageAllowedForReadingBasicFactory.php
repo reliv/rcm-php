@@ -24,7 +24,6 @@ class IsPageAllowedForReadingBasicFactory
     {
         return new IsPageAllowedForReadingBasic(
             $serviceContainer->get(ResourceName::class),
-            $serviceContainer->get(IsAllowed::class), //@TODO //@TODOACL remove eventually as this uses OLD ACL system
             $serviceContainer->get(GetGroupNamesByUserInterface::class),
             $serviceContainer->get(GetIdentity::class),
             $serviceContainer->get(RequestContext::class)
