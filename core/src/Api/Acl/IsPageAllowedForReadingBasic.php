@@ -2,10 +2,17 @@
 
 namespace Rcm\Api\Acl;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\GetGroupNamesByUserInterface;
+use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
+use Rcm\Api\GetPsrRequest;
 use Rcm\Entity\Page;
 use RcmUser\Api\Acl\IsAllowed;
+use RcmUser\Api\Authentication\GetIdentity;
 
 /**
  * @author James Jervis - https://github.com/jerv13
@@ -13,44 +20,39 @@ use RcmUser\Api\Acl\IsAllowed;
 class IsPageAllowedForReadingBasic implements IsPageAllowedForReading
 {
     protected $resourceName;
-    protected $isAllowed;
+    protected $isAllowed; //@TODO //@TODOACL remove eventually as this uses OLD ACL system
+    protected $getGroupNamesByUser;
+    protected $getIdentity;
+    protected $requestContext;
 
     /**
      * @param ResourceName $resourceName
-     * @param IsAllowed    $isAllowed
+     * @param IsAllowed $isAllowed
      */
     public function __construct(
         ResourceName $resourceName,
-        IsAllowed $isAllowed
+        IsAllowed $isAllowed, //@TODO //@TODOACL remove eventually as this uses OLD ACL system
+        GetGroupNamesByUserInterface $getGroupNamesByUser,
+        GetIdentity $getIdentity,
+        ContainerInterface $requestContext
     ) {
         $this->resourceName = $resourceName;
         $this->isAllowed = $isAllowed;
+        $this->getGroupNamesByUser = $getGroupNamesByUser;
+        $this->getIdentity = $getIdentity;
+        $this->requestContext = $requestContext;
     }
 
     /**
      * @param ServerRequestInterface $request
-     * @param Page                   $page
+     * @param Page $page
      *
      * @return bool
      */
     public function __invoke(
         ServerRequestInterface $request,
         Page $page
-    ):bool {
-        $resourceId = $this->resourceName->get(
-            ResourceName::RESOURCE_SITES,
-            $page->getSiteId(),
-            ResourceName::RESOURCE_PAGES,
-            $page->getPageType(),
-            $page->getName()
-        );
-
-        $allowed = $this->isAllowed->__invoke(
-            $request,
-            $resourceId,
-            'read'
-        );
-
+    ): bool {
         /* ltrim added for BC */
         $currentPage = $page->getName();
         $siteLoginPage = ltrim($page->getSite()->getLoginPage(), '/');
@@ -61,9 +63,71 @@ class IsPageAllowedForReadingBasic implements IsPageAllowedForReading
             || $notAuthorizedPage == $currentPage
             || $notFoundPage == $currentPage
         ) {
-            $allowed = true;
+            return true; //BC Support: These 3 page types apperently always have public read access.
         }
 
-        return $allowed;
+        $newAclSystemSaysAllowed = true;
+
+        if ($page->allowsPublicReadAccess() !== true) {
+            $newAclSystemSaysAllowed = $this->currentUserHasReadAccessToPageAccordingToNewAclSystem($page);
+        }
+
+        // @TODO @TODOACL - - - - - - BELOW IS THE OLD ACL SYSTEM CODE THAT SHOULD BE REMOVED EVENTUALLY - - - - - -
+//        $resourceId = $this->resourceName->get(
+//            ResourceName::RESOURCE_SITES,
+//            $page->getSiteId(),
+//            ResourceName::RESOURCE_PAGES,
+//            $page->getPageType(),
+//            $page->getName()
+//        );
+//
+//        $oldAclSystemSaysIsAllowed = $this->isAllowed->__invoke(
+//            $request,
+//            $resourceId,
+//            'read'
+//        );
+
+        // @TODO @TODOACL - - - - - - ABOVE IS THE OLD ACL SYSTEM CODE THAT SHOULD BE REMOVED EVENTUALLY - - - - - -
+
+        return $newAclSystemSaysAllowed;// && $oldAclSystemSaysIsAllowed;
+    }
+
+    protected function currentUserHasReadAccessToPageAccordingToNewAclSystem($page)
+    {
+        $pageReadAccessGroups = $page->getReadAccessGroups();
+        if ($pageReadAccessGroups === null) {
+            $pageReadAccessGroups = []; //fix old DB data where this may be null instead of []
+        }
+        $currentUser = $this->getIdentity->__invoke(GetPsrRequest::invoke());
+        $currentUserGroups = $this->getGroupNamesByUser->__invoke($currentUser);
+        $userHasAGroupThatPageAllowsReadAccessTo = false;
+        foreach ($pageReadAccessGroups as $pageReadAccessGroup) {
+            if (in_array($pageReadAccessGroup, $currentUserGroups)) {
+                $userHasAGroupThatPageAllowsReadAccessTo = true;
+                break;
+            }
+        }
+
+        return $userHasAGroupThatPageAllowsReadAccessTo
+            || $this->currentUserHasReadAccessToAllPagesBecauseTheyAreAdmin();
+    }
+
+    protected function currentUserHasReadAccessToAllPagesBecauseTheyAreAdmin()
+    {
+        /**
+         * @var AssertIsAllowed $assertIsAllowed
+         */
+        $assertIsAllowed = $this->requestContext->get(AssertIsAllowed::class);
+
+        try {
+            //Note: This check ideally should include locale. Maybe we add that in the future if issues happen.
+            $assertIsAllowed->__invoke(AclActions::READ, ['type' => 'content']);
+
+            //User is a content admin so give them read access even though the page its self says not to
+            return true;
+        } catch (NotAllowedException $e) {
+            //User is not a content admin and the page says they should not have access.
+            return false;
+        }
     }
 }

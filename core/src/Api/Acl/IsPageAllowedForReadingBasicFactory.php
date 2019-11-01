@@ -3,8 +3,12 @@
 namespace Rcm\Api\Acl;
 
 use Interop\Container\ContainerInterface;
+use Rcm\Acl\GetGroupNamesByUserInterface;
 use Rcm\Acl\ResourceName;
+use Rcm\RequestContext\RequestContext;
 use RcmUser\Api\Acl\IsAllowed;
+use RcmUser\Api\Authentication\GetIdentity;
+use RcmUser\Api\GetPsrRequest;
 
 /**
  * @author James Jervis - https://github.com/jerv13
@@ -20,7 +24,10 @@ class IsPageAllowedForReadingBasicFactory
     {
         return new IsPageAllowedForReadingBasic(
             $serviceContainer->get(ResourceName::class),
-            $serviceContainer->get(IsAllowed::class)
+            $serviceContainer->get(IsAllowed::class), //@TODO //@TODOACL remove eventually as this uses OLD ACL system
+            $serviceContainer->get(GetGroupNamesByUserInterface::class),
+            $serviceContainer->get(GetIdentity::class),
+            $serviceContainer->get(RequestContext::class)
         );
     }
 }

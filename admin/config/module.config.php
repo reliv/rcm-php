@@ -70,7 +70,7 @@ return [
 
                     'modules/rcm-admin/plugin-admin/ajax-plugin-edit-helper.js',
                     'modules/rcm-admin/plugin-admin/jquery-dialog-inputs.js',
-                    'modules/rcm-admin/page-permissions/page-permissions.js',
+//                    'modules/rcm-admin/page-permissions/page-permissions.js',
                     'modules/rcm-admin/manage-sites/rcm-admin-manage-sites.js',
                     'modules/rcm-admin/create-site/rcm-admin-create-site.js',
                     'modules/rcm-admin/site-page-copy/rcm-admin-site-page-copy.js',
@@ -119,12 +119,6 @@ return [
             => RcmAdmin\Factory\PageControllerFactory::class,
         ],
         'invokables' => [
-            RcmAdmin\Controller\PagePermissionsController::class
-            => RcmAdmin\Controller\PagePermissionsController::class,
-
-            RcmAdmin\Controller\PageViewPermissionsController::class
-            => RcmAdmin\Controller\PageViewPermissionsController::class,
-
             RcmAdmin\Controller\ApiAdminCurrentSiteController::class
             => RcmAdmin\Controller\ApiAdminCurrentSiteController::class,
 
@@ -193,53 +187,12 @@ return [
                         'class' => 'rcmAdminMenu RcmFormDialog icon-after new-page',
                         'title' => 'New Page',
                     ],
-                    'Edit' => [
-                        'label' => 'Edit',
-                        'uri' => '#',
-                        'pages' => [
-                            'PageProperties' => [
-                                'label' => 'Page Properties',
-                                'class' => 'rcmAdminMenu RcmBlankDialog',
-                                'title' => 'Page Properties',
-                                'uri' => '/modules/rcm-admin/page-properties/page-properties.html',
-                            ],
-                            'PagePermissions' => [
-                                'label' => 'Page Permissions',
-                                'class' => 'rcmAdminMenu RcmBlankDialog',
-                                'title' => 'Page Permissions',
-                                'route' => 'RcmAdmin\Page\PagePermissions',
-                                'params' => [
-                                    'rcmPageName' => ':rcmPageName',
-                                    'rcmPageType' => ':rcmPageType',
-                                ],
-                            ],
-                        ],
+                    'PageProperties' => [
+                        'label' => 'Page Properties',
+                        'class' => 'rcmAdminMenu RcmBlankDialog',
+                        'title' => 'Page Properties',
+                        'uri' => '/modules/rcm-admin/page-properties/page-properties.html',
                     ],
-//Disabled durring immutable history project since no-one is using it
-                    //                    'Copy To' => [
-                    //                        'label' => 'Copy To...',
-                    //                        'uri' => '#',
-                    //                        'rcmOnly' => true,
-                    //                        'pages' => [
-                    //                            'Page' => [
-                    //                                'label' => 'Template',
-                    //                                'route' => 'RcmAdmin\Page\CreateTemplateFromPage',
-                    //                                'class' => 'rcmAdminMenu RcmFormDialog',
-                    //                                'title' => 'Copy To Template',
-                    //                                'params' => [
-                    //                                    'rcmPageName' => ':rcmPageName',
-                    //                                    'rcmPageType' => ':rcmPageType',
-                    //                                    'rcmPageRevision' => ':rcmPageRevision'
-                    //                                ],
-                    //                                'acl' => [
-                    //                                    'providerId' => \Rcm\Acl\ResourceProvider::class,
-                    //                                    'resource'
-                    //                                    => \Rcm\Acl\ResourceName::RESOURCE_SITES . '.:siteId'
-                    //                                        . '.' . \Rcm\Acl\ResourceName::RESOURCE_PAGES . '.create'
-                    //                                ]
-                    //                            ],
-                    //                        ],
-                    //                    ],
                     'Drafts' => [
                         'label' => 'Drafts',
                         'uri' => '#',
@@ -605,28 +558,6 @@ return [
                     'defaults' => [
                         'controller' => RcmAdmin\Controller\PageController::class,
                         'action' => 'savePage',
-                    ],
-                ],
-            ],
-            'RcmAdmin\Page\PagePermissions' => [
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => [
-                    'route' => '/rcm-admin/page-permissions/:rcmPageType/:rcmPageName',
-                    'defaults' => [
-                        'controller' => RcmAdmin\Controller\PagePermissionsController::class,
-                        'action' => 'pagePermissions',
-                    ],
-                ],
-            ],
-            'RcmAdmin\Page\GetPermissions' => [
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => [
-                    'route' => '/api/admin/page/permissions/[:id]',
-                    'constraints' => [
-                        'id' => '[a-zA-Z0-9_-]+',
-                    ],
-                    'defaults' => [
-                        'controller' => RcmAdmin\Controller\PageViewPermissionsController::class,
                     ],
                 ],
             ],

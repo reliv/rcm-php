@@ -4,117 +4,131 @@ namespace RcmAdmin\InputFilter;
 
 use Zend\InputFilter\InputFilter;
 
-/**
- * Class SitePageUpdateInputFilter
- *
- * SitePageUpdateInputFilter
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   moduleNameHere
- * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2017 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: <package_version>
- * @link      https://github.com/reliv
- */
 class SitePageUpdateInputFilter extends InputFilter
 {
     /**
      * @var array
      */
-    protected $filterConfig
-        = [
-            'name' => [
-                'name' => 'name',
-                'required' => false,
-                'filters' => [
-                    ['name' => \Zend\Filter\StripTags::class],
-                    ['name' => \Zend\Filter\StringTrim::class],
-                ],
-                'validators' => [
-                    [
-                        'name' => \Zend\Validator\Regex::class,
-                        'options' => [
-                            'pattern' => '/[a-z\-0-9\.]/',
-                            'messageTemplates' => [
-                                \Zend\Validator\Regex::NOT_MATCH
-                                => "Page name can only contain letters and dashes"
-                            ]
-                        ],
+    protected $filterConfig = [
+        'name' => [
+            'name' => 'name',
+            'required' => false,
+            'filters' => [
+                ['name' => \Zend\Filter\StripTags::class],
+                ['name' => \Zend\Filter\StringTrim::class],
+            ],
+            'validators' => [
+                [
+                    'name' => \Zend\Validator\Regex::class,
+                    'options' => [
+                        'pattern' => '/[a-z\-0-9\.]/',
+                        'messageTemplates' => [
+                            \Zend\Validator\Regex::NOT_MATCH
+                            => "Page name can only contain letters and dashes"
+                        ]
                     ],
-                ]
-            ],
-            'pageLayout' => [
-                'name' => 'pageLayout',
-                'required' => false,
-                'filters' => [
-                    ['name' => \Zend\Filter\StripTags::class],
-                    ['name' => \Zend\Filter\StringTrim::class],
                 ],
-                'validators' => [
-                ]
+            ]
+        ],
+        'pageLayout' => [
+            'name' => 'pageLayout',
+            'required' => false,
+            'filters' => [
+                ['name' => \Zend\Filter\StripTags::class],
+                ['name' => \Zend\Filter\StringTrim::class],
             ],
-            'siteLayoutOverride' => [
-                'name' => 'siteLayoutOverride',
-                'required' => false,
-                'filters' => [
-                    ['name' => \Zend\Filter\StripTags::class],
-                    ['name' => \Zend\Filter\StringTrim::class],
-                ],
-                'validators' => [
-                ]
+            'validators' => [
+            ]
+        ],
+        'siteLayoutOverride' => [
+            'name' => 'siteLayoutOverride',
+            'required' => false,
+            'filters' => [
+                ['name' => \Zend\Filter\StripTags::class],
+                ['name' => \Zend\Filter\StringTrim::class],
             ],
-            'pageTitle' => [
-                'name' => 'pageTitle',
-                'required' => false,
-                'filters' => [
-                    ['name' => \Zend\Filter\StripTags::class],
-                    ['name' => \Zend\Filter\StringTrim::class],
-                ],
-                'validators' => [
-                ]
+            'validators' => [
+            ]
+        ],
+        'pageTitle' => [
+            'name' => 'pageTitle',
+            'required' => false,
+            'filters' => [
+                ['name' => \Zend\Filter\StripTags::class],
+                ['name' => \Zend\Filter\StringTrim::class],
             ],
-            'description' => [
-                'name' => 'description',
-                'required' => false,
-                'filters' => [
-                    ['name' => \Zend\Filter\StripTags::class],
-                    ['name' => \Zend\Filter\StringTrim::class],
-                ],
-                'validators' => [
-                ]
+            'validators' => [
+            ]
+        ],
+        'description' => [
+            'name' => 'description',
+            'required' => false,
+            'filters' => [
+                ['name' => \Zend\Filter\StripTags::class],
+                ['name' => \Zend\Filter\StringTrim::class],
             ],
-            'keywords' => [
-                'name' => 'keywords',
-                'required' => false,
-                'filters' => [
-                    ['name' => \Zend\Filter\StripTags::class],
-                    ['name' => \Zend\Filter\StringTrim::class],
-                ],
-                'validators' => [
-                ]
+            'validators' => [
+            ]
+        ],
+        'keywords' => [
+            'name' => 'keywords',
+            'required' => false,
+            'filters' => [
+                ['name' => \Zend\Filter\StripTags::class],
+                ['name' => \Zend\Filter\StringTrim::class],
             ],
-            'pageType' => [
-                'name' => 'pageType',
-                'required' => false,
-                'filters' => [
-                    ['name' => \Zend\Filter\StripTags::class],
-                    ['name' => \Zend\Filter\StringTrim::class],
-                ],
-                'validators' => [
-                    [
-                        'name' => \Zend\Validator\StringLength::class,
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min' => 1,
-                            'max' => 1,
-                        ],
+            'validators' => [
+            ]
+        ],
+        'pageType' => [
+            'name' => 'pageType',
+            'required' => false,
+            'filters' => [
+                ['name' => \Zend\Filter\StripTags::class],
+                ['name' => \Zend\Filter\StringTrim::class],
+            ],
+            'validators' => [
+                [
+                    'name' => \Zend\Validator\StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 1,
+                        'max' => 1,
                     ],
+                ],
+            ]
+        ],
+        'publicReadAccess' => [
+            'name' => 'publicReadAccess',
+            'required' => false,
+            'allow_empty' => true,
+            'continue_if_empty' => true,
+            'validators' => [
+                [
+                    'name' => \Zend\Validator\InArray::class,
+                    'options' => ['haystack' => [true, false]]
                 ]
-            ],
-        ];
+            ]
+        ],
+        'readAccessGroups' => [
+            'name' => 'readAccessGroups',
+            'required' => false,
+            'validators' => [
+                [
+                    'name' => \Zend\Validator\InArray::class,
+                    'options' => [
+                        'haystack' => [
+                            ['employee', 'distributor', 'customer'],
+                            ['employee', 'distributor'],
+                            ['employee'],
+                            [],
+                            null
+                        ]
+                    ]
+                ]
+            ]
+        ],
+    ];
 
     /**
      *
