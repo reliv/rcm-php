@@ -91,7 +91,6 @@ return [
                     'modules/rcm-admin/rcm-column-resize/style.css',
                     // RcmUser services - CSS
                     'modules/rcm-user/rcm-user-role-selector.css',
-                    'modules/rcm-admin/page-permissions/permissions.css',
                 ],
             ],
         ],
