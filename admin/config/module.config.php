@@ -70,7 +70,6 @@ return [
 
                     'modules/rcm-admin/plugin-admin/ajax-plugin-edit-helper.js',
                     'modules/rcm-admin/plugin-admin/jquery-dialog-inputs.js',
-//                    'modules/rcm-admin/page-permissions/page-permissions.js',
                     'modules/rcm-admin/manage-sites/rcm-admin-manage-sites.js',
                     'modules/rcm-admin/create-site/rcm-admin-create-site.js',
                     'modules/rcm-admin/site-page-copy/rcm-admin-site-page-copy.js',
