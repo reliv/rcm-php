@@ -773,5 +773,4 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     {
         $this->readAccessGroups = $readAccessGroups;
     }
-
 }
