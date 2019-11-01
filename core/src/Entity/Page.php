@@ -153,6 +153,20 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     protected $siteId;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", nullable=false, options={"default"=true})
+     */
+    protected $publicReadAccess = true;
+
+    /**
+     * @var array This is only looked at if publicReadAccess=false
+     *
+     * @ORM\Column(type="json", nullable=false)
+     */
+    protected $readAccessGroups = [];
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(
@@ -576,6 +590,14 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
             $this->setName($data['name']);
         }
 
+        if (isset($data['publicReadAccess']) && !in_array('publicReadAccess', $ignore)) {
+            $this->setPublicReadAccess($data['publicReadAccess']);
+        }
+
+        if (isset($data['readAccessGroups']) && !in_array('readAccessGroups', $ignore)) {
+            $this->setReadAccessGroups($data['readAccessGroups']);
+        }
+
         // @bc support
         if (isset($data['pageId']) && !in_array('pageId', $ignore)) {
             $this->setPageId($data['pageId']);
@@ -718,5 +740,37 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
     public function assertHasNewModifiedData()
     {
         parent::assertHasNewModifiedData();
+    }
+
+    /**
+     * @return bool
+     */
+    public function allowsPublicReadAccess(): bool
+    {
+        return $this->publicReadAccess;
+    }
+
+    /**
+     * @param bool $publicReadAccess
+     */
+    public function setPublicReadAccess(bool $publicReadAccess): void
+    {
+        $this->publicReadAccess = $publicReadAccess;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getReadAccessGroups()
+    {
+        return $this->readAccessGroups;
+    }
+
+    /**
+     * @param array|null $readAccessGroups
+     */
+    public function setReadAccessGroups($readAccessGroups): void
+    {
+        $this->readAccessGroups = $readAccessGroups;
     }
 }

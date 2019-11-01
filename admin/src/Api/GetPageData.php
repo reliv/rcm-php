@@ -40,7 +40,9 @@ class GetPageData
                 'keywords' => $this->getKeywords($page),
                 'description' => $this->getPageDescription($page),
                 'siteId' => $siteId,
-                'siteLayoutOverride' => $page->getSiteLayoutOverride()
+                'siteLayoutOverride' => $page->getSiteLayoutOverride(),
+                'publicReadAccess' => $page->allowsPublicReadAccess(),
+                'readAccessGroups' => $page->getReadAccessGroups()
             ],
             'requestedPage' => $requestedPageData,
         ];

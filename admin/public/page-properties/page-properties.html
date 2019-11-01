@@ -68,6 +68,22 @@
                                        style="min-width: 50%;"
                                        type="text"/>
                             </div>
+                            <div class="form-group">
+                                <label>Public Read Access</label>
+                                <select class="form-control"
+                                        data-ng-model="publicReadAccess"
+                                        ng-options="o.value as o.label for o in publicReadAccessOptions"
+                                        style="min-width: 50%;"
+                                        type="text"/>
+                            </div>
+                            <div class="form-group" ng-show="!publicReadAccess">
+                                <label>Read Access Groups</label>
+                                <select class="form-control"
+                                        data-ng-model="readAccessGroups"
+                                        ng-options="o.value as o.label for o in readAccessGroupOptions"
+                                        style="min-width: 50%;"
+                                        type="text"/>
+                            </div>
                         </form>
                     </div>
                 </div>

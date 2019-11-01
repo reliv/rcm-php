@@ -29,7 +29,22 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                 $scope.layoutChoices = [];
 
                 $scope.isEditable = rcmAdminService.model.RcmPageModel.isEditable();
-
+                $scope.publicReadAccessOptions = [
+                    {value: true, label: 'Public read access - Anyone can see this page.'},
+                    {
+                        value: false,
+                        label: 'Limited read access - Only some logged in group(s) can see this page.'
+                    }
+                ];
+                $scope.readAccessGroupOptions = [
+                    {
+                        value: ["employee", "distributor", "customer"],
+                        label: 'Only employees, distributors, and customers'
+                    },
+                    {value: ["employee", "distributor"], label: 'Only employees and distributors'},
+                    {value: ["employee"], label: 'Only employees'},
+                    {value: [], label: 'Only content admins who already have edit access to this page'},
+                ];
                 fetch('/api/rcm/layout-choices').then(function (response) {
                     response.json().then(function (responseData) {
                         $scope.layoutChoices = responseData;
@@ -55,8 +70,11 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                     $scope.keywords = data.keywords;
                     $scope.name = data.name;
                     $scope.siteLayoutOverride = data.siteLayoutOverride;
+                    $scope.publicReadAccess = data.publicReadAccess;
+                    $scope.readAccessGroups = $scope.readAccessGroupOptions.find(function (potentialOption) {
+                        return JSON.stringify(potentialOption.value) === JSON.stringify(data.readAccessGroups);
+                    }).value;
                 };
-
                 /**
                  *
                  * @param data
@@ -72,6 +90,8 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                     pageData.page.keywords = data.keywords;
                     pageData.page.name = data.name;
                     pageData.page.siteLayoutOverride = data.siteLayoutOverride;
+                    pageData.page.publicReadAccess = data.publicReadAccess;
+                    pageData.page.readAccessGroups = data.readAccessGroups;
                 };
 
                 /**
@@ -120,7 +140,9 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                         description: $scope.description,
                         keywords: $scope.keywords,
                         name: $scope.name,
-                        siteLayoutOverride: $scope.siteLayoutOverride
+                        siteLayoutOverride: $scope.siteLayoutOverride,
+                        publicReadAccess: $scope.publicReadAccess,
+                        readAccessGroups: $scope.readAccessGroups
                     };
 
                     var confirmNameChange = true;
