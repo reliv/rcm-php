@@ -13,7 +13,6 @@ use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Api\GetPsrRequest;
 use Rcm\Entity\Site;
 use Rcm\RequestContext\RequestContext;
-use RcmUser\Api\Acl\IsAllowed;
 
 class IsAllowedShowRevisionsBasic implements IsAllowedShowRevisions
 {

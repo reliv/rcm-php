@@ -11,7 +11,6 @@ use Rcm\Acl\NotAllowedException;
 use Rcm\Acl\ResourceName;
 use Rcm\Api\GetPsrRequest;
 use Rcm\Entity\Page;
-use RcmUser\Api\Acl\IsAllowed;
 use RcmUser\Api\Authentication\GetIdentity;
 
 class IsPageAllowedForReadingBasic implements IsPageAllowedForReading

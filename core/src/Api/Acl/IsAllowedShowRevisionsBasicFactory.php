@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Rcm\Acl\ResourceName;
 use Rcm\RequestContext\RequestContext;
-use RcmUser\Api\Acl\IsAllowed;
 
 /**
  * @author James Jervis - https://github.com/jerv13

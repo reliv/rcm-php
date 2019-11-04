@@ -11,7 +11,6 @@ use Rcm\Acl\ResourceName;
 use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Api\GetPsrRequest;
 use Rcm\Entity\Site;
-use RcmUser\Api\Acl\IsAllowed;
 
 class IsAllowedSiteAdminBasic implements IsAllowedSiteAdmin
 {

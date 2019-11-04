@@ -7,8 +7,9 @@ use Doctrine\ORM\EntityManager;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rcm\Acl\AclActions;
+use Rcm\Acl\IsAllowedByUser;
 use Rcm\Entity\Site;
-use RcmUser\Api\Acl\IsAllowed;
 use RcmUser\Api\Authentication\GetIdentity;
 use Zend\Diactoros\Response\JsonResponse;
 
@@ -18,11 +19,11 @@ class HttpPutSiteSettingsSectionController implements MiddlewareInterface
     protected $getSection;
     protected $entityManager;
     protected $currentSite;
-    protected $isAllowed;
+    protected $isAllowedByUser;
     protected $getIdentity;
 
     public function __construct(
-        IsAllowed $isAllowed,
+        IsAllowedByUser $isAllowedByUser,
         SetSection $setSection,
         GetSection $getSection,
         EntityManager $entityManager,
@@ -30,7 +31,7 @@ class HttpPutSiteSettingsSectionController implements MiddlewareInterface
         GetIdentity $getIdentity
     ) {
         $this->getIdentity = $getIdentity;
-        $this->isAllowed = $isAllowed;
+        $this->isAllowedByUser = $isAllowedByUser;
         $this->setSection = $setSection;
         $this->getSection = $getSection;
         $this->entityManager = $entityManager;
@@ -51,14 +52,12 @@ class HttpPutSiteSettingsSectionController implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        /**
-         * @TODO AclByCountryPlanToMoveToNode
-         */
         $user = $this->getIdentity->__invoke($request);
 
-        if (!$this->isAllowed->__invoke($request, 'sites', 'admin')
-            || !$user
+        if (!$user
             || !$user->getId()
+            // @TODO We plan to move this to node and off more specific ACL queires eventually
+            || !$this->isAllowedByUser->__invoke(AclActions::UPDATE, ['type' => 'content'], $user)
         ) {
             return new JsonResponse(['error' => 'unauthorized'], 401);
         }
