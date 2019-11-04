@@ -64,12 +64,11 @@ class IsPageAllowedForReadingBasic implements IsPageAllowedForReading
             return true;
         }
 
-        return $this->currentUserHasReadAccessToPageAccordingToAclSystem($page);
+        return $this->currentUserHasReadAccessToPageAccordingToAclSystem($page->getReadAccessGroups());
     }
 
-    protected function currentUserHasReadAccessToPageAccordingToAclSystem($page)
+    public function currentUserHasReadAccessToPageAccordingToAclSystem(array $pageReadAccessGroups): bool
     {
-        $pageReadAccessGroups = $page->getReadAccessGroups();
         if ($pageReadAccessGroups === null) {
             $pageReadAccessGroups = []; //fix old DB data where this may be null instead of []
         }

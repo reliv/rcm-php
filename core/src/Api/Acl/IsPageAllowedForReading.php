@@ -12,12 +12,14 @@ interface IsPageAllowedForReading
 {
     /**
      * @param ServerRequestInterface $request
-     * @param Page                   $page
+     * @param Page $page
      *
      * @return bool
      */
     public function __invoke(
         ServerRequestInterface $request,
         Page $page
-    ):bool;
+    ): bool;
+
+    public function currentUserHasReadAccessToPageAccordingToAclSystem(array $groups): bool;
 }
