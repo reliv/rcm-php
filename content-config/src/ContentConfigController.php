@@ -18,7 +18,7 @@ use Zend\View\Model\ViewModel;
 class ContentConfigController extends AbstractActionController
 {
     /** @var HasRoleBasedAccess */
-    protected $isPageAllowedForReadingBasic;
+    protected $isPageAllowedForReading;
 
     /** @var PageRendererBc */
     protected $renderer;
@@ -30,12 +30,12 @@ class ContentConfigController extends AbstractActionController
     protected $createPage;
 
     public function __construct(
-        IsPageAllowedForReading $isPageAllowedForReadingBasic,
+        IsPageAllowedForReading $isPageAllowedForReading,
         PageRendererBc $renderer,
         CreatePage $createPage,
         Site $currentSite
     ) {
-        $this->isPageAllowedForReadingBasic = $isPageAllowedForReadingBasic;
+        $this->isPageAllowedForReading = $isPageAllowedForReading;
         $this->currentSite = $currentSite;
         $this->renderer = $renderer;
         $this->createPage = $createPage;
@@ -51,7 +51,7 @@ class ContentConfigController extends AbstractActionController
     {
         $rolesAllowed = $this->params()->fromRoute('rolesAllowed');
         if (!empty($rolesAllowed)) {
-            $allowed = $this->isPageAllowedForReadingBasic
+            $allowed = $this->isPageAllowedForReading
                 ->currentUserHasReadAccessToPageAccordingToAclSystem($rolesAllowed);
             if (!$allowed) {
                 $response = $this->getResponse();
