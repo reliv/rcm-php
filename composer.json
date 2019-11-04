@@ -78,7 +78,8 @@
       "RcmUser\\Api\\": "user-api/src/",
       "Reliv\\App\\RcmApi\\": "reliv-app-rcm-api/src/",
       "RcmLogin\\": "login/src/",
-      "Rcm\\SwitchUser\\": "switch-user/src/"
+      "Rcm\\SwitchUser\\": "switch-user/src/",
+      "Rcm\\ContentConfig\\": "content-config/src/"
     }
   }
 }
