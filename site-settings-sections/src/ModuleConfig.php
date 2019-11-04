@@ -3,9 +3,9 @@
 namespace Rcm\SiteSettingsSections;
 
 use Doctrine\ORM\EntityManager;
+use Rcm\Acl\IsAllowedByUser;
 use Rcm\HttpLib\JsonBodyParserMiddleware;
 use Rcm\Service\CurrentSite;
-use RcmUser\Api\Acl\IsAllowed;
 use RcmUser\Api\Authentication\GetIdentity;
 
 class ModuleConfig
@@ -35,15 +35,16 @@ class ModuleConfig
                     ],
                     HttpGetSiteSettingsSectionController::class => [
                         'arguments' => [
-                            IsAllowed::class,
+                            IsAllowedByUser::class,
                             GetSection::class,
                             EntityManager::class,
-                            CurrentSite::class
+                            CurrentSite::class,
+                            GetIdentity::class
                         ],
                     ],
                     HttpPutSiteSettingsSectionController::class => [
                         'arguments' => [
-                            IsAllowed::class,
+                            IsAllowedByUser::class,
                             SetSection::class,
                             GetSection::class,
                             EntityManager::class,

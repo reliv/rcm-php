@@ -6,7 +6,6 @@ use Interop\Container\ContainerInterface;
 use Rcm\Acl\GetGroupNamesByUserInterface;
 use Rcm\Acl\ResourceName;
 use Rcm\RequestContext\RequestContext;
-use RcmUser\Api\Acl\IsAllowed;
 use RcmUser\Api\Authentication\GetIdentity;
 use RcmUser\Api\GetPsrRequest;
 
