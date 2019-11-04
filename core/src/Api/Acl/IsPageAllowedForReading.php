@@ -21,5 +21,5 @@ interface IsPageAllowedForReading
         Page $page
     ): bool;
 
-    public function currentUserHasReadAccessToPageAccordingToAclSystem(array $groups): bool ;
+    public function currentUserHasReadAccessToPageAccordingToAclSystem(array $groups): bool;
 }
