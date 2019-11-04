@@ -71,9 +71,10 @@ angular.module('rcmAdminPage', ['rcmApi', 'rcmAdminApi'])
                     $scope.name = data.name;
                     $scope.siteLayoutOverride = data.siteLayoutOverride;
                     $scope.publicReadAccess = data.publicReadAccess;
-                    $scope.readAccessGroups = $scope.readAccessGroupOptions.find(function (potentialOption) {
+                    var selectedReadAccessGroupOption = $scope.readAccessGroupOptions.find(function (potentialOption) {
                         return JSON.stringify(potentialOption.value) === JSON.stringify(data.readAccessGroups);
-                    }).value;
+                    });
+                    $scope.readAccessGroups = selectedReadAccessGroupOption ? selectedReadAccessGroupOption.value : null
                 };
                 /**
                  *
