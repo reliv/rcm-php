@@ -52,7 +52,7 @@ angular.module('rcmUserRolesService').factory(
                     if (roleStateMap[rcmUser.cache.roleState] > roleStateMap['Initial']) {
                         // we trigger this, someone needs it, but roles should already be set
                         setTimeout(
-                            function() {
+                            function () {
                                 rcmUser.eventManager.trigger(
                                     'rcmUserRolesService.on' + rcmUser.cache.roleState,
                                     rcmUser.cache.roles
@@ -66,22 +66,27 @@ angular.module('rcmUserRolesService').factory(
                     rcmUser.cache.roleState = 'RequestRoles';
 
                     // @todo use the Rcm User http version to get
-                    $http(
-                        {
-                            method: 'GET',
-                            url: self.url
-                        }
-                    )
-                        .success(
-                            function (data, status, headers, config) {
-                                self.setRoles(data.data);
-                            }
-                        )
-                        .error(
-                            function (data, status, headers, config) {
-                                $log.error('An error occured while talking to the server');
-                            }
-                        );
+                    // $http(
+                    //     {
+                    //         method: 'GET',
+                    //         url: self.url
+                    //     }
+                    // )
+                    //     .success(
+                    //         function (data, status, headers, config) {
+                    //             self.setRoles(data.data);
+                    //         }
+                    //     )
+                    //     .error(
+                    //         function (data, status, headers, config) {
+                    //             $log.error('An error occured while talking to the server');
+                    //         }
+                    //     );
+                    self.setRoles({//BC support. Should not really but in open source but o well for now.
+                        'customer': {roleId: 'customer'},
+                        'distributor': {roleId: 'distributor'},
+                        'employee': {roleId: 'employee'},
+                    });
                 };
 
                 /**
@@ -126,10 +131,10 @@ angular.module('rcmUserRolesService').factory(
                 self.setRoles = function (roles) {
 
                     // Only set roles once
-                    if(roleStateMap[rcmUser.cache.roleState] > roleStateMap['SetRoles']){
+                    if (roleStateMap[rcmUser.cache.roleState] > roleStateMap['SetRoles']) {
                         // we trigger this, someone needs it, but roles should already be set
                         setTimeout(
-                            function() {
+                            function () {
                                 rcmUser.eventManager.trigger(
                                     'rcmUserRolesService.on' + rcmUser.cache.roleState,
                                     rcmUser.cache.roles
