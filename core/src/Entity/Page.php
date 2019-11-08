@@ -596,6 +596,8 @@ class Page extends ContainerAbstract implements ApiModelInterface, \IteratorAggr
 
         if (isset($data['readAccessGroups']) && !in_array('readAccessGroups', $ignore)) {
             $this->setReadAccessGroups($data['readAccessGroups']);
+        } else {
+            $this->readAccessGroups = [];
         }
 
         // @bc support
