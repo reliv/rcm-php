@@ -2,6 +2,7 @@
 
 namespace Rcm\SwitchUser\Acl;
 
+use Rcm\Acl\AclActions;
 use Rcm\Acl\IsAllowedByUser;
 
 class DoesAclSayUserCanSU
@@ -21,6 +22,6 @@ class DoesAclSayUserCanSU
      */
     public function __invoke($user): bool
     {
-        return $this->isAllowedByUser->__invoke('execute', ['type' => 'switchUser'], $user);
+        return $this->isAllowedByUser->__invoke(AclActions::EXECUTE, ['type' => 'switchUser'], $user);
     }
 }
