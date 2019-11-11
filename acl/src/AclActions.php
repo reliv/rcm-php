@@ -8,4 +8,5 @@ class AclActions
     const READ = 'read';
     const UPDATE = 'update';
     const DELETE = 'delete';
+    const EXECUTE = 'execute';
 }

@@ -354,9 +354,9 @@ class ModuleConfigPipeRat2Page
                         'middleware' => [
                             RequestFormat::configKey()
                             => RequestFormat::class,
-
-                            RequestAcl::configKey()
-                            => RequestAcl::class,
+// Acl check was moved inside the controller CopyPage::class
+//                            RequestAcl::configKey()
+//                            => RequestAcl::class,
 
                             RequestAttributes::configKey()
                             => RequestAttributes::class,
