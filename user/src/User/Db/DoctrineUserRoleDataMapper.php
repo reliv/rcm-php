@@ -266,36 +266,37 @@ class DoctrineUserRoleDataMapper extends UserRolesDataMapper implements Doctrine
      */
     public function read(UserInterface $user)
     {
-        $userId = $user->getId();
-
-        if (empty($userId)) {
-            return new Result([], Result::CODE_FAIL, 'User id required to get user roles.');
-        }
-
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT userRole.roleId FROM ' . $this->getEntityClass() . ' userRole '
-            . 'INDEX BY userRole.roleId ' . 'WHERE userRole.userId = ?1'
-        );
-
-        $query->setParameter(
-            1,
-            $userId
-        );
-
-        $userRoles = $query->getResult();
-
-        $userAclRoles = [];
-
-        foreach ($userRoles as $userRole) {
-            $userAclRoles[] = $userRole['roleId'];
-        }
-
-        $message = '';
-        if (empty($userAclRoles)) {
-            $message = 'No roles found';
-        }
-
-        return new Result($userAclRoles, Result::CODE_SUCCESS, $message);
+//        $userId = $user->getId();
+//
+//        if (empty($userId)) {
+//            return new Result([], Result::CODE_FAIL, 'User id required to get user roles.');
+//        }
+//
+//        $query = $this->getEntityManager()->createQuery(
+//            'SELECT userRole.roleId FROM ' . $this->getEntityClass() . ' userRole '
+//            . 'INDEX BY userRole.roleId ' . 'WHERE userRole.userId = ?1'
+//        );
+//
+//        $query->setParameter(
+//            1,
+//            $userId
+//        );
+//
+//        $userRoles = $query->getResult();
+//
+//        $userAclRoles = [];
+//
+//        foreach ($userRoles as $userRole) {
+//            $userAclRoles[] = $userRole['roleId'];
+//        }
+//
+//        $message = '';
+//        if (empty($userAclRoles)) {
+//            $message = 'No roles found';
+//        }
+//
+//        return new Result($userAclRoles, Result::CODE_SUCCESS, $message);
+        return new Result([], Result::CODE_SUCCESS, 'Old ACL table disabled. No roles returned.');
     }
 
     /**

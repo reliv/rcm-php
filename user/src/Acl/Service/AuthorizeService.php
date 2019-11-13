@@ -307,7 +307,7 @@ class AuthorizeService extends EventProvider
     }
 
     /**
-     * isAllowed
+     * @deprecated This will be removed soon in favor of the new ACL system.
      *
      * @param string $resourceId resourceId
      * @param string $privilege privilege
@@ -323,121 +323,135 @@ class AuthorizeService extends EventProvider
         $providerId = null,
         $user = null
     ) {
-        $resourceId = strtolower($resourceId);
-
-        /* Get roles or guest roles if no user */
-        $userRoles = $this->getUserRoles($user);
-
-        /** @todo This is an issue
-         * if (count($userRoles) > 1) {
-         * $userId = 'UNKNOWN';
-         * if (!empty($user)) {
-         * $userId = $user->getId();
-         * }
-         *
-         * throw new RcmUserAclException(
-         * 'Multiple roles are not currently supported: User: ' . $userId
-         * . ' with roles: ' . json_encode($userRoles)
-         * );
-         * }*/
-
-        /* Check super admin
-         * we over-ride everything if user has super admin
+        /**
+         * @var AssertIsAllowed $assertIsAllowed
          */
-        if ($this->hasSuperAdmin($userRoles)) {
-            $result = true;
-
-            $this->getEventManager()->trigger(
-                self::EVENT_IS_ALLOWED_SUPER_ADMIN,
-                $this,
-                [
-                    'resourceId' => $resourceId,
-                    'privilege' => $privilege,
-                    'providerId' => $providerId,
-                    'result' => $result,
-                    'user' => $user,
-                    'userRoles' => $userRoles,
-                ]
-            );
-
-            return $result;
-        }
+        $assertIsAllowed = $this->requestContext->get(AssertIsAllowed::class);
 
         try {
-            $acl = $this->getAcl(
-                $resourceId,
-                $providerId
-            );
+            //Note that "legacy-global-admin-functionality" is temporary and will be removed eventually.
+            $assertIsAllowed->__invoke(AclActions::EXECUTE, ['type' => 'legacy-global-admin-functionality']);
 
-            foreach ($userRoles as $userRole) {
-                // @todo This will fail on deny in some cases
-                // @todo The logic for dealing with multiple roles with deny and allow needs to be addressed
-                $result = $acl->isAllowed(
-                    $userRole,
-                    $resourceId,
-                    $privilege
-                );
-
-                if ($result) {
-                    $this->getEventManager()->trigger(
-                        self::EVENT_IS_ALLOWED_TRUE,
-                        $this,
-                        [
-                            'privilege' => $privilege,
-                            'providerId' => $providerId,
-                            'resourceId' => $resourceId,
-                            'result' => $result,
-                            'user' => $user,
-                            'userRoleAllowed' => $userRole,
-                            'userRoles' => $userRoles,
-                        ]
-                    );
-
-                    return $result;
-                }
-            }
-        } catch (ExceptionInterface $e) {
-            $result = false;
-
-            $error = 'AuthorizeService->isAllowed failed check for resourceId: (' . $resourceId . ')'
-                . ' with exception: ' . get_class($e) . '::message: ' . $e->getMessage();
-
-            $params = [
-                'error' => $error,
-                'resourceId' => $resourceId,
-                'privilege' => $privilege,
-                'providerId' => $providerId,
-                'definedRoles' => $this->getRoles(),
-                'result' => $result,
-                'user' => $user,
-                'userRoles' => $userRoles,
-            ];
-
-            $this->getEventManager()->trigger(
-                self::EVENT_IS_ALLOWED_ERROR,
-                $this,
-                $params
-            );
-
-            return $result;
+            return true;
+        } catch (NotAllowedException $e) {
+            return false;
         }
 
-        $result = false;
-
-        $this->getEventManager()->trigger(
-            self::EVENT_IS_ALLOWED_FALSE,
-            $this,
-            [
-                'privilege' => $privilege,
-                'providerId' => $providerId,
-                'resourceId' => $resourceId,
-                'result' => $result,
-                'user' => $user,
-                'userRoles' => $userRoles,
-            ]
-        );
-
-        return $result;
+//        $resourceId = strtolower($resourceId);
+//
+//        /* Get roles or guest roles if no user */
+//        $userRoles = $this->getUserRoles($user);
+//
+//        /** @todo This is an issue
+//         * if (count($userRoles) > 1) {
+//         * $userId = 'UNKNOWN';
+//         * if (!empty($user)) {
+//         * $userId = $user->getId();
+//         * }
+//         *
+//         * throw new RcmUserAclException(
+//         * 'Multiple roles are not currently supported: User: ' . $userId
+//         * . ' with roles: ' . json_encode($userRoles)
+//         * );
+//         * }*/
+//
+//        /* Check super admin
+//         * we over-ride everything if user has super admin
+//         */
+//        if ($this->hasSuperAdmin($userRoles)) {
+//            $result = true;
+//
+//            $this->getEventManager()->trigger(
+//                self::EVENT_IS_ALLOWED_SUPER_ADMIN,
+//                $this,
+//                [
+//                    'resourceId' => $resourceId,
+//                    'privilege' => $privilege,
+//                    'providerId' => $providerId,
+//                    'result' => $result,
+//                    'user' => $user,
+//                    'userRoles' => $userRoles,
+//                ]
+//            );
+//
+//            return $result;
+//        }
+//
+//        try {
+//            $acl = $this->getAcl(
+//                $resourceId,
+//                $providerId
+//            );
+//
+//            foreach ($userRoles as $userRole) {
+//                // @todo This will fail on deny in some cases
+//                // @todo The logic for dealing with multiple roles with deny and allow needs to be addressed
+//                $result = $acl->isAllowed(
+//                    $userRole,
+//                    $resourceId,
+//                    $privilege
+//                );
+//
+//                if ($result) {
+//                    $this->getEventManager()->trigger(
+//                        self::EVENT_IS_ALLOWED_TRUE,
+//                        $this,
+//                        [
+//                            'privilege' => $privilege,
+//                            'providerId' => $providerId,
+//                            'resourceId' => $resourceId,
+//                            'result' => $result,
+//                            'user' => $user,
+//                            'userRoleAllowed' => $userRole,
+//                            'userRoles' => $userRoles,
+//                        ]
+//                    );
+//
+//                    return $result;
+//                }
+//            }
+//        } catch (ExceptionInterface $e) {
+//            $result = false;
+//
+//            $error = 'AuthorizeService->isAllowed failed check for resourceId: (' . $resourceId . ')'
+//                . ' with exception: ' . get_class($e) . '::message: ' . $e->getMessage();
+//
+//            $params = [
+//                'error' => $error,
+//                'resourceId' => $resourceId,
+//                'privilege' => $privilege,
+//                'providerId' => $providerId,
+//                'definedRoles' => $this->getRoles(),
+//                'result' => $result,
+//                'user' => $user,
+//                'userRoles' => $userRoles,
+//            ];
+//
+//            $this->getEventManager()->trigger(
+//                self::EVENT_IS_ALLOWED_ERROR,
+//                $this,
+//                $params
+//            );
+//
+//            return $result;
+//        }
+//
+//        $result = false;
+//
+//        $this->getEventManager()->trigger(
+//            self::EVENT_IS_ALLOWED_FALSE,
+//            $this,
+//            [
+//                'privilege' => $privilege,
+//                'providerId' => $providerId,
+//                'resourceId' => $resourceId,
+//                'result' => $result,
+//                'user' => $user,
+//                'userRoles' => $userRoles,
+//            ]
+//        );
+//
+//        return $result;
     }
 
     /**
