@@ -38,7 +38,8 @@ class AssertImpersonatorIsAllowed
         if (!$this->isAllowedByUser->__invoke($action, $properties, $user)) {
             throw new NotAllowedByQueryRunException(
                 'An ACL query ran and found the following to be not allowed for current impersonator: '
-                . json_encode([
+                . json_encode(
+                    [
                         'action' => $action,
                         'properties' => $properties
                     ]
