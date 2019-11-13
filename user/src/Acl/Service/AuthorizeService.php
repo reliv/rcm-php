@@ -2,6 +2,11 @@
 
 namespace RcmUser\Acl\Service;
 
+use Psr\Container\ContainerInterface;
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\IsAllowedByUser;
+use Rcm\Acl\NotAllowedException;
 use RcmUser\Acl\Entity\AclRole;
 use RcmUser\Acl\Entity\AclRule;
 use RcmUser\Acl\Exception\RcmUserAclException;
@@ -43,6 +48,8 @@ class AuthorizeService extends EventProvider
      */
     protected $aclDataService;
 
+    protected $isAllowedByUser;
+
     /**
      * Constructor.
      *
@@ -53,10 +60,12 @@ class AuthorizeService extends EventProvider
     public function __construct(
         AclResourceService $aclResourceService,
         AclDataService $aclDataService,
-        UserEventManager $userEventManager
+        UserEventManager $userEventManager,
+        IsAllowedByUser $isAllowedByUser
     ) {
         $this->aclResourceService = $aclResourceService;
         $this->aclDataService = $aclDataService;
+        $this->isAllowedByUser = $isAllowedByUser;
 
         parent::__construct($userEventManager);
     }
@@ -323,20 +332,12 @@ class AuthorizeService extends EventProvider
         $providerId = null,
         $user = null
     ) {
-        /**
-         * @var AssertIsAllowed $assertIsAllowed
-         */
-        $assertIsAllowed = $this->requestContext->get(AssertIsAllowed::class);
-
-        try {
-            //Note that "legacy-global-admin-functionality" is temporary and will be removed eventually.
-            $assertIsAllowed->__invoke(AclActions::EXECUTE, ['type' => 'legacy-global-admin-functionality']);
-
-            return true;
-        } catch (NotAllowedException $e) {
-            return false;
-        }
-
+        //Note that "legacy-global-admin-functionality" is temporary and will be removed eventually.
+        return $this->isAllowedByUser->__invoke(
+            AclActions::EXECUTE,
+            ['type' => 'legacy-global-admin-functionality'],
+            $user
+        );
 //        $resourceId = strtolower($resourceId);
 //
 //        /* Get roles or guest roles if no user */
