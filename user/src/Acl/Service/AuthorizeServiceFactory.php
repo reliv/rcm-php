@@ -3,6 +3,7 @@
 namespace RcmUser\Acl\Service;
 
 use Interop\Container\ContainerInterface;
+use Rcm\Acl\IsAllowedByUser;
 use Rcm\RequestContext\RequestContext;
 use RcmUser\Event\UserEventManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -40,7 +41,7 @@ class AuthorizeServiceFactory
             $aclResourceService,
             $aclDataService,
             $userEventManager,
-            $serviceLocator->get(RequestContext::class)
+            $serviceLocator->get(IsAllowedByUser::class)
         );
 
         return $service;
