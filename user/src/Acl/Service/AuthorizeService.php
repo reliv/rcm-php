@@ -2,6 +2,10 @@
 
 namespace RcmUser\Acl\Service;
 
+use Psr\Container\ContainerInterface;
+use Rcm\Acl\AclActions;
+use Rcm\Acl\AssertIsAllowed;
+use Rcm\Acl\NotAllowedException;
 use RcmUser\Acl\Entity\AclRole;
 use RcmUser\Acl\Entity\AclRule;
 use RcmUser\Acl\Exception\RcmUserAclException;
@@ -43,6 +47,8 @@ class AuthorizeService extends EventProvider
      */
     protected $aclDataService;
 
+    protected $requestContext;
+
     /**
      * Constructor.
      *
@@ -53,10 +59,12 @@ class AuthorizeService extends EventProvider
     public function __construct(
         AclResourceService $aclResourceService,
         AclDataService $aclDataService,
-        UserEventManager $userEventManager
+        UserEventManager $userEventManager,
+        ContainerInterface $requestContext
     ) {
         $this->aclResourceService = $aclResourceService;
         $this->aclDataService = $aclDataService;
+        $this->requestContext = $requestContext;
 
         parent::__construct($userEventManager);
     }
