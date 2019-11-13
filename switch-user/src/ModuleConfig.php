@@ -4,9 +4,13 @@ namespace Rcm\SwitchUser;
 
 use Rcm\Acl\AssertIsAllowed;
 use Rcm\Acl\IsAllowedByUser;
+use Rcm\RequestContext\RequestContext;
 use Rcm\SwitchUser\Acl\AssertCurrentUserIsAllowedToSwitchUser;
 use Rcm\SwitchUser\Acl\DoesAclSayUserCanSU;
+use Rcm\SwitchUser\Service\AssertImpersonatorIsAllowed;
+use Rcm\SwitchUser\Service\AssertImpersonatorOrUserIsAllowed;
 use Rcm\SwitchUser\Service\SwitchUserAclService;
+use Rcm\SwitchUser\Service\SwitchUserService;
 use RcmUser\Api\Acl\IsUserAllowed;
 use RcmUser\Api\Authentication\Authenticate;
 use RcmUser\Api\Authentication\GetIdentity;
@@ -108,6 +112,18 @@ class ModuleConfig
             /* SERVICE MANAGER */
             'dependencies' => [
                 'config_factories' => [
+                    AssertImpersonatorIsAllowed::class => [
+                        'arguments' => [
+                            IsAllowedByUser::class,
+                            SwitchUserService::class
+                        ]
+                    ],
+                    AssertImpersonatorOrUserIsAllowed::class => [
+                        'arguments' => [
+                            RequestContext::class,
+                            AssertImpersonatorIsAllowed::class,
+                        ]
+                    ],
                     \Rcm\SwitchUser\Middleware\RcmSwitchUserAcl::class => [
                         'arguments' => [
                             \Rcm\SwitchUser\Service\SwitchUserAclService::class,
