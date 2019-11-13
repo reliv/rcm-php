@@ -334,10 +334,10 @@ class AuthorizeService extends EventProvider
     ) {
         //Note that "legacy-global-admin-functionality" is temporary and will be removed eventually.
         return $this->isAllowedByUser->__invoke(
-            AclActions::EXECUTE, ['type' => 'legacy-global-admin-functionality'], $user
+            AclActions::EXECUTE,
+            ['type' => 'legacy-global-admin-functionality'],
+            $user
         );
-
-
 //        $resourceId = strtolower($resourceId);
 //
 //        /* Get roles or guest roles if no user */
