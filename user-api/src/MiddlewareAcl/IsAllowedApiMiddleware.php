@@ -6,7 +6,6 @@ use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RcmUser\Api\Acl\IsAllowed;
 use RcmUser\Api\MiddlewareResponse\GetNotAllowedResponse;
 
 /**
@@ -23,14 +22,13 @@ class IsAllowedApiMiddleware implements MiddlewareInterface
     protected $notAllowedStatus;
 
     /**
-     * @param IsAllowed             $isAllowed
-     * @param string                $resourceId
-     * @param string|null           $privilege
+     * @param IsAllowed $isAllowed
+     * @param string $resourceId
+     * @param string|null $privilege
      * @param GetNotAllowedResponse $getNotAllowedResponse
-     * @param int                   $notAllowedStatus
+     * @param int $notAllowedStatus
      */
     public function __construct(
-        IsAllowed $isAllowed,
         string $resourceId,
         string $privilege = null,
         GetNotAllowedResponse $getNotAllowedResponse,
@@ -45,7 +43,7 @@ class IsAllowedApiMiddleware implements MiddlewareInterface
 
     /**
      * @param ServerRequestInterface $request
-     * @param DelegateInterface      $delegate
+     * @param DelegateInterface $delegate
      *
      * @return ResponseInterface
      */
@@ -53,7 +51,8 @@ class IsAllowedApiMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         DelegateInterface $delegate
     ) {
-        if (!$this->isAllowed->__invoke($request, $this->resourceId, $this->privilege)) {
+        trigger_error('IsAllowedApiMiddleware is deprecated');
+        if (true) { //Was made to always deny because it doesn't follow new ACL rules
             return $this->getNotAllowedResponse->__invoke(
                 $request,
                 'Not Allowed: resource: ' . $this->resourceId,
@@ -61,6 +60,6 @@ class IsAllowedApiMiddleware implements MiddlewareInterface
             );
         }
 
-        return $delegate->process($request);
+//        return $delegate->process($request);
     }
 }

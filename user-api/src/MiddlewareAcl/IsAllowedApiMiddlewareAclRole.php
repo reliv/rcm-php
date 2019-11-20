@@ -2,7 +2,6 @@
 
 namespace RcmUser\Api\MiddlewareAcl;
 
-use RcmUser\Api\Acl\IsAllowed;
 use RcmUser\Api\MiddlewareResponse\GetNotAllowedResponse;
 
 /**
@@ -18,14 +17,12 @@ class IsAllowedApiMiddlewareAclRole extends IsAllowedApiMiddleware
      * @param int                   $notAllowedStatus
      */
     public function __construct(
-        IsAllowed $isAllowed,
         string $resourceId,
         string $privilege = null,
         GetNotAllowedResponse $getNotAllowedResponse,
         int $notAllowedStatus = self::DEFAULT_NOT_ALLOWED_STATUS
     ) {
         parent::__construct(
-            $isAllowed,
             $resourceId,
             $privilege,
             $getNotAllowedResponse,
