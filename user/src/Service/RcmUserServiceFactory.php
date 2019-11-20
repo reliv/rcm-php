@@ -5,8 +5,6 @@ namespace RcmUser\Service;
 use Interop\Container\ContainerInterface;
 use RcmUser\Api\Acl\HasRoleBasedAccess;
 use RcmUser\Api\Acl\HasRoleBasedAccessUser;
-use RcmUser\Api\Acl\IsAllowed;
-use RcmUser\Api\Acl\IsUserAllowed;
 use RcmUser\Api\Authentication\Authenticate;
 use RcmUser\Api\Authentication\ClearIdentity;
 use RcmUser\Api\Authentication\GetIdentity;
@@ -74,10 +72,6 @@ class RcmUserServiceFactory
             $serviceLocator->get(SetIdentity::class),
             $serviceLocator->get(RefreshIdentity::class),
             $serviceLocator->get(GetIdentity::class),
-            $serviceLocator->get(IsAllowed::class),
-            $serviceLocator->get(IsUserAllowed::class),
-            $serviceLocator->get(HasRoleBasedAccess::class),
-            $serviceLocator->get(HasRoleBasedAccessUser::class),
             $serviceLocator->get(BuildNewUser::class),
             $serviceLocator->get(BuildUser::class)
         );

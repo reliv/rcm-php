@@ -247,45 +247,4 @@ class SwitchUserService
 
         return $suUser;
     }
-
-//    /**
-//     * isAllowed
-//     *
-//     * this is only a basic access check,
-//     * the restrictions should catch and log any access attempts
-//     *
-//     * @param $suUser
-//     *
-//     * @return bool|mixed
-//     */
-//    public function isAllowed($suUser)
-//    {
-//        if (empty($suUser)) {
-//            return false;
-//        }
-//        $aclConfig = $this->aclConfig;
-//
-//        return $this->doesAclSayUserCanSU->__invoke('execute', ['type' => 'switchUser'], $suUser);
-//    }
-
-//    /**
-//     * @deprecated use SwitchUserAclService::currentUserIsSuAllowed
-//     * currentUserIsAllowed
-//     *
-//     * @return bool|mixed
-//     */
-//    public function currentUserIsAllowed()
-//    {
-//        $adminUser = $this->getCurrentImpersonatorUser();
-//        $psrRequest = GetPsrRequest::invoke();
-//
-//        // Get current user
-//        $targetUser = $this->getIdentity->__invoke($psrRequest);
-//
-//        if (empty($adminUser)) {
-//            $adminUser = $targetUser;
-//        }
-//
-//        return $this->isAllowed($adminUser);
-//    }
 }

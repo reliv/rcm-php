@@ -8,8 +8,6 @@ use RcmUser\Api\Acl\HasRoleBasedAccess;
 use RcmUser\Api\Acl\HasRoleBasedAccessBasicFactory;
 use RcmUser\Api\Acl\HasRoleBasedAccessUser;
 use RcmUser\Api\Acl\HasRoleBasedAccessUserBasicFactory;
-use RcmUser\Api\Acl\IsAllowed;
-use RcmUser\Api\Acl\IsAllowedBasicFactory;
 use RcmUser\Api\Acl\IsUserAllowed;
 use RcmUser\Api\Acl\IsUserAllowedBasicFactory;
 use RcmUser\Api\Authentication\Authenticate;
@@ -90,12 +88,6 @@ class ModuleConfig
 
                     HasRoleBasedAccessUser::class
                     => HasRoleBasedAccessUserBasicFactory::class,
-
-                    IsAllowed::class
-                    => IsAllowedBasicFactory::class,
-
-                    IsUserAllowed::class
-                    => IsUserAllowedBasicFactory::class,
 
                     Authenticate::class
                     => AuthenticateBasicFactory::class,

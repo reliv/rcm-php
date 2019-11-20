@@ -124,11 +124,6 @@ class ModuleConfig
                             AssertImpersonatorIsAllowed::class,
                         ]
                     ],
-                    \Rcm\SwitchUser\Middleware\RcmSwitchUserAcl::class => [
-                        'arguments' => [
-                            \Rcm\SwitchUser\Service\SwitchUserAclService::class,
-                        ]
-                    ],
                     DoesAclSayUserCanSU::class => [
                         'arguments' => [
                             IsAllowedByUser::class,
@@ -151,7 +146,6 @@ class ModuleConfig
                             DoesAclSayUserCanSU::class,
                             GetIdentity::class,
                             \Rcm\SwitchUser\Service\SwitchUserService::class,
-                            IsUserAllowed::class//This should be removed eventually as it uses the OLD ACL system
                         ]
                     ],
                     \Rcm\SwitchUser\Service\SwitchUserLogService::class => [

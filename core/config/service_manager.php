@@ -305,9 +305,6 @@ return [
         \Rcm\Service\PluginManager::class
         => \Rcm\Service\PluginManagerFactory::class,
 
-        \Rcm\Service\RcmUser::class
-        => \Rcm\Factory\RcmUserFactory::class,
-
         \Rcm\Service\ResponseHandler::class
         => \Rcm\Factory\ResponseHandlerFactory::class,
 

@@ -6,8 +6,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use RcmUser\Acl\Service\AuthorizeService;
 use RcmUser\Api\Acl\HasRoleBasedAccess;
 use RcmUser\Api\Acl\HasRoleBasedAccessUser;
-use RcmUser\Api\Acl\IsAllowed;
-use RcmUser\Api\Acl\IsUserAllowed;
 use RcmUser\Api\Authentication\Authenticate;
 use RcmUser\Api\Authentication\ClearIdentity;
 use RcmUser\Api\Authentication\GetIdentity;
@@ -66,43 +64,9 @@ class RcmUserService
     protected $setIdentity;
     protected $refreshIdentity;
     protected $getIdentity;
-    protected $isAllowed;
-    protected $isUserAllowed;
-    protected $hasRoleBasedAccess;
-    protected $hasRoleBasedAccessUser;
     protected $buildNewUser;
     protected $buildUser;
 
-    /**
-     * @param GetUser                $getUser
-     * @param GetUserById            $getUserById
-     * @param GetUserByUsername      $getUserByUsername
-     * @param UserExists             $userExists
-     * @param ReadUserResult         $readUserResult
-     * @param ReadUser               $readUser
-     * @param CreateUserResult       $createUserResult
-     * @param CreateUser             $createUser
-     * @param UpdateUserResult       $updateUserResult
-     * @param UpdateUser             $updateUser
-     * @param DeleteUserResult       $deleteUserResult
-     * @param DeleteUser             $deleteUser
-     * @param GetUserProperty        $getUserProperty
-     * @param GetUserPropertyCurrent $getUserPropertyCurrent
-     * @param ValidateCredentials    $validateCredentials
-     * @param Authenticate           $authenticate
-     * @param ClearIdentity          $clearIdentity
-     * @param HasIdentity            $hasIdentity
-     * @param IsIdentity             $isIdentity
-     * @param SetIdentity            $setIdentity
-     * @param RefreshIdentity        $refreshIdentity
-     * @param GetIdentity            $getIdentity
-     * @param IsAllowed              $isAllowed
-     * @param IsUserAllowed          $isUserAllowed
-     * @param HasRoleBasedAccess     $hasRoleBasedAccess
-     * @param HasRoleBasedAccessUser $hasRoleBasedAccessUser
-     * @param BuildNewUser           $buildNewUser
-     * @param BuildUser              $buildUser
-     */
     public function __construct(
         GetUser $getUser,
         GetUserById $getUserById,
@@ -126,10 +90,6 @@ class RcmUserService
         SetIdentity $setIdentity,
         RefreshIdentity $refreshIdentity,
         GetIdentity $getIdentity,
-        IsAllowed $isAllowed,
-        IsUserAllowed $isUserAllowed,
-        HasRoleBasedAccess $hasRoleBasedAccess,
-        HasRoleBasedAccessUser $hasRoleBasedAccessUser,
         BuildNewUser $buildNewUser,
         BuildUser $buildUser
     ) {
@@ -155,10 +115,6 @@ class RcmUserService
         $this->setIdentity = $setIdentity;
         $this->refreshIdentity = $refreshIdentity;
         $this->getIdentity = $getIdentity;
-        $this->isAllowed = $isAllowed;
-        $this->isUserAllowed = $isUserAllowed;
-        $this->hasRoleBasedAccess = $hasRoleBasedAccess;
-        $this->hasRoleBasedAccessUser = $hasRoleBasedAccessUser;
         $this->buildNewUser = $buildNewUser;
         $this->buildUser = $buildUser;
     }
@@ -532,102 +488,6 @@ class RcmUserService
     public function getCurrentUser($default = null)
     {
         return $this->getIdentity($default);
-    }
-
-    //@todo implement guestIdentity
-    // - if getIdentity is empty return guest and save updates in session
-    // on login we can sync the guest user or the session user as needed
-
-    /* ACL HELPERS ********************************/
-
-    /**
-     * @deprecated Use \RcmUser\Api\Acl\IsAllowed
-     * isAllowed
-     * Check if the current Auth'd User has
-     * access to a resource with a privilege provided by provider id.
-     * This is use to validate a users access
-     * based on their role and the rules set by ACL
-     *
-     * @param string $resourceId a string resource id as defined by a provider
-     * @param string $privilege  privilege of the resource to check
-     * @param string $providerId @deprecated No Longer Required
-     *
-     * @return bool
-     */
-    public function isAllowed(
-        $resourceId,
-        $privilege = null,
-        $providerId = null
-    ) {
-        return $this->isAllowed->__invoke(
-            $this->getPsrRequest(),
-            $resourceId,
-            $privilege
-        );
-    }
-
-    /**
-     * @deprecated Use \RcmUser\Api\Acl\IsUserAllowed
-     * isUserAllowed
-     * Check if the current Auth'd User has
-     * access to a resource with a privilege provided by provider id.
-     * This is use to validate a users access
-     * based on their role and the rules set by ACL
-     *
-     * @param string        $resourceId a string resource id as defined by a provider
-     * @param string        $privilege  privilege of the resource to check
-     * @param string        $providerId @deprecated No Longer Required
-     * @param UserInterface $user       request user object
-     *
-     * @return bool
-     * @throws \RcmUser\Exception\RcmUserException
-     */
-    public function isUserAllowed(
-        $resourceId,
-        $privilege = null,
-        $providerId = null,
-        $user = null
-    ) {
-        return $this->isUserAllowed->__invoke(
-            $user,
-            $resourceId,
-            $privilege
-        );
-    }
-
-    /**
-     * @deprecated Use \RcmUser\Api\Acl\HasRoleBasedAccess
-     * hasRoleBasedAccess
-     * Check if current user has access based on role inheritance
-     *
-     * @param $roleId
-     *
-     * @return bool
-     */
-    public function hasRoleBasedAccess($roleId)
-    {
-        return $this->hasRoleBasedAccess->__invoke(
-            $this->getPsrRequest(),
-            $roleId
-        );
-    }
-
-    /**
-     * @deprecated Use \RcmUser\Api\Acl\HasRoleBasedAccessUser
-     * hasUserRoleBasedAccess -
-     * Check if a user has access based on role inheritance
-     *
-     * @param UserInterface $user
-     * @param string        $roleId
-     *
-     * @return bool
-     */
-    public function hasUserRoleBasedAccess($user, $roleId)
-    {
-        return $this->hasRoleBasedAccessUser->__invoke(
-            $user,
-            $roleId
-        );
     }
 
     /* UTILITIES **************************************/
