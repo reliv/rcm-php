@@ -110,27 +110,6 @@ class CmsPermissionChecks
     }
 
     /**
-     * @deprecated Use \Rcm\Api\Acl\IsPageRestricted
-     * isPageRestricted
-     *
-     * @param $siteId
-     * @param $pageType
-     * @param $pageName
-     * @param $privilege
-     *
-     * @return bool
-     */
-    public function isPageRestricted($siteId, $pageType, $pageName, $privilege)
-    {
-        return $this->isPageRestricted->__invoke(
-            $siteId,
-            $pageType,
-            $pageName,
-            $privilege
-        );
-    }
-
-    /**
      * @deprecated Use \Rcm\Acl\ResourceName
      * buildSiteResourceId
      *

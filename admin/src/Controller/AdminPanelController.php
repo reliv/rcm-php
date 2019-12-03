@@ -80,10 +80,10 @@ class AdminPanelController extends AbstractActionController
         $pageType = $routeMatch->getParam('pageType', 'n');
 
         $view = new ViewModel();
-        $view->setVariable('restrictions', false);
-        if ($this->cmsPermissionChecks->isPageRestricted($siteId, $pageType, $sourcePageName, 'read') == true) {
-            $view->setVariable('restrictions', true);
-        }
+//        $view->setVariable('restrictions', false);
+//        if ($this->cmsPermissionChecks->isPageRestricted($siteId, $pageType, $sourcePageName, 'read') == true) {
+//            $view->setVariable('restrictions', true);
+//        }
 
         $view->setVariable('adminMenu', $this->adminPanelConfig);
         $view->setTemplate('rcm-admin/admin/admin');
