@@ -11,7 +11,6 @@ use Rcm\SwitchUser\Service\AssertImpersonatorIsAllowed;
 use Rcm\SwitchUser\Service\AssertImpersonatorOrUserIsAllowed;
 use Rcm\SwitchUser\Service\SwitchUserAclService;
 use Rcm\SwitchUser\Service\SwitchUserService;
-use RcmUser\Api\Acl\IsUserAllowed;
 use RcmUser\Api\Authentication\Authenticate;
 use RcmUser\Api\Authentication\GetIdentity;
 use RcmUser\Api\Authentication\SetIdentityInsecure;

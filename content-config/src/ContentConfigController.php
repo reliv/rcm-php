@@ -7,7 +7,6 @@ use Rcm\Entity\Site;
 use Rcm\Http\Response;
 use Rcm\Page\PageData\PageDataBc;
 use Rcm\Page\Renderer\PageRendererBc;
-use RcmUser\Api\Acl\HasRoleBasedAccess;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
@@ -17,7 +16,6 @@ use Zend\View\Model\ViewModel;
  */
 class ContentConfigController extends AbstractActionController
 {
-    /** @var HasRoleBasedAccess */
     protected $isPageAllowedForReading;
 
     /** @var PageRendererBc */

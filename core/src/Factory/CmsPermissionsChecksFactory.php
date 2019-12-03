@@ -4,7 +4,6 @@ namespace Rcm\Factory;
 
 use Rcm\Acl\CmsPermissionChecks;
 use Rcm\Acl\ResourceName;
-use Rcm\Api\Acl\HasRoleBasedAccess;
 use Rcm\Api\Acl\IsAllowedShowRevisions;
 use Rcm\Api\Acl\IsAllowedSiteAdmin;
 use Rcm\Api\Acl\IsPageAllowedForReading;
@@ -28,7 +27,6 @@ class CmsPermissionsChecksFactory
             $serviceLocator->get(ResourceName::class),
             $serviceLocator->get(IsPageAllowedForReading::class),
             $serviceLocator->get(IsAllowedSiteAdmin::class),
-            $serviceLocator->get(HasRoleBasedAccess::class),
             $serviceLocator->get(IsUserLoggedIn::class),
             $serviceLocator->get(IsAllowedShowRevisions::class),
             $serviceLocator->get(IsPageRestricted::class)
