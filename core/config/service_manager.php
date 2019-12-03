@@ -29,12 +29,6 @@ return [
         \Rcm\Acl\ResourceProvider::class
         => \Rcm\Factory\AclResourceProviderFactory::class,
 
-        /**
-         * API =====================================
-         */
-        \Rcm\Api\Acl\HasRoleBasedAccess::class
-        => \Rcm\Api\Acl\HasRoleBasedAccessBasicFactory::class,
-
         \Rcm\Api\Acl\IsAllowedShowRevisions::class
         => \Rcm\Api\Acl\IsAllowedShowRevisionsBasicFactory::class,
 

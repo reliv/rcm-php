@@ -2,7 +2,6 @@
 
 namespace Rcm\Acl;
 
-use Rcm\Api\Acl\HasRoleBasedAccess;
 use Rcm\Api\Acl\IsAllowedShowRevisions;
 use Rcm\Api\Acl\IsAllowedSiteAdmin;
 use Rcm\Api\Acl\IsPageAllowedForReading;
@@ -29,7 +28,6 @@ class CmsPermissionChecks
      * @param ResourceName            $resourceName
      * @param IsPageAllowedForReading $isPageAllowedForReading
      * @param IsAllowedSiteAdmin      $isAllowedSiteAdmin
-     * @param HasRoleBasedAccess      $hasRoleBasedAccess
      * @param IsUserLoggedIn          $isUserLoggedIn
      * @param IsAllowedShowRevisions  $isAllowedShowRevisions
      * @param IsPageRestricted        $isPageRestricted
@@ -38,7 +36,6 @@ class CmsPermissionChecks
         ResourceName $resourceName,
         IsPageAllowedForReading $isPageAllowedForReading,
         IsAllowedSiteAdmin $isAllowedSiteAdmin,
-        HasRoleBasedAccess $hasRoleBasedAccess,
         IsUserLoggedIn $isUserLoggedIn,
         IsAllowedShowRevisions $isAllowedShowRevisions,
         IsPageRestricted $isPageRestricted
@@ -46,7 +43,6 @@ class CmsPermissionChecks
         $this->resourceName = $resourceName;
         $this->isPageAllowedForReading = $isPageAllowedForReading;
         $this->isAllowedSiteAdmin = $isAllowedSiteAdmin;
-        $this->hasRoleBasedAccess = $hasRoleBasedAccess;
         $this->isUserLoggedIn = $isUserLoggedIn;
         $this->isAllowedShowRevisions = $isAllowedShowRevisions;
         $this->isPageRestricted = $isPageRestricted;
@@ -81,22 +77,6 @@ class CmsPermissionChecks
         return $this->isAllowedSiteAdmin->__invoke(
             GetPsrRequest::invoke(),
             $site
-        );
-    }
-
-    /**
-     * @deprecated  Use \Rcm\Api\Acl\HasRoleBasedAccess
-     * hasRoleBasedAccess
-     *
-     * @param $role
-     *
-     * @return bool
-     */
-    public function hasRoleBasedAccess($role)
-    {
-        return $this->hasRoleBasedAccess->__invoke(
-            GetPsrRequest::invoke(),
-            $role
         );
     }
 
