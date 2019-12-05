@@ -36,7 +36,7 @@ class IsAllowedSiteAdminBasic implements IsAllowedSiteAdmin
 
         try {
             $this->assertIsAllowed->__invoke(
-                AclActions::UPDATE,
+                AclActions::READ,
                 [
                     'type' => SecurityPropertyConstants::TYPE_CONTENT,
                     SecurityPropertyConstants::CONTENT_TYPE_KEY
