@@ -8,19 +8,6 @@ use RcmUser\InputFilter\LoginInputFilter;
 use Reliv\RcmApiLib\Model\ApiMessage;
 use Zend\Http\Response;
 
-/**
- * Class UserController
- *
- * PHP version 5
- *
- * @category  Reliv
- * @package   RcmUser\Api\ApiController
- * @author    James Jervis <jjervis@relivinc.com>
- * @copyright 2015 Reliv International
- * @license   License.txt New BSD License
- * @version   Release: <package_version>
- * @link      https://github.com/reliv
- */
 class UserController extends AbstractController
 {
     /**
@@ -34,18 +21,6 @@ class UserController extends AbstractController
             'login',
             'logout',
         ];
-
-    /**
-     * isReservedId
-     *
-     * @param $id
-     *
-     * @return bool
-     */
-    protected function isReservedId($id)
-    {
-        return in_array($id, $this->reservedIds);
-    }
 
     /**
      * get
@@ -63,15 +38,6 @@ class UserController extends AbstractController
             $user = $rcmUserService->getCurrentUser();
         } else {
             return new NotAllowedResponseJsonZf2();
-// Getting user profiles other than your own was disabled durring the ACL2 project because it didn't follow new rules
-//            if (!$this->isReservedId($id)
-//                && $this->isAllowed(
-//                    RcmUserAclResourceProvider::RESOURCE_ID_USER,
-//                    'read'
-//                )
-//            ) {
-//                $user = $rcmUserService->getUserById($id);
-//            }
         }
 
         if (empty($user)) {
