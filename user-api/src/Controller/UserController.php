@@ -2,6 +2,7 @@
 
 namespace RcmUser\Api\Controller;
 
+use Rcm\Http\NotAllowedResponseJsonZf2;
 use RcmUser\Provider\RcmUserAclResourceProvider;
 use RcmUser\InputFilter\LoginInputFilter;
 use Reliv\RcmApiLib\Model\ApiMessage;
@@ -22,71 +23,68 @@ use Zend\Http\Response;
  */
 class UserController extends AbstractController
 {
-//    /**
-//     * List of RPC methods that are passed as IDs
-//     *
-//     * @var array
-//     */
-//    protected $reservedIds
-//        = [
-//            'new',
-//            'current',
-//            'login',
-//            'logout',
-//        ];
-//
-//    /**
-//     * isReservedId
-//     *
-//     * @param $id
-//     *
-//     * @return bool
-//     */
-//    protected function isReservedId($id)
-//    {
-//        return in_array($id, $this->reservedIds);
-//    }
-//
-//    /**
-//     * get
-//     *
-//     * @param mixed $id
-//     *
-//     * @return \Reliv\RcmApiLib\Http\ApiResponse
-//     */
-//    public function get($id)
-//    {
-//        $rcmUserService = $this->getRcmUserService();
-//        $user = null;
-//
-//        if ($id == 'new') {
-//            $user = $rcmUserService->buildNewUser();
-//        }
-//
-//        if ($id == 'current') {
-//            $user = $rcmUserService->getCurrentUser();
-//        }
-//
-//        if (!$this->isReservedId($id)
-//            && $this->isAllowed(
-//                RcmUserAclResourceProvider::RESOURCE_ID_USER,
-//                'read'
-//            )
-//        ) {
-//            $user = $rcmUserService->getUserById($id);
-//        }
-//
-//        if (empty($user)) {
-//            return $this->getApiResponse(
-//                $user,
-//                404
-//            );
-//        }
-//
-//        return $this->getApiResponse(
-//            $user
-//        );
-//    }
+    /**
+     * List of RPC methods that are passed as IDs
+     *
+     * @var array
+     */
+    protected $reservedIds
+        = [
+            'current',
+            'login',
+            'logout',
+        ];
+
+    /**
+     * isReservedId
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    protected function isReservedId($id)
+    {
+        return in_array($id, $this->reservedIds);
+    }
+
+    /**
+     * get
+     *
+     * @param mixed $id
+     *
+     * @return \Reliv\RcmApiLib\Http\ApiResponse
+     */
+    public function get($id)
+    {
+        $rcmUserService = $this->getRcmUserService();
+        $user = null;
+
+        if ($id == 'current') {
+            $user = $rcmUserService->getCurrentUser();
+        } else {
+            return new NotAllowedResponseJsonZf2();
+// Getting user profiles other than your own was disabled durring the ACL2 project because it didn't follow new rules
+//            if (!$this->isReservedId($id)
+//                && $this->isAllowed(
+//                    RcmUserAclResourceProvider::RESOURCE_ID_USER,
+//                    'read'
+//                )
+//            ) {
+//                $user = $rcmUserService->getUserById($id);
+//            }
+        }
+
+        if (empty($user)) {
+            return $this->getApiResponse(
+                $user,
+                404
+            );
+        }
+
+        return $this->getApiResponse(
+            $user
+        );
+    }
 
     /**
      * create
