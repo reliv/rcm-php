@@ -206,7 +206,9 @@ class PageSecureRepo
                 $createdPage->getPageTitle(),
                 $createdPage->getDescription(),
                 $createdPage->getKeywords(),
-                $this->revisionRepo->find($createdPage->getStagedRevision())->getPluginWrappers()->toArray()
+                $this->revisionRepo->find($createdPage->getStagedRevision())->getPluginWrappers()->toArray(),
+                $createdPage->allowsPublicReadAccess(),
+                $createdPage->getReadAccessGroups()
             ),
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
@@ -278,7 +280,9 @@ class PageSecureRepo
                 $createdPage->getPageTitle(),
                 $createdPage->getDescription(),
                 $createdPage->getKeywords(),
-                $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray()
+                $this->revisionRepo->find($resultRevisionId)->getPluginWrappers()->toArray(),
+                $createdPage->allowsPublicReadAccess(),
+                $createdPage->getReadAccessGroups()
             ),
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
@@ -333,7 +337,9 @@ class PageSecureRepo
                 $page->getPageTitle(),
                 $page->getDescription(),
                 $page->getKeywords(),
-                $page->getPublishedRevision()->getPluginWrappers()->toArray()
+                $page->getPublishedRevision()->getPluginWrappers()->toArray(),
+                $page->allowsPublicReadAccess(),
+                $page->getReadAccessGroups()
             ),
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
@@ -406,7 +412,9 @@ class PageSecureRepo
                     $page->getPageTitle(),
                     $page->getDescription(),
                     $page->getKeywords(),
-                    $this->revisionRepo->find($resultPageRevisionId)->getPluginWrappers()->toArray()
+                    $this->revisionRepo->find($resultPageRevisionId)->getPluginWrappers()->toArray(),
+                    $page->allowsPublicReadAccess(),
+                    $page->getReadAccessGroups()
                 ),
                 $user->getId(),
                 __CLASS__ . '::' . __FUNCTION__
@@ -555,7 +563,9 @@ class PageSecureRepo
                 $page->getPageTitle(),
                 $page->getDescription(),
                 $page->getDescription(),
-                $page->getPublishedRevision()->getPluginWrappers()->toArray()
+                $page->getPublishedRevision()->getPluginWrappers()->toArray(),
+                $page->allowsPublicReadAccess(),
+                $page->getReadAccessGroups()
             ),
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__

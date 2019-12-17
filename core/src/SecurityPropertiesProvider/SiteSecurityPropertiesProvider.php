@@ -14,7 +14,7 @@ class SiteSecurityPropertiesProvider implements SecurityPropertiesProviderInterf
         }
 
         return [
-            'type' => SecurityPropertyConstants::TYPE_CONTENT,
+            'type' => SecurityPropertyConstants::TYPE_SITE,
             SecurityPropertyConstants::CONTENT_TYPE_KEY => SecurityPropertyConstants::CONTENT_TYPE_SITE,
             'country' => $data['countryIso3']
         ];
