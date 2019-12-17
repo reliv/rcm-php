@@ -12,6 +12,8 @@ class PageContent implements ContentInterface
     protected $keywords;
     protected $description;
     protected $blockInstances;
+    protected $publicReadAccess;
+    protected $readAccessGroups;
 
     /**
      * PageContent constructor.
@@ -20,12 +22,20 @@ class PageContent implements ContentInterface
      * @param string | null $keywords
      * @param array $blockInstances
      */
-    public function __construct(string $title, $description, $keywords, array $blockInstances)
-    {
+    public function __construct(
+        string $title,
+        $description,
+        $keywords,
+        array $blockInstances,
+        bool $publicReadAccess,
+        $readAccessGroups
+    ) {
         $this->title = $title;
         $this->description = $description;
         $this->keywords = $keywords;
         $this->blockInstances = $blockInstances;
+        $this->publicReadAccess = $publicReadAccess;
+        $this->readAccessGroups = $readAccessGroups;
     }
 
     public function toArrayForLongTermStorage(): array
@@ -35,6 +45,8 @@ class PageContent implements ContentInterface
             'description' => $this->description,
             'keywords' => $this->keywords,
             'blockInstances' => $this->blockInstances,
+            'publicReadAccess' => $this->publicReadAccess,
+            'readAccessGroups' => $this->readAccessGroups,
             'contentSchemaVersion' => self::CONTENT_SCHEMA_VERSION
         ];
     }

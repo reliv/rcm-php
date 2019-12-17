@@ -617,7 +617,9 @@ class PageSecureRepo
                 $updatedPage->getPageTitle(),
                 $updatedPage->getDescription(),
                 $updatedPage->getKeywords(),
-                $pluginWrapperData
+                $pluginWrapperData,
+                $updatedPage->allowsPublicReadAccess(),
+                $updatedPage->getReadAccessGroups()
             ),
             $user->getId(),
             __CLASS__ . '::' . __FUNCTION__
