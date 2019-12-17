@@ -11,18 +11,6 @@ use Zend\Http\Response;
 class UserController extends AbstractController
 {
     /**
-     * List of RPC methods that are passed as IDs
-     *
-     * @var array
-     */
-    protected $reservedIds
-        = [
-            'current',
-            'login',
-            'logout',
-        ];
-
-    /**
      * get
      *
      * @param mixed $id
