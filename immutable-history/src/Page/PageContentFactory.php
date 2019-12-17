@@ -14,13 +14,21 @@ class PageContentFactory
      * @param array $pluginWrappers
      * @return PageContent
      */
-    public function __invoke(string $title, $description, $keywords, array $pluginWrappers)
-    {
+    public function __invoke(
+        string $title,
+        $description,
+        $keywords,
+        array $pluginWrappers,
+        bool $publicReadAccess,
+        $readAccessGroups
+    ) {
         return new PageContent(
             $title,
             $description,
             $keywords,
-            $this->pluginWrappersToFlatBlockInstances($pluginWrappers)
+            $this->pluginWrappersToFlatBlockInstances($pluginWrappers),
+            $publicReadAccess,
+            $readAccessGroups
         );
     }
 
