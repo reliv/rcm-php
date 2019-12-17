@@ -5,6 +5,7 @@ namespace Rcm\Acl2;
 class SecurityPropertyConstants
 {
     const TYPE_CONTENT = 'content';
+    const TYPE_SITE = 'site';
     const CONTENT_TYPE_KEY = 'contentType';
     const CONTENT_TYPE_PAGE = 'page';
     const CONTENT_TYPE_PAGE_HISTORY = 'pageHistory';
