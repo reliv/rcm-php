@@ -3,10 +3,6 @@
 namespace Rcm\SiteSettingsSections;
 
 use Doctrine\ORM\EntityManager;
-use Rcm\Acl\IsAllowedByUser;
-use Rcm\HttpLib\JsonBodyParserMiddleware;
-use Rcm\Service\CurrentSite;
-use RcmUser\Api\Authentication\GetIdentity;
 
 class ModuleConfig
 {
@@ -24,13 +20,6 @@ class ModuleConfig
                         'arguments' => [
                             GetSectionDefinitions::class,
                             EntityManager::class
-                        ],
-                    ],
-                    SetSection::class => [
-                        'arguments' => [
-                            GetSectionDefinitions::class,
-                            EntityManager::class,
-                            'Rcm\ImmutableHistory\SiteSettingsSectionVersionRepo'
                         ],
                     ],
                 ],
