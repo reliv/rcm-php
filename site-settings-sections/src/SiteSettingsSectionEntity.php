@@ -44,7 +44,7 @@ class SiteSettingsSectionEntity
     protected $sectionName;
 
     /**
-     * @var string Page name
+     * @var array Page name
      *
      * @ORM\Column(type="json")
      */
