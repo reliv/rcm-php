@@ -6,98 +6,31 @@ $this->headLink()->appendStylesheet(
 
 <form method="post" action="<?= $_SERVER['REQUEST_URI'] ?>">
     <input name="rcmPluginName" type="hidden" value="RcmCreateNewPassword">
+    <div>
+        <h1><?= $this->translate('Reset Password') ?></h1>
+    </div>
 
-    <table style="border:0;" width="310">
-        <tr>
-            <td colspan="2">
-                <div data-richEdit="top">
-                    <h1><?= $this->translate('Reset Password') ?></h1>
-                </div>
-            </td>
-        </tr>
 
-        <?php if ($this->postSuccess): ?>
+    <?php if ($this->postSuccess): ?>
+        <div><?= $this->translate('Your password has been changed.') ?></div>
+    <?php else: ?>
+        <div class="error">
+            <?= isset($error) ? $error : '' ?>
+        </div>
+        <?php if ($this->hideForm != true): ?>
+            <div class="form-group">
+                <label for="password"><?= $this->translate('New Password') ?> <?= $this->translate('(letters and numbers only)') ?></label>
+                <input id="password" type="password" name="password"/>
+            </div>
 
-            <tr>
-                <td>
-                    <?= $this->translate('Your password has been changed.') ?>
-                </td>
-                <td>
-                    <p>&nbsp;</p>
-                </td>
-            </tr>
+            <div class="form-group">
+                <label for="passwordTwo"><?= $this->translate('Verify Password') ?></label>
+                <input id="passwordTwo" type="password" name="passwordTwo"/>
+            </div>
 
-        <?php else: ?>
-            <tr>
-                <td>
-                    <p>&nbsp;</p>
-                </td>
-                <td>
-                    <p>&nbsp;</p>
-                </td>
-            </tr>
-            <tr>
-                <td height="10px" colspan="2">
-                    <div class="error">
-                        <?= isset($error) ? $error : '' ?>
-                    </div>
-                </td>
-            </tr>
-            <?php if ($this->hideForm != true): ?>
-                <tr>
-                    <td>
-                        <p>&nbsp;</p>
-                    </td>
-                    <td>
-                        <p>&nbsp;</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="password"><?= $this->translate('New Password') ?></label>
-                    </td>
-                    <td style="width:33%">
-                        <input id="password" type="password" name="password"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="text-align: right">
-                        <div data-richEdit="alphanumeric">
-                            <?= $this->translate('(letters and numbers only)') ?>
-                            <p>&nbsp;</p>
-                        </div>
-                    </td>
-                    <td>
-                        <p>&nbsp;</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="passwordTwo"><?= $this->translate('Verify Password') ?></label>
-                    </td>
-                    <td style="width:33%">
-                        <input id="passwordTwo" type="password" name="passwordTwo"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>&nbsp;</p>
-                    </td>
-                    <td>
-                        <p>&nbsp;</p>
-                    </td>
-                </tr>
-                <td>
-                    <p>&nbsp;</p>
-                </td>
-                <td style="text-align: right">
-                    <button class="btn btn-primary" type="submit">
-                        <span data-textEdit="button"><?= $this->translate('Submit') ?></span>
-                    </button>
-                </td>
-            <?php endif ?>
+            <button class="btn btn-primary"
+                    type="submit"><?= $this->translate('Submit') ?>
+            </button>
         <?php endif ?>
-
-    </table>
-
+    <?php endif ?>
 </form>

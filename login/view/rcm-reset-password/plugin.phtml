@@ -28,8 +28,11 @@ $form->prepare();
         <?php else: ?>
             <tr>
                 <td>
-                    <div data-richEdit="top">
-                        <?= $this->instanceConfig['top'] ?>
+                    <div>
+                        <h1><?= $this->translate('Reset Password') ?></h1>
+                        <p>
+                            <?= $this->translate('Enter you RCN or Username. An email to reset your password will be sent to your email address on file.') ?>
+                        </p>
                     </div>
                 </td>
             </tr>
@@ -52,7 +55,7 @@ $form->prepare();
             </tr>
             <tr>
                 <td>
-                    <label for="userId" data-textedit="userIdLabel"><?= $this->instanceConfig['userIdLabel'] ?></label>
+                    <label for="userId"><?= $this->translate('RCN or Username:') ?></label>
                     <input name="userId" type="text"/>
                 <td>
             </tr>
