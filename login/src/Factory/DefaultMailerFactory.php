@@ -4,6 +4,7 @@ namespace RcmLogin\Factory;
 
 use RcmLogin\Email\DefaultMailer;
 use RcmLogin\Validator\RedirectValidator;
+use Reliv\App\Mailer\Service\TemplateMailer;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -31,7 +32,7 @@ class DefaultMailerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $mailer = new DefaultMailer();
+        $mailer = new DefaultMailer($serviceLocator->get(TemplateMailer::class));
 
         return $mailer;
     }
