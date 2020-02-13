@@ -44,17 +44,25 @@ class SiteSettingsSectionEntity
     protected $sectionName;
 
     /**
-     * @var array Page name
+     * @var string Page name
      *
      * @ORM\Column(type="json")
      */
     protected $settings = [];
 
-    public function __construct(Site $site, string $sectionName, array $settings)
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $lastModified;
+
+    public function __construct(Site $site, string $sectionName, array $settings, \DateTime $lastModified)
     {
         $this->site = $site;
         $this->sectionName = $sectionName;
         $this->settings = $settings;
+        $this->lastModified = $lastModified;
     }
 
     /**
@@ -79,5 +87,13 @@ class SiteSettingsSectionEntity
     public function getSettings(): array
     {
         return $this->settings;
+    }
+
+    /**
+     * @param \DateTime $lastModified
+     */
+    public function setLastModified(\DateTime $lastModified): void
+    {
+        $this->lastModified = $lastModified;
     }
 }
