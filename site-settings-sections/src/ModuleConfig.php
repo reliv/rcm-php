@@ -3,10 +3,6 @@
 namespace Rcm\SiteSettingsSections;
 
 use Doctrine\ORM\EntityManager;
-use Rcm\Acl\IsAllowedByUser;
-use Rcm\HttpLib\JsonBodyParserMiddleware;
-use Rcm\Service\CurrentSite;
-use RcmUser\Api\Authentication\GetIdentity;
 
 class ModuleConfig
 {
@@ -25,47 +21,6 @@ class ModuleConfig
                             GetSectionDefinitions::class,
                             EntityManager::class
                         ],
-                    ],
-                    SetSection::class => [
-                        'arguments' => [
-                            GetSectionDefinitions::class,
-                            EntityManager::class,
-                            'Rcm\ImmutableHistory\SiteSettingsSectionVersionRepo'
-                        ],
-                    ],
-                    HttpGetSiteSettingsSectionController::class => [
-                        'arguments' => [
-                            IsAllowedByUser::class,
-                            GetSection::class,
-                            EntityManager::class,
-                            CurrentSite::class,
-                            GetIdentity::class
-                        ],
-                    ],
-                    HttpPutSiteSettingsSectionController::class => [
-                        'arguments' => [
-                            IsAllowedByUser::class,
-                            SetSection::class,
-                            GetSection::class,
-                            EntityManager::class,
-                            CurrentSite::class,
-                            GetIdentity::class
-                        ],
-                    ],
-                ],
-            ],
-            'routes' => [
-                [
-                    'allowed_methods' => ['GET'],
-                    'path' => '/api/rcm/site-settings-section/current/{sectionName}',
-                    'middleware' => [HttpGetSiteSettingsSectionController::class],
-                ],
-                [
-                    'allowed_methods' => ['PUT'],
-                    'path' => '/api/rcm/site-settings-section/current/{sectionName}',
-                    'middleware' => [
-                        JsonBodyParserMiddleware::class,
-                        HttpPutSiteSettingsSectionController::class
                     ],
                 ],
             ],
@@ -87,18 +42,23 @@ class ModuleConfig
             ],
             __NAMESPACE__ => [
                 'sections' => [
-//                    'example1' => [
-//                        'label' => 'Example 1',
-//                        'fields' => [
-//
-//                        ],
-//                    ],
-//                    'example2' => [
-//                        'label' => 'Example 2',
-//                        'fields' => [
-//
-//                        ],
-//                    ],
+                    // // NOTE: These examples are still technically accurate
+                    // //       in terms of data structure, but the current
+                    // //       convention is to load the config from Yaml files
+                    // //       using the Symfony Yaml parser, not put them in
+                    // //       the module config directly.
+                    // 'example1' => [
+                    //     'label' => 'Example 1',
+                    //     'fields' => [
+                    // 
+                    //     ],
+                    // ],
+                    // 'example2' => [
+                    //     'label' => 'Example 2',
+                    //     'fields' => [
+                    // 
+                    //     ],
+                    // ],
                 ]
             ],
         ];
