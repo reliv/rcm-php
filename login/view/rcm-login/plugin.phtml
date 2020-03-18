@@ -10,7 +10,6 @@ $this->rcmTextEdit(
     // This was moved to AJAX from a normal form post to try to work around chrome "stalled pending forever" issues
     window.addEventListener('DOMContentLoaded', function (event) {
         var formEle = document.body.querySelectorAll('form.loginForm.rcm-login-form')[0];
-        console.log(formEle);
         formEle.addEventListener('submit', function (event) {
             event.preventDefault();
 
