@@ -2,6 +2,7 @@
 
 namespace RcmLogin;
 
+use Rcm\HttpLib\JsonBodyParserMiddleware;
 use RcmLogin\Controller\LoginFormSubmitHandler;
 use RcmUser\Service\RcmUserService;
 
@@ -25,7 +26,10 @@ class ModuleConfig
             'routes' => [
                 [
                     'path' => '/rcm-login/login-form-submit-handler',
-                    'middleware' => LoginFormSubmitHandler::class,
+                    'middleware' => [
+                        JsonBodyParserMiddleware::class,
+                        LoginFormSubmitHandler::class
+                    ],
                     'allowed_methods' => ['POST'],
                 ],
             ]

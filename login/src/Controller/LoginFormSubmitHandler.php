@@ -10,6 +10,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use RcmLogin\Csrf\CsrfValidator;
 use RcmUser\Service\RcmUserService;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\EventManager\Event;
 use Zend\EventManager\EventManager;
@@ -67,7 +68,7 @@ class LoginFormSubmitHandler implements MiddlewareInterface
             || !array_key_exists('password', $requestBody)
             || !array_key_exists('csrf', $requestBody)
         ) {
-            return new RedirectResponse(
+            return $this->buildRedirectResponse(
                 $this->loginFormUrl . '?errorCode=systemFailure&detailedErrorCode=requestMissingBodyField'
                 . '&redirect=' . $redirectParam
             );
@@ -78,7 +79,7 @@ class LoginFormSubmitHandler implements MiddlewareInterface
         $redirectParam = filter_var($requestBody['redirect']);
 
         if (!$this->csrfValidator->isValid($requestBody['csrf'])) {
-            return new RedirectResponse(
+            return $this->buildRedirectResponse(
                 $this->loginFormUrl . '?errorCode=systemFailure&detailedErrorCode=invalidCsrfToken'
                 . '&username=' . urlencode($username)
                 . '&redirect=' . $redirectParam
@@ -86,7 +87,7 @@ class LoginFormSubmitHandler implements MiddlewareInterface
         }
 
         if (empty($username) || empty($password)) {
-            return new RedirectResponse(
+            return $this->buildRedirectResponse(
                 $this->loginFormUrl . '?errorCode=missing'
                 . '&username=' . urlencode($username)
                 . '&redirect=' . $redirectParam
@@ -109,10 +110,10 @@ class LoginFormSubmitHandler implements MiddlewareInterface
             if ($authResult->getCode() == Result::FAILURE_UNCATEGORIZED
                 && !empty($this->disabledAccountUrl)
             ) {
-                return new RedirectResponse($this->disabledAccountUrl);
+                return $this->buildRedirectResponse($this->disabledAccountUrl);
             }
 
-            return new RedirectResponse($this->loginFormUrl . '?errorCode=invalid'
+            return $this->buildRedirectResponse($this->loginFormUrl . '?errorCode=invalid'
                 . '&username=' . urlencode($username)
                 . '&redirect=' . $redirectParam);
         }
@@ -132,9 +133,18 @@ class LoginFormSubmitHandler implements MiddlewareInterface
 
         if ($redirectParam && preg_match($this->redirectWhitelistRegex, $redirectParam)) {
             //If we have been requested to redirect the user to somewhere besides the default place, do that
-            return new RedirectResponse($redirectParam);
+            return $this->buildRedirectResponse($redirectParam);
         }
 
-        return new RedirectResponse($this->afterLoginSuccessUrl);
+        return $this->buildRedirectResponse($this->afterLoginSuccessUrl);
+    }
+
+    public function buildRedirectResponse(string $redirectUrl)
+    {
+        return new JsonResponse(
+            [
+                'redirectToUrl' => $redirectUrl
+            ]
+        );
     }
 }
