@@ -6,12 +6,50 @@ $this->rcmTextEdit(
     'h1'
 )
 ?>
+<script>
+    // This was moved to AJAX from a normal form post to try to work around chrome "stalled pending forever" issues
+    window.addEventListener('DOMContentLoaded', function (event) {
+        var formEle = document.body.querySelectorAll('form.loginForm.rcm-login-form')[0];
+        console.log(formEle);
+        formEle.addEventListener('submit', function (event) {
+            event.preventDefault();
 
+            function getInputValue(inputName) {
+                return document.body.querySelectorAll('form.loginForm.rcm-login-form input[name=' + inputName + ']')[0]
+                    .value;
+            }
+
+            function redirectBackHereWithError(detailedErrorCode){
+                window.location.href = location.protocol + '//' + location.host + location.pathname
+                    + '?errorCode=systemFailure&detailedErrorCode='+detailedErrorCode;
+            }
+
+            formEle.classList.add('processing');
+            fetch('/rcm-login/login-form-submit-handler', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    redirect: getInputValue('redirect'),
+                    csrf: getInputValue('csrf'),
+                    username: getInputValue('username'),
+                    password: getInputValue('password')
+                })
+            }).then(function (response) {
+                response.json().then(function (reponseBody) {
+                    window.location.href = reponseBody.redirectToUrl;
+                }).catch(function(error){
+                    redirectBackHereWithError('serverReturnedInvalidJson');
+                })
+            }).catch(function (error) {
+                redirectBackHereWithError('browserCouldNotCommunicateWithServer');
+            })
+        })
+    });
+</script>
 <div class="loginContent">
-    <form class="loginForm  rcm-login-form"
-          action="/rcm-login/login-form-submit-handler"
-          method="post"
-    >
+    <form class="loginForm rcm-login-form">
         <?=
         $this->rcmTextEdit(
             'userNameCopy',
