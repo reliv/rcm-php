@@ -517,6 +517,7 @@ class SiteSecureRepo
         try {
             $copySite = $this->copySite($existingSite, $domain);
             $copySite->populate($data);
+            $this->entityManager->flush($copySite);
         } catch (\Exception $e) {
             //If something went wrong, delete the orphaned domain we created.
             $this->entityManager->remove($domain);
