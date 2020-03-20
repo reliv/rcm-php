@@ -29,6 +29,7 @@ $this->rcmTextEdit(
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'same-origin',
                 body: JSON.stringify({
                     redirect: getInputValue('redirect'),
                     csrf: getInputValue('csrf'),
