@@ -35,6 +35,10 @@ class LoginFormSubmitHandlerTest extends TestCase
 
         $response = $unit->process($request, Mockery::mock(DelegateInterface::class));
 
-        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(
+            '{"redirectToUrl":"/login?errorCode=systemFailure\u0026detailedErrorCode=invalidCsrfToken\u0026username=testusername\u0026redirect="}',
+            (string)$response->getBody()
+        );
     }
 }
