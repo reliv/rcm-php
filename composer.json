@@ -54,7 +54,7 @@
     "zendframework/zend-view": "2.*",
     "jakub-onderka/php-parallel-lint": "^1.0",
     "zendframework/zend-i18n": "^2.5",
-    "zendframework/zend-crypt": "^2.5",
+    "zendframework/zend-crypt": "^2.5 || ^3.3.1",
     "zendframework/zend-permissions-acl": "^2.5"
   },
   "require-dev": {
