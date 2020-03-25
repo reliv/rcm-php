@@ -36,7 +36,7 @@
     "reliv/pipe-rat": "~0.5",
     "reliv/white-rat": "^0.2.0",
     "reliv/zf-config-factories": "3.* || 4.*",
-    "rwoverdijk/assetmanager": "1.*",
+    "rwoverdijk/assetmanager": "1.*"
   },
   "require-commented-out": {
     "doctrine/doctrine-orm-module": "1.*",
