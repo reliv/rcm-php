@@ -108,7 +108,7 @@ class ResetPasswordPluginController extends CreatePasswordPluginController imple
      *
      * @return \Zend\View\Model\ViewModel
      */
-    public function renderInstance($instanceId, $instanceConfig)
+    public function renderInstance($instanceId, $instanceConfig, $_ = false)
     {
         //Allows this plugin to also serve as the CreateNewPassword form for simpler page management.
         if ($this->params()->fromQuery('fromPasswordResetEmail') == 1) {
@@ -166,7 +166,6 @@ class ResetPasswordPluginController extends CreatePasswordPluginController imple
         ResetPasswordForm $form,
         $instanceConfig
     ) {
-
         $resetPw = new ResetPassword();
         $form->setInputFilter($this->getResetPasswordInputFilter());
 
