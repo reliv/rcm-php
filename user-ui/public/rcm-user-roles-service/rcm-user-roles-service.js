@@ -84,7 +84,7 @@ angular.module('rcmUserRolesService').factory(
                     //     );
                     self.setRoles({//BC support. Should not really but in open source but o well for now.
                         'customer': {roleId: 'customer'},
-                        'preferredcustomer': {roleId: 'preferredcustomer'},
+                        'preferredCustomer': {roleId: 'preferredCustomer'},
                         'distributor': {roleId: 'distributor'},
                         'employee': {roleId: 'employee'},
                     });
