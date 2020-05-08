@@ -22,7 +22,7 @@ angular.module('rcmUserRolesService').factory(
                 var roleStateMap = {
                     'Initial': 0,
                     'SetRoles': 1,
-                    'RolesReady': 2
+                    'RolesReady': 2,
                 };
 
                 /**
@@ -49,7 +49,7 @@ angular.module('rcmUserRolesService').factory(
                 self.requestRoles = function () {
 
                     // Only request roles once
-                    if (roleStateMap[rcmUser.cache.roleState] > roleStateMap['Initial']) {
+                    if (roleStateMap[rcmUser.cache.roleState] > roleStateMap.Initial) {
                         // we trigger this, someone needs it, but roles should already be set
                         setTimeout(
                             function () {
@@ -84,6 +84,7 @@ angular.module('rcmUserRolesService').factory(
                     //     );
                     self.setRoles({//BC support. Should not really but in open source but o well for now.
                         'customer': {roleId: 'customer'},
+                        'preferredcustomer': {roleId: 'preferredcustomer'},
                         'distributor': {roleId: 'distributor'},
                         'employee': {roleId: 'employee'},
                     });
@@ -131,7 +132,7 @@ angular.module('rcmUserRolesService').factory(
                 self.setRoles = function (roles) {
 
                     // Only set roles once
-                    if (roleStateMap[rcmUser.cache.roleState] > roleStateMap['SetRoles']) {
+                    if (roleStateMap[rcmUser.cache.roleState] > roleStateMap.SetRoles) {
                         // we trigger this, someone needs it, but roles should already be set
                         setTimeout(
                             function () {
@@ -196,7 +197,7 @@ angular.module('rcmUserRolesService').factory(
                         'rcmUserRolesService.onSetSelectedRoles',
                         {
                             valueNamespace: valueNamespace,
-                            selectedRoles: rcmUser.cache.selectedRoles[valueNamespace]
+                            selectedRoles: rcmUser.cache.selectedRoles[valueNamespace],
                         }
                     );
                 };
@@ -208,7 +209,7 @@ angular.module('rcmUserRolesService').factory(
                 self.getSelectedRoles = function (valueNamespace) {
 
                     if (rcmUser.cache.selectedRoles[valueNamespace]) {
-                        return rcmUser.cache.selectedRoles[valueNamespace]
+                        return rcmUser.cache.selectedRoles[valueNamespace];
                     }
 
                     return {};
@@ -256,10 +257,9 @@ angular.module('rcmUserRolesService').factory(
                         {
                             valueNamespace: valueNamespace,
                             selectedRoles: rcmUser.cache.selectedRoles[valueNamespace],
-                            newRole: rcmUser.cache.selectedRoles[valueNamespace][index]
+                            newRole: rcmUser.cache.selectedRoles[valueNamespace][index],
                         }
                     );
-
 
                 };
 
@@ -313,11 +313,10 @@ angular.module('rcmUserRolesService').factory(
                         'rcmUserRolesService.onRemoveSelectedRole',
                         {
                             valueNamespace: valueNamespace,
-                            selectedRoles: rcmUser.cache.selectedRoles[valueNamespace]
+                            selectedRoles: rcmUser.cache.selectedRoles[valueNamespace],
                         }
                     );
                 };
-
 
                 /**
                  *
@@ -387,12 +386,12 @@ angular.module('rcmUserRolesService').factory(
                     );
 
                     return hasAllRoles;
-                }
+                };
             };
 
             var rcmUserRolesService = new RcmUserRolesService();
 
             return rcmUserRolesService;
-        }
+        },
     ]
 );
