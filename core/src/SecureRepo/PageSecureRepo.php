@@ -388,7 +388,8 @@ class PageSecureRepo
         );
 
         /**
-         * If the pageRepo deterimins there was no change, it saves nothing a returns and empty $resultRevisionId.
+         * If the pageRepo determines there was no change,
+         * it saves nothing and returns an empty $resultRevisionId.
          */
         $savedANewVersion = !empty($result['newPageRevisionId']);
 
@@ -422,9 +423,12 @@ class PageSecureRepo
         }
 
         /**
-         * @var $container Container
-         */
+         * @todo Load all known containers for the target page's site,
+         *       include empty entries for those not included in $result */
         foreach ($result['modifiedSiteWideContainers'] as $revisionId => $container) {
+            /**
+             * @var Container $container
+             */
             $this->immutableSiteWideContainerRepo->publish(
                 new SiteWideContainerLocator($container->getSiteId(), $container->getName()),
                 new ContainerContent(
