@@ -422,13 +422,11 @@ class PageSecureRepo
             );
         }
 
-        /**
-         * @todo Load all known containers for the target page's site,
-         *       include empty entries for those not included in $result */
         foreach ($result['modifiedSiteWideContainers'] as $revisionId => $container) {
             /**
              * @var Container $container
              */
+            $modifiedContainerNames[] = $container->getName();
             $this->immutableSiteWideContainerRepo->publish(
                 new SiteWideContainerLocator($container->getSiteId(), $container->getName()),
                 new ContainerContent(
@@ -440,6 +438,28 @@ class PageSecureRepo
                 __CLASS__ . '::' . __FUNCTION__
             );
         }
+
+        // FIXME: This is dangerous, as it may delete the content of site containers that are not on
+        //        the current page.
+        // $modifiedContainerNames = array_keys($data['containers']);
+
+        // // Clear containers that were not present in the result
+        // $unmodifiedContainerNames = $site->getContainers()->map(function (Container $container) use (
+        //     $modifiedContainerNames,
+        //     $user
+        // ) {
+        //     // Skip containers that were modified
+        //     if (in_array($container->getName(), $modifiedContainerNames)) {
+        //         return null;
+        //     }
+        //     $this->immutableSiteWideContainerRepo->publish(
+        //         new SiteWideContainerLocator($container->getSiteId(), $container->getName()),
+        //         new ContainerContent([]),
+        //         $user->getId(),
+        //         __CLASS__ . '::' . __FUNCTION__
+        //     );
+        //     return $container->getName();
+        // })->filter(function ($name) { return $name; });
 
         if ($savedANewVersion) {
             $return['redirect'] = $urlToPageFunction(
