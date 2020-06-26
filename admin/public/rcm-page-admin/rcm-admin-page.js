@@ -22,6 +22,7 @@ var RcmAdminPage = function (
     this.saveUrl = rcmAdminService.config.saveUrl;
 
     this.events = rcmAdminService.rcmEventManager;
+    /** @type {any[]} */
     this.editing = []; // page, layout, sitewide
     this.editMode = false;
     this.arrangeMode = false;
@@ -29,7 +30,7 @@ var RcmAdminPage = function (
     /** @type {{[id: string]: RcmAdminContainer}} */
     this.containers = {};
 
-    /** @type {{[name: string]: RcmAdminPluginData}} */
+    /** @type {{[name: string]: RcmAdminPlugin}} */
     this.plugins = {};
 
     this.loading = 0;
@@ -46,53 +47,26 @@ var RcmAdminPage = function (
         );
     };
 
-    /**
-     * setEditingOn
-     * @param type
-     * @returns viod
-     */
     this.setEditingOn = function (type) {
-
         if (self.editing.indexOf(type) < 0) {
             self.editing.push(type);
             self.onEditChange();
         }
     };
 
-    /**
-     * setEditingOff
-     * @param type
-     * @returns viod
-     */
     this.setEditingOff = function (type) {
-
         if (self.editing.indexOf(type) > -1) {
-
-            self.editing.splice(
-                self.editing.indexOf(type),
-                1
-            );
-
+            self.editing.splice(self.editing.indexOf(type), 1);
             self.onEditChange();
         }
     };
 
-    /**
-     * onEditChange
-     */
     this.onEditChange = function () {
-
         self.editMode = (self.editing.length > 0);
-
         self.events.trigger('editingStateChange', self);
     };
 
-    /**
-     * arrange
-     * @param state
-     */
     this.arrange = function (state) {
-
         if (typeof state === 'undefined') {
             // default is on
             state = true;
@@ -109,45 +83,30 @@ var RcmAdminPage = function (
     this.save = function () {
 
         self.registerObjects(
-            function (page) {
+            function () {
+                self.setLoading('RcmAdminPage', 0);
 
-                self.setLoading(
-                    'RcmAdminPage',
-                    0
-                );
-                var pagedata = self.getData();
+                var dataPage = self.getData().page;
 
-                var data = pagedata.page;
-
-                // loop containers and fire saves... aggregate data and sent to server
-                data.plugins = {};
-
-                var promiseArray = [];
-
-                jQuery.each(
-                    self.plugins,
-                    function (key, plugin) {
-                        promiseArray.push(
-                            plugin.getSaveData().then(
-                                function (pluginData) {
-                                    data.plugins[key] = pluginData;
-                                }
-                            )
-                        );
-                    }
-                );
+                dataPage.plugins = {};
 
                 return Promise.all(
-                    promiseArray
+                    jQuery.map(self.plugins, function (plugin, key) {
+                        return plugin.getSaveData().then(
+                            function (pluginData) {
+                                dataPage.plugins[key] = pluginData;
+                            }
+                        );
+                    })
                 ).then(
                     function () {
                         jQuery.ajax(
                             {
-                                url: self.saveUrl + '/' + data.type + '/' + data.name + '/' + data.revision,
-                                type: 'POST',
-                                data: JSON.stringify(data),
                                 contentType: 'application/json',
+                                data: JSON.stringify(dataPage),
                                 dataType: 'json',
+                                type: 'POST',
+                                url: self.saveUrl + '/' + dataPage.type + '/' + dataPage.name + '/' + dataPage.revision,
                             }
                         ).done(
                             function (msg) {
@@ -162,8 +121,8 @@ var RcmAdminPage = function (
 
                                     self.events.trigger(
                                         'alert', {
-                                            type: 'warning',
                                             message: msg,
+                                            type: 'warning',
                                         }
                                     );
                                 }
@@ -177,8 +136,8 @@ var RcmAdminPage = function (
                                 );
                                 self.events.trigger(
                                     'alert', {
-                                        type: 'warning',
                                         message: msg,
+                                        type: 'warning',
                                     }
                                 );
                             }
@@ -206,6 +165,7 @@ var RcmAdminPage = function (
 
     /**
      * refresh
+     * @param {(self: any) => void} onComplete
      */
     this.refresh = function (onComplete) {
 
@@ -283,7 +243,7 @@ var RcmAdminPage = function (
      * registerObjects
      * - Update object list based on DOM state
      * - should be called after DOM update
-     * @param {() => void} onComplete
+     * @param {(self: any) => void} [onComplete]
      */
     this.registerObjects = function (onComplete) {
 
@@ -351,7 +311,7 @@ var RcmAdminPage = function (
 
     /**
      * init
-     * @param onComplete
+     * @param {(self: any) => void} [onComplete]
      */
     this.init = function (onComplete) {
 

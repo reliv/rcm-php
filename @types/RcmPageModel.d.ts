@@ -1,3 +1,3 @@
 declare interface RcmPageModel {
-    getData(): RcmAdminPageData;
+    getData(): RcmAdminPageModelData;
 }
