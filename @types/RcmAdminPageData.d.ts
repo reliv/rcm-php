@@ -1,5 +1,9 @@
 declare interface RcmAdminPageData {
-    plugins: {[name: string]: RcmAdminPluginData};
+    containers: {
+        [containerName: string]: {
+            [pluginId: number]: RcmAdminPluginData;
+        };
+    };
     type: string;
     name: string;
     revision: number;

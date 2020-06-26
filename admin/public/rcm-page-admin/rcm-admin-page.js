@@ -47,6 +47,9 @@ var RcmAdminPage = function (
         );
     };
 
+    /**
+     * @param {any} type
+     */
     this.setEditingOn = function (type) {
         if (self.editing.indexOf(type) < 0) {
             self.editing.push(type);
@@ -54,6 +57,9 @@ var RcmAdminPage = function (
         }
     };
 
+    /**
+     * @param {any} type
+     */
     this.setEditingOff = function (type) {
         if (self.editing.indexOf(type) > -1) {
             self.editing.splice(self.editing.indexOf(type), 1);
@@ -66,6 +72,9 @@ var RcmAdminPage = function (
         self.events.trigger('editingStateChange', self);
     };
 
+    /**
+     * @param {unknown} state
+     */
     this.arrange = function (state) {
         if (typeof state === 'undefined') {
             // default is on
@@ -81,20 +90,25 @@ var RcmAdminPage = function (
      * save
      */
     this.save = function () {
-
+        console.log(Object.keys(self.containers));
         self.registerObjects(
             function () {
                 self.setLoading('RcmAdminPage', 0);
 
                 var dataPage = self.getData().page;
 
-                dataPage.plugins = {};
+                dataPage.containers = {};
+
+                jQuery.each(self.containers, function (name) {
+                    dataPage.containers[name] = {};
+                });
 
                 return Promise.all(
-                    jQuery.map(self.plugins, function (plugin, key) {
+                    jQuery.map(self.plugins, function (plugin, pluginId) {
                         return plugin.getSaveData().then(
                             function (pluginData) {
-                                dataPage.plugins[key] = pluginData;
+                                var c = dataPage.containers[pluginData.containerId];
+                                c[pluginId] = pluginData;
                             }
                         );
                     })
@@ -230,7 +244,7 @@ var RcmAdminPage = function (
     this.removePlugin = function (pluginId) {
         if (self.plugins[pluginId]) {
             self.plugins[pluginId].remove(
-                function (plugin) {
+                function () {
                     delete (self.plugins[pluginId]);
                     self.events.trigger('removePlugin', pluginId);
                 }
@@ -259,48 +273,36 @@ var RcmAdminPage = function (
         /** @type {number} */
         var pluginId = null;
 
-        jQuery.each(
-            containerElms,
-            function (key, value) {
+        jQuery.each(containerElms, function (__, value) {
+            containerElm = jQuery(value);
+            containerId = self.containerModel.getId(containerElm);
 
-                containerElm = jQuery(value);
-                containerId = self.containerModel.getId(containerElm);
-
-                if (!self.containers[containerId]) {
-
-                    self.containers[containerId] = new RcmAdminContainer(
-                        self,
-                        containerId,
-                        self.containerModel
-                    );
-                }
-
-                pluginElms = self.pluginModel.getElms(containerId);
-
-                jQuery.each(
-                    pluginElms,
-                    function (pkey, pvalue) {
-
-                        pluginElm = jQuery(pvalue);
-                        pluginId = self.pluginModel.getId(pluginElm);
-
-                        self.addPlugin(containerId, pluginId);
-
-                        pluginsRemove.push(pluginId);
-                    }
+            if (!self.containers[containerId]) {
+                self.containers[containerId] = new RcmAdminContainer(
+                    self,
+                    containerId,
+                    self.containerModel
                 );
             }
-        );
+
+            pluginElms = self.pluginModel.getElms(containerId);
+
+            jQuery.each(pluginElms, function (___, pvalue) {
+                pluginElm = jQuery(pvalue);
+                pluginId = self.pluginModel.getId(pluginElm);
+
+                self.addPlugin(containerId, pluginId);
+
+                pluginsRemove.push(pluginId);
+            });
+        });
 
         // remove if no longer in DOM
-        jQuery.each(
-            self.plugins,
-            function (prkey, prvalue) {
-                if (pluginsRemove.indexOf(prvalue.id) < 0) {
-                    self.removePlugin(prvalue.id);
-                }
+        jQuery.each(self.plugins, function (__, prvalue) {
+            if (pluginsRemove.indexOf(prvalue.id) < 0) {
+                self.removePlugin(prvalue.id);
             }
-        );
+        });
 
         self.events.trigger('registerObjects', self.plugins);
 
@@ -314,10 +316,8 @@ var RcmAdminPage = function (
      * @param {(self: any) => void} [onComplete]
      */
     this.init = function (onComplete) {
-
         self.registerObjects(
-            function (page) {
-
+            function () {
                 if (typeof onComplete === 'function') {
                     onComplete(self);
                 }
