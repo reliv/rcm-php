@@ -3,40 +3,29 @@
 
 namespace Rcm\SecureRepo;
 
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use Rcm\Acl\AclActions;
 use Rcm\Acl\AssertIsAllowed;
 use Rcm\Acl\Exception\NotAllowedByBusinessLogicException;
 use Rcm\Acl\Exception\NotAllowedBySecurityPropGenerationFailure;
 use Rcm\Acl\GetCurrentUser;
-use Rcm\Acl\IsAllowed;
-use Rcm\Acl\ResourceName;
-use Rcm\Acl\SecurityPropertiesProviderInterface;
 use Rcm\Acl2\SecurityPropertyConstants;
 use Rcm\Entity\Container;
 use Rcm\Entity\Page;
 use Rcm\Entity\Revision;
 use Rcm\Entity\Site;
 use Rcm\Exception\InvalidArgumentException;
-use Rcm\Exception\PageNotFoundException;
 use Rcm\Http\Response;
-use Rcm\ImmutableHistory\Page\PageContent;
 use Rcm\ImmutableHistory\Page\PageContentFactory;
 use Rcm\ImmutableHistory\Page\PageLocator;
 use Rcm\ImmutableHistory\Page\RcmPageNameToPathname;
 use Rcm\ImmutableHistory\SiteWideContainer\ContainerContent;
 use Rcm\ImmutableHistory\SiteWideContainer\SiteWideContainerLocator;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
-use Rcm\Repository\Page as PageRepo;
-use Rcm\SecurityPropertiesProvider\PageSecurityPropertiesProvider;
 use Rcm\Tracking\Exception\TrackingException;
 use RcmAdmin\Exception\CannotDuplicateAnUnpublishedPageException;
-use RcmMessage\Api\GetCurrentUserId;
-use RcmUser\Service\RcmUserService;
-use RcmUser\User\Entity\UserInterface;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\ResponseInterface;
-use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -48,31 +37,60 @@ use Zend\View\Model\ViewModel;
 class PageSecureRepo
 {
     /**
-     * @var \Rcm\Entity\Site
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * @var Site
      */
     protected $currentSite;
 
     /**
-     * @var \Rcm\Repository\Page
+     * @var \Rcm\Repository\PageRepository
      */
     protected $pageRepo;
 
-    protected $immuteblePageVersionRepo;
+    /**
+     * @var VersionRepositoryInterface
+     */
+    protected $immutablePageVersionRepo;
 
+    /**
+     *
+     * @var Repository
+     */
     protected $revisionRepo;
 
+    /**
+     * @var PageContentFactory
+     */
     protected $immutablePageContentFactory;
 
+    /**
+     * @var RcmPageNameToPathname
+     */
     protected $rcmPageNameToPathname;
 
-    protected $entityManager;
+    /**
+     * @var VersionRepositoryInterface
+     */
     protected $immutableSiteWideContainerRepo;
+
+
+    /**
+     * @var Rcm\Acl\RcmUser\User\Entity\UserInterface
+     */
     protected $currentUser;
+
+    /**
+     * @var AssertIsAllowed
+     */
     protected $assertIsAllowed;
 
     public function __construct(
         EntityManager $entityManager,
-        VersionRepositoryInterface $immuteblePageVersionRepo,
+        VersionRepositoryInterface $immutablePageVersionRepo,
         VersionRepositoryInterface $immutableSiteWideContainerRepo,
         PageContentFactory $immutablePageContentFactory,
         RcmPageNameToPathname $rcmPageNameToPathname,
@@ -80,16 +98,17 @@ class PageSecureRepo
         GetCurrentUser $getCurrentUser,
         AssertIsAllowed $assertIsAllowed
     ) {
-        $this->currentSite = $currentSite;
         $this->entityManager = $entityManager;
-        $this->pageRepo = $entityManager->getRepository(Page::class);
-        $this->revisionRepo = $entityManager->getRepository(Revision::class);
-        $this->immuteblePageVersionRepo = $immuteblePageVersionRepo;
+        $this->immutablePageVersionRepo = $immutablePageVersionRepo;
         $this->immutableSiteWideContainerRepo = $immutableSiteWideContainerRepo;
         $this->immutablePageContentFactory = $immutablePageContentFactory;
         $this->rcmPageNameToPathname = $rcmPageNameToPathname;
+        $this->currentSite = $currentSite;
         $this->currentUser = $getCurrentUser->__invoke();
         $this->assertIsAllowed = $assertIsAllowed;
+
+        $this->pageRepo = $entityManager->getRepository(Page::class);
+        $this->revisionRepo = $entityManager->getRepository(Revision::class);
     }
 
     public function findSecurityProperties($data): array
@@ -197,7 +216,7 @@ class PageSecureRepo
             $pageData
         );
 
-        $this->immuteblePageVersionRepo->createUnpublished(
+        $this->immutablePageVersionRepo->createUnpublished(
             new PageLocator(
                 $siteId,
                 $this->rcmPageNameToPathname->__invoke($createdPage->getName(), $createdPage->getPageType())
@@ -271,7 +290,7 @@ class PageSecureRepo
             $pageData
         );
 
-        $this->immuteblePageVersionRepo->createUnpublished(
+        $this->immutablePageVersionRepo->createUnpublished(
             new PageLocator(
                 $this->currentSite->getSiteId(),
                 $this->rcmPageNameToPathname->__invoke($createdPage->getName(), $createdPage->getPageType())
@@ -328,7 +347,7 @@ class PageSecureRepo
             'Publish page in ' . get_class($this)
         );
 
-        $this->immuteblePageVersionRepo->publish(
+        $this->immutablePageVersionRepo->publish(
             new PageLocator(
                 $siteId,
                 $this->rcmPageNameToPathname->__invoke($pageName, $pageType)
@@ -404,7 +423,7 @@ class PageSecureRepo
                 'pageType' => $pageType
             ]);
 
-            $this->immuteblePageVersionRepo->createUnpublished(
+            $this->immutablePageVersionRepo->createUnpublished(
                 new PageLocator(
                     $site->getSiteId(),
                     $this->rcmPageNameToPathname->__invoke($pageName, $pageType)
@@ -438,28 +457,6 @@ class PageSecureRepo
                 __CLASS__ . '::' . __FUNCTION__
             );
         }
-
-        // FIXME: This is dangerous, as it may delete the content of site containers that are not on
-        //        the current page.
-        // $modifiedContainerNames = array_keys($data['containers']);
-
-        // // Clear containers that were not present in the result
-        // $unmodifiedContainerNames = $site->getContainers()->map(function (Container $container) use (
-        //     $modifiedContainerNames,
-        //     $user
-        // ) {
-        //     // Skip containers that were modified
-        //     if (in_array($container->getName(), $modifiedContainerNames)) {
-        //         return null;
-        //     }
-        //     $this->immutableSiteWideContainerRepo->publish(
-        //         new SiteWideContainerLocator($container->getSiteId(), $container->getName()),
-        //         new ContainerContent([]),
-        //         $user->getId(),
-        //         __CLASS__ . '::' . __FUNCTION__
-        //     );
-        //     return $container->getName();
-        // })->filter(function ($name) { return $name; });
 
         if ($savedANewVersion) {
             $return['redirect'] = $urlToPageFunction(
@@ -500,7 +497,7 @@ class PageSecureRepo
             'Delete page in ' . get_class($this)
         );
 
-        $this->immuteblePageVersionRepo->depublish(
+        $this->immutablePageVersionRepo->depublish(
             new PageLocator(
                 $page->getSiteId(),
                 $this->rcmPageNameToPathname->__invoke(
@@ -574,7 +571,7 @@ class PageSecureRepo
             true
         );
 
-        $this->immuteblePageVersionRepo->duplicateBc(
+        $this->immutablePageVersionRepo->duplicateBc(
             new PageLocator(
                 $page->getSiteId(),
                 $this->rcmPageNameToPathname->__invoke($page->getName(), $page->getPageType())
@@ -645,7 +642,7 @@ class PageSecureRepo
             $pluginWrapperData = [];
         }
 
-        $this->immuteblePageVersionRepo->publish(
+        $this->immutablePageVersionRepo->publish(
             $originalLocator,
             $this->immutablePageContentFactory->__invoke(
                 $updatedPage->getPageTitle(),
@@ -659,7 +656,7 @@ class PageSecureRepo
             __CLASS__ . '::' . __FUNCTION__
         );
         if (json_encode($originalLocator->toArray()) !== json_encode($updatedLocator->toArray())) {
-            $this->immuteblePageVersionRepo->relocate(
+            $this->immutablePageVersionRepo->relocate(
                 $originalLocator,
                 $updatedLocator,
                 $user->getId(),
@@ -683,44 +680,48 @@ class PageSecureRepo
 
         ksort($data);
 
-        $data['containers'] = [];
         $data['pageContainer'] = [];
 
-        if (empty($data['plugins'])) {
+        if (empty($data['containers'])) {
             throw new InvalidArgumentException(
-                'Save Data missing plugins .
-                Please make sure the data you\'re attempting to save is correctly formatted.
-            '
+                "Save Data missing containers. Please make sure the data " .
+                "you're attempting to save is correctly formatted."
             );
         }
 
-        foreach ($data['plugins'] as &$plugin) {
-            self::cleanSaveData($plugin['saveData']);
+        foreach ($data['containers'] as $containerId => $container) {
+            /** @var boolean */
+            $isPageContainer = false;
+            foreach ($container as &$plugin) {
+                self::cleanSaveData($plugin['saveData']);
 
-            /* Patch for a Json Bug */
-            if (!empty($plugin['isSitewide'])
-                && $plugin['isSitewide'] != 'false'
-                && $plugin['isSitewide'] != '0'
-            ) {
-                $plugin['isSitewide'] = 1;
-            } else {
-                $plugin['isSitewide'] = 0;
+                /* Patch for a Json Bug */
+                if (!empty($plugin['isSitewide'])
+                    && $plugin['isSitewide'] != 'false'
+                    && $plugin['isSitewide'] != '0'
+                ) {
+                    $plugin['isSitewide'] = 1;
+                } else {
+                    $plugin['isSitewide'] = 0;
+                }
+
+                if (empty($plugin['sitewideName'])) {
+                    $plugin['sitewideName'] = null;
+                }
+
+                $plugin['rank'] = (int)$plugin['rank'];
+                $plugin['rowNumber'] = (int)$plugin['rowNumber'];
+                $plugin['columnClass'] = (string)$plugin['columnClass'];
+
+                $plugin['containerName'] = $containerId;
+
+                if ($plugin['containerType'] !== 'layout') {
+                    $isPageContainer = true;
+                    $data['pageContainer'][] = &$plugin;
+                }
             }
-
-            if (empty($plugin['sitewideName'])) {
-                $plugin['sitewideName'] = null;
-            }
-
-            $plugin['rank'] = (int)$plugin['rank'];
-            $plugin['rowNumber'] = (int)$plugin['rowNumber'];
-            $plugin['columnClass'] = (string)$plugin['columnClass'];
-
-            $plugin['containerName'] = $plugin['containerId'];
-
-            if ($plugin['containerType'] == 'layout') {
-                $data['containers'][$plugin['containerId']][] = &$plugin;
-            } else {
-                $data['pageContainer'][] = &$plugin;
+            if ($isPageContainer) {
+                unset($data['containers'][$containerId]);
             }
         }
     }

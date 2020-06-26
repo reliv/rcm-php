@@ -19,7 +19,7 @@ class GetCurrentUser
     /**
      * Returns the current user ID of null if there is no current user.
      *
-     * @return string|null
+     * @return RcmUser\User\Entity\UserInterface
      * @throws \Exception
      */
     public function __invoke()
