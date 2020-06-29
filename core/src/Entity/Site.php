@@ -730,9 +730,9 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
     }
 
     /**
-     * Get all the page entities for the site.
+     * Get all the containers for the site.
      *
-     * @return ArrayCollection Array of page entities
+     * @return ArrayCollection
      */
     public function getContainers()
     {
@@ -740,7 +740,7 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
     }
 
     /**
-     * Get all the page entities for the site.
+     * Get a container for this site
      *
      * @param string $name Name of container
      *
@@ -758,9 +758,9 @@ class Site extends ApiModelTrackingAbstract implements \IteratorAggregate, Track
     }
 
     /**
-     * Set up a page
+     * Add a container
      *
-     * @param Container $container Page Entity to add.
+     * @param Container $container
      *
      * @return void
      */

@@ -7,7 +7,7 @@
  * @param {rcmBlockConfigs} rcmBlockConfigs
  * @param {RcmAdminModel} RcmAdminModel
  * @param {RcmAdminViewModel} RcmAdminViewModel
- * @param {RcmAdminPage} RcmAdminPage
+ * @param {RcmAdminPageData} RcmAdminPage
  * @constructor
  */
 var RcmAdminService = function (
@@ -49,7 +49,7 @@ var RcmAdminService = function (
             {
                 url: self.config.apiUrls.canEdit,
                 type: 'post',
-                dataType: 'json'
+                dataType: 'json',
             }
         )
             .done(
@@ -126,7 +126,7 @@ var RcmAdminService = function (
             }
         }
 
-        return self.page
+        return self.page;
     };
 
     /**

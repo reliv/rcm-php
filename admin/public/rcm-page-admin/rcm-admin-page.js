@@ -1,35 +1,46 @@
+// @ts-check
+
 /**
  * RcmAdminPage AKA RcmPage
- * @param elm
- * @param onInitted
- * @param rcmAdminService
+ *
+ * @param {unknown} _ Unused
+ * @param {() => void} onInitted
+ * @param {RcmAdminService} rcmAdminService
  * @constructor
  */
-var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
+var RcmAdminPage = function (
+    _,
+    onInitted,
+    rcmAdminService
+) {
 
     var self = this;
-    self.model = rcmAdminService.model.RcmPageModel;
-    self.containerModel = rcmAdminService.model.RcmContainerModel;
-    self.pluginModel = rcmAdminService.model.RcmPluginModel;
+    this.model = rcmAdminService.model.RcmPageModel;
+    this.containerModel = rcmAdminService.model.RcmContainerModel;
+    this.pluginModel = rcmAdminService.model.RcmPluginModel;
 
-    self.saveUrl = rcmAdminService.config.saveUrl;
+    this.saveUrl = rcmAdminService.config.saveUrl;
 
-    self.events = rcmAdminService.rcmEventManager;
-    self.editing = []; // page, layout, sitewide
-    self.editMode = false;
-    self.arrangeMode = false;
+    this.events = rcmAdminService.rcmEventManager;
+    /** @type {any[]} */
+    this.editing = []; // page, layout, sitewide
+    this.editMode = false;
+    this.arrangeMode = false;
 
-    self.containers = {};
-    self.plugins = {};
+    /** @type {{[id: string]: RcmAdminContainer}} */
+    this.containers = {};
 
-    self.loading = 0;
+    /** @type {{[name: string]: RcmAdminPlugin}} */
+    this.plugins = {};
+
+    this.loading = 0;
 
     /**
      * setLoading
-     * @param name
-     * @param amount
+     * @param {string} name
+     * @param {number} amount
      */
-    self.setLoading = function (name, amount) {
+    this.setLoading = function (name, amount) {
         rcmLoading.setLoading(
             name,
             amount
@@ -37,12 +48,9 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
     };
 
     /**
-     * setEditingOn
-     * @param type
-     * @returns viod
+     * @param {any} type
      */
-    self.setEditingOn = function (type) {
-
+    this.setEditingOn = function (type) {
         if (self.editing.indexOf(type) < 0) {
             self.editing.push(type);
             self.onEditChange();
@@ -50,39 +58,24 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
     };
 
     /**
-     * setEditingOff
-     * @param type
-     * @returns viod
+     * @param {any} type
      */
-    self.setEditingOff = function (type) {
-
+    this.setEditingOff = function (type) {
         if (self.editing.indexOf(type) > -1) {
-
-            self.editing.splice(
-                self.editing.indexOf(type),
-                1
-            );
-
+            self.editing.splice(self.editing.indexOf(type), 1);
             self.onEditChange();
         }
     };
 
-    /**
-     * onEditChange
-     */
-    self.onEditChange = function () {
-
+    this.onEditChange = function () {
         self.editMode = (self.editing.length > 0);
-
         self.events.trigger('editingStateChange', self);
     };
 
     /**
-     * arrange
-     * @param state
+     * @param {unknown} state
      */
-    self.arrange = function (state) {
-
+    this.arrange = function (state) {
         if (typeof state === 'undefined') {
             // default is on
             state = true;
@@ -96,48 +89,38 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
     /**
      * save
      */
-    self.save = function () {
-
+    this.save = function () {
+        console.log(Object.keys(self.containers));
         self.registerObjects(
-            function (page) {
+            function () {
+                self.setLoading('RcmAdminPage', 0);
 
-                self.setLoading(
-                    'RcmAdminPage',
-                    0
-                );
-                var pagedata = self.getData();
+                var dataPage = self.getData().page;
 
-                var data = pagedata.page;
+                dataPage.containers = {};
 
-                // loop containers and fire saves... aggregate data and sent to server
-                data.plugins = {};
-
-                var promiseArray = [];
-
-                jQuery.each(
-                    self.plugins,
-                    function (key, plugin) {
-                        promiseArray.push(
-                            plugin.getSaveData().then(
-                                function (pluginData) {
-                                    data.plugins[key] = pluginData;
-                                }
-                            )
-                        );
-                    }
-                );
+                jQuery.each(self.containers, function (name) {
+                    dataPage.containers[name] = {};
+                });
 
                 return Promise.all(
-                    promiseArray
+                    jQuery.map(self.plugins, function (plugin, pluginId) {
+                        return plugin.getSaveData().then(
+                            function (pluginData) {
+                                var c = dataPage.containers[pluginData.containerId];
+                                c[pluginId] = pluginData;
+                            }
+                        );
+                    })
                 ).then(
                     function () {
                         jQuery.ajax(
                             {
-                                url: self.saveUrl + '/' + data.type + '/' + data.name + '/' + data.revision,
-                                type: "POST",
-                                data: JSON.stringify(data),
                                 contentType: 'application/json',
-                                dataType: "json",
+                                data: JSON.stringify(dataPage),
+                                dataType: 'json',
+                                type: 'POST',
+                                url: self.saveUrl + '/' + dataPage.type + '/' + dataPage.name + '/' + dataPage.revision,
                             }
                         ).done(
                             function (msg) {
@@ -152,8 +135,8 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
 
                                     self.events.trigger(
                                         'alert', {
+                                            message: msg,
                                             type: 'warning',
-                                            message: msg
                                         }
                                     );
                                 }
@@ -167,8 +150,8 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
                                 );
                                 self.events.trigger(
                                     'alert', {
+                                        message: msg,
                                         type: 'warning',
-                                        message: msg
                                     }
                                 );
                             }
@@ -182,7 +165,7 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
     /**
      * cancel
      */
-    self.cancel = function () {
+    this.cancel = function () {
 
         self.setLoading(
             'RcmAdminPage.cancel',
@@ -191,13 +174,14 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
 
         self.events.trigger('cancel', {page: self});
 
-        window.location = window.location.pathname;
+        window.location = /** @type {any} */ (window.location.pathname);
     };
 
     /**
      * refresh
+     * @param {(self: any) => void} onComplete
      */
-    self.refresh = function (onComplete) {
+    this.refresh = function (onComplete) {
 
         self.registerObjects(
             function (page) {
@@ -206,24 +190,19 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
                     onComplete(self);
                 }
             }
-        )
+        );
     };
 
-    /**
-     * getData
-     * @returns {*}
-     */
-    self.getData = function () {
-
+    this.getData = function () {
         return self.model.getData();
     };
 
     /**
      * getPlugin
-     * @param pluginId
-     * @returns {RcmAdminPlugin}|null
+     * @param {number} pluginId
+     * @returns {RcmAdminPlugin?}
      */
-    self.getPlugin = function (pluginId) {
+    this.getPlugin = function (pluginId) {
         if (self.plugins[pluginId]) {
             return self.plugins[pluginId];
         }
@@ -233,10 +212,10 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
 
     /**
      * addPlugin
-     * @param containerId
-     * @param pluginId
+     * @param {string} containerId
+     * @param {number} pluginId
      */
-    self.addPlugin = function (containerId, pluginId) {
+    this.addPlugin = function (containerId, pluginId) {
 
         if (!self.plugins[pluginId]) {
 
@@ -260,14 +239,12 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
 
     /**
      * removePlugin
-     * @param pluginId
+     * @param {number} pluginId
      */
-    self.removePlugin = function (pluginId) {
-
+    this.removePlugin = function (pluginId) {
         if (self.plugins[pluginId]) {
-
             self.plugins[pluginId].remove(
-                function (plugin) {
+                function () {
                     delete (self.plugins[pluginId]);
                     self.events.trigger('removePlugin', pluginId);
                 }
@@ -280,9 +257,9 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
      * registerObjects
      * - Update object list based on DOM state
      * - should be called after DOM update
-     * @param onComplete
+     * @param {(self: any) => void} [onComplete]
      */
-    self.registerObjects = function (onComplete) {
+    this.registerObjects = function (onComplete) {
 
         var containerElms = self.containerModel.getElms();
 
@@ -292,50 +269,40 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
         var pluginsRemove = [];
         var pluginElms = [];
         var pluginElm = null;
+
+        /** @type {number} */
         var pluginId = null;
 
-        jQuery.each(
-            containerElms,
-            function (key, value) {
+        jQuery.each(containerElms, function (__, value) {
+            containerElm = jQuery(value);
+            containerId = self.containerModel.getId(containerElm);
 
-                containerElm = jQuery(value);
-                containerId = self.containerModel.getId(containerElm);
-
-                if (!self.containers[containerId]) {
-
-                    self.containers[containerId] = new RcmAdminContainer(
-                        self,
-                        containerId,
-                        self.containerModel
-                    );
-                }
-
-                pluginElms = self.pluginModel.getElms(containerId);
-
-                jQuery.each(
-                    pluginElms,
-                    function (pkey, pvalue) {
-
-                        pluginElm = jQuery(pvalue);
-                        pluginId = self.pluginModel.getId(pluginElm);
-
-                        self.addPlugin(containerId, pluginId);
-
-                        pluginsRemove.push(pluginId);
-                    }
+            if (!self.containers[containerId]) {
+                self.containers[containerId] = new RcmAdminContainer(
+                    self,
+                    containerId,
+                    self.containerModel
                 );
             }
-        );
+
+            pluginElms = self.pluginModel.getElms(containerId);
+
+            jQuery.each(pluginElms, function (___, pvalue) {
+                pluginElm = jQuery(pvalue);
+                pluginId = self.pluginModel.getId(pluginElm);
+
+                self.addPlugin(containerId, pluginId);
+
+                pluginsRemove.push(pluginId);
+            });
+        });
 
         // remove if no longer in DOM
-        jQuery.each(
-            self.plugins,
-            function (prkey, prvalue) {
-                if (pluginsRemove.indexOf(prvalue.id) < 0) {
-                    self.removePlugin(prvalue.id);
-                }
+        jQuery.each(self.plugins, function (__, prvalue) {
+            if (pluginsRemove.indexOf(prvalue.id) < 0) {
+                self.removePlugin(prvalue.id);
             }
-        );
+        });
 
         self.events.trigger('registerObjects', self.plugins);
 
@@ -344,16 +311,13 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
         }
     };
 
-
     /**
      * init
-     * @param onComplete
+     * @param {(self: any) => void} [onComplete]
      */
-    self.init = function (onComplete) {
-
+    this.init = function (onComplete) {
         self.registerObjects(
-            function (page) {
-
+            function () {
                 if (typeof onComplete === 'function') {
                     onComplete(self);
                 }
@@ -361,5 +325,5 @@ var RcmAdminPage = function (elm, onInitted, rcmAdminService) {
         );
     };
 
-    self.init(onInitted);
+    this.init(onInitted);
 };

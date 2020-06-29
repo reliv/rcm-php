@@ -43,28 +43,23 @@ use Zend\View\Model\ViewModel;
 class PageController extends AbstractActionController
 {
     /**
-     * @var \Rcm\Entity\Site
+     * @var Site
      */
     protected $currentSite;
 
     /**
-     * @var \Rcm\Repository\Page
+     * @var PageSecureRepo
      */
-    protected $pageRepo;
+    protected $pageSecureRepo;
 
     /**
      * @var \Zend\View\Model\ViewModel
      */
     protected $view;
 
-    protected $immuteblePageVersionRepo;
-
-    protected $revisionRepo;
-
     /**
+     * @param PageSecureRepo $pageSecureRepo
      * @param Site $currentSite
-     * @param RcmUserService $rcmUserService
-     * @param PageRepo $pageRepo
      */
     public function __construct(
         PageSecureRepo $pageSecureRepo,

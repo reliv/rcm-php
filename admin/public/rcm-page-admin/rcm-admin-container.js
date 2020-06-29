@@ -10,7 +10,7 @@
  * @param page
  * @param id
  * @param rcmContainerModel
- * @param onInitted
+ * @param {() => void} [onInitted]
  * @constructor
  */
 var RcmAdminContainer = function (page, id, rcmContainerModel, onInitted) {
