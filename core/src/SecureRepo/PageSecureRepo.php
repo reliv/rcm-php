@@ -689,7 +689,7 @@ class PageSecureRepo
             );
         }
 
-        foreach ($data['containers'] as $containerId => $container) {
+        foreach ($data['containers'] as $containerId => &$container) {
             /** @var boolean */
             $isPageContainer = false;
             foreach ($container as &$plugin) {
