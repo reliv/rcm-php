@@ -8,7 +8,6 @@ use Rcm\Acl\AssertIsAllowed;
 use Rcm\Acl\Exception\NotAllowedBySecurityPropGenerationFailure;
 use Rcm\Acl\GetCurrentUser;
 use Rcm\Acl\NotAllowedException;
-use Rcm\Acl\SecurityPropertiesProviderInterface;
 use Rcm\Entity\Container;
 use Rcm\Entity\Country;
 use Rcm\Entity\Domain;
@@ -21,24 +20,13 @@ use Rcm\ImmutableHistory\Site\SiteLocator;
 use Rcm\ImmutableHistory\SiteWideContainer\ContainerContent;
 use Rcm\ImmutableHistory\SiteWideContainer\SiteWideContainerLocator;
 use Rcm\ImmutableHistory\VersionRepositoryInterface;
-use Rcm\Page\PageTypes\PageTypes;
 use Rcm\SecurityPropertiesProvider\SiteSecurityPropertiesProvider;
 use Rcm\Service\LayoutManager;
 use Rcm\Tracking\Exception\TrackingException;
-use Rcm\Tracking\Model\Tracking;
 use RcmAdmin\InputFilter\SiteInputFilter;
-use RcmUser\Service\RcmUserService;
 use RcmUser\User\Entity\UserInterface;
 use Rcm\Exception\InputFilterFoundInvalidDataException;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
-use Interop\Container\ContainerInterface;
-use Rcm\Acl\ResourceName;
-use Rcm\Http\Response;
-use Rcm\RequestContext\RequestContext;
 use Rcm\View\Model\ApiJsonModel;
-use Rcm\Http\NotAllowedResponseJsonZf2;
-use Zend\Paginator\Paginator;
 use Zend\View\Model\JsonModel;
 
 class SiteSecureRepo
@@ -588,7 +576,11 @@ class SiteSecureRepo
             $site->getLanguageId(),
             $site->getTheme(),
             $site->getSiteTitle(),
-            $site->getFavIcon()
+            $site->getFavIcon(),
+            $site->getLoginPage(),
+            $site->getNotAuthorizedPage(),
+            $site->getNotFoundPage(),
+            $site->getSiteLayout()
         );
     }
 
