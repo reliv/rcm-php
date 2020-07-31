@@ -399,14 +399,6 @@ return [
     ],
     'routes' => [
         [
-            'path' => '/api/rcm/site/current/domain',
-            'middleware' => [
-                \Rcm\HttpLib\JsonBodyParserMiddleware::class,
-                \RcmAdmin\Controller\SiteDomainNameController::class,
-            ],
-            'allowed_methods' => ['PUT'],
-        ],
-        [
             'path' => '/api/rcm/layout-choices',
             'middleware' => [
                 \RcmAdmin\Controller\LayoutChoicesController::class,
@@ -583,12 +575,6 @@ return [
             \RcmAdmin\Controller\LayoutChoicesController::class => [
                 'arguments' => [
                     \Rcm\Api\GetSiteByRequest::class
-                ],
-            ],
-            \RcmAdmin\Controller\SiteDomainNameController::class => [
-                'arguments' => [
-                    \Rcm\RequestContext\RequestContext::class,
-                    \Rcm\Service\CurrentSite::class
                 ],
             ],
             \RcmAdmin\Api\GetPageData::class => [],
