@@ -3,7 +3,6 @@
 namespace Rcm\ImmutableHistory\Test\Site;
 
 use PHPUnit\Framework\TestCase;
-use Rcm\ImmutableHistory\Page\PageContent;
 use Rcm\ImmutableHistory\Site\SiteContent;
 
 class SiteContentTest extends TestCase
@@ -17,7 +16,11 @@ class SiteContentTest extends TestCase
             'theme' => 'FUN THEME YEAH!',
             'siteTitle' => 'I\'m a fyuuuuuuun title!!!@#!($%821da1"',
             'faviconUrl' => '/fun/funfun.ico',
-            'contentSchemaVersion' => 1
+            'contentSchemaVersion' => 2,
+            'loginPage' => '/login',
+            'notAuthorized' => '/not-authorized',
+            'notFound' => '/not-found',
+            'siteLayout' => 'default'
         ];
 
         $unit = new SiteContent(
@@ -26,7 +29,11 @@ class SiteContentTest extends TestCase
             $data['languageId'],
             $data['theme'],
             $data['siteTitle'],
-            $data['faviconUrl']
+            $data['faviconUrl'],
+            $data['loginPage'],
+            $data['notAuthorizedPage'],
+            $data['notFoundPage'],
+            $data['siteLayout']
         );
 
         $this->assertEquals($data, $unit->toArrayForLongTermStorage());

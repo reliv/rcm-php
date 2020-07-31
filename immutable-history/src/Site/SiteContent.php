@@ -6,7 +6,7 @@ use Rcm\ImmutableHistory\ContentInterface;
 
 class SiteContent implements ContentInterface
 {
-    const CONTENT_SCHEMA_VERSION = 1;
+    const CONTENT_SCHEMA_VERSION = 2;
 
     protected $status;
     protected $countryIso3;
@@ -14,6 +14,10 @@ class SiteContent implements ContentInterface
     protected $theme;
     protected $siteTitle;
     protected $faviconUrl;
+    protected $loginPage;
+    protected $notAuthorizedPage;
+    protected $notFoundPage;
+    protected $siteLayout;
 
     /**
      * ContainerContent constructor.
@@ -25,7 +29,11 @@ class SiteContent implements ContentInterface
         int $languageId,
         string $theme,
         string $siteTitle,
-        string $faviconUrl
+        string $faviconUrl,
+        string $loginPage,
+        string $notAuthorizedPage,
+        string $notFoundPage,
+        string $siteLayout
     ) {
         $this->status = $status;
         $this->countryIso3 = $countryIso3;
@@ -33,18 +41,26 @@ class SiteContent implements ContentInterface
         $this->theme = $theme;
         $this->siteTitle = $siteTitle;
         $this->faviconUrl = $faviconUrl;
+        $this->loginPage = $loginPage;
+        $this->notAuthorizedPage = $notAuthorizedPage;
+        $this->notFoundPage = $notFoundPage;
+        $this->siteLayout = $siteLayout;
     }
 
     public function toArrayForLongTermStorage(): array
     {
         return [
-            'status' => $this->status,
+            'contentSchemaVersion' => self::CONTENT_SCHEMA_VERSION,
             'countryIso3' => $this->countryIso3,
-            'languageId' => $this->languageId,
-            'theme' => $this->theme,
-            'siteTitle' => $this->siteTitle,
             'faviconUrl' => $this->faviconUrl,
-            'contentSchemaVersion' => self::CONTENT_SCHEMA_VERSION
+            'languageId' => $this->languageId,
+            'loginPage' => $this->loginPage,
+            'notAuthorizedPage' => $this->notAuthorizedPage,
+            'notFoundPage' => $this->notFoundPage,
+            'siteLayout' => $this->siteLayout,
+            'siteTitle' => $this->siteTitle,
+            'status' => $this->status,
+            'theme' => $this->theme,
         ];
     }
 }
