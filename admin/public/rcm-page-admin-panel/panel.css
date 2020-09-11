@@ -23,6 +23,11 @@
 .rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-button-col {
 
 }
+.rcm-page-not-public-warning{
+    float:right;
+    color:#f7971c;
+    padding:10px;
+}
 
 .rcm-admin-panel .rcm-admin-menu-col.rcm-admin-menu-button-col button {
     display: inline-block;

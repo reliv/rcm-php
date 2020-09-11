@@ -1,0 +1,5 @@
+<?php if (!$page->allowsPublicReadAccess()): ?>
+<div class="rcm-page-not-public-warning">
+    This page is not public. It is only visable to: <?= json_encode($page->getReadAccessGroups())?>
+</div>
+<?php endif ?>
