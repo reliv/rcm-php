@@ -293,7 +293,7 @@ return [
             'post-config' => [],
             'pre-libraries' => [],
             'libraries' => [
-                '/bower_components/bootstrap/dist/css/bootstrap.min.css' => [],
+                '/bower_components/bootstrap/dist/css/bootstrap.min.css' => ['media' => 'all'],
             ],
             'post-libraries' => [],
             'pre-rcm' => [
@@ -307,7 +307,7 @@ return [
             ],
             'pre-modules' => [],
             'modules' => [
-                '/modules/rcm/modules.css' => ['media' => 'screen,print'],
+                '/modules/rcm/modules.css' => ['media' => 'all'],
             ],
             'post-modules' => [],
         ],
