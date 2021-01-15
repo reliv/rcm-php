@@ -39,7 +39,7 @@
                                         data-ng-model="siteLayoutOverride"
                                         data-ng-options="choice.value as choice.label for choice in layoutChoices"
                                         data-ng-show="layoutChoices.length!==0"
-                                        style="min-width: 50%;"/>
+                                        style="min-width: 50%;"></select>
                                 <select class="form-control"
                                         disabled="disabled"
                                         data-ng-if="layoutChoices.length===0"
@@ -74,7 +74,7 @@
                                         data-ng-model="publicReadAccess"
                                         ng-options="o.value as o.label for o in publicReadAccessOptions"
                                         style="min-width: 50%;"
-                                        type="text"/>
+                                        type="text"></select>
                             </div>
                             <div class="form-group" ng-show="!publicReadAccess">
                                 <label>Read Access Groups</label>
@@ -82,7 +82,7 @@
                                         data-ng-model="readAccessGroups"
                                         ng-options="o.value as o.label for o in readAccessGroupOptions"
                                         style="min-width: 50%;"
-                                        type="text"/>
+                                        type="text"></select>
                             </div>
                         </form>
                     </div>
