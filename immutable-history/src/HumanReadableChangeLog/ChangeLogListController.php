@@ -70,11 +70,13 @@ class ChangeLogListController implements MiddlewareInterface
             );
         } catch (NotAllowedException $e) {
             $loginUrl = '/login?redirect=' . urlencode($request->getUri()->getPath()
-                    . '?' . http_build_query($request->getQueryParams()));
+                . '?' . http_build_query($request->getQueryParams()));
             $response = new HtmlResponse('Access denied. Try <a href="' . $loginUrl . '">logging in</a>.');
 
             return $response;
         }
+
+        ini_set('memory_limit', '4000M'); //Needed for very long reports, such as over 1 year.
 
         $queryParams = $request->getQueryParams();
         $days = filter_var(
