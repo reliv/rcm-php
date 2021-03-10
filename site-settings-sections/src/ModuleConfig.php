@@ -13,7 +13,7 @@ class ModuleConfig
                 'config_factories' => [
                     GetSectionDefinitions::class => [
                         'arguments' => [
-                            ['from_config' => [__NAMESPACE__, 'sections']],
+                            ['from_config' => ['rcm', 'settings-sections', 'sections']],
                         ]
                     ],
                     GetSection::class => [
@@ -40,26 +40,28 @@ class ModuleConfig
                     ]
                 ]
             ],
-            __NAMESPACE__ => [
-                'sections' => [
-                    // // NOTE: These examples are still technically accurate
-                    // //       in terms of data structure, but the current
-                    // //       convention is to load the config from Yaml files
-                    // //       using the Symfony Yaml parser, not put them in
-                    // //       the module config directly.
-                    // 'example1' => [
-                    //     'label' => 'Example 1',
-                    //     'fields' => [
-                    // 
-                    //     ],
-                    // ],
-                    // 'example2' => [
-                    //     'label' => 'Example 2',
-                    //     'fields' => [
-                    // 
-                    //     ],
-                    // ],
-                ]
+            'rcm' => [
+                'settings-sections' => [
+                    'sections' => [
+                        // // NOTE: These examples are still technically accurate
+                        // //       in terms of data structure, but the current
+                        // //       convention is to load the config from Yaml files
+                        // //       using the Symfony Yaml parser, not put them in
+                        // //       the module config directly.
+                        // 'example1' => [
+                        //     'label' => 'Example 1',
+                        //     'fields' => [
+                        //
+                        //     ],
+                        // ],
+                        // 'example2' => [
+                        //     'label' => 'Example 2',
+                        //     'fields' => [
+                        //
+                        //     ],
+                        // ],
+                    ],
+                ],
             ],
         ];
     }
